@@ -73,28 +73,28 @@
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <TargetName>$(ProjectName)$(Platform)\$(Configuration)\</TargetName>
-    <IncludePath>E:\Users\MyMan\Desktop\Programming Stuff\Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(ProjectName);E:\Users\MyMan\Desktop\Programming Stuff\Include;$(IncludePath)</IncludePath>
     <LibraryPath>E:\Users\MyMan\Desktop\Programming Stuff\Lib\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <TargetName>$(ProjectName)$(Platform)\$(Configuration)\</TargetName>
-    <IncludePath>E:\Users\MyMan\Desktop\Programming Stuff\Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(ProjectName);E:\Users\MyMan\Desktop\Programming Stuff\Include;$(IncludePath)</IncludePath>
     <LibraryPath>E:\Users\MyMan\Desktop\Programming Stuff\Lib\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <TargetName>$(ProjectName)$(Platform)\$(Configuration)\</TargetName>
-    <IncludePath>E:\Users\MyMan\Desktop\Programming Stuff\Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(ProjectName);E:\Users\MyMan\Desktop\Programming Stuff\Include;$(IncludePath)</IncludePath>
     <LibraryPath>E:\Users\MyMan\Desktop\Programming Stuff\Lib\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <TargetName>$(ProjectName)$(Platform)\$(Configuration)\</TargetName>
-    <IncludePath>E:\Users\MyMan\Desktop\Programming Stuff\Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(ProjectName);E:\Users\MyMan\Desktop\Programming Stuff\Include;$(IncludePath)</IncludePath>
     <LibraryPath>E:\Users\MyMan\Desktop\Programming Stuff\Lib\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -105,6 +105,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>false</EnableModules>
+      <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <Link>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -118,6 +119,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>false</EnableModules>
+      <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <Link>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -133,6 +135,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>false</EnableModules>
+      <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -150,6 +153,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>false</EnableModules>
+      <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -158,6 +162,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="Utilities\Color.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Imgui\imgui.cpp" />
@@ -169,6 +174,8 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Graphics\Shader.h" />
+    <ClInclude Include="stdafx.h" />
     <ClInclude Include="Utilities\Color.h" />
     <ClInclude Include="Imgui\imconfig.h" />
     <ClInclude Include="Imgui\imgui.h" />

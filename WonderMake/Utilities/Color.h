@@ -1,7 +1,7 @@
 #pragma once
 #include <tuple>
 
-struct FColor
+struct SColor
 {
 public:
 	float R = 1.0f;
@@ -9,6 +9,6 @@ public:
 	float B = 1.0f;
 	float A = 1.0f;
 
-	const static FColor CornflowerBlue;
+	const static SColor CornflowerBlue;
 };
 

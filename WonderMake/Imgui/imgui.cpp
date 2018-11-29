@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 // dear imgui, v1.67 WIP
 // (main code and documentation)
 

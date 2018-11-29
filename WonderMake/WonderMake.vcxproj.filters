@@ -10,6 +10,7 @@
     <ClCompile Include="Imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Imgui\imgui_widgets.cpp" />
     <ClCompile Include="Utilities\Color.cpp" />
+    <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Imgui\imgui.h" />
@@ -22,6 +23,8 @@
     <ClInclude Include="Imgui\imconfig.h" />
     <ClInclude Include="Utilities\Color.h" />
     <ClInclude Include="Utilities\Result.h" />
+    <ClInclude Include="Graphics\Shader.h" />
+    <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

@@ -11,6 +11,10 @@
     <ClCompile Include="Imgui\imgui_widgets.cpp" />
     <ClCompile Include="Utilities\Color.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="Graphics\Renderer.cpp" />
+    <ClCompile Include="Program\Program.cpp" />
+    <ClCompile Include="Program\Window.cpp" />
+    <ClCompile Include="Program\ImguiWrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Imgui\imgui.h" />
@@ -25,6 +29,12 @@
     <ClInclude Include="Utilities\Result.h" />
     <ClInclude Include="Graphics\Shader.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Utilities\RestrictTypes.h" />
+    <ClInclude Include="Graphics\Renderer.h" />
+    <ClInclude Include="Program\Program.h" />
+    <ClInclude Include="Program\Window.h" />
+    <ClInclude Include="Utilities\Vector2.h" />
+    <ClInclude Include="Program\ImguiWrapper.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

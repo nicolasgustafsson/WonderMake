@@ -14,8 +14,8 @@ public:
 
 	constexpr bool IsSuccessful()
 	{
-		return !Error;
+		return !myError;
 	};
 	
-	std::optional<ErrorType> Error;
+	std::optional<ErrorType> myError;
 };

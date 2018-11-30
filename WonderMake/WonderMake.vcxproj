@@ -162,6 +162,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Graphics\Renderer.cpp" />
+    <ClCompile Include="Program\ImguiWrapper.cpp" />
+    <ClCompile Include="Program\Program.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="Utilities\Color.cpp" />
     <ClCompile Include="glad.c" />
@@ -172,9 +175,13 @@
     <ClCompile Include="Imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Imgui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Program\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\Shader.h" />
+    <ClInclude Include="Graphics\Renderer.h" />
+    <ClInclude Include="Program\ImguiWrapper.h" />
+    <ClInclude Include="Program\Program.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Utilities\Color.h" />
     <ClInclude Include="Imgui\imconfig.h" />
@@ -185,7 +192,10 @@
     <ClInclude Include="Imgui\imstb_rectpack.h" />
     <ClInclude Include="Imgui\imstb_textedit.h" />
     <ClInclude Include="Imgui\imstb_truetype.h" />
+    <ClInclude Include="Utilities\RestrictTypes.h" />
     <ClInclude Include="Utilities\Result.h" />
+    <ClInclude Include="Program\Window.h" />
+    <ClInclude Include="Utilities\Vector2.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

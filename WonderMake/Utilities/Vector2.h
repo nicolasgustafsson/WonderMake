@@ -10,6 +10,5 @@ public:
 	{
 	}
 
-	T X;
-	T Y;
+	T X, Y;
 };

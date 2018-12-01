@@ -74,7 +74,9 @@
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <TargetName>$(ProjectName)$(Platform)\$(Configuration)\</TargetName>
     <IncludePath>$(SolutionDir)$(ProjectName);E:\Users\MyMan\Desktop\Programming Stuff\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\Users\MyMan\Desktop\Programming Stuff\Lib\Release;$(LibraryPath)</LibraryPath>
+    <LibraryPath>E:\Users\MyMan\Desktop\Programming Stuff\Lib\Debug;$(LibraryPath)</LibraryPath>
+    <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
@@ -82,13 +84,17 @@
     <TargetName>$(ProjectName)$(Platform)\$(Configuration)\</TargetName>
     <IncludePath>$(SolutionDir)$(ProjectName);E:\Users\MyMan\Desktop\Programming Stuff\Include;$(IncludePath)</IncludePath>
     <LibraryPath>E:\Users\MyMan\Desktop\Programming Stuff\Lib\Release;$(LibraryPath)</LibraryPath>
+    <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <TargetName>$(ProjectName)$(Platform)\$(Configuration)\</TargetName>
     <IncludePath>$(SolutionDir)$(ProjectName);E:\Users\MyMan\Desktop\Programming Stuff\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\Users\MyMan\Desktop\Programming Stuff\Lib\Release;$(LibraryPath)</LibraryPath>
+    <LibraryPath>E:\Users\MyMan\Desktop\Programming Stuff\Lib\Debug;$(LibraryPath)</LibraryPath>
+    <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
@@ -96,6 +102,8 @@
     <TargetName>$(ProjectName)$(Platform)\$(Configuration)\</TargetName>
     <IncludePath>$(SolutionDir)$(ProjectName);E:\Users\MyMan\Desktop\Programming Stuff\Include;$(IncludePath)</IncludePath>
     <LibraryPath>E:\Users\MyMan\Desktop\Programming Stuff\Lib\Release;$(LibraryPath)</LibraryPath>
+    <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -106,6 +114,9 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>false</EnableModules>
       <PrecompiledHeader>Create</PrecompiledHeader>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <EnablePREfast>false</EnablePREfast>
+      <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -120,6 +131,9 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>false</EnableModules>
       <PrecompiledHeader>Create</PrecompiledHeader>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <EnablePREfast>false</EnablePREfast>
+      <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -136,6 +150,9 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>false</EnableModules>
       <PrecompiledHeader>Create</PrecompiledHeader>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <EnablePREfast>false</EnablePREfast>
+      <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -154,6 +171,9 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>false</EnableModules>
       <PrecompiledHeader>Create</PrecompiledHeader>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <EnablePREfast>false</EnablePREfast>
+      <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -165,6 +185,7 @@
     <ClCompile Include="Graphics\Renderer.cpp" />
     <ClCompile Include="Program\ImguiWrapper.cpp" />
     <ClCompile Include="Program\Program.cpp" />
+    <ClCompile Include="Graphics\ShaderProgram.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="Utilities\Color.cpp" />
     <ClCompile Include="glad.c" />
@@ -178,10 +199,12 @@
     <ClCompile Include="Program\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Graphics\VertexBuffer.h" />
     <ClInclude Include="Graphics\Shader.h" />
     <ClInclude Include="Graphics\Renderer.h" />
     <ClInclude Include="Program\ImguiWrapper.h" />
     <ClInclude Include="Program\Program.h" />
+    <ClInclude Include="Graphics\ShaderProgram.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Utilities\Color.h" />
     <ClInclude Include="Imgui\imconfig.h" />
@@ -196,6 +219,8 @@
     <ClInclude Include="Utilities\Result.h" />
     <ClInclude Include="Program\Window.h" />
     <ClInclude Include="Utilities\Vector2.h" />
+    <ClInclude Include="Utilities\Vector3.h" />
+    <ClInclude Include="Utilities\Vector4.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

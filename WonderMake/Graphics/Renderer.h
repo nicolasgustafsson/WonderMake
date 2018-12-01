@@ -1,6 +1,6 @@
 #pragma once
-#include "Program/Window.h"
-#include "Shader.h"
+#include "ShaderProgram.h"
+#include "VertexBuffer.h"
 
 class Renderer : NonCopyable
 {
@@ -12,11 +12,11 @@ public:
 	void SwapFrame();
 
 private:
-	Shader<EShaderType::Vertex> myVertexShader;
-	Shader<EShaderType::Fragment> myFragmentShader;
+	ShaderProgram myShaderProgram;
 	u32 myVAO;
-	u32 myVBO;
-	u32 myShaderProgram;
+	u32 myEBO;
+
+	VertexBuffer<SVector3<f32>> myQuadVertexBuffer;
 
 	const SColor ClearColor = SColor::CornflowerBlue;
 };

@@ -1,11 +1,13 @@
 #pragma once
 #include <fstream>
 #include "../Utilities/RestrictTypes.h"
+#include <iostream>
 
 enum class EShaderType
 {
 	Vertex,
-	Fragment
+	Fragment,
+	Geometry
 };
 
 template<EShaderType ShaderType>
@@ -24,8 +26,10 @@ public:
 
 		if constexpr (ShaderType == EShaderType::Vertex)
 			ShaderHandle = glCreateShader(GL_VERTEX_SHADER);
-		else if (ShaderType == EShaderType::Fragment)
+		else if constexpr (ShaderType == EShaderType::Fragment)
 			ShaderHandle = glCreateShader(GL_FRAGMENT_SHADER);
+		else if constexpr (ShaderType == EShaderType::Geometry)
+			ShaderHandle = glCreateShader(GL_GEOMETRY_SHADER);
 
 		const char* Raw = ShaderString.data();
 		glShaderSource(ShaderHandle, 1, &Raw, nullptr);
@@ -41,6 +45,9 @@ public:
 			std::cout << "Shader compilation failed! \n" << ErrorMessage << std::endl;
 		}
 	}
+
+	Shader(Shader&&) = default;
+	Shader& operator=(Shader&&) = default;
 
 	~Shader()
 	{

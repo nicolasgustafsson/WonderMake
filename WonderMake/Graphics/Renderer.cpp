@@ -3,45 +3,35 @@
 #include <iostream>
 #include <GLFW/glfw3.h>
 #include "Shader.h"
+#include <chrono>
 
-constexpr std::array<f32, 3 * 3> Vertices
+void GLAPIENTRY
+MessageCallback(GLenum source,
+	GLenum type,
+	GLuint id,
+	GLenum severity,
+	GLsizei length,
+	const GLchar* message,
+	const void* userParam)
 {
-	-0.5f, -0.5f, 0.0f,
-	0.5f, -0.5f, 0.0f,
-	0.0f, 0.5f, 0.0f
-};
+	fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+		(type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
+		type, severity, message);
+}
 
 Renderer::Renderer()
-	:myVertexShader(std::filesystem::current_path() / "Shaders/Vertex/SpriteVertex.vert"),
-	myFragmentShader(std::filesystem::current_path() / "Shaders/Fragment/SpriteFragment.frag")
+	:myShaderProgram(
+		std::filesystem::current_path() / "Shaders/Vertex/SpriteVertex.vert", 
+		std::filesystem::current_path() / "Shaders/Fragment/SpriteFragment.frag"
+		, std::filesystem::current_path() / "Shaders/Geometry/SpriteGeometry.geom"
+	), 
+	myQuadVertexBuffer({SVector3<float>(0.0f, 0.0f, 0.0f)})
 {
-	myShaderProgram = glCreateProgram();
-
-	glGenBuffers(1, &myVBO);
-
-	glAttachShader(myShaderProgram, myVertexShader.ShaderHandle);
-	glAttachShader(myShaderProgram, myFragmentShader.ShaderHandle);
-	glLinkProgram(myShaderProgram);
-
-	i32 Success;
-	char ErrorMessage[512];
-	glGetProgramiv(myShaderProgram, GL_LINK_STATUS, &Success);
-	if (!Success) {
-		glGetProgramInfoLog(myShaderProgram, 512, NULL, ErrorMessage);
-
-		std::cout << "Error: Shader program linking failed\n" << ErrorMessage << std::endl;
-	}
+	glEnable(GL_DEBUG_OUTPUT);
+	glDebugMessageCallback(MessageCallback, 0);
 
 	glGenVertexArrays(1, &myVAO);
-
 	glBindVertexArray(myVAO);
-
-	constexpr u32 Size = static_cast<unsigned int>(Vertices.size() * sizeof(float));
-	glBindBuffer(GL_ARRAY_BUFFER, myVBO);
-	glBufferData(GL_ARRAY_BUFFER, Size, &*Vertices.begin(), GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(f32), (void*)0);
-	glEnableVertexAttribArray(0);
 }
 
 void Renderer::SetViewportSize(const SVector2<int> WindowSize)
@@ -53,9 +43,10 @@ void Renderer::SwapFrame()
 {
 	glClearColor(ClearColor.R, ClearColor.G, ClearColor.B, ClearColor.A);
 	glClear(GL_COLOR_BUFFER_BIT);
+	myQuadVertexBuffer.Bind();
+	myShaderProgram.Activate();
 
-	glUseProgram(myShaderProgram);
 	glBindVertexArray(myVAO);
 
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(GL_POINTS, 0,1);
 }

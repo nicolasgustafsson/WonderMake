@@ -51,3 +51,4 @@ void Program::OnWindowSizeChanged(GLFWwindow* Window, i32 X, i32 Y)
 {
 	myRenderer.SetViewportSize({ X, Y });
 }
+

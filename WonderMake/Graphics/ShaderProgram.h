@@ -1,8 +1,8 @@
 #pragma once
 #include "Graphics/Shader.h"
-#include "Utilities/Vector2.h"
-#include "Utilities/Vector3.h"
-#include "Utilities/Vector4.h"
+#include "Utilities/Vector.h"
+#include "Utilities/Vector.h"
+#include "Utilities/Vector.h"
 #include <optional>
 
 class ShaderProgram : NonCopyable

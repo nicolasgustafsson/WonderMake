@@ -34,12 +34,11 @@
     <ClInclude Include="Graphics\Renderer.h" />
     <ClInclude Include="Program\Program.h" />
     <ClInclude Include="Program\Window.h" />
-    <ClInclude Include="Utilities\Vector2.h" />
     <ClInclude Include="Program\ImguiWrapper.h" />
     <ClInclude Include="Graphics\ShaderProgram.h" />
-    <ClInclude Include="Utilities\Vector3.h" />
-    <ClInclude Include="Utilities\Vector4.h" />
     <ClInclude Include="Graphics\VertexBuffer.h" />
+    <ClInclude Include="Utilities\Vector.h" />
+    <ClInclude Include="Typedefs.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

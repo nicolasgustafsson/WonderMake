@@ -25,7 +25,7 @@ Renderer::Renderer()
 		std::filesystem::current_path() / "Shaders/Fragment/SpriteFragment.frag"
 		, std::filesystem::current_path() / "Shaders/Geometry/SpriteGeometry.geom"
 	), 
-	myQuadVertexBuffer({SVector3<float>(0.0f, 0.0f, 0.0f)})
+	myQuadVertexBuffer({})
 {
 	glEnable(GL_DEBUG_OUTPUT);
 	glDebugMessageCallback(MessageCallback, 0);
@@ -43,10 +43,11 @@ void Renderer::SwapFrame()
 {
 	glClearColor(ClearColor.R, ClearColor.G, ClearColor.B, ClearColor.A);
 	glClear(GL_COLOR_BUFFER_BIT);
+	
 	myQuadVertexBuffer.Bind();
 	myShaderProgram.Activate();
 
 	glBindVertexArray(myVAO);
 
-	glDrawArrays(GL_POINTS, 0,1);
+	glDrawArrays(GL_POINTS, 0, 1);
 }

@@ -44,5 +44,5 @@ VertexBuffer<TVertexData, Count>::VertexBuffer()
 {
 	glGenBuffers(1, &myBufferHandle);
 	glBindBuffer(GL_ARRAY_BUFFER, myBufferHandle);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(TVertexData) * Count, nullptr, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(TVertexData) * Count, nullptr, GL_STREAM_DRAW);
 }

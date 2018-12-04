@@ -1,6 +1,7 @@
 #pragma once
 #include "ShaderProgram.h"
 #include "VertexBuffer.h"
+#include "Texture.h"
 
 class Renderer : NonCopyable
 {
@@ -17,6 +18,7 @@ private:
 	u32 myEBO;
 
 	VertexBuffer<SVector3<f32>> myQuadVertexBuffer;
+	Texture myTexture;
 
 	const SColor ClearColor = SColor::CornflowerBlue;
 };

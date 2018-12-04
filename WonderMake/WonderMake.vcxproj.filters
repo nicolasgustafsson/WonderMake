@@ -16,6 +16,8 @@
     <ClCompile Include="Program\Window.cpp" />
     <ClCompile Include="Program\ImguiWrapper.cpp" />
     <ClCompile Include="Graphics\ShaderProgram.cpp" />
+    <ClCompile Include="Graphics\Texture.cpp" />
+    <ClCompile Include="Graphics\Material.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Imgui\imgui.h" />
@@ -39,6 +41,10 @@
     <ClInclude Include="Graphics\VertexBuffer.h" />
     <ClInclude Include="Utilities\Vector.h" />
     <ClInclude Include="Typedefs.h" />
+    <ClInclude Include="Graphics\Texture.h" />
+    <ClInclude Include="Resources\ResourceManager.h" />
+    <ClInclude Include="Graphics\Material.h" />
+    <ClInclude Include="Utilities\Singleton.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

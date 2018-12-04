@@ -17,10 +17,7 @@ public:
 	template<typename TProperty>
 	void SetProperty(std::string_view Name, TProperty Property)
 	{
-		if (!myProgramHandle)
-			return;
-
-		const auto Location = glGetUniformLocation(*myProgramHandle, Name.data());
+		const auto Location = glGetUniformLocation(myProgramHandle, Name.data());
 
 		if constexpr (std::is_same_v<TProperty, i32>)
 			glUniform1i(Location, Property);
@@ -41,10 +38,10 @@ public:
 	}
 
 private:
-	std::optional<u32> myProgramHandle;
+	u32 myProgramHandle = -1;
 
-	Shader<EShaderType::Vertex> myVertexShader;
-	Shader<EShaderType::Fragment> myFragmentShader;
-	std::optional<Shader<EShaderType::Geometry>> myGeometryShader;
+	Shader<EShaderType::Vertex>* myVertexShader = nullptr;
+	Shader<EShaderType::Fragment>* myFragmentShader = nullptr;
+	std::optional<Shader<EShaderType::Geometry>*> myGeometryShader;
 };
 

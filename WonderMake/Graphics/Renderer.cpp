@@ -25,7 +25,8 @@ Renderer::Renderer()
 		std::filesystem::current_path() / "Shaders/Fragment/SpriteFragment.frag"
 		, std::filesystem::current_path() / "Shaders/Geometry/SpriteGeometry.geom"
 	), 
-	myQuadVertexBuffer({})
+	myQuadVertexBuffer({}),
+	myTexture(std::filesystem::current_path() / "Textures/tile.png")
 {
 	glEnable(GL_DEBUG_OUTPUT);
 	glDebugMessageCallback(MessageCallback, 0);
@@ -46,6 +47,7 @@ void Renderer::SwapFrame()
 	
 	myQuadVertexBuffer.Bind();
 	myShaderProgram.Activate();
+	myTexture.Bind();
 
 	glBindVertexArray(myVAO);
 

@@ -44,12 +44,14 @@ struct SVector : SVectorBase<T, Size>
 	//put generic vector stuff here
 	constexpr SVector() = default;
 
+	//lowers the dimension of the vector by one
 	template<class Q = T>
 	constexpr typename std::enable_if_t<(Size == 2), Q> Demote() const
 	{
 		return (*this)[0];
 	}
 
+	//lowers the dimension of the vector by one
 	template<class Q = T>
 	constexpr typename std::enable_if_t<(Size > 2), SVector<Q, Size - 1>> Demote() const
 	{
@@ -63,6 +65,7 @@ struct SVector : SVectorBase<T, Size>
 		return ReturnVal;
 	}
 
+	//raises the dimension of the vector by one
 	constexpr SVector<T, Size + 1> Promote(const T LastValue = {}) const
 	{
 		SVector<T, Size + 1> ReturnVal;
@@ -134,3 +137,7 @@ using SVector4f = SVector4<f32>;
 using SVector2i = SVector2<i32>;
 using SVector3i = SVector3<i32>;
 using SVector4i = SVector4<i32>;
+
+using SVector2u = SVector2<u32>;
+using SVector3u = SVector3<u32>;
+using SVector4u = SVector4<u32>;

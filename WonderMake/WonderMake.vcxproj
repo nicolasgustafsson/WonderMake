@@ -73,8 +73,8 @@
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <TargetName>$(ProjectName)$(Platform)\$(Configuration)\</TargetName>
-    <IncludePath>$(SolutionDir)$(ProjectName);E:\Users\MyMan\Desktop\Programming Stuff\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\Users\MyMan\Desktop\Programming Stuff\Lib\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)External\Lib\Debug;$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
@@ -82,8 +82,8 @@
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <TargetName>$(ProjectName)$(Platform)\$(Configuration)\</TargetName>
-    <IncludePath>$(SolutionDir)$(ProjectName);E:\Users\MyMan\Desktop\Programming Stuff\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\Users\MyMan\Desktop\Programming Stuff\Lib\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)External\Lib\Release;$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
@@ -91,8 +91,8 @@
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <TargetName>$(ProjectName)$(Platform)\$(Configuration)\</TargetName>
-    <IncludePath>$(SolutionDir)$(ProjectName);E:\Users\MyMan\Desktop\Programming Stuff\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\Users\MyMan\Desktop\Programming Stuff\Lib\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)External\Lib\Debug;$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
@@ -100,8 +100,8 @@
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <TargetName>$(ProjectName)$(Platform)\$(Configuration)\</TargetName>
-    <IncludePath>$(SolutionDir)$(ProjectName);E:\Users\MyMan\Desktop\Programming Stuff\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\Users\MyMan\Desktop\Programming Stuff\Lib\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)External\Lib\Release;$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
@@ -183,10 +183,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Graphics\Renderer.cpp" />
+    <ClCompile Include="Graphics\Material.cpp" />
     <ClCompile Include="Program\ImguiWrapper.cpp" />
     <ClCompile Include="Program\Program.cpp" />
     <ClCompile Include="Graphics\ShaderProgram.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="Graphics\Texture.cpp" />
     <ClCompile Include="Utilities\Color.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Imgui\imgui.cpp" />
@@ -202,10 +204,14 @@
     <ClInclude Include="Graphics\VertexBuffer.h" />
     <ClInclude Include="Graphics\Shader.h" />
     <ClInclude Include="Graphics\Renderer.h" />
+    <ClInclude Include="Graphics\Material.h" />
     <ClInclude Include="Program\ImguiWrapper.h" />
     <ClInclude Include="Program\Program.h" />
     <ClInclude Include="Graphics\ShaderProgram.h" />
+    <ClInclude Include="Resources\ResourceManager.h" />
+    <ClInclude Include="Utilities\Singleton.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Graphics\Texture.h" />
     <ClInclude Include="Typedefs.h" />
     <ClInclude Include="Utilities\Color.h" />
     <ClInclude Include="Imgui\imconfig.h" />

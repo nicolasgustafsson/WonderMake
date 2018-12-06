@@ -3,23 +3,17 @@ template<typename SingletonType>
 class Singleton
 {
 public:
-	static SingletonType* Get();
+	static SingletonType& Get();
 
 protected:
 	Singleton() = default;
-
-	static std::unique_ptr<SingletonType> Self;
 };
 
 template<typename SingletonType>
-std::unique_ptr<SingletonType> Singleton<SingletonType>::Self = nullptr;
-
-template<typename SingletonType>
-SingletonType* Singleton<SingletonType>::Get()
+SingletonType& Singleton<SingletonType>::Get()
 {
-	if (!Self)
-		Self = std::make_unique<SingletonType>();
+	static SingletonType Self;
 
-	return Self.get();
+	return Self;
 }
 

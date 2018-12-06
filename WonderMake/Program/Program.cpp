@@ -47,7 +47,7 @@ void Program::SetupCallbacks()
 	});
 }
 
-void Program::OnWindowSizeChanged(GLFWwindow* Window, i32 X, i32 Y)
+void Program::OnWindowSizeChanged([[maybe_unused]]GLFWwindow* Window, i32 X, i32 Y)
 {
 	myRenderer.SetViewportSize({ X, Y });
 }

@@ -107,7 +107,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
@@ -124,7 +124,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
@@ -187,6 +187,7 @@
     <ClCompile Include="Program\ImguiWrapper.cpp" />
     <ClCompile Include="Program\Program.cpp" />
     <ClCompile Include="Graphics\ShaderProgram.cpp" />
+    <ClCompile Include="Graphics\RenderObject.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="Graphics\Texture.cpp" />
     <ClCompile Include="Utilities\Color.cpp" />
@@ -208,6 +209,7 @@
     <ClInclude Include="Program\ImguiWrapper.h" />
     <ClInclude Include="Program\Program.h" />
     <ClInclude Include="Graphics\ShaderProgram.h" />
+    <ClInclude Include="Graphics\RenderObject.h" />
     <ClInclude Include="Resources\ResourceManager.h" />
     <ClInclude Include="Utilities\Singleton.h" />
     <ClInclude Include="stdafx.h" />
@@ -225,7 +227,9 @@
     <ClInclude Include="Utilities\RestrictTypes.h" />
     <ClInclude Include="Utilities\Result.h" />
     <ClInclude Include="Program\Window.h" />
+    <ClInclude Include="Utilities\Utility.h" />
     <ClInclude Include="Utilities\Vector.h" />
+    <ClInclude Include="Graphics\VertexTypes.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

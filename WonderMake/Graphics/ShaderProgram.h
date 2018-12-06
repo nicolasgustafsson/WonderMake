@@ -27,18 +27,18 @@ public:
 			glUniform1i(Location, Property);
 		else if constexpr (std::is_same_v<TProperty, f64>)
 			glUniform1d(Location, Property);
-		else if constexpr (std::is_same_v<TProperty, SVector2<f32>>)
+		else if constexpr (std::is_same_v<TProperty, SVector2f>)
 			glUniform2f(Location, Property.X, Property.Y);
-		else if constexpr (std::is_same_v<TProperty, SVector3<f32>>)
+		else if constexpr (std::is_same_v<TProperty, SVector3f>)
 			glUniform3f(Location, Property.X, Property.Y, Property.Z);
-		else if constexpr (std::is_same_v<TProperty, SVector4<f32>>)
+		else if constexpr (std::is_same_v<TProperty, SVector4f>)
 			glUniform4f(Location, Property.X, Property.Y, Property.Z, Property.W);
 		else if constexpr (std::is_same_v<TProperty, SColor>)
 			glUniform4f(Location, Property.R, Property.G, Property.B, Property.A);
 	}
 
 private:
-	u32 myProgramHandle = -1;
+	u32 myProgramHandle = std::numeric_limits<u32>::max();
 
 	Shader<EShaderType::Vertex>* myVertexShader = nullptr;
 	Shader<EShaderType::Fragment>* myFragmentShader = nullptr;

@@ -14,7 +14,7 @@ private:
 
 	void Update();
 	void SetupCallbacks();
-	void OnWindowSizeChanged(GLFWwindow* Window, i32 X, i32 Y);
+	void OnWindowSizeChanged([[maybe_unused]]GLFWwindow* Window, i32 X, i32 Y);
 
 	//-------KEEP THIS IN ORDER------
 	Window myWindow;

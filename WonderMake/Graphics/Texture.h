@@ -5,7 +5,7 @@ public:
 	Texture(const std::filesystem::path& Path);
 	~Texture();
 
-	void Bind();
+	void Bind(const u32 TextureSlot = 0);
 
 private:
 	u32 myTextureHandle;

@@ -7,17 +7,17 @@
 
 ShaderProgram::ShaderProgram(const std::filesystem::path& VertexShaderPath, const std::filesystem::path& FragmentShaderPath, const std::filesystem::path& GeometryShaderPath)
 {
-	ResourceManager<Shader<EShaderType::Vertex>>* VertexRM = ResourceManager<Shader<EShaderType::Vertex>>::Get();
-	ResourceManager<Shader<EShaderType::Fragment>>* FragmentRM = ResourceManager<Shader<EShaderType::Fragment>>::Get();
+	ResourceManager<Shader<EShaderType::Vertex>>& VertexRM = ResourceManager<Shader<EShaderType::Vertex>>::Get();
+	ResourceManager<Shader<EShaderType::Fragment>>& FragmentRM = ResourceManager<Shader<EShaderType::Fragment>>::Get();
 
-	myVertexShader = VertexRM->GetResource(VertexShaderPath);
-	myFragmentShader = FragmentRM->GetResource(FragmentShaderPath);
+	myVertexShader = VertexRM.GetResource(VertexShaderPath);
+	myFragmentShader = FragmentRM.GetResource(FragmentShaderPath);
 
 	if (!GeometryShaderPath.empty())
 	{
-		ResourceManager<Shader<EShaderType::Geometry>>* GeomRM = ResourceManager<Shader<EShaderType::Geometry>>::Get();
+		ResourceManager<Shader<EShaderType::Geometry>>& GeomRM = ResourceManager<Shader<EShaderType::Geometry>>::Get();
 
-		myGeometryShader.emplace(GeomRM->GetResource(GeometryShaderPath));
+		myGeometryShader.emplace(GeomRM.GetResource(GeometryShaderPath));
 	}
 
 	myProgramHandle = glCreateProgram();

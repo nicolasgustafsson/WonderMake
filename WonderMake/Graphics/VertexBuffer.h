@@ -2,7 +2,7 @@
 #include <glad/glad.h>
 
 template <typename TVertexData, u32 Count = 1>
-class VertexBuffer
+class VertexBuffer : NonCopyable
 {
 public:
 	VertexBuffer();
@@ -28,7 +28,6 @@ void VertexBuffer<TVertexData, Count>::Bind()
 {
 	glBindBuffer(GL_ARRAY_BUFFER, myBufferHandle);
 	glVertexAttribPointer(0, Count, GL_FLOAT, GL_FALSE, sizeof(TVertexData), (void*)0);
-	auto error = glGetError();
 	glEnableVertexAttribArray(0);
 }
 

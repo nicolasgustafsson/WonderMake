@@ -9,6 +9,7 @@
 
 class Dispatchable;
 class DispatchRouter;
+class Task;
 
 class DataRouters final
 	: public Singleton<DataRouters>
@@ -20,6 +21,8 @@ public:
 
 	template<typename T>
 	void Dispatch(const T& Message);
+
+	void Dispatch(const EThreadId Process, Task&& Job);
 
 private:
 	static void Dispatch(std::unique_ptr<Dispatchable>&& Message, DispatchRouter& Router);

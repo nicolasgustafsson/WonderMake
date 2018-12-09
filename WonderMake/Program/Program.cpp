@@ -2,16 +2,20 @@
 #include "Program.h"
 #include <GLFW/glfw3.h>
 #include <functional>
-#include "../Imgui/imgui.h"
-#include "../Imgui/imgui_impl_glfw.h"
-#include "../Imgui/imgui_impl_opengl3.h"
-#include "../Graphics/Shader.h"
+#include "Imgui/imgui.h"
+#include "Imgui/imgui_impl_glfw.h"
+#include "Imgui/imgui_impl_opengl3.h"
+#include "Graphics/Shader.h"
+#include "Message/DataRouters.h"
+#include "Threads/DataThreads.h"
 #include <iostream>
 
 Program::Program()
 	:myWindow(WindowSize), myRenderer(), myImguiWrapper(myWindow)
 {
 	SetupCallbacks();
+	DataRouters::Get();
+	DataThreads::Get();
 }
 
 void Program::Start()

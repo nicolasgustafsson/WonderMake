@@ -31,7 +31,7 @@ public:
 
 private:
 	template<typename T>
-	static void RouteDelegate(const std::function<void(const T&)> Callback, const Dispatchable& Message);
+	static void RouteDelegate(std::function<void(const T&)>&& Callback, const Dispatchable& Message);
 	template<typename T>
 	void SetRoute(std::function<void(const T&)>&& Callback);
 
@@ -49,7 +49,7 @@ MessageRouter::MessageRouter(const EThreadId ThreadId, ROUTES... Routes)
 }
 
 template<typename T>
-void MessageRouter::RouteDelegate(const std::function<void(const T&)> Callback, const Dispatchable& Message)
+void MessageRouter::RouteDelegate(std::function<void(const T&)>&& Callback, const Dispatchable& Message)
 {
 	Callback(static_cast<const T&>(Message));
 }
@@ -57,5 +57,5 @@ void MessageRouter::RouteDelegate(const std::function<void(const T&)> Callback, 
 template<typename T>
 void MessageRouter::SetRoute(std::function<void(const T&)>&& Callback)
 {
-	Subscribe(T::GetTypeHash(), std::bind(&MessageRouter::RouteDelegate<T>, Callback, std::placeholders::_1));
+	Subscribe(T::GetTypeHash(), std::bind(&MessageRouter::RouteDelegate<T>, std::move(Callback), std::placeholders::_1));
 }

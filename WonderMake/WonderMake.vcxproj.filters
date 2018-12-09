@@ -23,6 +23,7 @@
     <ClCompile Include="Message\DispatchRouter.cpp" />
     <ClCompile Include="Message\DataRouters.cpp" />
     <ClCompile Include="Threads\ThreadProcess.cpp" />
+    <ClCompile Include="Threads\DataThreads.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Imgui\imgui.h" />
@@ -60,6 +61,7 @@
     <ClInclude Include="Threads\DoubleBuffer.h" />
     <ClInclude Include="Message\DataRouters.h" />
     <ClInclude Include="Threads\ThreadProcess.h" />
+    <ClInclude Include="Threads\DataThreads.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

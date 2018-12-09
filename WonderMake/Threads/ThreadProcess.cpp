@@ -13,13 +13,13 @@ ThreadProcess::ThreadProcess(const EThreadId ThreadId)
 
 ThreadProcess::~ThreadProcess()
 {
-	myRun = false;
-	myThread.join();
+	Stop();
 }
 
 void ThreadProcess::Stop()
 {
 	myRun = false;
+	myThread.join();
 }
 
 void ThreadProcess::Procedure() {}

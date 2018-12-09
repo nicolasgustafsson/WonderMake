@@ -12,7 +12,7 @@ class ThreadProcess
 {
 public:
 	ThreadProcess(const EThreadId ThreadId);
-	~ThreadProcess();
+	virtual ~ThreadProcess();
 
 	void Stop();
 
@@ -26,5 +26,4 @@ private:
 
 	std::atomic_bool myRun;
 	std::thread myThread;
-
 };

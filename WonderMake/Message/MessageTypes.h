@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Utilities/RestrictTypes.h"
-
 #include <typeinfo>
 #include <functional>
 
@@ -48,6 +46,7 @@ public:
 	Task(const Closure Function)
 		: myFunction(std::move(Function))
 	{}
+
 	void Run() const
 	{
 		myFunction();

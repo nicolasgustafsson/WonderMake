@@ -2,6 +2,7 @@
 #include "DataRouters.h"
 
 #include "DispatchRouter.h"
+#include "MessageTypes.h"
 
 DataRouters::DataRouters()
 {
@@ -14,6 +15,11 @@ DataRouters::DataRouters()
 DispatchRouter& DataRouters::GetRouter(const EThreadId Process) const
 {
 	return *myRouters[static_cast<decltype(myRouters)::size_type>(Process)];
+}
+
+void DataRouters::Dispatch(const EThreadId Process, Task&& Job)
+{
+	GetRouter(Process).Dispatch(std::make_unique<Task>(std::move(Job)));
 }
 
 void DataRouters::Dispatch(std::unique_ptr<Dispatchable>&& Message, DispatchRouter& Router)

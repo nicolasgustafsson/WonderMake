@@ -182,6 +182,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Threads\DataThreads.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
     <ClCompile Include="Graphics\Material.cpp" />
     <ClCompile Include="Message\DataRouters.cpp" />
@@ -206,6 +207,7 @@
     <ClCompile Include="Program\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Threads\DataThreads.h" />
     <ClInclude Include="Graphics\VertexBuffer.h" />
     <ClInclude Include="Graphics\Shader.h" />
     <ClInclude Include="Graphics\Renderer.h" />

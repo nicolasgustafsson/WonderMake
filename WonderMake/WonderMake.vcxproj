@@ -184,12 +184,16 @@
   <ItemGroup>
     <ClCompile Include="Graphics\Renderer.cpp" />
     <ClCompile Include="Graphics\Material.cpp" />
+    <ClCompile Include="Message\DataRouters.cpp" />
+    <ClCompile Include="Message\DispatchRouter.cpp" />
+    <ClCompile Include="Message\MessageRouter.cpp" />
     <ClCompile Include="Program\ImguiWrapper.cpp" />
     <ClCompile Include="Program\Program.cpp" />
     <ClCompile Include="Graphics\ShaderProgram.cpp" />
     <ClCompile Include="Graphics\RenderObject.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="Graphics\Texture.cpp" />
+    <ClCompile Include="Threads\ThreadProcess.cpp" />
     <ClCompile Include="Utilities\Color.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Imgui\imgui.cpp" />
@@ -206,11 +210,18 @@
     <ClInclude Include="Graphics\Shader.h" />
     <ClInclude Include="Graphics\Renderer.h" />
     <ClInclude Include="Graphics\Material.h" />
+    <ClInclude Include="Message\DataRouters.h" />
+    <ClInclude Include="Message\DispatchRouter.h" />
+    <ClInclude Include="Message\MessageTypes.h" />
+    <ClInclude Include="Message\MessageRouter.h" />
+    <ClInclude Include="Threads\DoubleBuffer.h" />
+    <ClInclude Include="Threads\ThreadIds.h" />
     <ClInclude Include="Program\ImguiWrapper.h" />
     <ClInclude Include="Program\Program.h" />
     <ClInclude Include="Graphics\ShaderProgram.h" />
     <ClInclude Include="Graphics\RenderObject.h" />
     <ClInclude Include="Resources\ResourceManager.h" />
+    <ClInclude Include="Threads\ThreadProcess.h" />
     <ClInclude Include="Utilities\Singleton.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Graphics\Texture.h" />

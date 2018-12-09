@@ -19,6 +19,10 @@
     <ClCompile Include="Graphics\Texture.cpp" />
     <ClCompile Include="Graphics\Material.cpp" />
     <ClCompile Include="Graphics\RenderObject.cpp" />
+    <ClCompile Include="Message\MessageRouter.cpp" />
+    <ClCompile Include="Message\DispatchRouter.cpp" />
+    <ClCompile Include="Message\DataRouters.cpp" />
+    <ClCompile Include="Threads\ThreadProcess.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Imgui\imgui.h" />
@@ -49,6 +53,13 @@
     <ClInclude Include="Utilities\Utility.h" />
     <ClInclude Include="Graphics\RenderObject.h" />
     <ClInclude Include="Graphics\VertexTypes.h" />
+    <ClInclude Include="Message\MessageTypes.h" />
+    <ClInclude Include="Message\MessageRouter.h" />
+    <ClInclude Include="Message\DispatchRouter.h" />
+    <ClInclude Include="Threads\ThreadIds.h" />
+    <ClInclude Include="Threads\DoubleBuffer.h" />
+    <ClInclude Include="Message\DataRouters.h" />
+    <ClInclude Include="Threads\ThreadProcess.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

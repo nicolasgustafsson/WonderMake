@@ -15,9 +15,9 @@ public:
 		myVertexBuffer.ResizeBuffer(aSize);
 	}
 
-	void Set(const u32 Index, const ValueType Value)
+	void Set(const u32 aIndex, const ValueType aValue)
 	{
-		myContainer[Index] = Value;
+		myContainer[aIndex] = aValue;
 		myIsDirty = true;
 	}
 
@@ -47,7 +47,7 @@ class VertexBufferArray final : NonCopyable
 {
 public:
 	VertexBufferArray();
-	VertexBufferArray(const u32 Size);
+	VertexBufferArray(const u32 aSize);
 
 	void Render();
 

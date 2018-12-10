@@ -9,15 +9,15 @@ enum class EVertexAttribute
 	Rotation
 };
 
-template<EVertexAttribute VertexAttribute>
+template<EVertexAttribute TVertexAttribute>
 static auto constexpr GetValueFromAttribute()
 {
-	if constexpr (VertexAttribute == EVertexAttribute::Color)
+	if constexpr (TVertexAttribute == EVertexAttribute::Color)
 		return SColor();
-	else if constexpr (VertexAttribute == EVertexAttribute::Position)
+	else if constexpr (TVertexAttribute == EVertexAttribute::Position)
 		return SVector2f();
-	else if constexpr (VertexAttribute == EVertexAttribute::Scale)
+	else if constexpr (TVertexAttribute == EVertexAttribute::Scale)
 		return SVector2f();
-	else if constexpr (VertexAttribute == EVertexAttribute::Rotation)
+	else if constexpr (TVertexAttribute == EVertexAttribute::Rotation)
 		return 0.f;
 }

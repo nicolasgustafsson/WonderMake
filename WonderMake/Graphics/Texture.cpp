@@ -3,10 +3,10 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 
-Texture::Texture(const std::filesystem::path& Path)
+Texture::Texture(const std::filesystem::path& aPath)
 {
 	i32 ChannelCount;
-	u8* RawPixelData = stbi_load(Path.string().c_str(), &myWidth, &myHeight, &ChannelCount, 0);
+	u8* RawPixelData = stbi_load(aPath.string().c_str(), &myWidth, &myHeight, &ChannelCount, 0);
 
 	glGenTextures(1, &myTextureHandle);
 	glBindTexture(GL_TEXTURE_2D, myTextureHandle);
@@ -31,9 +31,9 @@ Texture::~Texture()
 	glDeleteTextures(1, &myTextureHandle);
 }
 
-void Texture::Bind(const u32 TextureSlot)
+void Texture::Bind(const u32 aTextureSlot)
 {
-	glActiveTexture(GL_TEXTURE0 + TextureSlot);
+	glActiveTexture(GL_TEXTURE0 + aTextureSlot);
 
 	glBindTexture(GL_TEXTURE_2D, myTextureHandle);
 }

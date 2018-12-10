@@ -1,7 +1,8 @@
 #pragma once
 #include <fstream>
-#include "../Utilities/RestrictTypes.h"
 #include <iostream>
+
+#include "../Utilities/RestrictTypes.h"
 
 enum class EShaderType
 {

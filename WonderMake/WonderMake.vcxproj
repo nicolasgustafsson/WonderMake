@@ -183,11 +183,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Graphics\Renderer.cpp" />
-    <ClCompile Include="Graphics\Material.cpp" />
     <ClCompile Include="Program\ImguiWrapper.cpp" />
     <ClCompile Include="Program\Program.cpp" />
     <ClCompile Include="Graphics\ShaderProgram.cpp" />
-    <ClCompile Include="Graphics\RenderObject.cpp" />
+    <ClCompile Include="Graphics\SpriteRenderObject.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="Graphics\Texture.cpp" />
     <ClCompile Include="Utilities\Color.cpp" />
@@ -202,15 +201,16 @@
     <ClCompile Include="Program\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Graphics\VertexAttributes.h" />
     <ClInclude Include="Graphics\VertexBuffer.h" />
     <ClInclude Include="Graphics\Shader.h" />
     <ClInclude Include="Graphics\Renderer.h" />
-    <ClInclude Include="Graphics\Material.h" />
     <ClInclude Include="Program\ImguiWrapper.h" />
     <ClInclude Include="Program\Program.h" />
     <ClInclude Include="Graphics\ShaderProgram.h" />
     <ClInclude Include="Graphics\RenderObject.h" />
     <ClInclude Include="Resources\ResourceManager.h" />
+    <ClInclude Include="Graphics\SpriteRenderObject.h" />
     <ClInclude Include="Utilities\Singleton.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Graphics\Texture.h" />
@@ -230,6 +230,7 @@
     <ClInclude Include="Utilities\Utility.h" />
     <ClInclude Include="Utilities\Vector.h" />
     <ClInclude Include="Graphics\VertexTypes.h" />
+    <ClInclude Include="Graphics\VertexBufferArray.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

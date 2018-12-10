@@ -17,8 +17,7 @@
     <ClCompile Include="Program\ImguiWrapper.cpp" />
     <ClCompile Include="Graphics\ShaderProgram.cpp" />
     <ClCompile Include="Graphics\Texture.cpp" />
-    <ClCompile Include="Graphics\Material.cpp" />
-    <ClCompile Include="Graphics\RenderObject.cpp" />
+    <ClCompile Include="Graphics\SpriteRenderObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Imgui\imgui.h" />
@@ -44,11 +43,13 @@
     <ClInclude Include="Typedefs.h" />
     <ClInclude Include="Graphics\Texture.h" />
     <ClInclude Include="Resources\ResourceManager.h" />
-    <ClInclude Include="Graphics\Material.h" />
     <ClInclude Include="Utilities\Singleton.h" />
     <ClInclude Include="Utilities\Utility.h" />
     <ClInclude Include="Graphics\RenderObject.h" />
     <ClInclude Include="Graphics\VertexTypes.h" />
+    <ClInclude Include="Graphics\VertexAttributes.h" />
+    <ClInclude Include="Graphics\VertexBufferArray.h" />
+    <ClInclude Include="Graphics\SpriteRenderObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

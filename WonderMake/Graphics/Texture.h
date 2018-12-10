@@ -2,10 +2,13 @@
 class Texture : NonCopyable
 {
 public:
-	Texture(const std::filesystem::path& Path);
+	Texture(const std::filesystem::path& aPath);
 	~Texture();
 
-	void Bind(const u32 TextureSlot = 0);
+	void Bind(const u32 aTextureSlot = 0);
+
+	i32 GetWidth() const { return myWidth; }
+	i32 GetHeight() const { return myHeight; }
 
 private:
 	u32 myTextureHandle;

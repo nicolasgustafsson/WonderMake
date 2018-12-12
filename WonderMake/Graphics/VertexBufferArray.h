@@ -1,6 +1,8 @@
 #pragma once
 #include "VertexAttributes.h"
 #include "VertexBuffer.h"
+#include "../Utilities/Utility.h"
+#include <type_traits>
 
 template<EVertexAttribute TAttribute>
 class SVertexAttributeContainer final
@@ -15,15 +17,15 @@ public:
 		myVertexBuffer.ResizeBuffer(aSize);
 	}
 
-	void Set(const u32 aIndex, const ValueType aValue)
+	void Set(const u32 aVertexIndex, const ValueType aValue)
 	{
-		myContainer[aIndex] = aValue;
+		myContainer[aVertexIndex] = aValue;
 		myIsDirty = true;
 	}
 
 	void Update()
 	{
-		myVertexBuffer.Bind();
+		myVertexBuffer.Bind(myVertexAttributeIndex);
 		if (!myIsDirty)
 			return;
 
@@ -33,12 +35,18 @@ public:
 
 	void Bind()
 	{
-		myVertexBuffer.Bind();
+		myVertexBuffer.Bind(myVertexAttributeIndex);
+	}
+
+	void SetVertexAttributeIndex(const u32 aVertexAttributeIndex)
+	{
+		myVertexAttributeIndex = aVertexAttributeIndex;
 	}
 
 private:
 	VertexBuffer<ValueType> myVertexBuffer;
 	std::vector<ValueType> myContainer;
+	u32 myVertexAttributeIndex;
 	bool myIsDirty = false;
 };
 
@@ -67,6 +75,9 @@ template<EVertexAttribute... TAttributes>
 VertexBufferArray<TAttributes...>::VertexBufferArray()
 {
 	glGenVertexArrays(1, &myVAO);
+
+	(std::get<SVertexAttributeContainer<TAttributes>>(myAttributeData).SetVertexAttributeIndex
+		(Utility::TupleIndex<SVertexAttributeContainer<TAttributes>, decltype(myAttributeData)>::value), ...);
 }
 
 template<EVertexAttribute... TAttributes>

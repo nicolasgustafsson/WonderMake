@@ -6,12 +6,12 @@ class VertexBuffer : NonCopyable
 {
 public:
 	VertexBuffer();
-	VertexBuffer(const std::vector<TVertexData>& Data);
+	VertexBuffer(const std::vector<TVertexData>& aData);
 
-	void ResizeBuffer(const u32 Count);
-	void SetData(const std::vector<TVertexData>& Data);
+	void ResizeBuffer(const u32 aCount);
+	void SetData(const std::vector<TVertexData>& aData);
 
-	void Bind();
+	void Bind(const u32 aIndex);
 
 private:
 	u32 myBufferHandle;
@@ -25,36 +25,36 @@ VertexBuffer<TVertexData>::VertexBuffer()
 }
 
 template <typename TVertexData>
-VertexBuffer<TVertexData>::VertexBuffer(const std::vector<TVertexData>& Data)
+VertexBuffer<TVertexData>::VertexBuffer(const std::vector<TVertexData>& aData)
 	: VertexBuffer()
 {
-	SetData(Data);
+	SetData(aData);
 }
 
 template <typename TVertexData>
-void VertexBuffer<TVertexData>::ResizeBuffer(const u32 Count)
+void VertexBuffer<TVertexData>::ResizeBuffer(const u32 aCount)
 {
-	myVertexCount = Count;
+	myVertexCount = aCount;
 	glBindBuffer(GL_ARRAY_BUFFER, myBufferHandle);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(TVertexData) * myVertexCount, nullptr, GL_STATIC_DRAW);
 }
 
 template <typename TVertexData>
-void VertexBuffer<TVertexData>::SetData(const std::vector<TVertexData>& Data)
+void VertexBuffer<TVertexData>::SetData(const std::vector<TVertexData>& aData)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, myBufferHandle);
 
-	if (myVertexCount != Data.size())
-		ResizeBuffer(Data.size());
+	if (myVertexCount != static_cast<u32>(aData.size()))
+		ResizeBuffer(static_cast<u32>(aData.size()));
 
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(TVertexData) * myVertexCount, Data.data());
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(TVertexData) * myVertexCount, aData.data());
 }
 
 template <typename TVertexData>
-void VertexBuffer<TVertexData>::Bind()
+void VertexBuffer<TVertexData>::Bind(const u32 aIndex)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, myBufferHandle);
-	glVertexAttribPointer(0, sizeof(TVertexData) / 4, GL_FLOAT, GL_FALSE, sizeof(TVertexData), (void*)0);
-	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(aIndex, sizeof(TVertexData) / 4, GL_FLOAT, GL_FALSE, sizeof(TVertexData), (void*)0);
+	glEnableVertexAttribArray(aIndex);
 }
 

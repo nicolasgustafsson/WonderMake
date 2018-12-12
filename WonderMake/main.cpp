@@ -1,7 +1,5 @@
 #include "stdafx.h"
 #include "Program/Program.h"
-#include "Graphics/VertexBufferArray.h"
-#include "Graphics/VertexAttributes.h"
 
 int main()
 {

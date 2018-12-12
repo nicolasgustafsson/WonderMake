@@ -29,8 +29,6 @@ Renderer::Renderer()
 {
 	glEnable(GL_DEBUG_OUTPUT);
 	glDebugMessageCallback(MessageCallback, 0);
-
-	mySpriteRenderObject.SetAttribute<EVertexAttribute::Position>(0, SVector2f{ 0.5, 0.0f });
 }
 
 void Renderer::SetViewportSize(const SVector2<int> WindowSize)

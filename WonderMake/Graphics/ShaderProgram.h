@@ -19,7 +19,6 @@ public:
 	{
 		Activate();
 		const auto Location = glGetUniformLocation(myProgramHandle, Name.data());
-		auto err2 = glGetError();
 
 		if constexpr (std::is_same_v<TProperty, i32>)
 			glUniform1i(Location, Property);

@@ -1,8 +1,8 @@
 #pragma once
 #include "VertexAttributes.h"
 #include "VertexBuffer.h"
-#include "../Utilities/Utility.h"
-#include <type_traits>
+
+#include "Utilities/Utility.h"
 
 template<EVertexAttribute TAttribute>
 class SVertexAttributeContainer final
@@ -77,7 +77,7 @@ VertexBufferArray<TAttributes...>::VertexBufferArray()
 	glGenVertexArrays(1, &myVAO);
 
 	(std::get<SVertexAttributeContainer<TAttributes>>(myAttributeData).SetVertexAttributeIndex
-		(Utility::TupleIndex<SVertexAttributeContainer<TAttributes>, decltype(myAttributeData)>::value), ...);
+		(Utility::TupleIndex<SVertexAttributeContainer<TAttributes>, decltype(myAttributeData)>::Index), ...);
 }
 
 template<EVertexAttribute... TAttributes>

@@ -10,7 +10,7 @@
 struct SRenderObjectInfo
 {
 	std::filesystem::path VertexShaderPath;
-	std::filesystem::path GeometryShaderPath;
+	std::filesystem::path GeometryShaderPath = "";
 	std::filesystem::path FragmentShaderPath;
 	std::filesystem::path TexturePath;
 	u32 VertexCount = 1;
@@ -71,6 +71,7 @@ RenderObject<TAttributes...>::RenderObject(const SRenderObjectInfo& aRenderObjec
 	, myGeometryType(aRenderObjectInfo.GeometryType)
 {
 	myVertexCount = aRenderObjectInfo.VertexCount;
-	myTextures.emplace_back(ResourceManager<Texture>::Get().GetResource(aRenderObjectInfo.TexturePath));
+	if (!aRenderObjectInfo.TexturePath.empty())
+		myTextures.emplace_back(ResourceManager<Texture>::Get().GetResource(aRenderObjectInfo.TexturePath));
 }
 

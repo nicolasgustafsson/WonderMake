@@ -183,6 +183,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Graphics\Renderer.cpp" />
+    <ClCompile Include="Graphics\LineRenderObject.cpp" />
     <ClCompile Include="Program\ImguiWrapper.cpp" />
     <ClCompile Include="Program\Program.cpp" />
     <ClCompile Include="Graphics\ShaderProgram.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="Graphics\VertexBuffer.h" />
     <ClInclude Include="Graphics\Shader.h" />
     <ClInclude Include="Graphics\Renderer.h" />
+    <ClInclude Include="Graphics\LineRenderObject.h" />
     <ClInclude Include="Program\ImguiWrapper.h" />
     <ClInclude Include="Program\Program.h" />
     <ClInclude Include="Graphics\ShaderProgram.h" />

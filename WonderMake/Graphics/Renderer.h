@@ -1,6 +1,7 @@
 #pragma once
 #include "RenderObject.h"
 #include "SpriteRenderObject.h"
+#include "LineRenderObject.h"
 
 class Renderer : NonCopyable
 {
@@ -14,6 +15,7 @@ public:
 private:
 
 	SpriteRenderObject mySpriteRenderObject;
+	LineRenderObject myLine;
 
 	const SColor ClearColor = SColor::CornflowerBlue;
 	float myRotation = 0.0f;

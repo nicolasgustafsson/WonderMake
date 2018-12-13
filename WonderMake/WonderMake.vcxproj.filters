@@ -18,6 +18,7 @@
     <ClCompile Include="Graphics\ShaderProgram.cpp" />
     <ClCompile Include="Graphics\Texture.cpp" />
     <ClCompile Include="Graphics\SpriteRenderObject.cpp" />
+    <ClCompile Include="Graphics\LineRenderObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Imgui\imgui.h" />
@@ -50,6 +51,7 @@
     <ClInclude Include="Graphics\VertexAttributes.h" />
     <ClInclude Include="Graphics\VertexBufferArray.h" />
     <ClInclude Include="Graphics\SpriteRenderObject.h" />
+    <ClInclude Include="Graphics\LineRenderObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

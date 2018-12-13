@@ -45,4 +45,12 @@ void Renderer::SwapFrame()
 	mySpriteRenderObject.SetAttribute<EVertexAttribute::Rotation>(0, myRotation);
 
 	mySpriteRenderObject.Render();
+
+	myLine.SetAttribute<EVertexAttribute::Position>(0, { 0.1f, 0.2f });
+	myLine.SetAttribute<EVertexAttribute::Position>(1, { 0.4f, 0.2f });
+
+	myLine.SetAttribute<EVertexAttribute::Color>(0, { 1.0f, 0.0f, 0.0f, 1.0f});
+	myLine.SetAttribute<EVertexAttribute::Color>(1, { 1.0f, 1.0f, 0.0f, 1.0f});
+
+	myLine.Render();
 }

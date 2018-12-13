@@ -14,8 +14,8 @@ void ConstructSpriteRectangle(vec2 position, vec2 scale, vec4 color, float rotat
 {    
 	Color = vertexColor[0];
 	
-	float width = (TextureSize.x) * scale.x;
-	float height = (TextureSize.y) * scale.y;
+	float width = TextureSize.x * scale.x;
+	float height = TextureSize.y * scale.y;
 	
 	mat2 rotationMatrix = mat2(cos(rotation), sin(rotation), -sin(rotation), cos(rotation));
 	vec2 rotatedScale = vec2(-width, height) * rotationMatrix;

@@ -41,5 +41,8 @@ void Renderer::SwapFrame()
 	glClearColor(ClearColor.R, ClearColor.G, ClearColor.B, ClearColor.A);
 	glClear(GL_COLOR_BUFFER_BIT);
 
+	myRotation += 0.003f;
+	mySpriteRenderObject.SetAttribute<EVertexAttribute::Rotation>(0, myRotation);
+
 	mySpriteRenderObject.Render();
 }

@@ -16,5 +16,6 @@ private:
 	SpriteRenderObject mySpriteRenderObject;
 
 	const SColor ClearColor = SColor::CornflowerBlue;
+	float myRotation = 0.0f;
 };
 

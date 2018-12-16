@@ -19,11 +19,12 @@
     <ClCompile Include="Graphics\Texture.cpp" />
     <ClCompile Include="Graphics\Material.cpp" />
     <ClCompile Include="Graphics\RenderObject.cpp" />
-    <ClCompile Include="Message\MessageRouter.cpp" />
     <ClCompile Include="Message\DispatchRouter.cpp" />
-    <ClCompile Include="Message\DataRouters.cpp" />
     <ClCompile Include="Threads\ThreadProcess.cpp" />
     <ClCompile Include="Threads\DataThreads.cpp" />
+    <ClCompile Include="Message\DispatchableBuffer.cpp" />
+    <ClCompile Include="Message\MessageSubscriber.cpp" />
+    <ClCompile Include="Message\DataRouters.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Imgui\imgui.h" />
@@ -55,13 +56,15 @@
     <ClInclude Include="Graphics\RenderObject.h" />
     <ClInclude Include="Graphics\VertexTypes.h" />
     <ClInclude Include="Message\MessageTypes.h" />
-    <ClInclude Include="Message\MessageRouter.h" />
     <ClInclude Include="Message\DispatchRouter.h" />
     <ClInclude Include="Threads\ThreadIds.h" />
     <ClInclude Include="Threads\DoubleBuffer.h" />
     <ClInclude Include="Message\DataRouters.h" />
     <ClInclude Include="Threads\ThreadProcess.h" />
     <ClInclude Include="Threads\DataThreads.h" />
+    <ClInclude Include="Message\DispatchableBuffer.h" />
+    <ClInclude Include="Message\Messages.h" />
+    <ClInclude Include="Message\MessageSubscriber.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

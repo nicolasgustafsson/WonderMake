@@ -1,40 +1,24 @@
 #pragma once
 
+#include "DispatchRouter.h"
+
 #include "Threads/ThreadIds.h"
 
 #include "Utilities/Singleton.h"
-
-#include <memory>
-#include <vector>
-
-class Dispatchable;
-class DispatchRouter;
-class Task;
 
 class DataRouters final
 	: public Singleton<DataRouters>
 {
 public:
-	DataRouters();
+	DataRouters() = default;
 
-	DispatchRouter& GetRouter(const EThreadId Process) const;
-
-	template<typename T>
-	void Dispatch(const T& Message);
-
-	void Dispatch(const EThreadId Process, Task&& Job);
+	inline DispatchRouter& GetRouter(const EThreadId aProcess);
 
 private:
-	static void Dispatch(std::unique_ptr<Dispatchable>&& Message, DispatchRouter& Router);
-
-	std::vector<std::shared_ptr<DispatchRouter>> myRouters;
+	DispatchRouter myRouters[ThreadCount];
 };
 
-template<typename T>
-void DataRouters::Dispatch(const T& Message)
+DispatchRouter& DataRouters::GetRouter(const EThreadId aProcess)
 {
-	for (const auto& router : myRouters)
-	{
-		Dispatch(std::make_unique<T>(Message), *router);
-	}
+	return myRouters[static_cast<u32>(aProcess)];
 }

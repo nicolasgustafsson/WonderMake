@@ -15,8 +15,8 @@ public:
 	}
 
 protected:
-	constexpr Dispatchable(const size_t TypeHash)
-		: myTypeHash(TypeHash)
+	constexpr Dispatchable(const size_t aTypeHash)
+		: myTypeHash(aTypeHash)
 	{}
 
 private:
@@ -43,15 +43,15 @@ class Task final
 	: public Message<Task>
 {
 public:
-	Task(const Closure Function)
-		: myFunction(std::move(Function))
+	Task(const Closure aClosure)
+		: myClosure(std::move(aClosure))
 	{}
 
 	void Run() const
 	{
-		myFunction();
+		myClosure();
 	}
 
 private:
-	const Closure myFunction;
+	const Closure myClosure;
 };

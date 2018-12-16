@@ -182,12 +182,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Message\DataRouters.cpp" />
+    <ClCompile Include="Message\DispatchableBuffer.cpp" />
     <ClCompile Include="Threads\DataThreads.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
     <ClCompile Include="Graphics\Material.cpp" />
-    <ClCompile Include="Message\DataRouters.cpp" />
     <ClCompile Include="Message\DispatchRouter.cpp" />
-    <ClCompile Include="Message\MessageRouter.cpp" />
+    <ClCompile Include="Message\MessageSubscriber.cpp" />
     <ClCompile Include="Program\ImguiWrapper.cpp" />
     <ClCompile Include="Program\Program.cpp" />
     <ClCompile Include="Graphics\ShaderProgram.cpp" />
@@ -207,6 +208,8 @@
     <ClCompile Include="Program\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Message\DispatchableBuffer.h" />
+    <ClInclude Include="Message\Messages.h" />
     <ClInclude Include="Threads\DataThreads.h" />
     <ClInclude Include="Graphics\VertexBuffer.h" />
     <ClInclude Include="Graphics\Shader.h" />
@@ -215,7 +218,7 @@
     <ClInclude Include="Message\DataRouters.h" />
     <ClInclude Include="Message\DispatchRouter.h" />
     <ClInclude Include="Message\MessageTypes.h" />
-    <ClInclude Include="Message\MessageRouter.h" />
+    <ClInclude Include="Message\MessageSubscriber.h" />
     <ClInclude Include="Threads\DoubleBuffer.h" />
     <ClInclude Include="Threads\ThreadIds.h" />
     <ClInclude Include="Program\ImguiWrapper.h" />

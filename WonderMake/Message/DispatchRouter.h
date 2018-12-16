@@ -1,19 +1,14 @@
 #pragma once
 
-#include "MessageTypes.h"
-
-#include "Threads/DoubleBuffer.h"
-
 #include "Utilities/RestrictTypes.h"
 
 #include <functional>
-#include <memory>
 #include <mutex>
 #include <unordered_map>
-#include <utility>
 #include <vector>
 
-class MessageRouter;
+class Dispatchable;
+class MessageSubscriber;
 
 class DispatchRouter final
 	: private NonCopyable
@@ -21,17 +16,28 @@ class DispatchRouter final
 public:
 	DispatchRouter() = default;
 
-	void Dispatch(std::unique_ptr<Dispatchable>&& DispatchedMessage);
-	void FlushMessagesAndRunTasks();
+	void RouteDispatchable(const Dispatchable& aDispatchedMessage);
+	void CommitChanges();
 
-	void SubscribeToType(const size_t TypeHash, const MessageRouter& Subscriber, std::function<void(const Dispatchable&)>&& Callback);
-	void UnsubscribeToType(const size_t TypeHash, const MessageRouter& Subscriber);
+	void SubscribeToType(const size_t aTypeHash, const MessageSubscriber& aSubscriber, std::function<void(const Dispatchable&)>&& aCallback);
+	void UnsubscribeToType(const size_t aTypeHash, const MessageSubscriber& aSubscriber);
 
 private:
-	void RunTask(const Task& Job);
-	void RouteMessage(const Dispatchable& Message);
+	struct SSubscription
+	{
+		const MessageSubscriber* mySubscriber;
+		size_t myTypeHash;
+	};
 
-	DoubleBuffer<std::unique_ptr<Dispatchable>> myDispatchBuffer;
-	std::unordered_map<size_t, std::vector<std::pair<const MessageRouter*, std::function<void(const Dispatchable&)>>>> myRouters;
+	struct SSubscriptionOrder
+	{
+		std::function<void(const Dispatchable&)> myCallback;
+		SSubscription mySubscription;
+	};
+
+	std::vector<SSubscriptionOrder> myNewSubscriptions;
+	std::vector<SSubscription> myNewUnsubscriptions;
+
+	std::unordered_map<size_t, std::vector<SSubscriptionOrder>> mySubscribers;
 	std::mutex myLock;
 };

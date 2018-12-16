@@ -17,6 +17,7 @@ public:
 	template<typename TProperty>
 	void SetProperty(std::string_view Name, TProperty Property)
 	{
+		Activate();
 		const auto Location = glGetUniformLocation(myProgramHandle, Name.data());
 
 		if constexpr (std::is_same_v<TProperty, i32>)
@@ -29,6 +30,8 @@ public:
 			glUniform1d(Location, Property);
 		else if constexpr (std::is_same_v<TProperty, SVector2f>)
 			glUniform2f(Location, Property.X, Property.Y);
+		else if constexpr (std::is_same_v<TProperty, SVector2i>)
+			glUniform2i(Location, Property.X, Property.Y);
 		else if constexpr (std::is_same_v<TProperty, SVector3f>)
 			glUniform3f(Location, Property.X, Property.Y, Property.Z);
 		else if constexpr (std::is_same_v<TProperty, SVector4f>)

@@ -1,53 +1,77 @@
 #pragma once
 #include "VertexTypes.h"
 #include "ShaderProgram.h"
-#include "Material.h"
-#include "VertexBuffer.h"
 #include "Texture.h"
 #include "../Resources/ResourceManager.h"
+#include "VertexAttributes.h"
+#include "VertexBufferArray.h"
 
 //everything needed to create a renderobject
-template<typename VertexType = SGenericVertex, u32 VertexCount = 1>
 struct SRenderObjectInfo
 {
 	std::filesystem::path VertexShaderPath;
-	std::filesystem::path GeometryShaderPath;
-	std::filesystem::path FragmentShaderPath; //will make MaterialPath later
-	std::filesystem::path TexturePath; //will make MaterialPath later
-
-	std::array<VertexType, VertexCount> VertexData;
+	std::filesystem::path GeometryShaderPath = "";
+	std::filesystem::path FragmentShaderPath;
+	std::filesystem::path TexturePath;
+	u32 VertexCount = 1;
+	u32 GeometryType = GL_POINTS;
 };
 
-template<typename VertexType = SGenericVertex, u32 VertexCount = 1>
+template<EVertexAttribute... TAttributes>
 class RenderObject
 {
 public:
-	RenderObject(const SRenderObjectInfo<VertexType, VertexCount>& RenderObjectInfo);
+	RenderObject(const SRenderObjectInfo& aRenderObjectInfo);
 
 	void Render();
 
-private:
-	Material myMaterial;
+	void BindTextures();
+
+	template<EVertexAttribute TAttribute>
+	void SetAttribute(const u32 aIndex, decltype(GetValueFromAttribute<TAttribute>()) aAttribute);
+
+protected:
 	ShaderProgram myShaderProgram;
-	VertexBuffer<VertexType, VertexCount> myVertexBuffer;
+	VertexBufferArray<TAttributes...> myVertexBufferArray;
+	std::vector<Texture*> myTextures;
+	u32 myGeometryType;
+	u32 myVertexCount;
 };
 
-template<typename VertexType /*= SGenericVertex*/, u32 VertexCount /*= 1*/>
-void RenderObject<VertexType, VertexCount>::Render()
+template<EVertexAttribute... TAttributes>
+template<EVertexAttribute TAttribute>
+void RenderObject<TAttributes...>::SetAttribute(const u32 aIndex, decltype(GetValueFromAttribute<TAttribute>()) aAttribute)
 {
-	myVertexBuffer.Bind();
-	myShaderProgram.Activate();
-	myMaterial.BindTextures();
-
-	glDrawArrays(GL_POINTS, 0, 1);
+	myVertexBufferArray.Set<TAttribute>(aIndex, aAttribute);
 }
 
-template<typename VertexType /*= SGenericVertex*/, u32 VertexCount /*= 1*/>
-RenderObject<VertexType, VertexCount>::RenderObject(const SRenderObjectInfo<VertexType, VertexCount>& RenderObjectInfo)
-	: myVertexBuffer(RenderObjectInfo.VertexData)
-	, myMaterial({}, {ResourceManager<Texture>::Get().GetResource(RenderObjectInfo.TexturePath)})
-	, myShaderProgram(RenderObjectInfo.VertexShaderPath, RenderObjectInfo.FragmentShaderPath, RenderObjectInfo.GeometryShaderPath)
+template<EVertexAttribute... TAttributes>
+void RenderObject<TAttributes...>::BindTextures()
 {
+	for (auto[i, texture] : Utility::Enumerate(myTextures))
+	{
+		if (texture)
+			texture->Bind(i);
+	}
+}
 
+template<EVertexAttribute... TAttributes>
+void RenderObject<TAttributes...>::Render()
+{
+	myShaderProgram.Activate();
+	myVertexBufferArray.Render();
+
+	glDrawArrays(myGeometryType, 0, myVertexCount);
+}
+
+template<EVertexAttribute... TAttributes>
+RenderObject<TAttributes...>::RenderObject(const SRenderObjectInfo& aRenderObjectInfo)
+	: myVertexBufferArray(aRenderObjectInfo.VertexCount)
+	, myShaderProgram(aRenderObjectInfo.VertexShaderPath, aRenderObjectInfo.FragmentShaderPath, aRenderObjectInfo.GeometryShaderPath)
+	, myGeometryType(aRenderObjectInfo.GeometryType)
+{
+	myVertexCount = aRenderObjectInfo.VertexCount;
+	if (!aRenderObjectInfo.TexturePath.empty())
+		myTextures.emplace_back(ResourceManager<Texture>::Get().GetResource(aRenderObjectInfo.TexturePath));
 }
 

@@ -1,5 +1,7 @@
 #pragma once
 #include "RenderObject.h"
+#include "SpriteRenderObject.h"
+#include "LineRenderObject.h"
 
 class Renderer : NonCopyable
 {
@@ -11,11 +13,11 @@ public:
 	void SwapFrame();
 
 private:
-	u32 myVAO;
-	u32 myEBO;
 
-	RenderObject<> myRenderObject;
+	SpriteRenderObject mySpriteRenderObject;
+	LineRenderObject myLine;
 
 	const SColor ClearColor = SColor::CornflowerBlue;
+	float myRotation = 0.0f;
 };
 

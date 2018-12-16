@@ -1,47 +1,60 @@
 #pragma once
 #include <glad/glad.h>
 
-template <typename TVertexData, u32 Count = 1>
+template <typename TVertexData>
 class VertexBuffer : NonCopyable
 {
 public:
 	VertexBuffer();
-	VertexBuffer(const std::array<TVertexData, Count>& Data);
+	VertexBuffer(const std::vector<TVertexData>& aData);
 
-	void SetData(const std::array<TVertexData, Count>& Data);
+	void ResizeBuffer(const u32 aCount);
+	void SetData(const std::vector<TVertexData>& aData);
 
-	void Bind();
+	void Bind(const u32 aIndex);
 
 private:
 	u32 myBufferHandle;
+	u32 myVertexCount = 0;
 };
 
-template <typename TVertexData, u32 Count>
-VertexBuffer<TVertexData, Count>::VertexBuffer(const std::array<TVertexData, Count>& Data)
-	: VertexBuffer()
-{
-	SetData(Data);
-}
-
-template <typename TVertexData, u32 Count>
-void VertexBuffer<TVertexData, Count>::Bind()
-{
-	glBindBuffer(GL_ARRAY_BUFFER, myBufferHandle);
-	glVertexAttribPointer(0, Count, GL_FLOAT, GL_FALSE, sizeof(TVertexData), (void*)0);
-	glEnableVertexAttribArray(0);
-}
-
-template <typename TVertexData, u32 Count>
-void VertexBuffer<TVertexData, Count>::SetData(const std::array<TVertexData, Count>& Data)
-{
-	glBindBuffer(GL_ARRAY_BUFFER, myBufferHandle);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(TVertexData) * Count, Data.data());
-}
-
-template <typename TVertexData, u32 Count>
-VertexBuffer<TVertexData, Count>::VertexBuffer()
+template <typename TVertexData>
+VertexBuffer<TVertexData>::VertexBuffer()
 {
 	glGenBuffers(1, &myBufferHandle);
-	glBindBuffer(GL_ARRAY_BUFFER, myBufferHandle);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(TVertexData) * Count, nullptr, GL_STREAM_DRAW);
 }
+
+template <typename TVertexData>
+VertexBuffer<TVertexData>::VertexBuffer(const std::vector<TVertexData>& aData)
+	: VertexBuffer()
+{
+	SetData(aData);
+}
+
+template <typename TVertexData>
+void VertexBuffer<TVertexData>::ResizeBuffer(const u32 aCount)
+{
+	myVertexCount = aCount;
+	glBindBuffer(GL_ARRAY_BUFFER, myBufferHandle);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(TVertexData) * myVertexCount, nullptr, GL_STATIC_DRAW);
+}
+
+template <typename TVertexData>
+void VertexBuffer<TVertexData>::SetData(const std::vector<TVertexData>& aData)
+{
+	glBindBuffer(GL_ARRAY_BUFFER, myBufferHandle);
+
+	if (myVertexCount != static_cast<u32>(aData.size()))
+		ResizeBuffer(static_cast<u32>(aData.size()));
+
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(TVertexData) * myVertexCount, aData.data());
+}
+
+template <typename TVertexData>
+void VertexBuffer<TVertexData>::Bind(const u32 aIndex)
+{
+	glBindBuffer(GL_ARRAY_BUFFER, myBufferHandle);
+	glVertexAttribPointer(aIndex, sizeof(TVertexData) / 4, GL_FLOAT, GL_FALSE, sizeof(TVertexData), (void*)0);
+	glEnableVertexAttribArray(aIndex);
+}
+

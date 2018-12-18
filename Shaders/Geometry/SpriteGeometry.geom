@@ -12,6 +12,8 @@ uniform vec2 TextureSize;
 
 void ConstructSpriteRectangle(vec2 position, vec2 scale, vec4 color, float rotation)
 {    
+	gl_Position.zw = vec2(0.0, 1.0);
+	
 	Color = vertexColor[0];
 	
 	float width = TextureSize.x * scale.x;

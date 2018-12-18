@@ -29,6 +29,10 @@ Renderer::Renderer()
 {
 	glEnable(GL_DEBUG_OUTPUT);
 	glDebugMessageCallback(MessageCallback, 0);
+
+	SLogMessage message;
+	message.LogText = "Successfully setup renderer!";
+	WmDispatchMessage(message);
 }
 
 void Renderer::SetViewportSize(const SVector2<int> WindowSize)

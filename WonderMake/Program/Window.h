@@ -13,7 +13,6 @@ public:
 	void Update();
 
 	bool IsValid() const;
-	bool ShouldClose() const;
 
 	GLFWwindow* myGlfwWindow = nullptr;
 };

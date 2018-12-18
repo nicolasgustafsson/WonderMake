@@ -15,9 +15,10 @@ class ThreadProcess
 	: private NonCopyable
 {
 public:
-	ThreadProcess(const EThreadId aThreadId, const bool aCreateThread = true);
+	ThreadProcess(const EThreadId aThreadId);
 	virtual ~ThreadProcess();
 
+	void Start(const bool aCreateThread = true);
 	void Stop();
 
 protected:

@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "Program/Program.h"
+#include "Program/Engine.h"
 
 int main()
 {
-	Program Program;
-	Program.Start();
+	Engine::Start();
+
 	return 0;
 }

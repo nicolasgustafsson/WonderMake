@@ -6,11 +6,20 @@
 #include "Message/DispatchRouter.h"
 #include "Message/MessageTypes.h"
 
-ThreadProcess::ThreadProcess(const EThreadId aThreadId, const bool aCreateThread)
+ThreadProcess::ThreadProcess(const EThreadId aThreadId)
 	: mySubscriber(aThreadId,
 		BindHelper(&ThreadProcess::OnTask, this))
 	, myRun(true)
 	, myThreadId(aThreadId)
+{
+}
+
+ThreadProcess::~ThreadProcess()
+{
+	Stop();
+}
+
+void ThreadProcess::Start(const bool aCreateThread)
 {
 	if (aCreateThread)
 	{
@@ -20,11 +29,6 @@ ThreadProcess::ThreadProcess(const EThreadId aThreadId, const bool aCreateThread
 	{
 		Run();
 	}
-}
-
-ThreadProcess::~ThreadProcess()
-{
-	Stop();
 }
 
 void ThreadProcess::Stop()

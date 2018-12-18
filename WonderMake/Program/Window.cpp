@@ -36,14 +36,14 @@ void Window::Update()
 
 	glfwSwapBuffers(myGlfwWindow);
 	glfwPollEvents();
+
+	if (glfwWindowShouldClose(myGlfwWindow))
+	{
+		WmDispatchTask([]() {quick_exit(0);}, EThreadId::Logic);
+	}
 }
 
 bool Window::IsValid() const
 {
 	return myGlfwWindow != nullptr;
-}
-
-bool Window::ShouldClose() const
-{
-	return (!myGlfwWindow || glfwWindowShouldClose(myGlfwWindow));
 }

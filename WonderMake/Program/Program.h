@@ -2,25 +2,27 @@
 #include "Graphics/Renderer.h"
 #include "Window.h"
 #include "ImguiWrapper.h"
+#include "../Logging/ConsoleLogger.h"
 
 class Program
 {
 public:
 	Program();
 
-	void Start();
+	void Update();
 
 private:
 
-	void Update();
 	void SetupCallbacks();
 	void OnWindowSizeChanged([[maybe_unused]]GLFWwindow* Window, i32 X, i32 Y);
 
-	//-------KEEP THIS IN ORDER------
+	//-------KEEP THIS IN ORDER-------
+	ConsoleLogger myLogger;
 	Window myWindow;
 	Renderer myRenderer;
 	ImguiWrapper myImguiWrapper;
-	//-------KEEP THIS IN ORDER------
+	//-------KEEP THIS IN ORDER-------
+
 
 	static constexpr SVector2<i32> WindowSize = {1600, 900};
 };

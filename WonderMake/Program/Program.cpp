@@ -7,19 +7,12 @@
 #include "Imgui/imgui_impl_opengl3.h"
 #include "Graphics/Shader.h"
 #include <iostream>
+#include "../Threads/DataThreads.h"
 
 Program::Program()
 	:myWindow(WindowSize), myRenderer(), myImguiWrapper(myWindow)
 {
 	SetupCallbacks();
-}
-
-void Program::Start()
-{
-	while (!myWindow.ShouldClose())
-	{
-		Update();
-	}
 }
 
 void Program::Update()

@@ -66,6 +66,7 @@
     <ClInclude Include="Message\DispatchableBuffer.h" />
     <ClInclude Include="Message\Messages.h" />
     <ClInclude Include="Message\MessageSubscriber.h" />
+    <ClInclude Include="Graphics\VertexAttributes.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

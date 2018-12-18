@@ -207,6 +207,7 @@
     <ClCompile Include="Program\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Graphics\VertexAttributes.h" />
     <ClInclude Include="Message\DispatchableBuffer.h" />
     <ClInclude Include="Message\Messages.h" />
     <ClInclude Include="Threads\DataThreads.h" />

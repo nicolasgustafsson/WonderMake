@@ -24,7 +24,7 @@ public:
 	inline size_t GetTypeHash() const;
 
 	virtual void UpdateList() = 0;
-	virtual const std::vector<const Dispatchable*>& GetList() = 0;
+	virtual const std::vector<const Dispatchable*>& GetList() const = 0;
 
 	static bool UpdateBuffers(const EThreadId aThreadId);
 	static const std::unordered_set<DispatchableBufferBase*>& GetUpdatedBuffers(const EThreadId aThreadId);
@@ -59,7 +59,7 @@ public:
 	static void Dispatch(TDispatchType&& aDispatchable, const EThreadId aThreadId);
 
 	virtual void UpdateList() override;
-	virtual const std::vector<const Dispatchable*>& GetList() override;
+	virtual const std::vector<const Dispatchable*>& GetList() const override;
 
 private:
 	static DispatchableBuffer<TDispatchType> Instance[ThreadCount];
@@ -115,11 +115,6 @@ void DispatchableBuffer<TDispatchType>::UpdateList()
 	myDispatchableList.clear();
 	myDoubleBuffer.ClearContent([](auto& aList) { aList.clear(); });
 	myDoubleBuffer.SwapContent();
-}
-
-template<typename TDispatchType>
-const std::vector<const Dispatchable*>& DispatchableBuffer<TDispatchType>::GetList()
-{
 	const auto& list = myDoubleBuffer.ReadContent();
 	if (myDispatchableList.capacity() < list.size())
 	{
@@ -130,5 +125,10 @@ const std::vector<const Dispatchable*>& DispatchableBuffer<TDispatchType>::GetLi
 	{
 		myDispatchableList[i] = &dispatchable;
 	}
+}
+
+template<typename TDispatchType>
+const std::vector<const Dispatchable*>& DispatchableBuffer<TDispatchType>::GetList() const
+{
 	return myDispatchableList;
 }

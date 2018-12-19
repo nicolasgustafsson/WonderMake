@@ -1,30 +1,30 @@
 #include "stdafx.h"
 #include "DispatchableBuffer.h"
 
-DoubleBuffer<std::unordered_set<DispatchableBufferBase*>> DispatchableBufferBase::UpdatedBuffers[ThreadCount];
+DoubleBuffer<std::unordered_set<DispatchableBufferBase*>> DispatchableBufferBase::UpdatedBuffers[RoutineCount];
 
 DispatchableBufferBase::DispatchableBufferBase(const size_t aTypeHash)
 	: myTypeHash(aTypeHash)
 {}
 
-bool DispatchableBufferBase::UpdateBuffers(const EThreadId aThreadId)
+bool DispatchableBufferBase::UpdateBuffers(const ERoutineId aRoutineId)
 {
-	auto& buffers = UpdatedBuffers[static_cast<u32>(aThreadId)];
+	auto& buffers = UpdatedBuffers[static_cast<u32>(aRoutineId)];
 	buffers.ClearContent([](auto& aSet) { aSet.clear(); });
 	return buffers.SwapContent();
 }
 
-const std::unordered_set<DispatchableBufferBase*>& DispatchableBufferBase::GetUpdatedBuffers(const EThreadId aThreadId)
+const std::unordered_set<DispatchableBufferBase*>& DispatchableBufferBase::GetUpdatedBuffers(const ERoutineId aRoutineId)
 {
-	return UpdatedBuffers[static_cast<u32>(aThreadId)].ReadContent();
+	return UpdatedBuffers[static_cast<u32>(aRoutineId)].ReadContent();
 }
 
-void DispatchableBufferBase::BufferUpdated(const EThreadId aThreadId)
+void DispatchableBufferBase::BufferUpdated(const ERoutineId aRoutineId)
 {
 	if (myIsUpdated)
 	{
 		return;
 	}
-	UpdatedBuffers[static_cast<u32>(aThreadId)].WriteContent([this](auto& aSet) { aSet.insert(this); });
+	UpdatedBuffers[static_cast<u32>(aRoutineId)].WriteContent([this](auto& aSet) { aSet.insert(this); });
 	myIsUpdated = true;
 }

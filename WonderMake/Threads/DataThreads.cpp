@@ -21,7 +21,7 @@ void DataThreads::Start(Program& aProgramReference)
 	myThreads.reserve(myRoutines.size() - 1);
 	for (size_t i = 1; i < myThreads.size(); ++i)
 	{
-		myThreads.emplace_back(std::thread(&RunRoutine, myRoutines[i]));
+		myThreads.emplace_back(&RunRoutine, myRoutines[i]);
 	}
 	RunRoutine(myRoutines[static_cast<size_t>(ERoutineId::Logic)]);
 }

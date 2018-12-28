@@ -10,6 +10,7 @@
 #include "Utilities/Utility.h"
 
 #include <atomic>
+#include <mutex>
 #include <unordered_set>
 #include <vector>
 
@@ -23,21 +24,35 @@ public:
 	
 	inline size_t GetTypeHash() const;
 
-	virtual void UpdateList() = 0;
-	virtual const std::vector<const Dispatchable*>& GetList() const = 0;
-
 	static bool UpdateBuffers(const ERoutineId aRoutineId);
-	static const std::unordered_set<DispatchableBufferBase*>& GetUpdatedBuffers(const ERoutineId aRoutineId);
+	static void GetDispatchableList(const ERoutineId aRoutineId, std::vector<const Dispatchable*>& aOutList);
 
 protected:
 	DispatchableBufferBase(const size_t aTypeHash);
 
-	void BufferUpdated(const ERoutineId aRoutineId);
+	void AddDispatchable(const ERoutineId aRoutineId, const size_t aIndex);
+
+	virtual const Dispatchable& GetDispatchableAt(const size_t aIndex) const = 0;
+	virtual void Clear() = 0;
+	virtual void Swap() = 0;
 
 	std::atomic_bool myIsUpdated = false;
 
 private:
-	static DoubleBuffer<std::unordered_set<DispatchableBufferBase*>> UpdatedBuffers[RoutineCount];
+	struct DispatchableLocation
+	{
+		DispatchableBufferBase* myBuffer = nullptr;
+		size_t myIndex = 0;
+	};
+
+	struct DispatchableContainer
+	{
+		std::unordered_set<DispatchableBufferBase*> myUpdatedBuffers;
+		std::vector<DispatchableLocation> myMessages;
+	};
+
+	static DoubleBuffer<DispatchableContainer> UpdatedBuffers[RoutineCount];
+	static std::mutex myLock;
 	const size_t myTypeHash;
 };
 
@@ -58,13 +73,13 @@ public:
 	static void Dispatch(const TDispatchType& aDispatchable, const ERoutineId aRoutineId);
 	static void Dispatch(TDispatchType&& aDispatchable, const ERoutineId aRoutineId);
 
-	virtual void UpdateList() override;
-	virtual const std::vector<const Dispatchable*>& GetList() const override;
-
 private:
+	virtual const Dispatchable& GetDispatchableAt(const size_t aIndex) const override;
+	virtual void Clear() override;
+	virtual void Swap() override;
+
 	static DispatchableBuffer<TDispatchType> Instance[RoutineCount];
 	DoubleBuffer<std::vector<TDispatchType>> myDoubleBuffer;
-	std::vector<const Dispatchable*> myDispatchableList;
 };
 
 template<typename TDispatchType>
@@ -97,38 +112,41 @@ void DispatchableBuffer<TDispatchType>::Dispatch(TDispatchType&& aDispatchable)
 template<typename TDispatchType>
 void DispatchableBuffer<TDispatchType>::Dispatch(const TDispatchType& aDispatchable, const ERoutineId aRoutineId)
 {
-	Instance[static_cast<u32>(aRoutineId)].myDoubleBuffer.WriteContent([&aDispatchable](auto& aList) { aList.emplace_back(aDispatchable); });
-	Instance[static_cast<u32>(aRoutineId)].BufferUpdated(aRoutineId);
+	size_t index = 0;
+	Instance[static_cast<u32>(aRoutineId)].myDoubleBuffer.WriteContent([&aDispatchable, &index](auto& aList)
+	{
+		index = aList.size();
+		aList.emplace_back(aDispatchable);
+	});
+	Instance[static_cast<u32>(aRoutineId)].AddDispatchable(aRoutineId, index);
 }
 
 template<typename TDispatchType>
 void DispatchableBuffer<TDispatchType>::Dispatch(TDispatchType&& aDispatchable, const ERoutineId aRoutineId)
 {
-	Instance[static_cast<u32>(aRoutineId)].myDoubleBuffer.WriteContent([&aDispatchable](auto& aList) { aList.emplace_back(std::move(aDispatchable)); });
-	Instance[static_cast<u32>(aRoutineId)].BufferUpdated(aRoutineId);
+	size_t index = 0;
+	Instance[static_cast<u32>(aRoutineId)].myDoubleBuffer.WriteContent([&aDispatchable, &index](auto& aList)
+	{
+		index = aList.size();
+		aList.emplace_back(std::move(aDispatchable));
+	});
+	Instance[static_cast<u32>(aRoutineId)].AddDispatchable(aRoutineId, index);
 }
 
 template<typename TDispatchType>
-void DispatchableBuffer<TDispatchType>::UpdateList()
+const Dispatchable& DispatchableBuffer<TDispatchType>::GetDispatchableAt(const size_t aIndex) const
 {
-	myIsUpdated = false;
-	myDispatchableList.clear();
+	return myDoubleBuffer.ReadContent()[aIndex];
+}
+
+template<typename TDispatchType>
+void DispatchableBuffer<TDispatchType>::Clear()
+{
 	myDoubleBuffer.ClearContent([](auto& aList) { aList.clear(); });
-	myDoubleBuffer.SwapContent();
-	const auto& list = myDoubleBuffer.ReadContent();
-	if (myDispatchableList.capacity() < list.size())
-	{
-		myDispatchableList.reserve(list.size());
-	}
-	myDispatchableList.resize(list.size());
-	for (auto[i, dispatchable] : Utility::Enumerate(list))
-	{
-		myDispatchableList[i] = &dispatchable;
-	}
 }
 
 template<typename TDispatchType>
-const std::vector<const Dispatchable*>& DispatchableBuffer<TDispatchType>::GetList() const
+void DispatchableBuffer<TDispatchType>::Swap()
 {
-	return myDispatchableList;
+	myDoubleBuffer.SwapContent();
 }

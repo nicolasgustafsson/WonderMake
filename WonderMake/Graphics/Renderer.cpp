@@ -21,8 +21,9 @@ MessageCallback([[maybe_unused]] GLenum source,
 }
 
 Renderer::Renderer()
-	: mySpriteRenderObject(
-		{ std::filesystem::current_path() / "Textures/tile.png" })
+	:	mySpriteRenderObject({ std::filesystem::current_path() / "Textures/tile.png" })
+	,	myRenderTarget({ 1600, 900 })
+	,	myCopyPass(std::filesystem::current_path() / "Shaders/Fragment/Copy.frag")
 {
 	glEnable(GL_DEBUG_OUTPUT);
 	glDebugMessageCallback(MessageCallback, 0);
@@ -35,6 +36,9 @@ void Renderer::SetViewportSize(const SVector2<int> WindowSize)
 
 void Renderer::SwapFrame()
 {
+	//first pass
+	myRenderTarget.BindAsTarget();
+
 	glClearColor(ClearColor.R, ClearColor.G, ClearColor.B, ClearColor.A);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -50,4 +54,13 @@ void Renderer::SwapFrame()
 	myLine.SetAttribute<EVertexAttribute::Color>(1, { 1.0f, 1.0f, 0.0f, 1.0f});
 
 	myLine.Render();
+
+	//second pass
+	myRenderTarget.BindAsTexture();
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	myCopyPass.Render();
 }

@@ -2,6 +2,8 @@
 #include "RenderObject.h"
 #include "SpriteRenderObject.h"
 #include "LineRenderObject.h"
+#include "RenderTarget.h"
+#include "ScreenPassRenderObject.h"
 
 class Renderer : NonCopyable
 {
@@ -16,6 +18,8 @@ private:
 
 	SpriteRenderObject mySpriteRenderObject;
 	LineRenderObject myLine;
+	RenderTarget myRenderTarget;
+	ScreenPassRenderObject myCopyPass;
 
 	const SColor ClearColor = SColor::CornflowerBlue;
 	float myRotation = 0.0f;

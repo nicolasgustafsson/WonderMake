@@ -6,7 +6,8 @@ enum class EVertexAttribute
 	Position,
 	Color,
 	Scale,
-	Rotation
+	Rotation,
+	TexCoord
 };
 
 template<EVertexAttribute TVertexAttribute>
@@ -17,6 +18,8 @@ static auto constexpr GetValueFromAttribute()
 	else if constexpr (TVertexAttribute == EVertexAttribute::Position)
 		return SVector2f();
 	else if constexpr (TVertexAttribute == EVertexAttribute::Scale)
+		return SVector2f();
+	else if constexpr (TVertexAttribute == EVertexAttribute::TexCoord)
 		return SVector2f();
 	else if constexpr (TVertexAttribute == EVertexAttribute::Rotation)
 		return 0.f;

@@ -4,7 +4,7 @@
 
 ScreenPassRenderObject::ScreenPassRenderObject(const std::filesystem::path& aFragmentShader) :
 	RenderObject(SRenderObjectInfo
-		{ std::filesystem::current_path() / "Shaders/Vertex/ScreenPassVertex.vert"
+		{ std::filesystem::current_path() / "Shaders/Vertex/PassVertex.vert"
 		,	"" //geometry shader
 		,	aFragmentShader
 		,	"" //texture -- we have to bind the one we want to use manually for now

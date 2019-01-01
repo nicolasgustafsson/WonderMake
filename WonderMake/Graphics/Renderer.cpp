@@ -23,7 +23,7 @@ MessageCallback([[maybe_unused]] GLenum source,
 Renderer::Renderer()
 	:	mySpriteRenderObject({ std::filesystem::current_path() / "Textures/tile.png" })
 	,	myRenderTarget({ 1600, 900 })
-	,	myCopyPass(std::filesystem::current_path() / "Shaders/Fragment/ScreenCopy.frag")
+	,	myCopyPass(std::filesystem::current_path() / "Shaders/Fragment/Copy.frag")
 {
 	glEnable(GL_DEBUG_OUTPUT);
 	glDebugMessageCallback(MessageCallback, 0);

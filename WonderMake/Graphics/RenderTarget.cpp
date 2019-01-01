@@ -39,6 +39,8 @@ RenderTarget::RenderTarget(const SRenderTargetSettings& aSettings)
 RenderTarget::~RenderTarget()
 {
 	glDeleteFramebuffers(1, &myFrameBufferObject);
+	glDeleteTextures(1, &myRenderTexture);
+	glDeleteRenderbuffers(1, &myDepthStencilRBO);
 }
 
 void RenderTarget::BindAsTarget()

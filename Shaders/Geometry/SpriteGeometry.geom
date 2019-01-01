@@ -5,7 +5,7 @@ in vec2 vertexScale[];
 in vec4 vertexColor[];
 in float vertexRotation[];
 
-out vec2 TexCoords;
+out vec2 TexCoord;
 out vec4 Color;
 uniform vec2 ScreenSize = vec2(1600.0, 900.0);
 uniform vec2 TextureSize;
@@ -24,26 +24,26 @@ void ConstructSpriteRectangle(vec2 position, vec2 scale, vec4 color, float rotat
 	
     gl_Position.xy = position + rotatedScale / ScreenSize;    // 1:bottom-left
 	
-	TexCoords = vec2(0.0, 0.0);
+	TexCoord = vec2(0.0, 0.0);
     EmitVertex(); 
 	
 	rotatedScale = vec2(width, height) * rotationMatrix;
 	
     gl_Position.xy = position + rotatedScale / ScreenSize;    // 2:bottom-right
 
-	TexCoords = vec2(1.0, 0.0);
+	TexCoord = vec2(1.0, 0.0);
     EmitVertex();
 	
 	rotatedScale = vec2(-width, -height) * rotationMatrix;
     gl_Position.xy = position + rotatedScale / ScreenSize;     // 3:top-left
 	
-	TexCoords = vec2(0.0, 1.0);
+	TexCoord = vec2(0.0, 1.0);
     EmitVertex();
 	
 	rotatedScale = vec2(width, -height) * rotationMatrix;
     gl_Position.xy = position + rotatedScale / ScreenSize;     // 4:top-right
 	
-	TexCoords = vec2(1.0, 1.0);
+	TexCoord = vec2(1.0, 1.0);
     EmitVertex();
 	
     EndPrimitive();

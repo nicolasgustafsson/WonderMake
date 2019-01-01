@@ -17,8 +17,9 @@ public:
 	void BindAsTarget();
 	void BindAsTexture();
 
-	u32 myFrameBufferObject;
-	u32 myRenderTexture;
-	u32 myDepthStencilRBO;
+private:
+	u32 myFrameBufferObject = std::numeric_limits<u32>::max();
+	u32 myRenderTexture = std::numeric_limits<u32>::max();
+	u32 myDepthStencilRBO = std::numeric_limits<u32>::max();
 };
 

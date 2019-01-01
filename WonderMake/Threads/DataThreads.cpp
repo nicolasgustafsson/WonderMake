@@ -5,7 +5,7 @@
 #include "Threads/RoutineIds.h"
 #include "Threads/RoutineMain.h"
 
-void RunRoutine(std::shared_ptr<Routine> aRoutine)
+void StartRoutine(std::shared_ptr<Routine> aRoutine)
 {
 	for(;;)
 		aRoutine->Run();
@@ -21,7 +21,7 @@ void DataThreads::Start(Program& aProgramReference)
 	myThreads.reserve(myRoutines.size() - 1);
 	for (size_t i = 1; i < myThreads.size(); ++i)
 	{
-		myThreads.emplace_back(&RunRoutine, myRoutines[i]);
+		myThreads.emplace_back(&StartRoutine, myRoutines[i]);
 	}
-	RunRoutine(myRoutines[static_cast<size_t>(ERoutineId::Logic)]);
+	StartRoutine(myRoutines[static_cast<size_t>(ERoutineId::Logic)]);
 }

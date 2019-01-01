@@ -7,8 +7,29 @@ template<typename TType>
 class DoubleBuffer
 {
 public:
-	DoubleBuffer() = default;
+	template<typename TFunction>
+	void WriteContent(const TFunction& aWriteFunction);
 
+	const TType& ReadContent() const;
+
+	void SwapContent();
+	template<typename TFunction>
+	void ClearContent(const TFunction& aClearFunction);
+
+private:
+	TType myContentA;
+	TType myContentB;
+
+protected:
+	TType* myContentWrite = &myContentA;
+	TType* myContentRead = &myContentB;
+};
+
+template<typename TType>
+class ThreadSafeDoubleBuffer
+	: protected DoubleBuffer<TType>
+{
+public:
 	template<typename TFunction>
 	void WriteContent(const TFunction& aWriteFunction);
 
@@ -21,21 +42,13 @@ public:
 private:
 	std::mutex myLock;
 	std::atomic_bool myHasContent;
-
-	TType myContentA;
-	TType myContentB;
-
-	TType* myContentWrite = &myContentA;
-	TType* myContentRead = &myContentB;
 };
 
 template<typename TType>
 template<typename TFunction>
 void DoubleBuffer<TType>::WriteContent(const TFunction& aWriteFunction)
 {
-	std::lock_guard<decltype(myLock)> lock(myLock);
 	aWriteFunction(*myContentWrite);
-	myHasContent = true;
 }
 
 template<typename TType>
@@ -45,16 +58,9 @@ const TType& DoubleBuffer<TType>::ReadContent() const
 }
 
 template<typename TType>
-bool DoubleBuffer<TType>::SwapContent()
+void DoubleBuffer<TType>::SwapContent()
 {
-	if (!myHasContent)
-	{
-		return false;
-	}
-	std::lock_guard<decltype(myLock)> lock(myLock);
 	std::swap(myContentWrite, myContentRead);
-	myHasContent = false;
-	return true;
 }
 
 template<typename TType>
@@ -62,4 +68,39 @@ template<typename TFunction>
 void DoubleBuffer<TType>::ClearContent(const TFunction& aClearFunction)
 {
 	aClearFunction(*myContentRead);
+}
+
+template<typename TType>
+template<typename TFunction>
+void ThreadSafeDoubleBuffer<TType>::WriteContent(const TFunction& aWriteFunction)
+{
+	std::lock_guard<decltype(myLock)> lock(myLock);
+	DoubleBuffer<TType>::WriteContent(aWriteFunction);
+	myHasContent = true;
+}
+
+template<typename TType>
+const TType& ThreadSafeDoubleBuffer<TType>::ReadContent() const
+{
+	return DoubleBuffer<TType>::ReadContent();
+}
+
+template<typename TType>
+bool ThreadSafeDoubleBuffer<TType>::SwapContent()
+{
+	if (!myHasContent)
+	{
+		return false;
+	}
+	std::lock_guard<decltype(myLock)> lock(myLock);
+	DoubleBuffer<TType>::SwapContent();
+	myHasContent = false;
+	return true;
+}
+
+template<typename TType>
+template<typename TFunction>
+void ThreadSafeDoubleBuffer<TType>::ClearContent(const TFunction& aClearFunction)
+{
+	DoubleBuffer<TType>::ClearContent(aClearFunction);
 }

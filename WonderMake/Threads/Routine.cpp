@@ -21,18 +21,15 @@ void Routine::RouteMessages()
 {
 	auto& router = DataRouters::Get().GetRouter(myRoutineId);
 	router.CommitChanges();
+
+	std::vector<const Dispatchable*> dispatchableList;
+
 	if (DispatchableBufferBase::UpdateBuffers(myRoutineId))
 	{
-		const auto& updatedBuffers = DispatchableBufferBase::GetUpdatedBuffers(myRoutineId);
-
-		for (const auto buffer : updatedBuffers)
+		DispatchableBufferBase::GetDispatchableList(myRoutineId, dispatchableList);
+		for (const auto dispatchable : dispatchableList)
 		{
-			buffer->UpdateList();
-			const auto& list = buffer->GetList();
-			for (const auto dispatchable : list)
-			{
-				router.RouteDispatchable(*dispatchable);
-			}
+			router.RouteDispatchable(*dispatchable);
 		}
 	}
 }

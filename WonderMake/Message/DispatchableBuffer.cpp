@@ -1,7 +1,9 @@
 #include "stdafx.h"
 #include "DispatchableBuffer.h"
 
-DoubleBuffer<std::unordered_set<DispatchableBufferBase*>> DispatchableBufferBase::UpdatedBuffers[RoutineCount];
+DoubleBuffer<DispatchableBufferBase::DispatchableContainer> DispatchableBufferBase::UpdatedBuffers[RoutineCount];
+
+std::mutex DispatchableBufferBase::myLock;
 
 DispatchableBufferBase::DispatchableBufferBase(const size_t aTypeHash)
 	: myTypeHash(aTypeHash)
@@ -10,21 +12,42 @@ DispatchableBufferBase::DispatchableBufferBase(const size_t aTypeHash)
 bool DispatchableBufferBase::UpdateBuffers(const ERoutineId aRoutineId)
 {
 	auto& buffers = UpdatedBuffers[static_cast<u32>(aRoutineId)];
-	buffers.ClearContent([](auto& aSet) { aSet.clear(); });
-	return buffers.SwapContent();
-}
-
-const std::unordered_set<DispatchableBufferBase*>& DispatchableBufferBase::GetUpdatedBuffers(const ERoutineId aRoutineId)
-{
-	return UpdatedBuffers[static_cast<u32>(aRoutineId)].ReadContent();
-}
-
-void DispatchableBufferBase::BufferUpdated(const ERoutineId aRoutineId)
-{
-	if (myIsUpdated)
+	buffers.ClearContent([](auto& aContainer)
 	{
-		return;
+		for (auto buffer : aContainer.myUpdatedBuffers)
+		{
+			buffer->Clear();
+		}
+		aContainer.myUpdatedBuffers.clear();
+		aContainer.myMessages.clear();
+	});
+	std::lock_guard<decltype(myLock)> lock(myLock);
+	buffers.SwapContent();
+	return !buffers.ReadContent().myUpdatedBuffers.empty();
+}
+
+void DispatchableBufferBase::GetDispatchableList(const ERoutineId aRoutineId, std::vector<const Dispatchable*>& aOutList)
+{
+	const auto& buffers = UpdatedBuffers[static_cast<u32>(aRoutineId)].ReadContent();
+	for (auto buffer : buffers.myUpdatedBuffers)
+	{
+		buffer->Swap();
 	}
-	UpdatedBuffers[static_cast<u32>(aRoutineId)].WriteContent([this](auto& aSet) { aSet.insert(this); });
-	myIsUpdated = true;
+	for (const auto& dispatchable : buffers.myMessages)
+	{
+		aOutList.emplace_back(&dispatchable.myBuffer->GetDispatchableAt(dispatchable.myIndex));
+	}
+}
+
+void DispatchableBufferBase::AddDispatchable(const ERoutineId aRoutineId, const size_t aIndex)
+{
+	std::lock_guard<decltype(myLock)> lock(myLock);
+	UpdatedBuffers[static_cast<u32>(aRoutineId)].WriteContent([this, aIndex](auto& aContainer)
+	{
+		aContainer.myUpdatedBuffers.insert(this);
+		DispatchableLocation location;
+		location.myBuffer = this;
+		location.myIndex = aIndex;
+		aContainer.myMessages.emplace_back(location);
+	});
 }

@@ -94,14 +94,6 @@ struct SVector : SVectorBase<T, Size>
 		return *PointerToMember;
 	}
 
-	void Print()
-	{
-		for (u32 u = 0; u < Size; u++)
-		{
-			std::cout << GetMemberName(u) << ": " << (*this)[u] << "\n";
-		}
-	}
-
 	constexpr char GetMemberName(const u32 Index) const
 	{
 		switch (Index)

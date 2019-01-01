@@ -1,4 +1,4 @@
-ï»¿<?xml version="1.0" encoding="utf-8"?>
+?¿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -25,6 +25,7 @@
     <ClCompile Include="Message\MessageSubscriber.cpp" />
     <ClCompile Include="Program\Engine.cpp" />
     <ClCompile Include="Logging\ConsoleLogger.cpp" />
+    <ClCompile Include="Logging\ImGuiLogger.cpp" />
     <ClCompile Include="Threads\Routine.cpp" />
     <ClCompile Include="Threads\RoutineMain.cpp" />
   </ItemGroup>
@@ -70,6 +71,9 @@
     <ClInclude Include="Graphics\VertexAttributes.h" />
     <ClInclude Include="Program\Engine.h" />
     <ClInclude Include="Logging\ConsoleLogger.h" />
+    <ClInclude Include="Logging\LogMessageTypes.h" />
+    <ClInclude Include="Logging\LogMessageTags.h" />
+    <ClInclude Include="Logging\ImGuiLogger.h" />
     <ClInclude Include="Logging\LogMessageTypes.h" />
     <ClInclude Include="Threads\RoutineIds.h" />
     <ClInclude Include="Threads\Routine.h" />

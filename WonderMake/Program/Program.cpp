@@ -25,6 +25,8 @@ void Program::Update()
 
 	ImGui::ShowDemoWindow();
 
+	myImGuiLogger.Draw();
+
 	myImguiWrapper.EndFrame();
 }
 

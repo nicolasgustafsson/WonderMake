@@ -2,7 +2,8 @@
 #include "Graphics/Renderer.h"
 #include "Window.h"
 #include "ImguiWrapper.h"
-#include "../Logging/ConsoleLogger.h"
+#include "Logging/ConsoleLogger.h"
+#include "Logging/ImGuiLogger.h"
 
 class Program
 {
@@ -18,11 +19,11 @@ private:
 
 	//-------KEEP THIS IN ORDER-------
 	ConsoleLogger myLogger;
+	ImGuiLogger myImGuiLogger;
 	Window myWindow;
 	Renderer myRenderer;
 	ImguiWrapper myImguiWrapper;
 	//-------KEEP THIS IN ORDER-------
-
 
 	static constexpr SVector2<i32> WindowSize = {1600, 900};
 };

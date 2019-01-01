@@ -2,6 +2,7 @@
 
 #include "MessageTypes.h"
 #include "DispatchableBuffer.h"
+#include <sstream>
 
 template<typename TMessage>
 inline static void WmDispatchMessage(const TMessage& aMessage)
@@ -45,4 +46,14 @@ inline static void WmDispatchTask(Closure&& aTask, const ERoutineId aRoutineId)
 inline static void WmDispatchTask(const Closure& aTask, const ERoutineId aRoutineId)
 {
 	DispatchableBuffer<Task>::Dispatch(std::move(Task(aTask)), aRoutineId);
+}
+
+template<typename ... TMessageArgs>
+inline static void WmLog(TMessageArgs... aMessageArgs)
+{
+	std::stringstream MessageStream;
+
+	(MessageStream << ... << aMessageArgs);
+
+	WmDispatchMessage(SLogMessage(std::forward<std::string>(MessageStream.str())));
 }

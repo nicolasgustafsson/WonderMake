@@ -10,4 +10,3 @@
 #include "Utilities/Vector.h"
 #include "Typedefs.h"
 #include "Message/Messages.h"
-#include "Logging/LogMessageTypes.h"

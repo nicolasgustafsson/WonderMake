@@ -32,4 +32,4 @@
 Bin/
 Intermediate/
 *.user
-imgui.ini
+*imgui.ini

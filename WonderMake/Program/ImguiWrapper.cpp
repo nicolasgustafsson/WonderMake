@@ -17,6 +17,11 @@ ImguiWrapper::ImguiWrapper(const Window& Window)
 
 	// Setup Style
 	ImGui::StyleColorsDark();
+
+	ImGuiIO& io = ImGui::GetIO();
+
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.ConfigDockingWithShift = true;
 }
 
 void ImguiWrapper::StartFrame()

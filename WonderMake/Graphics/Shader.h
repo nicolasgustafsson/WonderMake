@@ -1,6 +1,5 @@
 #pragma once
 #include <fstream>
-#include <iostream>
 
 #include "../Utilities/RestrictTypes.h"
 
@@ -43,7 +42,7 @@ public:
 		if (!Success)
 		{
 			glGetShaderInfoLog(ShaderHandle, 512, nullptr, ErrorMessage);
-			std::cout << "Shader compilation failed! \n" << ErrorMessage << std::endl;
+			WmLog(TagError, TagOpenGL, "Shader compilation failed: ", ErrorMessage);
 		}
 	}
 

@@ -43,8 +43,8 @@ public:
 private:
 	u32 myProgramHandle = std::numeric_limits<u32>::max();
 
-	Shader<EShaderType::Vertex>* myVertexShader = nullptr;
-	Shader<EShaderType::Fragment>* myFragmentShader = nullptr;
-	std::optional<Shader<EShaderType::Geometry>*> myGeometryShader;
+	std::shared_ptr<Shader<EShaderType::Vertex>> myVertexShader = nullptr;
+	std::shared_ptr<Shader<EShaderType::Fragment>> myFragmentShader = nullptr;
+	std::optional<std::shared_ptr<Shader<EShaderType::Geometry>>> myGeometryShader;
 };
 

@@ -1,25 +1,47 @@
 #pragma once
-#include <unordered_map>
+#include "Utilities/Singleton.h"
+
 #include <filesystem>
 #include <memory>
-#include "../Utilities/Singleton.h"
+#include <mutex>
+#include <unordered_map>
 
-template<typename T>
-class ResourceManager : public Singleton<ResourceManager<T>>
+template<typename TResource>
+class ResourceManager : public Singleton<ResourceManager<TResource>>
 {
 public:
-	T* GetResource(const std::filesystem::path& Path);
+	std::shared_ptr<TResource> GetResource(const std::filesystem::path& aPath);
 
 protected:
-	friend class Singleton<ResourceManager<T>>;
+	friend class Singleton<ResourceManager<TResource>>;
 
 	//can't hash paths :(
-	std::unordered_map<std::string, std::unique_ptr<T>> LoadedResources;
+	std::mutex myLock;
+	std::unordered_map<std::string, std::weak_ptr<TResource>> myResources;
 };
 
-template<typename T>
-T* ResourceManager<T>::GetResource(const std::filesystem::path& Path)
+template<typename TResource>
+std::shared_ptr<TResource> ResourceManager<TResource>::GetResource(const std::filesystem::path& aPath)
 {
-	auto ret = LoadedResources.try_emplace(Path.string(), std::make_unique<T>(Path));
-	return ret.first->second.get();
+	std::lock_guard<decltype(myLock)> lock(myLock);
+	auto it = myResources.find(aPath.string());
+	if (it == myResources.end())
+	{
+		TResource* rawResource = new TResource(aPath);
+		std::shared_ptr<TResource> resource(rawResource, [this, aPath](TResource* aResource)
+		{
+			std::lock_guard<decltype(myLock)> lock(myLock);
+			auto it = myResources.find(aPath.string());
+			if (it == myResources.end())
+			{
+				WmLog(TagError, '[', typeid(TResource).name(), "] Unknown resource deletion requested: ", aResource);
+				return;
+			}
+			myResources.erase(it);
+			delete aResource;
+		});
+		myResources[aPath.string()] = resource;
+		return resource;
+	}
+	return std::shared_ptr<TResource>(it->second);
 }

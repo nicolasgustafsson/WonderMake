@@ -33,7 +33,7 @@ public:
 protected:
 	ShaderProgram myShaderProgram;
 	VertexBufferArray<TAttributes...> myVertexBufferArray;
-	std::vector<Texture*> myTextures;
+	std::vector<std::shared_ptr<Texture>> myTextures;
 	u32 myGeometryType;
 	u32 myVertexCount;
 };

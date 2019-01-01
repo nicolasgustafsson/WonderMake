@@ -4,7 +4,7 @@
 
 
 ImGuiLogger::ImGuiLogger()
-	:mySubscriber(EThreadId::Logic, BindHelper(&ImGuiLogger::OnLogMessage, this))
+	:mySubscriber(ERoutineId::Logic, BindHelper(&ImGuiLogger::OnLogMessage, this))
 {
 }
 

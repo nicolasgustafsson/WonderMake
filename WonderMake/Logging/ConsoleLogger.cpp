@@ -4,7 +4,7 @@
 #include <ConsoleApi2.h>
 
 ConsoleLogger::ConsoleLogger()
-	:mySubscriber(EThreadId::Logic, BindHelper(&ConsoleLogger::OnLogMessage, this))
+	:mySubscriber(ERoutineId::Logic, BindHelper(&ConsoleLogger::OnLogMessage, this))
 {
 
 }

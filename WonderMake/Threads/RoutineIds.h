@@ -2,9 +2,9 @@
 
 #include "Typedefs.h"
 
-constexpr u32 ThreadCount = 3;
+constexpr u32 RoutineCount = 3;
 
-enum class EThreadId
+enum class ERoutineId
 {
 	Logic = 0,
 	Render,

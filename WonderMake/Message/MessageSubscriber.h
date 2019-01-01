@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Threads/ThreadIds.h"
+#include "Threads/RoutineIds.h"
 
 #include "Utilities/RestrictTypes.h"
 
@@ -32,7 +32,7 @@ class MessageSubscriber final
 {
 public:
 	template<typename ...ROUTES>
-	MessageSubscriber(const EThreadId aThreadId, ROUTES... aRoutes);
+	MessageSubscriber(const ERoutineId aRoutineId, ROUTES... aRoutes);
 	~MessageSubscriber();
 
 private:
@@ -44,12 +44,12 @@ private:
 	void Subscribe(const size_t aTypeHash, std::function<void(const Dispatchable&)>&& aCallback);
 
 	std::unordered_set<size_t> mySubscribedMessages;
-	EThreadId myThreadId;
+	ERoutineId myRoutineId;
 };
 
 template<typename ...ROUTES>
-MessageSubscriber::MessageSubscriber(const EThreadId aThreadId, ROUTES... aRoutes)
-	: myThreadId(aThreadId)
+MessageSubscriber::MessageSubscriber(const ERoutineId aRoutineId, ROUTES... aRoutes)
+	: myRoutineId(aRoutineId)
 {
 	(SetRoute(std::move(aRoutes)), ...);
 }

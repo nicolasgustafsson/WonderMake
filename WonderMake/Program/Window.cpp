@@ -38,7 +38,7 @@ void Window::Update()
 
 	if (glfwWindowShouldClose(myGlfwWindow))
 	{
-		WmDispatchTask([]() {quick_exit(0);}, EThreadId::Logic);
+		WmDispatchTask([]() {quick_exit(0);}, ERoutineId::Logic);
 	}
 }
 

@@ -1,4 +1,4 @@
-ï»¿<?xml version="1.0" encoding="utf-8"?>
+?¿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -20,14 +20,14 @@
     <ClCompile Include="Graphics\SpriteRenderObject.cpp" />
     <ClCompile Include="Graphics\LineRenderObject.cpp" />
     <ClCompile Include="Message\DispatchRouter.cpp" />
-    <ClCompile Include="Threads\ThreadProcess.cpp" />
     <ClCompile Include="Threads\DataThreads.cpp" />
     <ClCompile Include="Message\DispatchableBuffer.cpp" />
     <ClCompile Include="Message\MessageSubscriber.cpp" />
-    <ClCompile Include="Threads\ThreadProcessMain.cpp" />
     <ClCompile Include="Program\Engine.cpp" />
     <ClCompile Include="Logging\ConsoleLogger.cpp" />
     <ClCompile Include="Logging\ImGuiLogger.cpp" />
+    <ClCompile Include="Threads\Routine.cpp" />
+    <ClCompile Include="Threads\RoutineMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Imgui\imgui.h" />
@@ -62,20 +62,22 @@
     <ClInclude Include="Graphics\LineRenderObject.h" />
     <ClInclude Include="Message\MessageTypes.h" />
     <ClInclude Include="Message\DispatchRouter.h" />
-    <ClInclude Include="Threads\ThreadIds.h" />
     <ClInclude Include="Threads\DoubleBuffer.h" />
     <ClInclude Include="Message\DataRouters.h" />
-    <ClInclude Include="Threads\ThreadProcess.h" />
     <ClInclude Include="Threads\DataThreads.h" />
     <ClInclude Include="Message\DispatchableBuffer.h" />
     <ClInclude Include="Message\Messages.h" />
     <ClInclude Include="Message\MessageSubscriber.h" />
     <ClInclude Include="Graphics\VertexAttributes.h" />
-    <ClInclude Include="Threads\ThreadProcessMain.h" />
     <ClInclude Include="Program\Engine.h" />
     <ClInclude Include="Logging\ConsoleLogger.h" />
+    <ClInclude Include="Logging\LogMessageTypes.h" />
     <ClInclude Include="Logging\LogMessageTags.h" />
     <ClInclude Include="Logging\ImGuiLogger.h" />
+    <ClInclude Include="Logging\LogMessageTypes.h" />
+    <ClInclude Include="Threads\RoutineIds.h" />
+    <ClInclude Include="Threads\Routine.h" />
+    <ClInclude Include="Threads\RoutineMain.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

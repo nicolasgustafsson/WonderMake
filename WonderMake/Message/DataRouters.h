@@ -2,7 +2,7 @@
 
 #include "DispatchRouter.h"
 
-#include "Threads/ThreadIds.h"
+#include "Threads/RoutineIds.h"
 
 #include "Utilities/Singleton.h"
 
@@ -12,13 +12,13 @@ class DataRouters final
 public:
 	DataRouters() = default;
 
-	inline DispatchRouter& GetRouter(const EThreadId aProcess);
+	inline DispatchRouter& GetRouter(const ERoutineId aRoutineId);
 
 private:
-	DispatchRouter myRouters[ThreadCount];
+	DispatchRouter myRouters[RoutineCount];
 };
 
-DispatchRouter& DataRouters::GetRouter(const EThreadId aProcess)
+DispatchRouter& DataRouters::GetRouter(const ERoutineId aRoutineId)
 {
-	return myRouters[static_cast<u32>(aProcess)];
+	return myRouters[static_cast<u32>(aRoutineId)];
 }

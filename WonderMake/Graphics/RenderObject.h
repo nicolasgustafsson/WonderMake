@@ -60,6 +60,7 @@ void RenderObject<TAttributes...>::Render()
 {
 	myShaderProgram.Activate();
 	myVertexBufferArray.Render();
+	BindTextures();
 
 	glDrawArrays(myGeometryType, 0, myVertexCount);
 }

@@ -3,6 +3,7 @@
 #include "Window.h"
 #include "ImguiWrapper.h"
 #include "../Logging/ConsoleLogger.h"
+#include "Logging/ImGuiLogger.h"
 
 class Program
 {
@@ -18,6 +19,7 @@ private:
 
 	//-------KEEP THIS IN ORDER-------
 	ConsoleLogger myLogger;
+	ImGuiLogger myImGuiLogger;
 	Window myWindow;
 	Renderer myRenderer;
 	ImguiWrapper myImguiWrapper;

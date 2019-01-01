@@ -1,9 +1,11 @@
 #include "stdafx.h"
 #include "Renderer.h"
+
 #include <iostream>
-#include <GLFW/glfw3.h>
-#include "Shader.h"
 #include <chrono>
+
+#include <GLFW/glfw3.h>
+
 #include "VertexAttributes.h"
 
 void GLAPIENTRY
@@ -18,9 +20,9 @@ MessageCallback([[maybe_unused]] GLenum source,
 	if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
 		return;
 
-	fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-		(type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
-		type, severity, message);
+	auto severityTag = severity == GL_DEBUG_SEVERITY_HIGH ? TagError : (severity == GL_DEBUG_SEVERITY_MEDIUM) ? TagWarning : "";
+
+	WmLog(severityTag, TagOpenGL, " type = ", type, " severity: ", severity, "\n", message);
 }
 
 Renderer::Renderer()
@@ -29,10 +31,6 @@ Renderer::Renderer()
 {
 	glEnable(GL_DEBUG_OUTPUT);
 	glDebugMessageCallback(MessageCallback, 0);
-
-	SLogMessage message;
-	message.LogText = "Successfully setup renderer!";
-	WmDispatchMessage(message);
 }
 
 void Renderer::SetViewportSize(const SVector2<int> WindowSize)

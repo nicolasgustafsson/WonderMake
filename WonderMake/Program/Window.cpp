@@ -12,7 +12,7 @@ Window::Window(const SVector2<int> Size)
 	myGlfwWindow = glfwCreateWindow(Size.X, Size.Y, "WonderMake", NULL, NULL);
 	if (!myGlfwWindow)
 	{
-		std::cout << "Failed to create GLFW window" << std::endl;
+		WmLog(TagError, TagOpenGL, "Failed to create GLFW window!");
 		glfwTerminate();
 		return;
 	}
@@ -21,7 +21,7 @@ Window::Window(const SVector2<int> Size)
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		std::cout << "Failed to initialize GLAD" << std::endl;
+		WmLog(TagError, TagOpenGL, "Failed to initialize GLAD");
 	}
 }
 

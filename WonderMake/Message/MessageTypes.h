@@ -55,3 +55,17 @@ public:
 private:
 	const Closure myClosure;
 };
+
+struct SLogMessage : public Message<Dispatchable>
+{
+public:
+	SLogMessage(std::string&& aLogMessage)
+		:LogText(std::forward<std::string>(aLogMessage)) {}
+
+	std::string LogText;
+
+	bool HasTag(const std::string& aTag) const
+	{
+		return LogText.find(aTag) != std::string::npos;
+	}
+};

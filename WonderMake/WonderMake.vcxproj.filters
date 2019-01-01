@@ -27,6 +27,7 @@
     <ClCompile Include="Threads\ThreadProcessMain.cpp" />
     <ClCompile Include="Program\Engine.cpp" />
     <ClCompile Include="Logging\ConsoleLogger.cpp" />
+    <ClCompile Include="Logging\ImGuiLogger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Imgui\imgui.h" />
@@ -73,7 +74,8 @@
     <ClInclude Include="Threads\ThreadProcessMain.h" />
     <ClInclude Include="Program\Engine.h" />
     <ClInclude Include="Logging\ConsoleLogger.h" />
-    <ClInclude Include="Logging\LogMessageTypes.h" />
+    <ClInclude Include="Logging\LogMessageTags.h" />
+    <ClInclude Include="Logging\ImGuiLogger.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

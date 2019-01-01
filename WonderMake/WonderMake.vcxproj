@@ -182,6 +182,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Logging\ImGuiLogger.cpp" />
     <ClCompile Include="Logging\ConsoleLogger.cpp" />
     <ClCompile Include="Program\Engine.cpp" />
     <ClCompile Include="Message\DispatchableBuffer.cpp" />
@@ -210,8 +211,9 @@
     <ClCompile Include="Program\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Logging\ImGuiLogger.h" />
     <ClInclude Include="Logging\ConsoleLogger.h" />
-    <ClInclude Include="Logging\LogMessageTypes.h" />
+    <ClInclude Include="Logging\LogMessageTags.h" />
     <ClInclude Include="Program\Engine.h" />
     <ClInclude Include="Graphics\VertexAttributes.h" />
     <ClInclude Include="Message\DispatchableBuffer.h" />

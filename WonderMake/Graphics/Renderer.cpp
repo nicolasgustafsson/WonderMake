@@ -1,11 +1,6 @@
 #include "stdafx.h"
 #include "Renderer.h"
 
-#include <iostream>
-#include <chrono>
-
-#include <GLFW/glfw3.h>
-
 #include "VertexAttributes.h"
 
 void GLAPIENTRY

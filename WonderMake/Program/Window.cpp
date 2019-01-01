@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Window.h"
 #include <GLFW/glfw3.h>
-#include <iostream>
 
 Window::Window(const SVector2<int> Size)
 {

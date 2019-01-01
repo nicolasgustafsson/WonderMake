@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Logging/LogMessageTags.h"
+
 #include <typeinfo>
 #include <functional>
 

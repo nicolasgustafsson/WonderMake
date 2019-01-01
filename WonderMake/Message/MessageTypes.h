@@ -2,6 +2,7 @@
 
 #include "Logging/LogMessageTags.h"
 
+#include <atomic>
 #include <typeinfo>
 #include <functional>
 
@@ -45,11 +46,11 @@ class Task final
 	: public Message<Task>
 {
 public:
-	Task(const Closure aClosure)
+	inline Task(const Closure aClosure)
 		: myClosure(std::move(aClosure))
 	{}
 
-	void Run() const
+	inline void Run() const
 	{
 		myClosure();
 	}
@@ -58,15 +59,63 @@ private:
 	const Closure myClosure;
 };
 
+template<typename T>
+class Query
+	: public Message<Query<T>>
+{
+public:
+	inline Query()
+		: myId(NextQueryId++)
+	{}
+
+	inline u32 Id() const
+	{
+		return myId;
+	}
+
+private:
+	static std::atomic_uint32_t NextQueryId;
+
+	u32 myId;
+};
+
+template<typename T>
+std::atomic_uint32_t Query<T>::NextQueryId = 0;
+
+template<typename T>
+class QueryResult
+	: public Message<QueryResult<T>>
+{
+public:
+	template<typename TQuery>
+	inline QueryResult(const TQuery& aQuery)
+		: myId(aQuery.Id())
+	{}
+
+	template<typename TQuery>
+	inline bool IsResultOf(const TQuery& aQuery) const
+	{
+		return Id() == aQuery.Id();
+	}
+
+	inline u32 Id() const
+	{
+		return myId;
+	}
+
+private:
+	u32 myId;
+};
+
 struct SLogMessage : public Message<Dispatchable>
 {
 public:
-	SLogMessage(std::string&& aLogMessage)
+	inline SLogMessage(std::string&& aLogMessage)
 		:LogText(std::forward<std::string>(aLogMessage)) {}
 
 	std::string LogText;
 
-	bool HasTag(const std::string& aTag) const
+	inline bool HasTag(const std::string& aTag) const
 	{
 		return LogText.find(aTag) != std::string::npos;
 	}

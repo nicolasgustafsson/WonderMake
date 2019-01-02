@@ -83,7 +83,7 @@ void Renderer::Debug()
 		ImGui::PopStyleVar();
 		ImGui::PopStyleVar();
 
-		ImGui::Image((void *)myRenderTarget.GetTexture(), ImGui::GetWindowSize());
+		ImGui::Image((void *)myRenderTarget.GetTexture(), ImGui::GetContentRegionAvail());
 
 		ImGui::End();
 	}

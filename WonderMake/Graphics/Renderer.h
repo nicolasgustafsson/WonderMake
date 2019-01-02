@@ -14,6 +14,8 @@ public:
 
 	void SwapFrame();
 
+	void Debug();
+
 private:
 
 	SpriteRenderObject mySpriteRenderObject;

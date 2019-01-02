@@ -4,7 +4,7 @@
 #include "ImguiWrapper.h"
 #include "Logging/ConsoleLogger.h"
 #include "Logging/ImGuiLogger.h"
-#include <Imgui/DockSpace.h>
+#include "Imgui/DockSpace.h"
 
 class Program
 {

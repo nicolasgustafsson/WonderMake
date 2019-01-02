@@ -55,12 +55,36 @@ void Renderer::SwapFrame()
 
 	myLine.Render();
 
-	//second pass
-	myRenderTarget.BindAsTexture();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	myCopyPass.Render();
+	if (!Constants::IsDebugging)
+	{
+		//second pass - copy directly to backbuffer if we are not debugging
+		myRenderTarget.BindAsTexture();
+
+		myCopyPass.Render();
+	}
+}
+
+void Renderer::Debug()
+{
+	if (Constants::IsDebugging)
+	{
+		//if we are debugging, render the game window as an imgui image
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
+		ImGui::Begin("Game Window");
+
+		ImGui::PopStyleVar();
+		ImGui::PopStyleVar();
+
+		ImGui::Image((void *)myRenderTarget.GetTexture(), ImGui::GetWindowSize());
+
+		ImGui::End();
+	}
 }

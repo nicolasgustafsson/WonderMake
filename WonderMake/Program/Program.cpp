@@ -21,13 +21,18 @@ void Program::Update()
 
 	myRenderer.SwapFrame();
 
-	myImguiWrapper.StartFrame();
+	if (Constants::IsDebugging)
+	{
+		myImguiWrapper.StartFrame();
 
-	ImGui::ShowDemoWindow();
+		myDockSpace.Debug();
 
-	myImGuiLogger.Draw();
+		ImGui::ShowDemoWindow();
+		myImGuiLogger.Draw();
+		myRenderer.Debug();
 
-	myImguiWrapper.EndFrame();
+		myImguiWrapper.EndFrame();
+	}
 }
 
 void Program::SetupCallbacks()

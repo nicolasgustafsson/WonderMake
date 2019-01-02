@@ -30,6 +30,8 @@
     <ClCompile Include="Program\Window.cpp" />
     <ClCompile Include="Graphics\RenderTarget.cpp" />
     <ClCompile Include="Graphics\ScreenPassRenderObject.cpp" />
+    <ClCompile Include="Imgui\DockSpace.cpp" />
+    <ClCompile Include="Imgui\imgui_stdlib.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logging\ImGuiLogger.h" />
@@ -80,6 +82,9 @@
     <ClInclude Include="Graphics\VertexBufferArray.h" />
     <ClInclude Include="Graphics\RenderTarget.h" />
     <ClInclude Include="Graphics\ScreenPassRenderObject.h" />
+    <ClInclude Include="Constants.h" />
+    <ClInclude Include="Imgui\DockSpace.h" />
+    <ClInclude Include="Imgui\imgui_stdlib.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

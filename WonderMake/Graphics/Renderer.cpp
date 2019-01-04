@@ -2,6 +2,7 @@
 #include "Renderer.h"
 
 #include "VertexAttributes.h"
+#include "EngineUniformBuffer.h"
 
 void GLAPIENTRY
 MessageCallback([[maybe_unused]] GLenum source,
@@ -36,6 +37,8 @@ void Renderer::SetViewportSize(const SVector2<int> WindowSize)
 
 void Renderer::SwapFrame()
 {
+	EngineUniformBuffer::Get().Update();
+
 	//first pass
 	myRenderTarget.BindAsTarget();
 
@@ -60,7 +63,7 @@ void Renderer::SwapFrame()
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	if (!Constants::IsDebugging)
+	if constexpr (!Constants::IsDebugging)
 	{
 		//second pass - copy directly to backbuffer if we are not debugging
 		myRenderTarget.BindAsTexture();
@@ -71,7 +74,7 @@ void Renderer::SwapFrame()
 
 void Renderer::Debug()
 {
-	if (Constants::IsDebugging)
+	if constexpr (Constants::IsDebugging)
 	{
 		//if we are debugging, render the game window as an imgui image
 

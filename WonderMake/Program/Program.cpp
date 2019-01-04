@@ -17,11 +17,13 @@ Program::Program()
 
 void Program::Update()
 {
+	EngineUniformBuffer::Get().GetBuffer().Time += 0.01f;
+
 	myWindow.Update();
 
 	myRenderer.SwapFrame();
 
-	if (Constants::IsDebugging)
+	if constexpr (Constants::IsDebugging)
 	{
 		myImguiWrapper.StartFrame();
 

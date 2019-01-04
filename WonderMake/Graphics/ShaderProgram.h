@@ -1,5 +1,6 @@
 #pragma once
 #include "Graphics/Shader.h"
+#include "Resources/ResourceManager.h"
 #include "Utilities/Vector.h"
 #include "Utilities/Vector.h"
 #include "Utilities/Vector.h"
@@ -43,8 +44,8 @@ public:
 private:
 	u32 myProgramHandle = std::numeric_limits<u32>::max();
 
-	std::shared_ptr<Shader<EShaderType::Vertex>> myVertexShader = nullptr;
-	std::shared_ptr<Shader<EShaderType::Fragment>> myFragmentShader = nullptr;
-	std::optional<std::shared_ptr<Shader<EShaderType::Geometry>>> myGeometryShader;
+	ResourceProxy<Shader<EShaderType::Vertex>> myVertexShader;
+	ResourceProxy<Shader<EShaderType::Fragment>> myFragmentShader;
+	std::optional<ResourceProxy<Shader<EShaderType::Geometry>>> myGeometryShader;
 };
 

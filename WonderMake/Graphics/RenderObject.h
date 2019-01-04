@@ -1,10 +1,11 @@
 #pragma once
-#include "VertexTypes.h"
-#include "ShaderProgram.h"
-#include "Texture.h"
-#include "../Resources/ResourceManager.h"
-#include "VertexAttributes.h"
-#include "VertexBufferArray.h"
+#include "Graphics/ShaderProgram.h"
+#include "Graphics/Texture.h"
+#include "Graphics/VertexAttributes.h"
+#include "Graphics/VertexBufferArray.h"
+#include "Graphics/VertexTypes.h"
+
+#include "Resources/ResourceManager.h"
 
 //everything needed to create a renderobject
 struct SRenderObjectInfo
@@ -33,7 +34,7 @@ public:
 protected:
 	ShaderProgram myShaderProgram;
 	VertexBufferArray<TAttributes...> myVertexBufferArray;
-	std::vector<std::shared_ptr<Texture>> myTextures;
+	std::vector<ResourceProxy<Texture>> myTextures;
 	u32 myGeometryType;
 	u32 myVertexCount;
 };

@@ -1,4 +1,6 @@
 #pragma once
+#include "Resources/ResourceProxy.h"
+
 #include "Utilities/Singleton.h"
 
 #include <filesystem>
@@ -10,7 +12,7 @@ template<typename TResource>
 class ResourceManager : public Singleton<ResourceManager<TResource>>
 {
 public:
-	std::shared_ptr<TResource> GetResource(const std::filesystem::path& aPath);
+	ResourceProxy<TResource> GetResource(const std::filesystem::path& aPath);
 
 protected:
 	friend class Singleton<ResourceManager<TResource>>;
@@ -21,7 +23,7 @@ protected:
 };
 
 template<typename TResource>
-std::shared_ptr<TResource> ResourceManager<TResource>::GetResource(const std::filesystem::path& aPath)
+ResourceProxy<TResource> ResourceManager<TResource>::GetResource(const std::filesystem::path& aPath)
 {
 	std::lock_guard<decltype(myLock)> lock(myLock);
 	auto it = myResources.find(aPath.string());
@@ -41,7 +43,7 @@ std::shared_ptr<TResource> ResourceManager<TResource>::GetResource(const std::fi
 			delete aResource;
 		});
 		myResources[aPath.string()] = resource;
-		return resource;
+		return ResourceProxy<TResource>(std::move(resource));
 	}
-	return std::shared_ptr<TResource>(it->second);
+	return ResourceProxy<TResource>(std::shared_ptr<TResource>(it->second));
 }

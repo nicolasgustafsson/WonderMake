@@ -218,6 +218,7 @@
     <ClInclude Include="Graphics\VertexAttributes.h" />
     <ClInclude Include="Message\DispatchableBuffer.h" />
     <ClInclude Include="Message\Messages.h" />
+    <ClInclude Include="Resources\ResourceProxy.h" />
     <ClInclude Include="Threads\Routine.h" />
     <ClInclude Include="Threads\RoutineMain.h" />
     <ClInclude Include="Threads\DataThreads.h" />

@@ -2,7 +2,7 @@
 #include "Typedefs.h"
 
 //this assumes that the buffer uses an optimal memory alignment
-template<u32 TBufferBindIndex, typename TBuffer>
+template< typename TBuffer>
 class UniformBuffer
 {
 public:
@@ -18,13 +18,13 @@ public:
 	}
 
 protected:
-	UniformBuffer()
+	UniformBuffer(const u32 aBufferBindIndex)
 	{
 		glGenBuffers(1, &myUniformBufferObject);
 		glBindBuffer(GL_UNIFORM_BUFFER, myUniformBufferObject);
 		glBufferData(GL_UNIFORM_BUFFER, sizeof(TBuffer), NULL, GL_STATIC_DRAW);
 
-		glBindBufferBase(GL_UNIFORM_BUFFER, TBufferBindIndex, myUniformBufferObject);
+		glBindBufferBase(GL_UNIFORM_BUFFER, aBufferBindIndex, myUniformBufferObject);
 	}
 
 	~UniformBuffer()

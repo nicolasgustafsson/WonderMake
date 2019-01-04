@@ -9,8 +9,10 @@ struct SEngineUniformBufferData
 	float Time = 0;
 };
 
-class EngineUniformBuffer : public UniformBuffer<0, SEngineUniformBufferData>, public Singleton<EngineUniformBuffer>
+class EngineUniformBuffer : public UniformBuffer<SEngineUniformBufferData>, public Singleton<EngineUniformBuffer>
 {
 public:
+
+	EngineUniformBuffer();
 };
 

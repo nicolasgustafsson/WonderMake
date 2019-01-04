@@ -4,7 +4,6 @@
 #include "Utilities/Vector.h"
 #include "Utilities/Vector.h"
 #include <optional>
-#include "GLUtilities.h"
 
 class ShaderProgram : NonCopyable
 {

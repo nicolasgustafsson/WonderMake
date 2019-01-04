@@ -86,7 +86,6 @@
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Imgui\DockSpace.h" />
     <ClInclude Include="Imgui\imgui_stdlib.h" />
-    <ClInclude Include="Graphics\GLUtilities.h" />
     <ClInclude Include="Graphics\UniformBuffer.h" />
     <ClInclude Include="Graphics\EngineUniformBuffer.h" />
   </ItemGroup>

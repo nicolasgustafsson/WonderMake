@@ -2,13 +2,21 @@
 
 #include <cassert>
 #include <memory>
+#include <mutex>
+
+template<typename TResource>
+struct SResource
+{
+	std::mutex myLock;
+	std::shared_ptr<TResource> myPointer = nullptr;
+};
 
 template<typename TResource>
 class ResourceProxy final
 {
 public:
 	ResourceProxy() = default;
-	inline ResourceProxy(std::shared_ptr<TResource>&& aResource)
+	inline ResourceProxy(std::shared_ptr<SResource<TResource>>&& aResource)
 		: myResource(aResource)
 	{}
 
@@ -22,27 +30,34 @@ public:
 private:
 	inline void Validate() const;
 
-	std::shared_ptr<TResource> myResource = nullptr;
+	std::shared_ptr<SResource<TResource>> myResource = nullptr;
 };
 
 template<typename TResource>
 inline bool ResourceProxy<TResource>::IsValid() const
 {
-	return myResource != nullptr;
+	if (myResource == nullptr)
+	{
+		return false;
+	}
+	std::lock_guard<decltype(myResource->myLock)> lock(myResource->myLock);
+	return myResource->myPointer != nullptr;
 }
 
 template<typename TResource>
 inline TResource* ResourceProxy<TResource>::operator->() const
 {
+	std::lock_guard<decltype(myResource->myLock)> lock(myResource->myLock);
 	Validate();
-	return myResource.get();
+	return myResource->myPointer.get();
 }
 
 template<typename TResource>
 inline TResource& ResourceProxy<TResource>::operator*() const
 {
+	std::lock_guard<decltype(myResource->myLock)> lock(myResource->myLock);
 	Validate();
-	return *myResource;
+	return *myResource->myPointer;
 }
 
 template<typename TResource>
@@ -54,7 +69,8 @@ inline ResourceProxy<TResource>::operator bool() const
 template<typename TResource>
 inline void ResourceProxy<TResource>::Validate() const
 {
-	if (!IsValid())
+	if (myResource == nullptr
+		|| myResource->myPointer == nullptr)
 	{
 		WmLog(TagError, "Resource proxy validation failed.");
 		assert(true);

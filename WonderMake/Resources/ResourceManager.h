@@ -19,7 +19,7 @@ protected:
 
 	//can't hash paths :(
 	std::mutex myLock;
-	std::unordered_map<std::string, std::weak_ptr<TResource>> myResources;
+	std::unordered_map<std::string, std::weak_ptr<SResource<TResource>>> myResources;
 };
 
 template<typename TResource>
@@ -29,14 +29,15 @@ ResourceProxy<TResource> ResourceManager<TResource>::GetResource(const std::file
 	auto it = myResources.find(aPath.string());
 	if (it == myResources.end())
 	{
-		TResource* rawResource = new TResource(aPath);
-		std::shared_ptr<TResource> resource(rawResource, [this, aPath](TResource* aResource)
+		auto rawResource = new SResource<TResource>();
+		rawResource->myPointer = std::make_shared<TResource>(aPath);
+		std::shared_ptr<SResource<TResource>> resource(rawResource, [this, aPath](SResource<TResource>* aResource)
 		{
 			std::lock_guard<decltype(myLock)> lock(myLock);
 			auto it = myResources.find(aPath.string());
 			if (it == myResources.end())
 			{
-				WmLog(TagError, '[', typeid(TResource).name(), "] Unknown resource deletion requested: ", aResource);
+				WmLog(TagError, '[', typeid(TResource).name(), "]Unknown resource deletion requested: ", aResource);
 				return;
 			}
 			myResources.erase(it);
@@ -45,5 +46,5 @@ ResourceProxy<TResource> ResourceManager<TResource>::GetResource(const std::file
 		myResources[aPath.string()] = resource;
 		return ResourceProxy<TResource>(std::move(resource));
 	}
-	return ResourceProxy<TResource>(std::shared_ptr<TResource>(it->second));
+	return ResourceProxy<TResource>(std::shared_ptr<SResource<TResource>>(it->second));
 }

@@ -8,6 +8,8 @@
 #include "Graphics/Shader.h"
 #include <iostream>
 #include "../Threads/DataThreads.h"
+#include "Camera/Camera.h"
+#include "Graphics/EngineUniformBuffer.h"
 
 Program::Program()
 	:myWindow(WindowSize), myRenderer(), myImguiWrapper(myWindow)
@@ -21,6 +23,8 @@ void Program::Update()
 
 	myWindow.Update();
 
+	Camera::Get().Update();
+
 	myRenderer.SwapFrame();
 
 	if constexpr (Constants::IsDebugging)
@@ -32,6 +36,8 @@ void Program::Update()
 		ImGui::ShowDemoWindow();
 		myImGuiLogger.Draw();
 		myRenderer.Debug();
+		Camera::Get().Debug();
+		EngineUniformBuffer::Get().Debug();
 
 		myImguiWrapper.EndFrame();
 	}

@@ -33,6 +33,7 @@
     <ClCompile Include="Imgui\DockSpace.cpp" />
     <ClCompile Include="Imgui\imgui_stdlib.cpp" />
     <ClCompile Include="Graphics\EngineUniformBuffer.cpp" />
+    <ClCompile Include="Camera\Camera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logging\ImGuiLogger.h" />
@@ -88,8 +89,11 @@
     <ClInclude Include="Imgui\imgui_stdlib.h" />
     <ClInclude Include="Graphics\UniformBuffer.h" />
     <ClInclude Include="Graphics\EngineUniformBuffer.h" />
+    <ClInclude Include="Camera\Camera.h" />
+    <ClInclude Include="Utilities\Matrix33.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
+    <None Include="Utilities\Matrix33.inl" />
   </ItemGroup>
 </Project>

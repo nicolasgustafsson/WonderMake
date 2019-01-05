@@ -110,6 +110,37 @@ struct SVector : SVectorBase<T, Size>
 			return '1' + Index;
 		}
 	}
+
+	constexpr SVector<T, Size> operator-() const
+	{
+		SVector<T, Size> ReturnVal;
+
+		for (u32 u = 0; u < Size; u++)
+		{
+			ReturnVal[u] = -((*this)[u]);
+		}
+
+		return ReturnVal;
+	}
+
+	constexpr static SVector<T, Size> Zero()
+	{
+		SVector<T, Size> ReturnVal;
+
+		return ReturnVal;
+	}
+
+	constexpr static SVector<T, Size> One()
+	{
+		SVector<T, Size> ReturnVal;
+
+		for (u32 u = 0; u < Size; u++)
+		{
+			ReturnVal[u] = 1;
+		}
+
+		return ReturnVal;
+	}
 };
 
 template <typename T>

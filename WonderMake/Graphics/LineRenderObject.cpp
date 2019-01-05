@@ -8,7 +8,7 @@ LineRenderObject::LineRenderObject()
 		,	"" //geometry shader
 		,	std::filesystem::current_path() / "Shaders/Fragment/LineFragment.frag"
 		,	"" //texture
-		,	2
+		,	8
 		,	GL_LINES})
 {
 

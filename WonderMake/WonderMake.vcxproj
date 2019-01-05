@@ -211,6 +211,7 @@
     <ClCompile Include="Program\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Job\Job.h" />
     <ClInclude Include="Logging\ImGuiLogger.h" />
     <ClInclude Include="Logging\ConsoleLogger.h" />
     <ClInclude Include="Logging\LogMessageTags.h" />

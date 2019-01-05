@@ -77,6 +77,7 @@
     <ClInclude Include="Graphics\VertexTypes.h" />
     <ClInclude Include="Graphics\VertexBufferArray.h" />
     <ClInclude Include="Resources\ResourceProxy.h" />
+    <ClInclude Include="Job\Job.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

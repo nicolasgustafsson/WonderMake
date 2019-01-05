@@ -1,12 +1,12 @@
 #pragma once
 
+#include "Typedefs.h"
+
 #include "Logging/LogMessageTags.h"
 
 #include <atomic>
 #include <typeinfo>
 #include <functional>
-
-typedef std::function<void()> Closure;
 
 class Dispatchable
 {

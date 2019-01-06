@@ -48,12 +48,11 @@ void Camera::Debug()
 
 	ImGui::SliderFloat2("Camera Position", &myPosition.X, -1000.f, 1000.f);
 	ImGui::SliderFloat("Camera Rotation", &myRotation, -3.1415f, 3.1415f);
-	ImGui::SliderFloat("Camera Scale", &myScale, 0.0f, 100.0f, "%.3f", 3.0f);
+	ImGui::SliderFloat("Camera Scale", &myScale, 0.0f, 10.0f, "%.3f", 3.0f);
 
 	ImGui::End();
 
 	myViewMatrix.SetPosition(myPosition);
-
 }
 
 void Camera::SetViewportSize(const SVector2i aViewportSize)

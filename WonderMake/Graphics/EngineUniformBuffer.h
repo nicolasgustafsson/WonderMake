@@ -42,7 +42,6 @@ struct SPaddedMatrix33
 		return DebugString;
 	}
 
-
 	float Data[4 * 3];
 };
 

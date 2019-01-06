@@ -26,7 +26,6 @@
     <ClCompile Include="Imgui\imgui_impl_glfw.cpp" />
     <ClCompile Include="Imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Imgui\imgui_widgets.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="Program\Window.cpp" />
     <ClCompile Include="Graphics\RenderTarget.cpp" />
     <ClCompile Include="Graphics\ScreenPassRenderObject.cpp" />

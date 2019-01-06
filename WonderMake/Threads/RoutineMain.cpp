@@ -14,4 +14,5 @@ RoutineMain::RoutineMain(Program& aProgramReference)
 void RoutineMain::Procedure()
 {
 	myProgram.Update();
+	Routine::Procedure();
 }

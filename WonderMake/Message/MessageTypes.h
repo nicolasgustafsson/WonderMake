@@ -107,7 +107,7 @@ private:
 	u32 myId;
 };
 
-struct SLogMessage : public Message<Dispatchable>
+struct SLogMessage : public Message<SLogMessage>
 {
 public:
 	inline SLogMessage(std::string&& aLogMessage)

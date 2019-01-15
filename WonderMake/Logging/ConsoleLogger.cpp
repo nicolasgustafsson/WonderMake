@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "ConsoleLogger.h"
 #include <iostream>
-#include <ConsoleApi2.h>
 
 ConsoleLogger::ConsoleLogger()
 	:mySubscriber(ERoutineId::Logic, BindHelper(&ConsoleLogger::OnLogMessage, this))

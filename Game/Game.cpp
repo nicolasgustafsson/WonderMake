@@ -15,7 +15,7 @@ int main()
 
 	Engine::Start([&] 
 	{
-		DataThreads::Get().GetRoutine(ERoutineId::Logic).lock()->AddProcedure([&] 
+		DataThreads::Get().GetRoutine(ERoutineId::Logic).lock()->SetProcedure([&] 
 		{
 			World.Tick();
 		});

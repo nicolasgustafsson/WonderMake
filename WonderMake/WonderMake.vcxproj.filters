@@ -26,12 +26,13 @@
     <ClCompile Include="Imgui\imgui_impl_glfw.cpp" />
     <ClCompile Include="Imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Imgui\imgui_widgets.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="Program\Window.cpp" />
     <ClCompile Include="Graphics\RenderTarget.cpp" />
     <ClCompile Include="Graphics\ScreenPassRenderObject.cpp" />
     <ClCompile Include="Imgui\DockSpace.cpp" />
     <ClCompile Include="Imgui\imgui_stdlib.cpp" />
+    <ClCompile Include="Graphics\EngineUniformBuffer.cpp" />
+    <ClCompile Include="Camera\Camera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logging\ImGuiLogger.h" />
@@ -85,8 +86,13 @@
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Imgui\DockSpace.h" />
     <ClInclude Include="Imgui\imgui_stdlib.h" />
+    <ClInclude Include="Graphics\UniformBuffer.h" />
+    <ClInclude Include="Graphics\EngineUniformBuffer.h" />
+    <ClInclude Include="Camera\Camera.h" />
+    <ClInclude Include="Utilities\Matrix33.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
+    <None Include="Utilities\Matrix33.inl" />
   </ItemGroup>
 </Project>

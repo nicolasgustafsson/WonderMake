@@ -15,7 +15,15 @@ void Routine::Run()
 	Procedure();
 }
 
-void Routine::Procedure() {}
+void Routine::SetProcedure(Closure aClosure)
+{
+	myProcedure = aClosure;
+}
+
+void Routine::Procedure() 
+{
+	myProcedure();
+}
 
 void Routine::RouteMessages()
 {

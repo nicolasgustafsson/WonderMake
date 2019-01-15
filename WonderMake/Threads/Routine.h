@@ -14,6 +14,8 @@ public:
 
 	void Run();
 
+	void SetProcedure(Closure aClosure);
+
 protected:
 	virtual void Procedure();
 
@@ -24,4 +26,5 @@ private:
 
 	const ERoutineId myRoutineId;
 	MessageSubscriber mySubscriber;
+	Closure myProcedure;
 };

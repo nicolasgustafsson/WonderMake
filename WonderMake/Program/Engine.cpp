@@ -5,10 +5,10 @@
 
 namespace Engine
 {
-	void Start()
+	void Start(Closure&& aCallback)
 	{
 		Program program;
-		DataThreads::Get().Start(program);
+		DataThreads::Get().Start(program, std::forward<Closure>(aCallback));
 	}
 }
 

@@ -6,6 +6,9 @@
 *.lo
 *.o
 *.obj
+*.ilk
+*.pdb
+*.exe
 
 # Precompiled Headers
 *.gch
@@ -28,8 +31,8 @@
 *.exe
 *.out
 *.app
+Bin/*.lib
 .vs/
-Bin/
 Intermediate/
 *.user
 *imgui.ini

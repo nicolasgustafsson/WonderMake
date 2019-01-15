@@ -17,7 +17,7 @@ int main()
 	{
 		DataThreads::Get().GetRoutine(ERoutineId::Logic).lock()->SetProcedure([&] 
 		{
-			World.Tick(); 
+			World.Tick();
 		});
 
 		WmLog("Game successfully setup!"); 

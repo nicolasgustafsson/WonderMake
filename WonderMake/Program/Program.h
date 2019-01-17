@@ -24,8 +24,8 @@ private:
 	ImGuiLogger myImGuiLogger;
 	DockSpace myDockSpace;
 	SystemPtr<Window> myWindowPtr;
-	Renderer myRenderer;
-	ImguiWrapper myImguiWrapper;
+	SystemPtr<Renderer> myRendererPtr;
+	SystemPtr<ImguiWrapper> myImguiWrapperPtr;
 	//-------KEEP THIS IN ORDER-------
 
 	static constexpr SVector2<i32> WindowSize = {1600, 900};

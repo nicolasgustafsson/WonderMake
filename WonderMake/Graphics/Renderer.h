@@ -4,8 +4,9 @@
 #include "LineRenderObject.h"
 #include "RenderTarget.h"
 #include "ScreenPassRenderObject.h"
+#include <System/System.h>
 
-class Renderer : NonCopyable
+class Renderer : public System
 {
 public:
 	Renderer();

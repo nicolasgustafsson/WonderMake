@@ -12,7 +12,6 @@
 #include "Graphics/EngineUniformBuffer.h"
 
 Program::Program()
-	:myRenderer(), myImguiWrapper(*myWindowPtr)
 {
 	SetupCallbacks();
 }
@@ -25,21 +24,21 @@ void Program::Update()
 
 	Camera::Get().Update();
 
-	myRenderer.SwapFrame();
+	myRendererPtr->SwapFrame();
 
 	if constexpr (Constants::IsDebugging)
 	{
-		myImguiWrapper.StartFrame();
+		myImguiWrapperPtr->StartFrame();
 
 		myDockSpace.Debug();
 
 		ImGui::ShowDemoWindow();
 		myImGuiLogger.Draw();
-		myRenderer.Debug();
+		myRendererPtr->Debug();
 		Camera::Get().Debug();
 		EngineUniformBuffer::Get().Debug();
 
-		myImguiWrapper.EndFrame();
+		myImguiWrapperPtr->EndFrame();
 	}
 }
 
@@ -57,6 +56,6 @@ void Program::SetupCallbacks()
 
 void Program::OnWindowSizeChanged([[maybe_unused]]GLFWwindow* Window, i32 X, i32 Y)
 {
-	myRenderer.SetViewportSize({ X, Y });
+	myRendererPtr->SetViewportSize({ X, Y });
 }
 

@@ -1,14 +1,17 @@
 #pragma once
+#include <System/SystemPtr.h>
+#include "Window.h"
 
-class Window;
-class ImguiWrapper : NonCopyable
+class ImguiWrapper : public System
 {
 public:
-	ImguiWrapper() = delete;
-	ImguiWrapper(const Window& Window);
+	ImguiWrapper();
 
 	void StartFrame();
 
 	void EndFrame();
+
+private:
+	SystemPtr<Window> myWindowPtr;
 };
 

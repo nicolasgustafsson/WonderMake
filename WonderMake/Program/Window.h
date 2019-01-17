@@ -1,13 +1,13 @@
 #pragma once
+#include <System/System.h>
 
 struct GLFWwindow;
 
-class Window : NonCopyable
+class Window : public System
 {
 public:
-	Window() = delete;
+	Window();
 
-	Window(const SVector2<int> Size);
 	~Window();
 
 	void Update();

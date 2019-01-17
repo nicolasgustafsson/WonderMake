@@ -6,7 +6,7 @@
 
 GameWorld::GameWorld()
 {
-	DataThreads::Get().GetRoutine(ERoutineId::Logic).lock()->AddProcedure([this] {Tick(); });
+	DataThreads::Get().GetRoutine(ERoutineId::Logic)->AddProcedure([this] {Tick(); });
 }
 
 

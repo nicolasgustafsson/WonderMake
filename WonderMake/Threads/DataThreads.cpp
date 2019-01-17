@@ -29,7 +29,7 @@ void DataThreads::Start(Program& aProgramReference, Closure&& aCallback)
 	StartRoutine(myRoutines[static_cast<size_t>(ERoutineId::Logic)]);
 }
 
-std::weak_ptr<Routine> DataThreads::GetRoutine(const ERoutineId aRoutine)
+std::shared_ptr<Routine> DataThreads::GetRoutine(const ERoutineId aRoutine)
 {
 	return myRoutines[static_cast<size_t>(aRoutine)];
 }

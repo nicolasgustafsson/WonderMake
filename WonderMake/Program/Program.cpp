@@ -12,7 +12,7 @@
 #include "Graphics/EngineUniformBuffer.h"
 
 Program::Program()
-	:myWindow(WindowSize), myRenderer(), myImguiWrapper(myWindow)
+	:myRenderer(), myImguiWrapper(*myWindowPtr)
 {
 	SetupCallbacks();
 }
@@ -21,7 +21,7 @@ void Program::Update()
 {
 	EngineUniformBuffer::Get().GetBuffer().Time += 0.01f;
 
-	myWindow.Update();
+	myWindowPtr->Update();
 
 	Camera::Get().Update();
 
@@ -46,9 +46,9 @@ void Program::Update()
 void Program::SetupCallbacks()
 {
 	//sets the user pointer so we can access ourself from the lambda
-	glfwSetWindowUserPointer(myWindow.myGlfwWindow, this);
+	glfwSetWindowUserPointer(myWindowPtr->myGlfwWindow, this);
 
-	glfwSetFramebufferSizeCallback(myWindow.myGlfwWindow, [](GLFWwindow* Window, int X, int Y) -> void
+	glfwSetFramebufferSizeCallback(myWindowPtr->myGlfwWindow, [](GLFWwindow* Window, int X, int Y) -> void
 	{
 		Program* SelfPointer = static_cast<Program*>(glfwGetWindowUserPointer(Window));
 		SelfPointer->OnWindowSizeChanged(Window, X, Y);

@@ -231,6 +231,7 @@
     <ClInclude Include="Graphics\EngineUniformBuffer.h" />
     <ClInclude Include="Imgui\DockSpace.h" />
     <ClInclude Include="Imgui\imgui_stdlib.h" />
+    <ClInclude Include="Json\json.hpp" />
     <ClInclude Include="Logging\ImGuiLogger.h" />
     <ClInclude Include="Logging\ConsoleLogger.h" />
     <ClInclude Include="Logging\LogMessageTags.h" />
@@ -240,6 +241,7 @@
     <ClInclude Include="Message\Messages.h" />
     <ClInclude Include="Graphics\RenderTarget.h" />
     <ClInclude Include="Graphics\ScreenPassRenderObject.h" />
+    <ClInclude Include="System\SystemPtr.h" />
     <ClInclude Include="System\SystemContainer.h" />
     <ClInclude Include="System\System.h" />
     <ClInclude Include="Threads\Routine.h" />

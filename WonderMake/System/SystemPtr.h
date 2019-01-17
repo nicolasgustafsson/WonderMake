@@ -1,4 +1,5 @@
 #pragma once
+#include "SystemContainer.h"
 template<typename TSystem>
 class SystemPtr
 {
@@ -9,17 +10,17 @@ public:
 
 	}
 
-	TSystem& operator* ()
+	TSystem& operator*()
 	{
 		return myReference;
 	}
 
-	TSystem* operator-> ()
+	TSystem* operator->()
 	{
-		return myReference;
+		return &myReference;
 	}
 
 private:
-	TSystem& myReference
+	TSystem& myReference;
 };
 

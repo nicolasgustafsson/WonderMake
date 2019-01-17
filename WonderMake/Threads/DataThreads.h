@@ -16,7 +16,7 @@ class DataThreads :
 public:
 	void Start(Program& aProgramReference, Closure&& aCallback);
 
-	std::weak_ptr<Routine> GetRoutine(const ERoutineId aRoutine);
+	std::shared_ptr<Routine> GetRoutine(const ERoutineId aRoutine);
 
 private:
 	std::vector<std::shared_ptr<Routine>> myRoutines;

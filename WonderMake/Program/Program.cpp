@@ -8,34 +8,46 @@
 #include "Graphics/Shader.h"
 #include <iostream>
 #include "../Threads/DataThreads.h"
+#include "Camera/Camera.h"
+#include "Graphics/EngineUniformBuffer.h"
 
 Program::Program()
-	:myWindow(WindowSize), myRenderer(), myImguiWrapper(myWindow)
 {
 	SetupCallbacks();
 }
 
 void Program::Update()
 {
-	myWindow.Update();
+	EngineUniformBuffer::Get().GetBuffer().Time += 0.01f;
 
-	myRenderer.SwapFrame();
+	myWindowPtr->Update();
 
-	myImguiWrapper.StartFrame();
+	Camera::Get().Update();
 
-	ImGui::ShowDemoWindow();
+	myRendererPtr->SwapFrame();
 
-	myImGuiLogger.Draw();
+	if constexpr (Constants::IsDebugging)
+	{
+		myImguiWrapperPtr->StartFrame();
 
-	myImguiWrapper.EndFrame();
+		myDockSpace.Debug();
+
+		ImGui::ShowDemoWindow();
+		myImGuiLogger.Draw();
+		myRendererPtr->Debug();
+		Camera::Get().Debug();
+		EngineUniformBuffer::Get().Debug();
+
+		myImguiWrapperPtr->EndFrame();
+	}
 }
 
 void Program::SetupCallbacks()
 {
 	//sets the user pointer so we can access ourself from the lambda
-	glfwSetWindowUserPointer(myWindow.myGlfwWindow, this);
+	glfwSetWindowUserPointer(myWindowPtr->myGlfwWindow, this);
 
-	glfwSetFramebufferSizeCallback(myWindow.myGlfwWindow, [](GLFWwindow* Window, int X, int Y) -> void
+	glfwSetFramebufferSizeCallback(myWindowPtr->myGlfwWindow, [](GLFWwindow* Window, int X, int Y) -> void
 	{
 		Program* SelfPointer = static_cast<Program*>(glfwGetWindowUserPointer(Window));
 		SelfPointer->OnWindowSizeChanged(Window, X, Y);
@@ -44,6 +56,6 @@ void Program::SetupCallbacks()
 
 void Program::OnWindowSizeChanged([[maybe_unused]]GLFWwindow* Window, i32 X, i32 Y)
 {
-	myRenderer.SetViewportSize({ X, Y });
+	myRendererPtr->SetViewportSize({ X, Y });
 }
 

@@ -1,14 +1,21 @@
 #include "stdafx.h"
 #include "Window.h"
 #include <GLFW/glfw3.h>
+#include "Json/json.hpp"
+#include <fstream>
 
-Window::Window(const SVector2<int> Size)
+Window::Window()
 {
+	std::ifstream windowSettingsFile("windowSettings.json");
+	json windowSettings;
+
+	windowSettingsFile >> windowSettings;
+
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	myGlfwWindow = glfwCreateWindow(Size.X, Size.Y, "WonderMake", NULL, NULL);
+	myGlfwWindow = glfwCreateWindow(windowSettings["X"].get<float>(), windowSettings["Y"].get<float>(), "WonderMake", NULL, NULL);
 	if (!myGlfwWindow)
 	{
 		WmLog(TagError, TagOpenGL, "Failed to create GLFW window!");

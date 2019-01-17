@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "ImGuiLogger.h"
 #include "Imgui/imgui.h"
-
+#include "Imgui/imgui_stdlib.h"
+#include <cctype>
 
 ImGuiLogger::ImGuiLogger()
 	:mySubscriber(ERoutineId::Logic, BindHelper(&ImGuiLogger::OnLogMessage, this))
@@ -19,6 +20,21 @@ void ImGuiLogger::Draw()
 
 	for (auto&& LogMessage : myLogMessages)
 	{
+		//skip filtered messages
+		if (!myFilterText.empty())
+		{
+			auto searchResult = std::search(
+				LogMessage.Message.begin(), LogMessage.Message.end(),
+				myFilterText.begin(), myFilterText.end(),
+				[](char a, char b) {return std::tolower(a) == std::tolower(b);}
+			);
+
+			if (searchResult == LogMessage.Message.end())
+			{
+				continue;
+			}
+		}
+
 		ImGui::PushStyleColor(ImGuiCol_Text, LogMessage.Color);
 		ImGui::TextUnformatted(LogMessage.Message.c_str());
 		ImGui::PopStyleColor();
@@ -27,6 +43,12 @@ void ImGuiLogger::Draw()
 	ImGui::PopStyleVar();
 
 	ImGui::EndChild();
+
+	ImGui::Separator();
+
+	ImGui::Text("Filter");
+	ImGui::SameLine();
+	ImGui::InputText("Write to filter", &myFilterText, ImGuiInputTextFlags_AutoSelectAll);
 
 	ImGui::End();
 }

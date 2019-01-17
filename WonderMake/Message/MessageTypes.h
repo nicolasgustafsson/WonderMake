@@ -109,7 +109,7 @@ private:
 	u32 myId = std::numeric_limits<u32>::max();
 };
 
-struct SLogMessage : public Message<Dispatchable>
+struct SLogMessage : public Message<SLogMessage>
 {
 public:
 	inline SLogMessage(std::string&& aLogMessage)

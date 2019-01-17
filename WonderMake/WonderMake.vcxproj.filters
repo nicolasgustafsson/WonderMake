@@ -28,6 +28,14 @@
     <ClCompile Include="Imgui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Program\Window.cpp" />
+    <ClCompile Include="Graphics\RenderTarget.cpp" />
+    <ClCompile Include="Graphics\ScreenPassRenderObject.cpp" />
+    <ClCompile Include="Imgui\DockSpace.cpp" />
+    <ClCompile Include="Imgui\imgui_stdlib.cpp" />
+    <ClCompile Include="Graphics\EngineUniformBuffer.cpp" />
+    <ClCompile Include="Camera\Camera.cpp" />
+    <ClCompile Include="System\System.cpp" />
+    <ClCompile Include="System\SystemContainer.cpp" />
     <ClCompile Include="Threads\RoutineIds.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -77,6 +85,19 @@
     <ClInclude Include="Utilities\Vector.h" />
     <ClInclude Include="Graphics\VertexTypes.h" />
     <ClInclude Include="Graphics\VertexBufferArray.h" />
+    <ClInclude Include="Graphics\RenderTarget.h" />
+    <ClInclude Include="Graphics\ScreenPassRenderObject.h" />
+    <ClInclude Include="Constants.h" />
+    <ClInclude Include="Imgui\DockSpace.h" />
+    <ClInclude Include="Imgui\imgui_stdlib.h" />
+    <ClInclude Include="Graphics\UniformBuffer.h" />
+    <ClInclude Include="Graphics\EngineUniformBuffer.h" />
+    <ClInclude Include="Camera\Camera.h" />
+    <ClInclude Include="Utilities\Matrix33.h" />
+    <ClInclude Include="System\System.h" />
+    <ClInclude Include="System\SystemContainer.h" />
+    <ClInclude Include="System\SystemPtr.h" />
+    <ClInclude Include="Json\json.hpp" />
     <ClInclude Include="Resources\ResourceProxy.h" />
     <ClInclude Include="Job\Job.h" />
     <ClInclude Include="Resources\CreateResource.h" />
@@ -84,5 +105,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
+    <None Include="Utilities\Matrix33.inl" />
   </ItemGroup>
 </Project>

@@ -3,6 +3,6 @@
 namespace Engine
 {
 	//wroom wroom
-	void Start();
+	void Start(Closure&& aCallback);
 };
 

@@ -11,7 +11,7 @@ void StartRoutine(std::shared_ptr<Routine> aRoutine)
 		aRoutine->Run();
 }
 
-void DataThreads::Start(Program& aProgramReference)
+void DataThreads::Start(Program& aProgramReference, Closure&& aCallback)
 {
 	myRoutines.resize(3);
 	myRoutines[static_cast<size_t>(ERoutineId::Logic)] = std::make_shared<RoutineMain>(aProgramReference);
@@ -23,5 +23,13 @@ void DataThreads::Start(Program& aProgramReference)
 	{
 		myThreads.emplace_back(&StartRoutine, myRoutines[i]);
 	}
+	
+	aCallback();
+
 	StartRoutine(myRoutines[static_cast<size_t>(ERoutineId::Logic)]);
+}
+
+std::shared_ptr<Routine> DataThreads::GetRoutine(const ERoutineId aRoutine)
+{
+	return myRoutines[static_cast<size_t>(aRoutine)];
 }

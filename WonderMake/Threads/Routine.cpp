@@ -16,7 +16,16 @@ void Routine::Run()
 	Procedure();
 }
 
-void Routine::Procedure() {}
+void Routine::AddProcedure(Closure aClosure)
+{
+	myProcedures.push_back(aClosure);
+}
+
+void Routine::Procedure() 
+{
+	for(auto&& procedure : myProcedures)
+		procedure();
+}
 
 void Routine::RouteMessages()
 {

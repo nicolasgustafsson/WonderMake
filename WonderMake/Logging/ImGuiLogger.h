@@ -19,6 +19,8 @@ private:
 
 	std::vector<SImGuiLogMessage> myLogMessages;
 
+	std::string myFilterText;
+
 	MessageSubscriber mySubscriber;
 };
 

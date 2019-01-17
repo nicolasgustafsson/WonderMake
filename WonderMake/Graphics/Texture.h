@@ -1,5 +1,10 @@
 #pragma once
-class Texture : NonCopyable
+
+#include "Resources/Resource.h"
+
+class Texture
+	: public Resource
+	, private NonCopyable
 {
 public:
 	Texture(const std::filesystem::path& aPath);

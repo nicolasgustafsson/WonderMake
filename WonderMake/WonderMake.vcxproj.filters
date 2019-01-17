@@ -28,6 +28,7 @@
     <ClCompile Include="Imgui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Program\Window.cpp" />
+    <ClCompile Include="Threads\RoutineIds.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logging\ImGuiLogger.h" />
@@ -78,6 +79,8 @@
     <ClInclude Include="Graphics\VertexBufferArray.h" />
     <ClInclude Include="Resources\ResourceProxy.h" />
     <ClInclude Include="Job\Job.h" />
+    <ClInclude Include="Resources\CreateResource.h" />
+    <ClInclude Include="Resources\Resource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

@@ -200,6 +200,8 @@
     <ClCompile Include="Message\DispatchableBuffer.cpp" />
     <ClCompile Include="Graphics\RenderTarget.cpp" />
     <ClCompile Include="Graphics\ScreenPassRenderObject.cpp" />
+    <ClCompile Include="System\SystemContainer.cpp" />
+    <ClCompile Include="System\System.cpp" />
     <ClCompile Include="Threads\Routine.cpp" />
     <ClCompile Include="Threads\RoutineMain.cpp" />
     <ClCompile Include="Threads\DataThreads.cpp" />
@@ -238,6 +240,8 @@
     <ClInclude Include="Message\Messages.h" />
     <ClInclude Include="Graphics\RenderTarget.h" />
     <ClInclude Include="Graphics\ScreenPassRenderObject.h" />
+    <ClInclude Include="System\SystemContainer.h" />
+    <ClInclude Include="System\System.h" />
     <ClInclude Include="Threads\Routine.h" />
     <ClInclude Include="Threads\RoutineMain.h" />
     <ClInclude Include="Threads\DataThreads.h" />

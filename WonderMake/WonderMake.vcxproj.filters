@@ -33,6 +33,8 @@
     <ClCompile Include="Imgui\imgui_stdlib.cpp" />
     <ClCompile Include="Graphics\EngineUniformBuffer.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
+    <ClCompile Include="System\System.cpp" />
+    <ClCompile Include="System\SystemContainer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logging\ImGuiLogger.h" />
@@ -90,6 +92,8 @@
     <ClInclude Include="Graphics\EngineUniformBuffer.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Utilities\Matrix33.h" />
+    <ClInclude Include="System\System.h" />
+    <ClInclude Include="System\SystemContainer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

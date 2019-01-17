@@ -27,6 +27,12 @@ public:
 		return SystemWrapped.mySystem;
 	}
 
+	template<typename TSystem>
+	void CreateSystem()
+	{
+		GetSystem<TSystem>();
+	}
+
 private:
 	std::vector<System*> mySystems;
 };

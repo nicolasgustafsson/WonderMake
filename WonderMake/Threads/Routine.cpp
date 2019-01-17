@@ -15,14 +15,15 @@ void Routine::Run()
 	Procedure();
 }
 
-void Routine::SetProcedure(Closure aClosure)
+void Routine::AddProcedure(Closure aClosure)
 {
-	myProcedure = aClosure;
+	myProcedures.push_back(aClosure);
 }
 
 void Routine::Procedure() 
 {
-	myProcedure();
+	for(auto&& procedure : myProcedures)
+		procedure();
 }
 
 void Routine::RouteMessages()

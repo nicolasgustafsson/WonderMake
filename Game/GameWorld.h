@@ -1,10 +1,12 @@
 #pragma once
-class GameWorld
+#include <System/System.h>
+
+class GameWorld : public System
 {
 public:
 	GameWorld();
 	~GameWorld();
 
-	void Tick();
+	virtual void Tick() override;
 };
 

@@ -2,13 +2,13 @@
 
 class SystemContainer;
 
-class System
+class System : public NonCopyable
 {
 public:
-	virtual void Update() {}
+	virtual void Tick() {}
 
 protected:
 	System() = default;
-	friend class SystemContainer;
+	virtual ~System() = default;
 };
 

@@ -14,7 +14,7 @@ public:
 
 	void Run();
 
-	void SetProcedure(Closure aClosure);
+	void AddProcedure(Closure aClosure);
 
 protected:
 	virtual void Procedure();
@@ -26,5 +26,5 @@ private:
 
 	const ERoutineId myRoutineId;
 	MessageSubscriber mySubscriber;
-	Closure myProcedure;
+	std::vector<Closure> myProcedures;
 };

@@ -51,7 +51,7 @@ ResourceProxy<TResource> ResourceManager<TResource>::GetResource(const std::file
 		}
 
 		rawResource = new SResource<TResource>();
-		resource = std::shared_ptr<SResource<TResource>>(rawResource, std::bind(&ResourceManager<TResource>::ResourceDeleter, this, aPath, std::placeholders::_1));
+		resource = std::shared_ptr<SResource<TResource>>(rawResource, [&, aPath](auto aResource) { ResourceDeleter(aPath, aResource); });
 		myResources[aPath.string()] = resource;
 	}
 
@@ -76,7 +76,7 @@ inline void ResourceManager<TResource>::SetCreateResourceJob()
 	myStartCreateJob = [&](const std::filesystem::path& aPath)
 	{
 		auto job = std::make_shared<TJob>();
-		job->Setup(aPath, std::bind(&ResourceManager<TResource>::OnCreateResourceComplete, this, aPath));
+		job->Setup(aPath, [&, aPath] { OnCreateResourceComplete(aPath); });
 		myCreateResourceJobs[aPath.string()] = job;
 		job->Start();
 	};

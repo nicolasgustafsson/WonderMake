@@ -29,11 +29,13 @@ Renderer::Renderer()
 {
 	glEnable(GL_DEBUG_OUTPUT);
 	glDebugMessageCallback(MessageCallback, 0);
+	myCameraPtr->SetViewportSize({1600, 900});
 }
 
 void Renderer::SetViewportSize(const SVector2<int> WindowSize)
 {
 	glViewport(0, 0, WindowSize.X, WindowSize.Y);
+	myCameraPtr->SetViewportSize(WindowSize);
 }
 
 void Renderer::SwapFrame()

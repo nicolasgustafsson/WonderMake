@@ -36,3 +36,5 @@ Bin/*.lib
 Intermediate/
 *.user
 *imgui.ini
+*.ipdb
+*.iobj

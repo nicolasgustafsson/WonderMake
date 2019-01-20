@@ -37,7 +37,6 @@ void Program::Update()
 		myRendererPtr->Debug();
 		myCameraPtr->Debug();
 		myEngineUniformBufferPtr->Debug();
-
 		myImguiWrapper.EndFrame();
 	}
 }

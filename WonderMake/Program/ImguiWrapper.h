@@ -1,8 +1,8 @@
 #pragma once
-#include <System/SystemPtr.h>
+#include "System/SystemPtr.h"
 #include "Window.h"
 
-class ImguiWrapper : public System
+class ImguiWrapper
 {
 public:
 	ImguiWrapper();

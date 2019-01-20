@@ -18,27 +18,27 @@ Program::Program()
 
 void Program::Update()
 {
-	EngineUniformBuffer::Get().GetBuffer().Time += 0.01f;
+	myEngineUniformBufferPtr->GetBuffer().Time += 0.01f;
 
 	myWindowPtr->Update();
 
-	Camera::Get().Update();
+	myCameraPtr->Update();
 
 	myRendererPtr->SwapFrame();
 
 	if constexpr (Constants::IsDebugging)
 	{
-		myImguiWrapperPtr->StartFrame();
+		myImguiWrapper.StartFrame();
 
 		myDockSpace.Debug();
 
 		ImGui::ShowDemoWindow();
 		myImGuiLogger.Draw();
 		myRendererPtr->Debug();
-		Camera::Get().Debug();
-		EngineUniformBuffer::Get().Debug();
+		myCameraPtr->Debug();
+		myEngineUniformBufferPtr->Debug();
 
-		myImguiWrapperPtr->EndFrame();
+		myImguiWrapper.EndFrame();
 	}
 }
 

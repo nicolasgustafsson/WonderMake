@@ -25,8 +25,11 @@ private:
 	DockSpace myDockSpace;
 	SystemPtr<Window> myWindowPtr;
 	SystemPtr<Renderer> myRendererPtr;
-	SystemPtr<ImguiWrapper> myImguiWrapperPtr;
+	SystemPtr<EngineUniformBuffer> myEngineUniformBufferPtr;
+	ImguiWrapper myImguiWrapper;
 	//-------KEEP THIS IN ORDER-------
+
+	SystemPtr<Camera> myCameraPtr;
 
 	static constexpr SVector2<i32> WindowSize = {1600, 900};
 };

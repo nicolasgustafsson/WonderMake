@@ -1,6 +1,6 @@
 #pragma once
 #include "Graphics/Shader.h"
-#include "Resources/ResourceManager.h"
+#include "Resources/ResourceProxy.h"
 #include "Utilities/Vector.h"
 #include "Utilities/Vector.h"
 #include "Utilities/Vector.h"

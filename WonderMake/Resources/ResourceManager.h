@@ -3,7 +3,7 @@
 #include "Resources/Resource.h"
 #include "Resources/ResourceProxy.h"
 
-#include "Utilities/Singleton.h"
+#include "System/System.h"
 
 #include <filesystem>
 #include <functional>
@@ -13,7 +13,7 @@
 
 template<typename TResource>
 class ResourceManager
-	: public Singleton<ResourceManager<TResource>>
+	: public System
 {
 public:
 	ResourceProxy<TResource> GetResource(const std::filesystem::path& aPath);
@@ -22,8 +22,6 @@ public:
 	inline void SetCreateResourceJob();
 
 protected:
-	friend class Singleton<ResourceManager<TResource>>;
-
 	inline void ResourceDeleter(std::filesystem::path aPath, SResource<TResource>* const aResource);
 
 	inline void OnCreateResourceComplete(const std::filesystem::path aPath);

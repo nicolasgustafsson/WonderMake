@@ -7,6 +7,8 @@
 
 #include "Resources/ResourceManager.h"
 
+#include "System/SystemPtr.h"
+
 //everything needed to create a renderobject
 struct SRenderObjectInfo
 {
@@ -74,6 +76,6 @@ RenderObject<TAttributes...>::RenderObject(const SRenderObjectInfo& aRenderObjec
 {
 	myVertexCount = aRenderObjectInfo.VertexCount;
 	if (!aRenderObjectInfo.TexturePath.empty())
-		myTextures.emplace_back(ResourceManager<Texture>::Get().GetResource(aRenderObjectInfo.TexturePath));
+		myTextures.emplace_back(SystemPtr<ResourceManager<Texture>>()->GetResource(aRenderObjectInfo.TexturePath));
 }
 

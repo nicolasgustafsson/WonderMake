@@ -2,22 +2,23 @@
 #include "ShaderProgram.h"
 #include <type_traits>
 #include "VertexBuffer.h"
-#include "../Resources/ResourceManager.h"
+#include "Resources/ResourceManager.h"
+#include "System/SystemPtr.h"
 #include "Texture.h"
 
 ShaderProgram::ShaderProgram(const std::filesystem::path& VertexShaderPath, const std::filesystem::path& FragmentShaderPath, const std::filesystem::path& GeometryShaderPath)
 {
-	ResourceManager<Shader<EShaderType::Vertex>>& VertexRM = ResourceManager<Shader<EShaderType::Vertex>>::Get();
-	ResourceManager<Shader<EShaderType::Fragment>>& FragmentRM = ResourceManager<Shader<EShaderType::Fragment>>::Get();
-
-	myVertexShader = VertexRM.GetResource(VertexShaderPath);
-	myFragmentShader = FragmentRM.GetResource(FragmentShaderPath);
+	SystemPtr<ResourceManager<Shader<EShaderType::Vertex>>> rmVertex;
+	SystemPtr<ResourceManager<Shader<EShaderType::Fragment>>> rmFragment;
+	
+	myVertexShader = rmVertex->GetResource(VertexShaderPath);
+	myFragmentShader = rmFragment->GetResource(FragmentShaderPath);
 
 	if (!GeometryShaderPath.empty())
 	{
-		ResourceManager<Shader<EShaderType::Geometry>>& GeomRM = ResourceManager<Shader<EShaderType::Geometry>>::Get();
+		SystemPtr<ResourceManager<Shader<EShaderType::Geometry>>> rmGeometry;
 
-		myGeometryShader.emplace(GeomRM.GetResource(GeometryShaderPath));
+		myGeometryShader.emplace(rmGeometry->GetResource(GeometryShaderPath));
 	}
 
 	myProgramHandle = glCreateProgram();

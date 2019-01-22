@@ -29,16 +29,18 @@ Renderer::Renderer()
 {
 	glEnable(GL_DEBUG_OUTPUT);
 	glDebugMessageCallback(MessageCallback, 0);
+	myCameraPtr->SetViewportSize({1600, 900});
 }
 
 void Renderer::SetViewportSize(const SVector2<int> WindowSize)
 {
 	glViewport(0, 0, WindowSize.X, WindowSize.Y);
+	myCameraPtr->SetViewportSize(WindowSize);
 }
 
 void Renderer::SwapFrame()
 {
-	EngineUniformBuffer::Get().Update();
+	myEngineUniformBufferPtr->Update();
 
 	//first pass
 	myRenderTarget.BindAsTarget();
@@ -110,7 +112,7 @@ void Renderer::Debug()
 		SVector2i ViewportSize = { static_cast<i32>(ImGui::GetContentRegionAvail().x), static_cast<i32>(ImGui::GetContentRegionAvail().y) };
 		ImGui::Image((void *)myRenderTarget.GetTexture(), ImVec2(ViewportSize.X, ViewportSize.Y));
 
-		Camera::Get().SetViewportSize(ViewportSize);
+		myCameraPtr->SetViewportSize(ViewportSize);
 
 		ImGui::End();
 	}

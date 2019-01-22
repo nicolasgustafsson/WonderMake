@@ -16,5 +16,4 @@ GameWorld::~GameWorld()
 
 void GameWorld::Tick()
 {
-	WmLog("Hello there!");
 }

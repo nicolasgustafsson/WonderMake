@@ -27,7 +27,7 @@ void Camera::Update()
 
 	viewInverse.Inverse();
 
-	auto& buffer = EngineUniformBuffer::Get().GetBuffer();
+	auto& buffer = myEngineBufferPtr->GetBuffer();
 
 	auto projectionMatrix = myProjectionMatrix;
 	auto viewMatrix = viewInverse;

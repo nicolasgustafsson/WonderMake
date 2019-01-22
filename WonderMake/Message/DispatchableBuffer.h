@@ -5,7 +5,6 @@
 #include "Threads/DoubleBuffer.h"
 #include "Threads/RoutineIds.h"
 
-#include "Utilities/Singleton.h"
 #include "Utilities/RestrictTypes.h"
 #include "Utilities/Utility.h"
 

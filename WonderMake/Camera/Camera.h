@@ -1,7 +1,9 @@
 #pragma once
-#include "Utilities/Singleton.h"
+#include "System/System.h"
+#include "System/SystemPtr.h"
+#include "Graphics/EngineUniformBuffer.h"
 
-class Camera : public Singleton<Camera>
+class Camera : public System
 {
 public:
 	Camera();
@@ -14,6 +16,7 @@ public:
 	void SetViewportSize(const SVector2i aViewportSize);
 
 private:
+	SystemPtr<EngineUniformBuffer> myEngineBufferPtr;
 	SVector2f myPosition;
 	float myRotation;
 	float myScale = 1.0f;

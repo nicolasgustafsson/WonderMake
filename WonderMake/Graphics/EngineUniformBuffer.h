@@ -1,7 +1,7 @@
 #pragma once
 #include "UniformBuffer.h"
-#include "Utilities/Singleton.h"
 #include "Utilities/Matrix33.h"
+#include "System/System.h"
 
 struct SPaddedMatrix33
 {
@@ -56,10 +56,12 @@ struct SEngineUniformBufferData
 	float Time = 0;
 };
 
-class EngineUniformBuffer : public UniformBuffer<SEngineUniformBufferData>, public Singleton<EngineUniformBuffer>
+class EngineUniformBuffer 
+	: public UniformBuffer<SEngineUniformBufferData>
+	, public System
+	
 {
 public:
-
 	EngineUniformBuffer();
 
 	void Debug();

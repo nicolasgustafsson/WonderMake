@@ -27,9 +27,7 @@ void ReadFileAsString::ReadFile()
 		return;
 	}
 
-	fileStream.seekg(0, std::ios::end);
-	myOutData.reserve(fileStream.tellg());
-	fileStream.seekg(0, std::ios::beg);
+	myOutData.reserve(std::filesystem::file_size(myFilePath));
 	myOutData.assign((std::istreambuf_iterator<char>(fileStream)), std::istreambuf_iterator<char>());
 
 	CompleteOnRoutine(EResult::Success, myRoutineChecker.GetRoutineId());

@@ -26,7 +26,6 @@
     <ClCompile Include="Imgui\imgui_impl_glfw.cpp" />
     <ClCompile Include="Imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Imgui\imgui_widgets.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="Program\Window.cpp" />
     <ClCompile Include="Graphics\RenderTarget.cpp" />
     <ClCompile Include="Graphics\ScreenPassRenderObject.cpp" />
@@ -37,6 +36,7 @@
     <ClCompile Include="System\System.cpp" />
     <ClCompile Include="System\SystemContainer.cpp" />
     <ClCompile Include="Threads\RoutineIds.cpp" />
+    <ClCompile Include="FileSystem\ReadFileAsString.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logging\ImGuiLogger.h" />
@@ -102,6 +102,8 @@
     <ClInclude Include="Job\Job.h" />
     <ClInclude Include="Resources\CreateResource.h" />
     <ClInclude Include="Resources\Resource.h" />
+    <ClInclude Include="FileSystem\FileSystem.h" />
+    <ClInclude Include="FileSystem\ReadFileAsString.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

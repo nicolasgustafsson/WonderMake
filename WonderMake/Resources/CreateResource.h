@@ -10,7 +10,7 @@ class CreateResource
 	: public Job
 {
 public:
-	inline void Setup(const std::filesystem::path& aFilePath, Closure&& aCallback)
+	inline void Setup(const std::filesystem::path& aFilePath, Callback&& aCallback)
 	{
 		myCallback = std::move(aCallback);
 		myFilePath = aFilePath;
@@ -19,7 +19,7 @@ public:
 	inline virtual void Start()
 	{
 		myResource = std::make_shared<TResource>(myFilePath);
-		Complete(EJobResult::Success);
+		Complete(EResult::Success);
 	}
 
 	std::shared_ptr<TResource> myResource;

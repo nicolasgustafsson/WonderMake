@@ -19,7 +19,7 @@ void DataThreads::Start(Program& aProgramReference, Closure&& aCallback)
 	myRoutines[static_cast<size_t>(ERoutineId::File)] = std::make_shared<Routine>(ERoutineId::File);
 	
 	myThreads.reserve(myRoutines.size() - 1);
-	for (size_t i = 1; i < myThreads.size(); ++i)
+	for (size_t i = 1; i < myRoutines.size(); ++i)
 	{
 		myThreads.emplace_back(&StartRoutine, myRoutines[i]);
 	}

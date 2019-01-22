@@ -1,9 +1,11 @@
 #pragma once
-#include <type_traits>
+#include "System/System.h"
 
-#include "System.h"
+#include "Utilities/Singleton.h"
+
+#include <mutex>
+#include <type_traits>
 #include <unordered_map>
-#include <Utilities/Singleton.h>
 
 class SystemContainer : public Singleton<SystemContainer>
 {
@@ -13,6 +15,8 @@ public:
 	TSystem& GetSystem()
 	{
 		static_assert(std::is_base_of<System, TSystem>::value, "Tried to get system that does not inherit from System!");
+
+		std::lock_guard<decltype(myMutex)> lock(myMutex);
 
 		static struct SystemConstructionWrapper
 		{
@@ -35,5 +39,6 @@ public:
 
 private:
 	std::vector<System*> mySystems;
+	std::recursive_mutex myMutex;
 };
 

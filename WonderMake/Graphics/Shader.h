@@ -1,7 +1,9 @@
 #pragma once
 #include <fstream>
 
-#include "../Utilities/RestrictTypes.h"
+#include "Resources/Resource.h"
+
+#include "Utilities/RestrictTypes.h"
 
 enum class EShaderType
 {
@@ -11,7 +13,9 @@ enum class EShaderType
 };
 
 template<EShaderType ShaderType>
-class Shader : NonCopyable
+class Shader
+	: public Resource
+	, private NonCopyable
 {
 public:
 	Shader(const std::filesystem::path Path)

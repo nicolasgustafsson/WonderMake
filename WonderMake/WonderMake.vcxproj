@@ -203,6 +203,7 @@
     <ClCompile Include="System\SystemContainer.cpp" />
     <ClCompile Include="System\System.cpp" />
     <ClCompile Include="Threads\Routine.cpp" />
+    <ClCompile Include="Threads\RoutineIds.cpp" />
     <ClCompile Include="Threads\RoutineMain.cpp" />
     <ClCompile Include="Threads\DataThreads.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
@@ -232,6 +233,7 @@
     <ClInclude Include="Imgui\DockSpace.h" />
     <ClInclude Include="Imgui\imgui_stdlib.h" />
     <ClInclude Include="Json\json.hpp" />
+    <ClInclude Include="Job\Job.h" />
     <ClInclude Include="Logging\ImGuiLogger.h" />
     <ClInclude Include="Logging\ConsoleLogger.h" />
     <ClInclude Include="Logging\LogMessageTags.h" />
@@ -244,6 +246,9 @@
     <ClInclude Include="System\SystemPtr.h" />
     <ClInclude Include="System\SystemContainer.h" />
     <ClInclude Include="System\System.h" />
+    <ClInclude Include="Resources\CreateResource.h" />
+    <ClInclude Include="Resources\Resource.h" />
+    <ClInclude Include="Resources\ResourceProxy.h" />
     <ClInclude Include="Threads\Routine.h" />
     <ClInclude Include="Threads\RoutineMain.h" />
     <ClInclude Include="Threads\DataThreads.h" />

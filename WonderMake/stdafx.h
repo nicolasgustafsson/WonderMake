@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <optional>
 #include <array>
+#include <functional>
 #include "Utilities/Result.h"
 #include "Utilities/Color.h"
 #include "Utilities/RestrictTypes.h"

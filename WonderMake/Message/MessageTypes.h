@@ -1,12 +1,13 @@
 #pragma once
 
+#include "Typedefs.h"
+
 #include "Logging/LogMessageTags.h"
 
 #include <atomic>
+#include <limits>
 #include <typeinfo>
 #include <functional>
-
-typedef std::function<void()> Closure;
 
 class Dispatchable
 {
@@ -87,6 +88,7 @@ class QueryResult
 	: public Message<QueryResult<T>>
 {
 public:
+	QueryResult() = default;
 	template<typename TQuery>
 	inline QueryResult(const TQuery& aQuery)
 		: myId(aQuery.Id())
@@ -104,7 +106,7 @@ public:
 	}
 
 private:
-	u32 myId;
+	u32 myId = std::numeric_limits<u32>::max();
 };
 
 struct SLogMessage : public Message<SLogMessage>

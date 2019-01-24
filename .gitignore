@@ -32,6 +32,7 @@
 *.out
 *.app
 Bin/*.lib
+Bin/Logs/
 .vs/
 Intermediate/
 *.user

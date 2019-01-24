@@ -195,6 +195,7 @@
     <ClCompile Include="Graphics\EngineUniformBuffer.cpp" />
     <ClCompile Include="Imgui\DockSpace.cpp" />
     <ClCompile Include="Imgui\imgui_stdlib.cpp" />
+    <ClCompile Include="Logging\FileLogger.cpp" />
     <ClCompile Include="Logging\ImGuiLogger.cpp" />
     <ClCompile Include="Logging\ConsoleLogger.cpp" />
     <ClCompile Include="Program\Engine.cpp" />
@@ -237,6 +238,7 @@
     <ClInclude Include="Imgui\imgui_stdlib.h" />
     <ClInclude Include="Json\json.hpp" />
     <ClInclude Include="Job\Job.h" />
+    <ClInclude Include="Logging\FileLogger.h" />
     <ClInclude Include="Logging\ImGuiLogger.h" />
     <ClInclude Include="Logging\ConsoleLogger.h" />
     <ClInclude Include="Logging\LogMessageTags.h" />

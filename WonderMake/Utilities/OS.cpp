@@ -4,7 +4,7 @@
 
 #include <time.h>
 
-void GetDateTime(std::string& aOutString)
+std::string GetDateTime()
 {
 	std::time_t rawtime;
 	std::tm timeinfo;
@@ -13,6 +13,6 @@ void GetDateTime(std::string& aOutString)
 	std::time(&rawtime);
 	localtime_s(&timeinfo, &rawtime);
 
-	std::strftime(buffer, 80, "%Y-%m-%d-%H-%M-%S", &timeinfo);
-	aOutString = buffer;
+	std::strftime(buffer, sizeof(buffer), "%Y-%m-%d-%H-%M-%S", &timeinfo);
+	return buffer;
 }

@@ -57,9 +57,7 @@ inline static void WmLog(TMessageArgs... aMessageArgs)
 {
 	std::stringstream MessageStream;
 
-	std::string dateTime;
-	GetDateTime(dateTime);
-	MessageStream << '[' << dateTime << ']';
+	MessageStream << '[' << GetDateTime() << ']';
 
 	(MessageStream << ... << aMessageArgs);
 

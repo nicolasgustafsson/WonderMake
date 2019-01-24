@@ -2,4 +2,4 @@
 
 #include <string>
 
-void GetDateTime(std::string& aOutString);
+std::string GetDateTime();

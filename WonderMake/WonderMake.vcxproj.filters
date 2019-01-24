@@ -36,7 +36,7 @@
     <ClCompile Include="System\System.cpp" />
     <ClCompile Include="System\SystemContainer.cpp" />
     <ClCompile Include="Threads\RoutineIds.cpp" />
-    <ClCompile Include="FileSystem\ReadFileAsString.cpp" />
+    <ClCompile Include="FileSystem\ReadFileAsStringJob.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logging\ImGuiLogger.h" />
@@ -63,7 +63,6 @@
     <ClInclude Include="Program\Program.h" />
     <ClInclude Include="Graphics\ShaderProgram.h" />
     <ClInclude Include="Graphics\RenderObject.h" />
-    <ClInclude Include="Resources\ResourceManager.h" />
     <ClInclude Include="Graphics\SpriteRenderObject.h" />
     <ClInclude Include="Utilities\Singleton.h" />
     <ClInclude Include="stdafx.h" />
@@ -103,7 +102,8 @@
     <ClInclude Include="Resources\CreateResource.h" />
     <ClInclude Include="Resources\Resource.h" />
     <ClInclude Include="FileSystem\FileSystem.h" />
-    <ClInclude Include="FileSystem\ReadFileAsString.h" />
+    <ClInclude Include="FileSystem\ReadFileAsStringJob.h" />
+    <ClInclude Include="Resources\ResourceSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

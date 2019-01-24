@@ -191,7 +191,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera\Camera.cpp" />
-    <ClCompile Include="FileSystem\ReadFileAsString.cpp" />
+    <ClCompile Include="FileSystem\ReadFileAsStringJob.cpp" />
     <ClCompile Include="Graphics\EngineUniformBuffer.cpp" />
     <ClCompile Include="Imgui\DockSpace.cpp" />
     <ClCompile Include="Imgui\imgui_stdlib.cpp" />
@@ -231,7 +231,7 @@
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="FileSystem\FileSystem.h" />
-    <ClInclude Include="FileSystem\ReadFileAsString.h" />
+    <ClInclude Include="FileSystem\ReadFileAsStringJob.h" />
     <ClInclude Include="Graphics\EngineUniformBuffer.h" />
     <ClInclude Include="Imgui\DockSpace.h" />
     <ClInclude Include="Imgui\imgui_stdlib.h" />
@@ -269,7 +269,7 @@
     <ClInclude Include="Program\Program.h" />
     <ClInclude Include="Graphics\ShaderProgram.h" />
     <ClInclude Include="Graphics\RenderObject.h" />
-    <ClInclude Include="Resources\ResourceManager.h" />
+    <ClInclude Include="Resources\ResourceSystem.h" />
     <ClInclude Include="Graphics\SpriteRenderObject.h" />
     <ClInclude Include="Graphics\UniformBuffer.h" />
     <ClInclude Include="Utilities\Matrix33.h" />

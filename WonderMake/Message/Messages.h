@@ -1,7 +1,9 @@
 #pragma once
 
-#include "MessageTypes.h"
-#include "DispatchableBuffer.h"
+#include "Message/MessageTypes.h"
+#include "Message/DispatchableBuffer.h"
+
+#include "Utilities/OS.h"
 
 #include <sstream>
 #include <memory>
@@ -54,6 +56,8 @@ template<typename ... TMessageArgs>
 inline static void WmLog(TMessageArgs... aMessageArgs)
 {
 	std::stringstream MessageStream;
+
+	MessageStream << '[' << GetDateTime() << ']';
 
 	(MessageStream << ... << aMessageArgs);
 

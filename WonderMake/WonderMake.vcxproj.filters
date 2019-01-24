@@ -37,6 +37,8 @@
     <ClCompile Include="System\SystemContainer.cpp" />
     <ClCompile Include="Threads\RoutineIds.cpp" />
     <ClCompile Include="FileSystem\ReadFileAsStringJob.cpp" />
+    <ClCompile Include="Logging\FileLogger.cpp" />
+    <ClCompile Include="Utilities\OS.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logging\ImGuiLogger.h" />
@@ -104,6 +106,8 @@
     <ClInclude Include="FileSystem\FileSystem.h" />
     <ClInclude Include="FileSystem\ReadFileAsStringJob.h" />
     <ClInclude Include="Resources\ResourceSystem.h" />
+    <ClInclude Include="Logging\FileLogger.h" />
+    <ClInclude Include="Utilities\OS.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

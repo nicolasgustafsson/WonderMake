@@ -195,6 +195,7 @@
     <ClCompile Include="Graphics\EngineUniformBuffer.cpp" />
     <ClCompile Include="Imgui\DockSpace.cpp" />
     <ClCompile Include="Imgui\imgui_stdlib.cpp" />
+    <ClCompile Include="Logging\FileLogger.cpp" />
     <ClCompile Include="Logging\ImGuiLogger.cpp" />
     <ClCompile Include="Logging\ConsoleLogger.cpp" />
     <ClCompile Include="Program\Engine.cpp" />
@@ -226,6 +227,7 @@
     <ClCompile Include="Imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Imgui\imgui_widgets.cpp" />
     <ClCompile Include="Program\Window.cpp" />
+    <ClCompile Include="Utilities\OS.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera\Camera.h" />
@@ -237,6 +239,7 @@
     <ClInclude Include="Imgui\imgui_stdlib.h" />
     <ClInclude Include="Json\json.hpp" />
     <ClInclude Include="Job\Job.h" />
+    <ClInclude Include="Logging\FileLogger.h" />
     <ClInclude Include="Logging\ImGuiLogger.h" />
     <ClInclude Include="Logging\ConsoleLogger.h" />
     <ClInclude Include="Logging\LogMessageTags.h" />
@@ -273,6 +276,7 @@
     <ClInclude Include="Graphics\SpriteRenderObject.h" />
     <ClInclude Include="Graphics\UniformBuffer.h" />
     <ClInclude Include="Utilities\Matrix33.h" />
+    <ClInclude Include="Utilities\OS.h" />
     <ClInclude Include="Utilities\Singleton.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Graphics\Texture.h" />

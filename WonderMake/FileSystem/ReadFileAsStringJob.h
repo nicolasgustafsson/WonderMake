@@ -6,9 +6,9 @@
 #include <filesystem>
 #include <memory>
 
-class ReadFileAsString
+class ReadFileAsStringJob
 	: public Job
-	, public std::enable_shared_from_this<ReadFileAsString>
+	, public std::enable_shared_from_this<ReadFileAsStringJob>
 {
 public:
 	template<typename TCallback>
@@ -26,7 +26,7 @@ private:
 };
 
 template<typename TCallback>
-inline void ReadFileAsString::Setup(std::filesystem::path&& aFilePath, TCallback&& aCallback)
+inline void ReadFileAsStringJob::Setup(std::filesystem::path&& aFilePath, TCallback&& aCallback)
 {
 	myFilePath = aFilePath;
 	myCallback = aCallback;

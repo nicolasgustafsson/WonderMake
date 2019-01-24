@@ -12,7 +12,7 @@
 #include <unordered_map>
 
 template<typename TResource>
-class ResourceManager
+class ResourceSystem
 	: public System
 {
 public:
@@ -34,7 +34,7 @@ protected:
 };
 
 template<typename TResource>
-ResourceProxy<TResource> ResourceManager<TResource>::GetResource(const std::filesystem::path& aPath)
+ResourceProxy<TResource> ResourceSystem<TResource>::GetResource(const std::filesystem::path& aPath)
 {
 	SResource<TResource>* rawResource = nullptr;
 	std::shared_ptr<SResource<TResource>> resource;
@@ -68,7 +68,7 @@ ResourceProxy<TResource> ResourceManager<TResource>::GetResource(const std::file
 
 template<typename TResource>
 template<typename TJob>
-inline void ResourceManager<TResource>::SetCreateResourceJob()
+inline void ResourceSystem<TResource>::SetCreateResourceJob()
 {
 	std::lock_guard<decltype(myLock)> lock(myLock);
 	myStartCreateJob = [&](const std::filesystem::path& aPath)
@@ -81,7 +81,7 @@ inline void ResourceManager<TResource>::SetCreateResourceJob()
 }
 
 template<typename TResource>
-inline void ResourceManager<TResource>::ResourceDeleter(std::filesystem::path aPath, SResource<TResource>* const aResource)
+inline void ResourceSystem<TResource>::ResourceDeleter(std::filesystem::path aPath, SResource<TResource>* const aResource)
 {
 	std::lock_guard<decltype(myLock)> lock(myLock);
 
@@ -103,7 +103,7 @@ inline void ResourceManager<TResource>::ResourceDeleter(std::filesystem::path aP
 }
 
 template<typename TResource>
-inline void ResourceManager<TResource>::OnCreateResourceComplete(const std::filesystem::path aPath)
+inline void ResourceSystem<TResource>::OnCreateResourceComplete(const std::filesystem::path aPath)
 {
 	std::shared_ptr<SResource<TResource>> resourceStruct;
 	std::shared_ptr<CreateResource<TResource>> resourceJob;

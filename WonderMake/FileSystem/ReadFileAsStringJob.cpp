@@ -1,17 +1,17 @@
 #include "stdafx.h"
-#include "ReadFileAsString.h"
+#include "ReadFileAsStringJob.h"
 
 #include "Message/Messages.h"
 
 #include <fstream>
 #include <string>
 
-void ReadFileAsString::Start()
+void ReadFileAsStringJob::Start()
 {
-	WmDispatchTask(BindTask(&ReadFileAsString::ReadFile, weak_from_this()), ERoutineId::File);
+	WmDispatchTask(BindTask(&ReadFileAsStringJob::ReadFile, weak_from_this()), ERoutineId::File);
 }
 
-void ReadFileAsString::ReadFile()
+void ReadFileAsStringJob::ReadFile()
 {
 	if (!std::filesystem::exists(myFilePath))
 	{

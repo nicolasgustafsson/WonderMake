@@ -1,6 +1,6 @@
 #pragma once
 
-#include "FileSystem/ReadFileAsString.h"
+#include "FileSystem/ReadFileAsStringJob.h"
 
 #include "System/System.h"
 
@@ -25,8 +25,8 @@ private:
 template<typename TCallback>
 inline void FileSystem::ReadFileAsString(std::filesystem::path aFilePath, TCallback aCallback)
 {
-	auto job = std::make_shared<class ReadFileAsString>();
-	job->Setup(std::move(aFilePath), [&, wjob = std::weak_ptr<class ReadFileAsString>(job), aCallback = std::move(aCallback)](const Job::EResult aResult)
+	auto job = std::make_shared<ReadFileAsStringJob>();
+	job->Setup(std::move(aFilePath), [&, wjob = std::weak_ptr<ReadFileAsStringJob>(job), aCallback = std::move(aCallback)](const Job::EResult aResult)
 	{
 		auto job = wjob.lock();
 		if (!job)

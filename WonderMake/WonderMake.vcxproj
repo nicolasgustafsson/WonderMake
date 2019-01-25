@@ -191,15 +191,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera\Camera.cpp" />
+    <ClCompile Include="Object\Capability.cpp" />
     <ClCompile Include="Graphics\EngineUniformBuffer.cpp" />
     <ClCompile Include="Imgui\DockSpace.cpp" />
     <ClCompile Include="Imgui\imgui_stdlib.cpp" />
     <ClCompile Include="Logging\ImGuiLogger.cpp" />
     <ClCompile Include="Logging\ConsoleLogger.cpp" />
+    <ClCompile Include="Object\Object.cpp" />
     <ClCompile Include="Program\Engine.cpp" />
     <ClCompile Include="Message\DispatchableBuffer.cpp" />
     <ClCompile Include="Graphics\RenderTarget.cpp" />
     <ClCompile Include="Graphics\ScreenPassRenderObject.cpp" />
+    <ClCompile Include="Object\Capabilities\SpriteRenderingCapability.cpp" />
     <ClCompile Include="System\SystemContainer.cpp" />
     <ClCompile Include="System\System.cpp" />
     <ClCompile Include="Threads\Routine.cpp" />
@@ -228,6 +231,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera\Camera.h" />
+    <ClInclude Include="Object\ComponentSystem.h" />
+    <ClInclude Include="Object\CapabilityDependency.h" />
+    <ClInclude Include="Object\ComponentDependency.h" />
+    <ClInclude Include="Object\CapabilitySystem.h" />
+    <ClInclude Include="Object\Component.h" />
+    <ClInclude Include="Object\Capability.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Graphics\EngineUniformBuffer.h" />
     <ClInclude Include="Imgui\DockSpace.h" />
@@ -237,12 +246,16 @@
     <ClInclude Include="Logging\ImGuiLogger.h" />
     <ClInclude Include="Logging\ConsoleLogger.h" />
     <ClInclude Include="Logging\LogMessageTags.h" />
+    <ClInclude Include="Object\Components\TransformComponent.h" />
+    <ClInclude Include="Object\Object.h" />
+    <ClInclude Include="Object\Components\SpriteComponent.h" />
     <ClInclude Include="Program\Engine.h" />
     <ClInclude Include="Graphics\VertexAttributes.h" />
     <ClInclude Include="Message\DispatchableBuffer.h" />
     <ClInclude Include="Message\Messages.h" />
     <ClInclude Include="Graphics\RenderTarget.h" />
     <ClInclude Include="Graphics\ScreenPassRenderObject.h" />
+    <ClInclude Include="Object\Capabilities\SpriteRenderingCapability.h" />
     <ClInclude Include="System\SystemPtr.h" />
     <ClInclude Include="System\SystemContainer.h" />
     <ClInclude Include="System\System.h" />

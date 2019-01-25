@@ -1,14 +1,12 @@
 #include "pch.h"
 #include "GameWorld.h"
-#include <Threads/DataThreads.h>
-#include <Threads/Routine.h>
+#include "System/System.h"
 
 
 GameWorld::GameWorld()
 {
-	DataThreads::Get().GetRoutine(ERoutineId::Logic)->AddProcedure([this] {Tick(); });
+	EnableTick();
 }
-
 
 GameWorld::~GameWorld()
 {
@@ -17,3 +15,4 @@ GameWorld::~GameWorld()
 void GameWorld::Tick()
 {
 }
+

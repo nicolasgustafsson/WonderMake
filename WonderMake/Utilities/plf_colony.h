@@ -1036,7 +1036,7 @@ private:
 	inline void blank() PLF_COLONY_NOEXCEPT
 	{
 		#ifdef PLF_COLONY_TYPE_TRAITS_SUPPORT
-			if (std::is_trivial<group_pointer_type>::value && std::is_trivial<aligned_pointer_type>::value && std::is_trivial<skipfield_pointer_type>::value)  // if all pointer types are trivial, we can just nuke it from orbit with memset (NULL is always 0 in C++):
+			if constexpr (std::is_trivial<group_pointer_type>::value && std::is_trivial<aligned_pointer_type>::value && std::is_trivial<skipfield_pointer_type>::value)  // if all pointer types are trivial, we can just nuke it from orbit with memset (NULL is always 0 in C++):
 			{
 				std::memset(static_cast<void *>(this), 0, offsetof(colony, pointer_allocator_pair));
 			}

@@ -5,14 +5,14 @@ Object::Object()
 {
 }
 
-void Object::_AddCapability(BaseCapability* aCapability)
+void Object::_AddFunctionality(BaseFunctionality* aFunctionality)
 {
-	myCapabilities.push_back(aCapability);
+	myFunctionalities.push_back(aFunctionality);
 }
 
-void Object::_RemoveCapability(BaseCapability* aCapability)
+void Object::_RemoveCapability(BaseFunctionality* aFunctionality)
 {
-	myCapabilities.erase(std::find(myCapabilities.begin(), myCapabilities.end(), aCapability));
+	myFunctionalities.erase(std::find(myFunctionalities.begin(), myFunctionalities.end(), aFunctionality));
 }
 
 void Object::_AddComponent(SComponent* aComponent)

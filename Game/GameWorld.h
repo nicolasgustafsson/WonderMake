@@ -7,16 +7,16 @@
 #include <Object/Object.h>
 #include <Object/ComponentDependency.h>
 #include <Object/Component.h>
-#include <Object/Capability.h>
-#include <Object/CapabilityDependency.h>
+#include <Object/Functionality.h>
+#include <Object/FunctionalityDependency.h>
 #include <Object/Components/TransformComponent.h>
-#include <Object/Capabilities/SpriteRenderingCapability.h>
+#include <Object/Functionalities/SpriteRenderingFunctionality.h>
 
-class MovementCapability
-	: public Capability
+class MovementFunctionality
+	: public Functionality
 {
 public:
-	MovementCapability(Object* OwningObject)
+	MovementFunctionality(Object* OwningObject)
 		:myPositionComponent(OwningObject)
 	{
 
@@ -51,8 +51,8 @@ public:
 	}
 
 private:
-	CapabilityDependency<MovementCapability> myMovement;
-	CapabilityDependency<SpriteRenderingCapability> mySprite;
+	FunctionalityDependency<MovementFunctionality> myMovement;
+	FunctionalityDependency<SpriteRenderingFunctionality> mySprite;
 };
 
 class Ant
@@ -68,8 +68,8 @@ public:
 	}
 
 private:
-	CapabilityDependency<MovementCapability> myMovement;
-	CapabilityDependency<SpriteRenderingCapability> mySprite;
+	FunctionalityDependency<MovementFunctionality> myMovement;
+	FunctionalityDependency<SpriteRenderingFunctionality> mySprite;
 };
 
 class GameWorld : public System
@@ -81,6 +81,6 @@ public:
 	virtual void Tick() override;
 	//Player myPlayer;
 
-	std::array<Ant, 2000> myAnts;
+	std::array<Ant, 10> myAnts;
 };
 

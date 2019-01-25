@@ -1,15 +1,15 @@
 #pragma once
-#include "../Capability.h"
+#include "../Functionality.h"
 #include "../Components/SpriteComponent.h"
 #include "../ComponentDependency.h"
 #include "../Components/TransformComponent.h"
-#include "../CapabilityDependency.h"
-class SpriteRenderingCapability
-	: public Capability
+#include "../FunctionalityDependency.h"
+class SpriteRenderingFunctionality
+	: public Functionality
 {
 public:
-	SpriteRenderingCapability(Object* aOwner);
-	~SpriteRenderingCapability();
+	SpriteRenderingFunctionality(Object* aOwner);
+	~SpriteRenderingFunctionality();
 
 	virtual void Tick() override;
 	void SetTexture(const std::filesystem::path& aTexturePath);

@@ -1,19 +1,19 @@
 #include "stdafx.h"
-#include "SpriteRenderingCapability.h"
+#include "SpriteRenderingFunctionality.h"
 
 
-SpriteRenderingCapability::SpriteRenderingCapability(Object* aOwner)
+SpriteRenderingFunctionality::SpriteRenderingFunctionality(Object* aOwner)
 	:mySpriteComponent(aOwner)
 	,myTransformComponent(aOwner)
 {
 }
 
 
-SpriteRenderingCapability::~SpriteRenderingCapability()
+SpriteRenderingFunctionality::~SpriteRenderingFunctionality()
 {
 }
 
-void SpriteRenderingCapability::Tick()
+void SpriteRenderingFunctionality::Tick()
 {
 	if (!mySpriteComponent->RenderObject)
 		return;
@@ -22,12 +22,12 @@ void SpriteRenderingCapability::Tick()
 	mySpriteComponent->RenderObject->Render();
 }
 
-void SpriteRenderingCapability::SetTexture(const std::filesystem::path& aTexturePath)
+void SpriteRenderingFunctionality::SetTexture(const std::filesystem::path& aTexturePath)
 {
 	mySpriteComponent->RenderObject.emplace(aTexturePath);
 }
 
-void SpriteRenderingCapability::SetScale(const SVector2f aScale)
+void SpriteRenderingFunctionality::SetScale(const SVector2f aScale)
 {
 	mySpriteComponent->RenderObject->SetAttribute<EVertexAttribute::Scale>(0, aScale);
 }

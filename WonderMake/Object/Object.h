@@ -1,6 +1,15 @@
 #pragma once
 struct SComponent;
-class BaseCapability;
+class BaseFunctionality;
+
+//TODO:
+//HE HAS DONE IT change capability to functionality(in name) 
+//allow functionalities to be added dynamically
+//fix capabilities removing components regarding of other capabilities when removed(ref count?)
+//change comparison when finding functionalities/components to not use dynamic cast(typeid?)
+//minimize or remove boilerplate of calling dependency constructor with object pointer(base class with templates?)
+//make debugging visitor to allow arbitrary debugging of objects, functionalities and components
+//Allow adding components in runtime via imgui
 
 class Object
 {
@@ -11,16 +20,16 @@ public:
 	T* FindComponent() const;
 
 	template<typename T>
-	T* FindCapability() const;
+	T* FindFunctionality() const;
 
-	void _AddCapability(BaseCapability* aCapability);
-	void _RemoveCapability(BaseCapability* aCapability);
+	void _AddFunctionality(BaseFunctionality* aFunctionality);
+	void _RemoveCapability(BaseFunctionality* aFunctionality);
 
 	void _AddComponent(SComponent* aComponent);
 	void _RemoveComponent(SComponent* aComponent);
 
 private:
-	std::vector<BaseCapability*> myCapabilities;
+	std::vector<BaseFunctionality*> myFunctionalities;
 	std::vector<SComponent*> myComponents;
 };
 
@@ -39,16 +48,16 @@ TComponent* Object::FindComponent() const
 	return nullptr;
 }
 
-template<typename TCapability>
-TCapability* Object::FindCapability() const
+template<typename TFunctionality>
+TFunctionality* Object::FindFunctionality() const
 {
-	static_assert(std::is_base_of<BaseCapability, TCapability>::value, "Component must inherit from SComponent!");
+	static_assert(std::is_base_of<BaseFunctionality, TFunctionality>::value, "Functionality must inherit from BaseFunctionality!");
 
-	for (BaseCapability* capability : myCapabilities)
+	for (BaseFunctionality* functionality : myFunctionalities)
 	{
-		TCapability* correctCapability = dynamic_cast<TCapability*>(capability);
-		if (correctCapability)
-			return correctCapability;
+		TFunctionality* correctFunctionality = dynamic_cast<TFunctionality*>(functionality);
+		if (correctFunctionality)
+			return correctFunctionality;
 	}
 
 	return nullptr;

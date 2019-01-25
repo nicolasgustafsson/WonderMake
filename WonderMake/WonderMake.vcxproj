@@ -191,7 +191,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera\Camera.cpp" />
-    <ClCompile Include="Object\Capability.cpp" />
+    <ClCompile Include="Object\Functionality.cpp" />
     <ClCompile Include="Graphics\EngineUniformBuffer.cpp" />
     <ClCompile Include="Imgui\DockSpace.cpp" />
     <ClCompile Include="Imgui\imgui_stdlib.cpp" />
@@ -202,7 +202,7 @@
     <ClCompile Include="Message\DispatchableBuffer.cpp" />
     <ClCompile Include="Graphics\RenderTarget.cpp" />
     <ClCompile Include="Graphics\ScreenPassRenderObject.cpp" />
-    <ClCompile Include="Object\Capabilities\SpriteRenderingCapability.cpp" />
+    <ClCompile Include="Object\Functionalities\SpriteRenderingFunctionality.cpp" />
     <ClCompile Include="System\SystemContainer.cpp" />
     <ClCompile Include="System\System.cpp" />
     <ClCompile Include="Threads\Routine.cpp" />
@@ -232,11 +232,11 @@
   <ItemGroup>
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Object\ComponentSystem.h" />
-    <ClInclude Include="Object\CapabilityDependency.h" />
+    <ClInclude Include="Object\FunctionalityDependency.h" />
     <ClInclude Include="Object\ComponentDependency.h" />
-    <ClInclude Include="Object\CapabilitySystem.h" />
+    <ClInclude Include="Object\FunctionalitySystem.h" />
     <ClInclude Include="Object\Component.h" />
-    <ClInclude Include="Object\Capability.h" />
+    <ClInclude Include="Object\Functionality.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Graphics\EngineUniformBuffer.h" />
     <ClInclude Include="Imgui\DockSpace.h" />
@@ -255,7 +255,7 @@
     <ClInclude Include="Message\Messages.h" />
     <ClInclude Include="Graphics\RenderTarget.h" />
     <ClInclude Include="Graphics\ScreenPassRenderObject.h" />
-    <ClInclude Include="Object\Capabilities\SpriteRenderingCapability.h" />
+    <ClInclude Include="Object\Functionalities\SpriteRenderingFunctionality.h" />
     <ClInclude Include="System\SystemPtr.h" />
     <ClInclude Include="System\SystemContainer.h" />
     <ClInclude Include="System\System.h" />

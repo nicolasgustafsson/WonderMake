@@ -1,7 +1,12 @@
 #pragma once
-struct SComponent
+struct SComponent : public NonCopyable
 {
 public:
-	virtual ~SComponent() = default;
+	SComponent()
+	{
+	}
+	virtual ~SComponent()
+	{
+	}
 };
 

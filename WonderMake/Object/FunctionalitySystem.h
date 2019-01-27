@@ -2,6 +2,8 @@
 #include "Utilities/plf_colony.h"
 #include "System/System.h"
 
+class Object;
+
 template<typename TFunctionality>
 class FunctionalitySystem
 	:public System
@@ -9,7 +11,7 @@ class FunctionalitySystem
 public:
 	FunctionalitySystem();
 	TFunctionality* AddFunctionality(Object* aObject);
-	void RemoveFunctionality(TFunctionality* const aFunctionality);
+	void RemoveFunctionality(TFunctionality* aFunctionality);
 
 	bool IsEmpty() const;
 
@@ -40,7 +42,7 @@ bool FunctionalitySystem<TFunctionality>::IsEmpty() const
 }
 
 template<typename TFunctionality>
-void FunctionalitySystem<TFunctionality>::RemoveFunctionality(TFunctionality* const aFunctionality)
+void FunctionalitySystem<TFunctionality>::RemoveFunctionality(TFunctionality* aFunctionality)
 {
 	myFunctionalities.erase(myFunctionalities.get_iterator_from_pointer(aFunctionality));
 }

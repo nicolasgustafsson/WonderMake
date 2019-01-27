@@ -1,26 +1,16 @@
 #include "stdafx.h"
 #include "Object.h"
+#include "Functionality.h"
 
 Object::Object()
 {
 }
 
-void Object::_AddFunctionality(BaseFunctionality* aFunctionality)
+Object::~Object()
 {
-	myFunctionalities.push_back(aFunctionality);
-}
-
-void Object::_RemoveCapability(BaseFunctionality* aFunctionality)
-{
-	myFunctionalities.erase(std::find(myFunctionalities.begin(), myFunctionalities.end(), aFunctionality));
-}
-
-void Object::_AddComponent(SComponent* aComponent)
-{
-	myComponents.push_back(aComponent);
-}
-
-void Object::_RemoveComponent(SComponent* aComponent)
-{
-	myComponents.erase(std::find(myComponents.begin(), myComponents.end(), aComponent));
+	while (!myFunctionalities.empty())
+	{
+		myFunctionalities[0].Functionality->Destroy(this);
+		myFunctionalities.erase(myFunctionalities.begin());
+	}
 }

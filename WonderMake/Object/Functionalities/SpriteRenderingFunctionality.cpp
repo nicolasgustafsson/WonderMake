@@ -14,7 +14,7 @@ SpriteRenderingFunctionality::~SpriteRenderingFunctionality()
 void SpriteRenderingFunctionality::Tick()
 {
 	auto& SpriteComponent = Get<SSpriteComponent>();
-	if (SpriteComponent.RenderObject)
+	if (!SpriteComponent.RenderObject)
 		return;
 
 	SpriteComponent.RenderObject->SetAttribute<EVertexAttribute::Position>(0, Get<STransformComponent>().Position);

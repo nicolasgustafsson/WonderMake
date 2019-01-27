@@ -1,8 +1,12 @@
 #pragma once
 
-#include "MessageTypes.h"
-#include "DispatchableBuffer.h"
+#include "Message/MessageTypes.h"
+#include "Message/DispatchableBuffer.h"
+
+#include "Utilities/OS.h"
+
 #include <sstream>
+#include <memory>
 
 template<typename TMessage>
 inline static void WmDispatchMessage(const TMessage& aMessage)
@@ -53,7 +57,65 @@ inline static void WmLog(TMessageArgs... aMessageArgs)
 {
 	std::stringstream MessageStream;
 
+	MessageStream << '[' << GetDateTime() << ']';
+
 	(MessageStream << ... << aMessageArgs);
 
 	WmDispatchMessage(SLogMessage(std::forward<std::string>(MessageStream.str())));
+}
+
+class Job;
+
+template<typename TFunctionPtr, typename TCaller, typename ...TArgs>
+inline static void _RunTask(TFunctionPtr aFunctionPtr, TCaller* const aCaller, TArgs... aArgs)
+{
+	if constexpr (std::is_base_of<Job>)
+	{
+		if (aCaller->IsComplete())
+		{
+			return;
+		}
+	}
+	(aCaller->*aFunctionPtr)(aArgs...);
+}
+
+template<typename TFunctionPtr, typename TCaller, typename ...TArgs>
+inline static auto BindTask(TFunctionPtr aFunctionPtr, TCaller* const aCaller, TArgs... aArgs)
+{
+	return[aFunctionPtr, aCaller, aArgs...]
+	{
+		_RunTask(aFunctionPtr, aCaller, aArgs...);
+	};
+}
+
+template<typename TFunctionPtr, typename TCaller, typename ...TArgs>
+inline static auto BindTask(TFunctionPtr aFunctionPtr, std::unique_ptr<TCaller> aCaller, TArgs... aArgs)
+{
+	return[aFunctionPtr, aCaller = std::move(aCaller), aArgs...]
+	{
+		_RunTask(aFunctionPtr, aCaller.get(), aArgs...);
+	};
+}
+
+template<typename TFunctionPtr, typename TCaller, typename ...TArgs>
+inline static auto BindTask(TFunctionPtr aFunctionPtr, std::shared_ptr<TCaller> aCaller, TArgs... aArgs)
+{
+	return[aFunctionPtr, aCaller = std::move(aCaller), aArgs...]
+	{
+		_RunTask(aFunctionPtr, aCaller.get(), aArgs...);
+	};
+}
+
+template<typename TFunctionPtr, typename TCaller, typename ...TArgs>
+inline static auto BindTask(TFunctionPtr aFunctionPtr, std::weak_ptr<TCaller> aCaller, TArgs... aArgs)
+{
+	return[aFunctionPtr, aCaller, aArgs...]
+	{
+		auto caller = aCaller.lock();
+		if (!caller)
+		{
+			return;
+		}
+		_RunTask(aFunctionPtr, caller.get(), aArgs...);
+	};
 }

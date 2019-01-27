@@ -3,6 +3,7 @@
 #include "Window.h"
 #include "ImguiWrapper.h"
 #include "Logging/ConsoleLogger.h"
+#include "Logging/FileLogger.h"
 #include "Logging/ImGuiLogger.h"
 #include "Imgui/DockSpace.h"
 #include <System/SystemPtr.h>
@@ -21,6 +22,7 @@ private:
 
 	//-------KEEP THIS IN ORDER-------
 	ConsoleLogger myLogger;
+	FileLogger myFileLogger;
 	ImGuiLogger myImGuiLogger;
 	DockSpace myDockSpace;
 	SystemPtr<Window> myWindowPtr;

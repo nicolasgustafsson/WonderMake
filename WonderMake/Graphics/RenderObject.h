@@ -5,7 +5,7 @@
 #include "Graphics/VertexBufferArray.h"
 #include "Graphics/VertexTypes.h"
 
-#include "Resources/ResourceManager.h"
+#include "Resources/ResourceSystem.h"
 
 #include "System/SystemPtr.h"
 
@@ -76,6 +76,6 @@ RenderObject<TAttributes...>::RenderObject(const SRenderObjectInfo& aRenderObjec
 {
 	myVertexCount = aRenderObjectInfo.VertexCount;
 	if (!aRenderObjectInfo.TexturePath.empty())
-		myTextures.emplace_back(SystemPtr<ResourceManager<Texture>>()->GetResource(aRenderObjectInfo.TexturePath));
+		myTextures.emplace_back(SystemPtr<ResourceSystem<Texture>>()->GetResource(aRenderObjectInfo.TexturePath));
 }
 

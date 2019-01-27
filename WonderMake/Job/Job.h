@@ -7,62 +7,111 @@
 #include "Threads/RoutineIds.h"
 
 #include <functional>
-
-enum class EJobResult
-{
-	InProgress,
-	Success,
-	Failure
-};
+#include <mutex>
 
 class Job
 {
 public:
-	virtual ~Job() = default;
+	enum class EResult
+	{
+		InProgress,
+		Cancelled,
+		Success,
+		Failure
+	};
 
-	inline bool IsComplete() const;
-	inline EJobResult GetResult() const;
+	using Callback = std::function<void(const EResult)>;
+
+	inline virtual ~Job();
+
+	inline void Cancel();
+
+	inline bool IsComplete();
+	inline bool IsSuccessful();
+	inline EResult GetResult();
 
 protected:
 	inline void Reset();
-	inline void Complete(const EJobResult aResult);
-	inline void CompleteOnRoutine(const EJobResult aResult, const ERoutineId aRoutineId);
+	inline void Complete(const EResult aResult);
+	inline void CompleteOnRoutine(const EResult aResult, const ERoutineId aRoutineId);
 
-	Closure myCallback;
+	inline virtual void OnReset() {};
+	inline virtual void OnCancel() {};
+	inline virtual void OnComplete(const EResult /*aResult*/) {};
+
+	Callback myCallback;
 
 private:
-	EJobResult myResult = EJobResult::InProgress;
+	inline void SetResult(const EResult aResult);
+
+	std::mutex myLock;
+	EResult myResult = EResult::InProgress;
 };
 
-inline bool Job::IsComplete() const
+inline Job::~Job()
 {
-	return myResult == EJobResult::Success;
+	Cancel();
 }
 
-inline EJobResult Job::GetResult() const
+inline void Job::Cancel()
 {
+	{
+		std::lock_guard<decltype(myLock)> lock(myLock);
+		if (myResult != EResult::InProgress)
+		{
+			return;
+		}
+		myResult = EResult::Cancelled;
+	}
+	OnCancel();
+}
+
+inline bool Job::IsComplete()
+{
+	std::lock_guard<decltype(myLock)> lock(myLock);
+	return myResult != EResult::InProgress;
+}
+
+inline bool Job::IsSuccessful()
+{
+	std::lock_guard<decltype(myLock)> lock(myLock);
+	return myResult == EResult::Success;
+}
+
+inline Job::EResult Job::GetResult()
+{
+	std::lock_guard<decltype(myLock)> lock(myLock);
 	return myResult;
 }
 
 inline void Job::Reset()
 {
-	myResult = EJobResult::InProgress;
+	SetResult(EResult::InProgress);
+	OnReset();
 }
 
-inline void Job::Complete(const EJobResult aResult)
+inline void Job::Complete(const EResult aResult)
 {
-	myResult = aResult;
+	SetResult(aResult);
+	OnComplete(aResult);
 	if (myCallback)
 	{
-		myCallback();
+		myCallback(aResult);
 	}
 }
 
-inline void Job::CompleteOnRoutine(const EJobResult aResult, const ERoutineId aRoutineId)
+inline void Job::CompleteOnRoutine(const EResult aResult, const ERoutineId aRoutineId)
 {
-	myResult = aResult;
+	SetResult(aResult);
+	OnComplete(aResult);
 	if (myCallback)
 	{
-		WmDispatchTask(myCallback, aRoutineId);
+		WmDispatchTask([&, aResult] { myCallback(aResult); }, aRoutineId);
 	}
+}
+
+inline void Job::SetResult(const EResult aResult)
+{
+	std::lock_guard<decltype(myLock)> lock(myLock);
+	myResult = aResult;
 }

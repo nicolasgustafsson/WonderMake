@@ -2,11 +2,7 @@
 struct SComponent : public NonCopyable
 {
 public:
-	SComponent()
-	{
-	}
-	virtual ~SComponent()
-	{
-	}
+	SComponent() = default;
+	virtual ~SComponent() = default;
 };
 

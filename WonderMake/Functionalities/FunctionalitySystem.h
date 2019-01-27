@@ -10,8 +10,8 @@ class FunctionalitySystem
 {
 public:
 	FunctionalitySystem();
-	TFunctionality* AddFunctionality(Object* aObject);
-	void RemoveFunctionality(TFunctionality* aFunctionality);
+	TFunctionality& AddFunctionality(Object& aObject);
+	void RemoveFunctionality(TFunctionality& aFunctionality);
 
 	bool IsEmpty() const;
 
@@ -24,8 +24,8 @@ private:
 template<typename TFunctionality>
 void FunctionalitySystem<TFunctionality>::Tick()
 {
-	for (auto&& capability : myFunctionalities)
-		capability.Tick();
+	for (auto&& functionality : myFunctionalities)
+		functionality.Tick();
 }
 
 template<typename TFunctionality>
@@ -38,18 +38,18 @@ FunctionalitySystem<TFunctionality>::FunctionalitySystem()
 template<typename TFunctionality>
 bool FunctionalitySystem<TFunctionality>::IsEmpty() const
 {
-	return myFunctionalities.size() == 0;
+	return myFunctionalities.empty();
 }
 
 template<typename TFunctionality>
-void FunctionalitySystem<TFunctionality>::RemoveFunctionality(TFunctionality* aFunctionality)
+void FunctionalitySystem<TFunctionality>::RemoveFunctionality(TFunctionality& aFunctionality)
 {
-	myFunctionalities.erase(myFunctionalities.get_iterator_from_pointer(aFunctionality));
+	myFunctionalities.erase(myFunctionalities.get_iterator_from_pointer(&aFunctionality));
 }
 
 template<typename TFunctionality>
-typename TFunctionality* FunctionalitySystem<TFunctionality>::AddFunctionality(Object* aObject)
+typename TFunctionality& FunctionalitySystem<TFunctionality>::AddFunctionality(Object& aObject)
 {
-	return &(*myFunctionalities.emplace(aObject));
+	return (*myFunctionalities.emplace(aObject));
 }
 

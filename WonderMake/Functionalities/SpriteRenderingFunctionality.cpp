@@ -2,12 +2,8 @@
 #include "SpriteRenderingFunctionality.h"
 
 
-SpriteRenderingFunctionality::SpriteRenderingFunctionality(Object* aOwner)
+SpriteRenderingFunctionality::SpriteRenderingFunctionality(Object& aOwner)
 	:Super(aOwner)
-{
-}
-
-SpriteRenderingFunctionality::~SpriteRenderingFunctionality()
 {
 }
 

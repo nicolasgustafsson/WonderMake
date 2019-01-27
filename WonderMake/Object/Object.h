@@ -1,19 +1,33 @@
 #pragma once
-#include <Typedefs.h>
-#include "FunctionalitySystem.h"
-#include <System/SystemPtr.h>
-#include "ComponentSystem.h"
+#include "Typedefs.h"
+#include "Functionalities/FunctionalitySystem.h"
+#include "System/SystemPtr.h"
+#include "Components/ComponentSystem.h"
+
 struct SComponent;
 class BaseFunctionality;
 
 struct SFunctionalityCounter
 {
+	SFunctionalityCounter(BaseFunctionality* aFunctionality)
+		: Functionality(aFunctionality)
+		, RefCount(1)
+	{
+
+	}
+
 	BaseFunctionality* Functionality;
 	i32 RefCount = 0;
 };
 
 struct SComponentCounter
 {
+	SComponentCounter(SComponent* aComponent)
+		: Component(aComponent)
+		, RefCount(1)
+	{
+
+	}
 	SComponent* Component;
 	i32 RefCount = 0;
 };
@@ -21,64 +35,46 @@ struct SComponentCounter
 class Object
 {
 public:
-	Object();
+	Object() = default;
 	virtual ~Object();
 
-	template<typename TComponent>
-	TComponent* FindComponent() const;
-
-	//will not add functionality if it already exists
+	//[Nicos]: Will not add functionality if it already exists.
 	template<typename TFunctionality>
-	TFunctionality* AddFunctionality();
+	inline TFunctionality& AddFunctionality();
 
-	//will not remove functionality if other functionalities depend on it
+	//[Nicos]: Will not remove functionality if other functionalities depend on it.
 	template<typename TFunctionality>
-	void RemoveFunctionality();
+	inline void RemoveFunctionality();
 
-	//will not add component if it already exists
+	//[Nicos]: Will not add component if it already exists.
 	template<typename TComponent>
-	TComponent* _AddComponent();
+	inline TComponent& _AddComponent();
 
-	//will not remove component if existing functionalities depend on it
+	//[Nicos]: Will not remove component if existing functionalities depend on it.
 	template<typename TComponent>
-	void _RemoveComponent();
+	inline void _RemoveComponent();
 
 private:
 	std::vector<SFunctionalityCounter> myFunctionalities;
 	std::vector<SComponentCounter> myComponents;
 };
 
-template<typename TComponent>
-TComponent* Object::FindComponent() const
-{
-	static_assert(std::is_base_of<SComponent, TComponent>::value, "Component must inherit from SComponent!");
-
-	for (SComponent* component : myComponents)
-	{
-		TComponent* correctComponent = dynamic_cast<TComponent*>(component);
-		if (correctComponent)
-			return correctComponent;
-	}
-
-	return nullptr;
-}
-
 template<typename TFunctionality>
-TFunctionality* Object::AddFunctionality()
+TFunctionality& Object::AddFunctionality()
 {
 	static_assert(std::is_base_of<BaseFunctionality, TFunctionality>::value, "Functionality must inherit from BaseFunctionality!");
 
 	for (SFunctionalityCounter& counter : myFunctionalities)
 	{
-		bool correctFunctionality = dynamic_cast<TFunctionality*>(counter.Functionality) != nullptr;
-		if (correctFunctionality)
+		TFunctionality* functionality = dynamic_cast<TFunctionality*>(counter.Functionality);
+		if (functionality)
 		{
 			counter.RefCount++;
-			return static_cast<TFunctionality*>(counter.Functionality);
+			return *functionality;
 		}
 	}
-	auto addedFunctionality = SystemPtr<FunctionalitySystem<TFunctionality>>()->AddFunctionality(this);
-	myFunctionalities.push_back({ addedFunctionality, 1 });
+	auto& addedFunctionality = SystemPtr<FunctionalitySystem<TFunctionality>>()->AddFunctionality(*this);
+	myFunctionalities.emplace_back(&addedFunctionality);
 	return addedFunctionality;
 }
 
@@ -92,6 +88,7 @@ void Object::RemoveFunctionality()
 		bool correctFunctionality = dynamic_cast<TFunctionality*>(counter.Functionality) != nullptr;
 		if (correctFunctionality)
 		{
+			assert(counter.RefCount != 0);
 			counter.RefCount--;
 
 			if (counter.RefCount <= 0)
@@ -106,21 +103,21 @@ void Object::RemoveFunctionality()
 }
 
 template<typename TComponent>
-TComponent* Object::_AddComponent()
+TComponent& Object::_AddComponent()
 {
 	static_assert(std::is_base_of<SComponent, TComponent>::value, "Component must inherit from SComponent!");
 
 	for (SComponentCounter& counter : myComponents)
 	{
-		bool correctComponent = dynamic_cast<TComponent*>(counter.Component) != nullptr;
-		if (correctComponent)
+		TComponent* component = dynamic_cast<TComponent*>(counter.Component);
+		if (component)
 		{
 			counter.RefCount++;
-			return static_cast<TComponent*>(counter.Component);
+			return *component;
 		}
 	}
-	auto addedComponent = SystemPtr<ComponentSystem<TComponent>>()->AddComponent();
-	myComponents.push_back({ addedComponent, 1 });
+	auto& addedComponent = SystemPtr<ComponentSystem<TComponent>>()->AddComponent();
+	myComponents.emplace_back(&addedComponent);
 	return addedComponent;
 }
 
@@ -134,11 +131,12 @@ void Object::_RemoveComponent()
 		bool correctComponent = dynamic_cast<TComponent*>(counter.Component) != nullptr;
 		if (correctComponent)
 		{
+			assert(counter.RefCount != 0);
 			counter.RefCount--;
 
 			if (counter.RefCount <= 0)
 			{
-				SystemPtr<ComponentSystem<TComponent>>()->RemoveComponent(static_cast<TComponent*>(counter.Component));
+				SystemPtr<ComponentSystem<TComponent>>()->RemoveComponent(static_cast<TComponent&>(*counter.Component));
 				myComponents.erase(myComponents.begin() + i);
 			}
 

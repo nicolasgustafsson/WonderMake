@@ -39,9 +39,8 @@
     <ClCompile Include="FileSystem\ReadFileAsStringJob.cpp" />
     <ClCompile Include="Logging\FileLogger.cpp" />
     <ClCompile Include="Utilities\OS.cpp" />
-    <ClCompile Include="Object\Functionality.cpp" />
     <ClCompile Include="Object\Object.cpp" />
-    <ClCompile Include="Object\Functionalities\SpriteRenderingFunctionality.cpp" />
+    <ClCompile Include="Functionalities\SpriteRenderingFunctionality.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logging\ImGuiLogger.h" />
@@ -113,14 +112,14 @@
     <ClInclude Include="Utilities\OS.h" />
     <ClInclude Include="Utilities\plf_colony.h" />
     <ClInclude Include="Object\Object.h" />
-    <ClInclude Include="Object\Component.h" />
-    <ClInclude Include="Object\ComponentSystem.h" />
     <ClInclude Include="Object\Dependency.h" />
-    <ClInclude Include="Object\Functionality.h" />
-    <ClInclude Include="Object\FunctionalitySystem.h" />
-    <ClInclude Include="Object\Functionalities\SpriteRenderingFunctionality.h" />
-    <ClInclude Include="Object\Components\TransformComponent.h" />
-    <ClInclude Include="Object\Components\SpriteComponent.h" />
+    <ClInclude Include="Components\SpriteComponent.h" />
+    <ClInclude Include="Components\TransformComponent.h" />
+    <ClInclude Include="Functionalities\SpriteRenderingFunctionality.h" />
+    <ClInclude Include="Functionalities\Functionality.h" />
+    <ClInclude Include="Functionalities\FunctionalitySystem.h" />
+    <ClInclude Include="Components\ComponentSystem.h" />
+    <ClInclude Include="Components\Component.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

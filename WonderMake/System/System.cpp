@@ -6,5 +6,5 @@
 
 void System::EnableTick()
 {
-	DataThreads::Get().GetRoutine(ERoutineId::Logic)->AddProcedure([this] {Tick(); });
+	DataThreads::Get().GetRoutine(ERoutineId::Logic)->AddProcedure([this] { Tick(); });
 }

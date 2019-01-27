@@ -1,16 +1,12 @@
 #include "stdafx.h"
 #include "Object.h"
-#include "Functionality.h"
-
-Object::Object()
-{
-}
+#include "Functionalities/Functionality.h"
 
 Object::~Object()
 {
 	while (!myFunctionalities.empty())
 	{
-		myFunctionalities[0].Functionality->Destroy(this);
+		myFunctionalities[0].Functionality->Destroy(*this);
 		myFunctionalities.erase(myFunctionalities.begin());
 	}
 }

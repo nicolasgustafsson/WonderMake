@@ -4,11 +4,11 @@
 
 template<typename TData>
 class ComponentSystem
-	:public System
+	: public System
 {
 public:
-	TData* AddComponent();
-	void RemoveComponent(TData* const aComponent);
+	TData& AddComponent();
+	void RemoveComponent(TData& aComponent);
 
 	bool IsEmpty() const;
 
@@ -19,18 +19,18 @@ private:
 template<typename TData>
 bool ComponentSystem<TData>::IsEmpty() const
 {
-	return myData.size() == 0;
+	return myData.empty();
 }
 
 template<typename TData>
-void ComponentSystem<TData>::RemoveComponent(TData* const aComponent)
+void ComponentSystem<TData>::RemoveComponent(TData& aComponent)
 {
-	myData.erase(myData.get_iterator_from_pointer(aComponent));
+	myData.erase(myData.get_iterator_from_pointer(&aComponent));
 }
 
 template<typename TData>
-typename TData* ComponentSystem<TData>::AddComponent()
+typename TData& ComponentSystem<TData>::AddComponent()
 {
-	return &(*myData.emplace());
+	return (*myData.emplace());
 }
 

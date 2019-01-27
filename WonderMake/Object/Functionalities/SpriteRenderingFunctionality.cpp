@@ -7,18 +7,18 @@ SpriteRenderingFunctionality::SpriteRenderingFunctionality(Object* aOwner)
 {
 }
 
-
 SpriteRenderingFunctionality::~SpriteRenderingFunctionality()
 {
 }
 
 void SpriteRenderingFunctionality::Tick()
 {
-	if (!Get<SSpriteComponent>().RenderObject)
+	auto& SpriteComponent = Get<SSpriteComponent>();
+	if (SpriteComponent.RenderObject)
 		return;
 
-	Get<SSpriteComponent>().RenderObject->SetAttribute<EVertexAttribute::Position>(0, Get<STransformComponent>().Position);
-	Get<SSpriteComponent>().RenderObject->Render();
+	SpriteComponent.RenderObject->SetAttribute<EVertexAttribute::Position>(0, Get<STransformComponent>().Position);
+	SpriteComponent.RenderObject->Render();
 }
 
 void SpriteRenderingFunctionality::SetTexture(const std::filesystem::path& aTexturePath)

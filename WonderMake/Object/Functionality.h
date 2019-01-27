@@ -17,9 +17,8 @@ public:
 	void Tick() {}
 };
 
-
 //describes a functionality for an object. template params are the type that is derived and then dependencies
-template<typename SelfType, typename ... TDependencies>
+template<typename TSelfType, typename ... TDependencies>
 class Functionality
 	:public BaseFunctionality
 {
@@ -27,7 +26,7 @@ public:
 
 	virtual void Destroy(Object* aObject) override final;
 
-	using Super = Functionality<SelfType, TDependencies...>;
+	using Super = Functionality<TSelfType, TDependencies...>;
 
 	template<typename TDependency>
 	__forceinline TDependency& Get()
@@ -47,18 +46,18 @@ protected:
 
 private:
 	Functionality(Object* aObject);
-	friend SelfType;
+	friend TSelfType;
 };
 
-template<typename SelfType, typename ... TDependencies>
-void Functionality<SelfType, TDependencies...>::Destroy(Object* aObject)
+template<typename TSelfType, typename ... TDependencies>
+void Functionality<TSelfType, TDependencies...>::Destroy(Object* aObject)
 {
 	myDependencies.Destroy(aObject);
-	SystemPtr<FunctionalitySystem<SelfType>>()->RemoveFunctionality(static_cast<SelfType*>(this));
+	SystemPtr<FunctionalitySystem<TSelfType>>()->RemoveFunctionality(static_cast<TSelfType*>(this));
 }
 
-template<typename SelfType, typename ... TDependencies>
-Functionality<SelfType, TDependencies...>::Functionality(Object* aObject)
+template<typename TSelfType, typename ... TDependencies>
+Functionality<TSelfType, TDependencies...>::Functionality(Object* aObject)
 	: myDependencies(aObject)
 {
 }

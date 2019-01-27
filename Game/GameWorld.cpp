@@ -1,13 +1,16 @@
 #include "pch.h"
 #include "GameWorld.h"
-#include "Threads/DataThreads.h"
-#include "Threads/Routine.h"
+
+
+#include "System/System.h"
+#include "Functionalities/SpriteRenderingFunctionality.h"
 
 GameWorld::GameWorld()
 {
-	DataThreads::Get().GetRoutine(ERoutineId::Logic)->AddProcedure([this] {Tick(); });
+	EnableTick();
+	auto& Sprite = myPlayer.AddFunctionality<SpriteRenderingFunctionality>();
+	Sprite.SetTexture(std::filesystem::current_path() / "Textures/tile.png");
 }
-
 
 GameWorld::~GameWorld()
 {
@@ -16,3 +19,4 @@ GameWorld::~GameWorld()
 void GameWorld::Tick()
 {
 }
+

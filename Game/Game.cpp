@@ -2,7 +2,6 @@
 //
 
 #include "pch.h"
-
 #include <iostream>
 #include "Program/Engine.h"
 #include "GameWorld.h"
@@ -14,10 +13,11 @@
 
 int main()
 {
+
 	Engine::Start([&] 
 	{
 		SystemContainer::Get().CreateSystem<GameWorld>();
 
-		WmLog("Game successfully setup!"); 
+		WmLog("Game successfully setup!");
 	});
 }

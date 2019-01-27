@@ -36,7 +36,7 @@ void VertexBuffer<TVertexData>::ResizeBuffer(const u32 aCount)
 {
 	myVertexCount = aCount;
 	glBindBuffer(GL_ARRAY_BUFFER, myBufferHandle);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(TVertexData) * myVertexCount, nullptr, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(TVertexData) * myVertexCount, nullptr, GL_DYNAMIC_DRAW);
 }
 
 template <typename TVertexData>

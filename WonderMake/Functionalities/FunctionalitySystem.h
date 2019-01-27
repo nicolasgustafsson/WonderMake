@@ -6,7 +6,7 @@ class Object;
 
 template<typename TFunctionality>
 class FunctionalitySystem
-	:public System
+	: public System
 {
 public:
 	FunctionalitySystem();

@@ -5,31 +5,38 @@
 #include "Threads/RoutineIds.h"
 #include "Threads/RoutineMain.h"
 
-void StartRoutine(std::shared_ptr<Routine> aRoutine)
-{
-	for(;;)
-		aRoutine->Run();
-}
-
 void DataThreads::Start(Program& aProgramReference, Closure&& aCallback)
 {
-	myRoutines.resize(3);
-	myRoutines[static_cast<size_t>(ERoutineId::Logic)] = std::make_shared<RoutineMain>(aProgramReference);
-	myRoutines[static_cast<size_t>(ERoutineId::Render)] = std::make_shared<Routine>(ERoutineId::Render);
-	myRoutines[static_cast<size_t>(ERoutineId::File)] = std::make_shared<Routine>(ERoutineId::File);
+	myRoutines.resize(RoutineCount);
+	myRoutines[static_cast<size_t>(ERoutineId::Logic)] = std::make_unique<RoutineMain>(aProgramReference);
+	myRoutines[static_cast<size_t>(ERoutineId::Render)] = std::make_unique<Routine>(ERoutineId::Render);
+	myRoutines[static_cast<size_t>(ERoutineId::File)] = std::make_unique<Routine>(ERoutineId::File);
+
+	if constexpr(Constants::IsDebugging)
+		myRoutines[static_cast<size_t>(ERoutineId::Debug)] = std::make_unique<Routine>(ERoutineId::Debug);
 	
-	myThreads.reserve(myRoutines.size() - 1);
-	for (size_t i = 1; i < myRoutines.size(); ++i)
-	{
-		myThreads.emplace_back(&StartRoutine, myRoutines[i]);
-	}
-	
+	myFileThread.emplace("File Thread").AddRoutine(*myRoutines[static_cast<size_t>(ERoutineId::File)]);
+	myRenderThread.emplace("Render Thread").AddRoutine(*myRoutines[static_cast<size_t>(ERoutineId::Render)]);
+
 	aCallback();
 
-	StartRoutine(myRoutines[static_cast<size_t>(ERoutineId::Logic)]);
+	for (;;)
+	{
+		myFileThread->DoOnce();
+		myRenderThread->DoOnce();
+		myRoutines[static_cast<size_t>(ERoutineId::Logic)]->Run();
+		myRenderThread->WaitUntilReady();
+
+		if constexpr (Constants::IsDebugging)
+		{
+			//wait for file thread so we can debug it as well.
+			myFileThread->WaitUntilReady();
+			myRoutines[static_cast<size_t>(ERoutineId::Debug)]->Run();
+		}
+	}
 }
 
-std::shared_ptr<Routine> DataThreads::GetRoutine(const ERoutineId aRoutine)
+Routine& DataThreads::GetRoutine(const ERoutineId aRoutine)
 {
-	return myRoutines[static_cast<size_t>(aRoutine)];
+	return *myRoutines[static_cast<size_t>(aRoutine)];
 }

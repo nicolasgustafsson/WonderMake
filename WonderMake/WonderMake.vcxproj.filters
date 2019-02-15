@@ -41,6 +41,7 @@
     <ClCompile Include="Utilities\OS.cpp" />
     <ClCompile Include="Object\Object.cpp" />
     <ClCompile Include="Functionalities\SpriteRenderingFunctionality.cpp" />
+    <ClCompile Include="Threads\Thread.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logging\ImGuiLogger.h" />
@@ -120,6 +121,8 @@
     <ClInclude Include="Functionalities\FunctionalitySystem.h" />
     <ClInclude Include="Components\ComponentSystem.h" />
     <ClInclude Include="Components\Component.h" />
+    <ClInclude Include="Threads\Thread.h" />
+    <ClInclude Include="Threads\ThreadNaming.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

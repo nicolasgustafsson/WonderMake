@@ -4,14 +4,17 @@
 
 #include "Typedefs.h"
 
-constexpr u32 RoutineCount = 3;
 
 enum class ERoutineId
 {
 	Logic = 0,
 	Render,
-	File
+	File,
+	Debug,
+	Count
 };
+
+constexpr u32 RoutineCount = static_cast<u32>(ERoutineId::Count);
 
 void _SetCurrentRoutine(const ERoutineId aRoutineId);
 ERoutineId _GetCurrentRoutine();

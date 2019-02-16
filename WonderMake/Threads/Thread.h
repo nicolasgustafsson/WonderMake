@@ -16,7 +16,7 @@ public:
 	void DoOnce() noexcept;
 
 	void WaitUntilReady() const noexcept;
-	bool IsReady() const noexcept { return myIsWaiting; };
+	inline bool IsReady() const noexcept { return myIsWaiting; };
 
 private:
 	std::vector<std::reference_wrapper<Routine>> myRoutines;

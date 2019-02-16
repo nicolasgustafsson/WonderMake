@@ -24,7 +24,7 @@ void Program::Update()
 
 	myCameraPtr->Update();
 
-	myRendererPtr->SwapFrame();
+	myRendererPtr->FinishFrame();
 
 	if constexpr (Constants::IsDebugging)
 	{
@@ -39,6 +39,8 @@ void Program::Update()
 		myEngineUniformBufferPtr->Debug();
 		myImguiWrapper.EndFrame();
 	}
+
+	myRendererPtr->StartFrame();
 }
 
 void Program::SetupCallbacks()

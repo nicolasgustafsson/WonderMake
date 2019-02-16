@@ -40,7 +40,6 @@ void Window::Update()
 	if (glfwGetKey(myGlfwWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(myGlfwWindow, true);
 
-	glfwSwapBuffers(myGlfwWindow);
 	glfwPollEvents();
 
 	if (glfwWindowShouldClose(myGlfwWindow))

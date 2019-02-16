@@ -4,6 +4,7 @@
 #include "VertexAttributes.h"
 #include "EngineUniformBuffer.h"
 #include "Camera/Camera.h"
+#include <GLFW/glfw3.h>
 
 void GLAPIENTRY
 MessageCallback([[maybe_unused]] GLenum source,
@@ -38,8 +39,10 @@ void Renderer::SetViewportSize(const SVector2<int> WindowSize)
 	myCameraPtr->SetViewportSize(WindowSize);
 }
 
-void Renderer::SwapFrame()
+void Renderer::StartFrame()
 {
+	glfwSwapBuffers(myWindowPtr->myGlfwWindow);
+
 	myEngineUniformBufferPtr->Update();
 
 	//first pass
@@ -80,7 +83,10 @@ void Renderer::SwapFrame()
 	myLine.SetAttribute<EVertexAttribute::Color>(7, { 1.0f, 0.0f, 0.0f, 1.0f });
 
 	myLine.Render();
+}
 
+void Renderer::FinishFrame()
+{
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);

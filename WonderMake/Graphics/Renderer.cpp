@@ -101,6 +101,7 @@ void Renderer::FinishFrame()
 	}
 }
 
+
 void Renderer::Debug()
 {
 	if constexpr (Constants::IsDebugging)

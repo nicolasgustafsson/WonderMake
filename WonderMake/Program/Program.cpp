@@ -18,12 +18,24 @@ Program::Program()
 
 void Program::Update()
 {
+	FinishPreviousFrame();
+
+	StartNewFrame();
+}
+
+void Program::StartNewFrame()
+{
 	myEngineUniformBufferPtr->GetBuffer().Time += 0.01f;
 
 	myWindowPtr->Update();
 
 	myCameraPtr->Update();
 
+	myRendererPtr->StartFrame();
+}
+
+void Program::FinishPreviousFrame()
+{
 	myRendererPtr->FinishFrame();
 
 	if constexpr (Constants::IsDebugging)
@@ -39,8 +51,6 @@ void Program::Update()
 		myEngineUniformBufferPtr->Debug();
 		myImguiWrapper.EndFrame();
 	}
-
-	myRendererPtr->StartFrame();
 }
 
 void Program::SetupCallbacks()

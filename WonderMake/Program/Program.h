@@ -15,6 +15,10 @@ public:
 
 	void Update();
 
+	void StartNewFrame();
+
+	void FinishPreviousFrame();
+
 private:
 
 	void SetupCallbacks();

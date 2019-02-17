@@ -5,19 +5,8 @@
 
 
 Thread::Thread(const std::string& aName)
-	:myThread
-	([&] {
-	while (true)
-	{
-		while (myIsWaiting)
-			std::this_thread::sleep_for(std::chrono::microseconds(100));
-
-		for (auto&& routine : myRoutines)
-			routine.get().Run();
-
-		myIsWaiting = true;
-	}
-	})
+	: myThread
+	([&] { Run(); })
 {
 	SetName(aName);
 }
@@ -47,4 +36,17 @@ void Thread::WaitUntilReady() const noexcept
 {
 	while (!IsReady())
 		std::this_thread::sleep_for(std::chrono::microseconds(100));
+}
+
+void Thread::Run()
+{
+	for(;;)
+	{
+		WaitUntilReady();
+
+		for (auto&& routine : myRoutines)
+			routine.get().Run();
+
+		myIsWaiting = true;
+	}
 }

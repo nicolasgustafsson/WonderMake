@@ -19,6 +19,8 @@ public:
 	inline bool IsReady() const noexcept { return myIsWaiting; };
 
 private:
+	void Run();
+
 	std::vector<std::reference_wrapper<Routine>> myRoutines;
 	std::thread myThread;
 	std::atomic_bool myIsWaiting = true;

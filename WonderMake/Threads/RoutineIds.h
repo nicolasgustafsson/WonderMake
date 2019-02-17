@@ -11,10 +11,10 @@ enum class ERoutineId
 	Render,
 	File,
 	Debug,
-	Count
+	_Count
 };
 
-constexpr u32 RoutineCount = static_cast<u32>(ERoutineId::Count);
+constexpr u32 RoutineCount = static_cast<u32>(ERoutineId::_Count);
 
 void _SetCurrentRoutine(const ERoutineId aRoutineId);
 ERoutineId _GetCurrentRoutine();

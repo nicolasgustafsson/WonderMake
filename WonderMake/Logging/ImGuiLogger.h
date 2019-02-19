@@ -14,7 +14,7 @@ public:
 	~ImGuiLogger() = default;
 
 private:
-	void Debug(const SDebugMessage&);
+	void OnDebugMessage(const SDebugMessage&);
 	void OnLogMessage(const SLogMessage& aMessage);
 
 	std::vector<SImGuiLogMessage> myLogMessages;

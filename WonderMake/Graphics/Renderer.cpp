@@ -28,7 +28,7 @@ Renderer::Renderer()
 	, myRenderTarget({ 1600, 900 })
 	, myCopyPass(std::filesystem::current_path() / "Shaders/Fragment/Copy.frag")
 	, mySubscriber(ERoutineId::Debug, 
-		BindHelper(&Renderer::Debug, this))
+		BindHelper(&Renderer::OnDebugMessage, this))
 {
 	glEnable(GL_DEBUG_OUTPUT);
 	glDebugMessageCallback(MessageCallback, 0);
@@ -104,7 +104,7 @@ void Renderer::FinishFrame()
 }
 
 
-void Renderer::Debug(const SDebugMessage& /*aDebugMessage*/)
+void Renderer::OnDebugMessage(const SDebugMessage&)
 {
 	//if we are debugging, render the game window as an imgui image
 

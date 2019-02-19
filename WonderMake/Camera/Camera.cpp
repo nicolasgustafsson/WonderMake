@@ -5,7 +5,7 @@
 
 Camera::Camera()
 	: mySubscriber(ERoutineId::Debug,
-		BindHelper(&Camera::Debug, this))
+		BindHelper(&Camera::OnDebugMessage, this))
 {
 }
 
@@ -44,7 +44,7 @@ void Camera::Update()
 	buffer.ViewProjectionMatrix = viewProjectionMatrix;
 }
 
-void Camera::Debug(const SDebugMessage& /**/)
+void Camera::OnDebugMessage(const SDebugMessage&)
 {
 	ImGui::Begin("Camera Debug Tool");
 

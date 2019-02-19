@@ -9,7 +9,7 @@ class RoutineDebug
 {
 public:
 	RoutineDebug();
-	~RoutineDebug();
+	~RoutineDebug() = default;
 
 protected:
 	virtual void PreMessageRouting() override;

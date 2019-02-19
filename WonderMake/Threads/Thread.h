@@ -17,11 +17,11 @@ public:
 
 	void WaitUntilReady() const noexcept;
 	void WaitWhileReady() const noexcept;
+
 	inline bool IsReady() const noexcept { return myIsWaiting; };
 
 private:
 	void Run();
-
 
 	std::vector<std::reference_wrapper<Routine>> myRoutines;
 	std::thread myThread;

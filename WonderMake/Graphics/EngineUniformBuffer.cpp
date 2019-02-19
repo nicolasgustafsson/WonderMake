@@ -3,12 +3,12 @@
 
 EngineUniformBuffer::EngineUniformBuffer()
 	: UniformBuffer<SEngineUniformBufferData>(0)
-	, mySubscriber(ERoutineId::Debug, BindHelper(&EngineUniformBuffer::Debug, this))
+	, mySubscriber(ERoutineId::Debug, BindHelper(&EngineUniformBuffer::OnDebugMessage, this))
 {
 
 }
 
-void EngineUniformBuffer::Debug(const SDebugMessage&)
+void EngineUniformBuffer::OnDebugMessage(const SDebugMessage&)
 {
 	ImGui::Begin("Engine Uniform Buffer info");
 

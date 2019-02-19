@@ -67,6 +67,6 @@ public:
 
 private:
 	MessageSubscriber mySubscriber;
-	void Debug(const SDebugMessage&);
+	void OnDebugMessage(const SDebugMessage&);
 };
 

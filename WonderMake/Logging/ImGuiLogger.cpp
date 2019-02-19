@@ -6,11 +6,11 @@
 
 ImGuiLogger::ImGuiLogger()
 	: mySubscriber(ERoutineId::Logic, BindHelper(&ImGuiLogger::OnLogMessage, this))
-	, myDebugSubscriber(ERoutineId::Debug, BindHelper(&ImGuiLogger::Debug, this))
+	, myDebugSubscriber(ERoutineId::Debug, BindHelper(&ImGuiLogger::OnDebugMessage, this))
 {
 }
 
-void ImGuiLogger::Debug(const SDebugMessage&)
+void ImGuiLogger::OnDebugMessage(const SDebugMessage&)
 {
 	ImGui::Begin("Console", 0);
 

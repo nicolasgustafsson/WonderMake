@@ -10,7 +10,8 @@
 #include "Program/Window.h"
 #include "Message/MessageSubscriber.h"
 
-class Renderer : public System
+class Renderer 
+	: public System
 {
 public:
 	Renderer();
@@ -23,7 +24,7 @@ public:
 
 
 private:
-	void Debug(const SDebugMessage& /*aDebugMessage*/);
+	void OnDebugMessage(const SDebugMessage&);
 
 	MessageSubscriber mySubscriber;
 	SpriteRenderObject mySpriteRenderObject;

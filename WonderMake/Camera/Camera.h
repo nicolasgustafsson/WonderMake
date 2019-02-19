@@ -3,9 +3,10 @@
 #include "System/SystemPtr.h"
 #include "Graphics/EngineUniformBuffer.h"
 #include "Message/MessageTypes.h"
-#include <Message/MessageSubscriber.h>
+#include "Message/MessageSubscriber.h"
 
-class Camera : public System
+class Camera 
+	: public System
 {
 public:
 	Camera();
@@ -16,8 +17,9 @@ public:
 	void SetViewportSize(const SVector2i aViewportSize);
 
 private:
+	void OnDebugMessage(const SDebugMessage&);
+
 	MessageSubscriber mySubscriber;
-	void Debug(const SDebugMessage& /**/);
 	SystemPtr<EngineUniformBuffer> myEngineBufferPtr;
 	SVector2f myPosition;
 	float myRotation;

@@ -8,11 +8,6 @@ RoutineDebug::RoutineDebug()
 {
 }
 
-
-RoutineDebug::~RoutineDebug()
-{
-}
-
 void RoutineDebug::PreMessageRouting()
 {
 	Routine::PreMessageRouting();

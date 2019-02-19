@@ -2,6 +2,7 @@
 #include "UniformBuffer.h"
 #include "Utilities/Matrix33.h"
 #include "System/System.h"
+#include "Message/MessageSubscriber.h"
 
 struct SPaddedMatrix33
 {
@@ -64,6 +65,8 @@ class EngineUniformBuffer
 public:
 	EngineUniformBuffer();
 
-	void Debug();
+private:
+	MessageSubscriber mySubscriber;
+	void Debug(const SDebugMessage&);
 };
 

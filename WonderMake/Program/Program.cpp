@@ -36,21 +36,8 @@ void Program::StartNewFrame()
 
 void Program::FinishPreviousFrame()
 {
-	myRendererPtr->FinishFrame();
-
-	if constexpr (Constants::IsDebugging)
-	{
-		myImguiWrapper.StartFrame();
-
-		myDockSpace.Debug();
-
-		ImGui::ShowDemoWindow();
-		myImGuiLogger.Draw();
-		myRendererPtr->Debug();
-		myCameraPtr->Debug();
-		myEngineUniformBufferPtr->Debug();
-		myImguiWrapper.EndFrame();
-	}
+	if constexpr (!Constants::IsDebugging)
+		myRendererPtr->FinishFrame();
 }
 
 void Program::SetupCallbacks()

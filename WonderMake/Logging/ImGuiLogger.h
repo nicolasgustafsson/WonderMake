@@ -13,8 +13,8 @@ public:
 	ImGuiLogger();
 	~ImGuiLogger() = default;
 
-	void Draw();
 private:
+	void Debug(const SDebugMessage&);
 	void OnLogMessage(const SLogMessage& aMessage);
 
 	std::vector<SImGuiLogMessage> myLogMessages;
@@ -22,5 +22,6 @@ private:
 	std::string myFilterText;
 
 	MessageSubscriber mySubscriber;
+	MessageSubscriber myDebugSubscriber;
 };
 

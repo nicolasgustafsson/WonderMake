@@ -8,6 +8,7 @@
 #include "Camera/Camera.h"
 #include "System/SystemPtr.h"
 #include "Program/Window.h"
+#include "Message/MessageSubscriber.h"
 
 class Renderer : public System
 {
@@ -20,9 +21,11 @@ public:
 
 	void FinishFrame();
 
-	void Debug();
 
 private:
+	void Debug(const SDebugMessage& /*aDebugMessage*/);
+
+	MessageSubscriber mySubscriber;
 	SpriteRenderObject mySpriteRenderObject;
 	LineRenderObject myLine;
 	RenderTarget myRenderTarget;

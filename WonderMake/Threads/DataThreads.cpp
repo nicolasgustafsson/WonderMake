@@ -4,6 +4,7 @@
 #include "Threads/Routine.h"
 #include "Threads/RoutineIds.h"
 #include "Threads/RoutineMain.h"
+#include "RoutineDebug.h"
 
 void DataThreads::Start(Program& aProgramReference, Closure&& aCallback)
 {
@@ -13,7 +14,7 @@ void DataThreads::Start(Program& aProgramReference, Closure&& aCallback)
 	myRoutines[static_cast<size_t>(ERoutineId::File)] = std::make_unique<Routine>(ERoutineId::File);
 
 	if constexpr(Constants::IsDebugging)
-		myRoutines[static_cast<size_t>(ERoutineId::Debug)] = std::make_unique<Routine>(ERoutineId::Debug);
+		myRoutines[static_cast<size_t>(ERoutineId::Debug)] = std::make_unique<RoutineDebug>();
 	
 	myFileThread.emplace("File Thread").AddRoutine(*myRoutines[static_cast<size_t>(ERoutineId::File)]);
 	myRenderThread.emplace("Render Thread").AddRoutine(*myRoutines[static_cast<size_t>(ERoutineId::Render)]);

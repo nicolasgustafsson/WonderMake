@@ -2,12 +2,13 @@
 #include "EngineUniformBuffer.h"
 
 EngineUniformBuffer::EngineUniformBuffer()
-	:UniformBuffer<SEngineUniformBufferData>(0)
+	: UniformBuffer<SEngineUniformBufferData>(0)
+	, mySubscriber(ERoutineId::Debug, BindHelper(&EngineUniformBuffer::Debug, this))
 {
 
 }
 
-void EngineUniformBuffer::Debug()
+void EngineUniformBuffer::Debug(const SDebugMessage&)
 {
 	ImGui::Begin("Engine Uniform Buffer info");
 

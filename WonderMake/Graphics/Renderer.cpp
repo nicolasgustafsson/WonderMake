@@ -24,9 +24,11 @@ MessageCallback([[maybe_unused]] GLenum source,
 }
 
 Renderer::Renderer()
-	:	mySpriteRenderObject({ std::filesystem::current_path() / "Textures/tile.png" })
-	,	myRenderTarget({ 1600, 900 })
-	,	myCopyPass(std::filesystem::current_path() / "Shaders/Fragment/Copy.frag")
+	: mySpriteRenderObject({ std::filesystem::current_path() / "Textures/tile.png" })
+	, myRenderTarget({ 1600, 900 })
+	, myCopyPass(std::filesystem::current_path() / "Shaders/Fragment/Copy.frag")
+	, mySubscriber(ERoutineId::Debug, 
+		BindHelper(&Renderer::Debug, this))
 {
 	glEnable(GL_DEBUG_OUTPUT);
 	glDebugMessageCallback(MessageCallback, 0);
@@ -102,25 +104,22 @@ void Renderer::FinishFrame()
 }
 
 
-void Renderer::Debug()
+void Renderer::Debug(const SDebugMessage& /*aDebugMessage*/)
 {
-	if constexpr (Constants::IsDebugging)
-	{
-		//if we are debugging, render the game window as an imgui image
+	//if we are debugging, render the game window as an imgui image
 
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 
-		ImGui::Begin("Game Window");
+	ImGui::Begin("Game Window");
 
-		ImGui::PopStyleVar();
-		ImGui::PopStyleVar();
+	ImGui::PopStyleVar();
+	ImGui::PopStyleVar();
 
-		SVector2i ViewportSize = { static_cast<i32>(ImGui::GetContentRegionAvail().x), static_cast<i32>(ImGui::GetContentRegionAvail().y) };
-		ImGui::Image((void *)myRenderTarget.GetTexture(), ImVec2(ViewportSize.X, ViewportSize.Y));
+	SVector2i ViewportSize = { static_cast<i32>(ImGui::GetContentRegionAvail().x), static_cast<i32>(ImGui::GetContentRegionAvail().y) };
+	ImGui::Image((void *)myRenderTarget.GetTexture(), ImVec2(ViewportSize.X, ViewportSize.Y));
 
-		myCameraPtr->SetViewportSize(ViewportSize);
+	myCameraPtr->SetViewportSize(ViewportSize);
 
-		ImGui::End();
-	}
+	ImGui::End();
 }

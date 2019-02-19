@@ -38,11 +38,17 @@ void Thread::WaitUntilReady() const noexcept
 		std::this_thread::sleep_for(std::chrono::microseconds(100));
 }
 
+void Thread::WaitWhileReady() const noexcept
+{
+	while (IsReady())
+		std::this_thread::sleep_for(std::chrono::microseconds(100));
+}
+
 void Thread::Run()
 {
 	for(;;)
 	{
-		WaitUntilReady();
+		WaitWhileReady();
 
 		for (auto&& routine : myRoutines)
 			routine.get().Run();

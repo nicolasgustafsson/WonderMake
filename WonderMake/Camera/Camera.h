@@ -2,6 +2,8 @@
 #include "System/System.h"
 #include "System/SystemPtr.h"
 #include "Graphics/EngineUniformBuffer.h"
+#include "Message/MessageTypes.h"
+#include <Message/MessageSubscriber.h>
 
 class Camera : public System
 {
@@ -11,11 +13,11 @@ public:
 
 	void Update();
 
-	void Debug();
-
 	void SetViewportSize(const SVector2i aViewportSize);
 
 private:
+	MessageSubscriber mySubscriber;
+	void Debug(const SDebugMessage& /**/);
 	SystemPtr<EngineUniformBuffer> myEngineBufferPtr;
 	SVector2f myPosition;
 	float myRotation;

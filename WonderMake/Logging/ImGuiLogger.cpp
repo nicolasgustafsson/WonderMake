@@ -5,11 +5,12 @@
 #include <cctype>
 
 ImGuiLogger::ImGuiLogger()
-	:mySubscriber(ERoutineId::Logic, BindHelper(&ImGuiLogger::OnLogMessage, this))
+	: mySubscriber(ERoutineId::Logic, BindHelper(&ImGuiLogger::OnLogMessage, this))
+	, myDebugSubscriber(ERoutineId::Debug, BindHelper(&ImGuiLogger::Debug, this))
 {
 }
 
-void ImGuiLogger::Draw()
+void ImGuiLogger::Debug(const SDebugMessage&)
 {
 	ImGui::Begin("Console", 0);
 

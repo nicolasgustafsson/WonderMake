@@ -4,7 +4,7 @@
 
 DockSpace::DockSpace()
 	: mySubscriber(ERoutineId::Debug,
-		BindHelper(&DockSpace::Debug, this))
+		BindHelper(&DockSpace::OnDebugMessage, this))
 {
 }
 
@@ -13,7 +13,7 @@ DockSpace::~DockSpace()
 {
 }
 
-void DockSpace::Debug(const SDebugMessage&)
+void DockSpace::OnDebugMessage(const SDebugMessage&)
 {
 	ImGuiViewport* viewport = ImGui::GetMainViewport();
 	ImGui::SetNextWindowPos(viewport->Pos);

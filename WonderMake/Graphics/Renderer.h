@@ -9,9 +9,11 @@
 #include "System/SystemPtr.h"
 #include "Program/Window.h"
 #include "Message/MessageSubscriber.h"
+#include "Utilities/Debugging/Debugged.h"
 
 class Renderer 
 	: public System
+	, public Debugged
 {
 public:
 	Renderer();
@@ -22,11 +24,9 @@ public:
 
 	void FinishFrame();
 
-
 private:
-	void OnDebugMessage(const SDebugMessage&);
+	virtual void Debug() override;
 
-	MessageSubscriber mySubscriber;
 	SpriteRenderObject mySpriteRenderObject;
 	LineRenderObject myLine;
 	RenderTarget myRenderTarget;

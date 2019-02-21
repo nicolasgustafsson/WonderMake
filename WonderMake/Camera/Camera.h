@@ -4,22 +4,23 @@
 #include "Graphics/EngineUniformBuffer.h"
 #include "Message/MessageTypes.h"
 #include "Message/MessageSubscriber.h"
+#include <Utilities/Debugging/Debugged.h>
 
-class Camera 
+class Camera final
 	: public System
+	, public Debugged
 {
 public:
-	Camera();
-	~Camera();
+	Camera() = default;
+	~Camera() = default;
 
 	void Update();
 
 	void SetViewportSize(const SVector2i aViewportSize);
 
 private:
-	void OnDebugMessage(const SDebugMessage&);
+	virtual void Debug() override;
 
-	MessageSubscriber mySubscriber;
 	SystemPtr<EngineUniformBuffer> myEngineBufferPtr;
 	SVector2f myPosition;
 	float myRotation;

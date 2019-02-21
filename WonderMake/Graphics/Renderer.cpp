@@ -27,8 +27,6 @@ Renderer::Renderer()
 	: mySpriteRenderObject({ std::filesystem::current_path() / "Textures/tile.png" })
 	, myRenderTarget({ 1600, 900 })
 	, myCopyPass(std::filesystem::current_path() / "Shaders/Fragment/Copy.frag")
-	, mySubscriber(ERoutineId::Debug, 
-		BindHelper(&Renderer::OnDebugMessage, this))
 {
 	glEnable(GL_DEBUG_OUTPUT);
 	glDebugMessageCallback(MessageCallback, 0);
@@ -103,8 +101,7 @@ void Renderer::FinishFrame()
 	}
 }
 
-
-void Renderer::OnDebugMessage(const SDebugMessage&)
+void Renderer::Debug()
 {
 	//if we are debugging, render the game window as an imgui image
 

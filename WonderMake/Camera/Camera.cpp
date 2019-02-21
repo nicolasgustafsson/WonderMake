@@ -2,18 +2,6 @@
 #include "Camera.h"
 #include "Graphics/EngineUniformBuffer.h"
 
-
-Camera::Camera()
-	: mySubscriber(ERoutineId::Debug,
-		BindHelper(&Camera::OnDebugMessage, this))
-{
-}
-
-
-Camera::~Camera()
-{
-}
-
 void Camera::Update()
 {
 	auto viewInverse = myViewMatrix;
@@ -44,7 +32,7 @@ void Camera::Update()
 	buffer.ViewProjectionMatrix = viewProjectionMatrix;
 }
 
-void Camera::OnDebugMessage(const SDebugMessage&)
+void Camera::Debug()
 {
 	ImGui::Begin("Camera Debug Tool");
 

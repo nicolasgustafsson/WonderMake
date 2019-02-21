@@ -3,6 +3,7 @@
 #include "Utilities/Matrix33.h"
 #include "System/System.h"
 #include "Message/MessageSubscriber.h"
+#include <Utilities/Debugging/Debugged.h>
 
 struct SPaddedMatrix33
 {
@@ -60,13 +61,13 @@ struct SEngineUniformBufferData
 class EngineUniformBuffer 
 	: public UniformBuffer<SEngineUniformBufferData>
 	, public System
+	, public Debugged
 	
 {
 public:
 	EngineUniformBuffer();
 
 private:
-	MessageSubscriber mySubscriber;
-	void OnDebugMessage(const SDebugMessage&);
+	virtual void Debug() override;
 };
 

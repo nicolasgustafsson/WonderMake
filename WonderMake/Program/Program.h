@@ -7,6 +7,7 @@
 #include "Logging/ImGuiLogger.h"
 #include "Imgui/DockSpace.h"
 #include "System/SystemPtr.h"
+#include "TimeKeeper.h"
 
 class Program
 {
@@ -35,6 +36,7 @@ private:
 	//-------KEEP THIS IN ORDER-------
 
 	SystemPtr<Camera> myCameraPtr;
+	SystemPtr<TimeKeeper> myTimeKeeperPtr;
 
 	static constexpr SVector2<i32> WindowSize = {1600, 900};
 };

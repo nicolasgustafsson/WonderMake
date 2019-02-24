@@ -1,5 +1,4 @@
 #pragma once
-#include "Utilities/RestrictTypes.h"
 #include "Message/MessageSubscriber.h"
 
 class Debugged

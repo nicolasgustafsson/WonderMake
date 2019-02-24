@@ -25,7 +25,7 @@ void Program::Update()
 
 void Program::StartNewFrame()
 {
-	myEngineUniformBufferPtr->GetBuffer().Time += 0.01f;
+	myEngineUniformBufferPtr->GetBuffer().Time = myTimeKeeperPtr->GetGameTime();
 
 	myWindowPtr->Update();
 

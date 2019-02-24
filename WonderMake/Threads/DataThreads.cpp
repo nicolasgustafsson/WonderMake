@@ -5,6 +5,7 @@
 #include "Threads/RoutineIds.h"
 #include "Threads/RoutineMain.h"
 #include "Threads/RoutineDebug.h"
+#include "Utilities/Stopwatch.h"
 
 void DataThreads::Start(Program& aProgramReference, Closure&& aCallback)
 {
@@ -23,6 +24,9 @@ void DataThreads::Start(Program& aProgramReference, Closure&& aCallback)
 
 	for (;;)
 	{
+		//update the timekeeper before any threads have run so that delta time can be accessed asynchronously
+		myTimeKeeper->Update();
+
 		myFileThread->DoOnce();
 		myRenderThread->DoOnce();
 		myRoutines[static_cast<size_t>(ERoutineId::Logic)]->Run();

@@ -8,6 +8,8 @@
 #include "RoutineIds.h"
 #include "Thread.h"
 #include "Routine.h"
+#include "TimeKeeper.h"
+#include "System/SystemPtr.h"
 
 class Program;
 class Routine;
@@ -25,4 +27,6 @@ private:
 
 	std::optional<Thread> myRenderThread;
 	std::optional<Thread> myFileThread;
+
+	SystemPtr<TimeKeeper> myTimeKeeper;
 };

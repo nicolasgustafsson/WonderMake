@@ -44,6 +44,7 @@
     <ClCompile Include="Threads\Thread.cpp" />
     <ClCompile Include="Threads\RoutineDebug.cpp" />
     <ClCompile Include="Utilities\Debugging\Debugged.cpp" />
+    <ClCompile Include="TimeKeeper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logging\ImGuiLogger.h" />
@@ -127,6 +128,8 @@
     <ClInclude Include="Threads\ThreadNaming.h" />
     <ClInclude Include="Threads\RoutineDebug.h" />
     <ClInclude Include="Utilities\Debugging\Debugged.h" />
+    <ClInclude Include="Utilities\Stopwatch.h" />
+    <ClInclude Include="TimeKeeper.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

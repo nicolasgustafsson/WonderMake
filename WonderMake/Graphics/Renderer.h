@@ -10,6 +10,7 @@
 #include "Program/Window.h"
 #include "Message/MessageSubscriber.h"
 #include "Utilities/Debugging/Debugged.h"
+#include "Debugging/DebugLineDrawer.h"
 
 class Renderer 
 	: public System
@@ -27,13 +28,12 @@ public:
 private:
 	virtual void Debug() override;
 
-	SpriteRenderObject mySpriteRenderObject;
-	LineRenderObject myLine;
 	RenderTarget myRenderTarget;
 	ScreenPassRenderObject myCopyPass;
 	SystemPtr<Camera> myCameraPtr;
 	SystemPtr<EngineUniformBuffer> myEngineUniformBufferPtr;
 	SystemPtr<Window> myWindowPtr;
+	SystemPtr<DebugLineDrawer> myLineDrawer;
 
 	const SColor ClearColor = SColor::CornflowerBlue;
 	float myRotation = 0.0f;

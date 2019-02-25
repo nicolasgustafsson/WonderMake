@@ -51,7 +51,5 @@ void Functionality<TSelfType, TDependencies...>::Destroy(Object& aObject)
 template<typename TSelfType, typename ... TDependencies>
 Functionality<TSelfType, TDependencies...>::Functionality(Object& aObject)
 	: myDependencies(aObject)
-{
-	static_assert(sizeof(TSelfType) == sizeof(Super), "Functionalities may not declare member variables! Please put those in a separate component!");
-}
+{}
 

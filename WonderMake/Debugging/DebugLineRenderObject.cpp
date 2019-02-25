@@ -1,0 +1,30 @@
+#include "stdafx.h"
+#include "DebugLineRenderObject.h"
+#include "DebugLine.h"
+
+
+DebugLineRenderObject::DebugLineRenderObject(const u32 aLineCount)
+	:RenderObject(SRenderObjectInfo
+		{	std::filesystem::current_path() / "Shaders/Vertex/LineVertex.vert"
+		,	"" //geometry shader
+		,	std::filesystem::current_path() / "Shaders/Fragment/LineFragment.frag"
+		,	"" //texture
+		,	aLineCount * 2
+		,	GL_LINES})
+{
+
+}
+
+void DebugLineRenderObject::SetLine(u32 aLineIndex, const SDebugLine& aDebugLine)
+{
+	SetAttribute<EVertexAttribute::Position>(aLineIndex * 2, aDebugLine.Start);
+	SetAttribute<EVertexAttribute::Position>(aLineIndex * 2 + 1, aDebugLine.End);
+
+	SetAttribute<EVertexAttribute::Color>(aLineIndex * 2, aDebugLine.Color);
+	SetAttribute<EVertexAttribute::Color>(aLineIndex * 2 + 1, aDebugLine.Color);
+}
+
+void DebugLineRenderObject::SetLineCount(const u32 aLineCount)
+{
+	SetRenderCount(aLineCount * 2);
+}

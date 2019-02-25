@@ -191,6 +191,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera\Camera.cpp" />
+    <ClCompile Include="Debugging\DebugLineDrawer.cpp" />
+    <ClCompile Include="Debugging\DebugLineRenderObject.cpp" />
+    <ClCompile Include="Debugging\DebugLine.cpp" />
     <ClCompile Include="TimeKeeper.cpp" />
     <ClCompile Include="Utilities\Debugging\Debugged.cpp" />
     <ClCompile Include="Threads\RoutineDebug.cpp" />
@@ -238,6 +241,9 @@
   <ItemGroup>
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="Debugging\DebugLineDrawer.h" />
+    <ClInclude Include="Debugging\DebugLineRenderObject.h" />
+    <ClInclude Include="Debugging\DebugLine.h" />
     <ClInclude Include="TimeKeeper.h" />
     <ClInclude Include="Utilities\Stopwatch.h" />
     <ClInclude Include="Utilities\Debugging\Debugged.h" />

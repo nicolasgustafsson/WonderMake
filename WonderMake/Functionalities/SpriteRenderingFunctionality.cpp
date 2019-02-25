@@ -13,8 +13,17 @@ void SpriteRenderingFunctionality::Tick()
 	if (!SpriteComponent.RenderObject)
 		return;
 
-	SpriteComponent.RenderObject->SetAttribute<EVertexAttribute::Position>(0, Get<STransformComponent>().Position);
+	const float currentTime = myTimeKeeperPtr->GetGameTime() * 2;
+	SVector2f position = Get<STransformComponent>().Position;
+
+	SpriteComponent.RenderObject->SetAttribute<EVertexAttribute::Position>(0, position);
 	SpriteComponent.RenderObject->Render();
+
+	SVector2f endPosition = position;
+	endPosition.X += std::cosf(currentTime) * 166.0f;
+	endPosition.Y += std::sinf(currentTime) * 166.0f;
+
+	WmDrawDebugLine(position, endPosition, SColor::Red, 0.0f);
 }
 
 void SpriteRenderingFunctionality::SetTexture(const std::filesystem::path& aTexturePath)

@@ -7,6 +7,7 @@
 
 #include <sstream>
 #include <memory>
+#include "Debugging/DebugLine.h"
 
 template<typename TMessage>
 inline static void WmDispatchMessage(const TMessage& aMessage)
@@ -62,6 +63,18 @@ inline static void WmLog(TMessageArgs... aMessageArgs)
 	(MessageStream << ... << aMessageArgs);
 
 	WmDispatchMessage(SLogMessage(std::forward<std::string>(MessageStream.str())));
+}
+
+inline static void WmDrawDebugLine(const SDebugLine& aDebugLine)
+{
+	WmDispatchMessage(SDebugLineMessage(aDebugLine));
+}
+
+inline static void WmDrawDebugLine(const SVector2f& aStart, const SVector2f& aEnd, const SColor& aColor, const f32 aDuration = 0.0f)
+{
+	SDebugLine line{ aColor, aStart, aEnd, aDuration };
+
+	WmDrawDebugLine(line);
 }
 
 class Job;

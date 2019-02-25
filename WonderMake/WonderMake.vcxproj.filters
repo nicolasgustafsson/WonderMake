@@ -45,6 +45,9 @@
     <ClCompile Include="Threads\RoutineDebug.cpp" />
     <ClCompile Include="Utilities\Debugging\Debugged.cpp" />
     <ClCompile Include="TimeKeeper.cpp" />
+    <ClCompile Include="Debugging\DebugLineDrawer.cpp" />
+    <ClCompile Include="Debugging\DebugLine.cpp" />
+    <ClCompile Include="Debugging\DebugLineRenderObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logging\ImGuiLogger.h" />
@@ -130,6 +133,9 @@
     <ClInclude Include="Utilities\Debugging\Debugged.h" />
     <ClInclude Include="Utilities\Stopwatch.h" />
     <ClInclude Include="TimeKeeper.h" />
+    <ClInclude Include="Debugging\DebugLineDrawer.h" />
+    <ClInclude Include="Debugging\DebugLine.h" />
+    <ClInclude Include="Debugging\DebugLineRenderObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

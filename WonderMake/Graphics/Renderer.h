@@ -1,7 +1,6 @@
 #pragma once
 #include "RenderObject.h"
 #include "SpriteRenderObject.h"
-#include "LineRenderObject.h"
 #include "RenderTarget.h"
 #include "ScreenPassRenderObject.h"
 #include "System/System.h"

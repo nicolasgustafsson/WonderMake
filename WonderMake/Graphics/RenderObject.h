@@ -65,7 +65,7 @@ void RenderObject<TAttributes...>::BindTextures()
 	for (auto[i, texture] : Utility::Enumerate(myTextures))
 	{
 		if (texture)
-			texture->Bind(i);
+			texture->Bind(static_cast<u32>(i));
 	}
 }
 

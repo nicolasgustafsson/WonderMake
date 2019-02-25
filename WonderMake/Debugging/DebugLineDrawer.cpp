@@ -28,7 +28,7 @@ void DebugLineDrawer::Render()
 
 	for (auto[i, line] : Utility::Enumerate(myDebugLines))
 	{
-		myRenderObject.SetLine(i, line);
+		myRenderObject.SetLine(static_cast<u32>(i), line);
 	}
 
 	myRenderObject.SetLineCount(static_cast<u32>(myDebugLines.size()));

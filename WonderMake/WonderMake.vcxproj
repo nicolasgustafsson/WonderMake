@@ -218,7 +218,6 @@
     <ClCompile Include="Threads\RoutineMain.cpp" />
     <ClCompile Include="Threads\DataThreads.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
-    <ClCompile Include="Graphics\LineRenderObject.cpp" />
     <ClCompile Include="Message\DispatchRouter.cpp" />
     <ClCompile Include="Message\MessageSubscriber.cpp" />
     <ClCompile Include="Program\ImguiWrapper.cpp" />
@@ -287,7 +286,6 @@
     <ClInclude Include="Graphics\VertexBuffer.h" />
     <ClInclude Include="Graphics\Shader.h" />
     <ClInclude Include="Graphics\Renderer.h" />
-    <ClInclude Include="Graphics\LineRenderObject.h" />
     <ClInclude Include="Message\DataRouters.h" />
     <ClInclude Include="Message\DispatchRouter.h" />
     <ClInclude Include="Message\MessageTypes.h" />

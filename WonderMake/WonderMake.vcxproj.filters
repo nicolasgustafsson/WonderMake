@@ -49,6 +49,9 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="Program\Window.cpp" />
     <ClCompile Include="Utilities\OS.cpp" />
+    <ClCompile Include="Object\Object.cpp" />
+    <ClCompile Include="Functionalities\SpriteRenderingFunctionality.cpp" />
+    <ClCompile Include="Policies\Scheduler.cpp" />
     <ClCompile Include="Randomizer\Randomizer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -197,6 +200,9 @@
     <ClInclude Include="Functionalities\OwnerFunctionality.h" />
     <ClInclude Include="Serialization\SerializationSystem.h" />
     <ClInclude Include="Randomizer\Randomizer.h" />
+    <ClInclude Include="Policies\Policy.h" />
+    <ClInclude Include="Policies\Scheduler.h" />
+    <ClInclude Include="Policies\SystemId.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

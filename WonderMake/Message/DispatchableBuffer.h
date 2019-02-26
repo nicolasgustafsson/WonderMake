@@ -21,13 +21,13 @@ class DispatchableBufferBase
 public:
 	virtual ~DispatchableBufferBase() = default;
 	
-	inline size_t GetTypeHash() const;
+	inline size_t GetTypeHash() const noexcept;
 
 	static bool UpdateBuffers(const ERoutineId aRoutineId);
 	static void GetDispatchableList(const ERoutineId aRoutineId, std::vector<const Dispatchable*>& aOutList);
 
 protected:
-	DispatchableBufferBase(const size_t aTypeHash);
+	DispatchableBufferBase(const size_t aTypeHash) noexcept;
 
 	void AddDispatchable(const ERoutineId aRoutineId, const size_t aIndex);
 
@@ -55,7 +55,7 @@ private:
 	const size_t myTypeHash;
 };
 
-size_t DispatchableBufferBase::GetTypeHash() const
+size_t DispatchableBufferBase::GetTypeHash() const noexcept
 {
 	return myTypeHash;
 }
@@ -65,7 +65,7 @@ class DispatchableBuffer final
 	: public DispatchableBufferBase
 {
 public:
-	inline DispatchableBuffer();
+	inline DispatchableBuffer() noexcept;
 
 	static void Dispatch(const TDispatchType& aDispatchable);
 	static void Dispatch(TDispatchType&& aDispatchable);
@@ -85,7 +85,7 @@ template<typename TDispatchType>
 DispatchableBuffer<TDispatchType> DispatchableBuffer<TDispatchType>::Instance[RoutineCount];
 
 template<typename TDispatchType>
-DispatchableBuffer<TDispatchType>::DispatchableBuffer()
+DispatchableBuffer<TDispatchType>::DispatchableBuffer() noexcept
 	: DispatchableBufferBase(TDispatchType::GetTypeHash())
 {}
 

@@ -5,7 +5,7 @@ DoubleBuffer<DispatchableBufferBase::DispatchableContainer> DispatchableBufferBa
 
 std::mutex DispatchableBufferBase::myLock;
 
-DispatchableBufferBase::DispatchableBufferBase(const size_t aTypeHash)
+DispatchableBufferBase::DispatchableBufferBase(const size_t aTypeHash) noexcept
 	: myTypeHash(aTypeHash)
 {}
 

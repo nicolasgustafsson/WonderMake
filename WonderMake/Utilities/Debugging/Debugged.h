@@ -4,7 +4,7 @@
 class Debugged
 {
 public:
-	Debugged();
+	Debugged() noexcept;
 	virtual ~Debugged() = default;
 
 protected:

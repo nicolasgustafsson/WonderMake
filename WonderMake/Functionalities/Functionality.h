@@ -12,7 +12,7 @@ public:
 
 	virtual void Destroy([[maybe_unused]]Object& aObject) = 0;
 
-	void Tick() {}
+	void Tick() noexcept {}
 };
 
 //[Nicos]: Describes a functionality for an object. Template params are 1. Type that is self type and 2. Dependencies.

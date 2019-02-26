@@ -8,7 +8,7 @@ class DebugLineDrawer
 	: public System
 {
 public:
-	DebugLineDrawer();
+	DebugLineDrawer() noexcept;
 	~DebugLineDrawer() = default;
 
 	void Render();

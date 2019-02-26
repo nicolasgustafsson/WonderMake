@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Renderer.h"
 
 #include "VertexAttributes.h"
@@ -24,11 +24,11 @@ MessageCallback([[maybe_unused]] GLenum source,
 }
 
 Renderer::Renderer()
-	: myRenderTarget({ 1600, 900 })
+	: myRenderTarget({ {1600, 900}, false })
 	, myCopyPass(std::filesystem::current_path() / "Shaders/Fragment/Copy.frag")
 {
 	glEnable(GL_DEBUG_OUTPUT);
-	glDebugMessageCallback(MessageCallback, 0);
+	glDebugMessageCallback(MessageCallback, nullptr);
 	myCameraPtr->SetViewportSize({1600, 900});
 }
 

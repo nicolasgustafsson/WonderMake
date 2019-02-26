@@ -2,7 +2,7 @@
 #include "Debugged.h"
 
 
-Debugged::Debugged()
+Debugged::Debugged() noexcept
 	: myDebugSubscriber(ERoutineId::Debug, 
 		BindHelper(&Debugged::OnDebugMessage, this))
 {

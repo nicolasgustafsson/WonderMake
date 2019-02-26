@@ -2,7 +2,7 @@
 #include "DebugLineDrawer.h"
 #include "Utilities/Utility.h"
 
-DebugLineDrawer::DebugLineDrawer()
+DebugLineDrawer::DebugLineDrawer() noexcept
 	: myRenderObject(10000)
 	, mySubscriber(ERoutineId::Logic, BindHelper(&DebugLineDrawer::OnGotDebugLineMessage, this))
 {

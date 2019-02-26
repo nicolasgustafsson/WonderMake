@@ -4,32 +4,57 @@
 template<typename T, u32 Size, typename Enable = void>
 struct SVectorBase;
 
+#pragma warning(push)
+#pragma warning(disable:4201)
 template <typename T>
 struct SVectorBase<T, 2>
 {
 public:
-	T X = {};
-	T Y = {};
+	union
+	{
+		struct
+		{
+			T X;
+			T Y;
+		};
+		std::array<T, 2> MemberArray = {};
+	};
+
 };
 
 template <typename T>
 struct SVectorBase<T, 3>
 {
 public:
-	T X = {};
-	T Y = {};
-	T Z = {};
+	union
+	{
+		struct
+		{
+			T X;
+			T Y;
+			T Z;
+		};
+		std::array<T, 3> MemberArray = {};
+	};
 };
 
 template <typename T>
 struct SVectorBase<T, 4>
 {
 public:
-	T X = {};
-	T Y = {};
-	T Z = {};
-	T W = {};
+	union
+	{
+		struct
+		{
+			T X;
+			T Y;
+			T Z;
+			T W;
+		};
+		std::array<T, 4> MemberArray = {};
+	};
 };
+#pragma warning(pop)
 
 template <typename T, u32 Size>
 struct SVectorBase<T, Size, std::enable_if_t<(Size > 4)>>
@@ -39,21 +64,33 @@ public:
 };
 
 template <typename T, u32 Size>
-struct SVector : SVectorBase<T, Size>
+struct SVector 
+	: public SVectorBase<T, Size>
 {
 	//put generic vector stuff here
 	constexpr SVector() = default;
 
+	template<typename... Ts>
+	using TVectorMembers = typename std::enable_if_t<sizeof...(Ts) == Size && std::conjunction_v<std::is_convertible<Ts, T>...>>;
+
+	template<typename ...TArgs, typename = TVectorMembers<TArgs...>>
+	constexpr SVector(TArgs... aArgs) noexcept
+	{
+		u32 i = 0;
+
+		(((*this)[i++] = aArgs), ...);
+	}
+
 	//lowers the dimension of the vector by one
 	template<class Q = T>
-	constexpr typename std::enable_if_t<(Size == 2), Q> Demote() const
+	constexpr typename std::enable_if_t<(Size == 2), Q> Demote() const noexcept
 	{
 		return (*this)[0];
 	}
 
 	//lowers the dimension of the vector by one
 	template<class Q = T>
-	constexpr typename std::enable_if_t<(Size > 2), SVector<Q, Size - 1>> Demote() const
+	constexpr typename std::enable_if_t<(Size > 2), SVector<Q, Size - 1>> Demote() const noexcept
 	{
 		SVector<Q, Size - 1> ReturnVal;
 
@@ -66,7 +103,7 @@ struct SVector : SVectorBase<T, Size>
 	}
 
 	//raises the dimension of the vector by one
-	constexpr SVector<T, Size + 1> Promote(const T LastValue = {}) const
+	constexpr SVector<T, Size + 1> Promote(const T LastValue = {}) const noexcept
 	{
 		SVector<T, Size + 1> ReturnVal;
 
@@ -80,21 +117,17 @@ struct SVector : SVectorBase<T, Size>
 		return ReturnVal;
 	}
 
-	constexpr T& operator[] (const u32 Index)
+	constexpr T& operator[] (const u32 Index) noexcept
 	{
-		T* PointerToMember = reinterpret_cast<T*>(this);
-		PointerToMember += Index;
-		return *PointerToMember;
+		return this->MemberArray[Index];
 	}
 
-	constexpr const T& operator[] (const u32 Index) const
+	constexpr const T& operator[] (const u32 Index) const noexcept
 	{
-		const T* PointerToMember = reinterpret_cast<const T*>(this);
-		PointerToMember += Index;
-		return *PointerToMember;
+		return this->MemberArray[Index];
 	}
 
-	constexpr char GetMemberName(const u32 Index) const
+	constexpr char GetMemberName(const u32 Index) const noexcept
 	{
 		switch (Index)
 		{
@@ -111,7 +144,7 @@ struct SVector : SVectorBase<T, Size>
 		}
 	}
 
-	constexpr SVector<T, Size> operator-() const
+	constexpr SVector<T, Size> operator-() const noexcept
 	{
 		SVector<T, Size> ReturnVal;
 
@@ -123,14 +156,90 @@ struct SVector : SVectorBase<T, Size>
 		return ReturnVal;
 	}
 
-	constexpr static SVector<T, Size> Zero()
+	constexpr SVector<T, Size> operator-(const SVector<T, Size>& aRightVector) noexcept
+	{
+		SVector<T, Size> ReturnVal = *this;
+
+		for (u32 u = 0; u < Size; u++)
+		{
+			ReturnVal[u] -= aRightVector[u];
+		}
+
+		return ReturnVal;
+	}
+
+	constexpr SVector<T, Size> operator+(const SVector<T, Size>& aRightVector) noexcept
+	{
+		SVector<T, Size> ReturnVal = *this;
+
+		for (u32 u = 0; u < Size; u++)
+		{
+			ReturnVal[u] += aRightVector[u];
+		}
+
+		return ReturnVal;
+	}
+
+	constexpr SVector<T, Size> operator*(const T aMultiplier) noexcept
+	{
+		SVector<T, Size> ReturnVal = *this;
+
+		for (u32 u = 0; u < Size; u++)
+		{
+			ReturnVal[u] *= aMultiplier;
+		}
+
+		return ReturnVal;
+	}
+
+	constexpr SVector<T, Size> operator/(const T aDivisor) noexcept
+	{
+		SVector<T, Size> ReturnVal = *this;
+
+		for (u32 u = 0; u < Size; u++)
+		{
+			ReturnVal[u] /= aDivisor;
+		}
+
+		return ReturnVal;
+	}
+
+	constexpr SVector<T, Size>& operator*=(const T aMultiplier) noexcept
+	{
+		*this = *this * aMultiplier;
+
+		return *this;
+	}
+
+	constexpr SVector<T, Size>& operator/=(const T aDivisor) noexcept
+	{
+		*this = *this / aDivisor;
+
+		return *this;
+	}
+
+	constexpr SVector<T, Size>& operator+=(const SVector<T, Size>& aRightVector) noexcept
+	{
+		*this = *this + aRightVector;
+
+		return *this;
+	}
+
+	constexpr SVector<T, Size>& operator-=(const SVector<T, Size>& aRightVector) noexcept
+	{
+		*this = *this - aRightVector;
+
+		return *this;
+	}
+
+	constexpr static SVector<T, Size> Zero() noexcept
 	{
 		SVector<T, Size> ReturnVal;
 
 		return ReturnVal;
 	}
 
-	constexpr static SVector<T, Size> One()
+	constexpr static SVector<T, Size> One() noexcept
 	{
 		SVector<T, Size> ReturnVal;
 

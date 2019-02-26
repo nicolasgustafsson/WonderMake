@@ -16,14 +16,14 @@ public:
 
 	void Update();
 
-	void SetViewportSize(const SVector2i aViewportSize);
+	void SetViewportSize(const SVector2i aViewportSize) noexcept;
 
 private:
 	virtual void Debug() override;
 
 	SystemPtr<EngineUniformBuffer> myEngineBufferPtr;
 	SVector2f myPosition;
-	float myRotation;
+	float myRotation = 0.f;
 	float myScale = 1.0f;
 	SMatrix33f myProjectionMatrix;
 	SMatrix33f myViewMatrix;

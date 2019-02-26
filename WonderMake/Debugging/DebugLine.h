@@ -13,7 +13,7 @@ public:
 struct SDebugLineMessage
 	: public Message<SDebugLineMessage>
 {
-	SDebugLineMessage(const SDebugLine& aDebugLine)
+	SDebugLineMessage(const SDebugLine& aDebugLine) noexcept
 		: Line(aDebugLine) {}
 
 	SDebugLine Line;

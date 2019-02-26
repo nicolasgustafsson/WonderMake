@@ -2,7 +2,7 @@
 #include "ConsoleLogger.h"
 #include <iostream>
 
-ConsoleLogger::ConsoleLogger()
+ConsoleLogger::ConsoleLogger() noexcept
 	:mySubscriber(ERoutineId::Logic, BindHelper(&ConsoleLogger::OnLogMessage, this))
 {
 
@@ -20,7 +20,7 @@ void ConsoleLogger::OnLogMessage(const SLogMessage& aMessage)
 	std::cout << aMessage.LogText << '\n';
 }
 
-void ConsoleLogger::SetColor(const EConsoleColor aColor)
+void ConsoleLogger::SetColor(const EConsoleColor aColor) noexcept
 {
 	auto hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 

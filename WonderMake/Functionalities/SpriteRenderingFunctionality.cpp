@@ -20,8 +20,9 @@ void SpriteRenderingFunctionality::Tick()
 	SpriteComponent.RenderObject->Render();
 
 	SVector2f endPosition = position;
-	endPosition.X += std::cosf(currentTime) * 166.0f;
-	endPosition.Y += std::sinf(currentTime) * 166.0f;
+	endPosition += SVector2f{ std::cosf(currentTime) * 166.0f, std::sinf(currentTime) * 166.0f };
+
+	endPosition = endPosition * std::sinf(currentTime / 2.0f);
 
 	WmDrawDebugLine(position, endPosition, SColor::Red, 0.0f);
 }

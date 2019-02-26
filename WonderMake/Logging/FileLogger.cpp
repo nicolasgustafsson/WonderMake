@@ -10,7 +10,7 @@
 constexpr auto LogFileDirectory = "Logs";
 constexpr auto LogFileSuffix = ".txt";
 
-FileLogger::FileLogger()
+FileLogger::FileLogger() noexcept
 	: mySubscriber(ERoutineId::File,
 		BindHelper(&FileLogger::OnLogMessage, this))
 {

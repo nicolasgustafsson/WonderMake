@@ -22,7 +22,7 @@ protected:
 	{
 		glGenBuffers(1, &myUniformBufferObject);
 		glBindBuffer(GL_UNIFORM_BUFFER, myUniformBufferObject);
-		glBufferData(GL_UNIFORM_BUFFER, sizeof(TBuffer), NULL, GL_STATIC_DRAW);
+		glBufferData(GL_UNIFORM_BUFFER, sizeof(TBuffer), nullptr, GL_STATIC_DRAW);
 
 		glBindBufferBase(GL_UNIFORM_BUFFER, aBufferBindIndex, myUniformBufferObject);
 	}

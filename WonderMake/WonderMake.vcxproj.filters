@@ -47,6 +47,7 @@
     <ClCompile Include="Debugging\DebugLineDrawer.cpp" />
     <ClCompile Include="Debugging\DebugLine.cpp" />
     <ClCompile Include="Debugging\DebugLineRenderObject.cpp" />
+    <ClCompile Include="Input\InputSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logging\ImGuiLogger.h" />
@@ -134,6 +135,7 @@
     <ClInclude Include="Debugging\DebugLineDrawer.h" />
     <ClInclude Include="Debugging\DebugLine.h" />
     <ClInclude Include="Debugging\DebugLineRenderObject.h" />
+    <ClInclude Include="Input\InputSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

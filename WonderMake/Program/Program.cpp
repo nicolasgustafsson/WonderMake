@@ -20,6 +20,8 @@ void Program::Update()
 {
 	FinishPreviousFrame();
 
+	myInputSystem->Update();
+
 	StartNewFrame();
 }
 

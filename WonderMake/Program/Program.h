@@ -8,6 +8,7 @@
 #include "Imgui/DockSpace.h"
 #include "System/SystemPtr.h"
 #include "TimeKeeper.h"
+#include "Input/InputSystem.h"
 
 class Program
 {
@@ -37,6 +38,7 @@ private:
 
 	SystemPtr<Camera> myCameraPtr;
 	SystemPtr<TimeKeeper> myTimeKeeperPtr;
+	SystemPtr<InputSystem> myInputSystem;
 
 	static constexpr SVector2<i32> WindowSize = {1600, 900};
 };

@@ -244,6 +244,7 @@
     <ClInclude Include="Debugging\DebugLineDrawer.h" />
     <ClInclude Include="Debugging\DebugLineRenderObject.h" />
     <ClInclude Include="Debugging\DebugLine.h" />
+    <ClInclude Include="Input\InputItems.h" />
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="TimeKeeper.h" />
     <ClInclude Include="Utilities\Stopwatch.h" />

@@ -8,7 +8,6 @@
 #include "Utilities/RestrictTypes.h"
 #include "Utilities/Utility.h"
 
-#include <atomic>
 #include <mutex>
 #include <unordered_set>
 #include <vector>
@@ -35,7 +34,7 @@ protected:
 	virtual void Clear() = 0;
 	virtual void Swap() = 0;
 
-	std::atomic_bool myIsUpdated = false;
+	static std::mutex myTemporaryLock;
 
 private:
 	struct DispatchableLocation
@@ -111,6 +110,7 @@ void DispatchableBuffer<TDispatchType>::Dispatch(TDispatchType&& aDispatchable)
 template<typename TDispatchType>
 void DispatchableBuffer<TDispatchType>::Dispatch(const TDispatchType& aDispatchable, const ERoutineId aRoutineId)
 {
+	std::lock_guard<decltype(myTemporaryLock)> _lock(myTemporaryLock);
 	size_t index = 0;
 	Instance[static_cast<u32>(aRoutineId)].myDoubleBuffer.WriteContent([&aDispatchable, &index](auto& aList)
 	{
@@ -123,6 +123,7 @@ void DispatchableBuffer<TDispatchType>::Dispatch(const TDispatchType& aDispatcha
 template<typename TDispatchType>
 void DispatchableBuffer<TDispatchType>::Dispatch(TDispatchType&& aDispatchable, const ERoutineId aRoutineId)
 {
+	std::lock_guard<decltype(myTemporaryLock)> _lock(myTemporaryLock);
 	size_t index = 0;
 	Instance[static_cast<u32>(aRoutineId)].myDoubleBuffer.WriteContent([&aDispatchable, &index](auto& aList)
 	{

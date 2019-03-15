@@ -3,13 +3,6 @@
 #include "Components/SpriteComponent.h"
 #include "Components/TransformComponent.h"
 #include "TimeKeeper.h"
-#include "Message/MessageTypes.h"
-
-struct SEmptyMessage
-	: public Message<SEmptyMessage>
-{
-
-};
 
 class SpriteRenderingFunctionality
 	: public Functionality<SpriteRenderingFunctionality, STransformComponent, SSpriteComponent>

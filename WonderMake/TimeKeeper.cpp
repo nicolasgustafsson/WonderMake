@@ -16,6 +16,8 @@ void TimeKeeper::Debug() noexcept
 {
 	ImGui::Begin("Time Keeper");
 
+	ImGui::Text("FPS: %i", static_cast<int>(1.0 / myPreviousDeltaSecondsPrecise));
+
 	ImGui::Text("f32: Current deltatime: %f", myPreviousDeltaSecondsPrecise);
 	ImGui::Text("f32: total time passed: %f", myTotalTimePassedPrecise);
 

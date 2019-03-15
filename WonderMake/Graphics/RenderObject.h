@@ -56,7 +56,7 @@ template<EVertexAttribute... TAttributes>
 template<EVertexAttribute TAttribute>
 void RenderObject<TAttributes...>::SetAttribute(const u32 aIndex, decltype(GetValueFromAttribute<TAttribute>()) aAttribute)
 {
-	myVertexBufferArray.Set<TAttribute>(aIndex, aAttribute);
+	myVertexBufferArray.template Set<TAttribute>(aIndex, aAttribute);
 }
 
 template<EVertexAttribute... TAttributes>

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "SpriteRenderingFunctionality.h"
+#include <iostream>
 
 
 SpriteRenderingFunctionality::SpriteRenderingFunctionality(Object& aOwner)
@@ -23,6 +24,11 @@ void SpriteRenderingFunctionality::Tick()
 	endPosition += SVector2f{ std::cosf(currentTime) * 166.0f, std::sinf(currentTime) * 166.0f };
 
 	endPosition = endPosition * std::sinf(currentTime / 2.0f);
+	SEmptyMessage aaaa;
+	for (u32 i = 0; i < 5000; i++)
+	{
+		WmDispatchMessage(aaaa);
+	}
 
 	WmDrawDebugLine(position, endPosition, SColor::Red, 0.0f);
 }

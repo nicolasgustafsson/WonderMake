@@ -94,9 +94,9 @@ void SMatrix33<TYPE>::SetPosition(const SVector2<TYPE> & aPosition)
 	m32 = aPosition.Y;
 }
 template<typename TYPE>
-const SVector2<TYPE> & SMatrix33<TYPE>::GetPosition() const
+SVector2<TYPE> SMatrix33<TYPE>::GetPosition() const
 {
-	return myPosition;
+	return {m31, m32};
 }
 
 template<typename TYPE>

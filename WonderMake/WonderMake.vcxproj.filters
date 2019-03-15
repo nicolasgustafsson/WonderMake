@@ -45,7 +45,6 @@
     <ClCompile Include="Utilities\Debugging\Debugged.cpp" />
     <ClCompile Include="TimeKeeper.cpp" />
     <ClCompile Include="Debugging\DebugLineDrawer.cpp" />
-    <ClCompile Include="Debugging\DebugLine.cpp" />
     <ClCompile Include="Debugging\DebugLineRenderObject.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />
   </ItemGroup>

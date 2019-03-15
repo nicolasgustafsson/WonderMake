@@ -10,6 +10,7 @@ GameWorld::GameWorld()
 	EnableTick();
 	auto& Sprite = myPlayer.AddFunctionality<SpriteRenderingFunctionality>();
 	Sprite.SetTexture(std::filesystem::current_path() / "Textures/tile.png");
+	
 }
 
 GameWorld::~GameWorld()

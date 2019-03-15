@@ -27,6 +27,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE  OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+
+
 #ifndef NLOHMANN_JSON_HPP
 #define NLOHMANN_JSON_HPP
 
@@ -45,6 +47,18 @@ SOFTWARE.
 #include <numeric> // accumulate
 #include <string> // string, stoi, to_string
 #include <utility> // declval, forward, move, pair, swap
+
+#define and	&&
+#define and_eq	&=
+#define bitand	&
+#define bitor	|
+#define compl	~
+#define not	!
+#define not_eq	!=
+#define or		||
+#define or_eq	|=
+#define xor	^
+#define xor_eq	^=
 
 // #include <nlohmann/json_fwd.hpp>
 #ifndef NLOHMANN_JSON_FWD_HPP
@@ -121,7 +135,7 @@ using json = basic_json<>;
 #if !defined(JSON_SKIP_UNSUPPORTED_COMPILER_CHECK)
     #if defined(__clang__)
         #if (__clang_major__ * 10000 + __clang_minor__ * 100 + __clang_patchlevel__) < 30400
-            #error "unsupported Clang version - see https://github.com/nlohmann/json#supported-compilers"
+           // #error "unsupported Clang version - see https://github.com/nlohmann/json#supported-compilers"
         #endif
     #elif defined(__GNUC__) && !(defined(__ICC) || defined(__INTEL_COMPILER))
         #if (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__) < 40800
@@ -528,7 +542,7 @@ struct has_from_json : std::false_type {};
 
 template <typename BasicJsonType, typename T>
 struct has_from_json<BasicJsonType, T,
-           enable_if_t<not is_basic_json<T>::value>>
+           enable_if_t<!is_basic_json<T>::value>>
 {
     using serializer = typename BasicJsonType::template json_serializer<T, void>;
 
@@ -543,7 +557,7 @@ template <typename BasicJsonType, typename T, typename = void>
 struct has_non_default_from_json : std::false_type {};
 
 template<typename BasicJsonType, typename T>
-struct has_non_default_from_json<BasicJsonType, T, enable_if_t<not is_basic_json<T>::value>>
+struct has_non_default_from_json<BasicJsonType, T, enable_if_t<!is_basic_json<T>::value>>
 {
     using serializer = typename BasicJsonType::template json_serializer<T, void>;
 
@@ -558,7 +572,7 @@ template <typename BasicJsonType, typename T, typename = void>
 struct has_to_json : std::false_type {};
 
 template <typename BasicJsonType, typename T>
-struct has_to_json<BasicJsonType, T, enable_if_t<not is_basic_json<T>::value>>
+struct has_to_json<BasicJsonType, T, enable_if_t<!is_basic_json<T>::value>>
 {
     using serializer = typename BasicJsonType::template json_serializer<T, void>;
 
@@ -605,8 +619,8 @@ struct is_compatible_object_type_impl : std::false_type {};
 template <typename BasicJsonType, typename CompatibleObjectType>
 struct is_compatible_object_type_impl <
     BasicJsonType, CompatibleObjectType,
-    enable_if_t<is_detected<mapped_type_t, CompatibleObjectType>::value and
-    is_detected<key_type_t, CompatibleObjectType>::value >>
+    enable_if_t<is_detected<mapped_type_t, CompatibleObjectType>::value &&
+	is_detected<key_type_t, CompatibleObjectType>::value >>
 {
 
     using object_t = typename BasicJsonType::object_t;
@@ -630,8 +644,8 @@ struct is_constructible_object_type_impl : std::false_type {};
 template <typename BasicJsonType, typename ConstructibleObjectType>
 struct is_constructible_object_type_impl <
     BasicJsonType, ConstructibleObjectType,
-    enable_if_t<is_detected<mapped_type_t, ConstructibleObjectType>::value and
-    is_detected<key_type_t, ConstructibleObjectType>::value >>
+    enable_if_t<is_detected<mapped_type_t, ConstructibleObjectType>::value &&
+	is_detected<key_type_t, ConstructibleObjectType>::value >>
 {
     using object_t = typename BasicJsonType::object_t;
 
@@ -690,12 +704,12 @@ struct is_compatible_array_type_impl : std::false_type {};
 template <typename BasicJsonType, typename CompatibleArrayType>
 struct is_compatible_array_type_impl <
     BasicJsonType, CompatibleArrayType,
-    enable_if_t<is_detected<value_type_t, CompatibleArrayType>::value and
-    is_detected<iterator_t, CompatibleArrayType>::value and
+    enable_if_t<is_detected<value_type_t, CompatibleArrayType>::value &&
+	is_detected<iterator_t, CompatibleArrayType>::value &&
 // This is needed because json_reverse_iterator has a ::iterator type...
 // Therefore it is detected as a CompatibleArrayType.
 // The real fix would be to have an Iterable concept.
-    not is_iterator_traits<
+    !is_iterator_traits<
     iterator_traits<CompatibleArrayType>>::value >>
 {
     static constexpr bool value =
@@ -720,10 +734,10 @@ struct is_constructible_array_type_impl <
 template <typename BasicJsonType, typename ConstructibleArrayType>
 struct is_constructible_array_type_impl <
     BasicJsonType, ConstructibleArrayType,
-    enable_if_t<not std::is_same<ConstructibleArrayType,
-    typename BasicJsonType::value_type>::value and
-    is_detected<value_type_t, ConstructibleArrayType>::value and
-    is_detected<iterator_t, ConstructibleArrayType>::value and
+    enable_if_t<!std::is_same<ConstructibleArrayType,
+    typename BasicJsonType::value_type>::value &&
+    is_detected<value_type_t, ConstructibleArrayType>::value &&
+    is_detected<iterator_t, ConstructibleArrayType>::value &&
     is_complete_type<
     detected_t<value_type_t, ConstructibleArrayType>>::value >>
 {
@@ -732,12 +746,12 @@ struct is_constructible_array_type_impl <
         // furthermore, std::back_insert_iterator (and other iterators) have a base class `iterator`...
         // Therefore it is detected as a ConstructibleArrayType.
         // The real fix would be to have an Iterable concept.
-        not is_iterator_traits <
-        iterator_traits<ConstructibleArrayType >>::value and
+        ! is_iterator_traits <
+        iterator_traits<ConstructibleArrayType >>::value &&
 
-        (std::is_same<typename ConstructibleArrayType::value_type, typename BasicJsonType::array_t::value_type>::value or
+        (std::is_same<typename ConstructibleArrayType::value_type, typename BasicJsonType::array_t::value_type>::value ||
          has_from_json<BasicJsonType,
-         typename ConstructibleArrayType::value_type>::value or
+         typename ConstructibleArrayType::value_type>::value ||
          has_non_default_from_json <
          BasicJsonType, typename ConstructibleArrayType::value_type >::value);
 };
@@ -2375,7 +2389,7 @@ struct wide_string_input_helper<WideStringType, 2>
                 utf8_bytes[1] = 0x80 | (wc & 0x3F);
                 utf8_bytes_filled = 2;
             }
-            else if (0xD800 > wc or wc >= 0xE000)
+            else if (0xD800 > wc || wc >= 0xE000)
             {
                 utf8_bytes[0] = 0xE0 | ((wc >> 12));
                 utf8_bytes[1] = 0x80 | ((wc >> 6) & 0x3F);
@@ -2760,7 +2774,7 @@ class lexer
     */
     bool next_byte_in_range(std::initializer_list<int> ranges)
     {
-        assert(ranges.size() == 2 or ranges.size() == 4 or ranges.size() == 6);
+        assert(ranges.size() == 2 || ranges.size() == 4 or ranges.size() == 6);
         add(current);
 
         for (auto range = ranges.begin(); range != ranges.end(); ++range)

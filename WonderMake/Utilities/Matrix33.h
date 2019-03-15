@@ -29,12 +29,7 @@ public:
 			TYPE m21, m22, m23;
 			TYPE m31, m32, m33;
 		};
-		struct
-		{
-			SVector2<TYPE> myFirstVector;	TYPE m13;
-			SVector2<TYPE> mySecondVector;	TYPE m23;
-			SVector2<TYPE> myPosition;		TYPE m33;
-		};
+
 		TYPE myMatrix[NumElements];
 	};
 #pragma warning(pop)
@@ -58,7 +53,7 @@ public:
 	SMatrix33 & operator =(const SMatrix33 & aSource);
 
 	void SetPosition(const SVector2<TYPE> & aPosition);
-	const SVector2<TYPE> & GetPosition() const;
+	SVector2<TYPE> GetPosition() const;
 
 	SMatrix33 & Rotate2D(const TYPE anAngle);
 	SMatrix33 & Set2DRotation(const TYPE anAngle);

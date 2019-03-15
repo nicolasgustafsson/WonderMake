@@ -3,11 +3,12 @@
 #include "Message/MessageTypes.h"
 #include "Message/DispatchableBuffer.h"
 
+#include "Debugging/DebugLine.h"
+
 #include "Utilities/OS.h"
 
 #include <sstream>
 #include <memory>
-#include "Debugging/DebugLine.h"
 
 template<typename TMessage>
 inline static void WmDispatchMessage(const TMessage& aMessage)
@@ -82,7 +83,7 @@ class Job;
 template<typename TFunctionPtr, typename TCaller, typename ...TArgs>
 inline static void _RunTask(TFunctionPtr aFunctionPtr, TCaller* const aCaller, TArgs... aArgs)
 {
-	if constexpr (std::is_base_of<Job>)
+	if constexpr (std::is_base_of<Job, TCaller>::value)
 	{
 		if (aCaller->IsComplete())
 		{

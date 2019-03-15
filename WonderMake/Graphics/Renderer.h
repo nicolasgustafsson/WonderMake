@@ -35,6 +35,5 @@ private:
 	SystemPtr<DebugLineDrawer> myLineDrawer;
 
 	const SColor ClearColor = SColor::CornflowerBlue;
-	float myRotation = 0.0f;
 };
 

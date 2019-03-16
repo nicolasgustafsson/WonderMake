@@ -8,7 +8,7 @@
 class FileLogger
 {
 public:
-	FileLogger();
+	FileLogger() noexcept;
 
 private:
 	void OnLogMessage(const SLogMessage& aMessage);

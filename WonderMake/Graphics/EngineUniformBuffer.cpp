@@ -2,7 +2,7 @@
 #include "EngineUniformBuffer.h"
 
 EngineUniformBuffer::EngineUniformBuffer()
-	:UniformBuffer<SEngineUniformBufferData>(0)
+	: UniformBuffer<SEngineUniformBufferData>(0)
 {
 
 }
@@ -34,5 +34,4 @@ void EngineUniformBuffer::Debug()
 	ImGui::Separator();
 
 	ImGui::End();
-	
 }

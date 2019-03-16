@@ -75,7 +75,7 @@
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
     <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\Include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)External\Lib\Debug;$(LibraryPath)</LibraryPath>
-    <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -113,12 +113,13 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>false</EnableModules>
-      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <TreatWarningAsError>false</TreatWarningAsError>
       <EnablePREfast>false</EnablePREfast>
       <CompileAs>CompileAsCpp</CompileAs>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);CONFIGURATION_$(Configuration);CONFIGURATION_$(Configuration);</PreprocessorDefinitions>
-      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <SupportJustMyCode>false</SupportJustMyCode>
     </ClCompile>
     <Link>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -132,12 +133,13 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>false</EnableModules>
-      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <TreatWarningAsError>false</TreatWarningAsError>
       <EnablePREfast>false</EnablePREfast>
       <CompileAs>CompileAsCpp</CompileAs>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);CONFIGURATION_$(Configuration);CONFIGURATION_$(Configuration);</PreprocessorDefinitions>
-      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <SupportJustMyCode>false</SupportJustMyCode>
     </ClCompile>
     <Link>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -153,12 +155,12 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>false</EnableModules>
-      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <TreatWarningAsError>false</TreatWarningAsError>
       <EnablePREfast>false</EnablePREfast>
       <CompileAs>CompileAsCpp</CompileAs>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);CONFIGURATION_$(Configuration);</PreprocessorDefinitions>
-      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -176,12 +178,12 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>false</EnableModules>
-      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <TreatWarningAsError>false</TreatWarningAsError>
       <EnablePREfast>false</EnablePREfast>
       <CompileAs>CompileAsCpp</CompileAs>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);CONFIGURATION_$(Configuration);</PreprocessorDefinitions>
-      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -191,6 +193,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera\Camera.cpp" />
+    <ClCompile Include="Debugging\DebugLineDrawer.cpp" />
+    <ClCompile Include="Debugging\DebugLineRenderObject.cpp" />
+    <ClCompile Include="Input\InputSystem.cpp" />
+    <ClCompile Include="TimeKeeper.cpp" />
+    <ClCompile Include="Utilities\Debugging\Debugged.cpp" />
+    <ClCompile Include="Threads\RoutineDebug.cpp" />
     <ClCompile Include="FileSystem\ReadFileAsStringJob.cpp" />
     <ClCompile Include="Graphics\EngineUniformBuffer.cpp" />
     <ClCompile Include="Imgui\DockSpace.cpp" />
@@ -206,19 +214,24 @@
     <ClCompile Include="Graphics\ScreenPassRenderObject.cpp" />
     <ClCompile Include="System\SystemContainer.cpp" />
     <ClCompile Include="System\System.cpp" />
+    <ClCompile Include="Threads\Thread.cpp" />
     <ClCompile Include="Threads\Routine.cpp" />
     <ClCompile Include="Threads\RoutineIds.cpp" />
     <ClCompile Include="Threads\RoutineMain.cpp" />
     <ClCompile Include="Threads\DataThreads.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
-    <ClCompile Include="Graphics\LineRenderObject.cpp" />
     <ClCompile Include="Message\DispatchRouter.cpp" />
     <ClCompile Include="Message\MessageSubscriber.cpp" />
     <ClCompile Include="Program\ImguiWrapper.cpp" />
     <ClCompile Include="Program\Program.cpp" />
     <ClCompile Include="Graphics\ShaderProgram.cpp" />
     <ClCompile Include="Graphics\SpriteRenderObject.cpp" />
-    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Graphics\Texture.cpp" />
     <ClCompile Include="Utilities\Color.cpp" />
     <ClCompile Include="glad.c" />
@@ -234,6 +247,15 @@
   <ItemGroup>
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="Debugging\DebugLineDrawer.h" />
+    <ClInclude Include="Debugging\DebugLineRenderObject.h" />
+    <ClInclude Include="Debugging\DebugLine.h" />
+    <ClInclude Include="Input\InputItems.h" />
+    <ClInclude Include="Input\InputSystem.h" />
+    <ClInclude Include="TimeKeeper.h" />
+    <ClInclude Include="Utilities\Stopwatch.h" />
+    <ClInclude Include="Utilities\Debugging\Debugged.h" />
+    <ClInclude Include="Threads\RoutineDebug.h" />
     <ClInclude Include="FileSystem\FileSystem.h" />
     <ClInclude Include="FileSystem\ReadFileAsStringJob.h" />
     <ClInclude Include="Graphics\EngineUniformBuffer.h" />
@@ -266,13 +288,13 @@
     <ClInclude Include="Resources\CreateResource.h" />
     <ClInclude Include="Resources\Resource.h" />
     <ClInclude Include="Resources\ResourceProxy.h" />
+    <ClInclude Include="Threads\Thread.h" />
     <ClInclude Include="Threads\Routine.h" />
     <ClInclude Include="Threads\RoutineMain.h" />
     <ClInclude Include="Threads\DataThreads.h" />
     <ClInclude Include="Graphics\VertexBuffer.h" />
     <ClInclude Include="Graphics\Shader.h" />
     <ClInclude Include="Graphics\Renderer.h" />
-    <ClInclude Include="Graphics\LineRenderObject.h" />
     <ClInclude Include="Message\DataRouters.h" />
     <ClInclude Include="Message\DispatchRouter.h" />
     <ClInclude Include="Message\MessageTypes.h" />
@@ -286,6 +308,7 @@
     <ClInclude Include="Resources\ResourceSystem.h" />
     <ClInclude Include="Graphics\SpriteRenderObject.h" />
     <ClInclude Include="Graphics\UniformBuffer.h" />
+    <ClInclude Include="Threads\ThreadNaming.h" />
     <ClInclude Include="Utilities\Matrix33.h" />
     <ClInclude Include="Utilities\OS.h" />
     <ClInclude Include="Utilities\plf_colony.h" />

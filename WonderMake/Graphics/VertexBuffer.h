@@ -54,7 +54,7 @@ template <typename TVertexData>
 void VertexBuffer<TVertexData>::Bind(const u32 aIndex)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, myBufferHandle);
-	glVertexAttribPointer(aIndex, sizeof(TVertexData) / 4, GL_FLOAT, GL_FALSE, sizeof(TVertexData), (void*)0);
+	glVertexAttribPointer(aIndex, sizeof(TVertexData) / 4, GL_FLOAT, GL_FALSE, sizeof(TVertexData), nullptr);
 	glEnableVertexAttribArray(aIndex);
 }
 

@@ -2,21 +2,11 @@
 #include "Camera.h"
 #include "Graphics/EngineUniformBuffer.h"
 
-
-Camera::Camera()
-{
-}
-
-
-Camera::~Camera()
-{
-}
-
 void Camera::Update()
 {
 	auto viewInverse = myViewMatrix;
 
-	SMatrix33f rotationMatrix = SMatrix33f::CreateRotateAroundZ(myRotation);
+	const SMatrix33f rotationMatrix = SMatrix33f::CreateRotateAroundZ(myRotation);
 
 	viewInverse = rotationMatrix * viewInverse;
 
@@ -29,9 +19,9 @@ void Camera::Update()
 
 	auto& buffer = myEngineBufferPtr->GetBuffer();
 
-	auto projectionMatrix = myProjectionMatrix;
-	auto viewMatrix = viewInverse;
-	auto viewProjectionMatrix = viewMatrix * myProjectionMatrix;
+	const auto projectionMatrix = myProjectionMatrix;
+	const auto viewMatrix = viewInverse;
+	const auto viewProjectionMatrix = viewMatrix * myProjectionMatrix;
 
 	//projectionMatrix.Transpose();
 	//viewMatrix.Transpose();
@@ -55,7 +45,7 @@ void Camera::Debug()
 	myViewMatrix.SetPosition(myPosition);
 }
 
-void Camera::SetViewportSize(const SVector2i aViewportSize)
+void Camera::SetViewportSize(const SVector2i aViewportSize) noexcept
 {
 	myProjectionMatrix.m11 = 1.0f / aViewportSize.X;
 	myProjectionMatrix.m22 = 1.0f / aViewportSize.Y;

@@ -5,13 +5,13 @@
 #include <cctype>
 
 ImGuiLogger::ImGuiLogger()
-	:mySubscriber(ERoutineId::Logic, BindHelper(&ImGuiLogger::OnLogMessage, this))
+	: mySubscriber(ERoutineId::Logic, BindHelper(&ImGuiLogger::OnLogMessage, this))
 {
 }
 
-void ImGuiLogger::Draw()
+void ImGuiLogger::Debug()
 {
-	ImGui::Begin("Console", 0);
+	ImGui::Begin("Debug Log", 0);
 
 	const float footerHeight = ImGui::GetStyle().ItemSpacing.y + ImGui::GetFrameHeightWithSpacing(); // 1 separator, 1 input text
 	ImGui::BeginChild("ScrollingRegion", ImVec2(0, -footerHeight), false, ImGuiWindowFlags_HorizontalScrollbar); // Leave room for 1 separator + 1 InputText
@@ -26,7 +26,7 @@ void ImGuiLogger::Draw()
 			auto searchResult = std::search(
 				LogMessage.Message.begin(), LogMessage.Message.end(),
 				myFilterText.begin(), myFilterText.end(),
-				[](char a, char b) {return std::tolower(a) == std::tolower(b);}
+				[](char a, char b) {return std::tolower(a) == std::tolower(b); }
 			);
 
 			if (searchResult == LogMessage.Message.end())

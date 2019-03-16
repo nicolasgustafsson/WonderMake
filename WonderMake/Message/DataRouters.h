@@ -12,13 +12,13 @@ class DataRouters final
 public:
 	DataRouters() = default;
 
-	inline DispatchRouter& GetRouter(const ERoutineId aRoutineId);
+	inline constexpr DispatchRouter& GetRouter(const ERoutineId aRoutineId) noexcept;
 
 private:
 	DispatchRouter myRouters[RoutineCount];
 };
 
-DispatchRouter& DataRouters::GetRouter(const ERoutineId aRoutineId)
+constexpr DispatchRouter& DataRouters::GetRouter(const ERoutineId aRoutineId) noexcept
 {
 	return myRouters[static_cast<u32>(aRoutineId)];
 }

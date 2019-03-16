@@ -1,5 +1,6 @@
 #pragma once
 #include "Message/MessageSubscriber.h"
+#include <Utilities/Debugging/Debugged.h>
 
 struct SImGuiLogMessage
 {
@@ -8,13 +9,14 @@ struct SImGuiLogMessage
 };
 
 class ImGuiLogger
+	: public Debugged
 {
 public:
 	ImGuiLogger();
 	~ImGuiLogger() = default;
 
-	void Draw();
 private:
+	virtual void Debug() override;
 	void OnLogMessage(const SLogMessage& aMessage);
 
 	std::vector<SImGuiLogMessage> myLogMessages;

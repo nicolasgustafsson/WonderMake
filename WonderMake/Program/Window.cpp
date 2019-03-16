@@ -15,7 +15,7 @@ Window::Window()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	myGlfwWindow = glfwCreateWindow(windowSettings["X"].get<float>(), windowSettings["Y"].get<float>(), "WonderMake", NULL, NULL);
+	myGlfwWindow = glfwCreateWindow(windowSettings["X"].get<i32>(), windowSettings["Y"].get<i32>(), "WonderMake", NULL, NULL);
 	if (!myGlfwWindow)
 	{
 		WmLog(TagError, TagOpenGL, "Failed to create GLFW window!");
@@ -40,7 +40,6 @@ void Window::Update()
 	if (glfwGetKey(myGlfwWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(myGlfwWindow, true);
 
-	glfwSwapBuffers(myGlfwWindow);
 	glfwPollEvents();
 
 	if (glfwWindowShouldClose(myGlfwWindow))

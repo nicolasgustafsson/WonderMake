@@ -6,6 +6,10 @@
 #include <vector>
 #include <thread>
 #include "RoutineIds.h"
+#include "Thread.h"
+#include "Routine.h"
+#include "TimeKeeper.h"
+#include "System/SystemPtr.h"
 
 class Program;
 class Routine;
@@ -16,9 +20,13 @@ class DataThreads :
 public:
 	void Start(Program& aProgramReference, Closure&& aCallback);
 
-	std::shared_ptr<Routine> GetRoutine(const ERoutineId aRoutine);
+	Routine& GetRoutine(const ERoutineId aRoutine);
 
 private:
-	std::vector<std::shared_ptr<Routine>> myRoutines;
-	std::vector<std::thread> myThreads;
+	std::vector<std::unique_ptr<Routine>> myRoutines;
+
+	std::optional<Thread> myRenderThread;
+	std::optional<Thread> myFileThread;
+
+	SystemPtr<TimeKeeper> myTimeKeeper;
 };

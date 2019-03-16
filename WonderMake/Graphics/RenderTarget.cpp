@@ -11,7 +11,7 @@ RenderTarget::RenderTarget(const SRenderTargetSettings& aSettings)
 	glGenTextures(1, &myRenderTexture);
 	glBindTexture(GL_TEXTURE_2D, myRenderTexture);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, aSettings.Size.X, aSettings.Size.Y, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, aSettings.Size.X, aSettings.Size.Y, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

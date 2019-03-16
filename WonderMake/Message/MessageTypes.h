@@ -109,7 +109,8 @@ private:
 	u32 myId = std::numeric_limits<u32>::max();
 };
 
-struct SLogMessage : public Message<SLogMessage>
+struct SLogMessage 
+	: public Message<SLogMessage>
 {
 public:
 	inline SLogMessage(std::string&& aLogMessage)
@@ -121,4 +122,10 @@ public:
 	{
 		return LogText.find(aTag) != std::string::npos;
 	}
+};
+
+struct SDebugMessage
+	: public Message<SDebugMessage>
+{
+
 };

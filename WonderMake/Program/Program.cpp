@@ -18,27 +18,28 @@ Program::Program()
 
 void Program::Update()
 {
-	myEngineUniformBufferPtr->GetBuffer().Time += 0.01f;
+	FinishPreviousFrame();
+
+	myInputSystem->Update();
+
+	StartNewFrame();
+}
+
+void Program::StartNewFrame()
+{
+	myEngineUniformBufferPtr->GetBuffer().Time = myTimeKeeperPtr->GetGameTime();
 
 	myWindowPtr->Update();
 
 	myCameraPtr->Update();
 
-	myRendererPtr->SwapFrame();
+	myRendererPtr->StartFrame();
+}
 
-	if constexpr (Constants::IsDebugging)
-	{
-		myImguiWrapper.StartFrame();
-
-		myDockSpace.Debug();
-
-		ImGui::ShowDemoWindow();
-		myImGuiLogger.Draw();
-		myRendererPtr->Debug();
-		myCameraPtr->Debug();
-		myEngineUniformBufferPtr->Debug();
-		myImguiWrapper.EndFrame();
-	}
+void Program::FinishPreviousFrame()
+{
+	if constexpr (!Constants::IsDebugging)
+		myRendererPtr->FinishFrame();
 }
 
 void Program::SetupCallbacks()

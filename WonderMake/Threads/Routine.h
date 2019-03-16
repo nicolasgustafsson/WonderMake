@@ -18,6 +18,7 @@ public:
 
 protected:
 	virtual void Procedure();
+	virtual void PreMessageRouting() {};
 
 private:
 	void RouteMessages();

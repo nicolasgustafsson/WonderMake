@@ -30,6 +30,8 @@ public:
 
 	void BindTextures();
 
+	void SetRenderCount(u32 aRenderCount);
+
 	template<EVertexAttribute TAttribute>
 	void SetAttribute(const u32 aIndex, decltype(GetValueFromAttribute<TAttribute>()) aAttribute);
 
@@ -39,13 +41,22 @@ protected:
 	std::vector<ResourceProxy<Texture>> myTextures;
 	u32 myGeometryType;
 	u32 myVertexCount;
+	std::optional<u32> myRenderCount;
 };
+
+template<EVertexAttribute... TAttributes>
+void RenderObject<TAttributes...>::SetRenderCount(u32 aRenderCount)
+{
+	//[Nicos]: We might want to resize the vertexbuffer here in the future
+	assert(aRenderCount < myVertexCount && "You can't render more vertices than there are in the vertex buffer!");
+	myRenderCount = aRenderCount;
+}
 
 template<EVertexAttribute... TAttributes>
 template<EVertexAttribute TAttribute>
 void RenderObject<TAttributes...>::SetAttribute(const u32 aIndex, decltype(GetValueFromAttribute<TAttribute>()) aAttribute)
 {
-	myVertexBufferArray.Set<TAttribute>(aIndex, aAttribute);
+	myVertexBufferArray.template Set<TAttribute>(aIndex, aAttribute);
 }
 
 template<EVertexAttribute... TAttributes>
@@ -54,7 +65,7 @@ void RenderObject<TAttributes...>::BindTextures()
 	for (auto[i, texture] : Utility::Enumerate(myTextures))
 	{
 		if (texture)
-			texture->Bind(i);
+			texture->Bind(static_cast<u32>(i));
 	}
 }
 
@@ -65,7 +76,8 @@ void RenderObject<TAttributes...>::Render()
 	myVertexBufferArray.Render();
 	BindTextures();
 
-	glDrawArrays(myGeometryType, 0, myVertexCount);
+	const u32 renderCount = myRenderCount ? *myRenderCount : myVertexCount;
+	glDrawArrays(myGeometryType, 0, renderCount);
 }
 
 template<EVertexAttribute... TAttributes>

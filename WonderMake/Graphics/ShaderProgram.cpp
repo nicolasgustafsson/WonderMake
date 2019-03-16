@@ -39,7 +39,7 @@ ShaderProgram::ShaderProgram(const std::filesystem::path& VertexShaderPath, cons
 
 	if (!Success)
 	{
-		glGetProgramInfoLog(myProgramHandle, 512, NULL, ErrorMessage);
+		glGetProgramInfoLog(myProgramHandle, 512, nullptr, ErrorMessage);
 
 		WmLog(TagError, "Error: Shader program linking failed: ", ErrorMessage);
 

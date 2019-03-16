@@ -9,7 +9,6 @@
     <ClCompile Include="Threads\RoutineMain.cpp" />
     <ClCompile Include="Threads\DataThreads.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
-    <ClCompile Include="Graphics\LineRenderObject.cpp" />
     <ClCompile Include="Message\DispatchRouter.cpp" />
     <ClCompile Include="Message\MessageSubscriber.cpp" />
     <ClCompile Include="Program\ImguiWrapper.cpp" />
@@ -41,6 +40,13 @@
     <ClCompile Include="Utilities\OS.cpp" />
     <ClCompile Include="Object\Object.cpp" />
     <ClCompile Include="Functionalities\SpriteRenderingFunctionality.cpp" />
+    <ClCompile Include="Threads\Thread.cpp" />
+    <ClCompile Include="Threads\RoutineDebug.cpp" />
+    <ClCompile Include="Utilities\Debugging\Debugged.cpp" />
+    <ClCompile Include="TimeKeeper.cpp" />
+    <ClCompile Include="Debugging\DebugLineDrawer.cpp" />
+    <ClCompile Include="Debugging\DebugLineRenderObject.cpp" />
+    <ClCompile Include="Input\InputSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logging\ImGuiLogger.h" />
@@ -56,7 +62,6 @@
     <ClInclude Include="Graphics\VertexBuffer.h" />
     <ClInclude Include="Graphics\Shader.h" />
     <ClInclude Include="Graphics\Renderer.h" />
-    <ClInclude Include="Graphics\LineRenderObject.h" />
     <ClInclude Include="Message\DataRouters.h" />
     <ClInclude Include="Message\DispatchRouter.h" />
     <ClInclude Include="Message\MessageTypes.h" />
@@ -120,6 +125,17 @@
     <ClInclude Include="Functionalities\FunctionalitySystem.h" />
     <ClInclude Include="Components\ComponentSystem.h" />
     <ClInclude Include="Components\Component.h" />
+    <ClInclude Include="Threads\Thread.h" />
+    <ClInclude Include="Threads\ThreadNaming.h" />
+    <ClInclude Include="Threads\RoutineDebug.h" />
+    <ClInclude Include="Utilities\Debugging\Debugged.h" />
+    <ClInclude Include="Utilities\Stopwatch.h" />
+    <ClInclude Include="TimeKeeper.h" />
+    <ClInclude Include="Debugging\DebugLineDrawer.h" />
+    <ClInclude Include="Debugging\DebugLine.h" />
+    <ClInclude Include="Debugging\DebugLineRenderObject.h" />
+    <ClInclude Include="Input\InputSystem.h" />
+    <ClInclude Include="Input\InputItems.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

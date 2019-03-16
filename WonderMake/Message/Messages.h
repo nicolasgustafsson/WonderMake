@@ -3,6 +3,8 @@
 #include "Message/MessageTypes.h"
 #include "Message/DispatchableBuffer.h"
 
+#include "Debugging/DebugLine.h"
+
 #include "Utilities/OS.h"
 
 #include <sstream>
@@ -64,12 +66,24 @@ inline static void WmLog(TMessageArgs... aMessageArgs)
 	WmDispatchMessage(SLogMessage(std::forward<std::string>(MessageStream.str())));
 }
 
+inline static void WmDrawDebugLine(const SDebugLine& aDebugLine)
+{
+	WmDispatchMessage(SDebugLineMessage(aDebugLine));
+}
+
+inline static void WmDrawDebugLine(const SVector2f& aStart, const SVector2f& aEnd, const SColor& aColor, const f32 aDuration = 0.0f)
+{
+	SDebugLine line{ aColor, aStart, aEnd, aDuration };
+
+	WmDrawDebugLine(line);
+}
+
 class Job;
 
 template<typename TFunctionPtr, typename TCaller, typename ...TArgs>
 inline static void _RunTask(TFunctionPtr aFunctionPtr, TCaller* const aCaller, TArgs... aArgs)
 {
-	if constexpr (std::is_base_of<Job>)
+	if constexpr (std::is_base_of<Job, TCaller>::value)
 	{
 		if (aCaller->IsComplete())
 		{

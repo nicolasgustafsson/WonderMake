@@ -12,6 +12,7 @@ Routine::Routine(const ERoutineId aRoutineId)
 void Routine::Run()
 {
 	_SetCurrentRoutine(myRoutineId);
+	PreMessageRouting();
 	RouteMessages();
 	Procedure();
 }

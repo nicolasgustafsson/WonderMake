@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Typedefs.h"
 
 #include "Threads/DoubleBuffer.h"
@@ -8,7 +7,6 @@
 #include "Utilities/RestrictTypes.h"
 #include "Utilities/Utility.h"
 
-#include <atomic>
 #include <mutex>
 #include <unordered_set>
 #include <vector>
@@ -21,13 +19,13 @@ class DispatchableBufferBase
 public:
 	virtual ~DispatchableBufferBase() = default;
 	
-	inline size_t GetTypeHash() const;
+	inline size_t GetTypeHash() const noexcept;
 
 	static bool UpdateBuffers(const ERoutineId aRoutineId);
 	static void GetDispatchableList(const ERoutineId aRoutineId, std::vector<const Dispatchable*>& aOutList);
 
 protected:
-	DispatchableBufferBase(const size_t aTypeHash);
+	DispatchableBufferBase(const size_t aTypeHash) noexcept;
 
 	void AddDispatchable(const ERoutineId aRoutineId, const size_t aIndex);
 
@@ -35,7 +33,7 @@ protected:
 	virtual void Clear() = 0;
 	virtual void Swap() = 0;
 
-	std::atomic_bool myIsUpdated = false;
+	static std::mutex myTemporaryLock;
 
 private:
 	struct DispatchableLocation
@@ -55,7 +53,7 @@ private:
 	const size_t myTypeHash;
 };
 
-size_t DispatchableBufferBase::GetTypeHash() const
+size_t DispatchableBufferBase::GetTypeHash() const noexcept
 {
 	return myTypeHash;
 }
@@ -65,7 +63,7 @@ class DispatchableBuffer final
 	: public DispatchableBufferBase
 {
 public:
-	inline DispatchableBuffer();
+	inline DispatchableBuffer() noexcept;
 
 	static void Dispatch(const TDispatchType& aDispatchable);
 	static void Dispatch(TDispatchType&& aDispatchable);
@@ -85,7 +83,7 @@ template<typename TDispatchType>
 DispatchableBuffer<TDispatchType> DispatchableBuffer<TDispatchType>::Instance[RoutineCount];
 
 template<typename TDispatchType>
-DispatchableBuffer<TDispatchType>::DispatchableBuffer()
+DispatchableBuffer<TDispatchType>::DispatchableBuffer() noexcept
 	: DispatchableBufferBase(TDispatchType::GetTypeHash())
 {}
 
@@ -111,6 +109,7 @@ void DispatchableBuffer<TDispatchType>::Dispatch(TDispatchType&& aDispatchable)
 template<typename TDispatchType>
 void DispatchableBuffer<TDispatchType>::Dispatch(const TDispatchType& aDispatchable, const ERoutineId aRoutineId)
 {
+	std::lock_guard<decltype(myTemporaryLock)> _lock(myTemporaryLock);
 	size_t index = 0;
 	Instance[static_cast<u32>(aRoutineId)].myDoubleBuffer.WriteContent([&aDispatchable, &index](auto& aList)
 	{
@@ -123,6 +122,7 @@ void DispatchableBuffer<TDispatchType>::Dispatch(const TDispatchType& aDispatcha
 template<typename TDispatchType>
 void DispatchableBuffer<TDispatchType>::Dispatch(TDispatchType&& aDispatchable, const ERoutineId aRoutineId)
 {
+	std::lock_guard<decltype(myTemporaryLock)> _lock(myTemporaryLock);
 	size_t index = 0;
 	Instance[static_cast<u32>(aRoutineId)].myDoubleBuffer.WriteContent([&aDispatchable, &index](auto& aList)
 	{

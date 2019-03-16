@@ -12,7 +12,7 @@ public:
 
 	virtual void Destroy([[maybe_unused]]Object& aObject) = 0;
 
-	void Tick() {}
+	void Tick() noexcept {}
 };
 
 //[Nicos]: Describes a functionality for an object. Template params are 1. Type that is self type and 2. Dependencies.
@@ -51,7 +51,5 @@ void Functionality<TSelfType, TDependencies...>::Destroy(Object& aObject)
 template<typename TSelfType, typename ... TDependencies>
 Functionality<TSelfType, TDependencies...>::Functionality(Object& aObject)
 	: myDependencies(aObject)
-{
-	static_assert(sizeof(TSelfType) == sizeof(Super), "Functionalities may not declare member variables! Please put those in a separate component!");
-}
+{}
 

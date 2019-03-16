@@ -5,7 +5,9 @@ DoubleBuffer<DispatchableBufferBase::DispatchableContainer> DispatchableBufferBa
 
 std::mutex DispatchableBufferBase::myLock;
 
-DispatchableBufferBase::DispatchableBufferBase(const size_t aTypeHash)
+std::mutex DispatchableBufferBase::myTemporaryLock;
+
+DispatchableBufferBase::DispatchableBufferBase(const size_t aTypeHash) noexcept
 	: myTypeHash(aTypeHash)
 {}
 
@@ -21,18 +23,19 @@ bool DispatchableBufferBase::UpdateBuffers(const ERoutineId aRoutineId)
 		aContainer.myUpdatedBuffers.clear();
 		aContainer.myMessages.clear();
 	});
+	std::lock_guard<decltype(myTemporaryLock)> _lock(myTemporaryLock);
 	std::lock_guard<decltype(myLock)> lock(myLock);
 	buffers.SwapContent();
+	for (auto buffer : buffers.ReadContent().myUpdatedBuffers)
+	{
+		buffer->Swap();
+	}
 	return !buffers.ReadContent().myUpdatedBuffers.empty();
 }
 
 void DispatchableBufferBase::GetDispatchableList(const ERoutineId aRoutineId, std::vector<const Dispatchable*>& aOutList)
 {
 	const auto& buffers = UpdatedBuffers[static_cast<u32>(aRoutineId)].ReadContent();
-	for (auto buffer : buffers.myUpdatedBuffers)
-	{
-		buffer->Swap();
-	}
 	for (const auto& dispatchable : buffers.myMessages)
 	{
 		aOutList.emplace_back(&dispatchable.myBuffer->GetDispatchableAt(dispatchable.myIndex));

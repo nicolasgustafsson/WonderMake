@@ -14,12 +14,12 @@ enum class EConsoleColor
 class ConsoleLogger
 {
 public:
-	ConsoleLogger();
+	ConsoleLogger() noexcept;
 	~ConsoleLogger() = default;
 
 private:
 	void OnLogMessage(const SLogMessage& aMessage);
-	void SetColor(const EConsoleColor aColor);
+	void SetColor(const EConsoleColor aColor) noexcept;
 	MessageSubscriber mySubscriber;
 };
 

@@ -47,6 +47,9 @@
     <ClCompile Include="Debugging\DebugLineDrawer.cpp" />
     <ClCompile Include="Debugging\DebugLineRenderObject.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />
+    <ClCompile Include="Tools\CurveEditor\CurveEditor.cpp" />
+    <ClCompile Include="Utilities\Curve\Curve.cpp" />
+    <ClCompile Include="Imgui\CustomRenderArea.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logging\ImGuiLogger.h" />
@@ -136,6 +139,10 @@
     <ClInclude Include="Debugging\DebugLineRenderObject.h" />
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="Input\InputItems.h" />
+    <ClInclude Include="Tools\CurveEditor\CurveEditor.h" />
+    <ClInclude Include="Utilities\Curve\Curve.h" />
+    <ClInclude Include="Utilities\MathUtility.h" />
+    <ClInclude Include="Imgui\CustomRenderArea.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

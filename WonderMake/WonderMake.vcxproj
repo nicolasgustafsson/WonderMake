@@ -193,6 +193,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera\Camera.cpp" />
+    <ClCompile Include="Imgui\CustomRenderArea.cpp" />
+    <ClCompile Include="Utilities\Curve\Curve.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Tools\CurveEditor\CurveEditor.cpp" />
     <ClCompile Include="Debugging\DebugLineDrawer.cpp" />
     <ClCompile Include="Debugging\DebugLineRenderObject.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />
@@ -247,12 +253,16 @@
   <ItemGroup>
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="Imgui\CustomRenderArea.h" />
+    <ClInclude Include="Utilities\Curve\Curve.h" />
+    <ClInclude Include="Tools\CurveEditor\CurveEditor.h" />
     <ClInclude Include="Debugging\DebugLineDrawer.h" />
     <ClInclude Include="Debugging\DebugLineRenderObject.h" />
     <ClInclude Include="Debugging\DebugLine.h" />
     <ClInclude Include="Input\InputItems.h" />
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="TimeKeeper.h" />
+    <ClInclude Include="Utilities\MathUtility.h" />
     <ClInclude Include="Utilities\Stopwatch.h" />
     <ClInclude Include="Utilities\Debugging\Debugged.h" />
     <ClInclude Include="Threads\RoutineDebug.h" />

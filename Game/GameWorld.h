@@ -10,5 +10,6 @@ public:
 
 	virtual void Tick() override;
 	Object myPlayer;
+	Object myEnemy;
 };
 

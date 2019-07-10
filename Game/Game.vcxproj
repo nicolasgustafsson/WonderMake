@@ -221,6 +221,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Enemy\EnemyControllerFunctionality.h" />
+    <ClInclude Include="Enemy\TargetFunctionality.h" />
+    <ClInclude Include="Enemy\EnemyControllerComponent.h" />
     <ClInclude Include="Movement\DefaultMovementFunctionality.h" />
     <ClInclude Include="GameWorld.h" />
     <ClInclude Include="Movement\MovementInputFunctionality.h" />
@@ -228,6 +231,8 @@
     <ClInclude Include="Player\PlayerControllerFunctionality.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Enemy\EnemyControllerFunctionality.cpp" />
+    <ClCompile Include="Enemy\TargetFunctionality.cpp" />
     <ClCompile Include="Movement\DefaultMovementFunctionality.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameWorld.cpp" />

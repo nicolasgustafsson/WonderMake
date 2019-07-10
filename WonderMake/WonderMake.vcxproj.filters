@@ -47,6 +47,7 @@
     <ClCompile Include="Debugging\DebugLineDrawer.cpp" />
     <ClCompile Include="Debugging\DebugLineRenderObject.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />
+    <ClCompile Include="Functionalities\TransformFunctionality.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logging\ImGuiLogger.h" />
@@ -137,6 +138,7 @@
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="Input\InputItems.h" />
     <ClInclude Include="Utilities\MathUtility.h" />
+    <ClInclude Include="Functionalities\TransformFunctionality.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

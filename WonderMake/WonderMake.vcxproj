@@ -253,6 +253,7 @@
     <ClInclude Include="Input\InputItems.h" />
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="TimeKeeper.h" />
+    <ClInclude Include="Utilities\MathUtility.h" />
     <ClInclude Include="Utilities\Stopwatch.h" />
     <ClInclude Include="Utilities\Debugging\Debugged.h" />
     <ClInclude Include="Threads\RoutineDebug.h" />

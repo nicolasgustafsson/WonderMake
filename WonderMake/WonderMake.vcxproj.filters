@@ -136,6 +136,7 @@
     <ClInclude Include="Debugging\DebugLineRenderObject.h" />
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="Input\InputItems.h" />
+    <ClInclude Include="Utilities\MathUtility.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

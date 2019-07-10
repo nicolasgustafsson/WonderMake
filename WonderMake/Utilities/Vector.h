@@ -210,7 +210,7 @@ struct SVector
 
 		for (u32 u = 0; u < Size; u++)
 		{
-			total += std::fabsf((*this)[u]) * std::fabsf((*this)[u]);
+			total += (*this)[u] * (*this)[u];
 		}
 
 		return total;

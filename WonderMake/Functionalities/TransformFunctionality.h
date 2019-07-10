@@ -8,7 +8,7 @@ class TransformFunctionality
 public:
 	TransformFunctionality(Object& aOwner);
 
-	[[no_discard]] SVector2f GetPosition() const;
+	[[nodiscard]] SVector2f GetPosition() const;
 
 private:
 	

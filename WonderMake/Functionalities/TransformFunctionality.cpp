@@ -7,7 +7,7 @@ TransformFunctionality::TransformFunctionality(Object& aOwner)
 
 }
 
-[[no_discard]] SVector2f TransformFunctionality::GetPosition() const
+[[nodiscard]] SVector2f TransformFunctionality::GetPosition() const
 {
 	return Get<STransformComponent>().Position;
 }

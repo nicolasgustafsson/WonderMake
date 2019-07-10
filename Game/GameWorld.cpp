@@ -12,14 +12,14 @@
 GameWorld::GameWorld()
 {
 	EnableTick();
-	auto& transform = myPlayer.AddFunctionality<TransformFunctionality>();
+	auto& playerTransform = myPlayer.AddFunctionality<TransformFunctionality>();
 	myPlayer.AddFunctionality<PlayerControllerFunctionality>();
 	myPlayer.AddFunctionality<DefaultMovementFunctionality>();
 	auto& playerSprite = myPlayer.AddFunctionality<SpriteRenderingFunctionality>();
 	playerSprite.SetTexture(std::filesystem::current_path() / "Textures/tile.png");
 
-	auto& target = myEnemy.AddFunctionality<TargetFunctionality>();
-	target.Temp = &transform;
+	auto& enemyTarget = myEnemy.AddFunctionality<TargetFunctionality>();
+	enemyTarget.Temp = &playerTransform;
 	myEnemy.AddFunctionality<EnemyControllerFunctionality>();
 	myEnemy.AddFunctionality<DefaultMovementFunctionality>();
 	auto& enemySprite = myEnemy.AddFunctionality<SpriteRenderingFunctionality>();

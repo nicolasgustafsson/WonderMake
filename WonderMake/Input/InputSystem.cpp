@@ -59,6 +59,11 @@ void InputSystem::UpdateGamepad() noexcept
 	}
 }
 
+bool InputSystem::IsKeyDown(const EKeyboardKey aKey) const noexcept
+{
+	return myKeyboardKeyStates[static_cast<u32>(aKey)] == EInputItemState::Down;
+}
+
 constexpr EInputItemState InputSystem::GetNewInputState(const EInputItemState aOldState, const bool aIsPressed) const noexcept
 {
 	if (aIsPressed)

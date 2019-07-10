@@ -156,53 +156,6 @@ struct SVector
 		return ReturnVal;
 	}
 
-	constexpr SVector<T, Size> operator-(const SVector<T, Size>& aRightVector) noexcept
-	{
-		SVector<T, Size> ReturnVal = *this;
-
-		for (u32 u = 0; u < Size; u++)
-		{
-			ReturnVal[u] -= aRightVector[u];
-		}
-
-		return ReturnVal;
-	}
-
-	constexpr SVector<T, Size> operator+(const SVector<T, Size>& aRightVector) noexcept
-	{
-		SVector<T, Size> ReturnVal = *this;
-
-		for (u32 u = 0; u < Size; u++)
-		{
-			ReturnVal[u] += aRightVector[u];
-		}
-
-		return ReturnVal;
-	}
-
-	constexpr SVector<T, Size> operator*(const T aMultiplier) noexcept
-	{
-		SVector<T, Size> ReturnVal = *this;
-
-		for (u32 u = 0; u < Size; u++)
-		{
-			ReturnVal[u] *= aMultiplier;
-		}
-
-		return ReturnVal;
-	}
-
-	constexpr SVector<T, Size> operator/(const T aDivisor) noexcept
-	{
-		SVector<T, Size> ReturnVal = *this;
-
-		for (u32 u = 0; u < Size; u++)
-		{
-			ReturnVal[u] /= aDivisor;
-		}
-
-		return ReturnVal;
-	}
 
 	constexpr SVector<T, Size>& operator*=(const T aMultiplier) noexcept
 	{
@@ -250,6 +203,36 @@ struct SVector
 
 		return ReturnVal;
 	}
+
+	constexpr T LengthSquared() const noexcept
+	{
+		T total = 0;
+
+		for (u32 u = 0; u < Size; u++)
+		{
+			total += std::fabsf((*this)[u]) * std::fabsf((*this)[u]);
+		}
+
+		return total;
+	}
+
+	constexpr T Length() const noexcept
+	{
+		return std::sqrt(LengthSquared());
+	}
+
+	constexpr void Normalize() noexcept
+	{
+		const T length = Length();
+
+		if (length == 0)
+			return;
+
+		for (u32 u = 0; u < Size; u++)
+		{
+			(*this)[u] /= length;
+		}
+	}
 };
 
 template <typename T>
@@ -273,3 +256,61 @@ using SVector4i = SVector4<i32>;
 using SVector2u = SVector2<u32>;
 using SVector3u = SVector3<u32>;
 using SVector4u = SVector4<u32>;
+
+template <typename T, u32 Size>
+constexpr static SVector<T, Size> operator-(const SVector<T, Size>& aLeftVector, const SVector<T, Size>& aRightVector) noexcept
+{
+	SVector<T, Size> ReturnVal = aLeftVector;
+
+	for (u32 u = 0; u < Size; u++)
+	{
+		ReturnVal[u] -= aRightVector[u];
+	}
+
+	return ReturnVal;
+}
+
+template <typename T, u32 Size>
+constexpr static SVector<T, Size> operator+(const SVector<T, Size>& aLeftVector, const SVector<T, Size>& aRightVector) noexcept
+{
+	SVector<T, Size> ReturnVal = aLeftVector;
+
+	for (u32 u = 0; u < Size; u++)
+	{
+		ReturnVal[u] += aRightVector[u];
+	}
+
+	return ReturnVal;
+}
+
+template <typename T, u32 Size>
+constexpr static SVector<T, Size> operator*(const T aMultiplier, const SVector<T, Size>& aLeftVector) noexcept
+{
+	return aLeftVector * aMultiplier;
+}
+
+template <typename T, u32 Size>
+constexpr static SVector<T, Size> operator*(const SVector<T, Size>& aLeftVector, const T aMultiplier) noexcept
+{
+	SVector<T, Size> ReturnVal = aLeftVector;
+
+	for (u32 u = 0; u < Size; u++)
+	{
+		ReturnVal[u] *= aMultiplier;
+	}
+
+	return ReturnVal;
+}
+
+template <typename T, u32 Size>
+constexpr static SVector<T, Size> operator/(const SVector<T, Size>& aLeftVector, const T aDivisor) noexcept
+{
+	SVector<T, Size> ReturnVal = aLeftVector;
+
+	for (u32 u = 0; u < Size; u++)
+	{
+		ReturnVal[u] /= aDivisor;
+	}
+
+	return ReturnVal;
+}

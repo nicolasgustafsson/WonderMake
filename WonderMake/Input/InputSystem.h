@@ -16,6 +16,8 @@ public:
 	void UpdateMouse() noexcept;
 	void UpdateGamepad() noexcept;
 
+	bool IsKeyDown(const EKeyboardKey aKey) const noexcept;
+
 private:
 	[[nodiscard]] constexpr EInputItemState GetNewInputState(const EInputItemState aOldState, const bool aIsPressed) const noexcept;
 

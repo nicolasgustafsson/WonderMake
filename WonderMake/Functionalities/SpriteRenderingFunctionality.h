@@ -9,7 +9,6 @@ class SpriteRenderingFunctionality
 {
 public:
 	SpriteRenderingFunctionality(Object& aOwner);
-	~SpriteRenderingFunctionality() = default;
 
 	void Tick();
 	void SetTexture(const std::filesystem::path& aTexturePath);

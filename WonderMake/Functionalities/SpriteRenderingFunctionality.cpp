@@ -15,7 +15,7 @@ void SpriteRenderingFunctionality::Tick()
 		return;
 
 	const float currentTime = myTimeKeeperPtr->GetGameTime() * 2;
-	SVector2f position = Get<STransformComponent>().Position;
+	const SVector2f position = Get<STransformComponent>().Position;
 
 	SpriteComponent.RenderObject->SetAttribute<EVertexAttribute::Position>(0, position);
 	SpriteComponent.RenderObject->Render();
@@ -24,8 +24,6 @@ void SpriteRenderingFunctionality::Tick()
 	endPosition += SVector2f{ std::cosf(currentTime) * 166.0f, std::sinf(currentTime) * 166.0f };
 
 	endPosition = endPosition * std::sinf(currentTime / 2.0f);
-
-	WmDrawDebugLine(position, endPosition, SColor::Red, 0.0f);
 }
 
 void SpriteRenderingFunctionality::SetTexture(const std::filesystem::path& aTexturePath)

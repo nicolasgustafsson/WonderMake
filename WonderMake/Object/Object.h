@@ -93,7 +93,7 @@ void Object::RemoveFunctionality()
 
 			if (counter.RefCount <= 0)
 			{
-				counter.Functionality->Destroy(this);
+				counter.Functionality->Destroy(*this);
 				myFunctionalities.erase(myFunctionalities.begin() + i);
 			}
 

@@ -15,7 +15,6 @@
     <ClCompile Include="Program\Program.cpp" />
     <ClCompile Include="Graphics\ShaderProgram.cpp" />
     <ClCompile Include="Graphics\SpriteRenderObject.cpp" />
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="Graphics\Texture.cpp" />
     <ClCompile Include="Utilities\Color.cpp" />
     <ClCompile Include="glad.c" />
@@ -41,6 +40,7 @@
     <ClCompile Include="Debugging\DebugLineRenderObject.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />
     <ClCompile Include="Functionalities\TransformFunctionality.cpp" />
+    <ClCompile Include="pch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logging\ImGuiLogger.h" />
@@ -68,7 +68,6 @@
     <ClInclude Include="Graphics\RenderObject.h" />
     <ClInclude Include="Graphics\SpriteRenderObject.h" />
     <ClInclude Include="Utilities\Singleton.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="Graphics\Texture.h" />
     <ClInclude Include="Typedefs.h" />
     <ClInclude Include="Utilities\Color.h" />
@@ -124,6 +123,7 @@
     <ClInclude Include="Utilities\MathUtility.h" />
     <ClInclude Include="Functionalities\TransformFunctionality.h" />
     <ClInclude Include="Imgui\ImguiInclude.h" />
+    <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

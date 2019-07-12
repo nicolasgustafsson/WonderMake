@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "InputSystem.h"
 #include <GLFW/glfw3.h>
 #include <algorithm>

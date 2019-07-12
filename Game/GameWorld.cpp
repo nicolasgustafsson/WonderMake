@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "GameWorld.h"
 
+#include "Collision/CollisionFunctionality.h"
+#include "Collision/CollisionSystem.h"
 #include "Enemy/EnemyControllerFunctionality.h"
 #include "Enemy/TargetFunctionality.h"
 #include "Functionalities/SpriteRenderingFunctionality.h"
@@ -22,6 +24,8 @@ GameWorld::GameWorld()
 	enemyTarget.Temp = &playerTransform;
 	myEnemy.AddFunctionality<EnemyControllerFunctionality>();
 	myEnemy.AddFunctionality<DefaultMovementFunctionality>();
+	auto& enemyCollision = myEnemy.AddFunctionality<CollisionFunctionality>();
+	enemyCollision.AddSphereCollider(SVector2f::Zero(), 75.f);
 	auto& enemySprite = myEnemy.AddFunctionality<SpriteRenderingFunctionality>();
 	enemySprite.SetTexture(std::filesystem::current_path() / "Textures/enemy.png");
 	

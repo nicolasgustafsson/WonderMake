@@ -7,12 +7,13 @@ class System
 	: public NonCopyable
 {
 public:
-	virtual void Tick() {}
+	virtual ~System() = default;
+
+	virtual void Tick() noexcept {}
 
 protected:
 	void EnableTick();
 
 	System() = default;
-	virtual ~System() = default;
 };
 

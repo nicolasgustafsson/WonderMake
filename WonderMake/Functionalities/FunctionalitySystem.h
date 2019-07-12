@@ -15,14 +15,14 @@ public:
 
 	bool IsEmpty() const;
 
-	virtual void Tick() override;
+	virtual void Tick() noexcept override;
 
 private:
 	plf::colony<TFunctionality> myFunctionalities;
 };
 
 template<typename TFunctionality>
-void FunctionalitySystem<TFunctionality>::Tick()
+void FunctionalitySystem<TFunctionality>::Tick() noexcept
 {
 	for (auto&& functionality : myFunctionalities)
 		functionality.Tick();

@@ -119,11 +119,13 @@ struct SVector
 
 	[[nodiscard]] constexpr T& operator[] (const u32 Index) noexcept
 	{
+		assert(Index < Size);
 		return this->MemberArray[Index];
 	}
 
 	[[nodiscard]] constexpr const T& operator[] (const u32 Index) const noexcept
 	{
+		assert(Index < Size);
 		return this->MemberArray[Index];
 	}
 

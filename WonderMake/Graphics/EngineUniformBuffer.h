@@ -7,7 +7,7 @@
 
 struct SPaddedMatrix33
 {
-	SPaddedMatrix33& operator=(const SMatrix33f& aMatrix)
+	SPaddedMatrix33& operator=(const SMatrix33f& aMatrix) noexcept
 	{
 		Data[0] = aMatrix.m11;
 		Data[1] = aMatrix.m12;

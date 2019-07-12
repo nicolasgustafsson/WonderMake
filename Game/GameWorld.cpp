@@ -31,7 +31,7 @@ GameWorld::~GameWorld()
 {
 }
 
-void GameWorld::Tick()
+void GameWorld::Tick() noexcept
 {
 }
 

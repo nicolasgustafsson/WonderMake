@@ -203,7 +203,6 @@
     <ClCompile Include="FileSystem\ReadFileAsStringJob.cpp" />
     <ClCompile Include="Graphics\EngineUniformBuffer.cpp" />
     <ClCompile Include="Imgui\DockSpace.cpp" />
-    <ClCompile Include="Imgui\imgui_stdlib.cpp" />
     <ClCompile Include="Logging\FileLogger.cpp" />
     <ClCompile Include="Logging\ImGuiLogger.cpp" />
     <ClCompile Include="Logging\ConsoleLogger.cpp" />
@@ -236,12 +235,6 @@
     <ClCompile Include="Graphics\Texture.cpp" />
     <ClCompile Include="Utilities\Color.cpp" />
     <ClCompile Include="glad.c" />
-    <ClCompile Include="Imgui\imgui.cpp" />
-    <ClCompile Include="Imgui\imgui_demo.cpp" />
-    <ClCompile Include="Imgui\imgui_draw.cpp" />
-    <ClCompile Include="Imgui\imgui_impl_glfw.cpp" />
-    <ClCompile Include="Imgui\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="Imgui\imgui_widgets.cpp" />
     <ClCompile Include="Program\Window.cpp" />
     <ClCompile Include="Utilities\OS.cpp" />
   </ItemGroup>
@@ -252,6 +245,7 @@
     <ClInclude Include="Debugging\DebugLineRenderObject.h" />
     <ClInclude Include="Debugging\DebugLine.h" />
     <ClInclude Include="Functionalities\TransformFunctionality.h" />
+    <ClInclude Include="Imgui\ImguiInclude.h" />
     <ClInclude Include="Input\InputItems.h" />
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="TimeKeeper.h" />
@@ -263,7 +257,6 @@
     <ClInclude Include="FileSystem\ReadFileAsStringJob.h" />
     <ClInclude Include="Graphics\EngineUniformBuffer.h" />
     <ClInclude Include="Imgui\DockSpace.h" />
-    <ClInclude Include="Imgui\imgui_stdlib.h" />
     <ClInclude Include="Json\json.hpp" />
     <ClInclude Include="Job\Job.h" />
     <ClInclude Include="Logging\FileLogger.h" />
@@ -320,14 +313,6 @@
     <ClInclude Include="Graphics\Texture.h" />
     <ClInclude Include="Typedefs.h" />
     <ClInclude Include="Utilities\Color.h" />
-    <ClInclude Include="Imgui\imconfig.h" />
-    <ClInclude Include="Imgui\imgui.h" />
-    <ClInclude Include="Imgui\imgui_impl_glfw.h" />
-    <ClInclude Include="Imgui\imgui_impl_opengl3.h" />
-    <ClInclude Include="Imgui\imgui_internal.h" />
-    <ClInclude Include="Imgui\imstb_rectpack.h" />
-    <ClInclude Include="Imgui\imstb_textedit.h" />
-    <ClInclude Include="Imgui\imstb_truetype.h" />
     <ClInclude Include="Utilities\RestrictTypes.h" />
     <ClInclude Include="Utilities\Result.h" />
     <ClInclude Include="Program\Window.h" />

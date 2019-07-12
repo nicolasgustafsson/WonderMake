@@ -40,7 +40,7 @@ template<typename TYPE>
 SMatrix33<TYPE>::SMatrix33(
 	const TYPE a11, const TYPE a12, const TYPE a13,
 	const TYPE a21, const TYPE a22, const TYPE a23,
-	const TYPE a31, const TYPE a32, const TYPE a33)
+	const TYPE a31, const TYPE a32, const TYPE a33) noexcept
 {
 	m11 = a11; m12 = a12; m13 = a13;
 	m21 = a21; m22 = a22; m23 = a23;
@@ -78,7 +78,7 @@ SMatrix33<TYPE> & SMatrix33<TYPE>::operator *=(const SMatrix33<TYPE> & aRight)
 }
 
 template<typename TYPE>
-SMatrix33<TYPE> & SMatrix33<TYPE>::operator =(const SMatrix33<TYPE> & aRight)
+SMatrix33<TYPE> & SMatrix33<TYPE>::operator =(const SMatrix33<TYPE> & aRight) noexcept
 {
 	for (unsigned char i = 0; i < NumElements; ++i)
 	{

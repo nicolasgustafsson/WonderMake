@@ -2,14 +2,12 @@
 #include "Program.h"
 #include <GLFW/glfw3.h>
 #include <functional>
-#include "Imgui/imgui.h"
-#include "Imgui/imgui_impl_glfw.h"
-#include "Imgui/imgui_impl_opengl3.h"
 #include "Graphics/Shader.h"
 #include <iostream>
 #include "../Threads/DataThreads.h"
 #include "Camera/Camera.h"
 #include "Graphics/EngineUniformBuffer.h"
+#include "Imgui/ImguiInclude.h"
 
 Program::Program()
 {

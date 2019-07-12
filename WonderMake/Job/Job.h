@@ -22,38 +22,39 @@ public:
 
 	using Callback = std::function<void(const EResult)>;
 
-	inline virtual ~Job();
+	Job() noexcept = default;
+	inline virtual ~Job() noexcept;
 
-	inline void Cancel();
+	inline void Cancel() noexcept;
 
-	inline bool IsComplete();
-	inline bool IsSuccessful();
-	inline EResult GetResult();
+	inline bool IsComplete() noexcept;
+	inline bool IsSuccessful() noexcept;
+	inline EResult GetResult() noexcept;
 
 protected:
-	inline void Reset();
-	inline void Complete(const EResult aResult);
-	inline void CompleteOnRoutine(const EResult aResult, const ERoutineId aRoutineId);
+	inline void Reset() noexcept;
+	inline void Complete(const EResult aResult) noexcept;
+	inline void CompleteOnRoutine(const EResult aResult, const ERoutineId aRoutineId) noexcept;
 
-	inline virtual void OnReset() {};
-	inline virtual void OnCancel() {};
-	inline virtual void OnComplete(const EResult /*aResult*/) {};
+	inline virtual void OnReset() noexcept {};
+	inline virtual void OnCancel() noexcept {};
+	inline virtual void OnComplete(const EResult /*aResult*/) noexcept {};
 
 	Callback myCallback;
 
 private:
-	inline void SetResult(const EResult aResult);
+	inline void SetResult(const EResult aResult) noexcept;
 
 	std::mutex myLock;
 	EResult myResult = EResult::InProgress;
 };
 
-inline Job::~Job()
+inline Job::~Job() noexcept
 {
 	Cancel();
 }
 
-inline void Job::Cancel()
+inline void Job::Cancel() noexcept
 {
 	{
 		std::lock_guard<decltype(myLock)> lock(myLock);
@@ -66,31 +67,31 @@ inline void Job::Cancel()
 	OnCancel();
 }
 
-inline bool Job::IsComplete()
+inline bool Job::IsComplete() noexcept
 {
 	std::lock_guard<decltype(myLock)> lock(myLock);
 	return myResult != EResult::InProgress;
 }
 
-inline bool Job::IsSuccessful()
+inline bool Job::IsSuccessful() noexcept
 {
 	std::lock_guard<decltype(myLock)> lock(myLock);
 	return myResult == EResult::Success;
 }
 
-inline Job::EResult Job::GetResult()
+inline Job::EResult Job::GetResult() noexcept
 {
 	std::lock_guard<decltype(myLock)> lock(myLock);
 	return myResult;
 }
 
-inline void Job::Reset()
+inline void Job::Reset() noexcept
 {
 	SetResult(EResult::InProgress);
 	OnReset();
 }
 
-inline void Job::Complete(const EResult aResult)
+inline void Job::Complete(const EResult aResult) noexcept
 {
 	SetResult(aResult);
 	OnComplete(aResult);
@@ -100,17 +101,24 @@ inline void Job::Complete(const EResult aResult)
 	}
 }
 
-inline void Job::CompleteOnRoutine(const EResult aResult, const ERoutineId aRoutineId)
+inline void Job::CompleteOnRoutine(const EResult aResult, const ERoutineId aRoutineId) noexcept
 {
 	SetResult(aResult);
 	OnComplete(aResult);
 	if (myCallback)
 	{
-		WmDispatchTask([&, aResult] { myCallback(aResult); }, aRoutineId);
+		WmDispatchTask([&, aResult]
+			{
+				if (!myCallback)
+				{
+					return;
+				}
+				myCallback(aResult);
+			}, aRoutineId);
 	}
 }
 
-inline void Job::SetResult(const EResult aResult)
+inline void Job::SetResult(const EResult aResult) noexcept
 {
 	std::lock_guard<decltype(myLock)> lock(myLock);
 	myResult = aResult;

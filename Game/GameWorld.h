@@ -8,7 +8,7 @@ public:
 	GameWorld();
 	~GameWorld();
 
-	virtual void Tick() override;
+	virtual void Tick() noexcept override;
 	Object myPlayer;
 	Object myEnemy;
 };

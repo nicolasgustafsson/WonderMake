@@ -11,9 +11,6 @@ class Camera final
 	, public Debugged
 {
 public:
-	Camera() = default;
-	~Camera() = default;
-
 	void Update();
 
 	void SetViewportSize(const SVector2i aViewportSize) noexcept;

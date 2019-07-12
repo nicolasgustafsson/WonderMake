@@ -5,12 +5,12 @@
 class Resource
 {
 public:
-	Resource() = default;
-	inline virtual ~Resource()
+	Resource() noexcept = default;
+	inline virtual ~Resource() noexcept
 	{
 		myRoutineChecker.RequireRoutine();
 	};
-	inline ERoutineId GetOwnerRoutineId() const
+	inline ERoutineId GetOwnerRoutineId() const noexcept
 	{
 		return myRoutineChecker.GetRoutineId();
 	}

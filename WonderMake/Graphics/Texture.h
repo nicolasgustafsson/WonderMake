@@ -12,8 +12,8 @@ public:
 
 	void Bind(const u32 aTextureSlot = 0);
 
-	i32 GetWidth() const { return myWidth; }
-	i32 GetHeight() const { return myHeight; }
+	i32 GetWidth() const noexcept { return myWidth; }
+	i32 GetHeight() const noexcept { return myHeight; }
 
 private:
 	u32 myTextureHandle;

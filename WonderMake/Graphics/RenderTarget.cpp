@@ -2,7 +2,7 @@
 #include "RenderTarget.h"
 
 
-RenderTarget::RenderTarget(const SRenderTargetSettings& aSettings)
+RenderTarget::RenderTarget(const SRenderTargetSettings& aSettings) noexcept
 {
 	glGenFramebuffers(1, &myFrameBufferObject);
 

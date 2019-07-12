@@ -11,7 +11,7 @@ DispatchableBufferBase::DispatchableBufferBase(const size_t aTypeHash) noexcept
 	: myTypeHash(aTypeHash)
 {}
 
-bool DispatchableBufferBase::UpdateBuffers(const ERoutineId aRoutineId)
+bool DispatchableBufferBase::UpdateBuffers(const ERoutineId aRoutineId) noexcept
 {
 	auto& buffers = UpdatedBuffers[static_cast<u32>(aRoutineId)];
 	buffers.ClearContent([](auto& aContainer)
@@ -33,7 +33,7 @@ bool DispatchableBufferBase::UpdateBuffers(const ERoutineId aRoutineId)
 	return !buffers.ReadContent().myUpdatedBuffers.empty();
 }
 
-void DispatchableBufferBase::GetDispatchableList(const ERoutineId aRoutineId, std::vector<const Dispatchable*>& aOutList)
+void DispatchableBufferBase::GetDispatchableList(const ERoutineId aRoutineId, std::vector<const Dispatchable*>& aOutList) noexcept
 {
 	const auto& buffers = UpdatedBuffers[static_cast<u32>(aRoutineId)].ReadContent();
 	for (const auto& dispatchable : buffers.myMessages)
@@ -42,7 +42,7 @@ void DispatchableBufferBase::GetDispatchableList(const ERoutineId aRoutineId, st
 	}
 }
 
-void DispatchableBufferBase::AddDispatchable(const ERoutineId aRoutineId, const size_t aIndex)
+void DispatchableBufferBase::AddDispatchable(const ERoutineId aRoutineId, const size_t aIndex) noexcept
 {
 	std::lock_guard<decltype(myLock)> lock(myLock);
 	UpdatedBuffers[static_cast<u32>(aRoutineId)].WriteContent([this, aIndex](auto& aContainer)

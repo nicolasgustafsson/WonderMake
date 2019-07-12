@@ -9,7 +9,7 @@ class BaseFunctionality;
 
 struct SFunctionalityCounter
 {
-	SFunctionalityCounter(BaseFunctionality* aFunctionality)
+	SFunctionalityCounter(BaseFunctionality* aFunctionality) noexcept
 		: Functionality(aFunctionality)
 		, RefCount(1)
 	{
@@ -22,7 +22,7 @@ struct SFunctionalityCounter
 
 struct SComponentCounter
 {
-	SComponentCounter(SComponent* aComponent)
+	SComponentCounter(SComponent* aComponent) noexcept
 		: Component(aComponent)
 		, RefCount(1)
 	{

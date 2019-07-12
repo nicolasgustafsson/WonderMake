@@ -23,7 +23,7 @@ MessageCallback([[maybe_unused]] GLenum source,
 	WmLog(severityTag, TagOpenGL, " type = ", type, " severity: ", severity, "\n", message);
 }
 
-Renderer::Renderer()
+Renderer::Renderer() noexcept
 	: myRenderTarget({ {1600, 900}, false })
 	, myCopyPass(std::filesystem::current_path() / "Shaders/Fragment/Copy.frag")
 {
@@ -81,8 +81,10 @@ void Renderer::Debug()
 	ImGui::PopStyleVar();
 	ImGui::PopStyleVar();
 
-	SVector2i ViewportSize = { static_cast<i32>(ImGui::GetContentRegionAvail().x), static_cast<i32>(ImGui::GetContentRegionAvail().y) };
-	ImGui::Image((void *)myRenderTarget.GetTexture(), ImVec2(ViewportSize.X, ViewportSize.Y));
+	const SVector2i ViewportSize = { static_cast<i32>(ImGui::GetContentRegionAvail().x), static_cast<i32>(ImGui::GetContentRegionAvail().y) };
+#pragma warning(disable: 4312 26493)
+	ImGui::Image((ImTextureID)myRenderTarget.GetTexture(), ImVec2(static_cast<float>(ViewportSize.X), static_cast<float>(ViewportSize.Y)));
+#pragma warning(default: 4312 26493)
 
 	myCameraPtr->SetViewportSize(ViewportSize);
 

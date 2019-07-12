@@ -21,17 +21,17 @@ public:
 	
 	inline size_t GetTypeHash() const noexcept;
 
-	static bool UpdateBuffers(const ERoutineId aRoutineId);
-	static void GetDispatchableList(const ERoutineId aRoutineId, std::vector<const Dispatchable*>& aOutList);
+	static bool UpdateBuffers(const ERoutineId aRoutineId) noexcept;
+	static void GetDispatchableList(const ERoutineId aRoutineId, std::vector<const Dispatchable*>& aOutList) noexcept;
 
 protected:
 	DispatchableBufferBase(const size_t aTypeHash) noexcept;
 
-	void AddDispatchable(const ERoutineId aRoutineId, const size_t aIndex);
+	void AddDispatchable(const ERoutineId aRoutineId, const size_t aIndex) noexcept;
 
-	virtual const Dispatchable& GetDispatchableAt(const size_t aIndex) const = 0;
-	virtual void Clear() = 0;
-	virtual void Swap() = 0;
+	virtual const Dispatchable& GetDispatchableAt(const size_t aIndex) const noexcept = 0;
+	virtual void Clear() noexcept = 0;
+	virtual void Swap() noexcept = 0;
 
 	static std::mutex myTemporaryLock;
 
@@ -65,15 +65,15 @@ class DispatchableBuffer final
 public:
 	inline DispatchableBuffer() noexcept;
 
-	static void Dispatch(const TDispatchType& aDispatchable);
-	static void Dispatch(TDispatchType&& aDispatchable);
-	static void Dispatch(const TDispatchType& aDispatchable, const ERoutineId aRoutineId);
-	static void Dispatch(TDispatchType&& aDispatchable, const ERoutineId aRoutineId);
+	static void Dispatch(const TDispatchType& aDispatchable) noexcept;
+	static void Dispatch(TDispatchType&& aDispatchable) noexcept;
+	static void Dispatch(const TDispatchType& aDispatchable, const ERoutineId aRoutineId) noexcept;
+	static void Dispatch(TDispatchType&& aDispatchable, const ERoutineId aRoutineId) noexcept;
 
 private:
-	virtual const Dispatchable& GetDispatchableAt(const size_t aIndex) const override;
-	virtual void Clear() override;
-	virtual void Swap() override;
+	virtual const Dispatchable& GetDispatchableAt(const size_t aIndex) const noexcept override;
+	virtual void Clear() noexcept override;
+	virtual void Swap() noexcept override;
 
 	static DispatchableBuffer<TDispatchType> Instance[RoutineCount];
 	DoubleBuffer<std::vector<TDispatchType>> myDoubleBuffer;
@@ -88,7 +88,7 @@ DispatchableBuffer<TDispatchType>::DispatchableBuffer() noexcept
 {}
 
 template<typename TDispatchType>
-void DispatchableBuffer<TDispatchType>::Dispatch(const TDispatchType& aDispatchable)
+void DispatchableBuffer<TDispatchType>::Dispatch(const TDispatchType& aDispatchable) noexcept
 {
 	for (u32 i = 0; i < RoutineCount; ++i)
 	{
@@ -97,7 +97,7 @@ void DispatchableBuffer<TDispatchType>::Dispatch(const TDispatchType& aDispatcha
 }
 
 template<typename TDispatchType>
-void DispatchableBuffer<TDispatchType>::Dispatch(TDispatchType&& aDispatchable)
+void DispatchableBuffer<TDispatchType>::Dispatch(TDispatchType&& aDispatchable) noexcept
 {
 	for (u32 i = 0; i < RoutineCount - 1; ++i)
 	{
@@ -107,7 +107,7 @@ void DispatchableBuffer<TDispatchType>::Dispatch(TDispatchType&& aDispatchable)
 }
 
 template<typename TDispatchType>
-void DispatchableBuffer<TDispatchType>::Dispatch(const TDispatchType& aDispatchable, const ERoutineId aRoutineId)
+void DispatchableBuffer<TDispatchType>::Dispatch(const TDispatchType& aDispatchable, const ERoutineId aRoutineId) noexcept
 {
 	std::lock_guard<decltype(myTemporaryLock)> _lock(myTemporaryLock);
 	size_t index = 0;
@@ -120,7 +120,7 @@ void DispatchableBuffer<TDispatchType>::Dispatch(const TDispatchType& aDispatcha
 }
 
 template<typename TDispatchType>
-void DispatchableBuffer<TDispatchType>::Dispatch(TDispatchType&& aDispatchable, const ERoutineId aRoutineId)
+void DispatchableBuffer<TDispatchType>::Dispatch(TDispatchType&& aDispatchable, const ERoutineId aRoutineId) noexcept
 {
 	std::lock_guard<decltype(myTemporaryLock)> _lock(myTemporaryLock);
 	size_t index = 0;
@@ -133,19 +133,19 @@ void DispatchableBuffer<TDispatchType>::Dispatch(TDispatchType&& aDispatchable, 
 }
 
 template<typename TDispatchType>
-const Dispatchable& DispatchableBuffer<TDispatchType>::GetDispatchableAt(const size_t aIndex) const
+const Dispatchable& DispatchableBuffer<TDispatchType>::GetDispatchableAt(const size_t aIndex) const noexcept
 {
 	return myDoubleBuffer.ReadContent()[aIndex];
 }
 
 template<typename TDispatchType>
-void DispatchableBuffer<TDispatchType>::Clear()
+void DispatchableBuffer<TDispatchType>::Clear() noexcept
 {
 	myDoubleBuffer.ClearContent([](auto& aList) { aList.clear(); });
 }
 
 template<typename TDispatchType>
-void DispatchableBuffer<TDispatchType>::Swap()
+void DispatchableBuffer<TDispatchType>::Swap() noexcept
 {
 	myDoubleBuffer.SwapContent();
 }

@@ -11,7 +11,7 @@ public:
 		return myBuffer;
 	}
 
-	void Update()
+	void Update() noexcept
 	{
 		glBindBuffer(GL_UNIFORM_BUFFER, myUniformBufferObject);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(TBuffer), &myBuffer);
@@ -27,7 +27,7 @@ protected:
 		glBindBufferBase(GL_UNIFORM_BUFFER, aBufferBindIndex, myUniformBufferObject);
 	}
 
-	~UniformBuffer()
+	~UniformBuffer() noexcept
 	{
 		glDeleteBuffers(1, &myUniformBufferObject);
 	}

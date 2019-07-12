@@ -9,7 +9,6 @@ class DebugLineDrawer
 {
 public:
 	DebugLineDrawer() noexcept;
-	~DebugLineDrawer() = default;
 
 	void Render();
 

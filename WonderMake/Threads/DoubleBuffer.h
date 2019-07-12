@@ -10,9 +10,9 @@ public:
 	template<typename TFunction>
 	void WriteContent(const TFunction& aWriteFunction);
 
-	const TType& ReadContent() const;
+	const TType& ReadContent() const noexcept;
 
-	void SwapContent();
+	void SwapContent() noexcept;
 	template<typename TFunction>
 	void ClearContent(const TFunction& aClearFunction);
 
@@ -52,13 +52,13 @@ void DoubleBuffer<TType>::WriteContent(const TFunction& aWriteFunction)
 }
 
 template<typename TType>
-const TType& DoubleBuffer<TType>::ReadContent() const
+const TType& DoubleBuffer<TType>::ReadContent() const noexcept
 {
 	return *myContentRead;
 }
 
 template<typename TType>
-void DoubleBuffer<TType>::SwapContent()
+void DoubleBuffer<TType>::SwapContent() noexcept
 {
 	std::swap(myContentWrite, myContentRead);
 }

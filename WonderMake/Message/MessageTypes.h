@@ -12,8 +12,8 @@
 class Dispatchable
 {
 public:
-	virtual ~Dispatchable() = default;
-	inline size_t GetTypeHash() const
+	virtual ~Dispatchable() noexcept = default;
+	inline size_t GetTypeHash() const noexcept
 	{
 		return myTypeHash;
 	}
@@ -38,7 +38,7 @@ public:
 	}
 
 protected:
-	constexpr Message()
+	constexpr Message() noexcept
 		: Dispatchable(GetTypeHash())
 	{}
 };
@@ -113,12 +113,12 @@ struct SLogMessage
 	: public Message<SLogMessage>
 {
 public:
-	inline SLogMessage(std::string&& aLogMessage)
+	inline SLogMessage(std::string&& aLogMessage) noexcept
 		:LogText(std::forward<std::string>(aLogMessage)) {}
 
 	std::string LogText;
 
-	inline bool HasTag(const std::string& aTag) const
+	inline bool HasTag(const std::string& aTag) const noexcept
 	{
 		return LogText.find(aTag) != std::string::npos;
 	}

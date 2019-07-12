@@ -73,6 +73,6 @@ inline void ResourceProxy<TResource>::Validate() const
 		|| myResource->myPointer == nullptr)
 	{
 		WmLog(TagError, "Resource proxy validation failed.");
-		assert(true);
+		assert(false);
 	}
 }

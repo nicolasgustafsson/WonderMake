@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "ImGuiLogger.h"
-#include "Imgui/imgui.h"
-#include "Imgui/imgui_stdlib.h"
+#include "Imgui/ImguiInclude.h"
 #include <cctype>
 
 ImGuiLogger::ImGuiLogger()

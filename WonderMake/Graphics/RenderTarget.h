@@ -11,13 +11,13 @@ struct SRenderTargetSettings
 class RenderTarget : NonCopyable
 {
 public:
-	RenderTarget(const SRenderTargetSettings& Settings);
+	RenderTarget(const SRenderTargetSettings& Settings) noexcept;
 	~RenderTarget();
 
 	void BindAsTarget();
 	void BindAsTexture();
 
-	inline u32 GetTexture() const { return myRenderTexture; }
+	inline u32 GetTexture() const noexcept { return myRenderTexture; }
 
 private:
 	u32 myFrameBufferObject = std::numeric_limits<u32>::max();

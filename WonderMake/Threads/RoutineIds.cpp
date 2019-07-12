@@ -4,12 +4,12 @@
 
 thread_local ERoutineId CurrentRoutine;
 
-void _SetCurrentRoutine(const ERoutineId aRoutineId)
+void _SetCurrentRoutine(const ERoutineId aRoutineId) noexcept
 {
 	CurrentRoutine = aRoutineId;
 }
 
-ERoutineId _GetCurrentRoutine()
+ERoutineId _GetCurrentRoutine() noexcept
 {
 	return CurrentRoutine;
 }

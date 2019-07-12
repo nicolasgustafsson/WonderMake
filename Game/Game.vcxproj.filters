@@ -7,6 +7,8 @@
     <ClCompile Include="Movement\MovementInputFunctionality.cpp" />
     <ClCompile Include="Player\PlayerControllerFunctionality.cpp" />
     <ClCompile Include="Movement\DefaultMovementFunctionality.cpp" />
+    <ClCompile Include="Enemy\EnemyControllerFunctionality.cpp" />
+    <ClCompile Include="Enemy\TargetFunctionality.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -14,5 +16,8 @@
     <ClInclude Include="Movement\MovementInputFunctionality.h" />
     <ClInclude Include="Player\PlayerControllerFunctionality.h" />
     <ClInclude Include="Movement\DefaultMovementFunctionality.h" />
+    <ClInclude Include="Enemy\EnemyControllerFunctionality.h" />
+    <ClInclude Include="Enemy\TargetFunctionality.h" />
+    <ClInclude Include="Enemy\EnemyControllerComponent.h" />
   </ItemGroup>
 </Project>

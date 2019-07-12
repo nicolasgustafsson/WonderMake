@@ -83,14 +83,14 @@ struct SVector
 
 	//lowers the dimension of the vector by one
 	template<class Q = T>
-	constexpr typename std::enable_if_t<(Size == 2), Q> Demote() const noexcept
+	[[nodiscard]] constexpr typename std::enable_if_t<(Size == 2), Q> Demote() const noexcept
 	{
 		return (*this)[0];
 	}
 
 	//lowers the dimension of the vector by one
 	template<class Q = T>
-	constexpr typename std::enable_if_t<(Size > 2), SVector<Q, Size - 1>> Demote() const noexcept
+	[[nodiscard]] constexpr typename std::enable_if_t<(Size > 2), SVector<Q, Size - 1>> Demote() const noexcept
 	{
 		SVector<Q, Size - 1> ReturnVal;
 
@@ -103,7 +103,7 @@ struct SVector
 	}
 
 	//raises the dimension of the vector by one
-	constexpr SVector<T, Size + 1> Promote(const T LastValue = {}) const noexcept
+	[[nodiscard]] constexpr SVector<T, Size + 1> Promote(const T LastValue = {}) const noexcept
 	{
 		SVector<T, Size + 1> ReturnVal;
 
@@ -117,17 +117,19 @@ struct SVector
 		return ReturnVal;
 	}
 
-	constexpr T& operator[] (const u32 Index) noexcept
+	[[nodiscard]] constexpr T& operator[] (const u32 Index) noexcept
 	{
+		assert(Index < Size);
 		return this->MemberArray[Index];
 	}
 
-	constexpr const T& operator[] (const u32 Index) const noexcept
+	[[nodiscard]] constexpr const T& operator[] (const u32 Index) const noexcept
 	{
+		assert(Index < Size);
 		return this->MemberArray[Index];
 	}
 
-	constexpr char GetMemberName(const u32 Index) const noexcept
+	[[nodiscard]] constexpr char GetMemberName(const u32 Index) const noexcept
 	{
 		switch (Index)
 		{
@@ -144,7 +146,7 @@ struct SVector
 		}
 	}
 
-	constexpr SVector<T, Size> operator-() const noexcept
+	[[nodiscard]] constexpr SVector<T, Size> operator-() const noexcept
 	{
 		SVector<T, Size> ReturnVal;
 
@@ -185,14 +187,14 @@ struct SVector
 		return *this;
 	}
 
-	constexpr static SVector<T, Size> Zero() noexcept
+	[[nodiscard]] constexpr static SVector<T, Size> Zero() noexcept
 	{
 		SVector<T, Size> ReturnVal;
 
 		return ReturnVal;
 	}
 
-	constexpr static SVector<T, Size> One() noexcept
+	[[nodiscard]] constexpr static SVector<T, Size> One() noexcept
 	{
 		SVector<T, Size> ReturnVal;
 
@@ -204,7 +206,7 @@ struct SVector
 		return ReturnVal;
 	}
 
-	constexpr T LengthSquared() const noexcept
+	[[nodiscard]] constexpr T LengthSquared() const noexcept
 	{
 		T total = 0;
 
@@ -216,7 +218,7 @@ struct SVector
 		return total;
 	}
 
-	constexpr T Length() const noexcept
+	[[nodiscard]] constexpr T Length() const noexcept
 	{
 		return std::sqrt(LengthSquared());
 	}
@@ -232,6 +234,15 @@ struct SVector
 		{
 			(*this)[u] /= length;
 		}
+	}
+
+	[[nodiscard]] constexpr SVector<T, Size> GetNormalized() const noexcept
+	{
+		SVector<T, Size> vec = *this;
+
+		vec.Normalize();
+
+		return vec;
 	}
 };
 
@@ -258,7 +269,7 @@ using SVector3u = SVector3<u32>;
 using SVector4u = SVector4<u32>;
 
 template <typename T, u32 Size>
-constexpr static SVector<T, Size> operator-(const SVector<T, Size>& aLeftVector, const SVector<T, Size>& aRightVector) noexcept
+[[nodiscard]] constexpr static SVector<T, Size> operator-(const SVector<T, Size>& aLeftVector, const SVector<T, Size>& aRightVector) noexcept
 {
 	SVector<T, Size> ReturnVal = aLeftVector;
 
@@ -271,7 +282,7 @@ constexpr static SVector<T, Size> operator-(const SVector<T, Size>& aLeftVector,
 }
 
 template <typename T, u32 Size>
-constexpr static SVector<T, Size> operator+(const SVector<T, Size>& aLeftVector, const SVector<T, Size>& aRightVector) noexcept
+[[nodiscard]] constexpr static SVector<T, Size> operator+(const SVector<T, Size>& aLeftVector, const SVector<T, Size>& aRightVector) noexcept
 {
 	SVector<T, Size> ReturnVal = aLeftVector;
 
@@ -284,13 +295,13 @@ constexpr static SVector<T, Size> operator+(const SVector<T, Size>& aLeftVector,
 }
 
 template <typename T, u32 Size>
-constexpr static SVector<T, Size> operator*(const T aMultiplier, const SVector<T, Size>& aLeftVector) noexcept
+[[nodiscard]] constexpr static SVector<T, Size> operator*(const T aMultiplier, const SVector<T, Size>& aLeftVector) noexcept
 {
 	return aLeftVector * aMultiplier;
 }
 
 template <typename T, u32 Size>
-constexpr static SVector<T, Size> operator*(const SVector<T, Size>& aLeftVector, const T aMultiplier) noexcept
+[[nodiscard]] constexpr static SVector<T, Size> operator*(const SVector<T, Size>& aLeftVector, const T aMultiplier) noexcept
 {
 	SVector<T, Size> ReturnVal = aLeftVector;
 
@@ -303,7 +314,7 @@ constexpr static SVector<T, Size> operator*(const SVector<T, Size>& aLeftVector,
 }
 
 template <typename T, u32 Size>
-constexpr static SVector<T, Size> operator/(const SVector<T, Size>& aLeftVector, const T aDivisor) noexcept
+[[nodiscard]] constexpr static SVector<T, Size> operator/(const SVector<T, Size>& aLeftVector, const T aDivisor) noexcept
 {
 	SVector<T, Size> ReturnVal = aLeftVector;
 

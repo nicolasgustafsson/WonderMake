@@ -43,14 +43,14 @@ public:
 	SMatrix33(
 		const TYPE a11, const TYPE a12, const TYPE a13,
 		const TYPE a21, const TYPE a22, const TYPE a23,
-		const TYPE a31, const TYPE a32, const TYPE a33);
+		const TYPE a31, const TYPE a32, const TYPE a33) noexcept;
 	SMatrix33(const SVector2<TYPE> & aPosition);
 
 	SMatrix33 & operator +=(const SMatrix33 & aRight);
 	SMatrix33 & operator -=(const SMatrix33 & aRight);
 	SMatrix33 & operator *=(const SMatrix33 & aRight);
 
-	SMatrix33 & operator =(const SMatrix33 & aSource);
+	SMatrix33 & operator =(const SMatrix33 & aSource) noexcept;
 
 	void SetPosition(const SVector2<TYPE> & aPosition);
 	SVector2<TYPE> GetPosition() const;

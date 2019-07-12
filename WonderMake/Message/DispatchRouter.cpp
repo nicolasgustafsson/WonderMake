@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "DispatchRouter.h"
 
 #include "MessageTypes.h"

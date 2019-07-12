@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "ShaderProgram.h"
 #include <type_traits>
 #include "VertexBuffer.h"

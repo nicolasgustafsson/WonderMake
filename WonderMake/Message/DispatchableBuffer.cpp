@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "DispatchableBuffer.h"
 
 DoubleBuffer<DispatchableBufferBase::DispatchableContainer> DispatchableBufferBase::UpdatedBuffers[RoutineCount];

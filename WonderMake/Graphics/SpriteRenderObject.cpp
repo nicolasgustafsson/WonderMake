@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "SpriteRenderObject.h"
 
 SpriteRenderObject::SpriteRenderObject(const std::filesystem::path& aTexturePath)

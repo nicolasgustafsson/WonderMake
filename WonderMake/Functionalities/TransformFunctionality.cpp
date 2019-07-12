@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "TransformFunctionality.h"
 
 TransformFunctionality::TransformFunctionality(Object& aOwner)

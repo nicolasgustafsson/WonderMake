@@ -10,20 +10,13 @@ SpriteRenderingFunctionality::SpriteRenderingFunctionality(Object& aOwner)
 
 void SpriteRenderingFunctionality::Tick()
 {
-	auto& SpriteComponent = Get<SSpriteComponent>();
-	if (!SpriteComponent.RenderObject)
+	auto& spriteComponent = Get<SSpriteComponent>();
+	if (!spriteComponent.RenderObject)
 		return;
 
-	const float currentTime = myTimeKeeperPtr->GetGameTime() * 2;
 	const SVector2f position = Get<STransformComponent>().Position;
-
-	SpriteComponent.RenderObject->SetAttribute<EVertexAttribute::Position>(0, position);
-	SpriteComponent.RenderObject->Render();
-
-	SVector2f endPosition = position;
-	endPosition += SVector2f{ std::cosf(currentTime) * 166.0f, std::sinf(currentTime) * 166.0f };
-
-	endPosition = endPosition * std::sinf(currentTime / 2.0f);
+	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Position>(0, position);
+	spriteComponent.RenderObject->Render();
 }
 
 void SpriteRenderingFunctionality::SetTexture(const std::filesystem::path& aTexturePath)

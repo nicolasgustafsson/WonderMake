@@ -17,7 +17,7 @@ void ObjectImpulseRouter::Unsubscribe(const size_t aTypeHash, Object& aObject, B
 
 	auto& vector = subscriptionIterator->second[&aObject];
 	 
-	auto it = std::find_if(vector.begin(), vector.end(), [&aFunctionality](const auto& aSubscription) -> bool
+	auto it = std::find_if(vector.begin(), vector.end(), [&aFunctionality](const auto& aSubscription)
 		{
 			return (&aSubscription.myFunctionalityIdentifier.get() == &aFunctionality);
 		});

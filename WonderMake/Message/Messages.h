@@ -61,7 +61,7 @@ inline static void WmSendObjectImpulse(Object& aObject, TObjectImpulse&& aImpuls
 
 	aImpulse.SelfObject = &aObject;
 
-	DispatchableBuffer<TObjectImpulse>::Dispatch(std::move(aImpulse));
+	DispatchableBuffer<TObjectImpulse>::Dispatch(aImpulse);
 }
 
 template<typename TObjectImpulse>

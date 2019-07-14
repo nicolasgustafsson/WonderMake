@@ -12,7 +12,7 @@ struct SImpulseKey
 struct SImpulseListComponent
 	: public SComponent
 {
-	std::vector<SImpulseKey> myImpulseKeys;
+	std::vector<SImpulseKey> ImpulseKeys;
 };
 
 class ImpulseFunctionality
@@ -22,8 +22,8 @@ public:
 	ImpulseFunctionality(Object& aOwner);
 	~ImpulseFunctionality();
 
-	template <typename TMessage>
-	void Subscribe(BaseFunctionality& aSubscriber, std::function<void(const TMessage&)> aCallback);
+	template <typename TMessage, typename TFunction>
+	void Subscribe(BaseFunctionality& aSubscriber, TFunction aCallback);
 	
 	template <typename TMessage>
 	void Unsubscribe(BaseFunctionality& aSubscriber);
@@ -36,10 +36,10 @@ private:
 	SystemPtr<ObjectImpulseRouter> myRouter;
 };
 
-template <typename TMessage>
-void ImpulseFunctionality::Subscribe(BaseFunctionality& aSubscriber, std::function<void(const TMessage&)> aCallback)
+template <typename TMessage, typename TFunction>
+void ImpulseFunctionality::Subscribe(BaseFunctionality& aSubscriber, TFunction aCallback)
 {
-	myRouter->Subscribe(Get<OwnerFunctionality>().GetOwner(), aSubscriber, aCallback);
+	myRouter->Subscribe<TMessage>(Get<OwnerFunctionality>().GetOwner(), aSubscriber, aCallback);
 
 	auto& impulseList = Get<SImpulseListComponent>();
 
@@ -47,7 +47,7 @@ void ImpulseFunctionality::Subscribe(BaseFunctionality& aSubscriber, std::functi
 	impulseKey.TypeHash = TMessage::GetTypeHash();
 	impulseKey.OwningFunctionality = &aSubscriber;
 
-	impulseList.myImpulseKeys.push_back(impulseKey);
+	impulseList.ImpulseKeys.push_back(impulseKey);
 }
 
 template <typename TMessage>

@@ -14,8 +14,8 @@ class ObjectImpulseRouter
 public:
 	ObjectImpulseRouter();
 
-	template<typename TMessage>
-	void Subscribe(Object& aObject, BaseFunctionality& aFunctionality, std::function<void(const TMessage&)> aCallback);
+	template<typename TMessage, typename TFunction>
+	void Subscribe(Object& aObject, BaseFunctionality& aFunctionality, TFunction aCallback);
 
 	void Unsubscribe(const size_t aTypeHash, Object& aObject, BaseFunctionality& aFunctionality);
 
@@ -34,13 +34,13 @@ private:
 		std::reference_wrapper<BaseFunctionality> myFunctionalityIdentifier;
 	};
 
-	std::unordered_map<size_t, std::unordered_multimap<Object*, SImpulseSubscription>> mySubscriptions;
+	std::unordered_map<size_t, std::unordered_map<Object*, std::vector<SImpulseSubscription>>> mySubscriptions;
 
 	MessageSubscriber mySubscriber;
 };
 
-template<typename TMessage>
-void ObjectImpulseRouter::Subscribe(Object& aObject, BaseFunctionality& aFunctionality, std::function<void(const TMessage&)> aCallback)
+template<typename TMessage, typename TFunction>
+void ObjectImpulseRouter::Subscribe(Object& aObject, BaseFunctionality& aFunctionality, TFunction aCallback)
 {
 	static_assert(std::is_base_of_v<SObjectImpulse, TMessage>, "Object message type must have base of SObjectImpulse!");
 
@@ -51,14 +51,12 @@ void ObjectImpulseRouter::Subscribe(Object& aObject, BaseFunctionality& aFunctio
 		aCallback(static_cast<const TMessage&>(aImpulse));
 	};
 
-	std::pair<Object*, SImpulseSubscription > pair(&aObject, subscription);
-
 	auto it = mySubscriptions.find(TMessage::GetTypeHash());
 
 	if (it == mySubscriptions.cend())
 		mySubscriber.AddRoute(BindHelper(&ObjectImpulseRouter::HandleObjectMessage<TMessage>, this));
 
-	mySubscriptions[TMessage::GetTypeHash()].insert(pair);
+	mySubscriptions[TMessage::GetTypeHash()][&aObject].push_back(subscription);
 }
 
 template<typename TMessage>
@@ -71,10 +69,8 @@ void ObjectImpulseRouter::HandleObjectMessage(const TMessage& aMessage)
 	if (iterator == mySubscriptions.cend())
 		return; 
 
-	auto range = iterator->second.equal_range(&impulse.SelfObject);
-	
-	for (auto it = range.first; it != range.second; it++)
-	{
-		it->second.myCallback(aMessage);
-	}
+	std::vector<SImpulseSubscription>& vector = iterator->second[impulse.SelfObject];
+	std::for_each(vector.rbegin(), vector.rend(), [&aMessage](const auto & aSubscription) {
+		aSubscription.myCallback(aMessage);
+		});
 }

@@ -32,5 +32,10 @@ void PlayerControllerFunctionality::Debug()
 
 	Get<TransformFunctionality>().Inspect();
 
+	if (ImGui::Button("Send cool impulse"))
+	{
+		WmSendObjectImpulse(Get<OwnerFunctionality>().GetOwner(), SCoolImpulse());
+	}
+	 
 	ImGui::End();
 }

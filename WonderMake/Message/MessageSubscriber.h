@@ -31,7 +31,6 @@ class MessageSubscriber final
 	: private NonCopyable
 {
 public:
-	template<typename ...ROUTES>
 	MessageSubscriber(const ERoutineId aRoutineId);
 
 	template<typename ...ROUTES>
@@ -61,13 +60,6 @@ void MessageSubscriber::RemoveRoute()
 {
 	RemoveRoute(T::GetTypeHash());
 }
-
-template<typename ...ROUTES>
-MessageSubscriber::MessageSubscriber(const ERoutineId aRoutineId)
-	: myRoutineId(aRoutineId)
-{
-}
-
 
 template<typename ...ROUTES>
 MessageSubscriber::MessageSubscriber(const ERoutineId aRoutineId, ROUTES... aRoutes)

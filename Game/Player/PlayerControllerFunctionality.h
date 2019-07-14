@@ -3,9 +3,16 @@
 #include "Input/InputSystem.h"
 #include "Movement/DefaultMovementFunctionality.h"
 #include "Functionalities/TransformFunctionality.h"
+#include "Functionalities/OwnerFunctionality.h"
+
+struct SCoolImpulse
+	: public SObjectImpulse
+{
+
+};
 
 class PlayerControllerFunctionality
-	: public Functionality<PlayerControllerFunctionality, TransformFunctionality, MovementInputFunctionality, DefaultMovementFunctionality>
+	: public Functionality<PlayerControllerFunctionality, TransformFunctionality, MovementInputFunctionality, DefaultMovementFunctionality, OwnerFunctionality>
 	, public Debugged
 {
 public:

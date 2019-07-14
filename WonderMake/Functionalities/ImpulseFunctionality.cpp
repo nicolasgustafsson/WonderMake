@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ImpulseFunctionality.h"
+#include <algorithm>
 
 ImpulseFunctionality::ImpulseFunctionality(Object& aOwner)
 	: Super(aOwner)
@@ -12,10 +13,8 @@ ImpulseFunctionality::~ImpulseFunctionality()
 	Object& Owner = Get<OwnerFunctionality>().GetOwner();
 	auto& impulseList = Get<SImpulseListComponent>();
 
-	for (i32 i = 0; i < impulseList.myImpulseKeys.size(); i++)
+	for (SImpulseKey& impulseKey : impulseList.ImpulseKeys)
 	{
-		SImpulseKey& impulseKey = impulseList.myImpulseKeys[i];
-
 		myRouter->Unsubscribe(impulseKey.TypeHash, Owner, *impulseKey.OwningFunctionality);
 	}
 }
@@ -26,33 +25,29 @@ void ImpulseFunctionality::Unsubscribe(BaseFunctionality& aSubscriber, const siz
 
 	auto& impulseComponent = Get<SImpulseListComponent>();
 
-	for (i32 i = 0; i < impulseComponent.myImpulseKeys.size(); i++)
-	{
-		SImpulseKey& impulseKey = impulseComponent.myImpulseKeys[i];
-
-		if (impulseKey.OwningFunctionality == &aSubscriber && impulseKey.TypeHash == aTypeHash)
+	auto it = std::find_if(impulseComponent.ImpulseKeys.begin(), impulseComponent.ImpulseKeys.end(), [&aSubscriber, aTypeHash](SImpulseKey& aKey) -> bool 
 		{
-			impulseComponent.myImpulseKeys.erase(impulseComponent.myImpulseKeys.begin() + i);
-			return;
-		}
-	}
+			return aKey.OwningFunctionality == &aSubscriber && aKey.TypeHash == aTypeHash; 
+		});
+
+	if (it != impulseComponent.ImpulseKeys.end())
+		impulseComponent.ImpulseKeys.erase(it);
 }
 
 void ImpulseFunctionality::UnsubscribeAll(BaseFunctionality& aSubscriber)
 {
 	auto& impulseList = Get<SImpulseListComponent>();
-	Object& Owner = Get<OwnerFunctionality>().GetOwner();
+	Object& owner = Get<OwnerFunctionality>().GetOwner();
 
-	for (i32 i = 0; i < impulseList.myImpulseKeys.size(); i++)
-	{
-		SImpulseKey& impulseKey = impulseList.myImpulseKeys[i];
-
-		if (impulseKey.OwningFunctionality == &aSubscriber)
+	const auto it = std::remove_if(impulseList.ImpulseKeys.begin(), impulseList.ImpulseKeys.end(), [&aSubscriber](const auto& aImpulseKey)
 		{
-			myRouter->Unsubscribe(impulseKey.TypeHash, Owner, aSubscriber);
+			return aImpulseKey.OwningFunctionality == &aSubscriber;
+		});
 
-			impulseList.myImpulseKeys.erase(impulseList.myImpulseKeys.begin() + i);
-			i--;
-		}
-	}
+	std::for_each(it, impulseList.ImpulseKeys.end(), [&](const auto& aImpulseKey)
+		{
+			myRouter->Unsubscribe(aImpulseKey.TypeHash, owner, aSubscriber);
+		});
+
+	impulseList.ImpulseKeys.erase(it, impulseList.ImpulseKeys.end());
 }

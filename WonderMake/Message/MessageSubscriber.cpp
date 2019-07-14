@@ -4,6 +4,12 @@
 #include "DataRouters.h"
 #include "DispatchRouter.h"
 
+MessageSubscriber::MessageSubscriber(const ERoutineId aRoutineId) 
+	: myRoutineId(aRoutineId)
+{
+
+}
+
 MessageSubscriber::~MessageSubscriber()
 {
 	for (const size_t typeHash : mySubscribedMessages)

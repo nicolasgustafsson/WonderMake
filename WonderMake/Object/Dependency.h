@@ -44,7 +44,7 @@ void Dependency<TDependency>::Create(Object& aOwningObject)
 class ImpulseFunctionality;
 
 template<typename TDependency>
-void Dependency<TDependency>::Destroy(Object& aOwningObject, BaseFunctionality& aFunctionality)
+void Dependency<TDependency>::Destroy(Object& aOwningObject, [[maybe_unused]] BaseFunctionality& aFunctionality)
 {
 	if constexpr (std::is_same_v<TDependency, ImpulseFunctionality>)
 		myDependency->UnsubscribeAll(aFunctionality);

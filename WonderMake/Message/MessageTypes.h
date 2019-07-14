@@ -129,10 +129,12 @@ struct SObjectImpulse
 	: public Message<SObjectImpulse>
 {
 public:
-	inline SObjectImpulse(Object& aObject) noexcept
-		: SelfObject(aObject) {}
+	SObjectImpulse() = default;
 
-	Object& SelfObject;
+	inline SObjectImpulse(Object& aObject) noexcept
+		: SelfObject(&aObject) {}
+
+	Object* SelfObject;
 };
 
 struct SDebugMessage

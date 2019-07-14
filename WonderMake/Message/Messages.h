@@ -54,6 +54,26 @@ inline static void WmDispatchTask(const Closure& aTask, const ERoutineId aRoutin
 	DispatchableBuffer<Task>::Dispatch(std::move(Task(aTask)), aRoutineId);
 }
 
+template<typename TObjectImpulse>
+inline static void WmSendObjectImpulse(Object& aObject, TObjectImpulse&& aImpulse)
+{
+	static_assert(std::is_base_of_v<SObjectImpulse, TObjectImpulse>, "Impulse must be base of SObjectImpulse!");
+
+	aImpulse.SelfObject = &aObject;
+
+	DispatchableBuffer<TObjectImpulse>::Dispatch(std::move(aImpulse));
+}
+
+template<typename TObjectImpulse>
+inline static void WmSendObjectImpulse(Object& aObject, TObjectImpulse& aImpulse)
+{
+	static_assert(std::is_base_of_v<SObjectImpulse, TObjectImpulse>, "Impulse must be base of SObjectImpulse!");
+
+	aImpulse.SelfObject = &aObject;
+
+	DispatchableBuffer<TObjectImpulse>::Dispatch(aImpulse);
+}
+
 template<typename ... TMessageArgs>
 inline static void WmLog(TMessageArgs... aMessageArgs)
 {

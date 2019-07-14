@@ -15,14 +15,13 @@ void ObjectImpulseRouter::Unsubscribe(const size_t aTypeHash, Object& aObject, B
 	if (subscriptionIterator == mySubscriptions.cend())
 		return;
 
-	auto range = subscriptionIterator->second.equal_range(&aObject);
-
-	for (auto it = range.first; it != range.second; it++)
-	{
-		if (&it->second.myFunctionalityIdentifier.get() == &aFunctionality)
+	auto& vector = subscriptionIterator->second[&aObject];
+	 
+	auto it = std::find_if(vector.begin(), vector.end(), [&aFunctionality](const auto& aSubscription) -> bool
 		{
-			subscriptionIterator->second.erase(it);
-			return;
-		}
-	}
+			return (&aSubscription.myFunctionalityIdentifier.get() == &aFunctionality);
+		});
+
+	vector.erase(it);
 }
+

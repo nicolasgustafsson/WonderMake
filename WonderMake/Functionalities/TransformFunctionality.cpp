@@ -11,3 +11,11 @@ TransformFunctionality::TransformFunctionality(Object& aOwner)
 {
 	return Get<STransformComponent>().Position;
 }
+
+void TransformFunctionality::Inspect()
+{
+	STransformComponent& transform = Get<STransformComponent>(); 
+
+	ImGui::Text("X: %f", transform.Position.X);
+	ImGui::Text("Y: %f", transform.Position.Y);
+}

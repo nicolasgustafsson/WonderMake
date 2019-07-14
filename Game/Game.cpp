@@ -13,7 +13,6 @@
 
 int main()
 {
-
 	Engine::Start([&] 
 	{
 		SystemContainer::Get().CreateSystem<GameWorld>();

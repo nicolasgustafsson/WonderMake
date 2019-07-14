@@ -4,9 +4,8 @@
 
 
 SpriteRenderingFunctionality::SpriteRenderingFunctionality(Object& aOwner)
-	:Super(aOwner)
-{
-}
+	: Super(aOwner)
+{}
 
 void SpriteRenderingFunctionality::Tick()
 {

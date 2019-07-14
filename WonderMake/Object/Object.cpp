@@ -6,7 +6,7 @@ Object::~Object()
 {
 	while (!myFunctionalities.empty())
 	{
-		myFunctionalities[0].Functionality->Destroy(*this);
-		myFunctionalities.erase(myFunctionalities.begin());
+		myFunctionalities[myFunctionalities.size() - 1].Functionality->Destroy(*this);
+		myFunctionalities.erase(myFunctionalities.end() - 1);
 	}
 }

@@ -32,14 +32,23 @@ class MessageSubscriber final
 {
 public:
 	template<typename ...ROUTES>
+	MessageSubscriber(const ERoutineId aRoutineId);
+
+	template<typename ...ROUTES>
 	MessageSubscriber(const ERoutineId aRoutineId, ROUTES... aRoutes);
 	~MessageSubscriber();
+
+	template<typename T>
+	void AddRoute(std::function<void(const T&)> aCallback); 
+
+	template<typename T>
+	void RemoveRoute();
+
+	void RemoveRoute(const size_t aTypeHash);
 
 private:
 	template<typename T>
 	static void RouteDelegate(const std::function<void(const T&)> aCallback, const Dispatchable& aMessage);
-	template<typename T>
-	void SetRoute(std::function<void(const T&)>&& aCallback);
 
 	void Subscribe(const size_t aTypeHash, std::function<void(const Dispatchable&)>&& aCallback);
 
@@ -47,11 +56,24 @@ private:
 	ERoutineId myRoutineId;
 };
 
+template<typename T>
+void MessageSubscriber::RemoveRoute()
+{
+	RemoveRoute(T::GetTypeHash());
+}
+
 template<typename ...ROUTES>
-MessageSubscriber::MessageSubscriber(const ERoutineId aRoutineId, ROUTES... aRoutes)
+MessageSubscriber::MessageSubscriber(const ERoutineId aRoutineId)
 	: myRoutineId(aRoutineId)
 {
-	(SetRoute(std::move(aRoutes)), ...);
+}
+
+
+template<typename ...ROUTES>
+MessageSubscriber::MessageSubscriber(const ERoutineId aRoutineId, ROUTES... aRoutes)
+	: MessageSubscriber(aRoutineId)
+{
+	(AddRoute(std::move(aRoutes)), ...);
 }
 
 template<typename T>
@@ -61,7 +83,7 @@ void MessageSubscriber::RouteDelegate(const std::function<void(const T&)> aCallb
 }
 
 template<typename T>
-void MessageSubscriber::SetRoute(std::function<void(const T&)>&& aCallback)
+void MessageSubscriber::AddRoute(std::function<void(const T&)> aCallback)
 {
 	Subscribe(T::GetTypeHash(), std::bind(&MessageSubscriber::RouteDelegate<T>, std::move(aCallback), std::placeholders::_1));
 }

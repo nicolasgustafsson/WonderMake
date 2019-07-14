@@ -1,12 +1,12 @@
 #include "pch.h"
 #include "SpriteRenderingFunctionality.h"
 #include <iostream>
+#include "Message/MessageSubscriber.h"
 
 
 SpriteRenderingFunctionality::SpriteRenderingFunctionality(Object& aOwner)
-	:Super(aOwner)
-{
-}
+	: Super(aOwner)
+{}
 
 void SpriteRenderingFunctionality::Tick()
 {

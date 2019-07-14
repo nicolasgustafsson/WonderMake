@@ -30,5 +30,7 @@ void PlayerControllerFunctionality::Debug()
 
 	Get<DefaultMovementFunctionality>().Inspect();
 
+	Get<TransformFunctionality>().Inspect();
+
 	ImGui::End();
 }

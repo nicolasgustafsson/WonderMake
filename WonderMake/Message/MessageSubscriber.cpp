@@ -17,3 +17,9 @@ void MessageSubscriber::Subscribe(const size_t aTypeHash, std::function<void(con
 	mySubscribedMessages.insert(aTypeHash);
 	DataRouters::Get().GetRouter(myRoutineId).SubscribeToType(aTypeHash, *this, std::move(aCallback));
 }
+
+void MessageSubscriber::RemoveRoute(const size_t aTypeHash)
+{	
+	mySubscribedMessages.erase(aTypeHash);
+	DataRouters::Get().GetRouter(myRoutineId).UnsubscribeToType(aTypeHash, *this);
+}

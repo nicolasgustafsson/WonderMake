@@ -3,6 +3,7 @@
 #include "Typedefs.h"
 
 #include "Logging/LogMessageTags.h"
+#include "Object/Object.h"
 
 #include <atomic>
 #include <limits>
@@ -122,6 +123,16 @@ public:
 	{
 		return LogText.find(aTag) != std::string::npos;
 	}
+};
+
+struct SObjectImpulse
+	: public Message<SObjectImpulse>
+{
+public:
+	inline SObjectImpulse(Object& aObject) noexcept
+		: SelfObject(aObject) {}
+
+	Object& SelfObject;
 };
 
 struct SDebugMessage

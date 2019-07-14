@@ -41,6 +41,9 @@
     <ClCompile Include="Input\InputSystem.cpp" />
     <ClCompile Include="Functionalities\TransformFunctionality.cpp" />
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Functionalities\ImpulseFunctionality.cpp" />
+    <ClCompile Include="Object\ObjectImpulseRouter.cpp" />
+    <ClCompile Include="Functionalities\OwnerFunctionality.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logging\ImGuiLogger.h" />
@@ -124,6 +127,9 @@
     <ClInclude Include="Functionalities\TransformFunctionality.h" />
     <ClInclude Include="Imgui\ImguiInclude.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Functionalities\ImpulseFunctionality.h" />
+    <ClInclude Include="Object\ObjectImpulseRouter.h" />
+    <ClInclude Include="Functionalities\OwnerFunctionality.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

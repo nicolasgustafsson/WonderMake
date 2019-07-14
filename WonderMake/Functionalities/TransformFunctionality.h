@@ -10,6 +10,7 @@ public:
 
 	[[nodiscard]] SVector2f GetPosition() const;
 
+	void Inspect();
+
 private:
-	
 };

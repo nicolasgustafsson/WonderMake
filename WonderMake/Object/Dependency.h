@@ -14,7 +14,7 @@ public:
 	~Dependency() = default;
 
 	inline void Create(Object& aOwningObject);
-	inline void Destroy(Object& aOwningObject);
+	inline void Destroy(Object& aOwningObject, BaseFunctionality& aFunctionality);
 
 	inline TDependency& operator*() const noexcept
 	{
@@ -30,6 +30,8 @@ private:
 	TDependency* myDependency;
 };
 
+
+
 template<typename TDependency>
 void Dependency<TDependency>::Create(Object& aOwningObject)
 {
@@ -39,9 +41,14 @@ void Dependency<TDependency>::Create(Object& aOwningObject)
 		myDependency = &aOwningObject._AddComponent<TDependency>();
 }
 
+class ImpulseFunctionality;
+
 template<typename TDependency>
-void Dependency<TDependency>::Destroy(Object& aOwningObject)
+void Dependency<TDependency>::Destroy(Object& aOwningObject, BaseFunctionality& aFunctionality)
 {
+	if constexpr (std::is_same_v<TDependency, ImpulseFunctionality>)
+		myDependency->UnsubscribeAll(aFunctionality);
+
 	if constexpr (std::is_base_of<BaseFunctionality, TDependency>::value)
 		aOwningObject.RemoveFunctionality<TDependency>();
 	else if (std::is_base_of<SComponent, TDependency>::value)
@@ -55,7 +62,7 @@ public:
 	inline Dependencies(Object& aObject);
 
 	inline void Create(Object& aObject);
-	inline void Destroy(Object& aObject);
+	inline void Destroy(Object& aObject, BaseFunctionality& aFunctionality);
 
 	template<typename TDependency>
 	__forceinline TDependency& Get() const;
@@ -71,9 +78,9 @@ void Dependencies<TDependencies...>::Create(Object& aObject)
 }
 
 template<typename ... TDependencies>
-void Dependencies<TDependencies...>::Destroy(Object& aObject)
+void Dependencies<TDependencies...>::Destroy(Object& aObject, BaseFunctionality& aFunctionality)
 {
-	(std::get<Dependency<TDependencies>>(myDependencies).Destroy(aObject), ...);
+	(std::get<Dependency<TDependencies>>(myDependencies).Destroy(aObject, aFunctionality), ...);
 }
 
 template<typename ... TDependencies>

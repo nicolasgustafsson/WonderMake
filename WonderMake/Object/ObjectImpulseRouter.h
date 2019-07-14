@@ -1,0 +1,80 @@
+#pragma once
+#include "System/System.h"
+#include "Object.h"
+#include "Message/MessageTypes.h"
+#include <type_traits>
+#include <unordered_map>
+#include <functional>
+
+class BaseFunctionality;
+
+class ObjectImpulseRouter
+	: public System
+{
+public:
+	ObjectImpulseRouter();
+
+	template<typename TMessage>
+	void Subscribe(Object& aObject, BaseFunctionality& aFunctionality, std::function<void(const TMessage&)> aCallback);
+
+	void Unsubscribe(const size_t aTypeHash, Object& aObject, BaseFunctionality& aFunctionality);
+
+private:
+	template<typename TMessage>
+	void HandleObjectMessage(const TMessage& aMessage);
+
+	struct SImpulseSubscription 
+	{ 
+		SImpulseSubscription(BaseFunctionality& aFunctionality) noexcept
+			: myFunctionalityIdentifier(aFunctionality)
+		{
+		}
+
+		std::function<void(const SObjectImpulse&)> myCallback;
+		std::reference_wrapper<BaseFunctionality> myFunctionalityIdentifier;
+	};
+
+	std::unordered_map<size_t, std::unordered_multimap<Object*, SImpulseSubscription>> mySubscriptions;
+
+	MessageSubscriber mySubscriber;
+};
+
+template<typename TMessage>
+void ObjectImpulseRouter::Subscribe(Object& aObject, BaseFunctionality& aFunctionality, std::function<void(const TMessage&)> aCallback)
+{
+	static_assert(std::is_base_of_v<SObjectImpulse, TMessage>, "Object message type must have base of SObjectImpulse!");
+
+	SImpulseSubscription subscription(aFunctionality);
+
+	subscription.myCallback = [aCallback] (const SObjectImpulse& aImpulse) 
+	{
+		aCallback(static_cast<const TMessage&>(aImpulse));
+	};
+
+	std::pair<Object*, SImpulseSubscription > pair(&aObject, subscription);
+
+	auto it = mySubscriptions.find(TMessage::GetTypeHash());
+
+	if (it == mySubscriptions.cend())
+		mySubscriber.AddRoute(BindHelper(&ObjectImpulseRouter::HandleObjectMessage<TMessage>, this));
+
+	mySubscriptions[TMessage::GetTypeHash()].insert(pair);
+}
+
+template<typename TMessage>
+void ObjectImpulseRouter::HandleObjectMessage(const TMessage& aMessage)
+{
+	const SObjectImpulse& impulse = static_cast<const SObjectImpulse&>(aMessage);
+	
+	auto iterator = mySubscriptions.find(TMessage::GetTypeHash());
+	
+	if (iterator == mySubscriptions.cend())
+		return; 
+
+	auto range = iterator->second.equal_range(&impulse.SelfObject);
+	
+	for (auto it = range.first; it != range.second; it++)
+	{
+		it->second.myCallback(aMessage);
+	}
+}

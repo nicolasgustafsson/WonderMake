@@ -12,7 +12,7 @@ void CollisionSystem::Tick() noexcept
 
 }
 
-Colliders::SSphere& CollisionSystem::CreateSphereCollider(CollisionFunctionality& aCollisionFunctionality, const SVector2f aPosition, const f32 aRadius)
+Colliders::Shape& CollisionSystem::CreateSphereCollider(CollisionFunctionality& aCollisionFunctionality, const SVector2f aPosition, const f32 aRadius)
 {
 	Colliders::SSphere collider;
 
@@ -20,56 +20,55 @@ Colliders::SSphere& CollisionSystem::CreateSphereCollider(CollisionFunctionality
 	collider.Position = aPosition;
 	collider.Radius = aRadius;
 
-	return (*mySphereColliders.emplace(collider));
+	return (*myColliders.emplace(collider));
 }
 
-bool CollisionSystem::DestroyCollider(Colliders::SBase& aCollider)
+bool CollisionSystem::DestroyCollider(Colliders::Shape& aCollider)
 {
-	switch(aCollider.Type)
+	auto it = myColliders.get_iterator_from_pointer(&aCollider);
+	
+	if (it == myColliders.end())
 	{
-	case Colliders::Type::Sphere:
-	{
-		const auto it = mySphereColliders.get_iterator_from_pointer(static_cast<Colliders::SSphere*>(&aCollider));
+		return false;
+	}
 
-		if (it == mySphereColliders.cend())
+	myColliders.erase(it);
+
+	return true;
+}
+
+bool CollisionSystem::TestCollision(const Colliders::Shape& aColliderA, const Colliders::Shape& aColliderB) noexcept
+{
+	return std::visit([aColliderB](const auto& aCollider)
 		{
-			return false;
-			
-		}
-		
-		mySphereColliders.erase(it);
-		
-		return true;
-	}
-	}
+			using T = std::decay_t<decltype(aCollider)>;
 
-	return false;
+			if constexpr (std::is_same_v<T, Colliders::SSphere>)
+			{
+				return TestSphereCollision(aCollider, aColliderB);
+			}
+			else
+			{
+				static_assert(always_false<T>::value, "Invalid collider!");
+			}
+		}, aColliderA);
 }
 
-bool CollisionSystem::TestCollision(const Colliders::SBase& aColliderA, const Colliders::SBase& aColliderB) noexcept
+bool CollisionSystem::TestSphereCollision(const Colliders::SSphere& aSphere, const Colliders::Shape& aCollider) noexcept
 {
-	switch (aColliderA.Type)
-	{
-	case Colliders::Type::Sphere:
-		return TestSphereCollision(static_cast<const Colliders::SSphere&>(aColliderA), aColliderB);
-	}
+	return std::visit([aSphere](const auto& aCollider)
+		{
+			using T = std::decay_t<decltype(aCollider)>;
 
-	assert(false);
-
-	return false;
-}
-
-bool CollisionSystem::TestSphereCollision(const Colliders::SSphere& aSphere, const Colliders::SBase& aCollider) noexcept
-{
-	switch (aCollider.Type)
-	{
-	case Colliders::Type::Sphere:
-		return TestSphereVsSphereCollision(aSphere, static_cast<const Colliders::SSphere&>(aCollider));
-	}
-
-	assert(false);
-
-	return false;
+			if constexpr (std::is_same_v<T, Colliders::SSphere>)
+			{
+				return TestSphereVsSphereCollision(aSphere, aCollider);
+			}
+			else
+			{
+				static_assert(always_false<T>::value, "Invalid collider!");
+			}
+		}, aCollider);
 }
 
 bool CollisionSystem::TestSphereVsSphereCollision(const Colliders::SSphere& aSphereA, const Colliders::SSphere& aSphereB) noexcept

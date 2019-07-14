@@ -34,7 +34,15 @@ void CollisionFunctionality::Tick()
 
 	for (auto& collider : collisionComponent.Colliders)
 	{
-		collider.Collider->Position = collider.Offset * tranformation;
+		if (!collider.Collider)
+		{
+			continue;
+		}
+
+		std::visit([collider, tranformation](auto& aCollider)
+			{
+				aCollider.Position = collider.Offset * tranformation;
+			}, *collider.Collider);
 	}
 }
 
@@ -62,12 +70,28 @@ void CollisionFunctionality::Debug()
 
 	for (auto& collider : collisionComponent.Colliders)
 	{
-		Colliders::SSphere& sphere = static_cast<Colliders::SSphere&>(*collider.Collider);
-
-		DrawCollider(sphere);
+		if (!collider.Collider)
+		{
+			continue;
+		}
 
 		ImGui::SliderFloat2("Offset", &collider.Offset.X, -1000.f, 1000.f);
-		ImGui::SliderFloat("Radius", &sphere.Radius, 0, 500);
+
+		std::visit([](auto& aCollider)
+			{
+				using T = std::decay_t<decltype(aCollider)>;
+				
+				if constexpr (std::is_same_v<T, Colliders::SSphere>)
+				{
+					ImGui::SliderFloat("Radius", &aCollider.Radius, 0, 500);
+				}
+				else
+				{
+					static_assert(always_false<T>::value, "Invalid collider!");
+				}
+			}, *collider.Collider);
+
+		DrawCollider(*collider.Collider);
 	}
 
 	ImGui::End();

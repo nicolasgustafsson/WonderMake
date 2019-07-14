@@ -1,18 +1,21 @@
 #pragma once
 
+#include "Collision/Colliders.h"
+
 #include "Components/Component.h"
 
 #include <vector>
 
-namespace Colliders
+struct SColliderSerialization
 {
-	struct SBase;
-}
+	SVector2f				Position;
+	f32						Radius = 0.f;
+};
 
 struct SCollider
 {
 	SVector2f				Offset;
-	Colliders::SBase*		Collider = nullptr;
+	Colliders::Shape*		Collider = nullptr;
 };
 
 struct SCollisionComponent final

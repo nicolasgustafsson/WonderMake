@@ -17,27 +17,27 @@ public:
 	void Tick() noexcept override;
 
 	template<typename TCallback>
-	inline void Overlap(const Colliders::SSphere& aCollider, const TCallback& aCallback) const noexcept;
+	inline void Overlap(const Colliders::Shape& aCollider, const TCallback& aCallback) const noexcept;
 
-	Colliders::SSphere& CreateSphereCollider(CollisionFunctionality& aCollisionFunctionality, const SVector2f aPosition, const f32 aRadius);
+	Colliders::Shape& CreateSphereCollider(CollisionFunctionality& aCollisionFunctionality, const SVector2f aPosition, const f32 aRadius);
 
-	bool DestroyCollider(Colliders::SBase& aCollider);
+	bool DestroyCollider(Colliders::Shape& aCollider);
 
 private:
-	[[nodiscard]] static bool TestCollision(const Colliders::SBase& aColliderA, const Colliders::SBase& aColliderB) noexcept;
-	[[nodiscard]] static bool TestSphereCollision(const Colliders::SSphere& aSphere, const Colliders::SBase& aCollider) noexcept;
+	[[nodiscard]] static bool TestCollision(const Colliders::Shape& aColliderA, const Colliders::Shape& aColliderB) noexcept;
+	[[nodiscard]] static bool TestSphereCollision(const Colliders::SSphere& aSphere, const Colliders::Shape& aCollider) noexcept;
 
 	[[nodiscard]] static bool TestSphereVsSphereCollision(const Colliders::SSphere& aSphereA, const Colliders::SSphere& aSphereB) noexcept;
 
-	plf::colony<Colliders::SSphere> mySphereColliders;
+	plf::colony<Colliders::Shape> myColliders;
 };
 
 template<typename TCallback>
-inline void CollisionSystem::Overlap(const Colliders::SSphere& aCollider, const TCallback& aCallback) const noexcept
+inline void CollisionSystem::Overlap(const Colliders::Shape& aCollider, const TCallback& aCallback) const noexcept
 {
-	for (const auto& collider : mySphereColliders)
+	for (const auto& collider : myColliders)
 	{
-		if (TestSphereVsSphereCollision(aCollider, collider))
+		if (TestCollision(aCollider, collider))
 		{
 			aCallback(collider);
 		}

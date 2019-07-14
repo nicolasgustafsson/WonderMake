@@ -3,18 +3,7 @@
 #include "ColliderDebug.h"
 #include "Colliders.h"
 
-void DrawCollider(const Colliders::SBase& aCollider, SColor aColor)
-{
-	switch (aCollider.Type)
-	{
-	case Colliders::Type::Sphere:
-		DrawCollider(static_cast<const Colliders::SSphere&>(aCollider), aColor);
-
-		break;
-	}
-}
-
-void DrawCollider(const Colliders::SSphere& aCollider, SColor aColor)
+void DrawSphere(const Colliders::SSphere& aCollider, SColor aColor)
 {
 	constexpr u32 points = 16;
 	SVector2f positions[points];
@@ -43,4 +32,21 @@ void DrawCollider(const Colliders::SSphere& aCollider, SColor aColor)
 	line.End = positions[0];
 
 	WmDrawDebugLine(line);
+}
+
+void DrawCollider(const Colliders::Shape& aCollider, SColor aColor)
+{
+	std::visit([aColor](const auto& aCollider)
+		{
+			using T = std::decay_t<decltype(aCollider)>;
+
+			if constexpr (std::is_same_v<T, Colliders::SSphere>)
+			{
+				DrawSphere(aCollider, aColor);
+			}
+			else
+			{
+				static_assert(always_false<T>::value, "Invalid collider!");
+			}
+		}, aCollider);
 }

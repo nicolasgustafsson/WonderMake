@@ -87,7 +87,7 @@ void CollisionFunctionality::Debug()
 				}
 				else
 				{
-					static_assert(always_false<T>::value, "Invalid collider!");
+					static_assert(std::false_type::value, "Collider not implemented!");
 				}
 			}, *collider.Collider);
 

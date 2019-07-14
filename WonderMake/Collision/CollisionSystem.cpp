@@ -49,7 +49,7 @@ bool CollisionSystem::TestCollision(const Colliders::Shape& aColliderA, const Co
 			}
 			else
 			{
-				static_assert(always_false<T>::value, "Invalid collider!");
+				static_assert(std::false_type::value, "Collider not implemented!");
 			}
 		}, aColliderA);
 }
@@ -66,7 +66,7 @@ bool CollisionSystem::TestSphereCollision(const Colliders::SSphere& aSphere, con
 			}
 			else
 			{
-				static_assert(always_false<T>::value, "Invalid collider!");
+				static_assert(std::false_type::value, "Collider not implemented!");
 			}
 		}, aCollider);
 }

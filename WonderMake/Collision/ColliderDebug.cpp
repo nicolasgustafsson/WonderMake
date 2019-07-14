@@ -3,7 +3,7 @@
 #include "ColliderDebug.h"
 #include "Colliders.h"
 
-void DrawSphere(const Colliders::SSphere& aCollider, SColor aColor)
+void DrawSphere(const Colliders::SSphere& aCollider, const SColor& aColor)
 {
 	constexpr u32 points = 16;
 	SVector2f positions[points];
@@ -34,7 +34,7 @@ void DrawSphere(const Colliders::SSphere& aCollider, SColor aColor)
 	WmDrawDebugLine(line);
 }
 
-void DrawCollider(const Colliders::Shape& aCollider, SColor aColor)
+void DrawCollider(const Colliders::Shape& aCollider, const SColor aColor)
 {
 	std::visit([aColor](const auto& aCollider)
 		{
@@ -46,7 +46,7 @@ void DrawCollider(const Colliders::Shape& aCollider, SColor aColor)
 			}
 			else
 			{
-				static_assert(always_false<T>::value, "Invalid collider!");
+				static_assert(std::false_type::value, "Collider not implemented!");
 			}
 		}, aCollider);
 }

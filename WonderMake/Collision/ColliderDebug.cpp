@@ -18,7 +18,7 @@ void DrawSphere(const Colliders::SSphere& aCollider, const SColor& aColor)
 	}
 
 	SDebugLine line;
-	line.Color = SColor::Red;
+	line.Color = aColor;
 
 	for (u32 i = 0; i < points - 1; ++i)
 	{
@@ -34,7 +34,7 @@ void DrawSphere(const Colliders::SSphere& aCollider, const SColor& aColor)
 	WmDrawDebugLine(line);
 }
 
-void DrawCollider(const Colliders::Shape& aCollider, const SColor aColor)
+void DrawCollider(const Colliders::Shape& aCollider, const SColor& aColor)
 {
 	std::visit([aColor](const auto& aCollider)
 		{

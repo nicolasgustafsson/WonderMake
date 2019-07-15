@@ -17,7 +17,7 @@ public:
 	void Tick() noexcept override;
 
 	template<typename TCallback>
-	inline void Overlap(const Colliders::Shape& aCollider, const TCallback& aCallback) const noexcept;
+	inline void Overlap(const Colliders::SSphere& aCollider, const TCallback& aCallback) const noexcept;
 
 	Colliders::Shape& CreateSphereCollider(CollisionFunctionality& aCollisionFunctionality, const SVector2f aPosition, const f32 aRadius);
 
@@ -33,11 +33,11 @@ private:
 };
 
 template<typename TCallback>
-inline void CollisionSystem::Overlap(const Colliders::Shape& aCollider, const TCallback& aCallback) const noexcept
+inline void CollisionSystem::Overlap(const Colliders::SSphere& aCollider, const TCallback& aCallback) const noexcept
 {
 	for (const auto& collider : myColliders)
 	{
-		if (TestCollision(aCollider, collider))
+		if (TestSphereCollision(aCollider, collider))
 		{
 			aCallback(collider);
 		}

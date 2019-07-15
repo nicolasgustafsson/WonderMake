@@ -28,6 +28,11 @@ Renderer::Renderer() noexcept
 	, myCopyPass(std::filesystem::current_path() / "Shaders/Fragment/Copy.frag")
 {
 	glEnable(GL_DEBUG_OUTPUT);
+	
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE); additive
+
 	glDebugMessageCallback(MessageCallback, nullptr);
 	myCameraPtr->SetViewportSize({1600, 900});
 }

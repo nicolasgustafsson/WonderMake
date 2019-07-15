@@ -18,7 +18,7 @@ GameWorld::GameWorld()
 	myPlayer.AddFunctionality<PlayerControllerFunctionality>();
 	myPlayer.AddFunctionality<DefaultMovementFunctionality>();
 	auto& playerSprite = myPlayer.AddFunctionality<SpriteRenderingFunctionality>();
-	playerSprite.SetTexture(std::filesystem::current_path() / "Textures/tile.png");
+	playerSprite.SetTexture(std::filesystem::current_path() / "Textures/player.png");
 
 	auto& enemyTarget = myEnemy.AddFunctionality<TargetFunctionality>();
 	enemyTarget.Temp = &playerTransform;

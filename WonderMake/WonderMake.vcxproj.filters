@@ -44,6 +44,9 @@
     <ClCompile Include="Collision\CollisionSystem.cpp" />
     <ClCompile Include="Collision\CollisionFunctionality.cpp" />
     <ClCompile Include="Collision\ColliderDebug.cpp" />
+    <ClCompile Include="Functionalities\ImpulseFunctionality.cpp" />
+    <ClCompile Include="Object\ObjectImpulseRouter.cpp" />
+    <ClCompile Include="Functionalities\OwnerFunctionality.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logging\ImGuiLogger.h" />
@@ -132,6 +135,9 @@
     <ClInclude Include="Collision\CollisionComponent.h" />
     <ClInclude Include="Collision\Colliders.h" />
     <ClInclude Include="Collision\ColliderDebug.h" />
+    <ClInclude Include="Functionalities\ImpulseFunctionality.h" />
+    <ClInclude Include="Object\ObjectImpulseRouter.h" />
+    <ClInclude Include="Functionalities\OwnerFunctionality.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

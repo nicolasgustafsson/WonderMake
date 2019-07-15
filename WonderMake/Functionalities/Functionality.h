@@ -44,7 +44,7 @@ private:
 template<typename TSelfType, typename ... TDependencies>
 void Functionality<TSelfType, TDependencies...>::Destroy(Object& aObject)
 {
-	myDependencies.Destroy(aObject);
+	myDependencies.Destroy(aObject, *this);
 	SystemPtr<FunctionalitySystem<TSelfType>>()->RemoveFunctionality(static_cast<TSelfType&>(*this));
 }
 

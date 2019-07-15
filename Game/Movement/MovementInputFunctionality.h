@@ -1,6 +1,9 @@
 #pragma once
 #include "Components/Component.h"
 #include "Functionalities/Functionality.h"
+#include "Functionalities/ImpulseFunctionality.h"
+
+struct SCoolImpulse;
 
 struct SMovementInputComponent 
 	: public SComponent
@@ -9,7 +12,7 @@ struct SMovementInputComponent
 };
 
 class MovementInputFunctionality :
-	public Functionality<MovementInputFunctionality, SMovementInputComponent>
+	public Functionality<MovementInputFunctionality, SMovementInputComponent, ImpulseFunctionality>
 {
 public:
 	MovementInputFunctionality(Object& aOwner);

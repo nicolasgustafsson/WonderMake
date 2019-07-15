@@ -16,6 +16,7 @@ public:
 
 	[[nodiscard]] SMatrix33f GetMatrix() const;
 
+	void Inspect();
+
 private:
-	
 };

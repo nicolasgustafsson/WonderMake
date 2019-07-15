@@ -204,6 +204,9 @@
     <ClCompile Include="Debugging\DebugLineRenderObject.cpp" />
     <ClCompile Include="Functionalities\TransformFunctionality.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />
+    <ClCompile Include="Functionalities\ImpulseFunctionality.cpp" />
+    <ClCompile Include="Object\ObjectImpulseRouter.cpp" />
+    <ClCompile Include="Functionalities\OwnerFunctionality.cpp" />
     <ClCompile Include="TimeKeeper.cpp" />
     <ClCompile Include="Utilities\Debugging\Debugged.cpp" />
     <ClCompile Include="Threads\RoutineDebug.cpp" />
@@ -260,6 +263,9 @@
     <ClInclude Include="Imgui\ImguiInclude.h" />
     <ClInclude Include="Input\InputItems.h" />
     <ClInclude Include="Input\InputSystem.h" />
+    <ClInclude Include="Functionalities\ImpulseFunctionality.h" />
+    <ClInclude Include="Object\ObjectImpulseRouter.h" />
+    <ClInclude Include="Functionalities\OwnerFunctionality.h" />
     <ClInclude Include="TimeKeeper.h" />
     <ClInclude Include="Utilities\MathUtility.h" />
     <ClInclude Include="Utilities\Stopwatch.h" />

@@ -5,8 +5,8 @@
 
 Texture::Texture(const std::filesystem::path& aPath)
 {
-	i32 ChannelCount;
-	u8* RawPixelData = stbi_load(aPath.string().c_str(), &myWidth, &myHeight, &ChannelCount, 0);
+	i32 channelCount;
+	u8* rawPixelData = stbi_load(aPath.string().c_str(), &myWidth, &myHeight, &channelCount, 0);
 
 	glGenTextures(1, &myTextureHandle);
 	glBindTexture(GL_TEXTURE_2D, myTextureHandle);
@@ -14,16 +14,13 @@ Texture::Texture(const std::filesystem::path& aPath)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
-	const float BorderColor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
-	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, BorderColor);
-
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, myWidth, myHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, RawPixelData);
-	glGenerateMipmap(GL_TEXTURE_2D);
+	const GLenum format = channelCount == 3 ? GL_RGB : GL_RGBA;
 
-	stbi_image_free(RawPixelData);
+	glTexImage2D(GL_TEXTURE_2D, 0, format, myWidth, myHeight, 0, format, GL_UNSIGNED_BYTE, rawPixelData);
+	glGenerateMipmap(GL_TEXTURE_2D);
 }
 
 Texture::~Texture()

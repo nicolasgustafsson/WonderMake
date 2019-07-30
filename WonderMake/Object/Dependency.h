@@ -65,7 +65,7 @@ public:
 	inline void Destroy(Object& aObject, BaseFunctionality& aFunctionality);
 
 	template<typename TDependency>
-	__forceinline TDependency& Get() const;
+	constexpr __forceinline TDependency& Get() const;
 
 private:
 	std::tuple<Dependency<TDependencies>...> myDependencies;
@@ -85,7 +85,7 @@ void Dependencies<TDependencies...>::Destroy(Object& aObject, BaseFunctionality&
 
 template<typename ... TDependencies>
 template<typename TDependency>
-TDependency& Dependencies<TDependencies...>::Get() const
+constexpr TDependency& Dependencies<TDependencies...>::Get() const
 {
 	return *std::get<Dependency<TDependency>>(myDependencies);
 }

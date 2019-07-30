@@ -26,7 +26,7 @@ public:
 	using Super = Functionality<TSelfType, TDependencies...>;
 
 	template<typename TDependency>
-	__forceinline TDependency& Get() const
+	constexpr __forceinline TDependency& Get() const
 	{
 		static_assert((std::is_same_v<TDependency, TDependencies> || ...), "Functionality::Get: type is not a dependency listed in your functionality declaration!");
 

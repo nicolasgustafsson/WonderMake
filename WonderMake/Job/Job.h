@@ -23,7 +23,10 @@ public:
 	using Callback = std::function<void(const EResult)>;
 
 	Job() noexcept = default;
+	Job(const Job&) noexcept = default;
 	inline virtual ~Job() noexcept;
+
+	Job& operator =(const Job&) noexcept = default;
 
 	inline void Cancel() noexcept;
 

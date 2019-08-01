@@ -131,7 +131,7 @@ SVector3<TYPE> operator *(SVector3<TYPE> aLeft, const SMatrix33<TYPE> & aRight)
 template<typename TYPE>
 SVector2<TYPE> operator *(SVector2<TYPE> aLeft, const SMatrix33<TYPE> & aRight)
 {
-	return (aLeft.Promote() * aRight).Demote();
+	return (aLeft.Promote(1) * aRight).Demote();
 }
 
 template<typename TYPE>

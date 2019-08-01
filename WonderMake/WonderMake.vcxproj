@@ -197,6 +197,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera\Camera.cpp" />
+    <ClCompile Include="Collision\ColliderDebug.cpp" />
+    <ClCompile Include="Collision\CollisionFunctionality.cpp" />
+    <ClCompile Include="Collision\CollisionSystem.cpp" />
     <ClCompile Include="Debugging\DebugLineDrawer.cpp" />
     <ClCompile Include="Debugging\DebugLineRenderObject.cpp" />
     <ClCompile Include="Functionalities\TransformFunctionality.cpp" />
@@ -247,6 +250,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera\Camera.h" />
+    <ClInclude Include="Collision\ColliderDebug.h" />
+    <ClInclude Include="Collision\CollisionComponent.h" />
+    <ClInclude Include="Collision\CollisionFunctionality.h" />
+    <ClInclude Include="Collision\Colliders.h" />
+    <ClInclude Include="Collision\CollisionSystem.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Debugging\DebugLineDrawer.h" />
     <ClInclude Include="Debugging\DebugLineRenderObject.h" />

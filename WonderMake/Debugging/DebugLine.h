@@ -7,7 +7,7 @@ public:
 	SColor Color;
 	SVector2f Start;
 	SVector2f End;
-	f32 Duration;
+	f32 Duration = 0.f;
 };
 
 struct SDebugLineMessage

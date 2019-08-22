@@ -13,6 +13,7 @@ public:
 	void Tick();
 	void SetTexture(const std::filesystem::path& aTexturePath);
 	void SetScale(const SVector2f aScale);
+	void SetRotation(const f32 aRotation);
 	void Hide();
 	void Show();
 

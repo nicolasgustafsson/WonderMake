@@ -26,7 +26,6 @@ Index of this file:
 */
 
 #pragma once
-
 // Configuration file (edit imconfig.h or define IMGUI_USER_CONFIG to your own filename)
 #ifdef IMGUI_USER_CONFIG
 #include IMGUI_USER_CONFIG

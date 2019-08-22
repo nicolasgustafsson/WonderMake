@@ -9,7 +9,8 @@ MeleeWeaponFunctionality::MeleeWeaponFunctionality(Object& aObject)
 
 void MeleeWeaponFunctionality::Swing()
 {
-
+	myRotation -= 1.f;
+	Get<SpriteRenderingFunctionality>().SetRotation(myRotation * 0.1f);
 }
 
 void MeleeWeaponFunctionality::SetWeapon(MeleeWeapon&& aWeapon)

@@ -17,6 +17,7 @@ void MeleeWeaponUserFunctionality::Tick()
 
 void MeleeWeaponUserFunctionality::SwingWeapon()
 {
+	Get<SMeleeWeaponUserComponent>().myWeapon->Swing();
 }
 
 void MeleeWeaponUserFunctionality::SetWeapon(MeleeWeapon&& aWeapon)

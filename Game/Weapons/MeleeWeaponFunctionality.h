@@ -20,5 +20,6 @@ public:
 	void SetWeapon(MeleeWeapon&& aWeapon);
 	void SetParent(STransformComponent* aParentTransform);
 	void Tick();
+	f32 myRotation = 0;
 };
 

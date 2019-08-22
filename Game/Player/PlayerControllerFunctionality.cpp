@@ -21,6 +21,8 @@ void PlayerControllerFunctionality::Tick() noexcept
 		movementInput += {0.f, 1.f};
 	if (myInputSystem->IsKeyDown(EKeyboardKey::D) || myInputSystem->IsKeyDown(EKeyboardKey::Right))
 		movementInput += {1.f, 0.f};
+	if (myInputSystem->IsMouseButtonDown(EMouseButton::Left))
+		Get<MeleeWeaponUserFunctionality>().SwingWeapon();
 
 	Get<MovementInputFunctionality>().SetMovementInput(movementInput);
 }

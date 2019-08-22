@@ -37,7 +37,9 @@ protected:
 private:
 	virtual bool ShouldApplyGrammars(const TGeneratedType& aObject, const TGenerationParameters& aGenerationParameters) const = 0;
 	virtual void ImplementGrammars() = 0;
-	
+
+	virtual void PreProcess(TGeneratedType& aObject) {};
+
 	std::vector<TBaseGrammarType> myGrammars;
 
 	virtual void Debug() override;
@@ -74,6 +76,8 @@ TGeneratedType Generator<TGeneratedType, TGenerationParameters>::Generate(TGener
 	TGeneratedType generatedObject = TGeneratedType();
 
 	ImplementGrammars();
+
+	PreProcess(generatedObject);
 
 	if (myGrammars.size() == 0)
 		return generatedObject;

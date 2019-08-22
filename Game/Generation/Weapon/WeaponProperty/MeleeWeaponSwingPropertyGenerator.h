@@ -11,6 +11,8 @@ class MeleeWeaponSwingPropertyGenerator
 public:
 
 private:
+	virtual void PreProcess(WeaponSwingProperty& aProperty);
+
 	virtual bool ShouldApplyGrammars(const WeaponSwingProperty& aObject, const SMeleeWeaponSwingPropertyGenerationParameters& aGenerationParameters) const override;
 
 	virtual void ImplementGrammars() override;

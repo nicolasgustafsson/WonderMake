@@ -17,6 +17,18 @@ void TransformFunctionality::SetPosition(const SVector2f aPosition)
 	Get<STransformComponent>().Position = aPosition;
 }
 
+void TransformFunctionality::FacePosition(const SVector2f aPosition)
+{
+
+}
+
+void TransformFunctionality::SetRotation(const f32 aRotation)
+{
+	STransformComponent& transform = Get<STransformComponent>();
+
+	transform.Rotation = aRotation;
+}
+
 void TransformFunctionality::Inspect()
 {
 	STransformComponent& transform = Get<STransformComponent>(); 

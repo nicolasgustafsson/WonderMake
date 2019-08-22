@@ -11,6 +11,8 @@ public:
 	[[nodiscard]] SVector2f GetPosition() const;
 
 	void SetPosition(const SVector2f aPosition);
+	void FacePosition(const SVector2f aPosition);
+	void SetRotation(const f32 aRotation);
 
 	void Inspect();
 

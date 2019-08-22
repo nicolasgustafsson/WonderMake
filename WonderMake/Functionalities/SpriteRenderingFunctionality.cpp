@@ -13,8 +13,8 @@ void SpriteRenderingFunctionality::Tick()
 	if (!spriteComponent.RenderObject || spriteComponent.bIsHidden)
 		return;
 
-	const SVector2f position = Get<STransformComponent>().Position;
-	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Position>(0, position);
+	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Position>(0, Get<STransformComponent>().Position);
+	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Rotation>(0, Get<STransformComponent>().Rotation);
 	spriteComponent.RenderObject->Render();
 }
 

@@ -64,9 +64,9 @@ bool InputSystem::IsKeyDown(const EKeyboardKey aKey) const noexcept
 	return myKeyboardKeyStates[static_cast<u32>(aKey)] == EInputItemState::Down;
 }
 
-bool InputSystem::IsMouseButtonDown(const EMouseButton aMouseButton) const noexcept
+bool InputSystem::IsMouseButtonPressed(const EMouseButton aMouseButton) const noexcept
 {
-	return myMouseButtonStates[static_cast<u32>(aMouseButton)] == EInputItemState::Down;
+	return myMouseButtonStates[static_cast<u32>(aMouseButton)] == EInputItemState::Pressed;
 }
 
 constexpr EInputItemState InputSystem::GetNewInputState(const EInputItemState aOldState, const bool aIsPressed) const noexcept

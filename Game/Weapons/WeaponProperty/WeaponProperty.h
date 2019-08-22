@@ -1,4 +1,5 @@
 #pragma once
+#include "BezierCurve.h"
 class WeaponProperty
 {
 public:
@@ -11,8 +12,12 @@ public:
 
 struct SSwing
 {
+	SSwing();
+
 	f32 mySwingDamage = 10.f;
 	f32 mySwingTime = 1.0f;
+
+	BezierCurve mySwingPath;
 };
 
 class WeaponSwingProperty
@@ -21,5 +26,6 @@ class WeaponSwingProperty
 public:
 	virtual void Inspect() override;
 
+	void DrawSwing(const SVector2f aOffset);
 	SSwing mySwing;
 };

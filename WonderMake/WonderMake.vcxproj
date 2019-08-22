@@ -196,6 +196,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BezierCurve.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Debugging\DebugLineDrawer.cpp" />
     <ClCompile Include="Debugging\DebugLineRenderObject.cpp" />
@@ -247,6 +248,7 @@
     <ClCompile Include="Utilities\OS.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BezierCurve.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Debugging\DebugLineDrawer.h" />

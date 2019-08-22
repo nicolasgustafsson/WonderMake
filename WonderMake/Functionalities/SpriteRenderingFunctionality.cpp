@@ -33,6 +33,11 @@ void SpriteRenderingFunctionality::SetRotation(const f32 aRotation)
 	Get<SSpriteComponent>().RenderObject->SetAttribute<EVertexAttribute::Rotation>(0, aRotation);
 }
 
+void SpriteRenderingFunctionality::SetOrigin(const SVector2f aOrigin)
+{
+	Get<SSpriteComponent>().RenderObject->SetAttribute<EVertexAttribute::Origin>(0, aOrigin);
+}
+
 void SpriteRenderingFunctionality::Hide()
 {
 	Get<SSpriteComponent>().bIsHidden == true;

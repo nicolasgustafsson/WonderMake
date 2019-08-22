@@ -14,6 +14,7 @@ public:
 	void SetTexture(const std::filesystem::path& aTexturePath);
 	void SetScale(const SVector2f aScale);
 	void SetRotation(const f32 aRotation);
+	void SetOrigin(const SVector2f aOrigin);
 	void Hide();
 	void Show();
 

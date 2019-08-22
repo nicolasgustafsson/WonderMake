@@ -5,6 +5,7 @@ MeleeWeaponFunctionality::MeleeWeaponFunctionality(Object& aObject)
 	: Super(aObject)
 {
 	Get<SpriteRenderingFunctionality>().SetTexture(std::filesystem::current_path() / "Textures/sword.png");
+	Get<SpriteRenderingFunctionality>().SetOrigin({ 0.f, 1.0f });
 }
 
 void MeleeWeaponFunctionality::Swing()

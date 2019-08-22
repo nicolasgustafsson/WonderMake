@@ -13,6 +13,8 @@ public:
 	void Tick();
 	void SetTexture(const std::filesystem::path& aTexturePath);
 	void SetScale(const SVector2f aScale);
+	void Hide();
+	void Show();
 
 private:
 	SystemPtr<TimeKeeper> myTimeKeeperPtr;

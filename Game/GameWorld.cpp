@@ -24,7 +24,6 @@ GameWorld::GameWorld()
 	myEnemy.AddFunctionality<DefaultMovementFunctionality>();
 	auto& enemySprite = myEnemy.AddFunctionality<SpriteRenderingFunctionality>();
 	enemySprite.SetTexture(std::filesystem::current_path() / "Textures/enemy.png");
-	
 }
 
 GameWorld::~GameWorld()

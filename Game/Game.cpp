@@ -20,3 +20,6 @@ int main()
 		WmLog("Game successfully setup!");
 	});
 }
+
+
+	

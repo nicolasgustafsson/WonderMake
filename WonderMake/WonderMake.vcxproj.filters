@@ -43,6 +43,7 @@
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Functionalities\ImpulseFunctionality.cpp" />
     <ClCompile Include="Object\ObjectImpulseRouter.cpp" />
+    <ClCompile Include="Randomizer.cpp" />
     <ClCompile Include="Functionalities\OwnerFunctionality.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -129,6 +130,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Functionalities\ImpulseFunctionality.h" />
     <ClInclude Include="Object\ObjectImpulseRouter.h" />
+    <ClInclude Include="Randomizer.h" />
     <ClInclude Include="Functionalities\OwnerFunctionality.h" />
   </ItemGroup>
   <ItemGroup>

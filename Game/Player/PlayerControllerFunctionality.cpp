@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "PlayerControllerFunctionality.h"
+#include "Generation/Weapon/MeleeWeaponGenerator.h"
 
 
 PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
@@ -35,6 +36,11 @@ void PlayerControllerFunctionality::Debug()
 	if (ImGui::Button("Send cool impulse"))
 	{
 		WmSendObjectImpulse(Get<OwnerFunctionality>().GetOwner(), SCoolImpulse());
+	}
+
+	if (ImGui::Button("Generate held weapon"))
+	{
+		//Get<MeleeWeaponUserFunctionality>().SetWeapon(SystemPtr<WeaponGenerator>()->Generate(SWeaponGenerationParameters{ 100.f}));
 	}
 	 
 	ImGui::End();

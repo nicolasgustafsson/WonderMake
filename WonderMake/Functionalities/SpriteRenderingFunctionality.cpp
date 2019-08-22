@@ -10,7 +10,7 @@ SpriteRenderingFunctionality::SpriteRenderingFunctionality(Object& aOwner)
 void SpriteRenderingFunctionality::Tick()
 {
 	auto& spriteComponent = Get<SSpriteComponent>();
-	if (!spriteComponent.RenderObject)
+	if (!spriteComponent.RenderObject || spriteComponent.bIsHidden)
 		return;
 
 	const SVector2f position = Get<STransformComponent>().Position;
@@ -26,4 +26,14 @@ void SpriteRenderingFunctionality::SetTexture(const std::filesystem::path& aText
 void SpriteRenderingFunctionality::SetScale(const SVector2f aScale)
 {
 	Get<SSpriteComponent>().RenderObject->SetAttribute<EVertexAttribute::Scale>(0, aScale);
+}
+
+void SpriteRenderingFunctionality::Hide()
+{
+	Get<SSpriteComponent>().bIsHidden == true;
+}
+
+void SpriteRenderingFunctionality::Show()
+{
+	Get<SSpriteComponent>().bIsHidden == true;
 }

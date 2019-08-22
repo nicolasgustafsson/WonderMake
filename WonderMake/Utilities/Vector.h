@@ -56,7 +56,7 @@ public:
 };
 #pragma warning(pop)
 
-template <typename T, u32 Size>
+template <typename T, u32 Size> 
 struct SVectorBase<T, Size, std::enable_if_t<(Size > 4)>>
 {
 public:

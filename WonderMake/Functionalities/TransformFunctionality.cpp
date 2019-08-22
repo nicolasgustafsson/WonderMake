@@ -12,6 +12,11 @@ TransformFunctionality::TransformFunctionality(Object& aOwner)
 	return Get<STransformComponent>().Position;
 }
 
+void TransformFunctionality::SetPosition(const SVector2f aPosition)
+{
+	Get<STransformComponent>().Position = aPosition;
+}
+
 void TransformFunctionality::Inspect()
 {
 	STransformComponent& transform = Get<STransformComponent>(); 

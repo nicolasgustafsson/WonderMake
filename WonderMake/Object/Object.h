@@ -1,36 +1,16 @@
 #pragma once
 #include "Typedefs.h"
-#include "Functionalities/FunctionalitySystem.h"
-#include "System/SystemPtr.h"
+
 #include "Components/ComponentSystem.h"
+
+#include "Functionalities/FunctionalitySystem.h"
+
+#include "System/SystemPtr.h"
+
+#include <typeindex>
 
 struct SComponent;
 class BaseFunctionality;
-
-struct SFunctionalityCounter
-{
-	SFunctionalityCounter(BaseFunctionality* aFunctionality) noexcept
-		: Functionality(aFunctionality)
-		, RefCount(1)
-	{
-
-	}
-
-	BaseFunctionality* Functionality;
-	i32 RefCount = 0;
-};
-
-struct SComponentCounter
-{
-	SComponentCounter(SComponent* aComponent) noexcept
-		: Component(aComponent)
-		, RefCount(1)
-	{
-
-	}
-	SComponent* Component;
-	i32 RefCount = 0;
-};
 
 class Object
 {
@@ -38,111 +18,141 @@ public:
 	Object() = default;
 	virtual ~Object();
 
-	//[Nicos]: Will not add functionality if it already exists.
-	template<typename TFunctionality>
-	inline TFunctionality& AddFunctionality();
+	// Will not add the type if it already exists.
+	template<typename TType>
+	inline TType& Add();
 
-	//[Nicos]: Will not remove functionality if other functionalities depend on it.
-	template<typename TFunctionality>
-	inline void RemoveFunctionality();
+	// Will not remove the type if existing functionalities depend on it.
+	template<typename TType>
+	inline void Remove();
 
-	//[Nicos]: Will not add component if it already exists.
-	template<typename TComponent>
-	inline TComponent& _AddComponent();
-
-	//[Nicos]: Will not remove component if existing functionalities depend on it.
-	template<typename TComponent>
-	inline void _RemoveComponent();
+	template<typename TType, typename TVisitFunc>
+	inline void Visit(TVisitFunc aVisitFunc);
 
 private:
-	std::vector<SFunctionalityCounter> myFunctionalities;
-	std::vector<SComponentCounter> myComponents;
+	template<typename TType>
+	struct SRefCounter
+	{
+		constexpr SRefCounter(TType* aReference) noexcept
+			: Reference(aReference)
+			, RefCount(1)
+		{}
+
+		TType* Reference = nullptr;
+		i32 RefCount = 0;
+	};
+
+	template<typename TType>
+	using Pair = std::pair<std::type_index, SRefCounter<TType>>;
+	template<typename TType>
+	using PairList = std::vector<Pair<TType>>;
+
+	using FunctionalityList = PairList<BaseFunctionality>;
+	using ComponentList = PairList<SComponent>;
+
+	template<typename TType, typename TBaseType, typename TCreateFunc>
+	inline TType& Add(PairList<TBaseType>& aList, TCreateFunc aCreateFunc);
+
+	template<typename TType, typename TBaseType>
+	inline TType* Remove(PairList<TBaseType>& aList);
+
+	FunctionalityList myFunctionalities;
+	ComponentList myComponents;
 };
 
-template<typename TFunctionality>
-TFunctionality& Object::AddFunctionality()
+template<typename TType>
+inline TType& Object::Add()
 {
-	static_assert(std::is_base_of<BaseFunctionality, TFunctionality>::value, "Functionality must inherit from BaseFunctionality!");
-
-	for (SFunctionalityCounter& counter : myFunctionalities)
-	{
-		TFunctionality* functionality = dynamic_cast<TFunctionality*>(counter.Functionality);
-		if (functionality)
-		{
-			counter.RefCount++;
-			return *functionality;
-		}
-	}
-	auto& addedFunctionality = SystemPtr<FunctionalitySystem<TFunctionality>>()->AddFunctionality(*this);
-	myFunctionalities.emplace_back(&addedFunctionality);
-	return addedFunctionality;
-}
-
-template<typename TFunctionality>
-void Object::RemoveFunctionality()
-{
-	static_assert(std::is_base_of<BaseFunctionality, TFunctionality>::value, "Functionality must inherit from BaseFunctionality!");
-
-	for (auto[i, counter] : Utility::Enumerate(myFunctionalities))
-	{
-		bool correctFunctionality = dynamic_cast<TFunctionality*>(counter.Functionality) != nullptr;
-		if (correctFunctionality)
-		{
-			assert(counter.RefCount != 0);
-			counter.RefCount--;
-
-			if (counter.RefCount <= 0)
+	if constexpr (std::is_base_of<SComponent, TType>::value)
+		return Add<TType>(myComponents, []() -> TType&
 			{
-				BaseFunctionality* functionality = counter.Functionality;
-				myFunctionalities.erase(myFunctionalities.begin() + i);
-				functionality->Destroy(*this);
-			}
-
-			return;
-		}
-	}
-}
-
-template<typename TComponent>
-TComponent& Object::_AddComponent()
-{
-	static_assert(std::is_base_of<SComponent, TComponent>::value, "Component must inherit from SComponent!");
-
-	for (SComponentCounter& counter : myComponents)
-	{
-		TComponent* component = dynamic_cast<TComponent*>(counter.Component);
-		if (component)
-		{
-			counter.RefCount++;
-			return *component;
-		}
-	}
-	auto& addedComponent = SystemPtr<ComponentSystem<TComponent>>()->AddComponent();
-	myComponents.emplace_back(&addedComponent);
-	return addedComponent;
-}
-
-template<typename TComponent>
-void Object::_RemoveComponent()
-{
-	static_assert(std::is_base_of<SComponent, TComponent>::value, "Component must inherit from SComponent!");
-
-	for (auto[i, counter] : Utility::Enumerate(myComponents))
-	{
-		bool correctComponent = dynamic_cast<TComponent*>(counter.Component) != nullptr;
-		if (correctComponent)
-		{
-			assert(counter.RefCount != 0);
-			counter.RefCount--;
-
-			if (counter.RefCount <= 0)
+				return SystemPtr<ComponentSystem<TType>>()->AddComponent();
+			});
+	else if constexpr (std::is_base_of<BaseFunctionality, TType>::value)
+		return Add<TType>(myFunctionalities, [&]() -> TType&
 			{
-				SystemPtr<ComponentSystem<TComponent>>()->RemoveComponent(static_cast<TComponent&>(*counter.Component));
-				myComponents.erase(myComponents.begin() + i);
-			}
+				return SystemPtr<FunctionalitySystem<TType>>()->AddFunctionality(*this);
+			});
+	else
+		static_assert("Type must inherit from SComponent or BaseFunctionality!");
+}
 
-			return;
-		}
+template<typename TType>
+inline void Object::Remove()
+{
+	if constexpr (std::is_base_of<SComponent, TType>::value)
+		Remove<TType>(myComponents);
+	else if constexpr (std::is_base_of<BaseFunctionality, TType>::value)
+	{
+		auto functionality = Remove<TType>(myFunctionalities);
+
+		functionality->Destroy(*this);
+	}
+	else
+		static_assert("Type must inherit from SComponent or BaseFunctionality!");
+}
+
+template<typename TType, typename TVisitFunc>
+inline void Object::Visit(TVisitFunc aVisitFunc)
+{
+	for (auto& functionality : myFunctionalities)
+	{
+		aVisitFunc(functionality.first, functionality.second);
+	}
+	for (auto& component : myComponents)
+	{
+		aVisitFunc(component.first, component.second);
 	}
 }
 
+template<typename TType, typename TBaseType, typename TCreateFunc>
+inline TType& Object::Add(PairList<TBaseType>& aList, TCreateFunc aCreateFunc)
+{
+	const auto it = std::find_if(aList.begin(), aList.end(), [](const auto& aPair)
+		{
+			return aPair.first == typeid(TType);
+		});
+
+	if (it != aList.cend())
+	{
+		auto& counter = it->second;
+
+		counter.RefCount++;
+
+		return static_cast<TType&>(*counter.Reference);
+	}
+
+	auto& added = aCreateFunc();
+
+	aList.emplace_back(Pair<TBaseType>(typeid(TType), &added));
+
+	return added;
+}
+
+template<typename TType, typename TBaseType>
+inline TType* Object::Remove(PairList<TBaseType>& aList)
+{
+	const auto it = std::find_if(aList.begin(), aList.end(), [](const auto& aPair)
+		{
+			return aPair.first == typeid(TType);
+		});
+
+	if (it == aList.cend())
+	{
+		return nullptr;
+	}
+
+	auto& counter = it->second;
+	auto reference = static_cast<TType*>(counter.Reference);
+
+	assert(counter.RefCount != 0);
+
+	counter.RefCount--;
+
+	if (counter.RefCount == 0)
+	{
+		aList.erase(it);
+	}
+
+	return reference;
+}

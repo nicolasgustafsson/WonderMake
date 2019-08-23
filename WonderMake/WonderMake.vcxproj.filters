@@ -138,6 +138,7 @@
     <ClInclude Include="Functionalities\ImpulseFunctionality.h" />
     <ClInclude Include="Object\ObjectImpulseRouter.h" />
     <ClInclude Include="Functionalities\OwnerFunctionality.h" />
+    <ClInclude Include="Serialization\SerializationSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

@@ -26,7 +26,7 @@ public:
 	template<typename TType>
 	inline void Remove();
 
-	template<typename TType, typename TVisitFunc>
+	template<typename TVisitFunc>
 	inline void Visit(TVisitFunc aVisitFunc);
 
 private:
@@ -64,24 +64,32 @@ template<typename TType>
 inline TType& Object::Add()
 {
 	if constexpr (std::is_base_of<SComponent, TType>::value)
-		return Add<TType>(myComponents, []() -> TType&
+	{
+		return Add<TType>(myComponents, []() -> TType &
 			{
 				return SystemPtr<ComponentSystem<TType>>()->AddComponent();
 			});
+	}
 	else if constexpr (std::is_base_of<BaseFunctionality, TType>::value)
-		return Add<TType>(myFunctionalities, [&]() -> TType&
+	{
+		return Add<TType>(myFunctionalities, [&]() -> TType &
 			{
 				return SystemPtr<FunctionalitySystem<TType>>()->AddFunctionality(*this);
 			});
+	}
 	else
+	{
 		static_assert("Type must inherit from SComponent or BaseFunctionality!");
+	}
 }
 
 template<typename TType>
 inline void Object::Remove()
 {
 	if constexpr (std::is_base_of<SComponent, TType>::value)
+	{
 		Remove<TType>(myComponents);
+	}
 	else if constexpr (std::is_base_of<BaseFunctionality, TType>::value)
 	{
 		auto functionality = Remove<TType>(myFunctionalities);
@@ -89,19 +97,21 @@ inline void Object::Remove()
 		functionality->Destroy(*this);
 	}
 	else
+	{
 		static_assert("Type must inherit from SComponent or BaseFunctionality!");
+	}
 }
 
-template<typename TType, typename TVisitFunc>
+template<typename TVisitFunc>
 inline void Object::Visit(TVisitFunc aVisitFunc)
 {
 	for (auto& functionality : myFunctionalities)
 	{
-		aVisitFunc(functionality.first, functionality.second);
+		aVisitFunc(functionality.first, functionality.second.Reference);
 	}
 	for (auto& component : myComponents)
 	{
-		aVisitFunc(component.first, component.second);
+		aVisitFunc(component.first, component.second.Reference);
 	}
 }
 

@@ -211,6 +211,7 @@
     <ClCompile Include="Functionalities\ImpulseFunctionality.cpp" />
     <ClCompile Include="Object\ObjectImpulseRouter.cpp" />
     <ClCompile Include="Functionalities\OwnerFunctionality.cpp" />
+    <ClCompile Include="Serialization\SerializationSystem.cpp" />
     <ClCompile Include="TimeKeeper.cpp" />
     <ClCompile Include="Utilities\Debugging\Debugged.cpp" />
     <ClCompile Include="Threads\RoutineDebug.cpp" />

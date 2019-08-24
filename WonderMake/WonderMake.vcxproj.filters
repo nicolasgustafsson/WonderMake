@@ -47,6 +47,7 @@
     <ClCompile Include="Functionalities\ImpulseFunctionality.cpp" />
     <ClCompile Include="Object\ObjectImpulseRouter.cpp" />
     <ClCompile Include="Functionalities\OwnerFunctionality.cpp" />
+    <ClCompile Include="Serialization\SerializationSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logging\ImGuiLogger.h" />

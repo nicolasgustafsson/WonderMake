@@ -19,5 +19,6 @@
     <ClInclude Include="Enemy\EnemyControllerFunctionality.h" />
     <ClInclude Include="Enemy\TargetFunctionality.h" />
     <ClInclude Include="Enemy\EnemyControllerComponent.h" />
+    <ClInclude Include="Game.h" />
   </ItemGroup>
 </Project>

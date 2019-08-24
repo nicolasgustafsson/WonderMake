@@ -1,6 +1,9 @@
 #pragma once
 #include "Message/MessageTypes.h"
 
+#include "Utilities/Color.h"
+#include "Utilities/Vector.h"
+
 struct SDebugLine
 {
 public:

@@ -3,11 +3,18 @@
 #include "Functionalities/TransformFunctionality.h"
 #include "Weapons/MeleeWeapon.h"
 
+struct SActiveSwing
+{
+	bool IsActive = false;
+	f32 Progress = 0.f;
+};
+
 struct SMeleeWeaponComponent
 	: public SComponent
 {
 	STransformComponent* ParentTransform;
-	std::optional<MeleeWeapon> myWeapon;
+	std::optional<MeleeWeapon> Weapon;
+	SActiveSwing CurrentSwing;
 };
 
 class MeleeWeaponFunctionality
@@ -21,5 +28,7 @@ public:
 	void SetParent(STransformComponent* aParentTransform);
 	void Tick();
 	f32 myRotation = 0;
+private:
+	void StopSwing();
 };
 

@@ -40,10 +40,10 @@ void SpriteRenderingFunctionality::SetOrigin(const SVector2f aOrigin)
 
 void SpriteRenderingFunctionality::Hide()
 {
-	Get<SSpriteComponent>().bIsHidden == true;
+	Get<SSpriteComponent>().bIsHidden = true;
 }
 
 void SpriteRenderingFunctionality::Show()
 {
-	Get<SSpriteComponent>().bIsHidden == true;
+	Get<SSpriteComponent>().bIsHidden = false;
 }

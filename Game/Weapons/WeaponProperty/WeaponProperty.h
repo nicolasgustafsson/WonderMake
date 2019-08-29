@@ -15,7 +15,7 @@ struct SSwing
 	SSwing();
 
 	f32 mySwingDamage = 10.f;
-	f32 mySwingTime = 1.0f;
+	f32 mySwingTime =  0.5f;
 
 	BezierCurve mySwingPath;
 };

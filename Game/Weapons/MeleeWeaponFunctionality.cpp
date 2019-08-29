@@ -8,21 +8,25 @@ MeleeWeaponFunctionality::MeleeWeaponFunctionality(Object& aObject)
 {
 	Get<SpriteRenderingFunctionality>().SetTexture(std::filesystem::current_path() / "Textures/sword.png");
 	Get<SpriteRenderingFunctionality>().SetOrigin({ 0.f, 1.0f });
+	Get<SpriteRenderingFunctionality>().Hide();
 	SWeaponGenerationParameters argh;
 	SetWeapon(SystemPtr<MeleeWeaponGenerator>()->Generate(argh));
 }
 
 void MeleeWeaponFunctionality::Swing()
 {
-	myRotation -= 1.f;
-	Get<TransformFunctionality>().SetRotation(myRotation * 0.1f);
 
-	Get<SMeleeWeaponComponent>().myWeapon->mySwingProperty.DrawSwing(Get<TransformFunctionality>().GetPosition());
+	auto& WeaponComp = Get<SMeleeWeaponComponent>();
+	
+	Get<SpriteRenderingFunctionality>().Show();
+
+	WeaponComp.CurrentSwing.IsActive = true;
+	WeaponComp.CurrentSwing.Progress = 0.f;
 }
 
 void MeleeWeaponFunctionality::SetWeapon(MeleeWeapon&& aWeapon)
 {
-	Get<SMeleeWeaponComponent>().myWeapon.emplace(std::move(aWeapon));
+	Get<SMeleeWeaponComponent>().Weapon.emplace(std::move(aWeapon));
 }
 
 void MeleeWeaponFunctionality::SetParent(STransformComponent* aParentTransform)
@@ -32,9 +36,35 @@ void MeleeWeaponFunctionality::SetParent(STransformComponent* aParentTransform)
 
 void MeleeWeaponFunctionality::Tick()
 {
-	STransformComponent* parent = Get<SMeleeWeaponComponent>().ParentTransform;
+	const f32 deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
 
-	if (parent)
-		Get<TransformFunctionality>().SetPosition(parent->Position);
+	auto& WeaponComp = Get<SMeleeWeaponComponent>();
+
+	if (WeaponComp.CurrentSwing.IsActive)
+	{
+		WeaponComp.CurrentSwing.Progress += deltaTime / WeaponComp.Weapon->mySwingProperty.mySwing.mySwingTime;
+
+		STransformComponent* parent = Get<SMeleeWeaponComponent>().ParentTransform;
+
+		if (parent)
+		{
+			const SVector2f SwingLocation = WeaponComp.Weapon->mySwingProperty.mySwing.mySwingPath.GetLocationAt(WeaponComp.CurrentSwing.Progress);
+			Get<TransformFunctionality>().SetPosition(parent->Position + SwingLocation);
+
+			Get<TransformFunctionality>().SetRotation(SwingLocation.GetRotation() + (3.141592f / 2.f) * (1.f - WeaponComp.CurrentSwing.Progress));
+		}
+
+		if (WeaponComp.CurrentSwing.Progress > 1.0f)
+		{
+			StopSwing();
+		}
+	}
+}
+
+void MeleeWeaponFunctionality::StopSwing()
+{
+	auto& WeaponComp = Get<SMeleeWeaponComponent>();
+	WeaponComp.CurrentSwing.IsActive = false;
+	Get<SpriteRenderingFunctionality>().Hide();
 }
 

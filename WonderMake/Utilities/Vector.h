@@ -20,6 +20,10 @@ public:
 		std::array<T, 2> MemberArray = {};
 	};
 
+	[[nodiscard]] constexpr f32 GetRotation() const noexcept
+	{
+		return std::atan2f(-X, -Y);
+	}
 };
 
 template <typename T>

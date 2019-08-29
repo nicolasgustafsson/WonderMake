@@ -14,19 +14,19 @@
 GameWorld::GameWorld()
 {
 	EnableTick();
-	auto& playerTransform = myPlayer.AddFunctionality<TransformFunctionality>();
-	myPlayer.AddFunctionality<PlayerControllerFunctionality>();
-	myPlayer.AddFunctionality<DefaultMovementFunctionality>();
-	auto& playerSprite = myPlayer.AddFunctionality<SpriteRenderingFunctionality>();
+	auto& playerTransform = myPlayer.Add<TransformFunctionality>();
+	myPlayer.Add<PlayerControllerFunctionality>();
+	myPlayer.Add<DefaultMovementFunctionality>();
+	auto& playerSprite = myPlayer.Add<SpriteRenderingFunctionality>();
 	playerSprite.SetTexture(std::filesystem::current_path() / "Textures/player.png");
 
-	auto& enemyTarget = myEnemy.AddFunctionality<TargetFunctionality>();
+	auto& enemyTarget = myEnemy.Add<TargetFunctionality>();
 	enemyTarget.Temp = &playerTransform;
-	myEnemy.AddFunctionality<EnemyControllerFunctionality>();
-	myEnemy.AddFunctionality<DefaultMovementFunctionality>();
-	auto& enemyCollision = myEnemy.AddFunctionality<CollisionFunctionality>();
+	myEnemy.Add<EnemyControllerFunctionality>();
+	myEnemy.Add<DefaultMovementFunctionality>();
+	auto& enemyCollision = myEnemy.Add<CollisionFunctionality>();
 	enemyCollision.AddSphereCollider(SVector2f::Zero(), 75.f);
-	auto& enemySprite = myEnemy.AddFunctionality<SpriteRenderingFunctionality>();
+	auto& enemySprite = myEnemy.Add<SpriteRenderingFunctionality>();
 	enemySprite.SetTexture(std::filesystem::current_path() / "Textures/enemy.png");
 	
 }

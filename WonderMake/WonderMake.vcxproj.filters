@@ -45,7 +45,7 @@
     <ClCompile Include="Object\ObjectImpulseRouter.cpp" />
     <ClCompile Include="Randomizer.cpp" />
     <ClCompile Include="Functionalities\OwnerFunctionality.cpp" />
-    <ClCompile Include="BezierCurve.cpp" />
+    <ClCompile Include="Utilities\BezierCurve.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logging\ImGuiLogger.h" />
@@ -133,7 +133,7 @@
     <ClInclude Include="Object\ObjectImpulseRouter.h" />
     <ClInclude Include="Randomizer.h" />
     <ClInclude Include="Functionalities\OwnerFunctionality.h" />
-    <ClInclude Include="BezierCurve.h" />
+    <ClInclude Include="Utilities\BezierCurve.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

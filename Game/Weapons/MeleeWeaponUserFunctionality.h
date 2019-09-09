@@ -22,6 +22,8 @@ public:
 	MeleeWeaponUserFunctionality(Object& aOwner);
 	void Tick();
 
+	void Inspect();
+
 	void SwingWeapon();
 	void SetWeapon(MeleeWeapon&& aWeapon);
 

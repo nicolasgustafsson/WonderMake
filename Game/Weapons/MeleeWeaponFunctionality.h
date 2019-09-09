@@ -28,7 +28,11 @@ public:
 	void SetParent(STransformComponent* aParentTransform);
 	void Tick();
 	f32 myRotation = 0;
+
+	void Inspect();
 private:
+
+	MeleeWeapon& GetWeapon();
 	void StopSwing();
 };
 

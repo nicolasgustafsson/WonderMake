@@ -15,6 +15,11 @@ void MeleeWeaponUserFunctionality::Tick()
 {
 }
 
+void MeleeWeaponUserFunctionality::Inspect()
+{
+	Get<SMeleeWeaponUserComponent>().myWeapon->Inspect();
+}
+
 void MeleeWeaponUserFunctionality::SwingWeapon()
 {
 	Get<SMeleeWeaponUserComponent>().myWeapon->Swing();

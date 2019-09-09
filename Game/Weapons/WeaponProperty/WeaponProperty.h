@@ -1,23 +1,11 @@
 #pragma once
-#include "BezierCurve.h"
+#include "../WeaponSwing.h"
 class WeaponProperty
 {
 public:
 	virtual ~WeaponProperty() = default;
 
 	virtual void Inspect();
-
-	f32 myPotential = 0.f;
-};
-
-struct SSwing
-{
-	SSwing();
-
-	f32 mySwingDamage = 10.f;
-	f32 mySwingTime =  3.f;
-
-	BezierCurve mySwingPath;
 };
 
 class WeaponSwingProperty

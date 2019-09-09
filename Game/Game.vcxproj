@@ -222,10 +222,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Generation\GeneratedObject.h" />
-    <ClInclude Include="Generation\GenerationParameters\Strength.h" />
+    <ClInclude Include="Generation\GenerationParameters\Power.h" />
     <ClInclude Include="Enemy\EnemyControllerFunctionality.h" />
     <ClInclude Include="Enemy\TargetFunctionality.h" />
     <ClInclude Include="Enemy\EnemyControllerComponent.h" />
+    <ClInclude Include="Weapons\WeaponSwing.h" />
     <ClInclude Include="Weapons\MeleeWeaponFunctionality.h" />
     <ClInclude Include="Weapons\MeleeWeaponUserFunctionality.h" />
     <ClInclude Include="Movement\DefaultMovementFunctionality.h" />
@@ -239,6 +240,7 @@
   <ItemGroup>
     <ClCompile Include="Enemy\EnemyControllerFunctionality.cpp" />
     <ClCompile Include="Enemy\TargetFunctionality.cpp" />
+    <ClCompile Include="Weapons\WeaponSwing.cpp" />
     <ClCompile Include="Weapons\MeleeWeaponFunctionality.cpp" />
     <ClCompile Include="Weapons\MeleeWeaponUserFunctionality.cpp" />
     <ClCompile Include="Movement\DefaultMovementFunctionality.cpp" />

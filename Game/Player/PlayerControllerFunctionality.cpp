@@ -34,6 +34,8 @@ void PlayerControllerFunctionality::Debug()
 
 	Get<TransformFunctionality>().Inspect();
 
+	Get<MeleeWeaponUserFunctionality>().Inspect();
+
 	if (ImGui::Button("Send cool impulse"))
 	{
 		WmSendObjectImpulse(Get<OwnerFunctionality>().GetOwner(), SCoolImpulse());
@@ -41,7 +43,7 @@ void PlayerControllerFunctionality::Debug()
 
 	if (ImGui::Button("Generate held weapon"))
 	{
-		//Get<MeleeWeaponUserFunctionality>().SetWeapon(SystemPtr<WeaponGenerator>()->Generate(SWeaponGenerationParameters{ 100.f}));
+		Get<MeleeWeaponUserFunctionality>().SetWeapon(MeleeWeapon(100.f));
 	}
 	 
 	ImGui::End();

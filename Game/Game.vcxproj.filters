@@ -13,6 +13,7 @@
     <ClCompile Include="Weapons\MeleeWeaponUserFunctionality.cpp" />
     <ClCompile Include="Weapons\MeleeWeapon.cpp" />
     <ClCompile Include="Weapons\MeleeWeaponFunctionality.cpp" />
+    <ClCompile Include="Weapons\WeaponSwing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -28,6 +29,7 @@
     <ClInclude Include="Weapons\MeleeWeapon.h" />
     <ClInclude Include="Weapons\MeleeWeaponFunctionality.h" />
     <ClInclude Include="Generation\GeneratedObject.h" />
-    <ClInclude Include="Generation\GenerationParameters\Strength.h" />
+    <ClInclude Include="Generation\GenerationParameters\Power.h" />
+    <ClInclude Include="Weapons\WeaponSwing.h" />
   </ItemGroup>
 </Project>

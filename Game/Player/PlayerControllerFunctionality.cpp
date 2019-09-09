@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "PlayerControllerFunctionality.h"
-#include "Generation/Weapon/MeleeWeaponGenerator.h"
 
 
 PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)

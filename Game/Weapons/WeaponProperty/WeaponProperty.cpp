@@ -24,8 +24,8 @@ void WeaponSwingProperty::DrawSwing(const SVector2f aOffset)
 
 SSwing::SSwing()
 {
-	mySwingPath.myStart = {-10.f, 0.f};
-	mySwingPath.myFirstControl = { -10.f, -130.f};
-	mySwingPath.mySecondControl = { 10.f, -130.f};
-	mySwingPath.myEnd = { 10.f, 0.f };
+	mySwingPath.myStart = {-25.f, 25.f};
+	mySwingPath.myFirstControl = { -25.f, -30.f};
+	mySwingPath.mySecondControl = { 0.f, -100.f};
+	mySwingPath.myEnd = { 10.f, -70.f };
 }

@@ -2,20 +2,9 @@
 #include "MeleeWeapon.h"
 #include "WeaponProperty/WeaponProperty.h"
 
-MeleeWeapon::MeleeWeapon(const f32 aPotential)
-	: myPotential(aPotential)
-{
-
-}
-
 MeleeWeapon::MeleeWeapon(MeleeWeapon&& aOther)
 {
-	myPotential = aOther.myPotential;
 	myProperties = std::move(aOther.myProperties);
-}
-
-MeleeWeapon::~MeleeWeapon()
-{
 }
 
 void MeleeWeapon::Inspect()
@@ -29,4 +18,24 @@ void MeleeWeapon::Inspect()
 	}
 
 	ImGui::Separator();
+}
+
+
+void MeleeWeapon::Strengthen(const SStrength aStrength)
+{
+
+}
+
+void MeleeWeapon::Weaken(const SStrength aStrength)
+{
+
+}
+
+SStrength MeleeWeapon::GetStrength() const
+{
+	return SStrength{ 1.0f };
+}
+
+void MeleeWeapon::Generate(SStrength aStrength)
+{
 }

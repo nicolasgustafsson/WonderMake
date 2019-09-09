@@ -1,22 +1,22 @@
 #include "pch.h"
 #include "MeleeWeaponFunctionality.h"
-#include "Generation/Weapon/MeleeWeaponGenerator.h"
-#include "Generation/Weapon/MeleeWeaponGenerationParameters.h"
 
 MeleeWeaponFunctionality::MeleeWeaponFunctionality(Object& aObject)
 	: Super(aObject)
 {
 	Get<SpriteRenderingFunctionality>().SetTexture(std::filesystem::current_path() / "Textures/sword.png");
-	Get<SpriteRenderingFunctionality>().SetOrigin({ 0.f, 1.0f });
+	Get<SpriteRenderingFunctionality>().SetOrigin({ 0.f, 0.8f });
 	Get<SpriteRenderingFunctionality>().Hide();
-	SWeaponGenerationParameters argh;
-	SetWeapon(SystemPtr<MeleeWeaponGenerator>()->Generate(argh));
+
+	SetWeapon(MeleeWeapon());
 }
 
 void MeleeWeaponFunctionality::Swing()
 {
 
 	auto& WeaponComp = Get<SMeleeWeaponComponent>();
+
+	WeaponComp.Weapon->mySwingProperty.DrawSwing(Get<SMeleeWeaponComponent>().ParentTransform->Position);
 	
 	Get<SpriteRenderingFunctionality>().Show();
 
@@ -48,10 +48,10 @@ void MeleeWeaponFunctionality::Tick()
 
 		if (parent)
 		{
-			const SVector2f SwingLocation = WeaponComp.Weapon->mySwingProperty.mySwing.mySwingPath.GetLocationAt(WeaponComp.CurrentSwing.Progress);
+			const SVector2f SwingLocation = WeaponComp.Weapon->mySwingProperty.mySwing.mySwingPath.GetLocationAt(WeaponComp.CurrentSwing.Progress * WeaponComp.CurrentSwing.Progress);
 			Get<TransformFunctionality>().SetPosition(parent->Position + SwingLocation);
 
-			Get<TransformFunctionality>().SetRotation(SwingLocation.GetRotation() + (3.141592f / 2.f) * (1.f - WeaponComp.CurrentSwing.Progress));
+			Get<TransformFunctionality>().SetRotation(SwingLocation.GetRotation() + (3.141592f / 3.f) * (1.f - WeaponComp.CurrentSwing.Progress * WeaponComp.CurrentSwing.Progress * WeaponComp.CurrentSwing.Progress));
 		}
 
 		if (WeaponComp.CurrentSwing.Progress > 1.0f)

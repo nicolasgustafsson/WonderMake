@@ -10,13 +10,8 @@
     <ClCompile Include="Enemy\EnemyControllerFunctionality.cpp" />
     <ClCompile Include="Enemy\TargetFunctionality.cpp" />
     <ClCompile Include="Weapons\WeaponProperty\WeaponProperty.cpp" />
-    <ClCompile Include="Generation\BaseGenerator.cpp" />
     <ClCompile Include="Weapons\MeleeWeaponUserFunctionality.cpp" />
     <ClCompile Include="Weapons\MeleeWeapon.cpp" />
-    <ClCompile Include="Generation\Weapon\MeleeWeaponGenerator.cpp" />
-    <ClCompile Include="Generation\Weapon\MeleeWeaponGrammars.cpp" />
-    <ClCompile Include="Generation\Weapon\WeaponProperty\MeleeWeaponSwingPropertyGenerator.cpp" />
-    <ClCompile Include="Generation\Weapon\WeaponProperty\MeleeWeaponSwingGrammars.cpp" />
     <ClCompile Include="Weapons\MeleeWeaponFunctionality.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -29,15 +24,10 @@
     <ClInclude Include="Enemy\TargetFunctionality.h" />
     <ClInclude Include="Enemy\EnemyControllerComponent.h" />
     <ClInclude Include="Weapons\WeaponProperty\WeaponProperty.h" />
-    <ClInclude Include="Generation\BaseGenerator.h" />
     <ClInclude Include="Weapons\MeleeWeaponUserFunctionality.h" />
     <ClInclude Include="Weapons\MeleeWeapon.h" />
-    <ClInclude Include="Generation\Weapon\MeleeWeaponGenerator.h" />
-    <ClInclude Include="Generation\Weapon\MeleeWeaponGrammars.h" />
-    <ClInclude Include="Generation\Weapon\MeleeWeaponGenerationParameters.h" />
-    <ClInclude Include="Generation\Weapon\WeaponProperty\MeleeWeaponSwingPropertyGenerator.h" />
-    <ClInclude Include="Generation\Weapon\WeaponProperty\MeleeWeaponSwingGrammars.h" />
-    <ClInclude Include="Generation\Weapon\WeaponProperty\MeleeWeaponSwingPropertyGenerationParameters.h" />
     <ClInclude Include="Weapons\MeleeWeaponFunctionality.h" />
+    <ClInclude Include="Generation\GeneratedObject.h" />
+    <ClInclude Include="Generation\GenerationParameters\Strength.h" />
   </ItemGroup>
 </Project>

@@ -34,7 +34,5 @@ public:
 		Strengthen(-aPower);
 	};
 
-	virtual void Rebalance() {};
-
 	virtual SPower GetPower() const = 0;
 };

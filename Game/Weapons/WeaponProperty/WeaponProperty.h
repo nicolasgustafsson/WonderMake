@@ -1,19 +1,11 @@
 #pragma once
-#include "../WeaponSwing.h"
+
+//Nicos: This is the base class for all unique properties of a weapon: things such as stat changes and special effects
+//Nicos: We have none atm :(
 class WeaponProperty
 {
 public:
 	virtual ~WeaponProperty() = default;
 
 	virtual void Inspect();
-};
-
-class WeaponSwingProperty
-	: public WeaponProperty
-{
-public:
-	virtual void Inspect() override;
-
-	void DrawSwing(const SVector2f aOffset);
-	SSwing mySwing;
 };

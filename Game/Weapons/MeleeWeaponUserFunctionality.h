@@ -1,6 +1,5 @@
 #pragma once
 #include "Functionalities/Functionality.h"
-#include "Weapons/MeleeWeapon.h"
 
 class TransformFunctionality;
 class SpriteRenderingFunctionality;
@@ -20,11 +19,11 @@ class MeleeWeaponUserFunctionality
 {
 public:
 	MeleeWeaponUserFunctionality(Object& aOwner);
+
 	void Tick();
 
 	void Inspect();
 
 	void SwingWeapon();
 	void SetWeapon(MeleeWeapon&& aWeapon);
-
 };

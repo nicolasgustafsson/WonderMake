@@ -26,10 +26,6 @@ GameWorld::GameWorld()
 	enemySprite.SetTexture(std::filesystem::current_path() / "Textures/enemy.png");
 }
 
-GameWorld::~GameWorld()
-{
-}
-
 void GameWorld::Tick() noexcept
 {
 }

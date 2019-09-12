@@ -15,7 +15,7 @@ public:
 	void Inspect();
 	void DrawSwing(const SVector2f aOffset);
 
-	virtual SPower GetStrength() const override;
+	virtual SPower GetPower() const override;
 
 	SSwing mySwing;
 	
@@ -25,7 +25,6 @@ private:
 	virtual void Strengthen(const SPower aPower) override;
 	void IncreaseDamage(const SPower aPower);
 	void IncreaseAttackSpeed(const SPower aPower);
-	virtual void Weaken(const SPower aPower) override;
 
 	std::vector<std::unique_ptr<WeaponProperty>> myProperties;
 

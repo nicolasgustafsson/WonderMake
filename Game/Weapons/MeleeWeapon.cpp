@@ -22,11 +22,30 @@ void MeleeWeapon::Inspect()
 	
 	ImGui::Text("Damage = %f", myBaseWeaponDamage);
 	ImGui::Text("Attack rate = %f", myBaseWeaponSwingRate);
-
+	
 	for (auto& property : myProperties)
 	{
 		property->Inspect();
 	}
+	const f32 currentPower = GetPower();
+	ImGui::Text("Current estimated power = %f", currentPower);
+
+
+	static f32 Power = 20.f;
+	
+	if (ImGui::Button("Strengthen"))
+	{
+		Strengthen(Power);
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Weaken"))
+	{
+		Weaken(Power);
+	}
+
+	ImGui::SliderFloat("Power to use when Strengthening/Weakening", &Power, 0.f, 1000.f, "%.3f", 2.0f);
 
 	ImGui::Separator();
 }
@@ -44,17 +63,24 @@ void MeleeWeapon::DrawSwing(const SVector2f aOffset)
 
 void MeleeWeapon::Strengthen(const SPower aPower)
 {
-	switch (SystemPtr<Randomizer>()->GetRandomNumber(0, 3))
+	switch (SystemPtr<Randomizer>()->GetRandomNumber(0, 6))
 	{
 	case 0:
+	case 1:
 		IncreaseDamage(aPower);
 		break;
-	case 1:
+	case 2:
+	case 3:
 		IncreaseAttackSpeed(aPower);
 		break;
-	case 2:
+	case 4:
 		Strengthen(aPower / 2.f);
 		Strengthen(aPower / 2.f);
+		break;
+	case 5:
+		Weaken(aPower);
+		Strengthen(aPower);
+		Strengthen(aPower);
 		break;
 	default:
 		WmLog("Noo");
@@ -63,22 +89,24 @@ void MeleeWeapon::Strengthen(const SPower aPower)
 
 void MeleeWeapon::IncreaseDamage(const SPower aPower)
 {
-	myBaseWeaponDamage += aPower;
+	myBaseWeaponDamage += aPower / myBaseWeaponSwingRate;
+
+	if (myBaseWeaponDamage <= 0)
+	{
+		myBaseWeaponDamage = 1.f;
+	}
 }
 
 void MeleeWeapon::IncreaseAttackSpeed(const SPower aPower)
 {
-	myBaseWeaponSwingRate *= 1.0f / (1.0f + (aPower / 100.f));
+	myBaseWeaponSwingRate += (aPower / 50.f) / (myBaseWeaponDamage / 50.f);
+	if (myBaseWeaponSwingRate < 0.025f)
+		myBaseWeaponSwingRate = 0.025f;
 }
 
-void MeleeWeapon::Weaken(const SPower aPower)
+SPower MeleeWeapon::GetPower() const
 {
-	Strengthen(-aPower);
-}
-
-SPower MeleeWeapon::GetStrength() const
-{
-	return SPower{ 1.0f };
+	return myBaseWeaponDamage * myBaseWeaponSwingRate;
 }
 
 void MeleeWeapon::Generate(const SPower aPower)

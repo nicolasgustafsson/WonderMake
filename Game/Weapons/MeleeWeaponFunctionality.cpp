@@ -43,16 +43,16 @@ void MeleeWeaponFunctionality::Tick()
 
 	if (CurrentSwing.IsActive)
 	{
-		CurrentSwing.Progress += deltaTime / Weapon.mySwing.mySwingTime / WeaponComp.Weapon->myBaseWeaponSwingRate;
+		CurrentSwing.Progress += (deltaTime / Weapon.mySwing.mySwingTime) * Weapon.myBaseWeaponSwingRate;
 
 		STransformComponent* parent = Get<SMeleeWeaponComponent>().ParentTransform;
 
 		if (parent)
 		{
-			const SVector2f SwingLocation = Weapon.mySwing.mySwingPath.GetLocationAt(CurrentSwing.Progress * CurrentSwing.Progress);
+			const SVector2f SwingLocation = Weapon.mySwing.mySwingPath.GetLocationAt(CurrentSwing.Progress);
 			Get<TransformFunctionality>().SetPosition(parent->Position + SwingLocation);
 
-			Get<TransformFunctionality>().SetRotation(SwingLocation.GetRotation() + (3.141592f / 3.f) * (1.f - CurrentSwing.Progress * CurrentSwing.Progress * CurrentSwing.Progress));
+			Get<TransformFunctionality>().SetRotation(SwingLocation.GetRotation() + (3.141592f / 12.f) * (1.f - CurrentSwing.Progress * CurrentSwing.Progress * CurrentSwing.Progress) + 0.7f);
 		}
 
 		if (CurrentSwing.Progress > 1.0f)

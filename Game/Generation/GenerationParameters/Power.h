@@ -29,9 +29,12 @@ class GenerationOperations<SPower>
 {
 public:
 	virtual void Strengthen(const SPower aPower) = 0;
-	virtual void Weaken(const SPower aPower) = 0;
+	virtual void Weaken(const SPower aPower)
+	{
+		Strengthen(-aPower);
+	};
 
 	virtual void Rebalance() {};
 
-	virtual SPower GetStrength() const = 0;
+	virtual SPower GetPower() const = 0;
 };

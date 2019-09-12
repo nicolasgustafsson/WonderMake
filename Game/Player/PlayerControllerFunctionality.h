@@ -4,6 +4,7 @@
 #include "Movement/DefaultMovementFunctionality.h"
 #include "Functionalities/TransformFunctionality.h"
 #include "Functionalities/OwnerFunctionality.h"
+#include "Weapons/MeleeWeaponUserFunctionality.h"
 
 struct SCoolImpulse
 	: public SObjectImpulse
@@ -12,7 +13,10 @@ struct SCoolImpulse
 };
 
 class PlayerControllerFunctionality
-	: public Functionality<PlayerControllerFunctionality, TransformFunctionality, MovementInputFunctionality, DefaultMovementFunctionality, OwnerFunctionality>
+	: public Functionality<
+			PlayerControllerFunctionality, TransformFunctionality, 
+			MovementInputFunctionality, DefaultMovementFunctionality, 
+			OwnerFunctionality, MeleeWeaponUserFunctionality>
 	, public Debugged
 {
 public:

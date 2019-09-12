@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "PlayerControllerFunctionality.h"
+#include "Weapons/MeleeWeapon.h"
 
 
 PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
@@ -20,6 +21,8 @@ void PlayerControllerFunctionality::Tick() noexcept
 		movementInput += {0.f, 1.f};
 	if (myInputSystem->IsKeyDown(EKeyboardKey::D) || myInputSystem->IsKeyDown(EKeyboardKey::Right))
 		movementInput += {1.f, 0.f};
+	if (myInputSystem->IsMouseButtonPressed(EMouseButton::Left))
+		Get<MeleeWeaponUserFunctionality>().SwingWeapon();
 
 	Get<MovementInputFunctionality>().SetMovementInput(movementInput);
 }
@@ -32,10 +35,20 @@ void PlayerControllerFunctionality::Debug()
 
 	Get<TransformFunctionality>().Inspect();
 
+	Get<MeleeWeaponUserFunctionality>().Inspect();
+
 	if (ImGui::Button("Send cool impulse"))
 	{
 		WmSendObjectImpulse(Get<OwnerFunctionality>().GetOwner(), SCoolImpulse());
 	}
+
+	static f32 Power = 100.f;
+	if (ImGui::Button("Generate held weapon"))
+	{
+		Get<MeleeWeaponUserFunctionality>().SetWeapon(MeleeWeapon(Power));
+	}
+
+	ImGui::SliderFloat("Weapon Power", &Power, 0.f, 10000.f, "%.3f", 2.0f);
 	 
 	ImGui::End();
 }

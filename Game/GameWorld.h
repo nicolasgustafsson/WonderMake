@@ -6,7 +6,6 @@ class GameWorld : public System
 {
 public:
 	GameWorld();
-	~GameWorld();
 
 	virtual void Tick() noexcept override;
 	Object myPlayer;

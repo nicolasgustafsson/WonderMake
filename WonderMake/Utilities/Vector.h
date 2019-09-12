@@ -22,6 +22,10 @@ public:
 		std::array<T, 2> MemberArray = {};
 	};
 
+	[[nodiscard]] constexpr f32 GetRotation() const noexcept
+	{
+		return std::atan2f(-X, -Y);
+	}
 };
 
 template <typename T>
@@ -58,7 +62,7 @@ public:
 };
 #pragma warning(pop)
 
-template <typename T, u32 Size>
+template <typename T, u32 Size> 
 struct SVectorBase<T, Size, std::enable_if_t<(Size > 4)>>
 {
 public:

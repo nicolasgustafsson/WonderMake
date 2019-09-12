@@ -27,19 +27,20 @@
 *.la
 *.a
 
-# Executables
-*.exe
-*.out
-*.app
-Bin/*.lib
-Bin/Logs/
+# Visual Studio
 .vs/
-Intermediate/
 *.user
-*imgui.ini
 *.ipdb
 *.iobj
 *.lastcodeanalysissucceeded
+
+# WonderMake Files
+Bin/*.exe
+Bin/*.lib
+Bin/imgui.ini
+Bin/Logs/
+
+Intermediate/
 
 WonderMakeLauncher/Registry/*.cpp
 WonderMakeLauncher/Registry/*.h

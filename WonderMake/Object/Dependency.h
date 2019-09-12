@@ -30,8 +30,6 @@ private:
 	TDependency* myDependency;
 };
 
-
-
 template<typename TDependency>
 void Dependency<TDependency>::Create(Object& aOwningObject)
 {

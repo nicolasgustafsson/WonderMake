@@ -1,13 +1,18 @@
 #include "pch.h"
 #include "MeleeWeapon.h"
 #include "WeaponProperty/WeaponProperty.h"
-#include <Randomizer.h>
+#include "Randomizer/Randomizer.h"
 
 MeleeWeapon::MeleeWeapon(MeleeWeapon&& aOther) noexcept
 {
 	myProperties = std::move(aOther.myProperties);
 	myBaseWeaponDamage = aOther.myBaseWeaponDamage;
 	myBaseWeaponSwingRate = aOther.myBaseWeaponSwingRate;
+	mySwing = aOther.mySwing;
+
+	aOther.myBaseWeaponDamage = 0;
+	aOther.myBaseWeaponSwingRate = 1.0f;
+	aOther.mySwing = SSwing();
 }
 
 MeleeWeapon::MeleeWeapon(const SPower aPower)
@@ -51,7 +56,7 @@ void MeleeWeapon::Inspect()
 
 void MeleeWeapon::DrawSwing(const SVector2f aOffset)
 {
-	for (i32 i = 0.f; i < 19.f; i++)
+	for (f32 i = 0.f; i < 19.f; i++)
 	{
 		const SVector2f start = mySwing.mySwingPath.GetLocationAt((f32)i / 20.f);
 		const SVector2f end = mySwing.mySwingPath.GetLocationAt(((f32)i + 1.f) / 20.f);
@@ -82,7 +87,7 @@ void MeleeWeapon::Strengthen(const SPower aPower)
 		Strengthen(aPower);
 		break;
 	default:
-		WmLog("Noo");
+		WmLog("Should not be reached; MeleeWeapon::Strengthen");
 	}
 }
 
@@ -90,7 +95,7 @@ void MeleeWeapon::IncreaseDamage(const SPower aPower)
 {
 	myBaseWeaponDamage += aPower / myBaseWeaponSwingRate;
 
-	if (myBaseWeaponDamage <= 0)
+	if (myBaseWeaponDamage < 1.0f)
 	{
 		myBaseWeaponDamage = 1.f;
 	}
@@ -98,9 +103,12 @@ void MeleeWeapon::IncreaseDamage(const SPower aPower)
 
 void MeleeWeapon::IncreaseAttackSpeed(const SPower aPower)
 {
-	myBaseWeaponSwingRate += (aPower / 50.f) / (myBaseWeaponDamage / 50.f);
-	if (myBaseWeaponSwingRate < 0.025f)
-		myBaseWeaponSwingRate = 0.025f;
+	const f32 baseDamage = 50.f;
+	myBaseWeaponSwingRate += (aPower / baseDamage) / (myBaseWeaponDamage / baseDamage);
+
+	const f32 MinimumSwingRate = 0.15f;
+	if (myBaseWeaponSwingRate < MinimumSwingRate)
+		myBaseWeaponSwingRate = MinimumSwingRate;
 }
 
 SPower MeleeWeapon::GetPower() const

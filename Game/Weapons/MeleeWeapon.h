@@ -15,12 +15,13 @@ public:
 	void Inspect();
 	void DrawSwing(const SVector2f aOffset);
 
-	virtual SPower GetPower() const override;
+	[[nodiscard]] virtual SPower GetPower() const override;
 
 	SSwing mySwing;
 	
 	f32 myBaseWeaponDamage = 0.f;
 	f32 myBaseWeaponSwingRate = 1.f;
+
 private:
 	virtual void Strengthen(const SPower aPower) override;
 	void IncreaseDamage(const SPower aPower);

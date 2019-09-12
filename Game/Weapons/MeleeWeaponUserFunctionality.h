@@ -15,12 +15,10 @@ struct SMeleeWeaponUserComponent
 };
 
 class MeleeWeaponUserFunctionality
-	: public Functionality<MeleeWeaponUserFunctionality, SMeleeWeaponUserComponent, STransformComponent>
+	: public Functionality<MeleeWeaponUserFunctionality, SMeleeWeaponUserComponent, TransformFunctionality>
 {
 public:
 	MeleeWeaponUserFunctionality(Object& aOwner);
-
-	void Tick();
 
 	void Inspect();
 

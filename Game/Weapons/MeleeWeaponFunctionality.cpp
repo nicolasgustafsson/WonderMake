@@ -29,7 +29,7 @@ void MeleeWeaponFunctionality::SetWeapon(MeleeWeapon&& aWeapon)
 	Get<SMeleeWeaponComponent>().Weapon.emplace(std::move(aWeapon));
 }
 
-void MeleeWeaponFunctionality::SetParent(STransformComponent* aParentTransform)
+void MeleeWeaponFunctionality::SetParent(TransformFunctionality* aParentTransform)
 {
 	Get<SMeleeWeaponComponent>().ParentTransform = aParentTransform;
 }
@@ -46,14 +46,14 @@ void MeleeWeaponFunctionality::Tick()
 	{
 		CurrentSwing.Progress += (deltaTime / Weapon.mySwing.mySwingTime) * Weapon.myBaseWeaponSwingRate;
 
-		STransformComponent* parent = Get<SMeleeWeaponComponent>().ParentTransform;
+		TransformFunctionality* parent = Get<SMeleeWeaponComponent>().ParentTransform;
 
 		if (parent)
 		{
 			const SVector2f SwingLocation = Weapon.mySwing.mySwingPath.GetLocationAt(CurrentSwing.Progress);
-			Get<TransformFunctionality>().SetPosition(parent->Position + SwingLocation);
+			Get<TransformFunctionality>().SetPosition(parent->GetPosition() + SwingLocation);
 
-			Get<TransformFunctionality>().SetRotation(SwingLocation.GetRotation() + (3.141592f / 12.f) * (1.f - CurrentSwing.Progress * CurrentSwing.Progress * CurrentSwing.Progress) + 0.7f);
+			Get<TransformFunctionality>().SetRotation(SwingLocation.GetRotation() + (3.141592f / 12.f) * (1.f - std::powf(CurrentSwing.Progress, 3.f)) + 0.7f);
 		}
 
 		if (CurrentSwing.Progress > 1.0f)

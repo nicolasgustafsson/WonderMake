@@ -12,22 +12,25 @@ struct SActiveSwing
 struct SMeleeWeaponComponent
 	: public SComponent
 {
-	STransformComponent* ParentTransform;
+	TransformFunctionality* ParentTransform;
 	std::optional<MeleeWeapon> Weapon;
 	SActiveSwing CurrentSwing;
 };
 
 class MeleeWeaponFunctionality
-	: public Functionality<MeleeWeaponFunctionality, SpriteRenderingFunctionality, TransformFunctionality, SMeleeWeaponComponent>
+	: public Functionality
+	< MeleeWeaponFunctionality
+	, SpriteRenderingFunctionality
+	, TransformFunctionality
+	, SMeleeWeaponComponent>
 {
 public:
 	MeleeWeaponFunctionality(Object& aObject);
 
 	void Swing();
 	void SetWeapon(MeleeWeapon&& aWeapon);
-	void SetParent(STransformComponent* aParentTransform);
+	void SetParent(TransformFunctionality* aParentTransform);
 	void Tick();
-	f32 myRotation = 0;
 
 	void Inspect();
 private:

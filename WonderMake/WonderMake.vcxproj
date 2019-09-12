@@ -212,7 +212,7 @@
     <ClCompile Include="Input\InputSystem.cpp" />
     <ClCompile Include="Functionalities\ImpulseFunctionality.cpp" />
     <ClCompile Include="Object\ObjectImpulseRouter.cpp" />
-    <ClCompile Include="Randomizer.cpp" />
+    <ClCompile Include="Randomizer\Randomizer.cpp" />
     <ClCompile Include="Serialization\SerializationSystem.cpp" />
     <ClCompile Include="TimeKeeper.cpp" />
     <ClCompile Include="Utilities\Debugging\Debugged.cpp" />
@@ -274,7 +274,7 @@
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="Functionalities\ImpulseFunctionality.h" />
     <ClInclude Include="Object\ObjectImpulseRouter.h" />
-    <ClInclude Include="Randomizer.h" />
+    <ClInclude Include="Randomizer\Randomizer.h" />
     <ClInclude Include="Serialization\SerializationSystem.h" />
     <ClInclude Include="TimeKeeper.h" />
     <ClInclude Include="Utilities\MathUtility.h" />

@@ -5,13 +5,13 @@ class GenerationOperations
 {
 	GenerationOperations() 
 	{
-		static_assert(false, "You need to override GenerationOperations<T>!");
+		static_assert(false, "You need to specialize GenerationOperations<T>!");
 	}
 };
 
 template<typename ... TGenerationParameters>
 class GeneratedObject 
-	: public GenerationOperations<TGenerationParameters...>
+	: public GenerationOperations<TGenerationParameters>...
 {
 public:
 	virtual ~GeneratedObject() = default;

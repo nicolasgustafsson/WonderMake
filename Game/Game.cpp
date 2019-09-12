@@ -2,23 +2,15 @@
 //
 
 #include "pch.h"
-#include <iostream>
-#include "Program/Engine.h"
+
+#include "Game.h"
 #include "GameWorld.h"
-#include "Threads/DataThreads.h"
-#include "Threads/RoutineIds.h"
-#include "Threads/Routine.h"
-#include "System/System.h"
+
 #include "System/SystemContainer.h"
 
-int main()
+void Start()
 {
-	Engine::Start([&] 
-	{
-		SystemContainer::Get().CreateSystem<GameWorld>();
-
-		WmLog("Game successfully setup!");
-	});
+	SystemContainer::Get().CreateSystem<GameWorld>();
 }
 
 

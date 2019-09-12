@@ -1,6 +1,8 @@
 #pragma once
 #include "Typedefs.h"
 
+#include <array>
+
 template<typename T, u32 Size, typename Enable = void>
 struct SVectorBase;
 

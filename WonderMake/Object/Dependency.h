@@ -35,10 +35,7 @@ private:
 template<typename TDependency>
 void Dependency<TDependency>::Create(Object& aOwningObject)
 {
-	if constexpr (std::is_base_of<BaseFunctionality, TDependency>::value)
-		myDependency = &aOwningObject.AddFunctionality<TDependency>();
-	else if (std::is_base_of<SComponent, TDependency>::value)
-		myDependency = &aOwningObject._AddComponent<TDependency>();
+	myDependency = &aOwningObject.Add<TDependency>();
 }
 
 class ImpulseFunctionality;
@@ -49,10 +46,7 @@ void Dependency<TDependency>::Destroy(Object& aOwningObject, [[maybe_unused]] Ba
 	if constexpr (std::is_same_v<TDependency, ImpulseFunctionality>)
 		myDependency->UnsubscribeAll(aFunctionality);
 
-	if constexpr (std::is_base_of<BaseFunctionality, TDependency>::value)
-		aOwningObject.RemoveFunctionality<TDependency>();
-	else if (std::is_base_of<SComponent, TDependency>::value)
-		aOwningObject._RemoveComponent<TDependency>();
+	aOwningObject.Remove<TDependency>();
 }
 
 template<typename ... TDependencies>

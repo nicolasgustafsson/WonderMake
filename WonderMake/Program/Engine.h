@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Typedefs.h"
+
 namespace Engine
 {
 	//wroom wroom

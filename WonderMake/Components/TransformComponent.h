@@ -5,6 +5,6 @@
 struct STransformComponent 
 	: public SComponent
 {
-	SVector2f Position;
-	f32 Rotation;
+	SVector2f	Position;
+	f32			Rotation = 0.f;
 };

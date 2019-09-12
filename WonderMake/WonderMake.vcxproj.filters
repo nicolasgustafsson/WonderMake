@@ -1,4 +1,4 @@
-ï»¿<?xml version="1.0" encoding="utf-8"?>
+?¿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Logging\ImGuiLogger.cpp" />
@@ -41,11 +41,15 @@
     <ClCompile Include="Input\InputSystem.cpp" />
     <ClCompile Include="Functionalities\TransformFunctionality.cpp" />
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Collision\CollisionSystem.cpp" />
+    <ClCompile Include="Collision\CollisionFunctionality.cpp" />
+    <ClCompile Include="Collision\ColliderDebug.cpp" />
     <ClCompile Include="Functionalities\ImpulseFunctionality.cpp" />
     <ClCompile Include="Object\ObjectImpulseRouter.cpp" />
     <ClCompile Include="Randomizer.cpp" />
     <ClCompile Include="Functionalities\OwnerFunctionality.cpp" />
     <ClCompile Include="Utilities\BezierCurve.cpp" />
+    <ClCompile Include="Serialization\SerializationSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logging\ImGuiLogger.h" />
@@ -129,11 +133,17 @@
     <ClInclude Include="Functionalities\TransformFunctionality.h" />
     <ClInclude Include="Imgui\ImguiInclude.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Collision\CollisionSystem.h" />
+    <ClInclude Include="Collision\CollisionFunctionality.h" />
+    <ClInclude Include="Collision\CollisionComponent.h" />
+    <ClInclude Include="Collision\Colliders.h" />
+    <ClInclude Include="Collision\ColliderDebug.h" />
     <ClInclude Include="Functionalities\ImpulseFunctionality.h" />
     <ClInclude Include="Object\ObjectImpulseRouter.h" />
     <ClInclude Include="Randomizer.h" />
     <ClInclude Include="Functionalities\OwnerFunctionality.h" />
     <ClInclude Include="Utilities\BezierCurve.h" />
+    <ClInclude Include="Serialization\SerializationSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

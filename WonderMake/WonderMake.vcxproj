@@ -73,7 +73,7 @@
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\stb\Inc;$(SolutionDir)External\MetaStuff\Inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\stb\Inc;$(SolutionDir)External\MetaStuff\Inc;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -82,7 +82,7 @@
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\stb\Inc;$(SolutionDir)External\MetaStuff\Inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\stb\Inc;$(SolutionDir)External\MetaStuff\Inc;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -91,7 +91,7 @@
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\stb\Inc;$(SolutionDir)External\MetaStuff\Inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\stb\Inc;$(SolutionDir)External\MetaStuff\Inc;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -100,7 +100,7 @@
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\stb\Inc;$(SolutionDir)External\MetaStuff\Inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\stb\Inc;$(SolutionDir)External\MetaStuff\Inc;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -281,7 +281,6 @@
     <ClInclude Include="FileSystem\ReadFileAsStringJob.h" />
     <ClInclude Include="Graphics\EngineUniformBuffer.h" />
     <ClInclude Include="Imgui\DockSpace.h" />
-    <ClInclude Include="Json\json.hpp" />
     <ClInclude Include="Job\Job.h" />
     <ClInclude Include="Logging\FileLogger.h" />
     <ClInclude Include="Logging\ImGuiLogger.h" />

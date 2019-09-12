@@ -96,7 +96,6 @@
     <ClInclude Include="System\System.h" />
     <ClInclude Include="System\SystemContainer.h" />
     <ClInclude Include="System\SystemPtr.h" />
-    <ClInclude Include="Json\json.hpp" />
     <ClInclude Include="Resources\ResourceProxy.h" />
     <ClInclude Include="Job\Job.h" />
     <ClInclude Include="Resources\CreateResource.h" />

@@ -40,3 +40,6 @@ Intermediate/
 *.ipdb
 *.iobj
 *.lastcodeanalysissucceeded
+
+WonderMakeLauncher/Registry/*.cpp
+WonderMakeLauncher/Registry/*.h

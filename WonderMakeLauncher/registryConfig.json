@@ -1,0 +1,13 @@
+{
+	"output_dir": "Registry",
+	"paths":
+	[
+		"..\\WonderMake\\Components",
+		"..\\WonderMake\\Collision\\CollisionComponent.h",
+		"..\\WonderMake\\Collision\\CollisionFunctionality.h"
+	],
+	"valid_extensions":
+	[
+		".h"
+	]
+}

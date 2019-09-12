@@ -30,7 +30,6 @@ void MeleeWeapon::Inspect()
 	const f32 currentPower = GetPower();
 	ImGui::Text("Current estimated power = %f", currentPower);
 
-
 	static f32 Power = 20.f;
 	
 	if (ImGui::Button("Strengthen"))

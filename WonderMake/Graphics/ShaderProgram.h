@@ -4,6 +4,8 @@
 #include "Utilities/Vector.h"
 #include "Utilities/Vector.h"
 #include "Utilities/Vector.h"
+
+#include <filesystem>
 #include <optional>
 
 class ShaderProgram : NonCopyable

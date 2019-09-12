@@ -5,6 +5,8 @@
 
 #include "Utilities/RestrictTypes.h"
 
+#include <glad/glad.h>
+
 enum class EShaderType
 {
 	Vertex,

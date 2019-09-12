@@ -2,6 +2,8 @@
 
 #include "Json/json.hpp"
 
+#include "Message/Messages.h"
+
 #include "Object/Object.h"
 
 #include "System/System.h"

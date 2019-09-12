@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -200,17 +200,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Utilities\BezierCurve.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Collision\ColliderDebug.cpp" />
     <ClCompile Include="Collision\CollisionFunctionality.cpp" />
     <ClCompile Include="Collision\CollisionSystem.cpp" />
     <ClCompile Include="Debugging\DebugLineDrawer.cpp" />
     <ClCompile Include="Debugging\DebugLineRenderObject.cpp" />
+    <ClCompile Include="Functionalities\OwnerFunctionality.cpp" />
     <ClCompile Include="Functionalities\TransformFunctionality.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />
     <ClCompile Include="Functionalities\ImpulseFunctionality.cpp" />
     <ClCompile Include="Object\ObjectImpulseRouter.cpp" />
-    <ClCompile Include="Functionalities\OwnerFunctionality.cpp" />
+    <ClCompile Include="Randomizer\Randomizer.cpp" />
     <ClCompile Include="Serialization\SerializationSystem.cpp" />
     <ClCompile Include="TimeKeeper.cpp" />
     <ClCompile Include="Utilities\Debugging\Debugged.cpp" />
@@ -254,6 +256,7 @@
     <ClCompile Include="Utilities\OS.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Utilities\BezierCurve.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Collision\ColliderDebug.h" />
     <ClInclude Include="Collision\CollisionComponent.h" />
@@ -264,13 +267,14 @@
     <ClInclude Include="Debugging\DebugLineDrawer.h" />
     <ClInclude Include="Debugging\DebugLineRenderObject.h" />
     <ClInclude Include="Debugging\DebugLine.h" />
+    <ClInclude Include="Functionalities\OwnerFunctionality.h" />
     <ClInclude Include="Functionalities\TransformFunctionality.h" />
     <ClInclude Include="Imgui\ImguiInclude.h" />
     <ClInclude Include="Input\InputItems.h" />
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="Functionalities\ImpulseFunctionality.h" />
     <ClInclude Include="Object\ObjectImpulseRouter.h" />
-    <ClInclude Include="Functionalities\OwnerFunctionality.h" />
+    <ClInclude Include="Randomizer\Randomizer.h" />
     <ClInclude Include="Serialization\SerializationSystem.h" />
     <ClInclude Include="TimeKeeper.h" />
     <ClInclude Include="Utilities\MathUtility.h" />

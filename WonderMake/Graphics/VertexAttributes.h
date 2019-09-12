@@ -7,6 +7,7 @@ enum class EVertexAttribute
 	Color,
 	Scale,
 	Rotation,
+	Origin,
 	TexCoord
 };
 
@@ -20,6 +21,8 @@ static auto constexpr GetValueFromAttribute()
 	else if constexpr (TVertexAttribute == EVertexAttribute::Scale)
 		return SVector2f();
 	else if constexpr (TVertexAttribute == EVertexAttribute::TexCoord)
+		return SVector2f();
+	else if constexpr (TVertexAttribute == EVertexAttribute::Origin)
 		return SVector2f();
 	else if constexpr (TVertexAttribute == EVertexAttribute::Rotation)
 		return 0.f;

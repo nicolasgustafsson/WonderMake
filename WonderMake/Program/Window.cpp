@@ -15,6 +15,7 @@ Window::Window()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 	myGlfwWindow = glfwCreateWindow(windowSettings["X"].get<i32>(), windowSettings["Y"].get<i32>(), "WonderMake", NULL, NULL);
 	if (!myGlfwWindow)
 	{

@@ -26,6 +26,5 @@ public:
 	virtual void Debug() override;
 
 private:
-	
 };
 

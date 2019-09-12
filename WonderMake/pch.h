@@ -1,4 +1,5 @@
 #pragma once
+#define _ITERATOR_DEBUG_LEVEL 0
 #include <string>
 #include <filesystem>
 #include <optional>
@@ -19,3 +20,5 @@
 #include "Components/SpriteComponent.h"
 #include "Components/Component.h"
 #include "TimeKeeper.h"
+
+

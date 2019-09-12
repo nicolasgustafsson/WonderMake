@@ -221,19 +221,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Generation\GeneratedObject.h" />
+    <ClInclude Include="Generation\GenerationParameters\Power.h" />
     <ClInclude Include="Enemy\EnemyControllerFunctionality.h" />
     <ClInclude Include="Enemy\TargetFunctionality.h" />
     <ClInclude Include="Enemy\EnemyControllerComponent.h" />
+    <ClInclude Include="Weapons\WeaponSwing.h" />
+    <ClInclude Include="Weapons\MeleeWeaponFunctionality.h" />
+    <ClInclude Include="Weapons\MeleeWeaponUserFunctionality.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Movement\DefaultMovementFunctionality.h" />
     <ClInclude Include="GameWorld.h" />
     <ClInclude Include="Movement\MovementInputFunctionality.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Player\PlayerControllerFunctionality.h" />
+    <ClInclude Include="Weapons\MeleeWeapon.h" />
+    <ClInclude Include="Weapons\WeaponProperty\WeaponProperty.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Enemy\EnemyControllerFunctionality.cpp" />
     <ClCompile Include="Enemy\TargetFunctionality.cpp" />
+    <ClCompile Include="Weapons\WeaponSwing.cpp" />
+    <ClCompile Include="Weapons\MeleeWeaponFunctionality.cpp" />
+    <ClCompile Include="Weapons\MeleeWeaponUserFunctionality.cpp" />
     <ClCompile Include="Movement\DefaultMovementFunctionality.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameWorld.cpp" />
@@ -245,6 +255,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Player\PlayerControllerFunctionality.cpp" />
+    <ClCompile Include="Weapons\MeleeWeapon.cpp" />
+    <ClCompile Include="Weapons\WeaponProperty\WeaponProperty.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WonderMake\WonderMake.vcxproj">

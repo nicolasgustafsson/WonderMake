@@ -28,11 +28,6 @@ GameWorld::GameWorld()
 	enemyCollision.AddSphereCollider(SVector2f::Zero(), 75.f);
 	auto& enemySprite = myEnemy.Add<SpriteRenderingFunctionality>();
 	enemySprite.SetTexture(std::filesystem::current_path() / "Textures/enemy.png");
-	
-}
-
-GameWorld::~GameWorld()
-{
 }
 
 void GameWorld::Tick() noexcept

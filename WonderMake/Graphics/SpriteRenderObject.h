@@ -4,6 +4,7 @@
 class SpriteRenderObject 
 	: public RenderObject
 		< EVertexAttribute::Position
+		, EVertexAttribute::Origin
 		, EVertexAttribute::Scale
 		, EVertexAttribute::Color
 		, EVertexAttribute::Rotation>

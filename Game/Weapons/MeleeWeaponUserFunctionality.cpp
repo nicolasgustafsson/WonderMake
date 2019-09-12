@@ -7,7 +7,7 @@
 MeleeWeaponUserFunctionality::MeleeWeaponUserFunctionality(Object& aOwner)
 	: Super(aOwner)
 {
-	Get<SMeleeWeaponUserComponent>().myWeapon = &Get<SMeleeWeaponUserComponent>().WeaponObject.AddFunctionality<MeleeWeaponFunctionality>();
+	Get<SMeleeWeaponUserComponent>().myWeapon = &Get<SMeleeWeaponUserComponent>().WeaponObject.Add<MeleeWeaponFunctionality>();
 	Get<SMeleeWeaponUserComponent>().myWeapon->SetParent(&Get<STransformComponent>());
 }
 

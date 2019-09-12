@@ -1,4 +1,4 @@
-?¿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -212,9 +212,7 @@
     <ClCompile Include="Input\InputSystem.cpp" />
     <ClCompile Include="Functionalities\ImpulseFunctionality.cpp" />
     <ClCompile Include="Object\ObjectImpulseRouter.cpp" />
-    <ClCompile Include="Functionalities\OwnerFunctionality.cpp" />
     <ClCompile Include="Randomizer.cpp" />
-    <ClCompile Include="Functionalities\OwnerFunctionality.cpp" />
     <ClCompile Include="Serialization\SerializationSystem.cpp" />
     <ClCompile Include="TimeKeeper.cpp" />
     <ClCompile Include="Utilities\Debugging\Debugged.cpp" />
@@ -276,9 +274,7 @@
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="Functionalities\ImpulseFunctionality.h" />
     <ClInclude Include="Object\ObjectImpulseRouter.h" />
-    <ClInclude Include="Functionalities\OwnerFunctionality.h" />
     <ClInclude Include="Randomizer.h" />
-    <ClInclude Include="Functionalities\OwnerFunctionality.h" />
     <ClInclude Include="Serialization\SerializationSystem.h" />
     <ClInclude Include="TimeKeeper.h" />
     <ClInclude Include="Utilities\MathUtility.h" />

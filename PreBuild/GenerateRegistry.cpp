@@ -85,6 +85,8 @@ bool GenerateSourceFile(
 	}
 
 	fileStream
+		<< "#include \"pch.h\"\n"
+		<< "\n"
 		<< "#include \"Register_" << fileName.string() << ".h\"\n"
 		<< "#include \"Serialization\\SerializationSystem.h\"\n"
 		<< "#include " << aFile.myIncludePath << "\n"

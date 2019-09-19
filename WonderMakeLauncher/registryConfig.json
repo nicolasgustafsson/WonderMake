@@ -1,11 +1,21 @@
 {
 	"output_dir": "Registry",
-	"paths":
-	[
-		"..\\WonderMake\\Components",
-		"..\\WonderMake\\Collision\\CollisionComponent.h",
-		"..\\WonderMake\\Collision\\CollisionFunctionality.h"
-	],
+	"output_registry_header_file": "Registry\\Registry.h",
+	"output_registry_source_file": "Registry\\Registry.cpp",
+  "paths": [
+    "..\\WonderMake\\Collision\\CollisionComponent.h",
+    "..\\WonderMake\\Collision\\CollisionFunctionality.h",
+    "..\\WonderMake\\Components\\SpriteComponent.h",
+    "..\\WonderMake\\Components\\TransformComponent.h",
+    "..\\WonderMake\\Functionalities\\ImpulseFunctionality.h",
+    "..\\WonderMake\\Functionalities\\OwnerFunctionality.h",
+    "..\\WonderMake\\Functionalities\\SpriteRenderingFunctionality.h",
+    "..\\WonderMake\\Functionalities\\TransformFunctionality.h",
+    "..\\Game\\Enemy\\",
+    "..\\Game\\Movement\\",
+    "..\\Game\\Player\\",
+    "..\\Game\\Weapons\\"
+  ],
 	"valid_extensions":
 	[
 		".h"

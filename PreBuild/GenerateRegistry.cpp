@@ -8,10 +8,13 @@
 #include <regex>
 #include <vector>
 
-struct SFile
+struct SLexedFile
 {
-	std::vector<std::string> myObjectNames;
 	std::filesystem::path myIncludePath;
+	std::filesystem::path myHeaderFile;
+	std::filesystem::path mySourceFile;
+	std::string myRegisterFuncName;
+	std::vector<std::string> myObjectNames;
 };
 
 std::ofstream CreateFile(
@@ -32,13 +35,9 @@ std::ofstream CreateFile(
 
 bool GenerateHeaderFile(
 	const std::filesystem::path& aOutputDir,
-	const SFile& aFile)
+	const SLexedFile& aFile)
 {
-	const std::filesystem::path fileName = aFile.myIncludePath.filename().stem();
-
-	std::filesystem::path filePath = aOutputDir / std::filesystem::path("Register_").concat(fileName.string());
-
-	filePath.replace_extension(".h");
+	const std::filesystem::path filePath = aOutputDir / aFile.myHeaderFile;
 
 	std::ofstream fileStream = CreateFile(filePath);
 
@@ -52,28 +51,20 @@ bool GenerateHeaderFile(
 		<< "\n"
 		<< "namespace Registry\n"
 		<< "{\n"
-		<< "\t\n";
-
-	for (const auto& objectName : aFile.myObjectNames)
-	{
-		fileStream
-			<< "\tvoid _Register" << objectName << "();\n"
-			<< "\t\n";
-	}
-
-	fileStream
+		<< "\tvoid " << aFile.myRegisterFuncName << "();\n"
 		<< "}\n";
+
+	fileStream.flush();
+	fileStream.close();
 
 	return true;
 }
 
 bool GenerateSourceFile(
 	const std::filesystem::path& aOutputDir,
-	const SFile& aFile)
+	const SLexedFile& aFile)
 {
-	const std::filesystem::path fileName = aFile.myIncludePath.filename().stem();
-
-	std::filesystem::path filePath = aOutputDir / std::filesystem::path("Register_").concat(fileName.string());
+	std::filesystem::path filePath = aOutputDir / aFile.mySourceFile;
 
 	filePath.replace_extension(".cpp");
 
@@ -87,64 +78,143 @@ bool GenerateSourceFile(
 	fileStream
 		<< "#include \"pch.h\"\n"
 		<< "\n"
-		<< "#include \"Register_" << fileName.string() << ".h\"\n"
+		<< "#include " << aFile.myHeaderFile << "\n"
 		<< "#include \"Serialization\\SerializationSystem.h\"\n"
 		<< "#include " << aFile.myIncludePath << "\n"
 		<< "\n"
 		<< "namespace Registry\n"
 		<< "{\n"
-		<< "\t\n";
+		<< "\tvoid " << aFile.myRegisterFuncName << "()\n"
+		<< "\t{\n";
 
 	for (const auto& objectName : aFile.myObjectNames)
 	{
 		fileStream
-			<< "\tvoid _Register" << objectName << "()\n"
-			<< "\t{\n"
-			<< "\t\tSystemPtr<SerializationSystem>()->Register<" << objectName << ">();\n"
-			<< "\t}\n"
-			<< "\t\n";
+			<< "\t\tSystemPtr<SerializationSystem>()->Register<" << objectName << ">();\n";
 	}
 
 	fileStream
+		<< "\t}\n"
 		<< "}\n";
+
+	fileStream.flush();
+	fileStream.close();
 
 	return true;
 }
 
-bool FindObjects(
-	SFile& aFile)
+bool GenerateRegistryHeaderFile(
+	const std::filesystem::path& aOutputFile)
 {
-	std::ifstream file(aFile.myIncludePath);
+	std::ofstream fileStream = CreateFile(aOutputFile);
+
+	if (!fileStream)
+	{
+		return false;
+	}
+
+	fileStream
+		<< "#pragma once\n"
+		<< "\n"
+		<< "namespace Registry\n"
+		<< "{\n"
+		<< "\tvoid Register();\n"
+		<< "}\n";
+
+	fileStream.flush();
+	fileStream.close();
+
+	return true;
+}
+
+bool GenerateRegistrySourceFile(
+	const std::filesystem::path& aOutputFile,
+	const std::vector<SLexedFile>& aFiles)
+{
+	std::ofstream fileStream = CreateFile(aOutputFile);
+
+	if (!fileStream)
+	{
+		return false;
+	}
+
+	fileStream
+		<< "#include \"pch.h\"\n"
+		<< "\n";
+
+	for (const auto& file : aFiles)
+	{
+		fileStream
+			<< "#include " << file.myHeaderFile << "\n";
+	}
+
+	fileStream
+		<< "\n"
+		<< "namespace Registry\n"
+		<< "{\n"
+		<< "\tvoid Register()\n"
+		<< "\t{\n";
+
+	for (const auto& file : aFiles)
+	{
+		fileStream
+			<< "\t\t" << file.myRegisterFuncName << "();\n";
+	}
+
+	fileStream
+		<< "\t}\n"
+		<< "}\n";
+
+	fileStream.flush();
+	fileStream.close();
+
+	return true;
+}
+
+bool FindObjectsInFile(
+	const std::filesystem::path& aFilePath,
+	SLexedFile& aOutFile)
+{
+	std::ifstream file(aFilePath);
 
 	if (!file)
 	{
-		std::cout << "Error: Unable to open file path; " << aFile.myIncludePath << ".\n";
+		std::cout << "Error: Unable to open file path; " << aFilePath << ".\n";
 		return false;
 	}
 
 	const std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-	std::regex componentRegex("struct\\s*S\\S*Component");
-	std::regex functionalityRegex("class\\s*\\S*Functionality");
+	std::regex componentRegex("struct\\s+S\\S*Component\\s*:\\s*public\\s+SComponent");
+	std::regex functionalityRegex("class\\s+\\S*Functionality\\s*:\\s*public\\s+Functionality");
 	std::smatch stringMatch;
 
-	const auto findObject = [&aFile](
+	const auto findObject = [&aOutFile, &aFilePath](
 		const std::smatch& aMatch)
 	{
 		for (const auto& match : aMatch)
 		{
 			const auto strMatch = match.str();
 
-			const auto it = std::find_if(strMatch.rbegin(), strMatch.rend(), isspace);
+			auto startIt = std::find_if(strMatch.begin(), strMatch.end(), isspace);
+			startIt = std::find_if(startIt, strMatch.end(), isalpha);
 
-			if (it == strMatch.rend())
+			if (startIt == strMatch.end())
 			{
-				std::cout << "Error: No whitespace found in regex match: \"" << strMatch << "\" in file " << aFile.myIncludePath << ".\n";
+				std::cout << "Error: Start of object not found in regex match: \"" << strMatch << "\" in file " << aFilePath << ".\n";
 				return false;
 			}
 
-			const std::string name(it.base(), strMatch.end());
+			const auto endIt = std::find_if(startIt + 1, strMatch.end(), isspace);
 
-			aFile.myObjectNames.emplace_back(name);
+			if (endIt == strMatch.end())
+			{
+				std::cout << "Error: End of object not found in regex match: \"" << strMatch << "\" in file " << aFilePath << ".\n";
+				return false;
+			}
+
+			const std::string name(startIt, endIt);
+
+			aOutFile.myObjectNames.emplace_back(name);
 		}
 
 		return true;
@@ -167,9 +237,25 @@ bool FindObjects(
 	return true;
 }
 
+bool Lex(
+	const std::filesystem::path& aFilePath,
+	SLexedFile& aOutFile)
+{
+	const std::string fileName = aFilePath.filename().stem().string();
+
+	aOutFile.myIncludePath = aFilePath;
+	aOutFile.myHeaderFile = "Register_" + fileName + ".h";
+	aOutFile.mySourceFile = "Register_" + fileName + ".cpp";
+	aOutFile.myRegisterFuncName = "_Register" + fileName;
+
+	return FindObjectsInFile(aFilePath, aOutFile);
+}
+
 bool ReadConfig(
 	const json& aConfigJson,
 	std::filesystem::path& aOutOutputDir,
+	std::filesystem::path& aOutRegistryHeaderFile,
+	std::filesystem::path& aOutRegistrySourceFile,
 	std::vector<std::filesystem::path>& aOutFiles,
 	std::vector<std::filesystem::path>& aOutValidExtensions)
 {
@@ -199,6 +285,46 @@ bool ReadConfig(
 
 			return false;
 		}
+	}
+
+	{
+		const auto it = aConfigJson.find("output_registry_header_file");
+
+		if (it == aConfigJson.cend())
+		{
+			std::cout << "Error: 'output_registry_header_file' string missing from config.\n";
+
+			return false;
+		}
+
+		if (!it->is_string())
+		{
+			std::cout << "Error: 'output_registry_header_file' must be a string.\n";
+
+			return false;
+		}
+
+		aOutRegistryHeaderFile = it->get<std::string>();
+	}
+
+	{
+		const auto it = aConfigJson.find("output_registry_source_file");
+
+		if (it == aConfigJson.cend())
+		{
+			std::cout << "Error: 'output_registry_source_file' string missing from config.\n";
+
+			return false;
+		}
+
+		if (!it->is_string())
+		{
+			std::cout << "Error: 'output_registry_source_file' must be a string.\n";
+
+			return false;
+		}
+
+		aOutRegistrySourceFile = it->get<std::string>();
 	}
 
 	{
@@ -282,12 +408,14 @@ bool GenerateRegistry(
 	std::ifstream configFile(aConfigFile);
 	json configJson;
 	std::filesystem::path outputDir;
+	std::filesystem::path registryHeaderFile;
+	std::filesystem::path registrySourceFile;
 	std::vector<std::filesystem::path> pathList;
 	std::vector<std::filesystem::path> validExtensions;
 
 	configFile >> configJson;
 
-	if (!ReadConfig(configJson, outputDir, pathList, validExtensions))
+	if (!ReadConfig(configJson, outputDir, registryHeaderFile, registrySourceFile, pathList, validExtensions))
 	{
 		return false;
 	}
@@ -297,7 +425,7 @@ bool GenerateRegistry(
 		std::filesystem::create_directories(outputDir);
 	}
 
-	std::vector<SFile> files;
+	std::vector<SLexedFile> files;
 
 	for (size_t i = 0; i < pathList.size(); ++i)
 	{
@@ -319,11 +447,9 @@ bool GenerateRegistry(
 
 		if (std::filesystem::is_regular_file(path))
 		{
-			SFile file;
-
-			file.myIncludePath = path;
-
-			if (!FindObjects(file))
+			SLexedFile file;
+			
+			if (!Lex(path, file))
 			{
 				return false;
 			}
@@ -333,7 +459,7 @@ bool GenerateRegistry(
 				continue;
 			}
 
-			files.emplace_back(std::move(file));
+			files.emplace_back(file);
 
 			continue;
 		}
@@ -348,6 +474,12 @@ bool GenerateRegistry(
 		{
 			return false;
 		}
+	}
+
+	if (!GenerateRegistryHeaderFile(registryHeaderFile)
+		|| !GenerateRegistrySourceFile(registrySourceFile, files))
+	{
+		return false;
 	}
 
 	return true;

@@ -184,8 +184,8 @@ bool FindObjectsInFile(
 	}
 
 	const std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-	std::regex componentRegex("struct\\s+S\\S*Component\\s*:\\s*public\\s+SComponent");
-	std::regex functionalityRegex("class\\s+\\S*Functionality\\s*:\\s*public\\s+Functionality");
+	std::regex componentRegex("struct\\s+[^_]S\\S+Component\\s*[^;]");
+	std::regex functionalityRegex("class\\s+[^_]\\S+Functionality\\s*[^;]");
 	std::smatch stringMatch;
 
 	const auto findObject = [&aOutFile, &aFilePath](

@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <functional>
 
-class BaseFunctionality;
+class _BaseFunctionality;
 
 class ObjectImpulseRouter
 	: public System
@@ -15,9 +15,9 @@ public:
 	ObjectImpulseRouter();
 
 	template<typename TMessage, typename TFunction>
-	void Subscribe(Object& aObject, BaseFunctionality& aFunctionality, TFunction aCallback);
+	void Subscribe(Object& aObject, _BaseFunctionality& aFunctionality, TFunction aCallback);
 
-	void Unsubscribe(const size_t aTypeHash, Object& aObject, BaseFunctionality& aFunctionality);
+	void Unsubscribe(const size_t aTypeHash, Object& aObject, _BaseFunctionality& aFunctionality);
 
 private:
 	template<typename TMessage>
@@ -25,13 +25,13 @@ private:
 
 	struct SImpulseSubscription 
 	{ 
-		SImpulseSubscription(BaseFunctionality& aFunctionality) noexcept
+		SImpulseSubscription(_BaseFunctionality& aFunctionality) noexcept
 			: myFunctionalityIdentifier(aFunctionality)
 		{
 		}
 
 		std::function<void(const SObjectImpulse&)> myCallback;
-		std::reference_wrapper<BaseFunctionality> myFunctionalityIdentifier;
+		std::reference_wrapper<_BaseFunctionality> myFunctionalityIdentifier;
 	};
 
 	std::unordered_map<size_t, std::unordered_map<Object*, std::vector<SImpulseSubscription>>> mySubscriptions;
@@ -40,7 +40,7 @@ private:
 };
 
 template<typename TMessage, typename TFunction>
-void ObjectImpulseRouter::Subscribe(Object& aObject, BaseFunctionality& aFunctionality, TFunction aCallback)
+void ObjectImpulseRouter::Subscribe(Object& aObject, _BaseFunctionality& aFunctionality, TFunction aCallback)
 {
 	static_assert(std::is_base_of_v<SObjectImpulse, TMessage>, "Object message type must have base of SObjectImpulse!");
 

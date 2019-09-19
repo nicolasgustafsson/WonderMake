@@ -15,7 +15,6 @@
 #include <typeindex>
 #include <unordered_map>
 
-class BaseFunctionality;
 struct SComponent;
 
 class SerializationSystem final

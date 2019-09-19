@@ -8,7 +8,7 @@ ObjectImpulseRouter::ObjectImpulseRouter()
 
 }
 
-void ObjectImpulseRouter::Unsubscribe(const size_t aTypeHash, Object& aObject, BaseFunctionality& aFunctionality)
+void ObjectImpulseRouter::Unsubscribe(const size_t aTypeHash, Object& aObject, _BaseFunctionality& aFunctionality)
 {
 	auto subscriptionIterator = mySubscriptions.find(aTypeHash);
 

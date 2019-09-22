@@ -2,6 +2,7 @@
 #include "InputSystem.h"
 #include <GLFW/glfw3.h>
 #include <algorithm>
+#include <Camera/Camera.h>
 
 void InputSystem::Update() noexcept
 {
@@ -59,6 +60,20 @@ void InputSystem::UpdateGamepad() noexcept
 	}
 }
 
+SVector2f InputSystem::GetMousePositionInWorld() const noexcept
+{
+	return SystemPtr<Camera>()->ConvertToWorldPosition(GetMousePositionOnScreen());
+}
+
+SVector2f InputSystem::GetMousePositionOnScreen() const noexcept
+{
+	f64 x, y;
+
+	glfwGetCursorPos(myWindowSystemPtr->myGlfwWindow, &x, &y);
+
+	return { static_cast<f32>(x), static_cast<f32>(y) };
+}
+
 bool InputSystem::IsKeyDown(const EKeyboardKey aKey) const noexcept
 {
 	return myKeyboardKeyStates[static_cast<u32>(aKey)] == EInputItemState::Down;
@@ -85,9 +100,15 @@ constexpr EInputItemState InputSystem::GetNewInputState(const EInputItemState aO
 	return EInputItemState::Up;
 }
 
-void InputSystem::Debug() noexcept
+void InputSystem::Debug()
 {
 	ImGui::Begin("InputSystem");
+
+	const SVector2f mousePositionOnScreen = GetMousePositionOnScreen();
+	const SVector2f mousePositionInWorld = GetMousePositionInWorld();
+
+	ImGui::Text("Mouse position on screen: %f, %f", mousePositionOnScreen.X, mousePositionOnScreen.Y);
+	ImGui::Text("Mouse position in world: %f, %f", mousePositionInWorld.X, mousePositionInWorld.Y);
 
 	if (ImGui::CollapsingHeader("Show Keyboard Keys"))
 	{

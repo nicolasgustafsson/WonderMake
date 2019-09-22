@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Camera.h"
 #include "Graphics/EngineUniformBuffer.h"
+#include <Program/Window.h>
+#include <GLFW/glfw3.h>
 
 void Camera::Update()
 {
@@ -47,6 +49,40 @@ void Camera::Debug()
 
 void Camera::SetViewportSize(const SVector2i aViewportSize) noexcept
 {
-	myProjectionMatrix.m11 = 1.0f / aViewportSize.X;
-	myProjectionMatrix.m22 = 1.0f / aViewportSize.Y;
+	myProjectionMatrix.m11 = 2.0f / aViewportSize.X;
+	myProjectionMatrix.m22 = 2.0f / aViewportSize.Y;
+
+	myProjectionMatrixInverse.m11 = aViewportSize.X / 2.0f;
+	myProjectionMatrixInverse.m22 = aViewportSize.Y / 2.0f;
+	myViewportSize = { aViewportSize.X, aViewportSize.Y };
+}
+
+SVector2f Camera::ConvertToWorldPosition(const SVector2f aScreenPosition) const noexcept
+{
+	SVector2f offsetScreenPosition = aScreenPosition - myImguiWindowOffset;
+
+	offsetScreenPosition -= myViewportSize / 2.f;
+
+	auto view = myViewMatrix;
+
+	const SMatrix33f rotationMatrix = SMatrix33f::CreateRotateAroundZ(myRotation);
+
+	view = rotationMatrix * myViewMatrix;
+
+	view.m11 /= myScale;
+	view.m12 /= myScale;
+	view.m22 /= myScale;
+	view.m21 /= myScale;
+
+	SMatrix33f screenPositionMatrix;
+	screenPositionMatrix.SetPosition(offsetScreenPosition);
+	
+	screenPositionMatrix *= view;
+
+	return screenPositionMatrix.GetPosition();
+}
+
+void Camera::SetImguiWindowOffset(const SVector2f aImguiOffset) noexcept
+{
+	myImguiWindowOffset = aImguiOffset;
 }

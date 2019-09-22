@@ -10,12 +10,22 @@ public:
 
 	}
 
-	TSystem& operator*() noexcept
+	[[nodiscard]] TSystem& operator*() noexcept
 	{
 		return myReference;
 	}
 
-	TSystem* operator->() noexcept
+	[[nodiscard]] TSystem* operator->() noexcept
+	{
+		return &myReference;
+	}
+
+	[[nodiscard]] const TSystem& operator*() const noexcept
+	{
+		return myReference;
+	}
+
+	[[nodiscard]] const TSystem* operator->() const noexcept
 	{
 		return &myReference;
 	}

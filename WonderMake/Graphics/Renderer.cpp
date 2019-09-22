@@ -80,8 +80,14 @@ void Renderer::Debug()
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-
+	
 	ImGui::Begin("Game Window");
+
+	i32 windowX, windowY;
+	glfwGetWindowPos(myWindowPtr->myGlfwWindow, &windowX, &windowY);
+	myCameraPtr->SetImguiWindowOffset(
+		{ ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x - windowX
+		, ImGui::GetWindowContentRegionMin().y + ImGui::GetWindowPos().y - windowY });
 
 	ImGui::PopStyleVar();
 	ImGui::PopStyleVar();
@@ -92,6 +98,8 @@ void Renderer::Debug()
 #pragma warning(default: 4312 26493)
 
 	myCameraPtr->SetViewportSize(ViewportSize);
+
+
 
 	ImGui::End();
 }

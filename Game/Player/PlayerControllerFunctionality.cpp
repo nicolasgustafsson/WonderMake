@@ -25,6 +25,9 @@ void PlayerControllerFunctionality::Tick() noexcept
 		Get<MeleeWeaponUserFunctionality>().SwingWeapon();
 
 	Get<MovementInputFunctionality>().SetMovementInput(movementInput);
+	const SVector2f position = Get<TransformFunctionality>().GetPosition();
+
+	WmDrawDebugLine(Get<TransformFunctionality>().GetPosition(), myInputSystem->GetMousePositionInWorld(), SColor::White);
 }
 
 void PlayerControllerFunctionality::Debug()

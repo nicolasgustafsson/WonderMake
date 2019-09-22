@@ -16,6 +16,9 @@ public:
 	void UpdateMouse() noexcept;
 	void UpdateGamepad() noexcept;
 
+	[[nodiscard]] SVector2f GetMousePositionInWorld() const noexcept;
+	[[nodiscard]] SVector2f GetMousePositionOnScreen() const noexcept;
+
 	bool IsKeyDown(const EKeyboardKey aKey) const noexcept;
 	bool IsMouseButtonPressed(const EMouseButton aKey) const noexcept;
 
@@ -32,7 +35,7 @@ private:
 		return !IsStateDown(aState);
 	}
 
-	virtual void Debug() noexcept override;
+	virtual void Debug() override;
 
 	std::array<EInputItemState, KeyboardKeyCount> myKeyboardKeyStates;
 	std::array<EInputItemState, MouseButtonCount> myMouseButtonStates;

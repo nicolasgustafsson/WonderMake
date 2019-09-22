@@ -88,7 +88,7 @@ SMatrix33<TYPE> & SMatrix33<TYPE>::operator =(const SMatrix33<TYPE> & aRight) no
 }
 
 template<typename TYPE>
-void SMatrix33<TYPE>::SetPosition(const SVector2<TYPE> & aPosition)
+void SMatrix33<TYPE>::SetPosition(const SVector2<TYPE> & aPosition) noexcept
 {
 	m31 = aPosition.X;
 	m32 = aPosition.Y;
@@ -134,7 +134,7 @@ SMatrix33<TYPE> SMatrix33<TYPE>::Transpose(SMatrix33 aMatrix)
 }
 
 template<typename TYPE>
-SMatrix33<TYPE> &  SMatrix33<TYPE>::Inverse()
+SMatrix33<TYPE>& SMatrix33<TYPE>::Inverse()
 {
 	SVector2<TYPE> position = -GetPosition();
 	SetPosition(SVector2<TYPE>::Zero());

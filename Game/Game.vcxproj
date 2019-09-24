@@ -233,7 +233,6 @@
     <ClInclude Include="Movement\DefaultMovementFunctionality.h" />
     <ClInclude Include="GameWorld.h" />
     <ClInclude Include="Movement\MovementInputFunctionality.h" />
-    <ClInclude Include="pch.h" />
     <ClInclude Include="Player\PlayerControllerFunctionality.h" />
     <ClInclude Include="Weapons\MeleeWeapon.h" />
     <ClInclude Include="Weapons\WeaponProperty\WeaponProperty.h" />

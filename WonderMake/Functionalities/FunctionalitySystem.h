@@ -31,7 +31,7 @@ void FunctionalitySystem<TFunctionality>::Tick() noexcept
 template<typename TFunctionality>
 FunctionalitySystem<TFunctionality>::FunctionalitySystem()
 {
-	if (typeid(&TFunctionality::Tick) != typeid(&BaseFunctionality::Tick))
+	if (typeid(&TFunctionality::Tick) != typeid(&_BaseFunctionality::Tick))
 		EnableTick();
 }
 

@@ -16,7 +16,6 @@
     <ClCompile Include="Weapons\WeaponSwing.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h" />
     <ClInclude Include="GameWorld.h" />
     <ClInclude Include="Movement\MovementInputFunctionality.h" />
     <ClInclude Include="Player\PlayerControllerFunctionality.h" />

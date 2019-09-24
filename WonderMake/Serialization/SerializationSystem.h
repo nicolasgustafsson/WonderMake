@@ -2,6 +2,8 @@
 
 #include "Json/json.hpp"
 
+#include "Message/Messages.h"
+
 #include "Object/Object.h"
 
 #include "System/System.h"
@@ -13,7 +15,6 @@
 #include <typeindex>
 #include <unordered_map>
 
-class BaseFunctionality;
 struct SComponent;
 
 class SerializationSystem final

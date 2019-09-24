@@ -2,13 +2,13 @@
 #include "Object/Dependency.h"
 
 class Object;
-class BaseFunctionality 
+class _BaseFunctionality
 	: public NonCopyable
 {
 public:
-	BaseFunctionality() = default;
+	_BaseFunctionality() = default;
 
-	virtual ~BaseFunctionality() = default;
+	virtual ~_BaseFunctionality() = default;
 
 	virtual void Destroy([[maybe_unused]]Object& aObject) = 0;
 
@@ -18,7 +18,7 @@ public:
 //[Nicos]: Describes a functionality for an object. Template params are 1. Type that is self type and 2. Dependencies.
 template<typename TSelfType, typename ... TDependencies>
 class Functionality
-	: public BaseFunctionality
+	: public _BaseFunctionality
 {
 public:
 	inline virtual void Destroy(Object& aObject) override final;

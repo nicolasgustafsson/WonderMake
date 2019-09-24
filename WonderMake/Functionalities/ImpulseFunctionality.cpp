@@ -19,7 +19,7 @@ ImpulseFunctionality::~ImpulseFunctionality()
 	}
 }
 
-void ImpulseFunctionality::Unsubscribe(BaseFunctionality& aSubscriber, const size_t aTypeHash)
+void ImpulseFunctionality::Unsubscribe(_BaseFunctionality& aSubscriber, const size_t aTypeHash)
 {
 	myRouter->Unsubscribe(aTypeHash, Get<OwnerFunctionality>().GetOwner(), aSubscriber);
 
@@ -34,7 +34,7 @@ void ImpulseFunctionality::Unsubscribe(BaseFunctionality& aSubscriber, const siz
 		impulseComponent.ImpulseKeys.erase(it);
 }
 
-void ImpulseFunctionality::UnsubscribeAll(BaseFunctionality& aSubscriber)
+void ImpulseFunctionality::UnsubscribeAll(_BaseFunctionality& aSubscriber)
 {
 	auto& impulseList = Get<SImpulseListComponent>();
 	Object& owner = Get<OwnerFunctionality>().GetOwner();

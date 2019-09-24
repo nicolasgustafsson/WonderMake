@@ -2,5 +2,43 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Registry\*.cpp" />
+    <ClCompile Include="Registry\*.cpp" />
+    <ClCompile Include="Registry\*.cpp" />
+    <ClCompile Include="Registry\*.cpp" />
+    <ClCompile Include="Registry\*.cpp" />
+    <ClCompile Include="Registry\*.cpp" />
+    <ClCompile Include="Registry\*.cpp" />
+    <ClCompile Include="Registry\*.cpp" />
+    <ClCompile Include="Registry\*.cpp" />
+    <ClCompile Include="Registry\*.cpp" />
+    <ClCompile Include="Registry\*.cpp" />
+    <ClCompile Include="Registry\*.cpp" />
+    <ClCompile Include="Registry\*.cpp" />
+    <ClCompile Include="Registry\*.cpp" />
+    <ClCompile Include="Registry\*.cpp" />
+    <ClCompile Include="Registry\*.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Registry\*.h" />
+    <ClInclude Include="Registry\*.h" />
+    <ClInclude Include="Registry\*.h" />
+    <ClInclude Include="Registry\*.h" />
+    <ClInclude Include="Registry\*.h" />
+    <ClInclude Include="Registry\*.h" />
+    <ClInclude Include="Registry\*.h" />
+    <ClInclude Include="Registry\*.h" />
+    <ClInclude Include="Registry\*.h" />
+    <ClInclude Include="Registry\*.h" />
+    <ClInclude Include="Registry\*.h" />
+    <ClInclude Include="Registry\*.h" />
+    <ClInclude Include="Registry\*.h" />
+    <ClInclude Include="Registry\*.h" />
+    <ClInclude Include="Registry\*.h" />
+    <ClInclude Include="Registry\*.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="registryConfig.json" />
   </ItemGroup>
 </Project>

@@ -2,6 +2,8 @@
 #include "Functionalities/Functionality.h"
 #include "Components/TransformComponent.h"
 
+#include "Utilities/Matrix33.h"
+
 class TransformFunctionality
 	: public Functionality<TransformFunctionality, STransformComponent>
 {

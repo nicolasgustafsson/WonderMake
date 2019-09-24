@@ -6,4 +6,8 @@ namespace Constants
 #else
 	constexpr bool IsDebugging = true;
 #endif
+
+	constexpr f32 Pi = 3.141592f;
+	constexpr f32 HalfPi = 3.141592f / 2.f;
+	constexpr f32 Tau = Pi * 2;
 }

@@ -3,6 +3,7 @@
 #include <Functionalities/SpriteRenderingFunctionality.h>
 #include "Functionalities/TransformFunctionality.h"
 #include "MeleeWeaponFunctionality.h"
+#include "Input/InputSystem.h"
 
 MeleeWeaponUserFunctionality::MeleeWeaponUserFunctionality(Object& aOwner)
 	: Super(aOwner)
@@ -18,6 +19,8 @@ void MeleeWeaponUserFunctionality::Inspect()
 
 void MeleeWeaponUserFunctionality::SwingWeapon()
 {
+	Get<TransformFunctionality>().FacePosition(SystemPtr<InputSystem>()->GetMousePositionInWorld());
+
 	Get<SMeleeWeaponUserComponent>().myWeapon->Swing();
 }
 

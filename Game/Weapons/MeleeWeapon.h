@@ -13,7 +13,7 @@ public:
 	MeleeWeapon(MeleeWeapon&& aOther) noexcept;
 
 	void Inspect();
-	void DrawSwing(const SVector2f aOffset);
+	void DrawSwing(const SVector2f aOffset, const f32 aRotation);
 
 	[[nodiscard]] virtual SPower GetPower() const override;
 

@@ -16,7 +16,9 @@ void MeleeWeaponFunctionality::Swing()
 	auto& WeaponComp = Get<SMeleeWeaponComponent>();
 
 	//uncomment to render the actual bezier curve
-	//WeaponComp.Weapon->DrawSwing(Get<SMeleeWeaponComponent>().ParentTransform->Position);
+	TransformFunctionality* parent = Get<SMeleeWeaponComponent>().ParentTransform;
+
+	WeaponComp.Weapon->DrawSwing(parent->GetPosition(), parent->GetRotation());
 
 	Get<SpriteRenderingFunctionality>().Show();
 
@@ -50,10 +52,14 @@ void MeleeWeaponFunctionality::Tick()
 
 		if (parent)
 		{
-			const SVector2f SwingLocation = Weapon.mySwing.mySwingPath.GetLocationAt(CurrentSwing.Progress);
+			SVector2f SwingLocation = Weapon.mySwing.mySwingPath.GetLocationAt(CurrentSwing.Progress);
+
+			SwingLocation.Rotate((parent->GetRotation()));
+
 			Get<TransformFunctionality>().SetPosition(parent->GetPosition() + SwingLocation);
 
-			Get<TransformFunctionality>().SetRotation(SwingLocation.GetRotation() + (3.141592f / 12.f) * (1.f - std::powf(CurrentSwing.Progress, 3.f)) + 0.7f);
+			Get<TransformFunctionality>().SetRotation(
+				SwingLocation.GetRotation() + (Constants::Pi / 12.f) * (std::powf(CurrentSwing.Progress, 3.f)) - Constants::HalfPi * 1.5f);
 		}
 
 		if (CurrentSwing.Progress > 1.0f)
@@ -68,17 +74,18 @@ void MeleeWeaponFunctionality::Inspect()
 	GetWeapon().Inspect();
 }
 
+void MeleeWeaponFunctionality::StopSwing()
+{
+	auto& WeaponComp = Get<SMeleeWeaponComponent>();
+
+	WeaponComp.CurrentSwing.IsActive = false;
+	Get<SpriteRenderingFunctionality>().Hide();
+}
+
 MeleeWeapon& MeleeWeaponFunctionality::GetWeapon()
 {
 	auto& WeaponComp = Get<SMeleeWeaponComponent>();
 
 	return *WeaponComp.Weapon;
-}
-
-void MeleeWeaponFunctionality::StopSwing()
-{
-	auto& WeaponComp = Get<SMeleeWeaponComponent>();
-	WeaponComp.CurrentSwing.IsActive = false;
-	Get<SpriteRenderingFunctionality>().Hide();
 }
 

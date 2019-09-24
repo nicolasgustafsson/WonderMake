@@ -64,9 +64,9 @@ public:
 	SMatrix33& Inverse();
 	static SMatrix33 Inverse(SMatrix33 aMatrix);
 
-	static SMatrix33 CreateRotateAroundX(const TYPE anAngle);
-	static SMatrix33 CreateRotateAroundY(const TYPE anAngle);
-	static SMatrix33 CreateRotateAroundZ(const TYPE anAngle);
+	static SMatrix33 CreateRotateAroundX(const TYPE anAngle) noexcept;
+	static SMatrix33 CreateRotateAroundY(const TYPE anAngle) noexcept;
+	static SMatrix33 CreateRotateAroundZ(const TYPE anAngle) noexcept;
 
 	std::string ToString() const;
 };

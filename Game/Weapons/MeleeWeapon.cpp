@@ -54,12 +54,15 @@ void MeleeWeapon::Inspect()
 	ImGui::Separator();
 }
 
-void MeleeWeapon::DrawSwing(const SVector2f aOffset)
+void MeleeWeapon::DrawSwing(const SVector2f aOffset, const f32 aRotation)
 {
 	for (f32 i = 0.f; i < 19.f; i++)
 	{
-		const SVector2f start = mySwing.mySwingPath.GetLocationAt((f32)i / 20.f);
-		const SVector2f end = mySwing.mySwingPath.GetLocationAt(((f32)i + 1.f) / 20.f);
+		SVector2f start = mySwing.mySwingPath.GetLocationAt((f32)i / 20.f);
+		SVector2f end = mySwing.mySwingPath.GetLocationAt(((f32)i + 1.f) / 20.f);
+
+		start.Rotate(aRotation);
+		end.Rotate(aRotation);
 
 		WmDrawDebugLine(start + aOffset, end + aOffset, SColor::Yellow, 10.f);
 	}

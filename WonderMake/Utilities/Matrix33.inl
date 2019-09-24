@@ -156,7 +156,7 @@ SMatrix33<TYPE> SMatrix33<TYPE>::Inverse(SMatrix33 aMatrix)
 }
 
 template<typename TYPE>
-SMatrix33<TYPE> SMatrix33<TYPE>::CreateRotateAroundX(const TYPE anAngle)
+SMatrix33<TYPE> SMatrix33<TYPE>::CreateRotateAroundX(const TYPE anAngle) noexcept
 {
 	return SMatrix33(
 		1, 0, 0,
@@ -165,7 +165,7 @@ SMatrix33<TYPE> SMatrix33<TYPE>::CreateRotateAroundX(const TYPE anAngle)
 		);
 }
 template<typename TYPE>
-SMatrix33<TYPE> SMatrix33<TYPE>::CreateRotateAroundY(const TYPE anAngle)
+SMatrix33<TYPE> SMatrix33<TYPE>::CreateRotateAroundY(const TYPE anAngle) noexcept
 {
 	return SMatrix33(
 		static_cast<TYPE>(cos(anAngle)), 0, -static_cast<TYPE>(sin(anAngle)),
@@ -174,7 +174,7 @@ SMatrix33<TYPE> SMatrix33<TYPE>::CreateRotateAroundY(const TYPE anAngle)
 		);
 }
 template<typename TYPE>
-SMatrix33<TYPE> SMatrix33<TYPE>::CreateRotateAroundZ(const TYPE anAngle)
+SMatrix33<TYPE> SMatrix33<TYPE>::CreateRotateAroundZ(const TYPE anAngle) noexcept
 {
 	return SMatrix33(
 		static_cast<TYPE>(cos(anAngle)), static_cast<TYPE>(sin(anAngle)), 0,

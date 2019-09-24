@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "MeleeWeaponUserFunctionality.h"
-#include <Functionalities/SpriteRenderingFunctionality.h>
 #include "Functionalities/TransformFunctionality.h"
 #include "MeleeWeaponFunctionality.h"
 #include "Input/InputSystem.h"

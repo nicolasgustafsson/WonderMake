@@ -10,7 +10,7 @@
 #include <typeindex>
 
 struct SComponent;
-class BaseFunctionality;
+class _BaseFunctionality;
 
 class Object
 {
@@ -47,7 +47,7 @@ private:
 	template<typename TType>
 	using PairList = std::vector<Pair<TType>>;
 
-	using FunctionalityList = PairList<BaseFunctionality>;
+	using FunctionalityList = PairList<_BaseFunctionality>;
 	using ComponentList = PairList<SComponent>;
 
 	template<typename TType, typename TBaseType, typename TCreateFunc>
@@ -70,7 +70,7 @@ inline TType& Object::Add()
 				return SystemPtr<ComponentSystem<TType>>()->AddComponent();
 			});
 	}
-	else if constexpr (std::is_base_of<BaseFunctionality, TType>::value)
+	else if constexpr (std::is_base_of<_BaseFunctionality, TType>::value)
 	{
 		return Add<TType>(myFunctionalities, [&]() -> TType &
 			{
@@ -79,7 +79,7 @@ inline TType& Object::Add()
 	}
 	else
 	{
-		static_assert("Type must inherit from SComponent or BaseFunctionality!");
+		static_assert("Type must inherit from SComponent or _BaseFunctionality!");
 	}
 }
 
@@ -90,7 +90,7 @@ inline void Object::Remove()
 	{
 		Remove<TType>(myComponents);
 	}
-	else if constexpr (std::is_base_of<BaseFunctionality, TType>::value)
+	else if constexpr (std::is_base_of<_BaseFunctionality, TType>::value)
 	{
 		auto functionality = Remove<TType>(myFunctionalities);
 
@@ -98,7 +98,7 @@ inline void Object::Remove()
 	}
 	else
 	{
-		static_assert("Type must inherit from SComponent or BaseFunctionality!");
+		static_assert("Type must inherit from SComponent or _BaseFunctionality!");
 	}
 }
 

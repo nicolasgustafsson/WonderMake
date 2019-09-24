@@ -1,10 +1,11 @@
 #pragma once
-#include "Functionalities/Functionality.h"
+#include "Components/Component.h"
 
-class TransformFunctionality;
-class SpriteRenderingFunctionality;
-class MeleeWeapon;
+#include "Functionalities/Functionality.h"
+#include "Functionalities/TransformFunctionality.h"
+
 class MeleeWeaponFunctionality;
+class MeleeWeapon;
 
 struct SMeleeWeaponUserComponent
 	: public SComponent

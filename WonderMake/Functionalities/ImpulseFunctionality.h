@@ -6,7 +6,7 @@
 struct SImpulseKey
 {
 	size_t TypeHash;
-	BaseFunctionality* OwningFunctionality;
+	_BaseFunctionality* OwningFunctionality;
 };
 
 struct SImpulseListComponent
@@ -23,21 +23,21 @@ public:
 	~ImpulseFunctionality();
 
 	template <typename TMessage, typename TFunction>
-	void Subscribe(BaseFunctionality& aSubscriber, TFunction aCallback);
+	void Subscribe(_BaseFunctionality& aSubscriber, TFunction aCallback);
 	
 	template <typename TMessage>
-	void Unsubscribe(BaseFunctionality& aSubscriber);
+	void Unsubscribe(_BaseFunctionality& aSubscriber);
 
-	void Unsubscribe(BaseFunctionality& aSubscriber, const size_t aTypeHash);
+	void Unsubscribe(_BaseFunctionality& aSubscriber, const size_t aTypeHash);
 
-	void UnsubscribeAll(BaseFunctionality& aSubscriber);
+	void UnsubscribeAll(_BaseFunctionality& aSubscriber);
 
 private:
 	SystemPtr<ObjectImpulseRouter> myRouter;
 };
 
 template <typename TMessage, typename TFunction>
-void ImpulseFunctionality::Subscribe(BaseFunctionality& aSubscriber, TFunction aCallback)
+void ImpulseFunctionality::Subscribe(_BaseFunctionality& aSubscriber, TFunction aCallback)
 {
 	myRouter->Subscribe<TMessage>(Get<OwnerFunctionality>().GetOwner(), aSubscriber, aCallback);
 
@@ -51,7 +51,7 @@ void ImpulseFunctionality::Subscribe(BaseFunctionality& aSubscriber, TFunction a
 }
 
 template <typename TMessage>
-void ImpulseFunctionality::Unsubscribe(BaseFunctionality& aSubscriber)
+void ImpulseFunctionality::Unsubscribe(_BaseFunctionality& aSubscriber)
 {
 	Unsubscribe(aSubscriber, TMessage::GetTypeHash());
 }

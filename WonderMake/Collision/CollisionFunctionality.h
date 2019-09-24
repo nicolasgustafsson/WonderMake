@@ -2,6 +2,8 @@
 
 #include "Collision/CollisionComponent.h"
 
+#include "Utilities/Debugging/Debugged.h"
+
 #include "Functionalities/Functionality.h"
 #include "Functionalities/TransformFunctionality.h"
 

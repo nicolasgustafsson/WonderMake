@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -74,27 +74,27 @@
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
     <LibraryPath>$(SolutionDir)External\glfw-3.3\Lib;$(SolutionDir)External\Imgui-1.68 WIP\Lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\KHR\Inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\stb\Inc;$(SolutionDir)External\MetaStuff\Inc;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
     <LibraryPath>$(SolutionDir)External\glfw-3.3\Lib;$(SolutionDir)External\Imgui-1.68 WIP\Lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\KHR\Inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\stb\Inc;$(SolutionDir)External\MetaStuff\Inc;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\KHR\Inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\stb\Inc;$(SolutionDir)External\MetaStuff\Inc;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)External\glfw-3.3\Lib;$(SolutionDir)External\Imgui-1.68 WIP\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\KHR\Inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\stb\Inc;$(SolutionDir)External\MetaStuff\Inc;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)External\glfw-3.3\Lib;$(SolutionDir)External\Imgui-1.68 WIP\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -104,15 +104,20 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Game;$(SolutionDir)WonderMake;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Game;$(SolutionDir)WonderMake;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>glfw3_$(Platform)_$(Configuration).lib;imgui_$(Platform)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)External\PreBuild\PreBuild.exe $(ProjectDir)RegistryConfig.json</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -121,15 +126,20 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Game;$(SolutionDir)WonderMake;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Game;$(SolutionDir)WonderMake;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>glfw3_$(Platform)_$(Configuration).lib;imgui_$(Platform)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)External\PreBuild\PreBuild.exe $(ProjectDir)RegistryConfig.json</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -140,11 +150,13 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Game;$(SolutionDir)WonderMake;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Game;$(SolutionDir)WonderMake;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <SupportJustMyCode>true</SupportJustMyCode>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -153,6 +165,9 @@
       <AdditionalDependencies>glfw3_$(Platform)_$(Configuration).lib;imgui_$(Platform)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)External\PreBuild\PreBuild.exe $(ProjectDir)RegistryConfig.json</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -163,11 +178,13 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Game;$(SolutionDir)WonderMake;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Game;$(SolutionDir)WonderMake;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <SupportJustMyCode>true</SupportJustMyCode>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -176,9 +193,19 @@
       <AdditionalDependencies>glfw3_$(Platform)_$(Configuration).lib;imgui_$(Platform)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)External\PreBuild\PreBuild.exe $(ProjectDir)RegistryConfig.json</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Registry\*.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Game\Game.vcxproj">
@@ -187,6 +214,12 @@
     <ProjectReference Include="..\WonderMake\WonderMake.vcxproj">
       <Project>{bb396f7d-1134-4dae-b855-1ca77a2b0c04}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Registry\*.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="registryConfig.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

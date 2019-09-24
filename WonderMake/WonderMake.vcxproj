@@ -117,7 +117,7 @@
       <TreatWarningAsError>false</TreatWarningAsError>
       <EnablePREfast>false</EnablePREfast>
       <CompileAs>CompileAsCpp</CompileAs>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);CONFIGURATION_$(Configuration);CONFIGURATION_$(Configuration);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;_ITERATOR_DEBUG_LEVEL 0;%(PreprocessorDefinitions);CONFIGURATION_$(Configuration);CONFIGURATION_$(Configuration);</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <SupportJustMyCode>false</SupportJustMyCode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -139,7 +139,7 @@
       <TreatWarningAsError>false</TreatWarningAsError>
       <EnablePREfast>false</EnablePREfast>
       <CompileAs>CompileAsCpp</CompileAs>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);CONFIGURATION_$(Configuration);CONFIGURATION_$(Configuration);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;_ITERATOR_DEBUG_LEVEL 0;%(PreprocessorDefinitions);CONFIGURATION_$(Configuration);CONFIGURATION_$(Configuration);</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <SupportJustMyCode>false</SupportJustMyCode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -163,7 +163,7 @@
       <TreatWarningAsError>false</TreatWarningAsError>
       <EnablePREfast>false</EnablePREfast>
       <CompileAs>CompileAsCpp</CompileAs>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);CONFIGURATION_$(Configuration);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;_ITERATOR_DEBUG_LEVEL 0;%(PreprocessorDefinitions);CONFIGURATION_$(Configuration);</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -188,7 +188,7 @@
       <TreatWarningAsError>false</TreatWarningAsError>
       <EnablePREfast>false</EnablePREfast>
       <CompileAs>CompileAsCpp</CompileAs>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);CONFIGURATION_$(Configuration);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;_ITERATOR_DEBUG_LEVEL 0;%(PreprocessorDefinitions);CONFIGURATION_$(Configuration);</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

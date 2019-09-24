@@ -80,7 +80,6 @@
     <ClInclude Include="FileSystem\ReadFileAsStringJob.h" />
     <ClInclude Include="Graphics\EngineUniformBuffer.h" />
     <ClInclude Include="Imgui\DockSpace.h" />
-    <ClInclude Include="Json\json.hpp" />
     <ClInclude Include="Job\Job.h" />
     <ClInclude Include="Logging\FileLogger.h" />
     <ClInclude Include="Logging\ImGuiLogger.h" />
@@ -197,6 +196,7 @@
     <ClInclude Include="Object\ObjectImpulseRouter.h" />
     <ClInclude Include="Functionalities\OwnerFunctionality.h" />
     <ClInclude Include="Serialization\SerializationSystem.h" />
+    <ClInclude Include="Randomizer\Randomizer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

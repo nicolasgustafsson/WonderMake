@@ -16,9 +16,8 @@ void MeleeWeaponFunctionality::Swing()
 	auto& WeaponComp = Get<SMeleeWeaponComponent>();
 
 	//uncomment to render the actual bezier curve
-	TransformFunctionality* parent = Get<SMeleeWeaponComponent>().ParentTransform;
-
-	WeaponComp.Weapon->DrawSwing(parent->GetPosition(), parent->GetRotation());
+	//TransformFunctionality* parent = Get<SMeleeWeaponComponent>().ParentTransform;
+	//WeaponComp.Weapon->DrawSwing(parent->GetPosition(), parent->GetRotation());
 
 	Get<SpriteRenderingFunctionality>().Show();
 

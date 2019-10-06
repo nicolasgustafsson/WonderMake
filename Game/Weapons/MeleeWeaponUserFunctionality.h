@@ -3,6 +3,8 @@
 
 #include "Functionalities/Functionality.h"
 #include "Functionalities/TransformFunctionality.h"
+#include "Weapons/WeaponSwingAction.h"
+#include "Actions/ActionFunctionality.h"
 
 class MeleeWeaponFunctionality;
 class MeleeWeapon;
@@ -12,11 +14,13 @@ struct SMeleeWeaponUserComponent
 {
 	Object WeaponObject;
 
-	MeleeWeaponFunctionality* myWeapon = nullptr;
+	MeleeWeaponFunctionality* Weapon = nullptr;
+
+	std::optional<WeaponSwingAction> SwingAction;
 };
 
 class MeleeWeaponUserFunctionality
-	: public Functionality<MeleeWeaponUserFunctionality, SMeleeWeaponUserComponent, TransformFunctionality>
+	: public Functionality<MeleeWeaponUserFunctionality, SMeleeWeaponUserComponent, TransformFunctionality, ActionFunctionality>
 {
 public:
 	MeleeWeaponUserFunctionality(Object& aOwner);

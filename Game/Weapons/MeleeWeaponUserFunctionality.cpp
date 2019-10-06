@@ -3,27 +3,27 @@
 #include "Functionalities/TransformFunctionality.h"
 #include "MeleeWeaponFunctionality.h"
 #include "Input/InputSystem.h"
+#include "Actions/ActionFunctionality.h"
+#include "Weapons/WeaponSwingAction.h"
 
 MeleeWeaponUserFunctionality::MeleeWeaponUserFunctionality(Object& aOwner)
 	: Super(aOwner)
 {
-	Get<SMeleeWeaponUserComponent>().myWeapon = &Get<SMeleeWeaponUserComponent>().WeaponObject.Add<MeleeWeaponFunctionality>();
-	Get<SMeleeWeaponUserComponent>().myWeapon->SetParent(&Get<TransformFunctionality>());
+	Get<SMeleeWeaponUserComponent>().Weapon = &Get<SMeleeWeaponUserComponent>().WeaponObject.Add<MeleeWeaponFunctionality>();
 }
 
 void MeleeWeaponUserFunctionality::Inspect()
 {
-	Get<SMeleeWeaponUserComponent>().myWeapon->Inspect();
+	Get<SMeleeWeaponUserComponent>().Weapon->Inspect();
 }
 
 void MeleeWeaponUserFunctionality::SwingWeapon()
 {
-	Get<TransformFunctionality>().FacePosition(SystemPtr<InputSystem>()->GetMousePositionInWorld());
-
-	Get<SMeleeWeaponUserComponent>().myWeapon->Swing();
+	Get<SMeleeWeaponUserComponent>().SwingAction.emplace(WeaponSwingAction(*Get<SMeleeWeaponUserComponent>().Weapon, Get<TransformFunctionality>()));
+	Get<ActionFunctionality>().StartAction(*Get<SMeleeWeaponUserComponent>().SwingAction);
 }
 
 void MeleeWeaponUserFunctionality::SetWeapon(MeleeWeapon&& aWeapon)
 {
-	Get<SMeleeWeaponUserComponent>().myWeapon->SetWeapon(std::forward<MeleeWeapon>(aWeapon));
+	Get<SMeleeWeaponUserComponent>().Weapon->SetWeapon(std::forward<MeleeWeapon>(aWeapon));
 }

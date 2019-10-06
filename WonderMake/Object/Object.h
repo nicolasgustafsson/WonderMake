@@ -79,7 +79,7 @@ inline TType& Object::Add()
 	}
 	else
 	{
-		static_assert("Type must inherit from SComponent or _BaseFunctionality!");
+		static_assert(false, "Type must inherit from SComponent or _BaseFunctionality!");
 	}
 }
 

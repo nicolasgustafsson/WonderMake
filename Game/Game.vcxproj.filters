@@ -14,6 +14,9 @@
     <ClCompile Include="Weapons\MeleeWeapon.cpp" />
     <ClCompile Include="Weapons\MeleeWeaponFunctionality.cpp" />
     <ClCompile Include="Weapons\WeaponSwing.cpp" />
+    <ClCompile Include="Actions\ActionFunctionality.cpp" />
+    <ClCompile Include="Actions\Action.cpp" />
+    <ClCompile Include="Weapons\WeaponSwingAction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWorld.h" />
@@ -31,5 +34,8 @@
     <ClInclude Include="Generation\GenerationParameters\Power.h" />
     <ClInclude Include="Weapons\WeaponSwing.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Actions\ActionFunctionality.h" />
+    <ClInclude Include="Actions\Action.h" />
+    <ClInclude Include="Weapons\WeaponSwingAction.h" />
   </ItemGroup>
 </Project>

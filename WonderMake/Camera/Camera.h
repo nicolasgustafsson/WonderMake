@@ -4,7 +4,7 @@
 #include "Graphics/EngineUniformBuffer.h"
 #include "Message/MessageTypes.h"
 #include "Message/MessageSubscriber.h"
-#include <Utilities/Debugging/Debugged.h>
+#include "Utilities/Debugging/Debugged.h"
 
 class Camera final
 	: public System

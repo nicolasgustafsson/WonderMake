@@ -19,7 +19,7 @@ public:
 	virtual ~Object();
 
 	// Will not add the type if it already exists.
-	template<typename TType>
+	template<typename TType, bool IncreaseRef = false>
 	inline TType& Add();
 
 	// Will not remove the type if existing functionalities depend on it.
@@ -50,7 +50,7 @@ private:
 	using FunctionalityList = PairList<_BaseFunctionality>;
 	using ComponentList = PairList<SComponent>;
 
-	template<typename TType, typename TBaseType, typename TCreateFunc>
+	template<bool IncreaseRef, typename TType, typename TBaseType, typename TCreateFunc>
 	inline TType& Add(PairList<TBaseType>& aList, TCreateFunc aCreateFunc);
 
 	template<typename TType, typename TBaseType>
@@ -60,19 +60,19 @@ private:
 	ComponentList myComponents;
 };
 
-template<typename TType>
+template<typename TType, bool IncreaseRef>
 inline TType& Object::Add()
 {
 	if constexpr (std::is_base_of<SComponent, TType>::value)
 	{
-		return Add<TType>(myComponents, []() -> TType &
+		return Add<IncreaseRef, TType>(myComponents, []() -> TType &
 			{
 				return SystemPtr<ComponentSystem<TType>>()->AddComponent();
 			});
 	}
 	else if constexpr (std::is_base_of<_BaseFunctionality, TType>::value)
 	{
-		return Add<TType>(myFunctionalities, [&]() -> TType &
+		return Add<IncreaseRef, TType>(myFunctionalities, [&]() -> TType &
 			{
 				return SystemPtr<FunctionalitySystem<TType>>()->AddFunctionality(*this);
 			});
@@ -115,7 +115,7 @@ inline void Object::Visit(TVisitFunc aVisitFunc)
 	}
 }
 
-template<typename TType, typename TBaseType, typename TCreateFunc>
+template<bool IncreaseRef, typename TType, typename TBaseType, typename TCreateFunc>
 inline TType& Object::Add(PairList<TBaseType>& aList, TCreateFunc aCreateFunc)
 {
 	const auto it = std::find_if(aList.begin(), aList.end(), [](const auto& aPair)
@@ -127,7 +127,10 @@ inline TType& Object::Add(PairList<TBaseType>& aList, TCreateFunc aCreateFunc)
 	{
 		auto& counter = it->second;
 
-		counter.RefCount++;
+		if constexpr (IncreaseRef)
+		{
+			counter.RefCount++;
+		}
 
 		return static_cast<TType&>(*counter.Reference);
 	}

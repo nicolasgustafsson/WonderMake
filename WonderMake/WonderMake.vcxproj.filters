@@ -197,6 +197,7 @@
     <ClInclude Include="Functionalities\OwnerFunctionality.h" />
     <ClInclude Include="Serialization\SerializationSystem.h" />
     <ClInclude Include="Randomizer\Randomizer.h" />
+    <ClInclude Include="Serialization\Serialization.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

@@ -83,7 +83,6 @@ inline void ImguiObject(Object& aObject)
 
 	ImGui::End();
 
-	// (Kevin): This is causing a bug where the ref count of components and functionalities are increased every frame!
 	serializationSystem->Deserialize(json, aObject);
 }
 

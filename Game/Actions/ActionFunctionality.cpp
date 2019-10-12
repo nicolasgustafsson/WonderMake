@@ -5,16 +5,14 @@
 ActionFunctionality::ActionFunctionality(Object& aOwner)
 	: Super(aOwner) {}
 
-void ActionFunctionality::StartAction(Action& aAction)
+Action* ActionFunctionality::GetCurrentAction() const
 {
-	Get<SActionComponent>().myCurrentAction = &aAction;
-
-	Get<SActionComponent>().myCurrentAction->BeginAction();
+	return Get<SActionComponent>().myCurrentAction;
 }
 
 void ActionFunctionality::Tick()
 {
-	Action* currentAction = Get<SActionComponent>().myCurrentAction;
+	Action*& currentAction = Get<SActionComponent>().myCurrentAction;
 	if (!currentAction)
 		return;
 

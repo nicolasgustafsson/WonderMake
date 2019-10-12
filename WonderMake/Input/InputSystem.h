@@ -37,9 +37,9 @@ private:
 
 	virtual void Debug() override;
 
-	std::array<EInputItemState, KeyboardKeyCount> myKeyboardKeyStates;
-	std::array<EInputItemState, MouseButtonCount> myMouseButtonStates;
-	std::array<EInputItemState, GamepadButtonCount> myGamepadButtonStates;
+	std::array<EInputItemState, KeyboardKeyCount> myKeyboardKeyStates		{ EInputItemState::Up };
+	std::array<EInputItemState, MouseButtonCount> myMouseButtonStates		{ EInputItemState::Up };
+	std::array<EInputItemState, GamepadButtonCount> myGamepadButtonStates	{ EInputItemState::Up };
 
 	SystemPtr<Window> myWindowSystemPtr;
 };

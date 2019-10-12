@@ -7,11 +7,11 @@ class SpriteRenderingFunctionality;
 class MeleeWeapon;
 class MeleeWeaponFunctionality;
 
-struct SActiveSwing
+enum class ESwingState
 {
-	bool IsActive = false;
-
-	f32 Progress = 0.f;
+	Charge,
+	Swing,
+	Backswing
 };
 
 class WeaponSwingAction
@@ -28,10 +28,18 @@ public:
 
 	virtual void EndAction() override;
 
+	virtual bool CanBeInterrupted() override;
+
 private:
+	void SetSwingTransform(const f32 aPercentageInSwing);
+	void UpdateCharge();
+	void UpdateSwing();
+	void UpdateBackswing();
+
 	TransformFunctionality& myUserTransform;
 	MeleeWeaponFunctionality& myWeaponFunctionality;
 	
-	f32 myProgress = 0.f;
+	ESwingState myCurrentState = ESwingState::Charge;
+	f32 myStateProgress = 0.f;
 };
 

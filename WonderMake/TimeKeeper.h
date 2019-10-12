@@ -20,15 +20,16 @@ public:
 	[[nodiscard]] __forceinline f64 GetGameTimePrecise() const noexcept;
 
 protected:
-	virtual void Debug() noexcept override;
+	virtual void Debug() override;
 
 	Stopwatch<> myStopwatch;
 	Stopwatch<> myTotalTimeStopwatch;
 
-	f64 myPreviousDeltaSecondsPrecise;
-	f64 myTotalTimePassedPrecise;
-	f32 myPreviousDeltaSeconds;
-	f32 myTotalTimePassed;
+	f64 myPreviousDeltaSecondsPrecise = 0.0;
+	f64 myTotalTimePassedPrecise = 0.0;
+	f32 myPreviousDeltaSeconds = 0.f;
+	f32 myTotalTimePassed = 0.f;
+	f32 myTimeDilation = 1.f;
 };
 
 [[nodiscard]] __forceinline f32 TimeKeeper::GetDeltaSeconds() const noexcept

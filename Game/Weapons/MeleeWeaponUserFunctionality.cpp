@@ -19,8 +19,7 @@ void MeleeWeaponUserFunctionality::Inspect()
 
 void MeleeWeaponUserFunctionality::SwingWeapon()
 {
-	Get<SMeleeWeaponUserComponent>().SwingAction.emplace(WeaponSwingAction(*Get<SMeleeWeaponUserComponent>().Weapon, Get<TransformFunctionality>()));
-	Get<ActionFunctionality>().StartAction(*Get<SMeleeWeaponUserComponent>().SwingAction);
+	Get<ActionFunctionality>().StartAction(WeaponSwingAction(*Get<SMeleeWeaponUserComponent>().Weapon, Get<TransformFunctionality>()));
 }
 
 void MeleeWeaponUserFunctionality::SetWeapon(MeleeWeapon&& aWeapon)

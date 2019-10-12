@@ -16,7 +16,8 @@ class PlayerControllerFunctionality
 	: public Functionality<
 			PlayerControllerFunctionality, TransformFunctionality, 
 			MovementInputFunctionality, DefaultMovementFunctionality, 
-			OwnerFunctionality, MeleeWeaponUserFunctionality>
+			OwnerFunctionality, MeleeWeaponUserFunctionality,
+			ActionFunctionality>
 	, public Debugged
 {
 public:
@@ -24,9 +25,12 @@ public:
 
 	void Tick() noexcept;
 
+
 	virtual void Debug() override;
 
 private:
+	void UpdateMovement();
+
 	SystemPtr<InputSystem> myInputSystem;
 };
 

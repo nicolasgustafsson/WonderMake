@@ -95,7 +95,7 @@ struct SVector
 	}
 
 	template<class Q = T>
-	[[nodiscard]] constexpr typename std::enable_if_t<(Size == 2), SVector<Q, Size>&> Rotate(const f32 aRotation) noexcept
+	constexpr typename std::enable_if_t<(Size == 2), SVector<Q, Size>&> Rotate(const f32 aRotation) noexcept
 	{
 		f32 rotation = this->GetRotation();
 		const f32 length = this->Length();

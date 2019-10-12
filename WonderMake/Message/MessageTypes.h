@@ -49,7 +49,7 @@ class Task final
 {
 public:
 	inline Task(const Closure aClosure)
-		: myClosure(std::move(aClosure))
+		: myClosure(aClosure)
 	{}
 
 	inline void Run() const

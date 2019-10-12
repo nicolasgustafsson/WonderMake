@@ -11,6 +11,24 @@ PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
 
 void PlayerControllerFunctionality::Tick() noexcept
 {
+	Action* currentAction = Get<ActionFunctionality>().GetCurrentAction();
+
+	const bool canMove = !(currentAction && currentAction->BlocksMovementInput());
+	if (canMove)
+		UpdateMovement();
+	else
+		Get<MovementInputFunctionality>().SetMovementInput({0.f, 0.f});
+
+	if (myInputSystem->IsMouseButtonPressed(EMouseButton::Left))
+		Get<MeleeWeaponUserFunctionality>().SwingWeapon();
+
+	const SVector2f position = Get<TransformFunctionality>().GetPosition();
+
+	WmDrawDebugLine(Get<TransformFunctionality>().GetPosition(), myInputSystem->GetMousePositionInWorld(), SColor::White);
+}
+
+void PlayerControllerFunctionality::UpdateMovement()
+{
 	SVector2f movementInput;
 
 	if (myInputSystem->IsKeyDown(EKeyboardKey::A) || myInputSystem->IsKeyDown(EKeyboardKey::Left))
@@ -25,13 +43,7 @@ void PlayerControllerFunctionality::Tick() noexcept
 	if (movementInput != SVector2f::Zero())
 		Get<TransformFunctionality>().FaceDirection(movementInput);
 
-	if (myInputSystem->IsMouseButtonPressed(EMouseButton::Left))
-		Get<MeleeWeaponUserFunctionality>().SwingWeapon();
-
 	Get<MovementInputFunctionality>().SetMovementInput(movementInput);
-	const SVector2f position = Get<TransformFunctionality>().GetPosition();
-
-	WmDrawDebugLine(Get<TransformFunctionality>().GetPosition(), myInputSystem->GetMousePositionInWorld(), SColor::White);
 }
 
 void PlayerControllerFunctionality::Debug()

@@ -11,7 +11,10 @@ struct SSwing
 {
 	SSwing();
 
-	f32 mySwingTime = 1.0f;
+
+	f32 myChargeTime = 0.4f;
+	f32 mySwingTime = 0.2f;
+	f32 myBackswingTime = 0.4f;
 
 	BezierCurve mySwingPath;
 };

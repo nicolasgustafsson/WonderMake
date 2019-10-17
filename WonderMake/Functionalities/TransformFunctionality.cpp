@@ -40,6 +40,22 @@ void TransformFunctionality::SetRotation(const f32 aRotation) noexcept
 	return Get<STransformComponent>().Rotation;
 }
 
+SVector2f TransformFunctionality::GetForwardVector() const noexcept
+{
+	const f32 myRotation = Get<STransformComponent>().Rotation;
+
+	SVector2f forward;
+	forward.X = -std::sinf(myRotation);
+	forward.Y = -std::cosf(myRotation);
+
+	return forward;
+}
+
+void TransformFunctionality::Move(const SVector2f aMovement) noexcept
+{
+	Get<STransformComponent>().Position += aMovement;
+}
+
 [[nodiscard]] SMatrix33f TransformFunctionality::GetMatrix() const noexcept
 {
 	SMatrix33f matrix;

@@ -12,7 +12,10 @@ WeaponSwingAction::WeaponSwingAction(MeleeWeaponFunctionality& aMeleeWeaponFunct
 
 void WeaponSwingAction::BeginAction()
 {
+	auto& swing = myWeaponFunctionality.GetWeapon().mySwing;
+
 	myWeaponFunctionality.GetSprite().Show();
+	myWeaponFunctionality.GetSprite().SetScale(swing.IsMirrored ? SVector2f{-1.0f, 1.0f} : SVector2f{1.0f, 1.0f});
 	myUserTransform.FacePosition(SystemPtr<InputSystem>()->GetMousePositionInWorld());
 }
 
@@ -63,12 +66,20 @@ void WeaponSwingAction::SetSwingTransform(const f32 aPercentageInSwing)
 	auto& swing = myWeaponFunctionality.GetWeapon().mySwing;
 	auto& weaponTransform = myWeaponFunctionality.GetTransform();
 
-	SVector2f swingLocation = swing.mySwingPath.GetConstantLocationAt(aPercentageInSwing);
+	SVector2f swingLocation = swing.SwingPath.GetConstantLocationAt(aPercentageInSwing);
 	swingLocation.Rotate((myUserTransform.GetRotation()));
 	weaponTransform.SetPosition(myUserTransform.GetPosition() + swingLocation);
 
-	weaponTransform.SetRotation(
-		swingLocation.GetRotation() + (Constants::Pi / 12.f) * (std::powf(aPercentageInSwing, 3.f)) - Constants::HalfPi * 1.5f);
+	if (!swing.IsMirrored)
+	{
+		weaponTransform.SetRotation(
+			swingLocation.GetRotation() + (Constants::Pi / 12.f) * (std::powf(aPercentageInSwing, 3.f)) - Constants::HalfPi * 1.5f);
+	}
+	else
+	{
+		weaponTransform.SetRotation(
+			swingLocation.GetRotation() - (Constants::Pi / 12.f) * (std::powf(aPercentageInSwing, 3.f)) + Constants::HalfPi * 1.5f);
+	}
 }
 
 void WeaponSwingAction::UpdateCharge()
@@ -77,7 +88,7 @@ void WeaponSwingAction::UpdateCharge()
 
 	const f32 deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
 	const auto& swing = myWeaponFunctionality.GetWeapon().mySwing;
-	myStateProgress += (deltaTime / swing.myChargeTime) * myWeaponFunctionality.GetWeapon().myBaseWeaponSwingRate;
+	myStateProgress += (deltaTime / swing.ChargeTime) * myWeaponFunctionality.GetWeapon().myBaseWeaponSwingRate;
 }
 
 void WeaponSwingAction::UpdateSwing()
@@ -86,7 +97,13 @@ void WeaponSwingAction::UpdateSwing()
 
 	const f32 deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
 	const auto& swing = myWeaponFunctionality.GetWeapon().mySwing;
-	myStateProgress += (deltaTime / swing.mySwingTime) * myWeaponFunctionality.GetWeapon().myBaseWeaponSwingRate;
+
+	const f32 oldStateProgress = myStateProgress;
+ 	myStateProgress += (deltaTime / swing.SwingTime) * myWeaponFunctionality.GetWeapon().myBaseWeaponSwingRate;
+
+	const f32 progressDelta = myStateProgress - oldStateProgress;
+	myUserTransform.Move(myUserTransform.GetForwardVector() * progressDelta * swing.StepLength);
+
 }
 
 void WeaponSwingAction::UpdateBackswing()
@@ -99,5 +116,5 @@ void WeaponSwingAction::UpdateBackswing()
 
 	const f32 deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
 	const auto& swing = myWeaponFunctionality.GetWeapon().mySwing;
-	myStateProgress += (deltaTime / swing.myBackswingTime) * myWeaponFunctionality.GetWeapon().myBaseWeaponSwingRate;
+	myStateProgress += (deltaTime / swing.BackswingTime) * myWeaponFunctionality.GetWeapon().myBaseWeaponSwingRate;
 }

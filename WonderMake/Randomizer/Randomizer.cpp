@@ -7,3 +7,8 @@ Randomizer::Randomizer()
 {
 
 }
+
+bool Randomizer::GetRandomBool()
+{
+	return GetRandomNumber(0, 2) == 1;
+}

@@ -20,6 +20,10 @@ public:
 	void SetRotation(const f32 aRotation) noexcept;
 	[[nodiscard]] f32 GetRotation() const noexcept;
 
+	SVector2f GetForwardVector() const noexcept;
+
+	void Move(const SVector2f aMovement) noexcept;
+
 	[[nodiscard]] SMatrix33f GetMatrix() const noexcept;
 
 	void Inspect();

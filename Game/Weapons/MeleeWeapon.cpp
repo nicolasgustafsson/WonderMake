@@ -58,8 +58,8 @@ void MeleeWeapon::DrawSwing(const SVector2f aOffset, const f32 aRotation)
 {
 	for (f32 i = 0.f; i < 19.f; i++)
 	{
-		SVector2f start = mySwing.mySwingPath.GetLocationAt((f32)i / 20.f);
-		SVector2f end = mySwing.mySwingPath.GetLocationAt(((f32)i + 1.f) / 20.f);
+		SVector2f start = mySwing.SwingPath.GetLocationAt((f32)i / 20.f);
+		SVector2f end = mySwing.SwingPath.GetLocationAt(((f32)i + 1.f) / 20.f);
 
 		start.Rotate(aRotation);
 		end.Rotate(aRotation);

@@ -11,10 +11,13 @@ struct SSwing
 {
 	SSwing();
 
+	bool IsMirrored = false;
 
-	f32 myChargeTime = 0.4f;
-	f32 mySwingTime = 0.2f;
-	f32 myBackswingTime = 0.4f;
+	f32 ChargeTime = 0.4f;
+	f32 SwingTime = 0.2f;
+	f32 BackswingTime = 0.4f;
+	
+	f32 StepLength = 60.f;
 
-	BezierCurve mySwingPath;
+	BezierCurve SwingPath;
 };

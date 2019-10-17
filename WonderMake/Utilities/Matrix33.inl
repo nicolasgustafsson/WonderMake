@@ -110,7 +110,7 @@ SMatrix33<TYPE> & SMatrix33<TYPE>::Rotate2D(const TYPE anAngle)
 }
 
 template<typename TYPE>
-SMatrix33<TYPE> & SMatrix33<TYPE>::Set2DRotation(const TYPE anAngle)
+SMatrix33<TYPE> & SMatrix33<TYPE>::Set2DRotation(const TYPE anAngle) noexcept
 {
 	m11 = static_cast<TYPE>(cos(anAngle));
 	m12 = static_cast<TYPE>(sin(anAngle));

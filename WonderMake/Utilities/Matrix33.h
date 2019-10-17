@@ -56,7 +56,7 @@ public:
 	SVector2<TYPE> GetPosition() const;
 
 	SMatrix33& Rotate2D(const TYPE anAngle);
-	SMatrix33& Set2DRotation(const TYPE anAngle);
+	SMatrix33& Set2DRotation(const TYPE anAngle) noexcept;
 
 	SMatrix33& Transpose();
 	static SMatrix33 Transpose(SMatrix33 aMatrix);

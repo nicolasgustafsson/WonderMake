@@ -13,11 +13,10 @@ public:
 	MeleeWeapon(MeleeWeapon&& aOther) noexcept;
 
 	void Inspect();
-	void DrawSwing(const SVector2f aOffset, const f32 aRotation);
 
 	[[nodiscard]] virtual SPower GetPower() const override;
 
-	SSwing mySwing;
+	std::vector<SSwing> mySwings;
 	
 	f32 myBaseWeaponDamage = 0.f;
 	f32 myBaseWeaponSwingRate = 1.f;

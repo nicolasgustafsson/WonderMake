@@ -19,7 +19,25 @@ void MeleeWeaponUserFunctionality::Inspect()
 
 void MeleeWeaponUserFunctionality::SwingWeapon()
 {
-	Get<ActionFunctionality>().StartAction(WeaponSwingAction(*Get<SMeleeWeaponUserComponent>().Weapon, Get<TransformFunctionality>()));
+	auto& component = Get<SMeleeWeaponUserComponent>();
+	auto& actionFunctionality = Get<ActionFunctionality>();
+
+	MeleeWeapon& weapon = Get<SMeleeWeaponUserComponent>().Weapon->GetWeapon();
+
+	if (weapon.mySwings.size() == 0)
+		return;
+
+	if (!actionFunctionality.WasLastActionOfType<WeaponSwingAction>() || actionFunctionality.TimeSinceLastAction() > 10.0f)
+		component.CurrentSwingIndex = 0;
+
+	component.CurrentSwingIndex %= weapon.mySwings.size();
+
+	Get<ActionFunctionality>().StartAction(WeaponSwingAction
+		( *Get<SMeleeWeaponUserComponent>().Weapon
+		, Get<TransformFunctionality>()
+		, weapon.mySwings[component.CurrentSwingIndex]));
+
+	component.CurrentSwingIndex++;
 }
 
 void MeleeWeaponUserFunctionality::SetWeapon(MeleeWeapon&& aWeapon)

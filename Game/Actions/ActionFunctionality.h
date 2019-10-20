@@ -7,8 +7,10 @@ class Action;
 struct SActionComponent
 	: public SComponent
 {
-	std::any myCurrentActionValue;
-	Action* myCurrentAction = nullptr;
+	std::any CurrentActionValue;
+	Action* CurrentAction = nullptr;
+
+	f32 CompletionTime = -999.f;
 };
 
 
@@ -29,18 +31,26 @@ public:
 	template<typename TAction> //requires std::is_base_of_v<Action, TAction> uncomment this when concepts is a thing
 	ActionResult StartAction(TAction aAction)
 	{
-		Action* currentAction = Get<SActionComponent>().myCurrentAction;
+		Action* currentAction = Get<SActionComponent>().CurrentAction;
 
 		if (currentAction && !currentAction->CanBeInterrupted())
 			return ActionResult::Failed;
 
-		Get<SActionComponent>().myCurrentActionValue = aAction;
+		Get<SActionComponent>().CurrentActionValue = aAction;
 
-		std::any_cast<TAction&>(Get<SActionComponent>().myCurrentActionValue).BeginAction();
-		Get<SActionComponent>().myCurrentAction = &std::any_cast<TAction&>(Get<SActionComponent>().myCurrentActionValue);
+		std::any_cast<TAction&>(Get<SActionComponent>().CurrentActionValue).BeginAction();
+		Get<SActionComponent>().CurrentAction = &std::any_cast<TAction&>(Get<SActionComponent>().CurrentActionValue);
 
 		return ActionResult::Succeeded;
 	}
+
+	template<typename TAction>
+	bool WasLastActionOfType() const
+	{
+		return typeid(TAction) == Get<SActionComponent>().CurrentActionValue.type();
+	}
+
+	f32 TimeSinceLastAction() const;
 
 	Action* GetCurrentAction() const;
 	

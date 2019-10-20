@@ -17,6 +17,8 @@ struct SMeleeWeaponUserComponent
 	MeleeWeaponFunctionality* Weapon = nullptr;
 
 	std::optional<WeaponSwingAction> SwingAction;
+
+	i32 CurrentSwingIndex = 0;
 };
 
 class MeleeWeaponUserFunctionality

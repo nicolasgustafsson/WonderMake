@@ -18,7 +18,7 @@ class WeaponSwingAction
 	: public Action
 {
 public:
-	WeaponSwingAction(MeleeWeaponFunctionality& aMeleeWeaponFunctionality, TransformFunctionality& aUserTransform);
+	WeaponSwingAction(MeleeWeaponFunctionality& aMeleeWeaponFunctionality, TransformFunctionality& aUserTransform, const SSwing aSwing);
 
 	virtual void BeginAction() override;
 
@@ -38,6 +38,7 @@ private:
 
 	TransformFunctionality& myUserTransform;
 	MeleeWeaponFunctionality& myWeaponFunctionality;
+	const SSwing mySwing;
 	
 	ESwingState myCurrentState = ESwingState::Charge;
 	f32 myStateProgress = 0.f;

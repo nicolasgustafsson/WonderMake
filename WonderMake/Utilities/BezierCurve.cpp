@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include "BezierCurve.h"
 
-BezierCurve::BezierCurve(const SVector2f aStart, const SVector2f aEnd, const SVector2f aFirstControl, const SVector2f aSecondControl)
+BezierCurve::BezierCurve(const SVector2f aStart, const SVector2f aEnd, const SVector2f aFirstControl, const SVector2f aSecondControl) noexcept
 	: myStart(aStart), myEnd(aEnd), myFirstControl(aFirstControl), mySecondControl(aSecondControl)
 {
 
@@ -14,7 +14,7 @@ SVector2f BezierCurve::GetLocationAt(const f32 aProgress) const noexcept
 		* std::powf(aProgress, 2.0f) * mySecondControl + std::powf(aProgress, 3.0f) * myEnd;
 }
 
-SVector2f BezierCurve::GetConstantLocationAt(const f32 aProgress)
+SVector2f BezierCurve::GetConstantLocationAt(const f32 aProgress) const
 {
 	if (!myConstantLengthProgressList)
 		EvaluatePoints();
@@ -39,7 +39,7 @@ SVector2f BezierCurve::GetConstantLocationAt(const f32 aProgress)
 	return ((*firstLocation).Location) + progressBetweenLocations * locationDelta;
 }
 
-void BezierCurve::EvaluatePoints(const i32 aPointCount)
+void BezierCurve::EvaluatePoints(const i32 aPointCount) const
 {
 	f32 length = 0.f;
 	SVector2f previousLocation = myStart;

@@ -10,7 +10,7 @@ SpriteRenderingFunctionality::SpriteRenderingFunctionality(Object& aOwner)
 void SpriteRenderingFunctionality::Tick()
 {
 	auto& spriteComponent = Get<SSpriteComponent>();
-	if (!spriteComponent.RenderObject || spriteComponent.bIsHidden)
+	if (!spriteComponent.RenderObject || spriteComponent.IsHidden)
 		return;
 
 	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Position>(0, Get<STransformComponent>().Position);
@@ -38,12 +38,12 @@ void SpriteRenderingFunctionality::SetOrigin(const SVector2f aOrigin)
 	Get<SSpriteComponent>().RenderObject->SetAttribute<EVertexAttribute::Origin>(0, aOrigin);
 }
 
-void SpriteRenderingFunctionality::Hide()
+void SpriteRenderingFunctionality::Hide() noexcept
 {
-	Get<SSpriteComponent>().bIsHidden = true;
+	Get<SSpriteComponent>().IsHidden = true;
 }
 
-void SpriteRenderingFunctionality::Show()
+void SpriteRenderingFunctionality::Show() noexcept
 {
-	Get<SSpriteComponent>().bIsHidden = false;
+	Get<SSpriteComponent>().IsHidden = false;
 }

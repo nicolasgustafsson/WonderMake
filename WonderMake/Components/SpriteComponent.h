@@ -7,5 +7,5 @@ struct SSpriteComponent
 	: public SComponent
 {
 	std::optional<SpriteRenderObject> RenderObject;
-	bool bIsHidden = false;
+	bool IsHidden = false;
 };

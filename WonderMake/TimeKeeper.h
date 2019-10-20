@@ -13,6 +13,9 @@ public:
 
 	f32 Update() noexcept;
 
+	[[nodiscard]] f32 TimeSince(const f32 aTime) const noexcept;
+	[[nodiscard]] f64 TimeSincePrecise(const f64 aTime) const noexcept;
+
 	[[nodiscard]] __forceinline f32 GetDeltaSeconds() const noexcept;
 	[[nodiscard]] __forceinline f64 GetDeltaSecondsPrecise() const noexcept;
 

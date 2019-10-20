@@ -12,6 +12,16 @@ float TimeKeeper::Update() noexcept
 	return GetDeltaSeconds();
 }
 
+f32 TimeKeeper::TimeSince(const f32 aTime) const noexcept
+{
+	return GetGameTime() - aTime;
+}
+
+f64 TimeKeeper::TimeSincePrecise(const f64 aTime) const noexcept
+{
+	return GetGameTimePrecise() - aTime;
+}
+
 void TimeKeeper::Debug()
 {
 	ImGui::Begin("Time Keeper");

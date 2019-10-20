@@ -15,8 +15,8 @@ public:
 	void SetScale(const SVector2f aScale);
 	void SetRotation(const f32 aRotation);
 	void SetOrigin(const SVector2f aOrigin);
-	void Hide();
-	void Show();
+	void Hide() noexcept;
+	void Show() noexcept;
 
 private:
 	SystemPtr<TimeKeeper> myTimeKeeperPtr;

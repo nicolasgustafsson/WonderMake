@@ -8,11 +8,10 @@ MeleeWeapon::MeleeWeapon(MeleeWeapon&& aOther) noexcept
 	myProperties = std::move(aOther.myProperties);
 	myBaseWeaponDamage = aOther.myBaseWeaponDamage;
 	myBaseWeaponSwingRate = aOther.myBaseWeaponSwingRate;
-	mySwing = aOther.mySwing;
+	mySwings = std::move(aOther.mySwings);
 
 	aOther.myBaseWeaponDamage = 0;
 	aOther.myBaseWeaponSwingRate = 1.0f;
-	aOther.mySwing = SSwing();
 }
 
 MeleeWeapon::MeleeWeapon(const SPower aPower)
@@ -52,20 +51,6 @@ void MeleeWeapon::Inspect()
 	ImGui::SliderFloat("Power to use when Strengthening/Weakening", &Power, 0.f, 1000.f, "%.3f", 2.0f);
 
 	ImGui::Separator();
-}
-
-void MeleeWeapon::DrawSwing(const SVector2f aOffset, const f32 aRotation)
-{
-	for (f32 i = 0.f; i < 19.f; i++)
-	{
-		SVector2f start = mySwing.SwingPath.GetLocationAt((f32)i / 20.f);
-		SVector2f end = mySwing.SwingPath.GetLocationAt(((f32)i + 1.f) / 20.f);
-
-		start.Rotate(aRotation);
-		end.Rotate(aRotation);
-
-		WmDrawDebugLine(start + aOffset, end + aOffset, SColor::Yellow, 10.f);
-	}
 }
 
 void MeleeWeapon::Strengthen(const SPower aPower)
@@ -126,4 +111,7 @@ void MeleeWeapon::Generate(const SPower aPower)
 	IncreaseDamage(half);
 
 	Strengthen(half);
+
+	for (i32 i = 0, e = SystemPtr<Randomizer>()->GetRandomNumber(1, 4); i < e; i++)
+		mySwings.emplace_back();
 }

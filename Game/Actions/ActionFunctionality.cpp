@@ -6,8 +6,15 @@
 ActionFunctionality::ActionFunctionality(Object& aOwner)
 	: Super(aOwner) {}
 
+bool ActionFunctionality::IsInAction() const
+{
+	return Get<SActionComponent>().CurrentAction != nullptr;
+}
+
 f32 ActionFunctionality::TimeSinceLastAction() const
 {
+	if (IsInAction())
+		return 0.f;
 	return SystemPtr<TimeKeeper>()->TimeSince(Get<SActionComponent>().CompletionTime);
 }
 
@@ -25,11 +32,7 @@ void ActionFunctionality::Tick()
 	currentAction->Tick();
 
 	if (currentAction->IsCompleted())
-	{
-		currentAction->EndAction();
-		currentAction = nullptr;
-		Get<SActionComponent>().CompletionTime = SystemPtr<TimeKeeper>()->GetGameTime();
-	}
+		EndCurrentAction();
 }
 
 void ActionFunctionality::Inspect()
@@ -37,4 +40,13 @@ void ActionFunctionality::Inspect()
 	Action* currentAction = Get<SActionComponent>().CurrentAction;
 	if (currentAction)
 		currentAction->Inspect();
+}
+
+void ActionFunctionality::EndCurrentAction()
+{
+	Action*& currentAction = Get<SActionComponent>().CurrentAction;
+
+	currentAction->EndAction();
+	currentAction = nullptr;
+	Get<SActionComponent>().CompletionTime = SystemPtr<TimeKeeper>()->GetGameTime();
 }

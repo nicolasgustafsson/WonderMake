@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PlayerControllerFunctionality.h"
 #include "Weapons/MeleeWeapon.h"
+#include "Designers/MeleeWeaponDesigner/MeleeWeaponDesigner.h"
 
 
 PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
@@ -64,7 +65,7 @@ void PlayerControllerFunctionality::Debug()
 	static f32 Power = 100.f;
 	if (ImGui::Button("Generate held weapon"))
 	{
-		Get<MeleeWeaponUserFunctionality>().SetWeapon(MeleeWeapon(Power));
+		Get<MeleeWeaponUserFunctionality>().SetWeapon(SystemPtr<MeleeWeaponDesigner>()->DesignWeapon());
 	}
 
 	ImGui::SliderFloat("Weapon Power", &Power, 0.f, 10000.f, "%.3f", 2.0f);

@@ -19,6 +19,11 @@ MeleeWeapon::MeleeWeapon(const SPower aPower)
 	Generate(aPower);
 }
 
+MeleeWeapon::MeleeWeapon()
+{
+
+}
+
 void MeleeWeapon::Inspect()
 {
 	ImGui::Separator();

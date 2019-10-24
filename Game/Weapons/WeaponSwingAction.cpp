@@ -56,7 +56,7 @@ void WeaponSwingAction::EndAction()
 
 bool WeaponSwingAction::CanBeInterrupted()
 {
-	return myCurrentState == ESwingState::Backswing && myStateProgress > 0.5f;
+	return myCurrentState == ESwingState::Backswing && myStateProgress > 0.5f && mySwing.IsFinisher == false;
 }
 
 void WeaponSwingAction::SetSwingTransform(const f32 aPercentageInSwing)

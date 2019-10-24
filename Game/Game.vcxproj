@@ -228,6 +228,7 @@
     <ClInclude Include="Enemy\EnemyControllerFunctionality.h" />
     <ClInclude Include="Enemy\TargetFunctionality.h" />
     <ClInclude Include="Enemy\EnemyControllerComponent.h" />
+    <ClInclude Include="Designers\MeleeWeaponDesigner\MeleeWeaponDesigner.h" />
     <ClInclude Include="Weapons\WeaponSwingAction.h" />
     <ClInclude Include="Weapons\WeaponSwing.h" />
     <ClInclude Include="Weapons\MeleeWeaponFunctionality.h" />
@@ -245,6 +246,7 @@
     <ClCompile Include="Actions\ActionFunctionality.cpp" />
     <ClCompile Include="Enemy\EnemyControllerFunctionality.cpp" />
     <ClCompile Include="Enemy\TargetFunctionality.cpp" />
+    <ClCompile Include="Designers\MeleeWeaponDesigner\MeleeWeaponDesigner.cpp" />
     <ClCompile Include="Weapons\WeaponSwingAction.cpp" />
     <ClCompile Include="Weapons\WeaponSwing.cpp" />
     <ClCompile Include="Weapons\MeleeWeaponFunctionality.cpp" />

@@ -9,6 +9,7 @@ class MeleeWeapon
 	, public GeneratedObject<SPower>
 {
 public:
+	MeleeWeapon();
 	MeleeWeapon(const SPower aPower);
 	MeleeWeapon(MeleeWeapon&& aOther) noexcept;
 

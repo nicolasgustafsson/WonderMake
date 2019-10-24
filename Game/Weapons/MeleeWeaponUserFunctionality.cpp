@@ -27,17 +27,18 @@ void MeleeWeaponUserFunctionality::SwingWeapon()
 	if (weapon.mySwings.size() == 0)
 		return;
 
-	if (!actionFunctionality.WasLastActionOfType<WeaponSwingAction>() || actionFunctionality.TimeSinceLastAction() > 10.0f)
+	if (!actionFunctionality.WasLastActionOfType<WeaponSwingAction>() || actionFunctionality.TimeSinceLastAction() > 0.5f)
 		component.CurrentSwingIndex = 0;
 
 	component.CurrentSwingIndex %= weapon.mySwings.size();
 
-	Get<ActionFunctionality>().StartAction(WeaponSwingAction
+	ActionResult Result = Get<ActionFunctionality>().StartAction(WeaponSwingAction
 		( *Get<SMeleeWeaponUserComponent>().Weapon
 		, Get<TransformFunctionality>()
 		, weapon.mySwings[component.CurrentSwingIndex]));
 
-	component.CurrentSwingIndex++;
+	if (Result == ActionResult::Succeeded)
+		component.CurrentSwingIndex++;
 }
 
 void MeleeWeaponUserFunctionality::SetWeapon(MeleeWeapon&& aWeapon)

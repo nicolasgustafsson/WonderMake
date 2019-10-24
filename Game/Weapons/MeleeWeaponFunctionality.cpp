@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include "MeleeWeaponFunctionality.h"
+#include "Designers/MeleeWeaponDesigner/MeleeWeaponDesigner.h"
 
 MeleeWeaponFunctionality::MeleeWeaponFunctionality(Object& aObject)
 	: Super(aObject)
@@ -9,7 +10,7 @@ MeleeWeaponFunctionality::MeleeWeaponFunctionality(Object& aObject)
 	Get<SpriteRenderingFunctionality>().SetOrigin({ 0.f, 0.8f });
 	Get<SpriteRenderingFunctionality>().Hide();
 
-	SetWeapon(MeleeWeapon(100.f));
+	SetWeapon(SystemPtr<MeleeWeaponDesigner>()->DesignWeapon());
 }
 
 void MeleeWeaponFunctionality::SetWeapon(MeleeWeapon&& aWeapon)

@@ -31,10 +31,15 @@ public:
 	template<typename TAction> //requires std::is_base_of_v<Action, TAction> uncomment this when concepts is a thing
 	ActionResult StartAction(TAction aAction)
 	{
-		Action* currentAction = Get<SActionComponent>().CurrentAction;
+		if (IsInAction())
+		{
+			Action* currentAction = Get<SActionComponent>().CurrentAction;
 
-		if (currentAction && !currentAction->CanBeInterrupted())
-			return ActionResult::Failed;
+			if (!currentAction->CanBeInterrupted())
+				return ActionResult::Failed;
+
+			EndCurrentAction();
+		}
 
 		Get<SActionComponent>().CurrentActionValue = aAction;
 
@@ -50,6 +55,8 @@ public:
 		return typeid(TAction) == Get<SActionComponent>().CurrentActionValue.type();
 	}
 
+	bool IsInAction() const;
+
 	f32 TimeSinceLastAction() const;
 
 	Action* GetCurrentAction() const;
@@ -57,5 +64,8 @@ public:
 	void Tick();
 
 	void Inspect();
+
+private:	
+	void EndCurrentAction();
 };
 

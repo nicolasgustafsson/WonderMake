@@ -17,6 +17,7 @@
     <ClCompile Include="Actions\ActionFunctionality.cpp" />
     <ClCompile Include="Actions\Action.cpp" />
     <ClCompile Include="Weapons\WeaponSwingAction.cpp" />
+    <ClCompile Include="Designers\MeleeWeaponDesigner\MeleeWeaponDesigner.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWorld.h" />
@@ -37,5 +38,6 @@
     <ClInclude Include="Actions\ActionFunctionality.h" />
     <ClInclude Include="Actions\Action.h" />
     <ClInclude Include="Weapons\WeaponSwingAction.h" />
+    <ClInclude Include="Designers\MeleeWeaponDesigner\MeleeWeaponDesigner.h" />
   </ItemGroup>
 </Project>

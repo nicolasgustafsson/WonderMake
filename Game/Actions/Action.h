@@ -13,6 +13,7 @@ public:
 	virtual void EndAction() {}
 
 	virtual void Inspect() {}
+
 	virtual bool CanBeInterrupted() { return false; }
 
 	virtual bool BlocksMovementInput() { return true; }

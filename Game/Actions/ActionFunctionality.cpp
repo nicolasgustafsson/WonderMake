@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "ActionFunctionality.h"
 #include "Actions/Action.h"
-#include <TimeKeeper.h>
 
 ActionFunctionality::ActionFunctionality(Object& aOwner)
 	: Super(aOwner) {}
@@ -15,6 +14,7 @@ f32 ActionFunctionality::TimeSinceLastAction() const
 {
 	if (IsInAction())
 		return 0.f;
+
 	return SystemPtr<TimeKeeper>()->TimeSince(Get<SActionComponent>().CompletionTime);
 }
 
@@ -25,7 +25,7 @@ Action* ActionFunctionality::GetCurrentAction() const
 
 void ActionFunctionality::Tick()
 {
-	Action*& currentAction = Get<SActionComponent>().CurrentAction;
+	Action* currentAction = Get<SActionComponent>().CurrentAction;
 	if (!currentAction)
 		return;
 

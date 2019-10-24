@@ -6,13 +6,13 @@ class MeleeWeapon
 	: public NonCopyable
 {
 public:
-	MeleeWeapon();
+	MeleeWeapon() = default;
 	MeleeWeapon(MeleeWeapon&& aOther) noexcept;
 
 	void Inspect();
 
 	std::vector<SSwing> mySwings;
-	
+
 	f32 myBaseWeaponDamage = 0.f;
 	f32 myBaseWeaponSwingRate = 1.f;
 

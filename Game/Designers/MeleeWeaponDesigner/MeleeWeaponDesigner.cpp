@@ -33,7 +33,7 @@ std::vector<SSwing> MeleeWeaponDesigner::CreateMoveset(const MeleeWeapon& aWeapo
 	return moveset; 
 }
 
-SSwing MeleeWeaponDesigner::DesignSwing(const MeleeWeapon& aWeapon, const bool Mirror) const
+SSwing MeleeWeaponDesigner::DesignSwing(const MeleeWeapon& aWeapon, const bool aMirror) const
 {
 	SSwing swing;
 
@@ -46,10 +46,10 @@ SSwing MeleeWeaponDesigner::DesignSwing(const MeleeWeapon& aWeapon, const bool M
 	swing.SwingTime = 0.2f;
 	swing.BackswingTime = 0.2f;
 
-	swing.IsMirrored = Mirror;
+	swing.IsMirrored = aMirror;
 	swing.StepLength = 25.f;
 
-	const f32 HorizontalMultiplier = Mirror ? -1.f : 1.f;
+	const f32 HorizontalMultiplier = aMirror ? -1.f : 1.f;
 
 	swing.SwingPath = BezierCurve(
 		{ -25.f * HorizontalMultiplier, 25.f },
@@ -60,9 +60,9 @@ SSwing MeleeWeaponDesigner::DesignSwing(const MeleeWeapon& aWeapon, const bool M
 	return swing;
 }
 
-SSwing MeleeWeaponDesigner::DesignFinisher(const MeleeWeapon& aWeapon, const bool Mirror) const
+SSwing MeleeWeaponDesigner::DesignFinisher(const MeleeWeapon& aWeapon, const bool aMirror) const
 {
-	SSwing finisher = DesignSwing(aWeapon, Mirror);
+	SSwing finisher = DesignSwing(aWeapon, aMirror);
 
 	finisher.IsFinisher = true;
 

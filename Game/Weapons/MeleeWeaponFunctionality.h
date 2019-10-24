@@ -4,7 +4,6 @@
 #include "Weapons/MeleeWeapon.h"
 #include "Weapons/WeaponSwingAction.h"
 
-
 struct SMeleeWeaponComponent
 	: public SComponent
 {

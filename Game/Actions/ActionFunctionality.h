@@ -13,7 +13,6 @@ struct SActionComponent
 	f32 CompletionTime = -999.f;
 };
 
-
 enum class ActionResult
 {
 	Succeeded,

@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "MeleeWeapon.h"
 #include "WeaponProperty/WeaponProperty.h"
-#include "Randomizer/Randomizer.h"
 
 MeleeWeapon::MeleeWeapon(MeleeWeapon&& aOther) noexcept
 {
@@ -12,11 +11,6 @@ MeleeWeapon::MeleeWeapon(MeleeWeapon&& aOther) noexcept
 
 	aOther.myBaseWeaponDamage = 0;
 	aOther.myBaseWeaponSwingRate = 1.0f;
-}
-
-MeleeWeapon::MeleeWeapon()
-{
-
 }
 
 void MeleeWeapon::Inspect()

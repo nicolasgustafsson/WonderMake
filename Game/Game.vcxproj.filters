@@ -31,8 +31,6 @@
     <ClInclude Include="Weapons\MeleeWeaponUserFunctionality.h" />
     <ClInclude Include="Weapons\MeleeWeapon.h" />
     <ClInclude Include="Weapons\MeleeWeaponFunctionality.h" />
-    <ClInclude Include="Generation\GeneratedObject.h" />
-    <ClInclude Include="Generation\GenerationParameters\Power.h" />
     <ClInclude Include="Weapons\WeaponSwing.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Actions\ActionFunctionality.h" />

@@ -24,7 +24,7 @@ public:
 
 	[[nodiscard]] constexpr f32 GetRotation() const noexcept
 	{
-		return std::atan2f(-X, -Y);
+		return std::atan2f(X, Y);
 	}
 };
 
@@ -92,6 +92,23 @@ struct SVector
 	[[nodiscard]] constexpr typename std::enable_if_t<(Size == 2), Q> Demote() const noexcept
 	{
 		return (*this)[0];
+	}
+
+	template<class Q = T>
+	constexpr typename std::enable_if_t<(Size == 2), SVector<Q, Size>&> Rotate(const f32 aRotation) noexcept
+	{
+		f32 rotation = this->GetRotation();
+		const f32 length = this->Length();
+
+		rotation += aRotation;
+
+		this->X = std::sinf(rotation);
+		this->Y = std::cosf(rotation);
+
+		this->X *= length;
+		this->Y *= length;
+
+		return (*this);
 	}
 
 	//lowers the dimension of the vector by one
@@ -191,6 +208,22 @@ struct SVector
 		*this = *this - aRightVector;
 
 		return *this;
+	}
+
+	constexpr bool operator==(const SVector<T, Size>& aRightVector) const noexcept
+	{
+		for (u32 u = 0; u < Size; u++)
+		{
+			if ((*this)[u] != aRightVector[u])
+				return false;
+		}
+
+		return true;
+	}
+
+	constexpr bool operator!=(const SVector<T, Size>& aRightVector) const noexcept
+	{
+		return !(*this == aRightVector);
 	}
 
 	[[nodiscard]] constexpr static SVector<T, Size> Zero() noexcept

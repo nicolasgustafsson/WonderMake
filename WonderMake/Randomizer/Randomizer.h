@@ -10,6 +10,8 @@ public:
 	template <typename T = f32>
 	T GetRandomNumber(T aMin = 0, T aMax = 1);
 
+	bool GetRandomBool();
+
 private:
 	std::random_device myRandomDevice;
 	std::mt19937 myRandomGenerator;

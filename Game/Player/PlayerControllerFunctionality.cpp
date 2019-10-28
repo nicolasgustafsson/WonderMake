@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PlayerControllerFunctionality.h"
 #include "Weapons/MeleeWeapon.h"
+#include "Designers/MeleeWeaponDesigner/MeleeWeaponDesigner.h"
 
 
 PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
@@ -10,6 +11,22 @@ PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
 }
 
 void PlayerControllerFunctionality::Tick() noexcept
+{
+	Action* currentAction = Get<ActionFunctionality>().GetCurrentAction();
+
+	const bool canMove = !(currentAction && currentAction->BlocksMovementInput());
+	if (canMove)
+		UpdateMovement();
+	else
+		Get<MovementInputFunctionality>().SetMovementInput({0.f, 0.f});
+
+	if (myInputSystem->IsMouseButtonPressed(EMouseButton::Left))
+		Get<MeleeWeaponUserFunctionality>().SwingWeapon();
+
+	WmDrawDebugLine(Get<TransformFunctionality>().GetPosition(), myInputSystem->GetMousePositionInWorld(), SColor::White);
+}
+
+void PlayerControllerFunctionality::UpdateMovement()
 {
 	SVector2f movementInput;
 
@@ -21,8 +38,9 @@ void PlayerControllerFunctionality::Tick() noexcept
 		movementInput += {0.f, 1.f};
 	if (myInputSystem->IsKeyDown(EKeyboardKey::D) || myInputSystem->IsKeyDown(EKeyboardKey::Right))
 		movementInput += {1.f, 0.f};
-	if (myInputSystem->IsMouseButtonPressed(EMouseButton::Left))
-		Get<MeleeWeaponUserFunctionality>().SwingWeapon();
+
+	if (movementInput != SVector2f::Zero())
+		Get<TransformFunctionality>().FaceDirection(movementInput);
 
 	Get<MovementInputFunctionality>().SetMovementInput(movementInput);
 }
@@ -42,13 +60,10 @@ void PlayerControllerFunctionality::Debug()
 		WmSendObjectImpulse(Get<OwnerFunctionality>().GetOwner(), SCoolImpulse());
 	}
 
-	static f32 Power = 100.f;
 	if (ImGui::Button("Generate held weapon"))
 	{
-		Get<MeleeWeaponUserFunctionality>().SetWeapon(MeleeWeapon(Power));
+		Get<MeleeWeaponUserFunctionality>().SetWeapon(SystemPtr<MeleeWeaponDesigner>()->DesignWeapon());
 	}
 
-	ImGui::SliderFloat("Weapon Power", &Power, 0.f, 10000.f, "%.3f", 2.0f);
-	 
 	ImGui::End();
 }

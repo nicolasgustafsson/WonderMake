@@ -2,25 +2,46 @@
 #include "MeleeWeaponUserFunctionality.h"
 #include "Functionalities/TransformFunctionality.h"
 #include "MeleeWeaponFunctionality.h"
+#include "Input/InputSystem.h"
+#include "Actions/ActionFunctionality.h"
+#include "Weapons/WeaponSwingAction.h"
 
 MeleeWeaponUserFunctionality::MeleeWeaponUserFunctionality(Object& aOwner)
 	: Super(aOwner)
 {
-	Get<SMeleeWeaponUserComponent>().myWeapon = &Get<SMeleeWeaponUserComponent>().WeaponObject.Add<MeleeWeaponFunctionality>();
-	Get<SMeleeWeaponUserComponent>().myWeapon->SetParent(&Get<TransformFunctionality>());
+	Get<SMeleeWeaponUserComponent>().Weapon = &Get<SMeleeWeaponUserComponent>().WeaponObject.Add<MeleeWeaponFunctionality>();
 }
 
 void MeleeWeaponUserFunctionality::Inspect()
 {
-	Get<SMeleeWeaponUserComponent>().myWeapon->Inspect();
+	Get<SMeleeWeaponUserComponent>().Weapon->Inspect();
 }
 
 void MeleeWeaponUserFunctionality::SwingWeapon()
 {
-	Get<SMeleeWeaponUserComponent>().myWeapon->Swing();
+	auto& component = Get<SMeleeWeaponUserComponent>();
+	auto& actionFunctionality = Get<ActionFunctionality>();
+
+	MeleeWeapon& weapon = component.Weapon->GetWeapon();
+
+	if (weapon.mySwings.empty())
+		return;
+
+	if (!actionFunctionality.WasLastActionOfType<WeaponSwingAction>() || actionFunctionality.TimeSinceLastAction() > 0.5f)
+		component.CurrentSwingIndex = 0;
+
+	component.CurrentSwingIndex %= weapon.mySwings.size();
+
+	EActionResult result = actionFunctionality.StartAction(WeaponSwingAction
+		( *component.Weapon
+		, Get<TransformFunctionality>()
+		, weapon.mySwings[component.CurrentSwingIndex]));
+
+	if (result == EActionResult::Succeeded)
+		component.CurrentSwingIndex++;
 }
 
 void MeleeWeaponUserFunctionality::SetWeapon(MeleeWeapon&& aWeapon)
 {
-	Get<SMeleeWeaponUserComponent>().myWeapon->SetWeapon(std::forward<MeleeWeapon>(aWeapon));
+	Get<SMeleeWeaponUserComponent>().Weapon->SetWeapon(std::forward<MeleeWeapon>(aWeapon));
 }

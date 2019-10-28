@@ -1,6 +1,6 @@
 #pragma once
 #include "Utilities/BezierCurve.h"
-enum class SwingStages
+enum class ESwingStages
 {
 	PreSwing,
 	Swing,
@@ -9,9 +9,14 @@ enum class SwingStages
 
 struct SSwing
 {
-	SSwing();
+	BezierCurve SwingPath;
 
-	f32 mySwingTime = 1.0f;
+	f32 ChargeTime = 0.4f;
+	f32 SwingTime = 0.2f;
+	f32 BackswingTime = 0.4f;
+	
+	f32 StepLength = 60.f;
 
-	BezierCurve mySwingPath;
+	bool IsFinisher = false;
+	bool IsMirrored = false;
 };

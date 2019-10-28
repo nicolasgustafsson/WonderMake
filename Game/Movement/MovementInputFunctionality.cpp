@@ -13,7 +13,6 @@ MovementInputFunctionality::MovementInputFunctionality(Object& aOwner)
 		});
 }
 
-
 void MovementInputFunctionality::SetMovementInput(const SVector2f aDirection)
 {
 	SMovementInputComponent& input = Get<SMovementInputComponent>();

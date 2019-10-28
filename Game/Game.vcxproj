@@ -221,11 +221,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Generation\GeneratedObject.h" />
-    <ClInclude Include="Generation\GenerationParameters\Power.h" />
+    <ClInclude Include="Actions\Action.h" />
+    <ClInclude Include="Actions\ActionFunctionality.h" />
     <ClInclude Include="Enemy\EnemyControllerFunctionality.h" />
     <ClInclude Include="Enemy\TargetFunctionality.h" />
     <ClInclude Include="Enemy\EnemyControllerComponent.h" />
+    <ClInclude Include="Designers\MeleeWeaponDesigner\MeleeWeaponDesigner.h" />
+    <ClInclude Include="Weapons\WeaponSwingAction.h" />
     <ClInclude Include="Weapons\WeaponSwing.h" />
     <ClInclude Include="Weapons\MeleeWeaponFunctionality.h" />
     <ClInclude Include="Weapons\MeleeWeaponUserFunctionality.h" />
@@ -238,9 +240,11 @@
     <ClInclude Include="Weapons\WeaponProperty\WeaponProperty.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Actions\ActionFunctionality.cpp" />
     <ClCompile Include="Enemy\EnemyControllerFunctionality.cpp" />
     <ClCompile Include="Enemy\TargetFunctionality.cpp" />
-    <ClCompile Include="Weapons\WeaponSwing.cpp" />
+    <ClCompile Include="Designers\MeleeWeaponDesigner\MeleeWeaponDesigner.cpp" />
+    <ClCompile Include="Weapons\WeaponSwingAction.cpp" />
     <ClCompile Include="Weapons\MeleeWeaponFunctionality.cpp" />
     <ClCompile Include="Weapons\MeleeWeaponUserFunctionality.cpp" />
     <ClCompile Include="Movement\DefaultMovementFunctionality.cpp" />

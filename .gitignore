@@ -44,3 +44,5 @@ Intermediate/
 
 WonderMakeLauncher/Registry/*.cpp
 WonderMakeLauncher/Registry/*.h
+WonderMakeLauncher/Logs/
+imgui.ini

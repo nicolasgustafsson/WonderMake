@@ -46,27 +46,27 @@ public:
 		const TYPE a31, const TYPE a32, const TYPE a33) noexcept;
 	SMatrix33(const SVector2<TYPE> & aPosition);
 
-	SMatrix33 & operator +=(const SMatrix33 & aRight);
-	SMatrix33 & operator -=(const SMatrix33 & aRight);
-	SMatrix33 & operator *=(const SMatrix33 & aRight);
+	SMatrix33& operator +=(const SMatrix33& aRight);
+	SMatrix33& operator -=(const SMatrix33& aRight);
+	SMatrix33& operator *=(const SMatrix33& aRight);
 
-	SMatrix33 & operator =(const SMatrix33 & aSource) noexcept;
+	SMatrix33& operator =(const SMatrix33 & aSource) noexcept;
 
-	void SetPosition(const SVector2<TYPE> & aPosition);
-	SVector2<TYPE> GetPosition() const;
+	void SetPosition(const SVector2<TYPE> & aPosition) noexcept;
+	SVector2<TYPE> GetPosition() const noexcept;
 
-	SMatrix33 & Rotate2D(const TYPE anAngle);
-	SMatrix33 & Set2DRotation(const TYPE anAngle);
+	SMatrix33& Rotate2D(const TYPE anAngle);
+	SMatrix33& Set2DRotation(const TYPE anAngle) noexcept;
 
-	SMatrix33 & Transpose();
+	SMatrix33& Transpose();
 	static SMatrix33 Transpose(SMatrix33 aMatrix);
 
-	SMatrix33 & Inverse();
+	SMatrix33& Inverse();
 	static SMatrix33 Inverse(SMatrix33 aMatrix);
 
-	static SMatrix33 CreateRotateAroundX(const TYPE anAngle);
-	static SMatrix33 CreateRotateAroundY(const TYPE anAngle);
-	static SMatrix33 CreateRotateAroundZ(const TYPE anAngle);
+	static SMatrix33 CreateRotateAroundX(const TYPE anAngle) noexcept;
+	static SMatrix33 CreateRotateAroundY(const TYPE anAngle) noexcept;
+	static SMatrix33 CreateRotateAroundZ(const TYPE anAngle) noexcept;
 
 	std::string ToString() const;
 };

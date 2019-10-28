@@ -4,18 +4,28 @@ template<typename TSystem>
 class SystemPtr
 {
 public:
-	SystemPtr() noexcept
+	SystemPtr()
 		:myReference(SystemContainer::Get().GetSystem<TSystem>())
 	{
 
 	}
 
-	TSystem& operator*() noexcept
+	[[nodiscard]] TSystem& operator*() noexcept
 	{
 		return myReference;
 	}
 
-	TSystem* operator->() noexcept
+	[[nodiscard]] TSystem* operator->() noexcept
+	{
+		return &myReference;
+	}
+
+	[[nodiscard]] const TSystem& operator*() const noexcept
+	{
+		return myReference;
+	}
+
+	[[nodiscard]] const TSystem* operator->() const noexcept
 	{
 		return &myReference;
 	}

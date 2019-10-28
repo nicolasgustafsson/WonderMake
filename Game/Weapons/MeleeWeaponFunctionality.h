@@ -2,19 +2,12 @@
 #include "Functionalities/SpriteRenderingFunctionality.h"
 #include "Functionalities/TransformFunctionality.h"
 #include "Weapons/MeleeWeapon.h"
-
-struct SActiveSwing
-{
-	bool IsActive = false;
-	f32 Progress = 0.f;
-};
+#include "Weapons/WeaponSwingAction.h"
 
 struct SMeleeWeaponComponent
 	: public SComponent
 {
-	TransformFunctionality* ParentTransform;
 	std::optional<MeleeWeapon> Weapon;
-	SActiveSwing CurrentSwing;
 };
 
 class MeleeWeaponFunctionality
@@ -27,15 +20,12 @@ class MeleeWeaponFunctionality
 public:
 	MeleeWeaponFunctionality(Object& aObject);
 
-	void Swing();
 	void SetWeapon(MeleeWeapon&& aWeapon);
-	void SetParent(TransformFunctionality* aParentTransform);
-	void Tick();
+
+	TransformFunctionality& GetTransform() { return Get<TransformFunctionality>(); };
+	SpriteRenderingFunctionality& GetSprite() { return Get<SpriteRenderingFunctionality>(); };
+	MeleeWeapon& GetWeapon();
 
 	void Inspect();
-private:
-
-	MeleeWeapon& GetWeapon();
-	void StopSwing();
 };
 

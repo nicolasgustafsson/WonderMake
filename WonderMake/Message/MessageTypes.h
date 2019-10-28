@@ -48,7 +48,7 @@ class Task final
 	: public Message<Task>
 {
 public:
-	inline Task(const Closure aClosure)
+	inline Task(Closure aClosure)
 		: myClosure(std::move(aClosure))
 	{}
 
@@ -58,7 +58,7 @@ public:
 	}
 
 private:
-	const Closure myClosure;
+	Closure myClosure;
 };
 
 template<typename T>
@@ -66,11 +66,11 @@ class Query
 	: public Message<Query<T>>
 {
 public:
-	inline Query()
+	inline Query() noexcept
 		: myId(NextQueryId++)
 	{}
 
-	inline u32 Id() const
+	inline u32 Id() const noexcept
 	{
 		return myId;
 	}

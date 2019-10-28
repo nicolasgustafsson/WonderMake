@@ -13,7 +13,9 @@
     <ClCompile Include="Weapons\MeleeWeaponUserFunctionality.cpp" />
     <ClCompile Include="Weapons\MeleeWeapon.cpp" />
     <ClCompile Include="Weapons\MeleeWeaponFunctionality.cpp" />
-    <ClCompile Include="Weapons\WeaponSwing.cpp" />
+    <ClCompile Include="Actions\ActionFunctionality.cpp" />
+    <ClCompile Include="Weapons\WeaponSwingAction.cpp" />
+    <ClCompile Include="Designers\MeleeWeaponDesigner\MeleeWeaponDesigner.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWorld.h" />
@@ -27,9 +29,11 @@
     <ClInclude Include="Weapons\MeleeWeaponUserFunctionality.h" />
     <ClInclude Include="Weapons\MeleeWeapon.h" />
     <ClInclude Include="Weapons\MeleeWeaponFunctionality.h" />
-    <ClInclude Include="Generation\GeneratedObject.h" />
-    <ClInclude Include="Generation\GenerationParameters\Power.h" />
     <ClInclude Include="Weapons\WeaponSwing.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Actions\ActionFunctionality.h" />
+    <ClInclude Include="Actions\Action.h" />
+    <ClInclude Include="Weapons\WeaponSwingAction.h" />
+    <ClInclude Include="Designers\MeleeWeaponDesigner\MeleeWeaponDesigner.h" />
   </ItemGroup>
 </Project>

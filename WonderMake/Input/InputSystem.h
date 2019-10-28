@@ -17,7 +17,7 @@ public:
 	void UpdateGamepad() noexcept;
 
 	[[nodiscard]] SVector2f GetMousePositionInWorld() const noexcept;
-	[[nodiscard]] SVector2f GetMousePositionOnScreen() const noexcept;
+	[[nodiscard]] SVector2f GetMousePositionOnWindow() const noexcept;
 
 	bool IsKeyDown(const EKeyboardKey aKey) const noexcept;
 	bool IsMouseButtonPressed(const EMouseButton aKey) const noexcept;

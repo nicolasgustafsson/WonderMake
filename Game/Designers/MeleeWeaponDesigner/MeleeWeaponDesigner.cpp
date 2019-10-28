@@ -4,7 +4,7 @@
 
 MeleeWeapon MeleeWeaponDesigner::DesignWeapon()
 {
-	MeleeWeapon currentWeapon = MeleeWeapon();
+	MeleeWeapon currentWeapon;
 
 	currentWeapon.myBaseWeaponDamage = 100.f;
 
@@ -17,31 +17,21 @@ MeleeWeapon MeleeWeaponDesigner::DesignWeapon()
 
 std::vector<SSwing> MeleeWeaponDesigner::CreateMoveset(const MeleeWeapon& aWeapon) const
 {
-	std::vector<SSwing> moveset;
-	bool IsMirrored = SystemPtr<Randomizer>()->GetRandomBool();
+	const bool isMirrored = SystemPtr<Randomizer>()->GetRandomBool();
 
-	moveset.push_back(DesignSwing(aWeapon, IsMirrored));
-
-	IsMirrored = !IsMirrored;
-
-	moveset.push_back(DesignSwing(aWeapon, IsMirrored));
-
-	IsMirrored = !IsMirrored;
-
-	moveset.push_back(DesignFinisher(aWeapon, IsMirrored));
-
-	return moveset; 
+	return {
+		DesignSwing(aWeapon, isMirrored),
+		DesignSwing(aWeapon, !isMirrored),
+		DesignFinisher(aWeapon, isMirrored)
+	};
 }
 
 SSwing MeleeWeaponDesigner::DesignSwing(const MeleeWeapon& aWeapon, const bool aMirror) const
 {
 	SSwing swing;
 
-	const bool isFirstSwing = aWeapon.mySwings.size() == 0;
-	if (isFirstSwing)
-		swing.ChargeTime = 0.4f;
-	else
-		swing.ChargeTime = 0.1f;
+	const bool isFirstSwing = aWeapon.mySwings.empty();
+	swing.ChargeTime = isFirstSwing ? 0.4f : 0.f;
 
 	swing.SwingTime = 0.2f;
 	swing.BackswingTime = 0.2f;
@@ -49,12 +39,12 @@ SSwing MeleeWeaponDesigner::DesignSwing(const MeleeWeapon& aWeapon, const bool a
 	swing.IsMirrored = aMirror;
 	swing.StepLength = 25.f;
 
-	const f32 HorizontalMultiplier = aMirror ? -1.f : 1.f;
+	const f32 horizontalMultiplier = aMirror ? -1.f : 1.f;
 
 	swing.SwingPath = BezierCurve(
-		{ -25.f * HorizontalMultiplier, 25.f },
-		{ 25.f * HorizontalMultiplier, 25.f },
-		{ -25.f * HorizontalMultiplier, -30.f },
+		{ -25.f * horizontalMultiplier, 25.f },
+		{ 25.f * horizontalMultiplier, 25.f },
+		{ -25.f * horizontalMultiplier, -30.f },
 		{ 0.f, -100.f });
 
 	return swing;

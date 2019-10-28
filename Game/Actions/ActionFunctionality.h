@@ -13,7 +13,7 @@ struct SActionComponent
 	f32 CompletionTime = -999.f;
 };
 
-enum class ActionResult
+enum class EActionResult
 {
 	Succeeded,
 	Failed,
@@ -28,28 +28,30 @@ public:
 	ActionFunctionality(Object& aOwner);
 
 	template<typename TAction> //requires std::is_base_of_v<Action, TAction> uncomment this when concepts is a thing
-	ActionResult StartAction(TAction aAction)
+	inline EActionResult StartAction(TAction aAction)
 	{
 		if (IsInAction())
 		{
 			Action* currentAction = Get<SActionComponent>().CurrentAction;
 
 			if (!currentAction->CanBeInterrupted())
-				return ActionResult::Failed;
+				return EActionResult::Failed;
 
 			EndCurrentAction();
 		}
 
 		Get<SActionComponent>().CurrentActionValue = aAction;
 
-		std::any_cast<TAction&>(Get<SActionComponent>().CurrentActionValue).BeginAction();
-		Get<SActionComponent>().CurrentAction = &std::any_cast<TAction&>(Get<SActionComponent>().CurrentActionValue);
+		TAction& newAction = std::any_cast<TAction&>(Get<SActionComponent>().CurrentActionValue);
+		newAction.BeginAction();
 
-		return ActionResult::Succeeded;
+		Get<SActionComponent>().CurrentAction = &newAction;
+
+		return EActionResult::Succeeded;
 	}
 
 	template<typename TAction>
-	bool WasLastActionOfType() const
+	inline bool WasLastActionOfType() const noexcept
 	{
 		return typeid(TAction) == Get<SActionComponent>().CurrentActionValue.type();
 	}

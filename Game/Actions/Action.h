@@ -8,14 +8,14 @@ public:
 
 	virtual void Tick() {};
 
-	virtual bool IsCompleted() = 0;
+	virtual bool IsCompleted() const = 0;
 
 	virtual void EndAction() {}
 
 	virtual void Inspect() {}
 
-	virtual bool CanBeInterrupted() { return false; }
+	virtual bool CanBeInterrupted() const { return false; }
 
-	virtual bool BlocksMovementInput() { return true; }
+	virtual bool BlocksMovementInput() const { return true; }
 };
 

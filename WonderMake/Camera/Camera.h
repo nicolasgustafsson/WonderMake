@@ -16,7 +16,7 @@ public:
 	void SetViewportSize(const SVector2i aViewportSize) noexcept;
 	void SetImguiWindowOffset(const SVector2f aImguiOffset) noexcept;
 
-	[[nodiscard]] SVector2f ConvertToWorldPosition(const SVector2f aScreenPosition) const noexcept;
+	[[nodiscard]] SVector2f ConvertToWorldPosition(const SVector2f aWindowPosition) const noexcept;
 private:
 	virtual void Debug() override;
 

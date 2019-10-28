@@ -18,23 +18,23 @@ class WeaponSwingAction
 	: public Action
 {
 public:
-	WeaponSwingAction(MeleeWeaponFunctionality& aMeleeWeaponFunctionality, TransformFunctionality& aUserTransform, const SSwing aSwing);
+	WeaponSwingAction(MeleeWeaponFunctionality& aMeleeWeaponFunctionality, TransformFunctionality& aUserTransform, const SSwing aSwing) noexcept;
 
 	virtual void BeginAction() override;
 
-	virtual void Tick() override;
+	virtual void Tick() noexcept override;
 
-	virtual bool IsCompleted() override;
+	virtual bool IsCompleted() const noexcept override;
 
-	virtual void EndAction() override;
+	virtual void EndAction() noexcept override;
 
-	virtual bool CanBeInterrupted() override;
+	virtual bool CanBeInterrupted() const noexcept override;
 
 private:
-	void SetSwingTransform(const f32 aPercentageInSwing);
-	void UpdateCharge();
-	void UpdateSwing();
-	void UpdateBackswing();
+	void SetSwingTransform(const f32 aPercentageInSwing) noexcept;
+	void UpdateCharge() noexcept;
+	void UpdateSwing() noexcept;
+	void UpdateBackswing() noexcept;
 
 	TransformFunctionality& myUserTransform;
 	MeleeWeaponFunctionality& myWeaponFunctionality;

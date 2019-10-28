@@ -13,9 +13,7 @@
     <ClCompile Include="Weapons\MeleeWeaponUserFunctionality.cpp" />
     <ClCompile Include="Weapons\MeleeWeapon.cpp" />
     <ClCompile Include="Weapons\MeleeWeaponFunctionality.cpp" />
-    <ClCompile Include="Weapons\WeaponSwing.cpp" />
     <ClCompile Include="Actions\ActionFunctionality.cpp" />
-    <ClCompile Include="Actions\Action.cpp" />
     <ClCompile Include="Weapons\WeaponSwingAction.cpp" />
     <ClCompile Include="Designers\MeleeWeaponDesigner\MeleeWeaponDesigner.cpp" />
   </ItemGroup>

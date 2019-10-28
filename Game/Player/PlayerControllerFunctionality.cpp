@@ -60,13 +60,10 @@ void PlayerControllerFunctionality::Debug()
 		WmSendObjectImpulse(Get<OwnerFunctionality>().GetOwner(), SCoolImpulse());
 	}
 
-	static f32 Power = 100.f;
 	if (ImGui::Button("Generate held weapon"))
 	{
 		Get<MeleeWeaponUserFunctionality>().SetWeapon(SystemPtr<MeleeWeaponDesigner>()->DesignWeapon());
 	}
 
-	ImGui::SliderFloat("Weapon Power", &Power, 0.f, 10000.f, "%.3f", 2.0f);
-	 
 	ImGui::End();
 }

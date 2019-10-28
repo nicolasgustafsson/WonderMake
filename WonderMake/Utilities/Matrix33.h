@@ -53,7 +53,7 @@ public:
 	SMatrix33& operator =(const SMatrix33 & aSource) noexcept;
 
 	void SetPosition(const SVector2<TYPE> & aPosition) noexcept;
-	SVector2<TYPE> GetPosition() const;
+	SVector2<TYPE> GetPosition() const noexcept;
 
 	SMatrix33& Rotate2D(const TYPE anAngle);
 	SMatrix33& Set2DRotation(const TYPE anAngle) noexcept;

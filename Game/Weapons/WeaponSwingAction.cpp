@@ -6,20 +6,19 @@
 #include "Input/InputSystem.h"
 #include "Weapons/MeleeWeaponFunctionality.h"
 
-WeaponSwingAction::WeaponSwingAction(MeleeWeaponFunctionality& aMeleeWeaponFunctionality, TransformFunctionality& aUserTransform, const SSwing aSwingToPerform)
+WeaponSwingAction::WeaponSwingAction(MeleeWeaponFunctionality& aMeleeWeaponFunctionality, TransformFunctionality& aUserTransform, const SSwing aSwingToPerform) noexcept
 	: myUserTransform(aUserTransform)
 	, myWeaponFunctionality(aMeleeWeaponFunctionality)
-	, mySwing(aSwingToPerform) {}
+	, mySwing(aSwingToPerform)  {}
 
 void WeaponSwingAction::BeginAction()
 {
-
 	myWeaponFunctionality.GetSprite().Show();
 	myWeaponFunctionality.GetSprite().SetScale(mySwing.IsMirrored ? SVector2f{-1.0f, 1.0f} : SVector2f{1.0f, 1.0f});
 	myUserTransform.FacePosition(SystemPtr<InputSystem>()->GetMousePositionInWorld());
 }
 
-void WeaponSwingAction::Tick()
+void WeaponSwingAction::Tick() noexcept
 {
 	switch (myCurrentState)
 	{
@@ -32,11 +31,9 @@ void WeaponSwingAction::Tick()
 	case ESwingState::Backswing:
 		UpdateBackswing();
 		break;
-	default:
-		break;
 	}
 
-	if (myStateProgress > 1.0f && !IsCompleted())
+	if (myStateProgress >= 1.0f && !IsCompleted())
 	{
 		myStateProgress -= 1.0f;
 
@@ -44,27 +41,30 @@ void WeaponSwingAction::Tick()
 	}
 }
 
-bool WeaponSwingAction::IsCompleted()
+bool WeaponSwingAction::IsCompleted() const noexcept
 {
 	return myStateProgress >= 1.0f && myCurrentState == ESwingState::Backswing;
 }
 
-void WeaponSwingAction::EndAction()
+void WeaponSwingAction::EndAction() noexcept
 {
 	myWeaponFunctionality.GetSprite().Hide();
 }
 
-bool WeaponSwingAction::CanBeInterrupted()
+bool WeaponSwingAction::CanBeInterrupted() const noexcept
 {
-	return myCurrentState == ESwingState::Backswing && myStateProgress > 0.5f && mySwing.IsFinisher == false;
+	if (mySwing.IsFinisher)
+		return false;
+
+	return myCurrentState == ESwingState::Backswing && myStateProgress > 0.5f;
 }
 
-void WeaponSwingAction::SetSwingTransform(const f32 aPercentageInSwing)
+void WeaponSwingAction::SetSwingTransform(const f32 aPercentageInSwing) noexcept
 {
 	auto& weaponTransform = myWeaponFunctionality.GetTransform();
 
 	SVector2f swingLocation = mySwing.SwingPath.GetConstantLocationAt(aPercentageInSwing);
-	swingLocation.Rotate((myUserTransform.GetRotation()));
+	swingLocation.Rotate(myUserTransform.GetRotation());
 	weaponTransform.SetPosition(myUserTransform.GetPosition() + swingLocation);
 
 	if (!mySwing.IsMirrored)
@@ -79,7 +79,7 @@ void WeaponSwingAction::SetSwingTransform(const f32 aPercentageInSwing)
 	}
 }
 
-void WeaponSwingAction::UpdateCharge()
+void WeaponSwingAction::UpdateCharge() noexcept
 {
 	SetSwingTransform((1.0f - myStateProgress * myStateProgress) * 0.1f);
 
@@ -87,7 +87,7 @@ void WeaponSwingAction::UpdateCharge()
 	myStateProgress += (deltaTime / mySwing.ChargeTime) * myWeaponFunctionality.GetWeapon().myBaseWeaponSwingRate;
 }
 
-void WeaponSwingAction::UpdateSwing()
+void WeaponSwingAction::UpdateSwing() noexcept
 {
 	SetSwingTransform(myStateProgress * 0.95f);
 
@@ -101,7 +101,7 @@ void WeaponSwingAction::UpdateSwing()
 
 }
 
-void WeaponSwingAction::UpdateBackswing()
+void WeaponSwingAction::UpdateBackswing() noexcept 
 {
 	const f32 inverseProgress = 1.0f - myStateProgress;
 	const f32 inverseQuadraticProgress = 1.0f - ((inverseProgress) * (inverseProgress));

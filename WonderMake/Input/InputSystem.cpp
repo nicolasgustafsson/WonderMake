@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "InputSystem.h"
+#include "Camera/Camera.h"
 #include <GLFW/glfw3.h>
 #include <algorithm>
-#include <Camera/Camera.h>
 
 void InputSystem::Update() noexcept
 {
@@ -62,10 +62,10 @@ void InputSystem::UpdateGamepad() noexcept
 
 SVector2f InputSystem::GetMousePositionInWorld() const noexcept
 {
-	return SystemPtr<Camera>()->ConvertToWorldPosition(GetMousePositionOnScreen());
+	return SystemPtr<Camera>()->ConvertToWorldPosition(GetMousePositionOnWindow());
 }
 
-SVector2f InputSystem::GetMousePositionOnScreen() const noexcept
+SVector2f InputSystem::GetMousePositionOnWindow() const noexcept
 {
 	f64 x, y;
 
@@ -104,7 +104,7 @@ void InputSystem::Debug()
 {
 	ImGui::Begin("InputSystem");
 
-	const SVector2f mousePositionOnScreen = GetMousePositionOnScreen();
+	const SVector2f mousePositionOnScreen = GetMousePositionOnWindow();
 	const SVector2f mousePositionInWorld = GetMousePositionInWorld();
 
 	ImGui::Text("Mouse position on screen: %f, %f", mousePositionOnScreen.X, mousePositionOnScreen.Y);

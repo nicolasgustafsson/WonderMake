@@ -240,13 +240,11 @@
     <ClInclude Include="Weapons\WeaponProperty\WeaponProperty.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Actions\Action.cpp" />
     <ClCompile Include="Actions\ActionFunctionality.cpp" />
     <ClCompile Include="Enemy\EnemyControllerFunctionality.cpp" />
     <ClCompile Include="Enemy\TargetFunctionality.cpp" />
     <ClCompile Include="Designers\MeleeWeaponDesigner\MeleeWeaponDesigner.cpp" />
     <ClCompile Include="Weapons\WeaponSwingAction.cpp" />
-    <ClCompile Include="Weapons\WeaponSwing.cpp" />
     <ClCompile Include="Weapons\MeleeWeaponFunctionality.cpp" />
     <ClCompile Include="Weapons\MeleeWeaponUserFunctionality.cpp" />
     <ClCompile Include="Movement\DefaultMovementFunctionality.cpp" />

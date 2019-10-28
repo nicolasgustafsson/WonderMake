@@ -16,12 +16,12 @@ public:
 	inline void Create(Object& aOwningObject);
 	inline void Destroy(Object& aOwningObject, _BaseFunctionality& aFunctionality);
 
-	inline TDependency& operator*() const noexcept
+	__forceinline TDependency& operator*() const noexcept
 	{
 		return *myDependency;
 	}
 
-	inline TDependency* operator->() const noexcept
+	__forceinline TDependency* operator->() const noexcept
 	{
 		return myDependency;
 	}

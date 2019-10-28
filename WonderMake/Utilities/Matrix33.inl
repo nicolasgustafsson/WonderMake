@@ -94,7 +94,7 @@ void SMatrix33<TYPE>::SetPosition(const SVector2<TYPE> & aPosition) noexcept
 	m32 = aPosition.Y;
 }
 template<typename TYPE>
-SVector2<TYPE> SMatrix33<TYPE>::GetPosition() const
+SVector2<TYPE> SMatrix33<TYPE>::GetPosition() const noexcept
 {
 	return {m31, m32};
 }

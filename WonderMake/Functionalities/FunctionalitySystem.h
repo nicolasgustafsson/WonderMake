@@ -9,7 +9,7 @@ class FunctionalitySystem
 	: public System
 {
 public:
-	FunctionalitySystem();
+	FunctionalitySystem() noexcept;
 	TFunctionality& AddFunctionality(Object& aObject);
 	void RemoveFunctionality(TFunctionality& aFunctionality);
 
@@ -29,7 +29,7 @@ void FunctionalitySystem<TFunctionality>::Tick() noexcept
 }
 
 template<typename TFunctionality>
-FunctionalitySystem<TFunctionality>::FunctionalitySystem()
+FunctionalitySystem<TFunctionality>::FunctionalitySystem() noexcept
 {
 	if (typeid(&TFunctionality::Tick) != typeid(&_BaseFunctionality::Tick))
 		EnableTick();

@@ -22,9 +22,9 @@ void MeleeWeaponUserFunctionality::SwingWeapon()
 	auto& component = Get<SMeleeWeaponUserComponent>();
 	auto& actionFunctionality = Get<ActionFunctionality>();
 
-	MeleeWeapon& weapon = Get<SMeleeWeaponUserComponent>().Weapon->GetWeapon();
+	MeleeWeapon& weapon = component.Weapon->GetWeapon();
 
-	if (weapon.mySwings.size() == 0)
+	if (weapon.mySwings.empty())
 		return;
 
 	if (!actionFunctionality.WasLastActionOfType<WeaponSwingAction>() || actionFunctionality.TimeSinceLastAction() > 0.5f)
@@ -32,12 +32,12 @@ void MeleeWeaponUserFunctionality::SwingWeapon()
 
 	component.CurrentSwingIndex %= weapon.mySwings.size();
 
-	ActionResult Result = Get<ActionFunctionality>().StartAction(WeaponSwingAction
-		( *Get<SMeleeWeaponUserComponent>().Weapon
+	EActionResult result = actionFunctionality.StartAction(WeaponSwingAction
+		( *component.Weapon
 		, Get<TransformFunctionality>()
 		, weapon.mySwings[component.CurrentSwingIndex]));
 
-	if (Result == ActionResult::Succeeded)
+	if (result == EActionResult::Succeeded)
 		component.CurrentSwingIndex++;
 }
 

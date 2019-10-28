@@ -4,7 +4,7 @@ template<typename TSystem>
 class SystemPtr
 {
 public:
-	SystemPtr() noexcept
+	SystemPtr()
 		:myReference(SystemContainer::Get().GetSystem<TSystem>())
 	{
 

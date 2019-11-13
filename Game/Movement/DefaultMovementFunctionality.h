@@ -1,6 +1,8 @@
 #pragma once
 #include "MovementInputFunctionality.h"
 
+#include "Serialization/Serialization.h"
+
 struct SDefaultMovementComponent
 	: public SComponent
 {
@@ -10,6 +12,20 @@ struct SDefaultMovementComponent
 	float myMaxMovementSpeed = 911.f;
 };
 
+namespace meta
+{
+	template <>
+	inline auto registerMembers<SDefaultMovementComponent>()
+	{
+		return members(
+			member("Current Velocity", &SDefaultMovementComponent::myCurrentVelocity),
+			member("Acceleration Speed", &SDefaultMovementComponent::myAccelerationSpeed),
+			member("Friction", &SDefaultMovementComponent::myFriction),
+			member("Max Movement Speed", &SDefaultMovementComponent::myMaxMovementSpeed)
+		);
+	}
+}
+
 class DefaultMovementFunctionality
 	: public Functionality<DefaultMovementFunctionality, SMovementInputComponent, STransformComponent, SDefaultMovementComponent>
 {
@@ -17,8 +33,6 @@ public:
 	DefaultMovementFunctionality(Object& aOwner);
 
 	void Tick() noexcept;
-
-	void Inspect();
 
 	SystemPtr<TimeKeeper> myTimeKeeper;
 };

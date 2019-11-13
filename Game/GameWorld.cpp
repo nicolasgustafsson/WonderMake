@@ -16,22 +16,30 @@ inline void ImguiJson(const std::string& aKey, json& aJson)
 {
 	if (aJson.is_array())
 	{
-		ImGui::Text(aKey.c_str());
-		for (size_t i = 0; i < aJson.size(); ++i)
+		if (ImGui::TreeNode(aKey.c_str()))
 		{
-			std::string indexStr;
+			for (size_t i = 0; i < aJson.size(); ++i)
+			{
+				std::string indexStr;
 
-			indexStr += i;
+				indexStr += i;
 
-			ImguiJson(indexStr, aJson[i]);
+				ImguiJson(indexStr, aJson[i]);
+			}
+
+			ImGui::TreePop();
 		}
 	}
 	else if (aJson.is_object())
 	{
-		ImGui::Text(aKey.c_str());
-		for (auto it = aJson.begin(); it != aJson.end(); it++)
+		if (ImGui::TreeNode(aKey.c_str()))
 		{
-			ImguiJson(it.key(), it.value());
+			for (auto it = aJson.begin(); it != aJson.end(); it++)
+			{
+				ImguiJson(it.key(), it.value());
+			}
+
+			ImGui::TreePop();
 		}
 	}
 	else if(aJson.is_boolean())
@@ -45,13 +53,17 @@ inline void ImguiJson(const std::string& aKey, json& aJson)
 	else if (aJson.is_number_integer())
 	{
 		int value = static_cast<int>(aJson.get<json::number_integer_t>());
+
 		ImGui::InputInt(aKey.c_str(), &value);
+
 		aJson = value;
 	}
 	else if (aJson.is_number_unsigned())
 	{
 		int value = static_cast<int>(aJson.get<json::number_unsigned_t>());
+
 		ImGui::InputInt(aKey.c_str(), &value);
+
 		aJson = value;
 	}
 	else if (aJson.is_string())
@@ -68,20 +80,21 @@ inline void ImguiJson(const std::string& aKey, json& aJson)
 	}
 }
 
-inline void ImguiObject(Object& aObject)
+inline void ImguiObject(const std::string& aObjectName, Object& aObject)
 {
 	SystemPtr<SerializationSystem> serializationSystem;
 
 	auto json = serializationSystem->Serialize(aObject);
 
-	ImGui::Begin("Object Inspector");
-
-	for (auto& element : json)
+	if (ImGui::TreeNode(aObjectName.c_str()))
 	{
-		ImguiJson(element["type"], element["data"]);
-	}
+		for (auto& element : json)
+		{
+			ImguiJson(element["type"], element["data"]);
+		}
 
-	ImGui::End();
+		ImGui::TreePop();
+	}
 
 	serializationSystem->Deserialize(json, aObject);
 }
@@ -111,5 +124,11 @@ void GameWorld::Tick() noexcept
 
 void GameWorld::Debug()
 {
-	ImguiObject(myPlayer);
+	ImGui::Begin("Object Inspector");
+
+	ImguiObject("Player", myPlayer);
+
+	ImguiObject("Enemy", myEnemy);
+
+	ImGui::End();
 }

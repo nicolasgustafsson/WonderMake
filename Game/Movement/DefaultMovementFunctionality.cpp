@@ -29,14 +29,3 @@ void DefaultMovementFunctionality::Tick() noexcept
 
 	transform.Position += movementComponent.myCurrentVelocity * deltaTime;
 }
-
-void DefaultMovementFunctionality::Inspect()
-{
-	SDefaultMovementComponent& movement = Get<SDefaultMovementComponent>();
-
-	ImGui::SliderFloat("acceleration", &movement.myAccelerationSpeed, 0, 30000, "%.3f", 2.0f);
-	ImGui::SliderFloat("friction", &movement.myFriction, 0.f, 20.0f, "%.3f", 2.0f);
-	ImGui::SliderFloat("maxspeed", &movement.myMaxMovementSpeed, 300, 3000, "%.3f", 2.0f);
-
-	ImGui::Text("velocity: %f", movement.myCurrentVelocity.Length());
-}

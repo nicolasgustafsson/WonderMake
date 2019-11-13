@@ -31,10 +31,6 @@ void PlayerControllerFunctionality::Debug()
 {
 	ImGui::Begin("Player controller");
 
-	Get<DefaultMovementFunctionality>().Inspect();
-
-	Get<TransformFunctionality>().Inspect();
-
 	Get<MeleeWeaponUserFunctionality>().Inspect();
 
 	if (ImGui::Button("Send cool impulse"))

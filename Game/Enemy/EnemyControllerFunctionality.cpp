@@ -13,7 +13,7 @@ void EnemyControllerFunctionality::Tick() noexcept
 {
 	const auto& targetFunctionality = Get<TargetFunctionality>();
 	auto& movementInputFunctionality = Get<MovementInputFunctionality>();
-	auto& enemyControllerComponent = Get<EnemyControllerComponent>();
+	auto& enemyControllerComponent = Get<SEnemyControllerComponent>();
 
 	const auto target = targetFunctionality.FindTarget([](TransformFunctionality& /*aTranform*/)
 		{
@@ -37,18 +37,4 @@ void EnemyControllerFunctionality::Tick() noexcept
 	}
 
 	movementInputFunctionality.SetMovementInput(delta.GetNormalized());
-}
-
-void EnemyControllerFunctionality::Debug()
-{
-	auto& defaultMovementFunctionality = Get<DefaultMovementFunctionality>();
-	auto& enemyControllerComponent = Get<EnemyControllerComponent>();
-
-	ImGui::Begin("Enemy controller");
-
-	defaultMovementFunctionality.Inspect();
-
-	ImGui::SliderFloat("Follow Range Min", &enemyControllerComponent.FollowRangeMin, 0, 500);
-
-	ImGui::End();
 }

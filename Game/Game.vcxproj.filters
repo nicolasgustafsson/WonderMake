@@ -22,7 +22,6 @@
     <ClInclude Include="Movement\DefaultMovementFunctionality.h" />
     <ClInclude Include="Enemy\EnemyControllerFunctionality.h" />
     <ClInclude Include="Enemy\TargetFunctionality.h" />
-    <ClInclude Include="Enemy\EnemyControllerComponent.h" />
     <ClInclude Include="Weapons\WeaponProperty\WeaponProperty.h" />
     <ClInclude Include="Weapons\MeleeWeaponUserFunctionality.h" />
     <ClInclude Include="Weapons\MeleeWeapon.h" />

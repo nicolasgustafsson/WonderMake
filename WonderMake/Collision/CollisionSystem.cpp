@@ -1,38 +1,41 @@
 #include "pch.h"
 
 #include "CollisionSystem.h"
+#include "CollisionFunctionality.h"
+#include "Collision/Colliders.h"
 
 CollisionSystem::CollisionSystem() noexcept
 {
-	// EnableTick();
+	EnableTick();
 }
 
 void CollisionSystem::Tick() noexcept
 {
+	for (Colliders::Shape* shape : myCollidersWithCallbacks)
+	{
+		Colliders::Shape& shapeRef = *shape;
 
-}
-
-Colliders::Shape& CollisionSystem::CreateSphereCollider(CollisionFunctionality& aCollisionFunctionality, const SVector2f aPosition, const f32 aRadius)
-{
-	Colliders::SSphere collider;
-
-	collider.CollisionFunctionality = &aCollisionFunctionality;
-	collider.Position = aPosition;
-	collider.Radius = aRadius;
-
-	return (*myColliders.emplace(collider));
+		std::visit([&](auto&& aShape)
+			{
+				//should iterate backwards ?
+				for (Colliders::SReaction& reaction : aShape.Reactions)
+				{
+					OverlapAgainstFunctionality(aShape, reaction);
+				}
+			}, shapeRef);
+	}
 }
 
 bool CollisionSystem::DestroyCollider(Colliders::Shape& aCollider)
 {
-	auto it = myColliders.get_iterator_from_pointer(&aCollider);
-	
-	if (it == myColliders.end())
-	{
-		return false;
-	}
-
-	myColliders.erase(it);
+	std::visit([&](auto&& aShape)
+		{
+			if (aShape.Reactions.size() > 0)
+			{
+				myCollidersWithCallbacks.erase(std::find(myCollidersWithCallbacks.begin(), myCollidersWithCallbacks.end(), &aCollider));
+			}
+			myCollidersByType[aShape.Identifier].erase(myCollidersByType[aShape.Identifier].get_iterator_from_pointer(&aCollider));
+		}, aCollider);
 
 	return true;
 }
@@ -77,3 +80,25 @@ bool CollisionSystem::TestSphereVsSphereCollision(const Colliders::SSphere& aSph
 	
 	return (delta.LengthSquared() <= std::powf(aSphereA.Radius + aSphereB.Radius, 2));
 }
+
+void CollisionSystem::OverlapAgainstFunctionality(const Colliders::Shape& aCollider, const Colliders::SReaction& aReaction)
+{
+	auto colonyIt = myCollidersByType.find(aReaction.Filter);
+
+	if (colonyIt == myCollidersByType.end())
+		return;
+
+	plf::colony<Colliders::Shape>& colony = (*colonyIt).second;
+
+	for (Colliders::Shape& shape : colony)
+	{
+		if (TestCollision(shape, aCollider))
+		{
+			std::visit([&](auto&& aShape)
+				{
+					aReaction.Callback(*aShape.Functionality);
+				}, shape);
+		}
+	}
+}
+

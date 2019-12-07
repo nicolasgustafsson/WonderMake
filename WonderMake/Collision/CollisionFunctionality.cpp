@@ -30,36 +30,18 @@ void CollisionFunctionality::Tick()
 	auto& collisionComponent = Get<SCollisionComponent>();
 	const auto& transformFunctionality = Get<TransformFunctionality>();
 
-	const auto tranformation = transformFunctionality.GetMatrix();
+	const auto transformation = transformFunctionality.GetMatrix();
 
 	for (auto& collider : collisionComponent.Colliders)
 	{
 		if (!collider.Collider)
-		{
 			continue;
-		}
 
-		std::visit([collider, tranformation](auto& aCollider)
+		std::visit([collider, transformation](auto& aCollider)
 			{
-				aCollider.Position = collider.Offset * tranformation;
+				aCollider.Position = collider.Offset * transformation;
 			}, *collider.Collider);
 	}
-}
-
-void CollisionFunctionality::AddSphereCollider(const SVector2f aOffset, const f32 aRadius)
-{
-	auto& collisionComponent = Get<SCollisionComponent>();
-	const auto& transformFunctionality = Get<TransformFunctionality>();
-	SystemPtr<CollisionSystem> collisionSystem;
-
-	const auto tranformation = transformFunctionality.GetMatrix();
-
-	SCollider collider;
-	
-	collider.Collider = &collisionSystem->CreateSphereCollider(*this, aOffset * tranformation, aRadius);
-	collider.Offset = aOffset;
-
-	collisionComponent.Colliders.emplace_back(collider);
 }
 
 void CollisionFunctionality::Debug()

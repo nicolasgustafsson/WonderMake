@@ -5,6 +5,7 @@
 #include "Functionalities/TransformFunctionality.h"
 #include "Functionalities/OwnerFunctionality.h"
 #include "Weapons/MeleeWeaponUserFunctionality.h"
+#include "Collision/CollisionFunctionality.h"
 
 struct SCoolImpulse
 	: public SObjectImpulse
@@ -17,14 +18,13 @@ class PlayerControllerFunctionality
 			PlayerControllerFunctionality, TransformFunctionality, 
 			MovementInputFunctionality, DefaultMovementFunctionality, 
 			OwnerFunctionality, MeleeWeaponUserFunctionality,
-			ActionFunctionality>
+			ActionFunctionality, CollisionFunctionality>
 	, public Debugged
 {
 public:
 	PlayerControllerFunctionality(Object& aOwner);
 
 	void Tick() noexcept;
-
 
 	virtual void Debug() override;
 

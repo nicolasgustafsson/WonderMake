@@ -2,12 +2,16 @@
 #include "PlayerControllerFunctionality.h"
 #include "Weapons/MeleeWeapon.h"
 #include "Designers/MeleeWeaponDesigner/MeleeWeaponDesigner.h"
+#include "Enemy/EnemyControllerFunctionality.h"
 
 
 PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
 	: Super(aOwner)
 {
+	CollisionFunctionality& collision = Get<CollisionFunctionality>();
+	auto& collider = collision.AddSphereCollider(*this, SVector2f::Zero(), 10.f);
 
+	collision.AddReaction<EnemyControllerFunctionality>(collider, [](EnemyControllerFunctionality& aEnemy) {WmLog("Owww"); });
 }
 
 void PlayerControllerFunctionality::Tick() noexcept

@@ -4,14 +4,30 @@
 
 #include <variant>
 
-class CollisionFunctionality;
+class _BaseFunctionality;
 
 namespace Colliders
 {
+	struct SReaction
+	{
+		template<typename TFunctionalityToReactTo>
+		SReaction(std::function<void(TFunctionalityToReactTo&)> aCallback) :
+			Filter { typeid(TFunctionalityToReactTo).hash_code() }
+		{
+			Callback = [aCallback](_BaseFunctionality& aBaseFunctionality) {aCallback(static_cast<TFunctionalityToReactTo&>(aBaseFunctionality));};
+		}
+
+		std::function<void(_BaseFunctionality&)>	Callback;
+		size_t										Filter;
+	};
+
 	struct SBase
 	{
-		CollisionFunctionality*		CollisionFunctionality;
+		_BaseFunctionality*			Functionality;
 		SVector2f					Position;
+
+		size_t						Identifier;
+		std::vector<SReaction>		Reactions;
 	};
 
 	struct SSphere

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Character/CharacterFunctionality.h"
+
 #include "Enemy/EnemyControllerComponent.h"
 #include "Enemy/TargetFunctionality.h"
 
@@ -15,7 +17,8 @@ class EnemyControllerFunctionality
 		TransformFunctionality,
 		TargetFunctionality,
 		MovementInputFunctionality,
-		DefaultMovementFunctionality>
+		DefaultMovementFunctionality,
+		CharacterFunctionality>
 	, public Debugged
 {
 public:

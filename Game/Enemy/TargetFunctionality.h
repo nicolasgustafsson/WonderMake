@@ -1,6 +1,7 @@
 #pragma once
 #include "Functionalities/Functionality.h"
 #include "Functionalities/TransformFunctionality.h"
+#include "Character/CharacterFunctionality.h"
 
 class TargetFunctionality
 	: public Functionality<TargetFunctionality, TransformFunctionality>
@@ -10,15 +11,22 @@ public:
 
 	template<typename TPredicate>
 	[[nodiscard]] inline TransformFunctionality* FindTarget(const TPredicate& aPredicate) const noexcept;
-
-	// (Kevin): This is temporary solution. The real solution is to fetch a list of targets and then filter through them using the predicate.
-	TransformFunctionality* Temp;
-private:
-	
 };
 
 template<typename TPredicate>
-[[nodiscard]] inline TransformFunctionality* TargetFunctionality::FindTarget(const TPredicate& /*aPredicate*/) const noexcept
+[[nodiscard]] inline TransformFunctionality* TargetFunctionality::FindTarget(const TPredicate& aPredicate) const noexcept
 {
-	return Temp;
+	TransformFunctionality* targetTransform = nullptr;
+	Colliders::SSphere sphere;
+
+	sphere.Position = Get<TransformFunctionality>().GetPosition();
+	sphere.Radius = 1000.f;
+
+	SystemPtr<CollisionSystem>()->OverlapAgainstFunctionality<CharacterFunctionality>(sphere, [&](CharacterFunctionality& aFunctionality)
+		{
+			if (aPredicate(aFunctionality))
+				targetTransform = &(aFunctionality.Get<TransformFunctionality>());
+		});
+
+	return targetTransform;
 }

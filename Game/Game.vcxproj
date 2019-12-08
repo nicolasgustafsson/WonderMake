@@ -223,6 +223,7 @@
   <ItemGroup>
     <ClInclude Include="Actions\Action.h" />
     <ClInclude Include="Actions\ActionFunctionality.h" />
+    <ClInclude Include="Character\CharacterFunctionality.h" />
     <ClInclude Include="Enemy\EnemyControllerFunctionality.h" />
     <ClInclude Include="Enemy\TargetFunctionality.h" />
     <ClInclude Include="Enemy\EnemyControllerComponent.h" />
@@ -241,6 +242,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actions\ActionFunctionality.cpp" />
+    <ClCompile Include="Character\CharacterFunctionality.cpp" />
     <ClCompile Include="Enemy\EnemyControllerFunctionality.cpp" />
     <ClCompile Include="Enemy\TargetFunctionality.cpp" />
     <ClCompile Include="Designers\MeleeWeaponDesigner\MeleeWeaponDesigner.cpp" />

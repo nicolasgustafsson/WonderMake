@@ -23,7 +23,6 @@ GameWorld::GameWorld()
 	playerSprite.SetTexture(std::filesystem::current_path() / "Textures/player.png");
 
 	auto& enemyTarget = myEnemy.Add<TargetFunctionality>();
-	enemyTarget.Temp = &playerTransform;
 	auto& enemyController = myEnemy.Add<EnemyControllerFunctionality>();
 	myEnemy.Add<DefaultMovementFunctionality>();
 	auto& enemyCollision = myEnemy.Add<CollisionFunctionality>();

@@ -20,7 +20,7 @@ void CollisionSystem::Tick() noexcept
 				//should iterate backwards ?
 				for (Colliders::SReaction& reaction : aShape.Reactions)
 				{
-					OverlapAgainstFunctionality(aShape, reaction);
+					OverlapAgainstFunctionalityInternal(aShape, reaction);
 				}
 			}, shapeRef);
 	}
@@ -81,7 +81,7 @@ bool CollisionSystem::TestSphereVsSphereCollision(const Colliders::SSphere& aSph
 	return (delta.LengthSquared() <= std::powf(aSphereA.Radius + aSphereB.Radius, 2));
 }
 
-void CollisionSystem::OverlapAgainstFunctionality(const Colliders::Shape& aCollider, const Colliders::SReaction& aReaction)
+void CollisionSystem::OverlapAgainstFunctionalityInternal(const Colliders::Shape& aCollider, const Colliders::SReaction& aReaction)
 {
 	auto colonyIt = myCollidersByType.find(aReaction.Filter);
 

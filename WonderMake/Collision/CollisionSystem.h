@@ -24,8 +24,11 @@ public:
 
 	bool DestroyCollider(Colliders::Shape& aCollider);
 
+	template<typename TFunctionalityToReactTo>
+	void OverlapAgainstFunctionality(const Colliders::Shape& aCollider, std::function<void(TFunctionalityToReactTo&)> aCallback);
+
 private:
-	void OverlapAgainstFunctionality(const Colliders::Shape& aCollider, const Colliders::SReaction& aReaction);
+	void OverlapAgainstFunctionalityInternal(const Colliders::Shape& aCollider, const Colliders::SReaction& aReaction);
 
 	[[nodiscard]] static bool TestCollision(const Colliders::Shape& aColliderA, const Colliders::Shape& aColliderB) noexcept;
 	[[nodiscard]] static bool TestSphereCollision(const Colliders::SSphere& aSphere, const Colliders::Shape& aCollider) noexcept;
@@ -37,6 +40,15 @@ private:
 	//test these every frame
 	plf::colony<Colliders::Shape*> myCollidersWithCallbacks;
 };
+
+template<typename TFunctionalityToReactTo>
+void CollisionSystem::OverlapAgainstFunctionality(const Colliders::Shape& aCollider, std::function<void(TFunctionalityToReactTo&)> aCallback)
+{
+	Colliders::SReaction reaction(aCallback);
+
+	OverlapAgainstFunctionalityInternal(aCollider, reaction);
+}
+
 template<typename TFunctionalityToReactTo>
 void CollisionSystem::AddReaction(Colliders::Shape& aShape, std::function<void(TFunctionalityToReactTo&)> aCallback)
 {
@@ -60,15 +72,3 @@ Colliders::Shape& CollisionSystem::CreateSphereCollider(TIdentifyingFunctionalit
 
 	return (*myCollidersByType[collider.Identifier].emplace(collider));
 }
-
-//template<typename TCallback>
-//inline void CollisionSystem::Overlap(const Colliders::SSphere& aCollider, const TCallback& aCallback) const noexcept
-//{
-//	//for (const auto& collider : myColliders)
-//	//{
-//	//	if (TestSphereCollision(aCollider, collider))
-//	//	{
-//	//		aCallback(collider);
-//	//	}
-//	//}
-//}

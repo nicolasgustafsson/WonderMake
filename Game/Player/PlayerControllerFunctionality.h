@@ -1,11 +1,16 @@
 #pragma once
-#include "Movement/MovementInputFunctionality.h"
+
 #include "Input/InputSystem.h"
+#include "Movement/MovementInputFunctionality.h"
 #include "Movement/DefaultMovementFunctionality.h"
-#include "Functionalities/TransformFunctionality.h"
-#include "Functionalities/OwnerFunctionality.h"
+
+#include "Character/CharacterFunctionality.h"
+
 #include "Weapons/MeleeWeaponUserFunctionality.h"
 #include "Collision/CollisionFunctionality.h"
+
+#include "Functionalities/TransformFunctionality.h"
+#include "Functionalities/OwnerFunctionality.h"
 
 struct SCoolImpulse
 	: public SObjectImpulse
@@ -15,10 +20,11 @@ struct SCoolImpulse
 
 class PlayerControllerFunctionality
 	: public Functionality<
-			PlayerControllerFunctionality, TransformFunctionality, 
-			MovementInputFunctionality, DefaultMovementFunctionality, 
-			OwnerFunctionality, MeleeWeaponUserFunctionality,
-			ActionFunctionality, CollisionFunctionality>
+		PlayerControllerFunctionality, TransformFunctionality,
+		MovementInputFunctionality, DefaultMovementFunctionality,
+		OwnerFunctionality, MeleeWeaponUserFunctionality,
+		ActionFunctionality, CollisionFunctionality,
+		CharacterFunctionality>
 	, public Debugged
 {
 public:

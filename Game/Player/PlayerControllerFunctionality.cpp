@@ -11,6 +11,8 @@ PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
 	CollisionFunctionality& collision = Get<CollisionFunctionality>();
 	auto& collider = collision.AddSphereCollider(*this, SVector2f::Zero(), 10.f);
 
+	Get<CharacterFunctionality>().SetFaction(EFaction::Player);
+
 	collision.AddReaction<EnemyControllerFunctionality>(collider, [](EnemyControllerFunctionality& aEnemy) {WmLog("Owww"); });
 }
 

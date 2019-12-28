@@ -31,6 +31,9 @@ public:
 	void OverlapAgainstFunctionality(const Colliders::Shape& aCollider, std::function<void(TFunctionalityToReactTo&)> aCallback);
 
 	template<typename TFunctionalityToReactTo>
+	void OverlapSphereAgainstFunctionality(const SVector2f aPosition, const f32 aRadius, std::function<void(TFunctionalityToReactTo&)> aCallback);
+
+	template<typename TFunctionalityToReactTo>
 	void OverlapLineAgainstFunctionality(const SVector2f aStart, const SVector2f aEnd, std::function<void(TFunctionalityToReactTo&)> aCallback);
 
 private:
@@ -53,6 +56,16 @@ private:
 	//test these every frame
 	plf::colony<Colliders::Shape*> myCollidersWithCallbacks;
 };
+
+template<typename TFunctionalityToReactTo>
+void CollisionSystem::OverlapSphereAgainstFunctionality(const SVector2f aPosition, const f32 aRadius, std::function<void(TFunctionalityToReactTo&)> aCallback)
+{
+	Colliders::SSphere collider;
+	collider.Position = aPosition;
+	collider.Radius = aRadius;
+
+	OverlapAgainstFunctionality(collider, aCallback);
+}
 
 template<typename TFunctionalityToReactTo>
 void CollisionSystem::OverlapLineAgainstFunctionality(const SVector2f aStart, const SVector2f aEnd, std::function<void(TFunctionalityToReactTo&)> aCallback)

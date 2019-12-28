@@ -70,7 +70,6 @@ void WeaponSwingAction::TestSwingCollision()
 
 	SystemPtr<CollisionSystem> collision;
 	collision->OverlapLineAgainstFunctionality<EnemyControllerFunctionality>(start, end, [](EnemyControllerFunctionality&) {WmLog("pew!"); });
-	WmDrawDebugLine(start, end, SColor::Red, 5.f);
 }
 
 void WeaponSwingAction::SetSwingTransform(const f32 aPercentageInSwing) noexcept

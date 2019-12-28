@@ -1,8 +1,8 @@
 #pragma once
 #include "Actions/Action.h"
-#include "Functionalities/TransformFunctionality.h"
 
 class CharacterFunctionality;
+class TransformFunctionality;
 
 enum class ETackleState
 {
@@ -34,13 +34,15 @@ private:
 
 	const float myChargeDistance = 150.f;
 
-	SVector2f myStartPosition;
-	SVector2f myEndPosition;
+	bool myHasBegunTackling = false;
 
-	SVector2f myVelocity;
+	SVector2f myStartPosition = SVector2f::Zero();
+	SVector2f myEndPosition = SVector2f::Zero();
 
-	CharacterFunctionality* myCharacter;
-	TransformFunctionality* myTarget;
+	SVector2f myVelocity = SVector2f::Zero();
+
+	CharacterFunctionality* myCharacter = nullptr;
+	TransformFunctionality* myTarget = nullptr;
 
 	std::vector<CharacterFunctionality*> myHitCharacters;
 };

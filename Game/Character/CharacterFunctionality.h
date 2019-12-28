@@ -3,7 +3,7 @@
 #include "Collision/CollisionFunctionality.h"
 #include "Functionalities/TransformFunctionality.h"
 #include "Functionalities/OwnerFunctionality.h"
-#include <Functionalities/SpriteRenderingFunctionality.h>
+#include "Functionalities/SpriteRenderingFunctionality.h"
 #include "Movement/DefaultMovementFunctionality.h"
 
 struct SHealthComponent : public  SComponent

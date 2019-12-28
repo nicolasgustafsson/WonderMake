@@ -39,11 +39,13 @@ void TackleAction::StartTackling()
 	myEndPosition = (myTarget->GetPosition() - myStartPosition).GetNormalized() * myChargeDistance + myStartPosition;
 
 	myVelocity = (myEndPosition - myStartPosition) / myTackleTime;
+
+	myHasBegunTackling = true;
 }
 
 void TackleAction::TickTackling()
 {
-	if (myTackleTime == 0.3f)
+	if (!myHasBegunTackling)
 		StartTackling();
 
 	const f32 deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();

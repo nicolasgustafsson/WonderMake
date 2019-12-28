@@ -8,6 +8,15 @@ DefaultMovementFunctionality::DefaultMovementFunctionality(Object& aOwner)
 
 }
 
+void DefaultMovementFunctionality::AddForce(const SVector2f aForce)
+{
+	SDefaultMovementComponent& movementComponent = Get<SDefaultMovementComponent>();
+
+	f32 deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
+
+	movementComponent.myCurrentVelocity += aForce * deltaTime;
+}
+
 void DefaultMovementFunctionality::Tick() noexcept
 {
 	STransformComponent& transform = Get<STransformComponent>();

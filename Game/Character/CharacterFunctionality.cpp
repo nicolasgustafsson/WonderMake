@@ -4,7 +4,17 @@
 CharacterFunctionality::CharacterFunctionality(Object& aOwner) noexcept
 	: Super(aOwner)
 {
-	Get<CollisionFunctionality>().AddSphereCollider(*this, SVector2f::Zero(), 10.f);
+	auto& collider = Get<CollisionFunctionality>().AddSphereCollider(*this, SVector2f::Zero(), 15.f);
+
+	Get<CollisionFunctionality>().AddReaction<CharacterFunctionality>(collider, [this](CharacterFunctionality& aOther)
+		{
+			const SVector2f selfPosition = Get<TransformFunctionality>().GetPosition();
+			const SVector2f otherPosition = aOther.Get<TransformFunctionality>().GetPosition();
+
+			SVector2f direction = (otherPosition - selfPosition).GetNormalized();
+			const f32 distance = selfPosition.DistanceTo(otherPosition);
+			aOther.Get<DefaultMovementFunctionality>().AddForce(direction * 100.f * (30.f - distance) * 0.2f);
+		});
 }
 
 void CharacterFunctionality::Damage(const i32 aDamage)

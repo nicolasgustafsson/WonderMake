@@ -5,7 +5,6 @@
 
 Texture::Texture(const std::filesystem::path& aPath)
 {
-	myPath = aPath;
 	i32 channelCount;
 	u8* rawPixelData = stbi_load(aPath.string().c_str(), &myWidth, &myHeight, &channelCount, 0);
 

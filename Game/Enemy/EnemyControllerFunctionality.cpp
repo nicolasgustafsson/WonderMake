@@ -9,24 +9,12 @@ EnemyControllerFunctionality::EnemyControllerFunctionality(Object& aOwner)
 	Get<CharacterFunctionality>().SetFaction(EFaction::Enemy);
 
 	Get<CollisionFunctionality>().AddSphereCollider(*this, SVector2f::Zero(), 10.f);
-
-	Get<ImpulseFunctionality>().Subscribe<SDiedImpulse>(*this, [&] (auto) 
-		{
-			OnDeath();
-		});
-
-	Get<SpriteRenderingFunctionality>().SetTexture(std::filesystem::current_path() / "Textures/enemy.png");
 }
 
 void EnemyControllerFunctionality::Tick() noexcept
 {
-	auto& movementInputFunctionality = Get<MovementInputFunctionality>();
-	movementInputFunctionality.SetMovementInput({ 0.f, 0.f });
-
-	if (Get<CharacterFunctionality>().IsDead())
-		return;
-
 	const auto& targetFunctionality = Get<TargetFunctionality>();
+	auto& movementInputFunctionality = Get<MovementInputFunctionality>();
 	auto& enemyControllerComponent = Get<EnemyControllerComponent>();
 
 	const auto target = targetFunctionality.FindTarget([&](CharacterFunctionality& aCharacter)
@@ -35,7 +23,11 @@ void EnemyControllerFunctionality::Tick() noexcept
 		});
 
 	if (!target)
+	{
+		movementInputFunctionality.SetMovementInput({ 0.f, 0.f});
+
 		return;
+	}
 
 	const SVector2f delta = target->GetPosition() - Get<TransformFunctionality>().GetPosition();
 
@@ -61,10 +53,4 @@ void EnemyControllerFunctionality::Debug()
 	ImGui::SliderFloat("Follow Range Min", &enemyControllerComponent.FollowRangeMin, 0, 500);
 
 	ImGui::End();
-}
-
-void EnemyControllerFunctionality::OnDeath()
-{
-	Get<SpriteRenderingFunctionality>().SetTexture(std::filesystem::current_path() / "Textures/deadEnemy.png");
-	WmLog("ded");
 }

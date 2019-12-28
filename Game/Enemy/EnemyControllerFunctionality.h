@@ -20,9 +20,7 @@ class EnemyControllerFunctionality
 		MovementInputFunctionality,
 		DefaultMovementFunctionality,
 		CharacterFunctionality,
-		CollisionFunctionality,
-		ImpulseFunctionality,
-		SpriteRenderingFunctionality>
+		CollisionFunctionality>
 	, public Debugged
 {
 public:
@@ -33,7 +31,5 @@ public:
 	virtual void Debug() override;
 
 private:
-
-	void OnDeath();
 };
 

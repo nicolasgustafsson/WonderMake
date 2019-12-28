@@ -57,7 +57,7 @@ inline static void WmDispatchTask(const Closure& aTask, const ERoutineId aRoutin
 template<typename TObjectImpulse>
 inline static void WmSendObjectImpulse(Object& aObject, TObjectImpulse&& aImpulse)
 {
-	static_assert(std::is_base_of_v<SObjectImpulse<TObjectImpulse>, TObjectImpulse>, "Impulse must be base of SObjectImpulse!");
+	static_assert(std::is_base_of_v<SObjectImpulse, TObjectImpulse>, "Impulse must be base of SObjectImpulse!");
 
 	aImpulse.SelfObject = &aObject;
 

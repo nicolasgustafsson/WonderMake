@@ -16,7 +16,6 @@ public:
 	i32 GetHeight() const noexcept { return myHeight; }
 
 private:
-	std::filesystem::path myPath;
 	u32 myTextureHandle;
 
 	i32 myWidth;

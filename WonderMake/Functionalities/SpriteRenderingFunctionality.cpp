@@ -20,10 +20,7 @@ void SpriteRenderingFunctionality::Tick()
 
 void SpriteRenderingFunctionality::SetTexture(const std::filesystem::path& aTexturePath)
 {
-	if (Get<SSpriteComponent>().RenderObject)
-		Get<SSpriteComponent>().RenderObject->SetTexture(aTexturePath);
-	else 
-		Get<SSpriteComponent>().RenderObject.emplace(aTexturePath);
+	Get<SSpriteComponent>().RenderObject.emplace(aTexturePath);
 }
 
 void SpriteRenderingFunctionality::SetScale(const SVector2f aScale)

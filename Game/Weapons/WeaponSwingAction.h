@@ -6,7 +6,6 @@ class TransformFunctionality;
 class SpriteRenderingFunctionality;
 class MeleeWeapon;
 class MeleeWeaponFunctionality;
-class CharacterFunctionality;
 
 enum class ESwingState
 {
@@ -48,7 +47,5 @@ private:
 	ESwingState myCurrentState = ESwingState::Charge;
 	f32 myStateProgress = 0.f;
 	f32 myPreviousStateProgress = 0.f;
-
-	std::vector<CharacterFunctionality*> hitCharacters;
 };
 

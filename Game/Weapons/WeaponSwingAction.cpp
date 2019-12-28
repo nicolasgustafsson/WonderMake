@@ -7,7 +7,6 @@
 #include "Weapons/MeleeWeaponFunctionality.h"
 #include "Collision/CollisionSystem.h"
 #include "Enemy/EnemyControllerFunctionality.h"
-#include "Character/CharacterFunctionality.h"
 
 WeaponSwingAction::WeaponSwingAction(MeleeWeaponFunctionality& aMeleeWeaponFunctionality, TransformFunctionality& aUserTransform, const SSwing aSwingToPerform) noexcept
 	: myUserTransform(aUserTransform)
@@ -70,17 +69,7 @@ void WeaponSwingAction::TestSwingCollision()
 	const SVector2f end = start + SVector2f(0.f, -100.f).Rotate(weaponTransform.GetRotation());
 
 	SystemPtr<CollisionSystem> collision;
-	collision->OverlapLineAgainstFunctionality<CharacterFunctionality>(start, end, [&](CharacterFunctionality& aHitCharacter)
-		{
-			if (std::find(hitCharacters.begin(), hitCharacters.end(), &aHitCharacter) != hitCharacters.end())
-			{
-				return;
-			}
-
-			aHitCharacter.Damage(myWeaponFunctionality.GetWeapon().myBaseWeaponDamage);
-
-			hitCharacters.push_back(&aHitCharacter);
-		});
+	collision->OverlapLineAgainstFunctionality<EnemyControllerFunctionality>(start, end, [](EnemyControllerFunctionality&) {WmLog("pew!"); });
 }
 
 void WeaponSwingAction::SetSwingTransform(const f32 aPercentageInSwing) noexcept

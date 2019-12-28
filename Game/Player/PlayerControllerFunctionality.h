@@ -13,7 +13,7 @@
 #include "Functionalities/OwnerFunctionality.h"
 
 struct SCoolImpulse
-	: public SObjectImpulse<SCoolImpulse>
+	: public SObjectImpulse
 {
 
 };

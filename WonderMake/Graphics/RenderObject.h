@@ -26,8 +26,6 @@ class RenderObject
 public:
 	RenderObject(const SRenderObjectInfo& aRenderObjectInfo);
 
-	void SetTexture(std::filesystem::path aTexturePath);
-
 	void Render();
 
 	void BindTextures();
@@ -45,14 +43,6 @@ protected:
 	u32 myVertexCount;
 	std::optional<u32> myRenderCount;
 };
-
-template<EVertexAttribute... TAttributes>
-void RenderObject<TAttributes...>::SetTexture(std::filesystem::path aTexturePath)
-{
-	myTextures.clear();
-	if (!aTexturePath.empty())
-		myTextures.emplace_back(SystemPtr<ResourceSystem<Texture>>()->GetResource(aTexturePath));
-}
 
 template<EVertexAttribute... TAttributes>
 void RenderObject<TAttributes...>::SetRenderCount(u32 aRenderCount)

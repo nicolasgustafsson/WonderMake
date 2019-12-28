@@ -17,6 +17,12 @@ void DefaultMovementFunctionality::AddForce(const SVector2f aForce)
 	movementComponent.myCurrentVelocity += aForce * deltaTime;
 }
 
+void DefaultMovementFunctionality::AddImpulse(const SVector2f aImpulse)
+{
+	SDefaultMovementComponent& movementComponent = Get<SDefaultMovementComponent>();
+	movementComponent.myCurrentVelocity += aImpulse;
+}
+
 void DefaultMovementFunctionality::Tick() noexcept
 {
 	STransformComponent& transform = Get<STransformComponent>();

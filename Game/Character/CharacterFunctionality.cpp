@@ -13,7 +13,7 @@ CharacterFunctionality::CharacterFunctionality(Object& aOwner) noexcept
 
 			SVector2f direction = (otherPosition - selfPosition).GetNormalized();
 			const f32 distance = selfPosition.DistanceTo(otherPosition);
-			aOther.Get<DefaultMovementFunctionality>().AddForce(direction * 100.f * (30.f - distance) * 0.2f);
+			aOther.Get<DefaultMovementFunctionality>().AddForce(direction * 100.f * (30.f - distance) * 0.5f);
 		});
 }
 

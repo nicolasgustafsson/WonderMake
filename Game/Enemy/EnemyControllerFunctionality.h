@@ -10,6 +10,7 @@
 
 #include "Functionalities/TransformFunctionality.h"
 #include "Collision/CollisionFunctionality.h"
+#include "Actions/ActionFunctionality.h"
 
 class EnemyControllerFunctionality
 	: public Functionality<
@@ -22,7 +23,8 @@ class EnemyControllerFunctionality
 		CharacterFunctionality,
 		CollisionFunctionality,
 		ImpulseFunctionality,
-		SpriteRenderingFunctionality>
+		SpriteRenderingFunctionality,
+		ActionFunctionality>
 	, public Debugged
 {
 public:

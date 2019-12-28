@@ -32,7 +32,7 @@ plf::colony<Object> LevelDesigner::DesignEnemies() const
 		enemy.Add<EnemyControllerFunctionality>();
 		auto& transform = enemy.Add<TransformFunctionality>();
 
-		const SVector2f position{ randomizer->GetRandomNumber<f32>(-100, 100), randomizer->GetRandomNumber<f32>(-100, 100) };
+		const SVector2f position{ randomizer->GetRandomNumber<f32>(-300, 300), randomizer->GetRandomNumber<f32>(-300, 300) };
 		transform.SetPosition(position);
 	}
 

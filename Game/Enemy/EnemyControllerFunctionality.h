@@ -9,6 +9,7 @@
 #include "Movement/MovementInputFunctionality.h"
 
 #include "Functionalities/TransformFunctionality.h"
+#include "Collision/CollisionFunctionality.h"
 
 class EnemyControllerFunctionality
 	: public Functionality<
@@ -18,7 +19,8 @@ class EnemyControllerFunctionality
 		TargetFunctionality,
 		MovementInputFunctionality,
 		DefaultMovementFunctionality,
-		CharacterFunctionality>
+		CharacterFunctionality,
+		CollisionFunctionality>
 	, public Debugged
 {
 public:

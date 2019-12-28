@@ -11,7 +11,7 @@ CollisionSystem::CollisionSystem() noexcept
 
 void CollisionSystem::Tick() noexcept
 {
-	for (Colliders::Shape* shape : myCollidersWithCallbacks)
+	for (Colliders::Shape* shape : myCollidersWithReactions)
 	{
 		Colliders::Shape& shapeRef = *shape;
 
@@ -32,7 +32,7 @@ bool CollisionSystem::DestroyCollider(Colliders::Shape& aCollider)
 		{
 			if (aShape.Reactions.size() > 0)
 			{
-				myCollidersWithCallbacks.erase(std::find(myCollidersWithCallbacks.begin(), myCollidersWithCallbacks.end(), &aCollider));
+				myCollidersWithReactions.erase(std::find(myCollidersWithReactions.begin(), myCollidersWithReactions.end(), &aCollider));
 			}
 			myCollidersByType[aShape.Identifier].erase(myCollidersByType[aShape.Identifier].get_iterator_from_pointer(&aCollider));
 		}, aCollider);

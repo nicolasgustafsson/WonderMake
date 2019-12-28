@@ -5,8 +5,8 @@
 #include "Functionalities/SpriteRenderingFunctionality.h"
 #include "Input/InputSystem.h"
 #include "Weapons/MeleeWeaponFunctionality.h"
-#include <Collision/CollisionSystem.h>
-#include <Enemy/EnemyControllerFunctionality.h>
+#include "Collision/CollisionSystem.h"
+#include "Enemy/EnemyControllerFunctionality.h"
 
 WeaponSwingAction::WeaponSwingAction(MeleeWeaponFunctionality& aMeleeWeaponFunctionality, TransformFunctionality& aUserTransform, const SSwing aSwingToPerform) noexcept
 	: myUserTransform(aUserTransform)

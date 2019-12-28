@@ -22,19 +22,19 @@ public:
 	template<typename TIdentifyingFunctionality>
 	Colliders::Shape& CreateLineCollider(TIdentifyingFunctionality& aFunctionality, const SVector2f aPosition, const SVector2f aSecondPosition);
 
-	template<typename TFunctionalityToReactTo>
-	void AddReaction(Colliders::Shape& aShape, std::function<void(TFunctionalityToReactTo&)> aCallback);
+	template<typename TFunctionalityToReactAgainst>
+	void AddReaction(Colliders::Shape& aShape, std::function<void(TFunctionalityToReactAgainst&)> aCallback);
 
 	bool DestroyCollider(Colliders::Shape& aCollider);
 
-	template<typename TFunctionalityToReactTo>
-	void OverlapAgainstFunctionality(const Colliders::Shape& aCollider, std::function<void(TFunctionalityToReactTo&)> aCallback);
+	template<typename TFunctionalityToReactAgainst>
+	void OverlapAgainstFunctionality(const Colliders::Shape& aCollider, std::function<void(TFunctionalityToReactAgainst&)> aCallback);
 
-	template<typename TFunctionalityToReactTo>
-	void OverlapSphereAgainstFunctionality(const SVector2f aPosition, const f32 aRadius, std::function<void(TFunctionalityToReactTo&)> aCallback);
+	template<typename TFunctionalityToReactAgainst>
+	void OverlapSphereAgainstFunctionality(const SVector2f aPosition, const f32 aRadius, std::function<void(TFunctionalityToReactAgainst&)> aCallback);
 
-	template<typename TFunctionalityToReactTo>
-	void OverlapLineAgainstFunctionality(const SVector2f aStart, const SVector2f aEnd, std::function<void(TFunctionalityToReactTo&)> aCallback);
+	template<typename TFunctionalityToReactAgainst>
+	void OverlapLineAgainstFunctionality(const SVector2f aStart, const SVector2f aEnd, std::function<void(TFunctionalityToReactAgainst&)> aCallback);
 
 private:
 
@@ -54,11 +54,30 @@ private:
 	std::unordered_map<size_t, plf::colony<Colliders::Shape>> myCollidersByType;
 
 	//test these every frame
-	plf::colony<Colliders::Shape*> myCollidersWithCallbacks;
+	plf::colony<Colliders::Shape*> myCollidersWithReactions;
 };
 
-template<typename TFunctionalityToReactTo>
-void CollisionSystem::OverlapSphereAgainstFunctionality(const SVector2f aPosition, const f32 aRadius, std::function<void(TFunctionalityToReactTo&)> aCallback)
+template<typename TFunctionalityToReactAgainst>
+void CollisionSystem::AddReaction(Colliders::Shape& aShape, std::function<void(TFunctionalityToReactAgainst&)> aCallback)
+{
+	myCollidersWithReactions.insert(&aShape);
+
+	std::visit([&](auto&& aShape)
+	{
+		aShape.Reactions.push_back(Colliders::SReaction(aCallback));
+	}, aShape);
+}
+
+template<typename TFunctionalityToReactAgainst>
+void CollisionSystem::OverlapAgainstFunctionality(const Colliders::Shape& aCollider, std::function<void(TFunctionalityToReactAgainst&)> aCallback)
+{
+	Colliders::SReaction reaction(aCallback);
+
+	OverlapAgainstFunctionalityInternal(aCollider, reaction);
+}
+
+template<typename TFunctionalityToReactAgainst>
+void CollisionSystem::OverlapSphereAgainstFunctionality(const SVector2f aPosition, const f32 aRadius, std::function<void(TFunctionalityToReactAgainst&)> aCallback)
 {
 	Colliders::SSphere collider;
 	collider.Position = aPosition;
@@ -67,33 +86,14 @@ void CollisionSystem::OverlapSphereAgainstFunctionality(const SVector2f aPositio
 	OverlapAgainstFunctionality(collider, aCallback);
 }
 
-template<typename TFunctionalityToReactTo>
-void CollisionSystem::OverlapLineAgainstFunctionality(const SVector2f aStart, const SVector2f aEnd, std::function<void(TFunctionalityToReactTo&)> aCallback)
+template<typename TFunctionalityToReactAgainst>
+void CollisionSystem::OverlapLineAgainstFunctionality(const SVector2f aStart, const SVector2f aEnd, std::function<void(TFunctionalityToReactAgainst&)> aCallback)
 {
 	Colliders::SLine collider;
 	collider.Position = aStart;
 	collider.EndOffsetFromPosition = aEnd - aStart;
 
 	OverlapAgainstFunctionality(collider, aCallback);
-}
-
-template<typename TFunctionalityToReactTo>
-void CollisionSystem::OverlapAgainstFunctionality(const Colliders::Shape& aCollider, std::function<void(TFunctionalityToReactTo&)> aCallback)
-{
-	Colliders::SReaction reaction(aCallback);
-
-	OverlapAgainstFunctionalityInternal(aCollider, reaction);
-}
-
-template<typename TFunctionalityToReactTo>
-void CollisionSystem::AddReaction(Colliders::Shape& aShape, std::function<void(TFunctionalityToReactTo&)> aCallback)
-{
-	myCollidersWithCallbacks.insert(&aShape);
-
-	std::visit([&](auto&& aShape)
-	{
-		aShape.Reactions.push_back(Colliders::SReaction(aCallback));
-	}, aShape);
 }
 
 template<typename TIdentifyingFunctionality>

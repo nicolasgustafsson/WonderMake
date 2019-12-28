@@ -2,7 +2,6 @@
 #include "PlayerControllerFunctionality.h"
 #include "Weapons/MeleeWeapon.h"
 #include "Designers/MeleeWeaponDesigner/MeleeWeaponDesigner.h"
-#include "Enemy/EnemyControllerFunctionality.h"
 
 
 PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)

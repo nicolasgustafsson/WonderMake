@@ -10,11 +10,11 @@ namespace Colliders
 {
 	struct SReaction
 	{
-		template<typename TFunctionalityToReactTo>
-		SReaction(std::function<void(TFunctionalityToReactTo&)> aCallback) :
-			Filter { typeid(TFunctionalityToReactTo).hash_code() }
+		template<typename TFunctionalityToReactAgainst>
+		SReaction(std::function<void(TFunctionalityToReactAgainst&)> aCallback) :
+			Filter { typeid(TFunctionalityToReactAgainst).hash_code() }
 		{
-			Callback = [aCallback](_BaseFunctionality& aBaseFunctionality) {aCallback(static_cast<TFunctionalityToReactTo&>(aBaseFunctionality));};
+			Callback = [aCallback](_BaseFunctionality& aBaseFunctionality) {aCallback(static_cast<TFunctionalityToReactAgainst&>(aBaseFunctionality));};
 		}
 
 		std::function<void(_BaseFunctionality&)>	Callback;
@@ -49,7 +49,7 @@ namespace Colliders
 
 		inline [[nodiscard]] SVector2f GetLineEnd() const noexcept;
 
-		SVector2f					EndOffsetFromPosition = {0.f, 0.f};
+		SVector2f					EndOffsetFromPosition = SVector2f::Zero();
 		f32							Rotation = 0.f;
 	};
 

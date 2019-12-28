@@ -7,6 +7,8 @@ EnemyControllerFunctionality::EnemyControllerFunctionality(Object& aOwner)
 	: Super(aOwner)
 {
 	Get<CharacterFunctionality>().SetFaction(EFaction::Enemy);
+
+	Get<CollisionFunctionality>().AddSphereCollider(*this, SVector2f::Zero(), 10.f);
 }
 
 void EnemyControllerFunctionality::Tick() noexcept

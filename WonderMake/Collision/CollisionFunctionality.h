@@ -33,8 +33,8 @@ public:
 	template<typename TIdentifyingFunctionality>
 	SCollider& AddLineCollider(TIdentifyingFunctionality& aFunctionalityIdentifier, const SVector2f aOffset, const SVector2f aSecondOffset);
 
-	template<typename TFunctionalityToReactTo>
-	void AddReaction(SCollider& aCollider, std::function<void(TFunctionalityToReactTo&)> aCallback);
+	template<typename TFunctionalityToReactAgainst>
+	void AddReaction(SCollider& aCollider, std::function<void(TFunctionalityToReactAgainst&)> aCallback);
 
 	void Debug() override;
 };
@@ -56,12 +56,12 @@ SCollider& CollisionFunctionality::AddLineCollider(TIdentifyingFunctionality& aF
 	return *collisionComponent.Colliders.emplace(collider);
 }
 
-template<typename TFunctionalityToReactTo>
-void CollisionFunctionality::AddReaction(SCollider& aCollider, std::function<void(TFunctionalityToReactTo&)> aCallback)
+template<typename TFunctionalityToReactAgainst>
+void CollisionFunctionality::AddReaction(SCollider& aCollider, std::function<void(TFunctionalityToReactAgainst&)> aCallback)
 {
 	SystemPtr<CollisionSystem> collisionSystem;
 
-	collisionSystem->AddReaction<TFunctionalityToReactTo>(*aCollider.Collider, aCallback);
+	collisionSystem->AddReaction<TFunctionalityToReactAgainst>(*aCollider.Collider, aCallback);
 }
 
 template<typename TIdentifyingFunctionality>

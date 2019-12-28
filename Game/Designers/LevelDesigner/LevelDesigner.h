@@ -13,4 +13,6 @@ protected:
 
 	plf::colony<Object> DesignEnemies() const;
 
+	Object DesignPortal() const;
+
 };

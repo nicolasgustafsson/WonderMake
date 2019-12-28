@@ -10,5 +10,5 @@ Randomizer::Randomizer()
 
 bool Randomizer::GetRandomBool()
 {
-	return GetRandomNumber(0, 2) == 1;
+	return GetRandomNumber(0, 1) == 1;
 }

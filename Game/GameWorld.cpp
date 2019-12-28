@@ -1,15 +1,13 @@
 #include "pch.h"
 #include "GameWorld.h"
 
-#include "Collision/CollisionFunctionality.h"
-#include "Collision/CollisionSystem.h"
-#include "Enemy/EnemyControllerFunctionality.h"
-#include "Enemy/TargetFunctionality.h"
 #include "Functionalities/SpriteRenderingFunctionality.h"
 #include "Functionalities/TransformFunctionality.h"
 #include "Movement/DefaultMovementFunctionality.h"
 #include "Player/PlayerControllerFunctionality.h"
 #include "System/System.h"
+
+#include "Designers/LevelDesigner/LevelDesigner.h"
 
 GameWorld::GameWorld()
 {
@@ -22,10 +20,9 @@ GameWorld::GameWorld()
 	auto& playerSprite = myPlayer.Add<SpriteRenderingFunctionality>();
 	playerSprite.SetTexture(std::filesystem::current_path() / "Textures/player.png");
 
-	auto& enemyController = myEnemy.Add<EnemyControllerFunctionality>();
-	myEnemy.Add<DefaultMovementFunctionality>();
-	auto& enemySprite = myEnemy.Add<SpriteRenderingFunctionality>();
-	enemySprite.SetTexture(std::filesystem::current_path() / "Textures/enemy.png");
+	SystemPtr<LevelDesigner> levelDesigner;
+
+	myLevel = levelDesigner->DesignLevel();
 }
 
 void GameWorld::Tick() noexcept

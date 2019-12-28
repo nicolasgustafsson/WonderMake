@@ -30,7 +30,7 @@ private:
 		{
 		}
 
-		std::function<void(const SObjectImpulse&)> myCallback;
+		std::function<void(const Dispatchable&)> myCallback;
 		std::reference_wrapper<_BaseFunctionality> myFunctionalityIdentifier;
 	};
 
@@ -42,11 +42,11 @@ private:
 template<typename TMessage, typename TFunction>
 void ObjectImpulseRouter::Subscribe(Object& aObject, _BaseFunctionality& aFunctionality, TFunction aCallback)
 {
-	static_assert(std::is_base_of_v<SObjectImpulse, TMessage>, "Object message type must have base of SObjectImpulse!");
+	static_assert(std::is_base_of_v<SObjectImpulse<TMessage>, TMessage>, "Object message type must have base of SObjectImpulse!");
 
 	SImpulseSubscription subscription(aFunctionality);
 
-	subscription.myCallback = [aCallback] (const SObjectImpulse& aImpulse) 
+	subscription.myCallback = [aCallback] (const Dispatchable& aImpulse) 
 	{
 		aCallback(static_cast<const TMessage&>(aImpulse));
 	};
@@ -62,7 +62,7 @@ void ObjectImpulseRouter::Subscribe(Object& aObject, _BaseFunctionality& aFuncti
 template<typename TMessage>
 void ObjectImpulseRouter::HandleObjectMessage(const TMessage& aMessage)
 {
-	const SObjectImpulse& impulse = static_cast<const SObjectImpulse&>(aMessage);
+	const SObjectImpulse<TMessage>& impulse = static_cast<const SObjectImpulse<TMessage>&>(aMessage);
 	
 	auto iterator = mySubscriptions.find(TMessage::GetTypeHash());
 	

@@ -30,14 +30,10 @@ plf::colony<Object> LevelDesigner::DesignEnemies() const
 	{
 		auto& enemy = *enemies.emplace();
 		enemy.Add<EnemyControllerFunctionality>();
-		enemy.Add<DefaultMovementFunctionality>();
 		auto& transform = enemy.Add<TransformFunctionality>();
-		auto& sprite = enemy.Add<SpriteRenderingFunctionality>();
 
-		const SVector2f position{ randomizer->GetRandomNumber<f32>(-100, 100), randomizer->GetRandomNumber<f32>(-100, 100) };
-
+		const SVector2f position{ randomizer->GetRandomNumber<f32>(-300, 300), randomizer->GetRandomNumber<f32>(-300, 300) };
 		transform.SetPosition(position);
-		sprite.SetTexture(std::filesystem::current_path() / "Textures/enemy.png");
 	}
 
 	return enemies;

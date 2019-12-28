@@ -10,6 +10,7 @@
 
 #include "Functionalities/TransformFunctionality.h"
 #include "Collision/CollisionFunctionality.h"
+#include "Actions/ActionFunctionality.h"
 
 class EnemyControllerFunctionality
 	: public Functionality<
@@ -20,7 +21,10 @@ class EnemyControllerFunctionality
 		MovementInputFunctionality,
 		DefaultMovementFunctionality,
 		CharacterFunctionality,
-		CollisionFunctionality>
+		CollisionFunctionality,
+		ImpulseFunctionality,
+		SpriteRenderingFunctionality,
+		ActionFunctionality>
 	, public Debugged
 {
 public:
@@ -31,5 +35,7 @@ public:
 	virtual void Debug() override;
 
 private:
+
+	void OnDeath();
 };
 

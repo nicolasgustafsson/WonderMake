@@ -16,6 +16,9 @@ class DefaultMovementFunctionality
 public:
 	DefaultMovementFunctionality(Object& aOwner);
 
+	void AddForce(const SVector2f aForce);
+	void AddImpulse(const SVector2f aImpulse);
+
 	void Tick() noexcept;
 
 	void Inspect();

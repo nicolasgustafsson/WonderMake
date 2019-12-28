@@ -14,13 +14,12 @@ void CollisionSystem::Tick() noexcept
 	for (Colliders::Shape* shape : myCollidersWithReactions)
 	{
 		Colliders::Shape& shapeRef = *shape;
-
-		std::visit([&](auto&& aShape)
+		std::visit([&](const auto& aCollider)
 			{
 				//should iterate backwards ? alt. change to colony
-				for (Colliders::SReaction& reaction : aShape.Reactions)
+				for (const Colliders::SReaction& reaction : aCollider.Reactions)
 				{
-					OverlapAgainstFunctionalityInternal(aShape, reaction);
+					OverlapAgainstFunctionalityInternal(shapeRef, reaction);
 				}
 			}, shapeRef);
 	}
@@ -28,7 +27,7 @@ void CollisionSystem::Tick() noexcept
 
 bool CollisionSystem::DestroyCollider(Colliders::Shape& aCollider)
 {
-	std::visit([&](auto&& aShape)
+	std::visit([&](const auto& aShape)
 		{
 			if (aShape.Reactions.size() > 0)
 			{
@@ -42,7 +41,11 @@ bool CollisionSystem::DestroyCollider(Colliders::Shape& aCollider)
 
 bool CollisionSystem::TestCollision(const Colliders::Shape& aColliderA, const Colliders::Shape& aColliderB) noexcept
 {
-	return std::visit([aColliderB](const auto& aCollider)
+	//don't have a collider overlap itself
+	if (&aColliderB == &aColliderA)
+		return false;
+
+	return std::visit([&aColliderB](const auto& aCollider)
 		{
 			using T = std::decay_t<decltype(aCollider)>;
 

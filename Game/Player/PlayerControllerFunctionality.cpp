@@ -11,6 +11,8 @@ PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
 	auto& collider = collision.AddSphereCollider(*this, SVector2f::Zero(), 10.f);
 
 	Get<CharacterFunctionality>().SetFaction(EFaction::Player);
+
+	Get<DefaultMovementFunctionality>().Get<SDefaultMovementComponent>().myMaxMovementSpeed = 250.f; 
 }
 
 void PlayerControllerFunctionality::Tick() noexcept

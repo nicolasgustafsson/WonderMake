@@ -125,8 +125,9 @@ public:
 	}
 };
 
+template <typename TImpulse>
 struct SObjectImpulse
-	: public Message<SObjectImpulse>
+	: public Message<SObjectImpulse<TImpulse>>
 {
 public:
 	SObjectImpulse() = default;

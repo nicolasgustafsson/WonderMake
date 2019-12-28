@@ -8,12 +8,27 @@ DefaultMovementFunctionality::DefaultMovementFunctionality(Object& aOwner)
 
 }
 
+void DefaultMovementFunctionality::AddForce(const SVector2f aForce)
+{
+	SDefaultMovementComponent& movementComponent = Get<SDefaultMovementComponent>();
+
+	const f32 deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
+
+	movementComponent.myCurrentVelocity += aForce * deltaTime;
+}
+
+void DefaultMovementFunctionality::AddImpulse(const SVector2f aImpulse)
+{
+	SDefaultMovementComponent& movementComponent = Get<SDefaultMovementComponent>();
+	movementComponent.myCurrentVelocity += aImpulse;
+}
+
 void DefaultMovementFunctionality::Tick() noexcept
 {
 	STransformComponent& transform = Get<STransformComponent>();
 	SDefaultMovementComponent& movementComponent = Get<SDefaultMovementComponent>();
 	const SVector2f movementInput = Get<SMovementInputComponent>().myMovementInput;
-	const float deltaTime = myTimeKeeper->GetDeltaSeconds();
+	const f32 deltaTime = myTimeKeeper->GetDeltaSeconds();
 
 	movementComponent.myCurrentVelocity += movementInput * movementComponent.myAccelerationSpeed * deltaTime;
 
@@ -23,7 +38,7 @@ void DefaultMovementFunctionality::Tick() noexcept
 		movementComponent.myCurrentVelocity *= movementComponent.myMaxMovementSpeed;
 	}
 
-	SVector2f friction = -movementComponent.myCurrentVelocity * movementComponent.myFriction;
+	const SVector2f friction = -movementComponent.myCurrentVelocity * movementComponent.myFriction;
 
 	movementComponent.myCurrentVelocity += friction * deltaTime;
 

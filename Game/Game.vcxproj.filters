@@ -18,6 +18,7 @@
     <ClCompile Include="Designers\MeleeWeaponDesigner\MeleeWeaponDesigner.cpp" />
     <ClCompile Include="Designers\LevelDesigner\LevelDesigner.cpp" />
     <ClCompile Include="Character\CharacterFunctionality.cpp" />
+    <ClCompile Include="Levels\LevelPortalFunctionality.cpp" />
     <ClCompile Include="Enemy\EnemyActions\TackleAction.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -41,6 +42,7 @@
     <ClInclude Include="Designers\LevelDesigner\LevelDesigner.h" />
     <ClInclude Include="Levels\Level.h" />
     <ClInclude Include="Character\CharacterFunctionality.h" />
+    <ClInclude Include="Levels\LevelPortalFunctionality.h" />
     <ClInclude Include="Enemy\EnemyActions\TackleAction.h" />
   </ItemGroup>
 </Project>

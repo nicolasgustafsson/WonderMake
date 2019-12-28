@@ -5,6 +5,8 @@
 #include "Functionalities/SpriteRenderingFunctionality.h"
 #include "Input/InputSystem.h"
 #include "Weapons/MeleeWeaponFunctionality.h"
+#include "Collision/CollisionSystem.h"
+#include "Enemy/EnemyControllerFunctionality.h"
 
 WeaponSwingAction::WeaponSwingAction(MeleeWeaponFunctionality& aMeleeWeaponFunctionality, TransformFunctionality& aUserTransform, const SSwing aSwingToPerform) noexcept
 	: myUserTransform(aUserTransform)
@@ -59,6 +61,17 @@ bool WeaponSwingAction::CanBeInterrupted() const noexcept
 	return myCurrentState == ESwingState::Backswing && myStateProgress > 0.5f;
 }
 
+void WeaponSwingAction::TestSwingCollision()
+{
+	auto& weaponTransform = myWeaponFunctionality.GetTransform();
+
+	const SVector2f start = weaponTransform.GetPosition();
+	const SVector2f end = start + SVector2f(0.f, -100.f).Rotate(weaponTransform.GetRotation());
+
+	SystemPtr<CollisionSystem> collision;
+	collision->OverlapLineAgainstFunctionality<EnemyControllerFunctionality>(start, end, [](EnemyControllerFunctionality&) {WmLog("pew!"); });
+}
+
 void WeaponSwingAction::SetSwingTransform(const f32 aPercentageInSwing) noexcept
 {
 	auto& weaponTransform = myWeaponFunctionality.GetTransform();
@@ -77,6 +90,11 @@ void WeaponSwingAction::SetSwingTransform(const f32 aPercentageInSwing) noexcept
 		weaponTransform.SetRotation(
 			swingLocation.GetRotation() - (Constants::Pi / 12.f) * (std::powf(aPercentageInSwing, 3.f)) + Constants::HalfPi * 1.5f);
 	}
+
+	if (myCurrentState == ESwingState::Swing)
+	{
+		TestSwingCollision();
+	}
 }
 
 void WeaponSwingAction::UpdateCharge() noexcept
@@ -84,21 +102,40 @@ void WeaponSwingAction::UpdateCharge() noexcept
 	SetSwingTransform((1.0f - myStateProgress * myStateProgress) * 0.1f);
 
 	const f32 deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
-	myStateProgress += (deltaTime / mySwing.ChargeTime) * myWeaponFunctionality.GetWeapon().myBaseWeaponSwingRate;
+	const f32 progressIncrease = (deltaTime / mySwing.ChargeTime) * myWeaponFunctionality.GetWeapon().myBaseWeaponSwingRate;
+
+	IncreaseProgress(progressIncrease);
+}
+
+void WeaponSwingAction::IncreaseProgress(const f32 progressIncrease)
+{
+	myPreviousStateProgress = myStateProgress;
+	myStateProgress += progressIncrease;
+
+	if (myStateProgress > 1.0f)
+		myStateProgress = 1.0f;
 }
 
 void WeaponSwingAction::UpdateSwing() noexcept
 {
+	const f32 substeps = 50.f;
+	const f32 substepThreshold = 1.0f / substeps;
+	while (myPreviousStateProgress + substepThreshold < myStateProgress)
+	{
+		myPreviousStateProgress += substepThreshold;
+		SetSwingTransform(myPreviousStateProgress * 0.95f);
+	}
+
 	SetSwingTransform(myStateProgress * 0.95f);
 
 	const f32 deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
 
 	const f32 oldStateProgress = myStateProgress;
- 	myStateProgress += (deltaTime / mySwing.SwingTime) * myWeaponFunctionality.GetWeapon().myBaseWeaponSwingRate;
+
+	IncreaseProgress((deltaTime / mySwing.SwingTime) * myWeaponFunctionality.GetWeapon().myBaseWeaponSwingRate);
 
 	const f32 progressDelta = myStateProgress - oldStateProgress;
 	myUserTransform.Move(myUserTransform.GetForwardVector() * progressDelta * mySwing.StepLength);
-
 }
 
 void WeaponSwingAction::UpdateBackswing() noexcept 
@@ -110,5 +147,5 @@ void WeaponSwingAction::UpdateBackswing() noexcept
 	SetSwingTransform(0.95f + inverseQuadraticProgress * 0.05f);
 
 	const f32 deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
-	myStateProgress += (deltaTime / mySwing.BackswingTime) * myWeaponFunctionality.GetWeapon().myBaseWeaponSwingRate;
+	IncreaseProgress((deltaTime / mySwing.BackswingTime) * myWeaponFunctionality.GetWeapon().myBaseWeaponSwingRate);
 }

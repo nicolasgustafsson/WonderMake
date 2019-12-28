@@ -6,6 +6,7 @@
 
 #include "Functionalities/Functionality.h"
 #include "Functionalities/TransformFunctionality.h"
+#include "Collision/CollisionSystem.h"
 
 namespace Colliders
 {
@@ -26,12 +27,56 @@ public:
 
 	void Tick();
 
-	void AddSphereCollider(const SVector2f aOffset, const f32 aRadius);
+	template<typename TIdentifyingFunctionality>
+	SCollider& AddSphereCollider(TIdentifyingFunctionality& aFunctionalityIdentifier, const SVector2f aOffset, const f32 aRadius);
+
+	template<typename TIdentifyingFunctionality>
+	SCollider& AddLineCollider(TIdentifyingFunctionality& aFunctionalityIdentifier, const SVector2f aOffset, const SVector2f aSecondOffset);
+
+	template<typename TFunctionalityToReactAgainst>
+	void AddReaction(SCollider& aCollider, std::function<void(TFunctionalityToReactAgainst&)> aCallback);
 
 	void Debug() override;
-
-	// TODO(Kevin): Allow objects to react to collisions.
-	
-private:
-	
 };
+
+template<typename TIdentifyingFunctionality>
+SCollider& CollisionFunctionality::AddLineCollider(TIdentifyingFunctionality& aFunctionalityIdentifier, const SVector2f aOffset, const SVector2f aSecondOffset)
+{
+	auto& collisionComponent = Get<SCollisionComponent>();
+	const auto& transformFunctionality = Get<TransformFunctionality>();
+	SystemPtr<CollisionSystem> collisionSystem;
+
+	const auto transformation = transformFunctionality.GetMatrix();
+
+	SCollider collider;
+
+	collider.Collider = &collisionSystem->CreateLineCollider(aFunctionalityIdentifier, aOffset * transformation, aSecondOffset * transformation);
+	collider.Offset = aOffset;
+
+	return *collisionComponent.Colliders.emplace(collider);
+}
+
+template<typename TFunctionalityToReactAgainst>
+void CollisionFunctionality::AddReaction(SCollider& aCollider, std::function<void(TFunctionalityToReactAgainst&)> aCallback)
+{
+	SystemPtr<CollisionSystem> collisionSystem;
+
+	collisionSystem->AddReaction<TFunctionalityToReactAgainst>(*aCollider.Collider, aCallback);
+}
+
+template<typename TIdentifyingFunctionality>
+SCollider& CollisionFunctionality::AddSphereCollider(TIdentifyingFunctionality& aFunctionalityIdentifier, const SVector2f aOffset, const f32 aRadius)
+{
+	SCollisionComponent& collisionComponent = Get<SCollisionComponent>();
+	const auto& transformFunctionality = Get<TransformFunctionality>();
+	SystemPtr<CollisionSystem> collisionSystem;
+
+	const auto transformation = transformFunctionality.GetMatrix();
+
+	SCollider collider;
+
+	collider.Collider = &collisionSystem->CreateSphereCollider(aFunctionalityIdentifier, aOffset * transformation, aRadius);
+	collider.Offset = aOffset;
+
+	return *collisionComponent.Colliders.emplace(collider);
+}

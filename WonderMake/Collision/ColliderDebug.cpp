@@ -10,8 +10,8 @@ void DrawSphere(const Colliders::SSphere& aCollider, const SColor& aColor)
 
 	for (u32 i = 0; i < points; ++i)
 	{
-		positions[i].X = std::cosf((3.14f * 2.f) / points * i);
-		positions[i].Y = std::sinf((3.14f * 2.f) / points * i);
+		positions[i].X = std::cosf((Constants::Pi * 2.f) / points * i);
+		positions[i].Y = std::sinf((Constants::Pi * 2.f) / points * i);
 
 		positions[i] *= aCollider.Radius;
 		positions[i] += aCollider.Position;
@@ -34,6 +34,16 @@ void DrawSphere(const Colliders::SSphere& aCollider, const SColor& aColor)
 	WmDrawDebugLine(line);
 }
 
+void DrawLine(const Colliders::SLine& aCollider, const SColor& aColor)
+{
+	SDebugLine line;
+	line.Color = aColor;
+
+	line.Start = aCollider.Position;
+	line.End = aCollider.GetLineEnd();
+	WmDrawDebugLine(line);
+}
+
 void DrawCollider(const Colliders::Shape& aCollider, const SColor& aColor)
 {
 	std::visit([aColor](const auto& aCollider)
@@ -43,6 +53,10 @@ void DrawCollider(const Colliders::Shape& aCollider, const SColor& aColor)
 			if constexpr (std::is_same_v<T, Colliders::SSphere>)
 			{
 				DrawSphere(aCollider, aColor);
+			}
+			else if constexpr (std::is_same_v<T, Colliders::SLine>)
+			{
+				DrawLine(aCollider, aColor);
 			}
 			else
 			{

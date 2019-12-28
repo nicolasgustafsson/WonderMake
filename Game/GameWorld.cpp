@@ -17,15 +17,13 @@ GameWorld::GameWorld()
 	auto& playerTransform = myPlayer.Add<TransformFunctionality>();
 	myPlayer.Add<PlayerControllerFunctionality>();
 	myPlayer.Add<DefaultMovementFunctionality>();
+
+	playerTransform.Move({ 0.f, 40.f });
 	auto& playerSprite = myPlayer.Add<SpriteRenderingFunctionality>();
 	playerSprite.SetTexture(std::filesystem::current_path() / "Textures/player.png");
 
-	auto& enemyTarget = myEnemy.Add<TargetFunctionality>();
-	enemyTarget.Temp = &playerTransform;
-	myEnemy.Add<EnemyControllerFunctionality>();
+	auto& enemyController = myEnemy.Add<EnemyControllerFunctionality>();
 	myEnemy.Add<DefaultMovementFunctionality>();
-	auto& enemyCollision = myEnemy.Add<CollisionFunctionality>();
-	enemyCollision.AddSphereCollider(SVector2f::Zero(), 75.f);
 	auto& enemySprite = myEnemy.Add<SpriteRenderingFunctionality>();
 	enemySprite.SetTexture(std::filesystem::current_path() / "Textures/enemy.png");
 }

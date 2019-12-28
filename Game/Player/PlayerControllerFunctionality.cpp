@@ -7,7 +7,10 @@
 PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
 	: Super(aOwner)
 {
+	CollisionFunctionality& collision = Get<CollisionFunctionality>();
+	auto& collider = collision.AddSphereCollider(*this, SVector2f::Zero(), 10.f);
 
+	Get<CharacterFunctionality>().SetFaction(EFaction::Player);
 }
 
 void PlayerControllerFunctionality::Tick() noexcept

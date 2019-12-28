@@ -35,13 +35,13 @@ void Thread::DoOnce() noexcept
 void Thread::WaitUntilReady() const noexcept
 {
 	while (!IsReady())
-		std::this_thread::sleep_for(std::chrono::microseconds(100));
+		std::this_thread::sleep_for(std::chrono::microseconds(1));
 }
 
 void Thread::WaitWhileReady() const noexcept
 {
 	while (IsReady())
-		std::this_thread::sleep_for(std::chrono::microseconds(100));
+		std::this_thread::sleep_for(std::chrono::microseconds(1));
 }
 
 void Thread::Run()

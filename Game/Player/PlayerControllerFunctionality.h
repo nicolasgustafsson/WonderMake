@@ -1,10 +1,16 @@
 #pragma once
-#include "Movement/MovementInputFunctionality.h"
+
 #include "Input/InputSystem.h"
+#include "Movement/MovementInputFunctionality.h"
 #include "Movement/DefaultMovementFunctionality.h"
+
+#include "Character/CharacterFunctionality.h"
+
+#include "Weapons/MeleeWeaponUserFunctionality.h"
+#include "Collision/CollisionFunctionality.h"
+
 #include "Functionalities/TransformFunctionality.h"
 #include "Functionalities/OwnerFunctionality.h"
-#include "Weapons/MeleeWeaponUserFunctionality.h"
 
 struct SCoolImpulse
 	: public SObjectImpulse
@@ -14,17 +20,17 @@ struct SCoolImpulse
 
 class PlayerControllerFunctionality
 	: public Functionality<
-			PlayerControllerFunctionality, TransformFunctionality, 
-			MovementInputFunctionality, DefaultMovementFunctionality, 
-			OwnerFunctionality, MeleeWeaponUserFunctionality,
-			ActionFunctionality>
+		PlayerControllerFunctionality, TransformFunctionality,
+		MovementInputFunctionality, DefaultMovementFunctionality,
+		OwnerFunctionality, MeleeWeaponUserFunctionality,
+		ActionFunctionality, CollisionFunctionality,
+		CharacterFunctionality>
 	, public Debugged
 {
 public:
 	PlayerControllerFunctionality(Object& aOwner);
 
 	void Tick() noexcept;
-
 
 	virtual void Debug() override;
 

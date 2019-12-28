@@ -262,6 +262,11 @@ struct SVector
 		return std::sqrt(LengthSquared());
 	}
 
+	[[nodiscard]] constexpr T DistanceTo(const SVector<T, Size> aOther) const noexcept
+	{
+		return (aOther - *this).Length();
+	}
+
 	constexpr void Normalize() noexcept
 	{
 		const T length = Length();
@@ -273,6 +278,17 @@ struct SVector
 		{
 			(*this)[u] /= length;
 		}
+	}
+
+	[[nodiscard]] constexpr T Dot(const SVector<T, Size> aOther) const noexcept
+	{
+		T sum = 0;
+		for (u32 i = 0; i < Size; i++)
+		{
+			sum += (*this)[i] * aOther[i];
+		}
+
+		return sum;
 	}
 
 	[[nodiscard]] constexpr SVector<T, Size> GetNormalized() const noexcept

@@ -6,7 +6,9 @@
 EnemyControllerFunctionality::EnemyControllerFunctionality(Object& aOwner)
 	: Super(aOwner)
 {
+	Get<CharacterFunctionality>().SetFaction(EFaction::Enemy);
 
+	Get<CollisionFunctionality>().AddSphereCollider(*this, SVector2f::Zero(), 10.f);
 }
 
 void EnemyControllerFunctionality::Tick() noexcept
@@ -15,9 +17,9 @@ void EnemyControllerFunctionality::Tick() noexcept
 	auto& movementInputFunctionality = Get<MovementInputFunctionality>();
 	auto& enemyControllerComponent = Get<EnemyControllerComponent>();
 
-	const auto target = targetFunctionality.FindTarget([](TransformFunctionality& /*aTranform*/)
+	const auto target = targetFunctionality.FindTarget([&](CharacterFunctionality& aCharacter)
 		{
-			return true;
+			return !aCharacter.IsFriendlyWith(Get<CharacterFunctionality>().GetFaction());
 		});
 
 	if (!target)

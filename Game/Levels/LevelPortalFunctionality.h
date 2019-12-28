@@ -11,7 +11,8 @@ class LevelPortalFunctionality
 {
 public:
 	LevelPortalFunctionality(Object& aOwner);
+	~LevelPortalFunctionality();
 
 private:
-
+	bool myDoOnce = false;
 };

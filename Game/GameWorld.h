@@ -8,7 +8,8 @@ class GameWorld : public System
 public:
 	GameWorld();
 
-	virtual void Tick() noexcept override;
+	void RestartLevel();
+
 	Object myPlayer;
 	Level myLevel;
 };

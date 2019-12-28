@@ -101,6 +101,11 @@ inline void Object::Remove()
 	{
 		auto functionality = Remove<TType>(myFunctionalities);
 
+		if (!functionality)
+		{
+			return;
+		}
+
 		functionality->Destroy(*this);
 	}
 	else
@@ -169,7 +174,9 @@ inline TType* Object::Remove(PairList<TBaseType>& aList)
 	if (counter.RefCount == 0)
 	{
 		aList.erase(it);
+
+		return reference;
 	}
 
-	return reference;
+	return nullptr;
 }

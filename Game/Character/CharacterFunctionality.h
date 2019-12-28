@@ -1,6 +1,7 @@
 #pragma once
 #include "Functionalities/Functionality.h"
 #include "Collision/CollisionFunctionality.h"
+#include "Functionalities/TransformFunctionality.h"
 
 struct SHealthComponent : public  SComponent
 {
@@ -23,11 +24,11 @@ class CharacterFunctionality
 	: public Functionality<CharacterFunctionality, CollisionFunctionality, SHealthComponent, SFactionComponent, TransformFunctionality>
 {
 public:
-	CharacterFunctionality(Object& aOwner);
+	CharacterFunctionality(Object& aOwner) noexcept;
 
 	//Nicos: might want to move faction code to its own functionality in the future
-	void SetFaction(const EFaction aFaction);
-	bool IsFriendlyWith(const EFaction aFaction) const;
-	EFaction GetFaction() const;
+	void SetFaction(const EFaction aFaction) noexcept;
+	[[nodiscard]] bool IsFriendlyWith(const EFaction aFaction) const noexcept;
+	[[nodiscard]] EFaction GetFaction() const noexcept;
 };
 

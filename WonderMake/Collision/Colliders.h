@@ -40,5 +40,24 @@ namespace Colliders
 		f32							Radius = 0.f;
 	};
 
-	typedef std::variant<SSphere>	Shape;
+	struct SLine
+		: public SBase
+	{
+		SLine() noexcept
+			: SBase({ nullptr })
+		{}
+
+		inline [[nodiscard]] SVector2f GetLineEnd() const noexcept;
+
+		SVector2f					EndOffsetFromPosition = {0.f, 0.f};
+		f32							Rotation = 0.f;
+	};
+
+	SVector2f SLine::GetLineEnd() const noexcept
+	{
+		SVector2f temp = EndOffsetFromPosition;
+		return Position + temp.Rotate(Rotation);
+	}
+
+	typedef std::variant<SSphere, SLine>	Shape;
 }

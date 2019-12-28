@@ -31,8 +31,12 @@ public:
 	virtual bool CanBeInterrupted() const noexcept override;
 
 private:
+	void TestSwingCollision();
 	void SetSwingTransform(const f32 aPercentageInSwing) noexcept;
 	void UpdateCharge() noexcept;
+
+	void IncreaseProgress(const f32 progressIncrease);
+
 	void UpdateSwing() noexcept;
 	void UpdateBackswing() noexcept;
 
@@ -42,5 +46,6 @@ private:
 	
 	ESwingState myCurrentState = ESwingState::Charge;
 	f32 myStateProgress = 0.f;
+	f32 myPreviousStateProgress = 0.f;
 };
 

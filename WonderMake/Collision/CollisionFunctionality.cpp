@@ -31,15 +31,24 @@ void CollisionFunctionality::Tick()
 	const auto& transformFunctionality = Get<TransformFunctionality>();
 
 	const auto transformation = transformFunctionality.GetMatrix();
+	const f32 rotation = transformFunctionality.GetRotation();
 
 	for (auto& collider : collisionComponent.Colliders)
 	{
 		if (!collider.Collider)
 			continue;
 
-		std::visit([collider, transformation](auto& aCollider)
+		std::visit([collider, transformation, rotation](auto& aCollider)
 			{
+				using T = std::decay_t<decltype(aCollider)>;
+
 				aCollider.Position = collider.Offset * transformation;
+				
+				if constexpr (std::is_same_v<T, Colliders::SLine>)
+				{
+					aCollider.Rotation = rotation;
+				}
+
 			}, *collider.Collider);
 	}
 }
@@ -66,6 +75,10 @@ void CollisionFunctionality::Debug()
 				if constexpr (std::is_same_v<T, Colliders::SSphere>)
 				{
 					ImGui::SliderFloat("Radius", &aCollider.Radius, 0, 500);
+				}
+				else if constexpr (std::is_same_v<T, Colliders::SLine>)
+				{
+					ImGui::SliderFloat2("End Offset", &aCollider.EndOffsetFromPosition.X, 0, 500);
 				}
 				else
 				{

@@ -12,8 +12,6 @@ PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
 	auto& collider = collision.AddSphereCollider(*this, SVector2f::Zero(), 10.f);
 
 	Get<CharacterFunctionality>().SetFaction(EFaction::Player);
-
-	collision.AddReaction<EnemyControllerFunctionality>(collider, [](EnemyControllerFunctionality& aEnemy) {WmLog("Owww"); });
 }
 
 void PlayerControllerFunctionality::Tick() noexcept

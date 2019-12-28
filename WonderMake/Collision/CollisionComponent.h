@@ -21,5 +21,5 @@ struct SCollider
 struct SCollisionComponent final
 	: public SComponent
 {
-	std::vector<SCollider>	Colliders;
+	plf::colony<SCollider>	Colliders;
 };

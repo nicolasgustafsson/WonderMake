@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include <regex>
+#include <sstream>
 #include <vector>
 
 struct SLexedFile
@@ -17,42 +18,37 @@ struct SLexedFile
 	std::vector<std::string> myObjectNames;
 };
 
-std::ofstream CreateFile(
-	const std::filesystem::path& aFilePath)
+bool CompareFile(const std::filesystem::path& aFilePath, const std::string_view aContent)
 {
+	std::ifstream fileStream(aFilePath);
+	std::stringstream sstr;
+
+	sstr << fileStream.rdbuf();
+	
+	const auto fileContent = sstr.str();
+
+	return aContent == fileContent;
+}
+
+bool WriteFile(const std::filesystem::path& aFilePath, const std::string_view aContent)
+{
+	if (CompareFile(aFilePath, aContent))
+	{
+		return true;
+	}
+
+	std::cout << "Info: File out of date, generating; " << aFilePath << ".\n";
+
 	std::ofstream fileStream(aFilePath);
+
 	if (!fileStream)
 	{
 		std::cout << "Error: Failed to open file for writing; " << aFilePath << ".\n";
 
-		return fileStream;
-	}
-
-	fileStream << " // This is a generated file, if you change it, you're going to have a bad time.\n\n";
-
-	return fileStream;
-}
-
-bool GenerateHeaderFile(
-	const std::filesystem::path& aOutputDir,
-	const SLexedFile& aFile)
-{
-	const std::filesystem::path filePath = aOutputDir / aFile.myHeaderFile;
-
-	std::ofstream fileStream = CreateFile(filePath);
-
-	if (!fileStream)
-	{
 		return false;
 	}
 
-	fileStream
-		<< "#pragma once\n"
-		<< "\n"
-		<< "namespace Registry\n"
-		<< "{\n"
-		<< "\tvoid " << aFile.myRegisterFuncName << "();\n"
-		<< "}\n";
+	fileStream << aContent;
 
 	fileStream.flush();
 	fileStream.close();
@@ -60,22 +56,38 @@ bool GenerateHeaderFile(
 	return true;
 }
 
-bool GenerateSourceFile(
-	const std::filesystem::path& aOutputDir,
-	const SLexedFile& aFile)
+void FileTemplate(std::stringstream& aOutStream)
 {
-	std::filesystem::path filePath = aOutputDir / aFile.mySourceFile;
+	aOutStream << " // This is a generated file, if you change it, you're going to have a bad time.\n\n";
+}
 
-	filePath.replace_extension(".cpp");
+bool GenerateHeaderFile(const std::filesystem::path& aOutputDir, const SLexedFile& aFile)
+{
+	std::stringstream sstr;
 
-	std::ofstream fileStream = CreateFile(filePath);
+	FileTemplate(sstr);
 
-	if (!fileStream)
-	{
-		return false;
-	}
+	sstr
+		<< "#pragma once\n"
+		<< "\n"
+		<< "namespace Registry\n"
+		<< "{\n"
+		<< "\tvoid " << aFile.myRegisterFuncName << "();\n"
+		<< "}\n";
 
-	fileStream
+	const std::filesystem::path filePath = aOutputDir / aFile.myHeaderFile;
+	const auto content = sstr.str();
+
+	return WriteFile(filePath, content);
+}
+
+bool GenerateSourceFile(const std::filesystem::path& aOutputDir, const SLexedFile& aFile)
+{
+	std::stringstream sstr;
+
+	FileTemplate(sstr);
+
+	sstr
 		<< "#include \"pch.h\"\n"
 		<< "\n"
 		<< "#include " << aFile.myHeaderFile << "\n"
@@ -89,31 +101,29 @@ bool GenerateSourceFile(
 
 	for (const auto& objectName : aFile.myObjectNames)
 	{
-		fileStream
+		sstr
 			<< "\t\tSystemPtr<SerializationSystem>()->Register<" << objectName << ">();\n";
 	}
 
-	fileStream
+	sstr
 		<< "\t}\n"
 		<< "}\n";
 
-	fileStream.flush();
-	fileStream.close();
+	std::filesystem::path filePath = aOutputDir / aFile.mySourceFile;
+	const auto content = sstr.str();
 
-	return true;
+	filePath.replace_extension(".cpp");
+
+	return WriteFile(filePath, content);
 }
 
-bool GenerateRegistryHeaderFile(
-	const std::filesystem::path& aOutputFile)
+bool GenerateRegistryHeaderFile(const std::filesystem::path& aFilePath)
 {
-	std::ofstream fileStream = CreateFile(aOutputFile);
+	std::stringstream sstr;
 
-	if (!fileStream)
-	{
-		return false;
-	}
+	FileTemplate(sstr);
 
-	fileStream
+	sstr
 		<< "#pragma once\n"
 		<< "\n"
 		<< "namespace Registry\n"
@@ -121,34 +131,28 @@ bool GenerateRegistryHeaderFile(
 		<< "\tvoid Register();\n"
 		<< "}\n";
 
-	fileStream.flush();
-	fileStream.close();
+	const auto content = sstr.str();
 
-	return true;
+	return WriteFile(aFilePath, content);
 }
 
-bool GenerateRegistrySourceFile(
-	const std::filesystem::path& aOutputFile,
-	const std::vector<SLexedFile>& aFiles)
+bool GenerateRegistrySourceFile(const std::filesystem::path& aFilePath, const std::vector<SLexedFile>& aFiles)
 {
-	std::ofstream fileStream = CreateFile(aOutputFile);
+	std::stringstream sstr;
 
-	if (!fileStream)
-	{
-		return false;
-	}
+	FileTemplate(sstr);
 
-	fileStream
+	sstr
 		<< "#include \"pch.h\"\n"
 		<< "\n";
 
 	for (const auto& file : aFiles)
 	{
-		fileStream
+		sstr
 			<< "#include " << file.myHeaderFile << "\n";
 	}
 
-	fileStream
+	sstr
 		<< "\n"
 		<< "namespace Registry\n"
 		<< "{\n"
@@ -157,18 +161,17 @@ bool GenerateRegistrySourceFile(
 
 	for (const auto& file : aFiles)
 	{
-		fileStream
+		sstr
 			<< "\t\t" << file.myRegisterFuncName << "();\n";
 	}
 
-	fileStream
+	sstr
 		<< "\t}\n"
 		<< "}\n";
 
-	fileStream.flush();
-	fileStream.close();
+	const auto content = sstr.str();
 
-	return true;
+	return WriteFile(aFilePath, content);
 }
 
 bool FindObjectsInFile(

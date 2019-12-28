@@ -8,5 +8,6 @@ struct Level
 {
 public:
 	plf::colony<Object> Enemies;
+	Object Portal;
 
 };

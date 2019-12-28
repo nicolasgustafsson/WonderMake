@@ -2,10 +2,18 @@
 #include "Functionalities/Functionality.h"
 #include "Collision/CollisionFunctionality.h"
 #include "Functionalities/TransformFunctionality.h"
+#include "Functionalities/OwnerFunctionality.h"
+#include <Functionalities/SpriteRenderingFunctionality.h>
 
 struct SHealthComponent : public  SComponent
 {
-	f32 Health = 100;
+	i32 Health = 200;
+};
+
+struct SDiedImpulse
+	: public SObjectImpulse<SDiedImpulse>
+{
+
 };
 
 enum class EFaction
@@ -21,11 +29,17 @@ struct SFactionComponent : public SComponent
 };
 
 class CharacterFunctionality
-	: public Functionality<CharacterFunctionality, CollisionFunctionality, SHealthComponent, SFactionComponent, TransformFunctionality>
+	: public Functionality<CharacterFunctionality, OwnerFunctionality
+	, CollisionFunctionality, SHealthComponent
+	, SFactionComponent, TransformFunctionality>
 {
 public:
 	CharacterFunctionality(Object& aOwner) noexcept;
 
+	void Damage(const i32 aDamage);
+
+	[[nodiscard]] bool IsDead() const noexcept;
+	[[nodiscard]] bool IsAlive() const noexcept;
 	//Nicos: might want to move faction code to its own functionality in the future
 	void SetFaction(const EFaction aFaction) noexcept;
 	[[nodiscard]] bool IsFriendlyWith(const EFaction aFaction) const noexcept;

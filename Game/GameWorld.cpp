@@ -24,8 +24,6 @@ GameWorld::GameWorld()
 
 	auto& enemyController = myEnemy.Add<EnemyControllerFunctionality>();
 	myEnemy.Add<DefaultMovementFunctionality>();
-	auto& enemySprite = myEnemy.Add<SpriteRenderingFunctionality>();
-	enemySprite.SetTexture(std::filesystem::current_path() / "Textures/enemy.png");
 }
 
 void GameWorld::Tick() noexcept

@@ -12,11 +12,16 @@
 struct SComponent;
 class _BaseFunctionality;
 
-class Object
+class Object final
 {
 public:
 	Object() = default;
-	virtual ~Object();
+	Object(const Object&) = delete;
+	Object(Object&& aOther) noexcept;
+	~Object() noexcept;
+
+	Object& operator=(const Object&) = delete;
+	Object& operator=(Object&& aOther) noexcept;
 
 	// Will not add the type if it already exists.
 	template<typename TType>
@@ -55,6 +60,8 @@ private:
 
 	template<typename TType, typename TBaseType>
 	inline TType* Remove(PairList<TBaseType>& aList);
+
+	void Destroy() noexcept;
 
 	FunctionalityList myFunctionalities;
 	ComponentList myComponents;

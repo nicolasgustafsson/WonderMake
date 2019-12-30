@@ -51,6 +51,9 @@ void ActionFunctionality::Inspect()
 
 void ActionFunctionality::EndCurrentAction()
 {
+	if (!IsInAction())
+		return;
+
 	Action*& currentAction = Get<SActionComponent>().CurrentAction;
 
 	currentAction->EndAction();

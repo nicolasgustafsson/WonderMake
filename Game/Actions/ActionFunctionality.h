@@ -1,6 +1,7 @@
 #pragma once
 #include <any>
 #include "Actions/Action.h"
+#include "Functionalities/ImpulseFunctionality.h"
 
 class Action;
 
@@ -22,7 +23,7 @@ enum class EActionResult
 
 //Nicos: This currently is not thread safe, have an extra look when adding policies/threading
 class ActionFunctionality
-	: public Functionality<ActionFunctionality, SActionComponent>
+	: public Functionality<ActionFunctionality, SActionComponent, ImpulseFunctionality>
 {
 public:
 	ActionFunctionality(Object& aOwner);

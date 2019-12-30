@@ -21,15 +21,15 @@ GameWorld::GameWorld()
 	auto& playerSprite = myPlayer.Add<SpriteRenderingFunctionality>();
 	playerSprite.SetTexture(std::filesystem::current_path() / "Textures/player.png");
 
+	RestartLevel();
+}
+
+void GameWorld::RestartLevel()
+{
 	SystemPtr<LevelDesigner> levelDesigner;
 
 	myLevel = levelDesigner->DesignLevel();
 }
-
-void GameWorld::Tick() noexcept
-{
-}
-
 void GameWorld::OnPlayerDeath(const SPlayerDiedMessage&)
 {
 	myDeathScreen.emplace();

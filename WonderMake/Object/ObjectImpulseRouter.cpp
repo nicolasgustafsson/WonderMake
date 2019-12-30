@@ -22,6 +22,11 @@ void ObjectImpulseRouter::Unsubscribe(const size_t aTypeHash, Object& aObject, _
 			return (&aSubscription.myFunctionalityIdentifier.get() == &aFunctionality);
 		});
 
+	if (it == vector.cend())
+	{
+		return;
+	}
+
 	vector.erase(it);
 }
 

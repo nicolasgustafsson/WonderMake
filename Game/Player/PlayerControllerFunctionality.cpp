@@ -13,10 +13,18 @@ PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
 	Get<CharacterFunctionality>().SetFaction(EFaction::Player);
 
 	Get<DefaultMovementFunctionality>().Get<SDefaultMovementComponent>().myMaxMovementSpeed = 250.f; 
+
+	Get<ImpulseFunctionality>().Subscribe<SDiedImpulse>(*this, [&](auto) 
+		{
+			OnDeath();
+		});
 }
 
 void PlayerControllerFunctionality::Tick() noexcept
 {
+	if (Get<CharacterFunctionality>().IsDead())
+		return;
+
 	Action* currentAction = Get<ActionFunctionality>().GetCurrentAction();
 
 	const bool canMove = !(currentAction && currentAction->BlocksMovementInput());
@@ -48,6 +56,13 @@ void PlayerControllerFunctionality::UpdateMovement()
 		Get<TransformFunctionality>().FaceDirection(movementInput);
 
 	Get<MovementInputFunctionality>().SetMovementInput(movementInput);
+}
+
+void PlayerControllerFunctionality::OnDeath()
+{
+	Get<SpriteRenderingFunctionality>().SetTexture("Textures/deadPlayer.png");
+
+	WmDispatchMessage(SPlayerDiedMessage());
 }
 
 void PlayerControllerFunctionality::Debug()

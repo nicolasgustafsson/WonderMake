@@ -10,6 +10,7 @@
 #include "Designers/LevelDesigner/LevelDesigner.h"
 
 GameWorld::GameWorld()
+	:mySubscriber(ERoutineId::Logic, BindHelper(&GameWorld::OnPlayerDeath, this))
 {
 	EnableTick();
 	auto& playerTransform = myPlayer.Add<TransformFunctionality>();
@@ -27,5 +28,13 @@ GameWorld::GameWorld()
 
 void GameWorld::Tick() noexcept
 {
+}
+
+void GameWorld::OnPlayerDeath(const SPlayerDiedMessage&)
+{
+	myDeathScreen.emplace();
+
+	auto& sprite = myDeathScreen->Add<SpriteRenderingFunctionality>();
+	sprite.SetTexture(std::filesystem::current_path() / "Textures/deadScreen.png");
 }
 

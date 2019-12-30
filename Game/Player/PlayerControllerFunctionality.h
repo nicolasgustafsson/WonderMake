@@ -11,11 +11,18 @@
 
 #include "Functionalities/TransformFunctionality.h"
 #include "Functionalities/OwnerFunctionality.h"
+#include "Functionalities/ImpulseFunctionality.h"
 
 struct SCoolImpulse
 	: public SObjectImpulse<SCoolImpulse>
 {
 
+};
+
+struct SPlayerDiedMessage
+	: public Message<SPlayerDiedMessage>
+{
+	
 };
 
 class PlayerControllerFunctionality
@@ -24,7 +31,8 @@ class PlayerControllerFunctionality
 		MovementInputFunctionality, DefaultMovementFunctionality,
 		OwnerFunctionality, MeleeWeaponUserFunctionality,
 		ActionFunctionality, CollisionFunctionality,
-		CharacterFunctionality>
+		CharacterFunctionality, ImpulseFunctionality,
+		SpriteRenderingFunctionality>
 	, public Debugged
 {
 public:
@@ -38,5 +46,6 @@ private:
 	void UpdateMovement();
 
 	SystemPtr<InputSystem> myInputSystem;
+	void OnDeath();
 };
 

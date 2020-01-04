@@ -14,13 +14,15 @@ public:
 	void RestartLevel();
 
 	Object myPlayer;
+	Object myCameraController;
 	Level myLevel;
 
 private:
-
-	std::optional<Object> myDeathScreen;
+	void SetupPlayer();
 
 	void OnPlayerDeath(const SPlayerDiedMessage&);
 	MessageSubscriber mySubscriber;
+
+	std::optional<Object> myDeathScreen;
 };
 

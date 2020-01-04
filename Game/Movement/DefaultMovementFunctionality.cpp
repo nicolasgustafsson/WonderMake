@@ -14,7 +14,6 @@ void DefaultMovementFunctionality::AddForce(const SVector2f aForce)
 	SDefaultMovementComponent& movementComponent = Get<SDefaultMovementComponent>();
 
 	const f32 deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
-
 	movementComponent.CurrentVelocity += aForce * deltaTime;
 }
 
@@ -51,8 +50,8 @@ void DefaultMovementFunctionality::Tick() noexcept
 	do
 	{
 		TestCollision();
-	}
-	while (movementComponent.Collided);
+	}                                    //avoid infinite loops if we are stuck inside geometry
+	while (movementComponent.Collided && movementComponent.CollisionIterationsLeft > 0);
 }
 
 void DefaultMovementFunctionality::Inspect()
@@ -87,9 +86,6 @@ void DefaultMovementFunctionality::TestCollision()
 
 	movementComponent.Collided = false;
 
-	//avoid infinite loops if we are stuck inside geometry
-	if (movementComponent.CollisionIterationsLeft <= 0)
-		return;
 	movementComponent.CollisionIterationsLeft -= 1;
 
 	SystemPtr<CollisionSystem> collisionSystem;

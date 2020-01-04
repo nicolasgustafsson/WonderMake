@@ -84,3 +84,8 @@ void Camera::SetImguiWindowOffset(const SVector2f aImguiOffset) noexcept
 {
 	myImguiWindowOffset = aImguiOffset;
 }
+
+void Camera::SetPosition(const SVector2f aPosition)
+{
+	myPosition = aPosition;
+}

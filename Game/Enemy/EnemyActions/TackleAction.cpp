@@ -57,7 +57,7 @@ void TackleAction::TickTackling()
 	const SVector2f selfPosition = myCharacter->Get<TransformFunctionality>().GetPosition();
 
 	SystemPtr<CollisionSystem>()->OverlapSphereAgainstFunctionality<CharacterFunctionality>(
-		myCharacter->Get<TransformFunctionality>().GetPosition(), 20.f, [&](CharacterFunctionality& aHitCharacter)
+		myCharacter->Get<TransformFunctionality>().GetPosition(), 20.f, [&](CharacterFunctionality& aHitCharacter, Colliders::SCollisionInfo)
 		{
 			if (myCharacter->IsFriendlyWith(aHitCharacter.GetFaction()))
 				return;

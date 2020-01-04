@@ -27,30 +27,7 @@ CollisionFunctionality::~CollisionFunctionality()
 
 void CollisionFunctionality::Tick()
 {
-	auto& collisionComponent = Get<SCollisionComponent>();
-	const auto& transformFunctionality = Get<TransformFunctionality>();
-
-	const auto transformation = transformFunctionality.GetMatrix();
-	const f32 rotation = transformFunctionality.GetRotation();
-
-	for (auto& collider : collisionComponent.Colliders)
-	{
-		if (!collider.Collider)
-			continue;
-
-		std::visit([collider, transformation, rotation](auto& aCollider)
-			{
-				using T = std::decay_t<decltype(aCollider)>;
-
-				aCollider.Position = collider.Offset * transformation;
-				
-				if constexpr (std::is_same_v<T, Colliders::SLine>)
-				{
-					aCollider.Rotation = rotation;
-				}
-
-			}, *collider.Collider);
-	}
+	UpdateCollisionTransforms();
 }
 
 void CollisionFunctionality::Debug()
@@ -90,4 +67,32 @@ void CollisionFunctionality::Debug()
 	}
 
 	ImGui::End();
+}
+
+void CollisionFunctionality::UpdateCollisionTransforms()
+{
+	auto& collisionComponent = Get<SCollisionComponent>();
+	const auto& transformFunctionality = Get<TransformFunctionality>();
+
+	const auto transformation = transformFunctionality.GetMatrix();
+	const f32 rotation = transformFunctionality.GetRotation();
+
+	for (auto& collider : collisionComponent.Colliders)
+	{
+		if (!collider.Collider)
+			continue;
+
+		std::visit([collider, transformation, rotation](auto& aCollider)
+			{
+				using T = std::decay_t<decltype(aCollider)>;
+
+				aCollider.Position = collider.Offset * transformation;
+
+				if constexpr (std::is_same_v<T, Colliders::SLine>)
+				{
+					aCollider.Rotation = rotation;
+				}
+
+			}, *collider.Collider);
+	}
 }

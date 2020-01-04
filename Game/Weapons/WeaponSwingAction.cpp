@@ -70,7 +70,7 @@ void WeaponSwingAction::TestSwingCollision()
 	const SVector2f end = start + SVector2f(0.f, -100.f).Rotate(weaponTransform.GetRotation());
 
 	SystemPtr<CollisionSystem> collision;
-	collision->OverlapLineAgainstFunctionality<CharacterFunctionality>(start, end, [&](CharacterFunctionality& aHitCharacter)
+	collision->OverlapLineAgainstFunctionality<CharacterFunctionality>(start, end, [&](CharacterFunctionality& aHitCharacter, Colliders::SCollisionInfo)
 		{
 			if (std::find(hitCharacters.begin(), hitCharacters.end(), &aHitCharacter) != hitCharacters.end())
 			{

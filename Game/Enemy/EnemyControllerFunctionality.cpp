@@ -10,7 +10,7 @@ EnemyControllerFunctionality::EnemyControllerFunctionality(Object& aOwner)
 {
 	Get<CharacterFunctionality>().SetFaction(EFaction::Enemy);
 
-	Get<DefaultMovementFunctionality>().Get<SDefaultMovementComponent>().myFriction = 15.f;
+	Get<DefaultMovementFunctionality>().Get<SDefaultMovementComponent>().Friction = 15.f;
 	Get<CollisionFunctionality>().AddSphereCollider(*this, SVector2f::Zero(), 10.f);
 
 	Get<ImpulseFunctionality>().Subscribe<SDiedImpulse>(*this, [&] (auto) 

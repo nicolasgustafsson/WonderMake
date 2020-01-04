@@ -1,13 +1,18 @@
 #pragma once
 #include "MovementInputFunctionality.h"
+#include "Collision/CollisionFunctionality.h"
 
 struct SDefaultMovementComponent
 	: public SComponent
 {
-	SVector2f myCurrentVelocity;
-	float myAccelerationSpeed = 6700.f;
-	float myFriction = 7.0f;
-	float myMaxMovementSpeed = 911.f;
+	SVector2f CurrentVelocity;
+	float AccelerationSpeed = 6700.f;
+	float Friction = 7.0f;
+	float MaxMovementSpeed = 911.f;
+	
+	static const i32 CollisionIterations = 10;
+	i32 CollisionIterationsLeft = CollisionIterations;
+	bool Collided = false;
 };
 
 class DefaultMovementFunctionality
@@ -24,5 +29,9 @@ public:
 	void Inspect();
 
 	SystemPtr<TimeKeeper> myTimeKeeper;
+
+private:
+	void HandleCollision(const Colliders::SSphere& aThisSphere, const Colliders::SLine& aOtherLine);
+	void TestCollision();
 };
 

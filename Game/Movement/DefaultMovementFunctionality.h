@@ -10,7 +10,7 @@ struct SDefaultMovementComponent
 	float Friction = 7.0f;
 	float MaxMovementSpeed = 911.f;
 	
-	static const i32 CollisionIterations = 10;
+	static const i32 CollisionIterations = 4;
 	i32 CollisionIterationsLeft = CollisionIterations;
 	bool Collided = false;
 };

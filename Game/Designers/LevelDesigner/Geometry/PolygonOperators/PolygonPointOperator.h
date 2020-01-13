@@ -41,9 +41,10 @@ namespace Geometry
 		PolygonLoopingPointOperator& operator++()
 		{
 			if (myBaseIterator == --myList.end())
-				myBaseIterator = --myList.begin();
+				myBaseIterator = myList.begin();
+			else
+				++myBaseIterator;
 
-			++myBaseIterator;
 			return *this;
 		}
 

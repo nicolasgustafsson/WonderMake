@@ -20,7 +20,6 @@ namespace Geometry
 		while (*this != aEnd)
 		{
 			RemovePoint();
-			//++(*this);
 		}
 
 		--(*this);

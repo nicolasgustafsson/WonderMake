@@ -235,6 +235,11 @@
     <ClInclude Include="Levels\Level.h" />
     <ClInclude Include="Levels\LevelPortalFunctionality.h" />
     <ClInclude Include="Physics\StaticGeometryFunctionality.h" />
+    <ClInclude Include="Designers\LevelDesigner\Geometry\Polygon.h" />
+    <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonOperators.h" />
+    <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonFloatingPointOperator.h" />
+    <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonPointOperator.h" />
+    <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonSideOperator.h" />
     <ClInclude Include="Weapons\WeaponSwingAction.h" />
     <ClInclude Include="Weapons\WeaponSwing.h" />
     <ClInclude Include="Weapons\MeleeWeaponFunctionality.h" />
@@ -259,6 +264,10 @@
     <ClCompile Include="Designers\MeleeWeaponDesigner\MeleeWeaponDesigner.cpp" />
     <ClCompile Include="Levels\LevelPortalFunctionality.cpp" />
     <ClCompile Include="Physics\StaticGeometryFunctionality.cpp" />
+    <ClCompile Include="Designers\LevelDesigner\Geometry\Polygon.cpp" />
+    <ClCompile Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonFloatingPointOperator.cpp" />
+    <ClCompile Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonPointOperator.cpp" />
+    <ClCompile Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonSideOperator.cpp" />
     <ClCompile Include="Weapons\WeaponSwingAction.cpp" />
     <ClCompile Include="Weapons\MeleeWeaponFunctionality.cpp" />
     <ClCompile Include="Weapons\MeleeWeaponUserFunctionality.cpp" />

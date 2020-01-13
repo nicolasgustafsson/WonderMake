@@ -12,16 +12,11 @@
 struct SComponent;
 class _BaseFunctionality;
 
-class Object final
+class Object final : public NonMovable, public NonCopyable
 {
 public:
 	Object() = default;
-	Object(const Object&) = delete;
-	Object(Object&& aOther) noexcept;
 	~Object() noexcept;
-
-	Object& operator=(const Object&) = delete;
-	Object& operator=(Object&& aOther) noexcept;
 
 	// Will not add the type if it already exists.
 	template<typename TType>

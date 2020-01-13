@@ -27,6 +27,8 @@ public:
 
 	void Tick();
 
+	void UpdateCollisionTransforms();
+
 	template<typename TIdentifyingFunctionality>
 	SCollider& AddSphereCollider(TIdentifyingFunctionality& aFunctionalityIdentifier, const SVector2f aOffset, const f32 aRadius);
 
@@ -34,7 +36,7 @@ public:
 	SCollider& AddLineCollider(TIdentifyingFunctionality& aFunctionalityIdentifier, const SVector2f aOffset, const SVector2f aSecondOffset);
 
 	template<typename TFunctionalityToReactAgainst>
-	void AddReaction(SCollider& aCollider, std::function<void(TFunctionalityToReactAgainst&)> aCallback);
+	void AddReaction(SCollider& aCollider, std::function<void(TFunctionalityToReactAgainst&, Colliders::SCollisionInfo)> aCallback);
 
 	void Debug() override;
 };
@@ -57,7 +59,7 @@ SCollider& CollisionFunctionality::AddLineCollider(TIdentifyingFunctionality& aF
 }
 
 template<typename TFunctionalityToReactAgainst>
-void CollisionFunctionality::AddReaction(SCollider& aCollider, std::function<void(TFunctionalityToReactAgainst&)> aCallback)
+void CollisionFunctionality::AddReaction(SCollider& aCollider, std::function<void(TFunctionalityToReactAgainst&, Colliders::SCollisionInfo)> aCallback)
 {
 	SystemPtr<CollisionSystem> collisionSystem;
 

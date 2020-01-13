@@ -10,13 +10,18 @@
 #include "Levels/LevelPortalFunctionality.h"
 #include "Movement/SpinnerFunctionality.h"
 #include "Randomizer/Randomizer.h"
+#include "Physics/StaticGeometryFunctionality.h"
 
-Level LevelDesigner::DesignLevel()
+Level LevelDesigner::DesignLevel() const
 {
 	Level level;
+	auto geometry = DesignGeometry();
+	level.Objects.splice(geometry);
 
-	level.Enemies = DesignEnemies();
-	level.Portal = DesignPortal();
+	auto enemies = DesignEnemies();
+	level.Objects.splice(enemies);
+
+	level.Objects.insert(DesignPortal());
 
 	return level;
 }
@@ -60,4 +65,47 @@ Object LevelDesigner::DesignPortal() const
 	sprite.SetTexture(std::filesystem::current_path() / "Textures/portal.png");
 
 	return portal;
+}
+
+plf::colony<Object> LevelDesigner::DesignGeometry() const
+{
+	plf::colony<Object> geometry;
+
+	auto room = DesignRoom();
+
+	for (auto wall : room.Walls)
+	{
+		Object object;
+
+		auto& geometryFunctionality = object.Add<StaticGeometryFunctionality>();
+
+		geometryFunctionality.SetLine(wall.Start, wall.End);
+
+		geometry.insert(std::move(object));
+	}
+
+	return geometry;
+}
+
+SRoom LevelDesigner::DesignRoom() const
+{
+	SystemPtr<Randomizer> randomizer;
+	SRoom room;
+
+	const f32 width = 400.f;
+	const f32 height = 300.f;
+
+	room.Walls.insert({ {-width, -height}, {-width, height} });
+	room.Walls.insert({ {-width, -height}, {width, -height} });
+	room.Walls.insert({ {width, height}, {-width, height} });
+	room.Walls.insert({ {width, height}, {width, -height} });
+
+	for (i32 i = 0; i < 10; i++)
+	{
+		const SVector2f startPosition{ randomizer->GetRandomNumber<f32>(-300, 300), randomizer->GetRandomNumber<f32>(-300, 300) };
+		const SVector2f endPosition = startPosition + SVector2f{ randomizer->GetRandomNumber<f32>(-100, 100), randomizer->GetRandomNumber<f32>(-100, 100) };
+		room.Walls.insert({ startPosition, endPosition });
+	}
+
+	return room;
 }

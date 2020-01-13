@@ -5,19 +5,23 @@
 #include <variant>
 
 class _BaseFunctionality;
-
 namespace Colliders
 {
+	struct SCollisionInfo;
+
 	struct SReaction
 	{
 		template<typename TFunctionalityToReactAgainst>
-		SReaction(std::function<void(TFunctionalityToReactAgainst&)> aCallback) :
+		SReaction(std::function<void(TFunctionalityToReactAgainst&, SCollisionInfo)> aCallback) :
 			Filter { typeid(TFunctionalityToReactAgainst).hash_code() }
 		{
-			Callback = [aCallback](_BaseFunctionality& aBaseFunctionality) {aCallback(static_cast<TFunctionalityToReactAgainst&>(aBaseFunctionality));};
+			Callback = [aCallback](_BaseFunctionality& aBaseFunctionality, const SCollisionInfo& aCollisionInfo) 
+			{
+				aCallback(static_cast<TFunctionalityToReactAgainst&>(aBaseFunctionality), aCollisionInfo);
+			};
 		}
 
-		std::function<void(_BaseFunctionality&)>	Callback;
+		std::function<void(_BaseFunctionality&, const SCollisionInfo&)>	Callback;
 		size_t										Filter;
 	};
 
@@ -60,4 +64,10 @@ namespace Colliders
 	}
 
 	typedef std::variant<SSphere, SLine>	Shape;
+
+	struct SCollisionInfo
+	{
+		const Shape& OriginalCollider;
+		const Shape& OtherCollider;
+	};
 }

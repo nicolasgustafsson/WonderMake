@@ -223,6 +223,7 @@
   <ItemGroup>
     <ClInclude Include="Actions\Action.h" />
     <ClInclude Include="Actions\ActionFunctionality.h" />
+    <ClInclude Include="Camera\CameraFunctionality.h" />
     <ClInclude Include="Movement\SpinnerFunctionality.h" />
     <ClInclude Include="Designers\LevelDesigner\LevelDesigner.h" />
     <ClInclude Include="Character\CharacterFunctionality.h" />
@@ -233,6 +234,7 @@
     <ClInclude Include="Designers\MeleeWeaponDesigner\MeleeWeaponDesigner.h" />
     <ClInclude Include="Levels\Level.h" />
     <ClInclude Include="Levels\LevelPortalFunctionality.h" />
+    <ClInclude Include="Physics\StaticGeometryFunctionality.h" />
     <ClInclude Include="Weapons\WeaponSwingAction.h" />
     <ClInclude Include="Weapons\WeaponSwing.h" />
     <ClInclude Include="Weapons\MeleeWeaponFunctionality.h" />
@@ -247,6 +249,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actions\ActionFunctionality.cpp" />
+    <ClCompile Include="Camera\CameraFunctionality.cpp" />
     <ClCompile Include="Movement\SpinnerFunctionality.cpp" />
     <ClCompile Include="Designers\LevelDesigner\LevelDesigner.cpp" />
     <ClCompile Include="Character\CharacterFunctionality.cpp" />
@@ -255,6 +258,7 @@
     <ClCompile Include="Enemy\TargetFunctionality.cpp" />
     <ClCompile Include="Designers\MeleeWeaponDesigner\MeleeWeaponDesigner.cpp" />
     <ClCompile Include="Levels\LevelPortalFunctionality.cpp" />
+    <ClCompile Include="Physics\StaticGeometryFunctionality.cpp" />
     <ClCompile Include="Weapons\WeaponSwingAction.cpp" />
     <ClCompile Include="Weapons\MeleeWeaponFunctionality.cpp" />
     <ClCompile Include="Weapons\MeleeWeaponUserFunctionality.cpp" />

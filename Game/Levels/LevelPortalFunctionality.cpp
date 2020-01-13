@@ -12,7 +12,7 @@ LevelPortalFunctionality::LevelPortalFunctionality(Object& aOwner)
 
 	auto& collider = collision.AddSphereCollider(*this, SVector2f::Zero(), 32.f);
 
-	collision.AddReaction<CharacterFunctionality>(collider, [&](auto& aCharacter)
+	collision.AddReaction<CharacterFunctionality>(collider, [&](auto& aCharacter, Colliders::SCollisionInfo)
 		{
 			if (myDoOnce)
 			{

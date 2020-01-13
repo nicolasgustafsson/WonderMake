@@ -21,6 +21,8 @@
     <ClCompile Include="Levels\LevelPortalFunctionality.cpp" />
     <ClCompile Include="Movement\SpinnerFunctionality.cpp" />
     <ClCompile Include="Enemy\EnemyActions\TackleAction.cpp" />
+    <ClCompile Include="Physics\StaticGeometryFunctionality.cpp" />
+    <ClCompile Include="Camera\CameraFunctionality.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWorld.h" />
@@ -46,5 +48,7 @@
     <ClInclude Include="Levels\LevelPortalFunctionality.h" />
     <ClInclude Include="Movement\SpinnerFunctionality.h" />
     <ClInclude Include="Enemy\EnemyActions\TackleAction.h" />
+    <ClInclude Include="Physics\StaticGeometryFunctionality.h" />
+    <ClInclude Include="Camera\CameraFunctionality.h" />
   </ItemGroup>
 </Project>

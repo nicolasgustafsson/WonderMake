@@ -6,7 +6,7 @@ CharacterFunctionality::CharacterFunctionality(Object& aOwner) noexcept
 {
 	auto& collider = Get<CollisionFunctionality>().AddSphereCollider(*this, SVector2f::Zero(), 15.f);
 
-	Get<CollisionFunctionality>().AddReaction<CharacterFunctionality>(collider, [this](CharacterFunctionality& aOther)
+	Get<CollisionFunctionality>().AddReaction<CharacterFunctionality>(collider, [this](CharacterFunctionality& aOther, Colliders::SCollisionInfo)
 		{
 			const SVector2f selfPosition = Get<TransformFunctionality>().GetPosition();
 			const SVector2f otherPosition = aOther.Get<TransformFunctionality>().GetPosition();

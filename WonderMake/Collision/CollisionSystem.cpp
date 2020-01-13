@@ -128,7 +128,8 @@ void CollisionSystem::OverlapAgainstFunctionalityInternal(const Colliders::Shape
 		{
 			std::visit([&](auto&& aShape)
 				{
-					aReaction.Callback(*aShape.Functionality);
+					Colliders::SCollisionInfo collisionInfo{ aCollider, shape };
+					aReaction.Callback(*aShape.Functionality, collisionInfo);
 				}, shape);
 		}
 	}

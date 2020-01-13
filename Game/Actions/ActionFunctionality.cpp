@@ -1,9 +1,16 @@
 #include "pch.h"
 #include "ActionFunctionality.h"
 #include "Actions/Action.h"
+#include "Character/CharacterFunctionality.h"
 
 ActionFunctionality::ActionFunctionality(Object& aOwner)
-	: Super(aOwner) {}
+	: Super(aOwner) 
+{
+	Get<ImpulseFunctionality>().Subscribe<SDiedImpulse>(*this, [&](auto) 
+		{
+			EndCurrentAction();
+		});
+}
 
 bool ActionFunctionality::IsInAction() const
 {
@@ -44,6 +51,9 @@ void ActionFunctionality::Inspect()
 
 void ActionFunctionality::EndCurrentAction()
 {
+	if (!IsInAction())
+		return;
+
 	Action*& currentAction = Get<SActionComponent>().CurrentAction;
 
 	currentAction->EndAction();

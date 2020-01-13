@@ -18,7 +18,7 @@ template<typename TPredicate>
 {
 	TransformFunctionality* targetTransform = nullptr;
 
-	SystemPtr<CollisionSystem>()->OverlapSphereAgainstFunctionality<CharacterFunctionality>(Get<TransformFunctionality>().GetPosition(), 1000.f, [&](CharacterFunctionality& aFunctionality)
+	SystemPtr<CollisionSystem>()->OverlapSphereAgainstFunctionality<CharacterFunctionality>(Get<TransformFunctionality>().GetPosition(), 1000.f, [&](CharacterFunctionality& aFunctionality, Colliders::SCollisionInfo)
 		{
 			if (aPredicate(aFunctionality))
 				targetTransform = &(aFunctionality.Get<TransformFunctionality>());

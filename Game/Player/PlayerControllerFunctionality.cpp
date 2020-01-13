@@ -12,11 +12,19 @@ PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
 
 	Get<CharacterFunctionality>().SetFaction(EFaction::Player);
 
-	Get<DefaultMovementFunctionality>().Get<SDefaultMovementComponent>().myMaxMovementSpeed = 250.f; 
+	Get<DefaultMovementFunctionality>().Get<SDefaultMovementComponent>().MaxMovementSpeed = 250.f; 
+
+	Get<ImpulseFunctionality>().Subscribe<SDiedImpulse>(*this, [&](auto) 
+		{
+			OnDeath();
+		});
 }
 
 void PlayerControllerFunctionality::Tick() noexcept
 {
+	if (Get<CharacterFunctionality>().IsDead())
+		return;
+
 	Action* currentAction = Get<ActionFunctionality>().GetCurrentAction();
 
 	const bool canMove = !(currentAction && currentAction->BlocksMovementInput());
@@ -42,12 +50,21 @@ void PlayerControllerFunctionality::UpdateMovement()
 	if (myInputSystem->IsKeyDown(EKeyboardKey::S) || myInputSystem->IsKeyDown(EKeyboardKey::Down))
 		movementInput += {0.f, 1.f};
 	if (myInputSystem->IsKeyDown(EKeyboardKey::D) || myInputSystem->IsKeyDown(EKeyboardKey::Right))
-		movementInput += {1.f, 0.f};
+		movementInput += {1.f, 0.f};	
+	if (myInputSystem->IsKeyDown(EKeyboardKey::Backspace))
+		Get<TransformFunctionality>().SetPosition(SVector2f::Zero());
 
 	if (movementInput != SVector2f::Zero())
 		Get<TransformFunctionality>().FaceDirection(movementInput);
 
 	Get<MovementInputFunctionality>().SetMovementInput(movementInput);
+}
+
+void PlayerControllerFunctionality::OnDeath()
+{
+	Get<SpriteRenderingFunctionality>().SetTexture("Textures/deadPlayer.png");
+
+	WmDispatchMessage(SPlayerDiedMessage());
 }
 
 void PlayerControllerFunctionality::Debug()

@@ -47,7 +47,7 @@ private:
 	VertexBuffer<ValueType> myVertexBuffer;
 	std::vector<ValueType> myContainer;
 	u32 myVertexAttributeIndex;
-	bool myIsDirty = false;
+	bool myIsDirty = true;
 };
 
 template<EVertexAttribute... TAttributes>

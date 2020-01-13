@@ -6,6 +6,8 @@
 
 void Camera::Update()
 {
+	myViewMatrix.SetPosition(myPosition);
+
 	auto viewInverse = myViewMatrix;
 
 	const SMatrix33f rotationMatrix = SMatrix33f::CreateRotateAroundZ(myRotation);
@@ -43,8 +45,6 @@ void Camera::Debug()
 	ImGui::SliderFloat("Camera Scale", &myScale, 0.0f, 10.0f, "%.3f", 3.0f);
 
 	ImGui::End();
-
-	myViewMatrix.SetPosition(myPosition);
 }
 
 void Camera::SetViewportSize(const SVector2i aViewportSize) noexcept

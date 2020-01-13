@@ -3,9 +3,10 @@
 
 #include "Object/Object.h"
 
-struct Level
+struct SLevel
 	: public NonCopyable
 {
 public:
 	plf::colony<Object> Objects;
+	SVector2f StartPosition;
 };

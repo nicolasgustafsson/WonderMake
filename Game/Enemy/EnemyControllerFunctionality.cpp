@@ -43,7 +43,6 @@ void EnemyControllerFunctionality::Tick() noexcept
 	if (!target)
 		return;
 
-
 	const SVector2f delta = target->GetPosition() - Get<TransformFunctionality>().GetPosition();
 
 	if (delta.LengthSquared() < std::pow(enemyControllerComponent.FollowRangeMin, 2))

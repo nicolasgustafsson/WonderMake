@@ -5,6 +5,7 @@
 #include "Message/MessageSubscriber.h"
 
 struct SPlayerDiedMessage;
+class TransformFunctionality;
 
 class GameWorld : public System
 {
@@ -15,9 +16,10 @@ public:
 
 	Object myPlayer;
 	Object myCameraController;
-	Level myLevel;
+	SLevel myLevel;
 
 private:
+	TransformFunctionality* myPlayerTransform;
 	void SetupPlayer();
 
 	void OnPlayerDeath(const SPlayerDiedMessage&);

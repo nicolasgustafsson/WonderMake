@@ -1,30 +1,70 @@
 #pragma once
 #include "Levels/Level.h"
 
-#include "System/System.h"
+#include "System/System.h" 
+#include "Geometry/Polygon.h"
+
+namespace Geometry { class PolygonSideOperator; }
+
+enum class ELevelStage
+{
+	Start,
+	Portal,
+	Challenge
+};
+
+struct SSpace
+{
+	ELevelStage SpaceType;
+
+	//Nicos todo: this should be a polygon!
+	SVector2f TopLeft;
+	SVector2f BottomRight;
+};
+
+struct SLevelGeometry
+{
+	Geometry::Polygon MainGeometry;
+
+	plf::colony<SSpace> Spaces;
+};
 
 struct SRoom
 {
-	struct SWall
+	SVector2f Width;
+	SVector2f Height;
+
+	struct SWallSection
 	{
 		SVector2f Start;
 		SVector2f End;
 	};
 
-	plf::colony<SWall> Walls;
+	plf::colony<SWallSection> Walls;
+
+	plf::colony<SWallSection> Connections;
 };
 
 class LevelDesigner
 	: public System
 {
 public:
-	Level DesignLevel() const;
+	SLevel DesignLevel();
 
 protected:
-	plf::colony<Object> DesignGeometry() const;
-	SRoom DesignRoom() const;
+	plf::colony<Object> CreateWalls(SLevelGeometry& aGeometry) const;
+	SLevelGeometry DesignGeometry() const;
 
-	plf::colony<Object> DesignEnemies() const;
-	Object DesignPortal() const;
+	Geometry::PolygonSideOperator DesignStartRoom(SLevelGeometry& aGeometry) const;
+	Geometry::PolygonSideOperator DesignChallengeRoom(Geometry::PolygonSideOperator aWallOfExistingRoom, SLevelGeometry& aGeometry) const;
+	void DesignPortalRoom(Geometry::PolygonSideOperator aWallOfExistingRoom, SLevelGeometry& aGeometry) const;
 
+	plf::colony<Object> InstantiateSpaces(const SLevelGeometry& aGeometry);
+
+	plf::colony<Object> DesignEnemies(const SSpace& aSpace);
+	void DesignPortal(const SSpace& aSpace);
+	void DesignStartPoint(const SSpace& aSpace);
+	void CreateEnemy(const SVector2f aPosition);
+
+	SLevel myCurrentLevel;
 };

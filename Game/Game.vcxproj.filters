@@ -23,6 +23,10 @@
     <ClCompile Include="Enemy\EnemyActions\TackleAction.cpp" />
     <ClCompile Include="Physics\StaticGeometryFunctionality.cpp" />
     <ClCompile Include="Camera\CameraFunctionality.cpp" />
+    <ClCompile Include="Designers\LevelDesigner\Geometry\Polygon.cpp" />
+    <ClCompile Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonFloatingPointOperator.cpp" />
+    <ClCompile Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonPointOperator.cpp" />
+    <ClCompile Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonSideOperator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWorld.h" />
@@ -50,5 +54,10 @@
     <ClInclude Include="Enemy\EnemyActions\TackleAction.h" />
     <ClInclude Include="Physics\StaticGeometryFunctionality.h" />
     <ClInclude Include="Camera\CameraFunctionality.h" />
+    <ClInclude Include="Designers\LevelDesigner\Geometry\Polygon.h" />
+    <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonSideOperator.h" />
+    <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonFloatingPointOperator.h" />
+    <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonPointOperator.h" />
+    <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonOperators.h" />
   </ItemGroup>
 </Project>

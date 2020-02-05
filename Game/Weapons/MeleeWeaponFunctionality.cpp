@@ -1,7 +1,7 @@
 #include "pch.h"
 
 #include "MeleeWeaponFunctionality.h"
-#include "Designers/MeleeWeaponDesigner/MeleeWeaponDesigner.h"
+#include "Designers/WeaponDesigners/MeleeWeaponDesigner.h"
 
 MeleeWeaponFunctionality::MeleeWeaponFunctionality(Object& aObject)
 	: Super(aObject)

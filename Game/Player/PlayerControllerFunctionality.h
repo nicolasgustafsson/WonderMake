@@ -7,6 +7,7 @@
 #include "Character/CharacterFunctionality.h"
 
 #include "Weapons/MeleeWeaponUserFunctionality.h"
+#include "Weapons/RangedWeaponUserFunctionality.h"
 #include "Collision/CollisionFunctionality.h"
 
 #include "Functionalities/TransformFunctionality.h"
@@ -30,6 +31,7 @@ class PlayerControllerFunctionality
 		PlayerControllerFunctionality, TransformFunctionality,
 		MovementInputFunctionality, DefaultMovementFunctionality,
 		OwnerFunctionality, MeleeWeaponUserFunctionality,
+		RangedWeaponUserFunctionality,
 		ActionFunctionality, CollisionFunctionality,
 		CharacterFunctionality, ImpulseFunctionality,
 		SpriteRenderingFunctionality>

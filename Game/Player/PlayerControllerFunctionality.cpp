@@ -1,8 +1,7 @@
 #include "pch.h"
 #include "PlayerControllerFunctionality.h"
 #include "Weapons/MeleeWeapon.h"
-#include "Designers/MeleeWeaponDesigner/MeleeWeaponDesigner.h"
-
+#include "Designers/WeaponDesigners/MeleeWeaponDesigner.h"
 
 PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
 	: Super(aOwner)
@@ -35,6 +34,8 @@ void PlayerControllerFunctionality::Tick() noexcept
 
 	if (myInputSystem->IsMouseButtonPressed(EMouseButton::Left))
 		Get<MeleeWeaponUserFunctionality>().SwingWeapon();
+	if (myInputSystem->IsMouseButtonPressed(EMouseButton::Right))
+		Get<RangedWeaponUserFunctionality>().ShootWeapon();
 
 	WmDrawDebugLine(Get<TransformFunctionality>().GetPosition(), myInputSystem->GetMousePositionInWorld(), SColor::White);
 }

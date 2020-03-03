@@ -27,6 +27,7 @@
     <ClCompile Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonFloatingPointOperator.cpp" />
     <ClCompile Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonPointOperator.cpp" />
     <ClCompile Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonSideOperator.cpp" />
+    <ClCompile Include="Character\Stats\CharacterStatsFunctionality.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWorld.h" />
@@ -59,5 +60,6 @@
     <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonFloatingPointOperator.h" />
     <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonPointOperator.h" />
     <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonOperators.h" />
+    <ClInclude Include="Character\Stats\CharacterStatsFunctionality.h" />
   </ItemGroup>
 </Project>

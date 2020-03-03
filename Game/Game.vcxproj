@@ -224,6 +224,7 @@
     <ClInclude Include="Actions\Action.h" />
     <ClInclude Include="Actions\ActionFunctionality.h" />
     <ClInclude Include="Camera\CameraFunctionality.h" />
+    <ClInclude Include="Character\Stats\CharacterStatsFunctionality.h" />
     <ClInclude Include="Movement\SpinnerFunctionality.h" />
     <ClInclude Include="Designers\LevelDesigner\LevelDesigner.h" />
     <ClInclude Include="Character\CharacterFunctionality.h" />
@@ -255,6 +256,7 @@
   <ItemGroup>
     <ClCompile Include="Actions\ActionFunctionality.cpp" />
     <ClCompile Include="Camera\CameraFunctionality.cpp" />
+    <ClCompile Include="Character\Stats\CharacterStatsFunctionality.cpp" />
     <ClCompile Include="Movement\SpinnerFunctionality.cpp" />
     <ClCompile Include="Designers\LevelDesigner\LevelDesigner.cpp" />
     <ClCompile Include="Character\CharacterFunctionality.cpp" />

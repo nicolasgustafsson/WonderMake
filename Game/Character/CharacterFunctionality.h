@@ -5,6 +5,9 @@
 #include "Functionalities/OwnerFunctionality.h"
 #include "Functionalities/SpriteRenderingFunctionality.h"
 #include "Movement/DefaultMovementFunctionality.h"
+#include "Character/Stats/CharacterStatsFunctionality.h"
+
+class CharacterStatsFunctionality;
 
 struct SHealthComponent : public  SComponent
 {
@@ -33,7 +36,7 @@ class CharacterFunctionality
 	: public Functionality<CharacterFunctionality, OwnerFunctionality
 	, CollisionFunctionality, SHealthComponent
 	, SFactionComponent, TransformFunctionality
-	, DefaultMovementFunctionality>
+	, DefaultMovementFunctionality, CharacterStatsFunctionality>
 {
 public:
 	CharacterFunctionality(Object& aOwner) noexcept;

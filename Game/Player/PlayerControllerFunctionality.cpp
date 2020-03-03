@@ -11,8 +11,7 @@ PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
 	auto& collider = collision.AddSphereCollider(*this, SVector2f::Zero(), 10.f);
 
 	Get<CharacterFunctionality>().SetFaction(EFaction::Player);
-
-	Get<DefaultMovementFunctionality>().Get<SDefaultMovementComponent>().MaxMovementSpeed = 250.f; 
+	Get<CharacterFunctionality>().Get<CharacterStatsFunctionality>().SetBaseValue(ECharacterStat::MovementSpeed, 200.f);
 
 	Get<ImpulseFunctionality>().Subscribe<SDiedImpulse>(*this, [&](auto) 
 		{

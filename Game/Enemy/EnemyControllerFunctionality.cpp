@@ -10,6 +10,7 @@ EnemyControllerFunctionality::EnemyControllerFunctionality(Object& aOwner)
 {
 	Get<CharacterFunctionality>().SetFaction(EFaction::Enemy);
 
+	Get<CharacterFunctionality>().Get<CharacterStatsFunctionality>().SetBaseValue(ECharacterStat::MovementSpeed, 150.f);
 	Get<DefaultMovementFunctionality>().Get<SDefaultMovementComponent>().Friction = 15.f;
 	Get<CollisionFunctionality>().AddSphereCollider(*this, SVector2f::Zero(), 10.f);
 

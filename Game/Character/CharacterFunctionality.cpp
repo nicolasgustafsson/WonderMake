@@ -15,6 +15,8 @@ CharacterFunctionality::CharacterFunctionality(Object& aOwner) noexcept
 			const f32 distance = selfPosition.DistanceTo(otherPosition);
 			aOther.Get<DefaultMovementFunctionality>().AddForce(direction * 100.f * (30.f - distance) * 0.5f);
 		});
+
+	Get<CharacterStatsFunctionality>().Get<SCharacterStatsComponent>().Character = this;
 }
 
 void CharacterFunctionality::Damage(const i32 aDamage)

@@ -25,6 +25,7 @@ void BuffGiverFunctionality::Initialize(BuffBlueprint& aBuffBlueprint, const f32
 				buffFunctionality.ApplyBuff(aCharacter, aBuffBlueprint);
 				WmLog("Gave the buff!");
 			}
+			
 		});
 
 	auto& renderObject = Get<SBuffGiverComponent>().RenderObject;

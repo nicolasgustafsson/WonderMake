@@ -223,7 +223,10 @@
   <ItemGroup>
     <ClInclude Include="Actions\Action.h" />
     <ClInclude Include="Actions\ActionFunctionality.h" />
+    <ClInclude Include="Designers\BuffDesigner\BuffDesigner.h" />
+    <ClInclude Include="Character\Buffs\Buff.h" />
     <ClInclude Include="Camera\CameraFunctionality.h" />
+    <ClInclude Include="Character\Buffs\CharacterBuffsFunctionality.h" />
     <ClInclude Include="Character\Stats\CharacterStatsFunctionality.h" />
     <ClInclude Include="Movement\SpinnerFunctionality.h" />
     <ClInclude Include="Designers\LevelDesigner\LevelDesigner.h" />
@@ -252,10 +255,14 @@
     <ClInclude Include="Player\PlayerControllerFunctionality.h" />
     <ClInclude Include="Weapons\MeleeWeapon.h" />
     <ClInclude Include="Weapons\WeaponProperty\WeaponProperty.h" />
+    <ClInclude Include="WorldObjects\BuffGiverFunctionality.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actions\ActionFunctionality.cpp" />
+    <ClCompile Include="Designers\BuffDesigner\BuffDesigner.cpp" />
+    <ClCompile Include="Character\Buffs\Buff.cpp" />
     <ClCompile Include="Camera\CameraFunctionality.cpp" />
+    <ClCompile Include="Character\Buffs\CharacterBuffsFunctionality.cpp" />
     <ClCompile Include="Character\Stats\CharacterStatsFunctionality.cpp" />
     <ClCompile Include="Movement\SpinnerFunctionality.cpp" />
     <ClCompile Include="Designers\LevelDesigner\LevelDesigner.cpp" />
@@ -286,11 +293,17 @@
     <ClCompile Include="Player\PlayerControllerFunctionality.cpp" />
     <ClCompile Include="Weapons\MeleeWeapon.cpp" />
     <ClCompile Include="Weapons\WeaponProperty\WeaponProperty.cpp" />
+    <ClCompile Include="WorldObjects\BuffGiverFunctionality.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WonderMake\WonderMake.vcxproj">
       <Project>{bb396f7d-1134-4dae-b855-1ca77a2b0c04}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Character\Buffs\BuffDesign.md" />
+    <None Include="Designers\BuffDesigner\BuffDesignerPhilosophy.md" />
+    <None Include="Designers\DesignerPhilosophy.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

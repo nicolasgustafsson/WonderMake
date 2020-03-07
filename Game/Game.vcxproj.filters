@@ -28,6 +28,10 @@
     <ClCompile Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonPointOperator.cpp" />
     <ClCompile Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonSideOperator.cpp" />
     <ClCompile Include="Character\Stats\CharacterStatsFunctionality.cpp" />
+    <ClCompile Include="Character\Buffs\CharacterBuffsFunctionality.cpp" />
+    <ClCompile Include="Character\Buffs\Buff.cpp" />
+    <ClCompile Include="Designers\BuffDesigner\BuffDesigner.cpp" />
+    <ClCompile Include="WorldObjects\BuffGiverFunctionality.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWorld.h" />
@@ -61,5 +65,14 @@
     <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonPointOperator.h" />
     <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonOperators.h" />
     <ClInclude Include="Character\Stats\CharacterStatsFunctionality.h" />
+    <ClInclude Include="Character\Buffs\CharacterBuffsFunctionality.h" />
+    <ClInclude Include="Character\Buffs\Buff.h" />
+    <ClInclude Include="Designers\BuffDesigner\BuffDesigner.h" />
+    <ClInclude Include="WorldObjects\BuffGiverFunctionality.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Character\Buffs\BuffDesign.md" />
+    <None Include="Designers\BuffDesigner\BuffDesignerPhilosophy.md" />
+    <None Include="Designers\DesignerPhilosophy.md" />
   </ItemGroup>
 </Project>

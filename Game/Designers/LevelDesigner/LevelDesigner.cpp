@@ -11,6 +11,8 @@
 #include "Movement/SpinnerFunctionality.h"
 #include "Randomizer/Randomizer.h"
 #include "Physics/StaticGeometryFunctionality.h"
+#include "WorldObjects/BuffGiverFunctionality.h"
+#include "Designers/BuffDesigner/BuffDesigner.h"
 
 SLevel LevelDesigner::DesignLevel()
 {
@@ -59,6 +61,39 @@ void LevelDesigner::DesignPortal(const SSpace& aSpace)
 	sprite.SetTexture(std::filesystem::current_path() / "Textures/portal.png");
 }
 
+void LevelDesigner::DesignBuffTotems(const SSpace& aSpace)
+{
+	SystemPtr<Randomizer> randomizer;
+	const auto totemCount = randomizer->GetRandomNumber<size_t>(0, 3);
+
+	for (size_t i = 0; i < totemCount; ++i)
+		DesignBuffTotem(aSpace);
+}
+
+void LevelDesigner::DesignBuffTotem(const SSpace& aSpace)
+{
+	SystemPtr<Randomizer> randomizer;
+	Object& totem = *myCurrentLevel.Objects.emplace();
+
+	auto& buffGiver = totem.Add<BuffGiverFunctionality>();
+
+	auto& transform = totem.Add<TransformFunctionality>();
+	auto& sprite = totem.Add<SpriteRenderingFunctionality>();
+
+	const f32 scale = randomizer->GetRandomNumber(25.f, 150.f) / 100.f;
+
+	//[Nicos]: Should be able to let buff designer handle this and inspect buff afterwards to see if it is a buff or debuff
+	const EBuffType buffType = randomizer->GetRandomBool() ? EBuffType::Debuff : EBuffType::Buff;
+
+	buffGiver.Initialize(SystemPtr<BuffDesigner>()->DesignBuff({ buffType }), scale * 100.f);
+
+	const SVector2f position{ randomizer->GetRandomNumber<f32>(aSpace.TopLeft.X, aSpace.BottomRight.X), randomizer->GetRandomNumber<f32>(aSpace.BottomRight.Y, aSpace.TopLeft.Y) };
+
+	transform.SetPosition(position);
+	sprite.SetTexture(std::filesystem::current_path() / (buffType == EBuffType::Buff ? "Textures/totemGreen.png" : "Textures/totemRed.png"));
+	sprite.SetScale({ scale, scale });
+}
+
 void LevelDesigner::DesignStartPoint(const SSpace& aSpace) 
 {
 	const SVector2f position = ((aSpace.BottomRight - aSpace.TopLeft) / 2.f) + aSpace.TopLeft;
@@ -90,7 +125,7 @@ plf::colony<Object> LevelDesigner::CreateWalls(SLevelGeometry& aGeometry) const
 		auto& geometryFunctionality = object.Add<StaticGeometryFunctionality>();
 
 		geometryFunctionality.SetLine(*side.GetStart(), *side.GetEnd());
-
+		geometryFunctionality.SetLine(*side.GetStart(), *side.GetEnd());
 		
 		++side;
 	} while (side.GetStart() != firstPoint);
@@ -141,14 +176,14 @@ Geometry::PolygonSideOperator LevelDesigner::DesignChallengeRoom(Geometry::Polyg
 
 void LevelDesigner::DesignPortalRoom(Geometry::PolygonSideOperator aWallOfExistingRoom, SLevelGeometry& aGeometry) const
 {
-	aWallOfExistingRoom = aWallOfExistingRoom.GetMiddle()											//get middle of newly extruded side
+	aWallOfExistingRoom = aWallOfExistingRoom.GetMiddle()		//get middle of newly extruded side
 		.SplitIntoSide(50.f)									//make 2 new points with a width of 50.f to become entrance
 		.Extrude(30.f)											//extrude to make passage into new room
 		.Extrude(0.f)											//creates a second set of points that will act as corners for new room
-		.Extrude(200.f);									//extrude into a new room
+		.Extrude(200.f);										//extrude into a new room
 
-	aWallOfExistingRoom.GetPreviousSide().Move({ 0.f, 75.f });				//widen room upwards
-	aWallOfExistingRoom.GetNextSide().Move({ 0.f, -75.f });					//widen room downwards
+	aWallOfExistingRoom.GetPreviousSide().Move({ 0.f, 75.f });	//widen room upwards
+	aWallOfExistingRoom.GetNextSide().Move({ 0.f, -75.f });		//widen room downwards
 
 	aGeometry.Spaces.insert({ ELevelStage::Portal, *aWallOfExistingRoom.GetPreviousSide().GetStart(),  *aWallOfExistingRoom.GetEnd() });
 }
@@ -168,6 +203,7 @@ plf::colony<Object> LevelDesigner::InstantiateSpaces(const SLevelGeometry& aGeom
 		case ELevelStage::Challenge:
 		{
 			auto enemies = DesignEnemies(space);
+			DesignBuffTotems(space);
 			objects.splice(enemies);
 			break;
 		}

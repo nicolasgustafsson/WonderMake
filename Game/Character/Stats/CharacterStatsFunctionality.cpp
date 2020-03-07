@@ -45,15 +45,16 @@ void CharacterStatsFunctionality::SetBaseValue(const ECharacterStat aStat, const
 void CharacterStatsFunctionality::ApplyMultiplier(const ECharacterStat aStat, const f32 aMultiplier)
 {
 	auto& stat = GetStat(aStat);
-	stat.Multiplier += aMultiplier;
-
+	stat.Multiplier += (aMultiplier - 1.0f);
+	
 	RefreshStats();
 }
 
 void CharacterStatsFunctionality::RemoveMultiplier(const ECharacterStat aStat, const f32 aMultiplier)
 {
 	auto& stat = GetStat(aStat);
-	stat.Multiplier -= aMultiplier;
+	stat.Multiplier -= (aMultiplier - 1.0f);
+
 	RefreshStats();
 }
 
@@ -74,3 +75,27 @@ SStat& CharacterStatsFunctionality::GetStat(const ECharacterStat aStat) const no
 	return Get<SCharacterStatsComponent>().Stats[static_cast<u32>(aStat)];
 }
 
+void CharacterStatsFunctionality::ApplyStatChange(const SStatChange aStatChange)
+{
+	ApplyMultiplier(aStatChange.Stat, aStatChange.Multiplier);
+}
+
+void CharacterStatsFunctionality::RemoveStatChange(const SStatChange aStatChange)
+{
+	RemoveMultiplier(aStatChange.Stat, aStatChange.Multiplier);
+}
+
+void SStatChange::Inspect() const
+{
+	const float percentage = Multiplier * 100.f;
+	ImGui::Text("%.0f%%", percentage);
+
+	ImGui::SameLine();
+
+	switch (Stat)
+	{
+	case ECharacterStat::MovementSpeed:
+		ImGui::Text("Movement Speed");
+		break;
+	}
+}

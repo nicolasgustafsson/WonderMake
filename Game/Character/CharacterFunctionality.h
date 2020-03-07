@@ -6,6 +6,7 @@
 #include "Functionalities/SpriteRenderingFunctionality.h"
 #include "Movement/DefaultMovementFunctionality.h"
 #include "Character/Stats/CharacterStatsFunctionality.h"
+#include "Character/Buffs/CharacterBuffsFunctionality.h"
 
 class CharacterStatsFunctionality;
 
@@ -36,7 +37,8 @@ class CharacterFunctionality
 	: public Functionality<CharacterFunctionality, OwnerFunctionality
 	, CollisionFunctionality, SHealthComponent
 	, SFactionComponent, TransformFunctionality
-	, DefaultMovementFunctionality, CharacterStatsFunctionality>
+	, DefaultMovementFunctionality, CharacterStatsFunctionality
+	, CharacterBuffsFunctionality>
 {
 public:
 	CharacterFunctionality(Object& aOwner) noexcept;

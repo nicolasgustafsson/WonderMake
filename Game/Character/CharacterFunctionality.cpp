@@ -11,7 +11,7 @@ CharacterFunctionality::CharacterFunctionality(Object& aOwner) noexcept
 			const SVector2f selfPosition = Get<TransformFunctionality>().GetPosition();
 			const SVector2f otherPosition = aOther.Get<TransformFunctionality>().GetPosition();
 
-			SVector2f direction = (otherPosition - selfPosition).GetNormalized();
+			const SVector2f direction = (otherPosition - selfPosition).GetNormalized();
 			const f32 distance = selfPosition.DistanceTo(otherPosition);
 			aOther.Get<DefaultMovementFunctionality>().AddForce(direction * 100.f * (30.f - distance) * 0.5f);
 		});

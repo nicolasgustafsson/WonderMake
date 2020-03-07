@@ -15,8 +15,16 @@ enum class ECharacterStat : u32
 
 struct SStat
 {
-	float BaseValue;
-	float Multiplier = 1.0f;
+	f32 BaseValue;
+	f32 Multiplier = 1.0f;
+};
+
+struct SStatChange
+{
+	ECharacterStat Stat;
+	f32 Multiplier;
+
+	void Inspect() const;
 };
 
 struct SCharacterStatsComponent : public SComponent
@@ -36,6 +44,8 @@ public:
 
 	void SetBaseValue(const ECharacterStat aStat, const f32 aBaseValue);
 
+	void ApplyStatChange(const SStatChange aStatChange);
+	void RemoveStatChange(const SStatChange aStatChange);
 	void ApplyMultiplier(const ECharacterStat aStat, const f32 aMultiplier);
 	void RemoveMultiplier(const ECharacterStat aStat, const f32 aMultiplier);
 

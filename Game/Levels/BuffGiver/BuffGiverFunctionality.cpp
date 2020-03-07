@@ -32,7 +32,7 @@ void BuffGiverFunctionality::Initialize(BuffBlueprint& aBuffBlueprint, const f32
 
 	auto& renderObject = Get<SBuffGiverComponent>().RenderObject;
 	renderObject.emplace();
-	renderObject->SetAttribute<EVertexAttribute::Scale>(0, { aRadius, aRadius });
+	renderObject->SetAttribute<EVertexAttribute::Scale>(0, { aRadius + 10.f, aRadius + 10.f });
 	renderObject->SetAttribute<EVertexAttribute::Color>(0, aBuffBlueprint.myBuffType == EBuffType::Buff ? SColor::Green : SColor::Red);
 }
 

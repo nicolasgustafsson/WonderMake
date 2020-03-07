@@ -5,6 +5,7 @@
 #include "Functionalities/TransformFunctionality.h"
 #include "Weapons/WeaponSwingAction.h"
 #include "Actions/ActionFunctionality.h"
+#include "Character/CharacterFunctionality.h"
 
 class MeleeWeaponFunctionality;
 class MeleeWeapon;
@@ -22,7 +23,7 @@ struct SMeleeWeaponUserComponent
 };
 
 class MeleeWeaponUserFunctionality
-	: public Functionality<MeleeWeaponUserFunctionality, SMeleeWeaponUserComponent, TransformFunctionality, ActionFunctionality>
+	: public Functionality<MeleeWeaponUserFunctionality, SMeleeWeaponUserComponent, TransformFunctionality, ActionFunctionality, CharacterFunctionality>
 {
 public:
 	MeleeWeaponUserFunctionality(Object& aOwner);

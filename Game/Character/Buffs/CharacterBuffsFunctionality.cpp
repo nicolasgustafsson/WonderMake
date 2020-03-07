@@ -7,14 +7,7 @@ CharacterBuffsFunctionality::CharacterBuffsFunctionality(Object& aOwner)
 {
 	Get<ImpulseFunctionality>().Subscribe<SDiedImpulse>(*this, [&](auto) 
 		{
-			for (auto it = buffComponent.Buffs.begin(); it != buffComponent.Buffs.end(); it++)
-			{
-				buff.myBlueprint.RemoveFrom(buff.myCharacter);
-
-				it = buffComponent.Buffs.erase(it);
-				if (it == buffComponent.Buffs.end())
-					return;
-			}
+			ClearBuffs();
 		});
 }
 
@@ -29,7 +22,16 @@ void CharacterBuffsFunctionality::ApplyBuff(class CharacterFunctionality& aChara
 
 void CharacterBuffsFunctionality::ClearBuffs()
 {
-	
+	auto& buffs = Get<SCharacterBuffComponent>().Buffs;
+	for (auto it = buffs.begin(); it != buffs.end(); it++)
+	{
+		auto& buff = *it;
+		buff.myBlueprint.RemoveFrom(buff.myCharacter);
+
+		it = buffs.erase(it);
+		if (it == buffs.end())
+			return;
+	}
 }
 
 bool CharacterBuffsFunctionality::HasBuff(BuffBlueprint& aBuffBlueprint) const

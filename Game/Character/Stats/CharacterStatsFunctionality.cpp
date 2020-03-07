@@ -65,6 +65,8 @@ void CharacterStatsFunctionality::ApplyStatToCharacter(const ECharacterStat aSta
 	case ECharacterStat::MovementSpeed:
 		aCharacter.Get<DefaultMovementFunctionality>().Get<SDefaultMovementComponent>().MaxMovementSpeed = GetStatValue(aStat);
 		break;
+	case ECharacterStat::MeleeAttackDamage:
+		break;
 	default:
 		WmLog(TagError, "Stat ", static_cast<i32>(aStat), " has no apply implemented!");
 	}
@@ -85,6 +87,11 @@ void CharacterStatsFunctionality::RemoveStatChange(const SStatChange aStatChange
 	RemoveMultiplier(aStatChange.Stat, aStatChange.Multiplier);
 }
 
+f32 CharacterStatsFunctionality::GetStatMultiplier(const ECharacterStat aStat) const noexcept
+{
+	return GetStat(aStat).Multiplier;
+}
+
 void SStatChange::Inspect() const
 {
 	const float percentage = Multiplier * 100.f;
@@ -96,6 +103,9 @@ void SStatChange::Inspect() const
 	{
 	case ECharacterStat::MovementSpeed:
 		ImGui::Text("Movement Speed");
+		break;
+	case ECharacterStat::MeleeAttackDamage:
+		ImGui::Text("Melee Attack Damage");
 		break;
 	}
 }

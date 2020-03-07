@@ -9,13 +9,14 @@ class CharacterFunctionality;
 enum class ECharacterStat : u32
 {
 	MovementSpeed,
+	MeleeAttackDamage,
 
 	Count
 };
 
 struct SStat
 {
-	f32 BaseValue;
+	f32 BaseValue = 0.f;
 	f32 Multiplier = 1.0f;
 };
 
@@ -39,6 +40,7 @@ class CharacterStatsFunctionality												//Nicos: having 2 functionalities d
 public:
 	CharacterStatsFunctionality(Object& aOwner);
 	f32 GetStatValue(const ECharacterStat aStat) const noexcept;
+	f32 GetStatMultiplier(const ECharacterStat aStat) const noexcept;
 	 
 	void RefreshStats() const;
 

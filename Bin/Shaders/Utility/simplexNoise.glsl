@@ -1,4 +1,3 @@
-#version 440
 
 /* discontinuous pseudorandom uniformly distributed in [-0.5, +0.5]^3 */
 vec3 random3(vec3 c) {
@@ -74,33 +73,4 @@ float simplex3d_fractal(vec3 m) {
 			+0.2666667*simplex3d(2.0*m*rot2)
 			+0.1333333*simplex3d(4.0*m*rot3)
 			+0.0666667*simplex3d(8.0*m);
-}
-
-
-out vec4 FragColor;
-  
-in vec2 TexCoord;
-in vec4 Color;
-
-uniform sampler2D ourTexture;
-
-layout (std140, binding = 0) uniform Engine
-{
-	mat3 ViewMatrix;
-	mat3 ProjectionMatrix;
-	mat3 ViewProjectionMatrix;
-    float Time;
-};
-
-void main()
-{
-	float dist = distance(TexCoord, vec2(0.5, 0.5)) * 2.0;
-	float noise = simplex3d(vec3(TexCoord * 15.f, Time));
-	dist += noise * 0.03;
-    float withinCircle = 1.0 - smoothstep(dist + 0.01f, dist, 1.0);
-    
-    float renderAlpha = min(withinCircle, dist);
-
-    // Output to screen
-    FragColor = Color * renderAlpha;
 }

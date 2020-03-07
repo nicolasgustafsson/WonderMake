@@ -203,8 +203,8 @@ plf::colony<Object> LevelDesigner::InstantiateSpaces(const SLevelGeometry& aGeom
 		case ELevelStage::Challenge:
 		{
 			auto enemies = DesignEnemies(space);
-			DesignBuffTotems(space);
 			objects.splice(enemies);
+			DesignBuffTotems(space);
 			break;
 		}
 

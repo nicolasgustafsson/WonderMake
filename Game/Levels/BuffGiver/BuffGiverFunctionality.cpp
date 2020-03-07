@@ -20,12 +20,14 @@ void BuffGiverFunctionality::Initialize(BuffBlueprint& aBuffBlueprint, const f32
 		{
 			CharacterBuffsFunctionality& buffFunctionality = aCharacter.Get<CharacterBuffsFunctionality>();
 
+			if (aCharacter.IsDead())
+				return;
+
 			if (!buffFunctionality.HasBuff(aBuffBlueprint))
 			{
 				buffFunctionality.ApplyBuff(aCharacter, aBuffBlueprint);
 				WmLog("Gave the buff!");
 			}
-			
 		});
 
 	auto& renderObject = Get<SBuffGiverComponent>().RenderObject;

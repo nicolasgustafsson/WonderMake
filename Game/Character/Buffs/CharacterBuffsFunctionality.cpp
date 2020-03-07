@@ -1,10 +1,21 @@
 #include "pch.h"
 #include "CharacterBuffsFunctionality.h"
+#include "Character/CharacterFunctionality.h"
 
 CharacterBuffsFunctionality::CharacterBuffsFunctionality(Object& aOwner)
 	: Super(aOwner)
 {
+	Get<ImpulseFunctionality>().Subscribe<SDiedImpulse>(*this, [&](auto) 
+		{
+			for (auto it = buffComponent.Buffs.begin(); it != buffComponent.Buffs.end(); it++)
+			{
+				buff.myBlueprint.RemoveFrom(buff.myCharacter);
 
+				it = buffComponent.Buffs.erase(it);
+				if (it == buffComponent.Buffs.end())
+					return;
+			}
+		});
 }
 
 void CharacterBuffsFunctionality::ApplyBuff(class CharacterFunctionality& aCharacter, BuffBlueprint& aBlueprint)
@@ -14,6 +25,11 @@ void CharacterBuffsFunctionality::ApplyBuff(class CharacterFunctionality& aChara
 	Buff buffInstance = aBlueprint.Instantiate(aCharacter);
 
 	buffComponent.Buffs.insert(std::move(buffInstance));
+}
+
+void CharacterBuffsFunctionality::ClearBuffs()
+{
+	
 }
 
 bool CharacterBuffsFunctionality::HasBuff(BuffBlueprint& aBuffBlueprint) const

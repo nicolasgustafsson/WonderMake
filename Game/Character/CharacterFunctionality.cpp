@@ -64,3 +64,4 @@ void CharacterFunctionality::Inspect()
 
 	Get<CharacterBuffsFunctionality>().Inspect();
 }
+

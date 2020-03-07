@@ -65,6 +65,7 @@ BuffBlueprint BuffDesigner::ConstructBlueprintFromDesign(SBuffDesign& aBuffDesig
 
 	blueprint.myDuration = aBuffDesign.Duration;
 	blueprint.myProperties = std::move(aBuffDesign.Properties);
+	blueprint.myBuffType = aBuffDesign.Type;
 
 	return blueprint;
 }

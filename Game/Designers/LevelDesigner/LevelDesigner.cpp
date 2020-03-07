@@ -12,7 +12,7 @@
 #include "Randomizer/Randomizer.h"
 #include "Physics/StaticGeometryFunctionality.h"
 #include "Designers/BuffDesigner/BuffDesigner.h"
-#include "Levels/BuffGiverFunctionality.h"
+#include "Levels/BuffGiver/BuffGiverFunctionality.h"
 
 SLevel LevelDesigner::DesignLevel()
 {

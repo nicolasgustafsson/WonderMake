@@ -26,4 +26,18 @@ void BuffGiverFunctionality::Initialize(BuffBlueprint& aBuffBlueprint, const f32
 				WmLog("Gave the buff!");
 			}
 		});
+
+	auto& renderObject = Get<SBuffGiverComponent>().RenderObject;
+	renderObject.emplace();
+	renderObject->SetAttribute<EVertexAttribute::Scale>(0, { aRadius, aRadius });
+	renderObject->SetAttribute<EVertexAttribute::Color>(0, aBuffBlueprint.myBuffType == EBuffType::Buff ? SColor::Green : SColor::Red);
+}
+
+void BuffGiverFunctionality::Tick()
+{
+	auto& renderObject = Get<SBuffGiverComponent>().RenderObject;
+
+	renderObject->SetAttribute<EVertexAttribute::Position>(0, Get<TransformFunctionality>().GetPosition());
+	
+	renderObject->Render();
 }

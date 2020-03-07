@@ -1,12 +1,6 @@
 #pragma once
 #include "Character/Buffs/Buff.h"
 
-enum class EBuffType
-{
-	Buff,
-	Debuff,
-	//ItsComplicated
-};
 
 enum class EBuffIntensity
 {

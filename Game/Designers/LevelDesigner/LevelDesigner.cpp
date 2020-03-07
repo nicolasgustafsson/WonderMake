@@ -11,8 +11,8 @@
 #include "Movement/SpinnerFunctionality.h"
 #include "Randomizer/Randomizer.h"
 #include "Physics/StaticGeometryFunctionality.h"
-#include "WorldObjects/BuffGiverFunctionality.h"
 #include "Designers/BuffDesigner/BuffDesigner.h"
+#include "Levels/BuffGiverFunctionality.h"
 
 SLevel LevelDesigner::DesignLevel()
 {

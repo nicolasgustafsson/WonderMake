@@ -31,7 +31,7 @@
     <ClCompile Include="Character\Buffs\CharacterBuffsFunctionality.cpp" />
     <ClCompile Include="Character\Buffs\Buff.cpp" />
     <ClCompile Include="Designers\BuffDesigner\BuffDesigner.cpp" />
-    <ClCompile Include="WorldObjects\BuffGiverFunctionality.cpp" />
+    <ClCompile Include="Levels\BuffGiverFunctionality.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWorld.h" />
@@ -68,7 +68,6 @@
     <ClInclude Include="Character\Buffs\CharacterBuffsFunctionality.h" />
     <ClInclude Include="Character\Buffs\Buff.h" />
     <ClInclude Include="Designers\BuffDesigner\BuffDesigner.h" />
-    <ClInclude Include="WorldObjects\BuffGiverFunctionality.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Character\Buffs\BuffDesign.md" />

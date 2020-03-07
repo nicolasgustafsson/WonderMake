@@ -49,3 +49,15 @@ void CharacterBuffsFunctionality::Tick()
 		}
 	}
 }
+
+void CharacterBuffsFunctionality::Inspect()
+{
+	SCharacterBuffComponent& buffComponent = Get<SCharacterBuffComponent>();
+	
+	for(auto& buff : buffComponent.Buffs)
+	{
+		ImGui::Separator();
+		buff.Inspect();
+		ImGui::Separator();
+	}
+}

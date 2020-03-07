@@ -54,3 +54,13 @@ EFaction CharacterFunctionality::GetFaction() const noexcept
 {
 	return Get<SFactionComponent>().Faction;
 }
+
+void CharacterFunctionality::Inspect()
+{
+	auto& healthComponent = Get<SHealthComponent>();
+	std::string healthString = ("Health ") + std::to_string(healthComponent.Health) + "/" + std::to_string(healthComponent.MaxHealth);
+
+	ImGui::ProgressBar(static_cast<f32>(healthComponent.Health) / static_cast<f32>(healthComponent.MaxHealth), ImVec2(-1.f, 0.f), healthString.c_str());
+
+	Get<CharacterBuffsFunctionality>().Inspect();
+}

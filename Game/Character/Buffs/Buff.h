@@ -37,7 +37,7 @@ public:
 	//[Nicos]: This should be moved out to a property or similar; the buff isn't necessarily timed
 	f32 myDuration = 0.f;
 
-	void Inspect();
+	void Inspect() const;
 };
 
 class Buff final : NonCopyable
@@ -50,6 +50,10 @@ private:
 	{}
 
 public:
+	void Inspect();
+
+	f32 GetEstimatedPercentLeft() const;
+
 	const BuffBlueprint& myBlueprint;
 	CharacterFunctionality& myCharacter;
 

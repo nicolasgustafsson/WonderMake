@@ -35,7 +35,7 @@ class Buff BuffBlueprint::Instantiate(CharacterFunctionality& aCharacter) const
 	return buff;
 }
 
-void BuffBlueprint::Inspect()
+void BuffBlueprint::Inspect() const
 {
 	ImGui::Separator();
 	
@@ -55,4 +55,16 @@ void BuffBlueprint::RemoveFrom(CharacterFunctionality& aCharacter) const
 	{
 		property->Remove(aCharacter);
 	}
+}
+
+void Buff::Inspect()
+{
+	myBlueprint.Inspect();
+
+	ImGui::ProgressBar(GetEstimatedPercentLeft());
+}
+
+f32 Buff::GetEstimatedPercentLeft() const
+{
+	return myTimeLeft / myBlueprint.myDuration;
 }

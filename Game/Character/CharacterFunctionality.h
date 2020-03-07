@@ -12,7 +12,8 @@ class CharacterStatsFunctionality;
 
 struct SHealthComponent : public  SComponent
 {
-	i32 Health = 200;
+	i32 MaxHealth = 200;
+	i32 Health = MaxHealth;
 };
 
 struct SDiedImpulse
@@ -51,5 +52,7 @@ public:
 	void SetFaction(const EFaction aFaction) noexcept;
 	[[nodiscard]] bool IsFriendlyWith(const EFaction aFaction) const noexcept;
 	[[nodiscard]] EFaction GetFaction() const noexcept;
+
+	void Inspect();
 };
 

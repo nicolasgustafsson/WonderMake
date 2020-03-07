@@ -17,5 +17,7 @@ public:
 
 	bool HasBuff(BuffBlueprint& aBuffBlueprint) const;
 	void Tick();
+
+	void Inspect();
 };
 

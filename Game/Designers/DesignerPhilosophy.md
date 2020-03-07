@@ -9,9 +9,9 @@ Usually the process will be some varying of the following:
 
 The goal of this is to generate content similar to how a studio would do it, for instance:
 
-The director says we need a spooky level, it asks the level designer for one
-The level designer creates a base level design, then asks environment art to make it spooky
-Environment art adds a bunch of skulls to the level and hands it back to the level designer
-The level designer asks weapon design to create a spooky weapon to go with the level
-The weapon designer creates a spooky weapon and hands it to the level designer
-The level designer returns it to the director which puts it in the game
+1. The director says we need a spooky level, it asks the level designer for one
+2. The level designer creates a base level design, then asks environment art to make it spooky
+3. Environment art adds a bunch of skulls to the level and hands it back to the level designer
+4. The level designer asks weapon design to create a spooky weapon to go with the level
+5. The weapon designer creates a spooky weapon and hands it to the level designer
+6. The level designer returns it to the director which puts it in the game

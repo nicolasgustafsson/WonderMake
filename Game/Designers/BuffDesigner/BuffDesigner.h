@@ -22,11 +22,11 @@ struct SBuffRequirements
 
 struct SBuffDesign
 {
-	EBuffType Type;
+	EBuffType Type = EBuffType::Buff;
 	f32 Strength = 10.f;
 	f32 NumericIntensity = 1.f; //[Nicos]: converted from the buff intensity enum
 	f32 Duration = 1.f;
-	plf::colony<std::unique_ptr<BuffProperty>> Properties;
+	plf::colony<std::unique_ptr<BuffBlueprintProperty>> Properties;
 };
 
 class BuffDesigner : public System, public Debugged
@@ -42,6 +42,10 @@ private:
 
 	void MakeBuffBetter(const f32 aHowMuch, SBuffDesign& aBuffDesign) const;
 	void MakeBuffWorse(const f32 aHowMuch, SBuffDesign& aBuffDesign) const;
+	
+	void AddStatProperty(bool aIncrease, const f32 aStrength, SBuffDesign& aBuffDesign) const;
+
+	void AddDamageOverTimeProperty(const f32 aDotStrength, SBuffDesign& aBuffDesign) const;
 
 	//[Nicos]: let the designer have ownership of the blueprints for now so we don't get a bunch of lifetime problems
 	BuffBlueprint ConstructBlueprintFromDesign(SBuffDesign& aBuffDesign) const;

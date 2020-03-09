@@ -15,7 +15,7 @@ void CharacterBuffsFunctionality::ApplyBuff(class CharacterFunctionality& aChara
 {
 	SCharacterBuffComponent& buffComponent = Get<SCharacterBuffComponent>();
 
-	Buff buffInstance = aBlueprint.Instantiate(aCharacter);
+	BuffInstance buffInstance = aBlueprint.Instantiate(aCharacter);
 
 	buffComponent.Buffs.insert(std::move(buffInstance));
 }
@@ -56,6 +56,8 @@ void CharacterBuffsFunctionality::Tick()
 	{
 		auto& buff = *it;
 		buff.myTimeLeft -= deltaTime;
+
+		buff.Tick();
 
 		if (buff.myTimeLeft < 0.f)
 		{

@@ -1,13 +1,14 @@
 #include "pch.h"
 #include "Buff.h"
 
-Buff BuffBlueprint::Instantiate(CharacterFunctionality& aCharacter) const
+BuffInstance BuffBlueprint::Instantiate(CharacterFunctionality& aCharacter) const
 {
-	Buff buff(*this, aCharacter);
+	BuffInstance buff(*this, aCharacter);
 
 	for (auto&& property : myProperties)
 	{
 		property->Apply(aCharacter);
+		property->ApplyOnBuff(buff);
 	}
 
 	return buff;
@@ -35,14 +36,20 @@ void BuffBlueprint::RemoveFrom(CharacterFunctionality& aCharacter) const
 	}
 }
 
-void Buff::Inspect()
+void BuffInstance::Inspect()
 {
 	myBlueprint.Inspect();
 
 	ImGui::ProgressBar(GetEstimatedPercentLeft());
 }
 
-f32 Buff::GetEstimatedPercentLeft() const
+f32 BuffInstance::GetEstimatedPercentLeft() const
 {
 	return myTimeLeft / myBlueprint.myDuration;
+}
+
+void BuffInstance::Tick()
+{
+	for (auto& propertyInstance : myPropertyInstances)
+		propertyInstance->Tick();
 }

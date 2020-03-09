@@ -47,19 +47,48 @@ f32 BuffDesigner::DecideBuffIntensity() const
 
 void BuffDesigner::MakeBuffBetter(const f32 aHowMuch, SBuffDesign& aBuffDesign) const
 {
-	const f32 strength = ((aBuffDesign.NumericIntensity * aHowMuch) / 100.f) + 1.0f;
-
-	ECharacterStat statToIncrease = static_cast<ECharacterStat>(SystemPtr<Randomizer>()->GetRandomNumber<i32>(0, static_cast<i32>(ECharacterStat::Count) - 1));
-	std::unique_ptr<BuffStatChangeProperty> statChangeProperty = std::make_unique<BuffStatChangeProperty>(SStatChange{ statToIncrease, strength });
-	aBuffDesign.Properties.insert(std::move(statChangeProperty));
+	AddStatProperty(true, aHowMuch, aBuffDesign);
 }
 
 void BuffDesigner::MakeBuffWorse(const f32 aHowMuch, SBuffDesign& aBuffDesign) const
 {
-	const f32 strength = (1.0f / ((aBuffDesign.NumericIntensity * aHowMuch) / 100.f + 1.0f));
+	switch (SystemPtr<Randomizer>()->GetRandomNumber<i32>(0, 1))
+	{
+	case 0:
+		AddStatProperty(false, aHowMuch, aBuffDesign);
+		break;
+	case 1:
+		AddDamageOverTimeProperty(aHowMuch, aBuffDesign);
+		break;
+	}
+}
+
+void BuffDesigner::AddStatProperty(bool aIncrease, const f32 aStrength, SBuffDesign& aBuffDesign) const
+{
+	f32 strength = (aBuffDesign.NumericIntensity * aStrength) / 100.f + 1.0f;
+
+	//[Nicos]: Invert
+	if (!aIncrease)
+		strength = 1.0f / strength;
+
 	ECharacterStat statToDecrease = static_cast<ECharacterStat>(SystemPtr<Randomizer>()->GetRandomNumber<i32>(0, static_cast<i32>(ECharacterStat::Count) - 1));
-	std::unique_ptr<BuffStatChangeProperty> statChangeProperty = std::make_unique<BuffStatChangeProperty>(SStatChange{ statToDecrease, strength });
+	std::unique_ptr<BuffStatChangeBlueprintProperty> statChangeProperty = std::make_unique<BuffStatChangeBlueprintProperty>(SStatChange{ statToDecrease, strength });
+
 	aBuffDesign.Properties.insert(std::move(statChangeProperty));
+}
+
+void BuffDesigner::AddDamageOverTimeProperty(const f32 aDotStrength, SBuffDesign& aBuffDesign) const
+{
+	const f32 damage = aDotStrength;
+
+	const f32 ticks = 10.f;
+
+	const f32 tickTime = (aBuffDesign.Duration - 0.1f) / ticks;
+
+	const f32 damagePerTick = damage / ticks;
+
+	std::unique_ptr<BuffDamageOverTimeBlueprintProperty> damageProperty = std::make_unique<BuffDamageOverTimeBlueprintProperty>(damagePerTick, tickTime);
+	aBuffDesign.Properties.insert(std::move(damageProperty));
 }
 
 BuffBlueprint BuffDesigner::ConstructBlueprintFromDesign(SBuffDesign& aBuffDesign) const

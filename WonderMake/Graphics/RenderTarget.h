@@ -11,7 +11,7 @@ struct SRenderTargetSettings
 class RenderTarget : NonCopyable
 {
 public:
-	RenderTarget(const SRenderTargetSettings& Settings) noexcept;
+	RenderTarget(const SRenderTargetSettings& Settings);
 	~RenderTarget();
 
 	void BindAsTarget();

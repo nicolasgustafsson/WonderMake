@@ -64,7 +64,7 @@ void LevelDesigner::DesignPortal(const SSpace& aSpace)
 void LevelDesigner::DesignBuffTotems(const SSpace& aSpace)
 {
 	SystemPtr<Randomizer> randomizer;
-	const auto totemCount = randomizer->GetRandomNumber<size_t>(0, 3);
+	const auto totemCount = randomizer->GetRandomNumber<size_t>(0, 10);
 
 	for (size_t i = 0; i < totemCount; ++i)
 		DesignBuffTotem(aSpace);

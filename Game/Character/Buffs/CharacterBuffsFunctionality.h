@@ -6,7 +6,7 @@ class BuffBlueprint;
 
 struct SCharacterBuffComponent : public SComponent
 {
-	plf::colony<Buff> Buffs;
+	plf::colony<BuffInstance> Buffs;
 };
 
 class CharacterBuffsFunctionality : public Functionality<CharacterBuffsFunctionality, SCharacterBuffComponent, ImpulseFunctionality>

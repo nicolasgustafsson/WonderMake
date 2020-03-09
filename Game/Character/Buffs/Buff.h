@@ -14,9 +14,9 @@ class CharacterFunctionality;
 class BuffBlueprint final
 {
 public:
-	plf::colony<std::unique_ptr<BuffProperty>> myProperties;
+	plf::colony<std::unique_ptr<BuffBlueprintProperty>> myProperties;
 
-	class Buff Instantiate(CharacterFunctionality& aCharacter) const;
+	class BuffInstance Instantiate(CharacterFunctionality& aCharacter) const;
 
 	void RemoveFrom(CharacterFunctionality& aCharacter) const;
 	//[Nicos]: This should be moved out to a property or similar; the buff isn't necessarily timed
@@ -27,17 +27,19 @@ public:
 	void Inspect() const;
 };
 
-class Buff final : NonCopyable
+class BuffInstance final : NonCopyable
 {
 private:
 	friend class BuffBlueprint;
 
-	Buff(const BuffBlueprint& aBuffBlueprint, CharacterFunctionality& aCharacter)
+	BuffInstance(const BuffBlueprint& aBuffBlueprint, CharacterFunctionality& aCharacter)
 		: myBlueprint(aBuffBlueprint), myTimeLeft(aBuffBlueprint.myDuration), myCharacter(aCharacter)
 	{}
 
 public:
 	void Inspect();
+
+	void Tick();
 
 	f32 GetEstimatedPercentLeft() const;
 
@@ -45,5 +47,7 @@ public:
 	CharacterFunctionality& myCharacter;
 
 	f32 myTimeLeft;
+
+	plf::colony<std::unique_ptr<BuffBlueprintPropertyInstance>> myPropertyInstances;
 };
 

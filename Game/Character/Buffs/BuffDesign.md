@@ -19,4 +19,10 @@ Use modules to build behavior:
 	One module to kill the buff after x seconds
 
 Designer is responsible for creating modules that do not interfere with eachother(somehow)
+
+Buffs have 2 parts. One blueprint part, and one instanced part:
+* The blueprint part contains the information for the buff type
+* The instanced part contains the information stored per buff instance
+
+For example, a weapon might apply a buff on hit. The weapon then has the buff blueprint create an instance on the character when hitting them.
 	

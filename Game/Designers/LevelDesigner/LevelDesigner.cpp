@@ -85,7 +85,10 @@ void LevelDesigner::DesignBuffTotem(const SSpace& aSpace)
 	//[Nicos]: Should be able to let buff designer handle this and inspect buff afterwards to see if it is a buff or debuff
 	const EBuffType buffType = randomizer->GetRandomBool() ? EBuffType::Debuff : EBuffType::Buff;
 
-	buffGiver.Initialize(SystemPtr<BuffDesigner>()->DesignBuff({ buffType }), scale * 100.f);
+	SBuffRequirements requirements;
+	requirements.Type = EBuffType::Debuff;
+	requirements.Intensity = 1.f;
+	buffGiver.Initialize(SystemPtr<BuffDesigner>()->DesignBuff(requirements), scale * 100.f);
 
 	const SVector2f position{ randomizer->GetRandomNumber<f32>(aSpace.TopLeft.X, aSpace.BottomRight.X), randomizer->GetRandomNumber<f32>(aSpace.BottomRight.Y, aSpace.TopLeft.Y) };
 

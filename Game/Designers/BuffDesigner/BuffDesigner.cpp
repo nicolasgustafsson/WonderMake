@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "BuffDesigner.h"
 #include "Randomizer/Randomizer.h"
+#include "Character/Buffs/LifetimeBuffProperty/BuffLifetimeProperty.h"
+#include "Character/Buffs/TimedTickBuffProperty/BuffTimedTickProperty.h"
+#include "Character/Buffs/StatChangeProperty/BuffStatChangeProperty.h"
 
 BuffBlueprint& BuffDesigner::DesignBuff(SBuffRequirements aBuffRequirements)
 {
@@ -26,12 +29,10 @@ BuffBlueprint& BuffDesigner::DesignBuff(SBuffRequirements aBuffRequirements)
 	std::unique_ptr<BuffLifetimeProperty> lifeTimeProperty = std::make_unique<BuffLifetimeProperty>(design.Duration);
 
 	design.Properties.insert(std::move(lifeTimeProperty));
-	
+
 	BuffBlueprint blueprint = ConstructBlueprintFromDesign(design);
 
-	myLastBuffDesign = std::move(design);
-
-	return *myBlueprint.insert(std::move(blueprint)); 
+	return *myBlueprints.insert(std::move(blueprint));
 }
 
 EBuffType BuffDesigner::DecideBuffType() const
@@ -76,7 +77,7 @@ void BuffDesigner::AddStatProperty(bool aIncrease, const f32 aStrength, SBuffDes
 		strength = 1.0f / strength;
 
 	ECharacterStat statToDecrease = static_cast<ECharacterStat>(SystemPtr<Randomizer>()->GetRandomNumber<i32>(0, static_cast<i32>(ECharacterStat::Count) - 1));
-	std::unique_ptr<BuffStatChangeBlueprintProperty> statChangeProperty = std::make_unique<BuffStatChangeBlueprintProperty>(SStatChange{ statToDecrease, strength });
+	std::unique_ptr<BuffStatChangeProperty> statChangeProperty = std::make_unique<BuffStatChangeProperty>(SStatChange{ statToDecrease, strength });
 
 	aBuffDesign.Properties.insert(std::move(statChangeProperty));
 }
@@ -91,7 +92,7 @@ void BuffDesigner::AddDamageOverTimeProperty(const f32 aDotStrength, SBuffDesign
 
 	const f32 damagePerTick = damage / ticks;
 
-	std::unique_ptr<BuffDamageOverTimeBlueprintProperty> damageProperty = std::make_unique<BuffDamageOverTimeBlueprintProperty>(damagePerTick, tickTime);
+	std::unique_ptr<BuffDamageOverTimeProperty> damageProperty = std::make_unique<BuffDamageOverTimeProperty>(damagePerTick, tickTime);
 	aBuffDesign.Properties.insert(std::move(damageProperty));
 }
 
@@ -108,24 +109,17 @@ BuffBlueprint BuffDesigner::ConstructBlueprintFromDesign(SBuffDesign& aBuffDesig
 
 void BuffDesigner::Debug()
 {
+	ImGui::ShowDemoWindow();
 	ImGui::Begin("Buff Designer");
 
-	if (ImGui::Button("Design Buff"))
-	{
-		myDebugBuffBlueprint = &DesignBuff({});
+	if (ImGui::TreeNode("Blueprints")) {
+		for (auto& blueprint : myBlueprints)
+		{
+			ImGui::TreePush();
+			blueprint.Inspect();
+			ImGui::TreePop();
+		}
+		ImGui::TreePop();
 	}
-
-	if (myLastBuffDesign.Type == EBuffType::Buff)
-		ImGui::Text("Positive buff!");
-	else
-		ImGui::Text("Debuff!");
-
-	ImGui::Text("Strength: %f", myLastBuffDesign.Strength);
-	ImGui::Text("Intensity: %f", myLastBuffDesign.NumericIntensity);
-	ImGui::Text("Duration: %f", myLastBuffDesign.Duration);
-
-	if(myDebugBuffBlueprint)
-		myDebugBuffBlueprint->Inspect();
-
 	ImGui::End();
 }

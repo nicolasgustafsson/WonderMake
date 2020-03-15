@@ -17,7 +17,7 @@ BuffInstance BuffBlueprint::Instantiate(CharacterFunctionality& aCharacter) cons
 void BuffBlueprint::Inspect() const
 {
 	ImGui::Separator();
-	
+
 	for (auto& property : myProperties)
 	{
 		property->Inspect();
@@ -38,7 +38,8 @@ void BuffBlueprint::RemoveFrom(CharacterFunctionality& aCharacter) const
 
 void BuffInstance::Inspect()
 {
-	myBlueprint.Inspect();
+	for (auto& propertyInstance : myPropertyInstances)
+		propertyInstance->Inspect();
 
 	//ImGui::ProgressBar(GetEstimatedPercentLeft());
 }

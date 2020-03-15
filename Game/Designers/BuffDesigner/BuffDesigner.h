@@ -52,9 +52,7 @@ private:
 protected:
 	virtual void Debug() override;
 
-	SBuffDesign myLastBuffDesign;
-	BuffBlueprint* myDebugBuffBlueprint;
 
-	plf::colony<BuffBlueprint> myBlueprint;
+	plf::colony<BuffBlueprint> myBlueprints;
 };
 

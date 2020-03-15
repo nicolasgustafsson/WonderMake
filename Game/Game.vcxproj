@@ -223,6 +223,9 @@
   <ItemGroup>
     <ClInclude Include="Actions\Action.h" />
     <ClInclude Include="Actions\ActionFunctionality.h" />
+    <ClInclude Include="Character\Buffs\LifetimeBuffProperty\BuffLifetimeProperty.h" />
+    <ClInclude Include="Character\Buffs\StatChangeProperty\BuffStatChangeProperty.h" />
+    <ClInclude Include="Character\Buffs\TimedTickBuffProperty\BuffTimedTickProperty.h" />
     <ClInclude Include="Levels\BuffGiver\BuffGiverRenderObject.h" />
     <ClInclude Include="Character\Buffs\BuffProperties.h" />
     <ClInclude Include="Designers\BuffDesigner\BuffDesigner.h" />
@@ -261,6 +264,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actions\ActionFunctionality.cpp" />
+    <ClCompile Include="Character\Buffs\LifetimeBuffProperty\BuffLifetimeProperty.cpp" />
+    <ClCompile Include="Character\Buffs\StatChangeProperty\BuffStatChangeProperty.cpp" />
+    <ClCompile Include="Character\Buffs\TimedTickBuffProperty\BuffTimedTickProperty.cpp" />
     <ClCompile Include="Levels\BuffGiver\BuffGiverRenderObject.cpp" />
     <ClCompile Include="Character\Buffs\BuffProperties.cpp" />
     <ClCompile Include="Designers\BuffDesigner\BuffDesigner.cpp" />

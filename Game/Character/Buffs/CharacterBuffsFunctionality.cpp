@@ -71,10 +71,13 @@ void CharacterBuffsFunctionality::Inspect()
 {
 	SCharacterBuffComponent& buffComponent = Get<SCharacterBuffComponent>();
 	
+	ImGui::Separator();
+
+	ImGui::Text("Buffs:");
 	for(auto& buff : buffComponent.Buffs)
 	{
-		ImGui::Separator();
 		buff.Inspect();
 		ImGui::Separator();
 	}
+	ImGui::Separator();
 }

@@ -34,6 +34,9 @@
     <ClCompile Include="Character\Buffs\BuffProperties.cpp" />
     <ClCompile Include="Levels\BuffGiver\BuffGiverFunctionality.cpp" />
     <ClCompile Include="Levels\BuffGiver\BuffGiverRenderObject.cpp" />
+    <ClCompile Include="Character\Buffs\LifetimeBuffProperty\BuffLifetimeProperty.cpp" />
+    <ClCompile Include="Character\Buffs\TimedTickBuffProperty\BuffTimedTickProperty.cpp" />
+    <ClCompile Include="Character\Buffs\StatChangeProperty\BuffStatChangeProperty.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWorld.h" />
@@ -73,6 +76,9 @@
     <ClInclude Include="Character\Buffs\BuffProperties.h" />
     <ClInclude Include="Levels\BuffGiver\BuffGiverFunctionality.h" />
     <ClInclude Include="Levels\BuffGiver\BuffGiverRenderObject.h" />
+    <ClInclude Include="Character\Buffs\LifetimeBuffProperty\BuffLifetimeProperty.h" />
+    <ClInclude Include="Character\Buffs\TimedTickBuffProperty\BuffTimedTickProperty.h" />
+    <ClInclude Include="Character\Buffs\StatChangeProperty\BuffStatChangeProperty.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Character\Buffs\BuffDesign.md" />

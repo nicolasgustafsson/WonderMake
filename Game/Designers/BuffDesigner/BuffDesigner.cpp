@@ -22,6 +22,10 @@ BuffBlueprint& BuffDesigner::DesignBuff(SBuffRequirements aBuffRequirements)
 		MakeBuffWorse(design.Strength, design);
 		break;
 	}
+
+	std::unique_ptr<BuffLifetimeProperty> lifeTimeProperty = std::make_unique<BuffLifetimeProperty>(design.Duration);
+
+	design.Properties.insert(std::move(lifeTimeProperty));
 	
 	BuffBlueprint blueprint = ConstructBlueprintFromDesign(design);
 

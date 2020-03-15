@@ -40,16 +40,27 @@ void BuffInstance::Inspect()
 {
 	myBlueprint.Inspect();
 
-	ImGui::ProgressBar(GetEstimatedPercentLeft());
+	//ImGui::ProgressBar(GetEstimatedPercentLeft());
 }
 
-f32 BuffInstance::GetEstimatedPercentLeft() const
-{
-	return myTimeLeft / myBlueprint.myDuration;
-}
+//f32 BuffInstance::GetEstimatedPercentLeft() const
+//{
+//	return myTimeLeft / myBlueprint.myDuration;
+//}
 
 void BuffInstance::Tick()
 {
 	for (auto& propertyInstance : myPropertyInstances)
 		propertyInstance->Tick();
+}
+
+bool BuffInstance::ShouldDie() const
+{
+	for (auto& propertyInstance : myPropertyInstances)
+	{
+		if (propertyInstance->BuffShouldDie())
+			return true;
+	}
+
+	return false;
 }

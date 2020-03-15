@@ -31,13 +31,12 @@ BuffDamageOverTimeBlueprintProperty::BuffDamageOverTimeBlueprintProperty(const f
 
 void BuffDamageOverTimeBlueprintProperty::Inspect() const
 {
-
+	
 }
 
 void BuffDamageOverTimeBlueprintProperty::TimedTick(BuffBlueprintPropertyInstance& aBuffPropertyInstance)
 {
 	aBuffPropertyInstance.myCharacter.Damage(myDamagePerTick);
-	WmLog("Haiyah!");
 }
 
 BuffTimedTickingBlueprintProperty::BuffTimedTickingBlueprintProperty(const f32 aTimeBetweenTicks)
@@ -69,4 +68,33 @@ void BuffTimedTickingBlueprintProperty::Tick(BuffBlueprintPropertyInstance& aBuf
 void BuffBlueprintPropertyInstance::Tick()
 {
 	myBlueprintProperty.Tick(*this);
+}
+
+bool BuffBlueprintPropertyInstance::BuffShouldDie() const
+{
+	return myBlueprintProperty.BuffShouldDie(*this);
+}
+
+void BuffLifetimeProperty::Inspect() const
+{
+
+}
+
+void BuffLifetimeProperty::ApplyOnBuff(BuffInstance& aBuff)
+{
+	BuffLifetimePropertyInstance& instance = *reinterpret_cast<BuffLifetimePropertyInstance*>((aBuff.myPropertyInstances.emplace(std::make_unique<BuffLifetimePropertyInstance>(*this, aBuff.myCharacter, myLifeTime)))->get());
+}
+
+void BuffLifetimeProperty::Tick(BuffBlueprintPropertyInstance& aBuffPropertyInstance)
+{
+	const f32 deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
+	BuffLifetimePropertyInstance& instance = *reinterpret_cast<BuffLifetimePropertyInstance*>(&aBuffPropertyInstance);
+
+	instance.myLifeLeft -= deltaTime;
+}
+
+bool BuffLifetimeProperty::BuffShouldDie(const BuffBlueprintPropertyInstance& aBuffPropertyInstance) const
+{
+	const BuffLifetimePropertyInstance& instance = *reinterpret_cast<const BuffLifetimePropertyInstance*>(&aBuffPropertyInstance);
+	return instance.myLifeLeft < 0.f;
 }

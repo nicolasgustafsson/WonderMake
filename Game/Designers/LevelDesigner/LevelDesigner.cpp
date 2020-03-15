@@ -64,7 +64,7 @@ void LevelDesigner::DesignPortal(const SSpace& aSpace)
 void LevelDesigner::DesignBuffTotems(const SSpace& aSpace)
 {
 	SystemPtr<Randomizer> randomizer;
-	const auto totemCount = randomizer->GetRandomNumber<size_t>(0, 10);
+	const auto totemCount = randomizer->GetRandomNumber<size_t>(1, 1);
 
 	for (size_t i = 0; i < totemCount; ++i)
 		DesignBuffTotem(aSpace);
@@ -202,8 +202,8 @@ plf::colony<Object> LevelDesigner::InstantiateSpaces(const SLevelGeometry& aGeom
 
 		case ELevelStage::Challenge:
 		{
-			auto enemies = DesignEnemies(space);
-			objects.splice(enemies);
+			//auto enemies = DesignEnemies(space);
+			//objects.splice(enemies);
 			DesignBuffTotems(space);
 			break;
 		}

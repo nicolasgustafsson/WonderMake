@@ -15,9 +15,7 @@ void CharacterBuffsFunctionality::ApplyBuff(class CharacterFunctionality& aChara
 {
 	SCharacterBuffComponent& buffComponent = Get<SCharacterBuffComponent>();
 
-	BuffInstance buffInstance = aBlueprint.Instantiate(aCharacter);
-
-	buffComponent.Buffs.insert(std::move(buffInstance));
+	buffComponent.Buffs.insert(aBlueprint.Instantiate(aCharacter));
 }
 
 void CharacterBuffsFunctionality::ClearBuffs()
@@ -55,11 +53,10 @@ void CharacterBuffsFunctionality::Tick()
 	for (auto it = buffComponent.Buffs.begin(); it != buffComponent.Buffs.end(); it++)
 	{
 		auto& buff = *it;
-		buff.myTimeLeft -= deltaTime;
 
 		buff.Tick();
 
-		if (buff.myTimeLeft < 0.f)
+		if (buff.ShouldDie())
 		{
 			buff.myBlueprint.RemoveFrom(buff.myCharacter);
 

@@ -33,7 +33,7 @@ private:
 	friend class BuffBlueprint;
 
 	BuffInstance(const BuffBlueprint& aBuffBlueprint, CharacterFunctionality& aCharacter)
-		: myBlueprint(aBuffBlueprint), myTimeLeft(aBuffBlueprint.myDuration), myCharacter(aCharacter)
+		: myBlueprint(aBuffBlueprint), myCharacter(aCharacter)
 	{}
 
 public:
@@ -41,12 +41,12 @@ public:
 
 	void Tick();
 
-	f32 GetEstimatedPercentLeft() const;
+	bool ShouldDie() const;
+
+	//f32 GetEstimatedPercentLeft() const;
 
 	const BuffBlueprint& myBlueprint;
 	CharacterFunctionality& myCharacter;
-
-	f32 myTimeLeft;
 
 	plf::colony<std::unique_ptr<BuffBlueprintPropertyInstance>> myPropertyInstances;
 };

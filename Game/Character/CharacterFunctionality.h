@@ -44,6 +44,7 @@ class CharacterFunctionality
 public:
 	CharacterFunctionality(Object& aOwner) noexcept;
 
+	void Heal(const i32 aHealAmount);
 	void Damage(const i32 aDamage);
 
 	[[nodiscard]] bool IsDead() const noexcept;

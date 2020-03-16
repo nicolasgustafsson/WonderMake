@@ -86,7 +86,7 @@ void LevelDesigner::DesignBuffTotem(const SSpace& aSpace)
 	const EBuffType buffType = randomizer->GetRandomBool() ? EBuffType::Debuff : EBuffType::Buff;
 
 	SBuffRequirements requirements;
-	requirements.Type = EBuffType::Debuff;
+	requirements.Type = buffType;
 	requirements.Intensity = 1.f;
 	buffGiver.Initialize(SystemPtr<BuffDesigner>()->DesignBuff(requirements), scale * 100.f);
 

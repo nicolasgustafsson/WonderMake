@@ -37,6 +37,8 @@
     <ClCompile Include="Character\Buffs\LifetimeBuffProperty\BuffLifetimeProperty.cpp" />
     <ClCompile Include="Character\Buffs\TimedTickBuffProperty\BuffTimedTickProperty.cpp" />
     <ClCompile Include="Character\Buffs\StatChangeProperty\BuffStatChangeProperty.cpp" />
+    <ClCompile Include="Character\Effects\CharacterEffect.cpp" />
+    <ClCompile Include="Designers\EffectDesigner\EffectDesigner.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWorld.h" />
@@ -79,10 +81,14 @@
     <ClInclude Include="Character\Buffs\LifetimeBuffProperty\BuffLifetimeProperty.h" />
     <ClInclude Include="Character\Buffs\TimedTickBuffProperty\BuffTimedTickProperty.h" />
     <ClInclude Include="Character\Buffs\StatChangeProperty\BuffStatChangeProperty.h" />
+    <ClInclude Include="Character\Effects\CharacterEffect.h" />
+    <ClInclude Include="Designers\EffectDesigner\EffectDesigner.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Character\Buffs\BuffDesign.md" />
     <None Include="Designers\BuffDesigner\BuffDesignerPhilosophy.md" />
     <None Include="Designers\DesignerPhilosophy.md" />
+    <None Include="Character\Effects\CharacterEffectPhilosophy.md" />
+    <None Include="Designers\EffectDesigner\EffectDesignerPhilosophy.md" />
   </ItemGroup>
 </Project>

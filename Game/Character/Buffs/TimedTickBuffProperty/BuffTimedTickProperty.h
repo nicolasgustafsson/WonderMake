@@ -1,6 +1,7 @@
 #pragma once
 #include "Character/Buffs/BuffProperties.h"
 
+class CharacterEffect;
 
 class BuffTimedTickProperty : public BuffBlueprintProperty
 {
@@ -29,17 +30,16 @@ public:
 	f32 myTimeUntilTick = 0.f;
 };
 
-//[Nicos]: We will move this functionality into something else later; it can just be an EffectOverTime
-class BuffDamageOverTimeProperty : public BuffTimedTickProperty
+class BuffEffectOverTimeProperty : public BuffTimedTickProperty
 {
 public:
-	BuffDamageOverTimeProperty(const f32 aDamagePerTick, const f32 aTimeBetweenTicks)
-		: BuffTimedTickProperty(aTimeBetweenTicks), myDamagePerTick(aDamagePerTick) {}
+	BuffEffectOverTimeProperty(const f32 aTimeBetweenTicks, CharacterEffect& aCharacterEffect)
+		: BuffTimedTickProperty(aTimeBetweenTicks), myCharacterEffect(aCharacterEffect) {}
 
 	virtual void TimedTick(BuffBlueprintPropertyInstance& aBuffPropertyInstance) override;
 
 	virtual void Inspect() const override;
 
 private:
-	f32 myDamagePerTick;
+	CharacterEffect& myCharacterEffect;
 };

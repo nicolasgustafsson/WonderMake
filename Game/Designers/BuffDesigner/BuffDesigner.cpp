@@ -4,6 +4,8 @@
 #include "Character/Buffs/LifetimeBuffProperty/BuffLifetimeProperty.h"
 #include "Character/Buffs/TimedTickBuffProperty/BuffTimedTickProperty.h"
 #include "Character/Buffs/StatChangeProperty/BuffStatChangeProperty.h"
+#include "Designers/EffectDesigner/EffectDesigner.h"
+#include "Character/Effects/CharacterEffect.h"
 
 BuffBlueprint& BuffDesigner::DesignBuff(SBuffRequirements aBuffRequirements)
 {
@@ -37,7 +39,7 @@ BuffBlueprint& BuffDesigner::DesignBuff(SBuffRequirements aBuffRequirements)
 
 EBuffType BuffDesigner::DecideBuffType() const
 {
-	return SystemPtr<Randomizer>()->GetRandomBool() ? EBuffType::Debuff : EBuffType::Buff;
+	return SystemPtr<Randomizer>()->SelectOne<EBuffType, EBuffType::Debuff, EBuffType::Buff>();
 }
 
 f32 BuffDesigner::DecideBuffStrength() const
@@ -52,7 +54,16 @@ f32 BuffDesigner::DecideBuffIntensity() const
 
 void BuffDesigner::MakeBuffBetter(const f32 aHowMuch, SBuffDesign& aBuffDesign) const
 {
-	AddStatProperty(true, aHowMuch, aBuffDesign);
+
+	switch (SystemPtr<Randomizer>()->GetRandomNumber<i32>(0, 1))
+	{
+	case 0:
+		AddStatProperty(true, aHowMuch, aBuffDesign);
+		break;
+	case 1:
+		AddEffectOverTimeProperty(aHowMuch, aBuffDesign);
+		break;
+	}
 }
 
 void BuffDesigner::MakeBuffWorse(const f32 aHowMuch, SBuffDesign& aBuffDesign) const
@@ -63,7 +74,7 @@ void BuffDesigner::MakeBuffWorse(const f32 aHowMuch, SBuffDesign& aBuffDesign) c
 		AddStatProperty(false, aHowMuch, aBuffDesign);
 		break;
 	case 1:
-		AddDamageOverTimeProperty(aHowMuch, aBuffDesign);
+		AddEffectOverTimeProperty(aHowMuch, aBuffDesign);
 		break;
 	}
 }
@@ -82,18 +93,17 @@ void BuffDesigner::AddStatProperty(bool aIncrease, const f32 aStrength, SBuffDes
 	aBuffDesign.Properties.insert(std::move(statChangeProperty));
 }
 
-void BuffDesigner::AddDamageOverTimeProperty(const f32 aDotStrength, SBuffDesign& aBuffDesign) const
+void BuffDesigner::AddEffectOverTimeProperty(const f32 aEffectStrength, SBuffDesign& aBuffDesign) const
 {
-	const f32 damage = aDotStrength;
-
 	const f32 ticks = 10.f;
 
 	const f32 tickTime = (aBuffDesign.Duration - 0.1f) / ticks;
 
-	const f32 damagePerTick = damage / ticks;
-
-	std::unique_ptr<BuffDamageOverTimeProperty> damageProperty = std::make_unique<BuffDamageOverTimeProperty>(damagePerTick, tickTime);
-	aBuffDesign.Properties.insert(std::move(damageProperty));
+	SEffectRequirements effectRequirements;
+	effectRequirements.Strength = aEffectStrength / ticks;
+	effectRequirements.Type = aBuffDesign.Type == EBuffType::Buff ? EEffectType::Positive : EEffectType::Negative;
+	std::unique_ptr<BuffEffectOverTimeProperty> characterEffect = std::make_unique<BuffEffectOverTimeProperty>(tickTime, SystemPtr<EffectDesigner>()->DesignCharacterEffect(effectRequirements));
+	aBuffDesign.Properties.insert(std::move(characterEffect));
 }
 
 BuffBlueprint BuffDesigner::ConstructBlueprintFromDesign(SBuffDesign& aBuffDesign) const

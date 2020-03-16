@@ -19,6 +19,14 @@ CharacterFunctionality::CharacterFunctionality(Object& aOwner) noexcept
 	Get<CharacterStatsFunctionality>().Get<SCharacterStatsComponent>().Character = this;
 }
 
+void CharacterFunctionality::Heal(const i32 aHealAmount)
+{
+	if (IsDead())
+		return;
+
+	Get<SHealthComponent>().Health += aHealAmount;
+}
+
 void CharacterFunctionality::Damage(const i32 aDamage)
 {
 	if (IsDead())

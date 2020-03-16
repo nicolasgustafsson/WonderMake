@@ -15,3 +15,13 @@ The goal of this is to generate content similar to how a studio would do it, for
 4. The level designer asks weapon design to create a spooky weapon to go with the level
 5. The weapon designer creates a spooky weapon and hands it to the level designer
 6. The level designer returns it to the director which puts it in the game
+
+Requirements VS Design
+
+Some designers have a Requirements and a Design struct allocated to them. 
+They often have very similar contents, but to preserve conceptual integrity they should remain separated.
+
+Requirements are what the *requester* wants from the object. It can be things like "Make the enemy easy to kill", "Make the buff that will be applied on hit be positive"
+and "Make the level be long".
+Design is what the designer is working on before completing the object. These are often based on the requirements and then fleshed out. It is up to the designer how to 
+implement the requirements: an enemy that is easy to kill may be something with very little health, or something that has a lot of health but is very slow.

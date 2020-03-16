@@ -45,13 +45,12 @@ private:
 	
 	void AddStatProperty(bool aIncrease, const f32 aStrength, SBuffDesign& aBuffDesign) const;
 
-	void AddDamageOverTimeProperty(const f32 aDotStrength, SBuffDesign& aBuffDesign) const;
+	void AddEffectOverTimeProperty(const f32 aEffectStrength, SBuffDesign& aBuffDesign) const;
 
 	//[Nicos]: let the designer have ownership of the blueprints for now so we don't get a bunch of lifetime problems
 	BuffBlueprint ConstructBlueprintFromDesign(SBuffDesign& aBuffDesign) const;
 protected:
 	virtual void Debug() override;
-
 
 	plf::colony<BuffBlueprint> myBlueprints;
 };

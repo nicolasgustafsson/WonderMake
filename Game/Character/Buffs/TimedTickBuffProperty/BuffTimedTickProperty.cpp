@@ -2,6 +2,7 @@
 #include "BuffTimedTickProperty.h"
 #include "Character/Buffs/Buff.h"
 #include "Character/CharacterFunctionality.h"
+#include "Character/Effects/CharacterEffect.h"
 
 BuffTimedTickProperty::BuffTimedTickProperty(const f32 aTimeBetweenTicks)
 	:myTimeBetweenTicks(aTimeBetweenTicks)
@@ -43,14 +44,15 @@ void BuffTimedTickProperty::InspectInstance(BuffBlueprintPropertyInstance& aBuff
 	ImGui::ProgressBar((instance.myTimeUntilTick) / (myTimeBetweenTicks), ImVec2(-1.f, 0.f), timeUntilTickString.c_str());
 }
 
-void BuffDamageOverTimeProperty::TimedTick(BuffBlueprintPropertyInstance& aBuffPropertyInstance)
+void BuffEffectOverTimeProperty::TimedTick(BuffBlueprintPropertyInstance& aBuffPropertyInstance)
 {
-	aBuffPropertyInstance.myCharacter.Damage(myDamagePerTick);
+	myCharacterEffect.Apply(aBuffPropertyInstance.myCharacter);
 }
 
-void BuffDamageOverTimeProperty::Inspect() const
+void BuffEffectOverTimeProperty::Inspect() const
 {
 	BuffTimedTickProperty::Inspect();
 
-	ImGui::Text("Damage on tick = %f", myDamagePerTick);
+	ImGui::Text("Applies following effect on tick: ");
+	myCharacterEffect.Inspect();
 }

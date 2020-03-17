@@ -83,6 +83,8 @@ void Renderer::Debug()
 	
 	ImGui::Begin("Game Window");
 
+	myDebugWindowHasFocus = ImGui::IsWindowFocused();
+
 	i32 windowX, windowY;
 	glfwGetWindowPos(myWindowPtr->myGlfwWindow, &windowX, &windowY);
 	myCameraPtr->SetImguiWindowOffset(

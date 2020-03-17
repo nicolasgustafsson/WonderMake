@@ -20,7 +20,11 @@ void CharacterEffectApplyBuff::Apply(CharacterFunctionality& aCharacter)
 void CharacterEffectApplyBuff::Inspect()
 {
 	ImGui::Text("Applies following buff: ");
-	myBuffToApply.Inspect();
+	if (ImGui::TreeNode("Buff"))
+	{
+		myBuffToApply.Inspect();
+		ImGui::TreePop();
+	}
 }
 
 void CharacterEffectHeal::Apply(CharacterFunctionality& aCharacter)

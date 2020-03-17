@@ -54,7 +54,6 @@ f32 BuffDesigner::DecideBuffIntensity() const
 
 void BuffDesigner::MakeBuffBetter(const f32 aHowMuch, SBuffDesign& aBuffDesign) const
 {
-
 	switch (SystemPtr<Randomizer>()->GetRandomNumber<i32>(0, 1))
 	{
 	case 0:
@@ -110,7 +109,6 @@ BuffBlueprint BuffDesigner::ConstructBlueprintFromDesign(SBuffDesign& aBuffDesig
 {
 	BuffBlueprint blueprint;
 
-	blueprint.myDuration = aBuffDesign.Duration;
 	blueprint.myProperties = std::move(aBuffDesign.Properties);
 	blueprint.myBuffType = aBuffDesign.Type;
 
@@ -122,14 +120,16 @@ void BuffDesigner::Debug()
 	ImGui::ShowDemoWindow();
 	ImGui::Begin("Buff Designer");
 
-	if (ImGui::TreeNode("Blueprints")) {
-		for (auto& blueprint : myBlueprints)
+	for (auto& blueprint : myBlueprints)
+	{
+		ImGui::PushID(&blueprint);
+		if (ImGui::TreeNode("Blueprint"))
 		{
-			ImGui::TreePush();
 			blueprint.Inspect();
 			ImGui::TreePop();
 		}
-		ImGui::TreePop();
+		ImGui::PopID();
 	}
+
 	ImGui::End();
 }

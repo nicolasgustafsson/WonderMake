@@ -19,8 +19,6 @@ public:
 	class BuffInstance Instantiate(CharacterFunctionality& aCharacter) const;
 
 	void RemoveFrom(CharacterFunctionality& aCharacter) const;
-	//[Nicos]: This should be moved out to a property or similar; the buff isn't necessarily timed
-	f32 myDuration = 0.f;
 
 	EBuffType myBuffType;
 

@@ -24,6 +24,8 @@ public:
 
 	void FinishFrame();
 
+	bool DebugWindowHasFocus() const noexcept { return myDebugWindowHasFocus; };
+
 private:
 	virtual void Debug() override;
 
@@ -33,6 +35,8 @@ private:
 	SystemPtr<EngineUniformBuffer> myEngineUniformBufferPtr;
 	SystemPtr<Window> myWindowPtr;
 	SystemPtr<DebugLineDrawer> myLineDrawer;
+
+	bool myDebugWindowHasFocus = false;
 
 	const SColor ClearColor = SColor::CornflowerBlue;
 };

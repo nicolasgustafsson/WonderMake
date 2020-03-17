@@ -3,6 +3,7 @@
 #include "Camera/Camera.h"
 #include <GLFW/glfw3.h>
 #include <algorithm>
+#include "Graphics/Renderer.h"
 
 void InputSystem::Update() noexcept
 {
@@ -81,6 +82,9 @@ bool InputSystem::IsKeyDown(const EKeyboardKey aKey) const noexcept
 
 bool InputSystem::IsMouseButtonPressed(const EMouseButton aMouseButton) const noexcept
 {
+	if (!ShouldCaptureMouseInput())
+		return false;
+
 	return myMouseButtonStates[static_cast<u32>(aMouseButton)] == EInputItemState::Pressed;
 }
 
@@ -182,4 +186,12 @@ void InputSystem::Debug()
 	ImGui::PopStyleVar();
 
 	ImGui::End();
+}
+
+bool InputSystem::ShouldCaptureMouseInput() const noexcept
+{
+	if constexpr (!Constants::IsDebugging)
+		return true;
+
+	return SystemPtr<Renderer>()->DebugWindowHasFocus();
 }

@@ -54,5 +54,10 @@ void BuffEffectOverTimeProperty::Inspect() const
 	BuffTimedTickProperty::Inspect();
 
 	ImGui::Text("Applies following effect on tick: ");
-	myCharacterEffect.Inspect();
+
+	if (ImGui::TreeNode("Effect"))
+	{
+		myCharacterEffect.Inspect();
+		ImGui::TreePop();
+	}
 }

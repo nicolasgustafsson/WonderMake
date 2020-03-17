@@ -16,16 +16,11 @@ BuffInstance BuffBlueprint::Instantiate(CharacterFunctionality& aCharacter) cons
 
 void BuffBlueprint::Inspect() const
 {
-	ImGui::Separator();
-
 	for (auto& property : myProperties)
 	{
 		property->Inspect();
+		ImGui::Separator();
 	}
-
-	ImGui::Text("%fs Duration", myDuration);
-
-	ImGui::Separator();
 }
 
 void BuffBlueprint::RemoveFrom(CharacterFunctionality& aCharacter) const

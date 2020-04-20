@@ -35,8 +35,8 @@ void GameWorld::SetupPlayer()
 	myPlayer.Add<PlayerControllerFunctionality>();
 	myPlayer.Add<DefaultMovementFunctionality>();
 
-	auto& playerSprite = myPlayer.Add<SpriteRenderingFunctionality>();
-	playerSprite.SetTexture(std::filesystem::current_path() / "Textures/player.png");
+	//auto& playerSprite = myPlayer.Add<SpriteRenderingFunctionality>();
+	//playerSprite.SetTexture(std::filesystem::current_path() / "Textures/player.png");
 
 	auto& camera = myCameraController.Add<CameraFunctionality>();
 	camera.SetTarget(myPlayerTransform);

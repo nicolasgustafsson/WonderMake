@@ -50,6 +50,7 @@
     <ClCompile Include="Program\Window.cpp" />
     <ClCompile Include="Utilities\OS.cpp" />
     <ClCompile Include="Randomizer\Randomizer.cpp" />
+    <ClCompile Include="Functionalities\BaseFunctionality.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -197,6 +198,7 @@
     <ClInclude Include="Functionalities\OwnerFunctionality.h" />
     <ClInclude Include="Serialization\SerializationSystem.h" />
     <ClInclude Include="Randomizer\Randomizer.h" />
+    <ClInclude Include="Functionalities\BaseFunctionality.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

@@ -17,7 +17,11 @@ public:
 	const static SColor White;
 	const static SColor Yellow;
 	const static SColor Red;
-	const static SColor Green;
 	const static SColor Blue;
+	const static SColor Green;
+	const static SColor Orange;
+	const static SColor Purple;
+	const static SColor Cyan;
+	const static SColor Brown;
 };
 

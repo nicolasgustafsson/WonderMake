@@ -9,6 +9,7 @@
 
 #include <sstream>
 #include <memory>
+#include "Constants.h"
 
 template<typename TMessage>
 inline static void WmDispatchMessage(const TMessage& aMessage)
@@ -94,6 +95,36 @@ inline static void WmDrawDebugLine(const SDebugLine& aDebugLine)
 inline static void WmDrawDebugLine(const SVector2f& aStart, const SVector2f& aEnd, const SColor& aColor, const f32 aDuration = 0.0f)
 {
 	SDebugLine line{ aColor, aStart, aEnd, aDuration };
+
+	WmDrawDebugLine(line);
+}
+
+inline static void WmDrawDebugSphere(const SVector2f aPosition, const f32 aRadius, const SColor aColor, const u32 aNumberOfPoints = 16)
+{
+	std::vector<SVector2f> positions(aNumberOfPoints);
+
+	for (u32 i = 0; i < positions.size(); ++i)
+	{
+		positions[i].X = std::cosf((Constants::Pi * 2.f) / positions.size() * i);
+		positions[i].Y = std::sinf((Constants::Pi * 2.f) / positions.size() * i);
+
+		positions[i] *= aRadius;
+		positions[i] += aPosition;
+	}
+
+	SDebugLine line;
+	line.Color = aColor;
+
+	for (u32 i = 0; i < positions.size() - 1; ++i)
+	{
+		line.Start = positions[i];
+		line.End = positions[i + 1];
+
+		WmDrawDebugLine(line);
+	}
+
+	line.Start = positions[positions.size() - 1];
+	line.End = positions[0];
 
 	WmDrawDebugLine(line);
 }

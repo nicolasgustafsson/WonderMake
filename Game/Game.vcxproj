@@ -224,6 +224,8 @@
     <ClInclude Include="Actions\Action.h" />
     <ClInclude Include="Actions\ActionFunctionality.h" />
     <ClInclude Include="Camera\CameraFunctionality.h" />
+    <ClInclude Include="Character\Animation\CharacterAnimationFunctionality.h" />
+    <ClInclude Include="Character\Animation\CharacterSkeleton.h" />
     <ClInclude Include="Movement\SpinnerFunctionality.h" />
     <ClInclude Include="Designers\LevelDesigner\LevelDesigner.h" />
     <ClInclude Include="Character\CharacterFunctionality.h" />
@@ -255,6 +257,8 @@
   <ItemGroup>
     <ClCompile Include="Actions\ActionFunctionality.cpp" />
     <ClCompile Include="Camera\CameraFunctionality.cpp" />
+    <ClCompile Include="Character\Animation\CharacterAnimationFunctionality.cpp" />
+    <ClCompile Include="Character\Animation\CharacterSkeleton.cpp" />
     <ClCompile Include="Movement\SpinnerFunctionality.cpp" />
     <ClCompile Include="Designers\LevelDesigner\LevelDesigner.cpp" />
     <ClCompile Include="Character\CharacterFunctionality.cpp" />
@@ -289,6 +293,9 @@
     <ProjectReference Include="..\WonderMake\WonderMake.vcxproj">
       <Project>{bb396f7d-1134-4dae-b855-1ca77a2b0c04}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Character\Animation\Character Animation Design.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

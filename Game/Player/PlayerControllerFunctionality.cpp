@@ -62,7 +62,7 @@ void PlayerControllerFunctionality::UpdateMovement()
 
 void PlayerControllerFunctionality::OnDeath()
 {
-	Get<SpriteRenderingFunctionality>().SetTexture("Textures/deadPlayer.png");
+	//Get<SpriteRenderingFunctionality>().SetTexture("Textures/deadPlayer.png");
 
 	WmDispatchMessage(SPlayerDiedMessage());
 }

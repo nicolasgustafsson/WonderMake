@@ -12,6 +12,7 @@
 #include "Functionalities/TransformFunctionality.h"
 #include "Functionalities/OwnerFunctionality.h"
 #include "Functionalities/ImpulseFunctionality.h"
+#include "Character/Animation/CharacterAnimationFunctionality.h"
 
 struct SCoolImpulse
 	: public SObjectImpulse<SCoolImpulse>
@@ -31,8 +32,8 @@ class PlayerControllerFunctionality
 		MovementInputFunctionality, DefaultMovementFunctionality,
 		OwnerFunctionality, MeleeWeaponUserFunctionality,
 		ActionFunctionality, CollisionFunctionality,
-		CharacterFunctionality, ImpulseFunctionality,
-		SpriteRenderingFunctionality>
+		CharacterFunctionality, ImpulseFunctionality, CharacterAnimationFunctionality
+		/*SpriteRenderingFunctionality*/>
 	, public Debugged
 {
 public:

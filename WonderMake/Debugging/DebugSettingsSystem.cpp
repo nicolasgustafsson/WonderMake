@@ -3,7 +3,7 @@
 #include "Imgui/JsonInspector.h"
 
 DebugSettingsSystem::DebugSettingsSystem()
-	: Debugged("DebugSettings")
+	: Debugged("Debug Settings")
 {
 	std::ifstream debugSettingsFile("debugSettings.json", std::fstream::app);
 
@@ -13,7 +13,7 @@ DebugSettingsSystem::DebugSettingsSystem()
 	if(json::accept(fileContents))
 		mySettings = json::parse(fileContents);
 
-	SetDebugValue<bool>("DebugWindows/DebugSettings", true);
+	SetDebugValue<bool>("Debug Windows/Debug Settings", true);
 }
 
 void DebugSettingsSystem::SaveSettings()

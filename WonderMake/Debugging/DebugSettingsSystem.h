@@ -11,7 +11,6 @@ public:
 
 	void SaveSettings();
 
-
 	template<typename TSettingType>
 	TSettingType GetOrCreateDebugValue(const std::string aSettingName, TSettingType aDefault);
 

@@ -75,7 +75,6 @@ void JsonInspector::InspectObject(nlohmann::json::iterator aElementIterator)
 	ImGui::NextColumn();
 	ImGui::NextColumn();
 
-
 	if (node_open)
 	{
 		for (nlohmann::json::iterator childElement = element.begin(); childElement != element.end(); childElement++)
@@ -93,7 +92,7 @@ void JsonInspector::InspectInteger(nlohmann::json::iterator aElementIterator)
 	i64& ref = element.get_ref<i64&>();
 
 	i32 integer = static_cast<i32>(ref);
-	ImGui::InputInt("##value", &integer, 1.0f);
+	ImGui::InputInt("##value", &integer, 1);
 	ref = integer;
 }
 
@@ -106,7 +105,7 @@ void JsonInspector::InspectString(nlohmann::json::iterator aElementIterator)
 	ImGui::InputText("##value", &ref[0], ref.capacity());
 }
 
-void JsonInspector::InspectTheUninspectable(nlohmann::json::iterator aElementIterator)
+void JsonInspector::InspectTheUninspectable(nlohmann::json::iterator /*aElementIterator*/)
 {
 	ImGui::Text("Uninspectable");
 }

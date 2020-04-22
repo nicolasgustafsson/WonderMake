@@ -51,6 +51,14 @@ SVector2f TransformFunctionality::GetForwardVector() const noexcept
 	return forward;
 }
 
+SVector2f TransformFunctionality::GetRightVector() const noexcept
+{
+	SVector2f forward = GetForwardVector();
+
+	forward.Rotate(-Constants::HalfPi);
+	return forward;
+}
+
 void TransformFunctionality::Move(const SVector2f aMovement) noexcept
 {
 	Get<STransformComponent>().Position += aMovement;

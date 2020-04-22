@@ -14,12 +14,15 @@ struct SFootAnimation
 
 	std::optional<SStep> CurrentStep;
 	SVector2f WorldLocation = { 0.f, 0.f };
+	f32 RightOffset;
 };
 
 struct SCharacterSkeletonComponent : public SComponent
 {
 	SFootAnimation LeftFoot;
 	SFootAnimation RightFoot;
+
+	SFootAnimation* NextFoot = nullptr;
 };
 
 class CharacterSkeletonFunctionality : public Functionality<CharacterSkeletonFunctionality, TransformFunctionality, CharacterFunctionality, DefaultMovementFunctionality, SCharacterSkeletonComponent>
@@ -41,5 +44,15 @@ private:
 
 	void BeginStep(SFootAnimation& aFoot);
 	void UpdateStep(SFootAnimation& aFoot);
+
+	void FinishStep(SFootAnimation& aFoot);
+
+	struct SAnimConfig
+	{
+		static constexpr const f32 FootOffset = 10.f;
+		static constexpr const f32 RequiredDistanceForStep = 25.f;
+		static constexpr const f32 DistanceInFrontOfCharacterForStepByVelocity = 0.15f;
+		static constexpr const f32 StepSpeed = 10.f;
+	};
 };
 

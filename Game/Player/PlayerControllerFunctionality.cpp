@@ -5,7 +5,7 @@
 
 
 PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
-	: Super(aOwner)
+	: Super(aOwner), Debugged("Player Controller")
 {
 	CollisionFunctionality& collision = Get<CollisionFunctionality>();
 	auto& collider = collision.AddSphereCollider(*this, SVector2f::Zero(), 10.f);
@@ -33,8 +33,8 @@ void PlayerControllerFunctionality::Tick() noexcept
 	else
 		Get<MovementInputFunctionality>().SetMovementInput({0.f, 0.f});
 
-	if (myInputSystem->IsMouseButtonPressed(EMouseButton::Left))
-		Get<MeleeWeaponUserFunctionality>().SwingWeapon();
+	//if (myInputSystem->IsMouseButtonPressed(EMouseButton::Left))
+	//	Get<MeleeWeaponUserFunctionality>().SwingWeapon();
 
 	WmDrawDebugLine(Get<TransformFunctionality>().GetPosition(), myInputSystem->GetMousePositionInWorld(), SColor::White);
 }

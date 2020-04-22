@@ -26,6 +26,7 @@ MessageCallback([[maybe_unused]] GLenum source,
 Renderer::Renderer() noexcept
 	: myRenderTarget({ {1600, 900}, false })
 	, myCopyPass(std::filesystem::current_path() / "Shaders/Fragment/Copy.frag")
+	, Debugged("Renderer")
 {
 	glEnable(GL_DEBUG_OUTPUT);
 	

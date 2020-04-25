@@ -51,6 +51,7 @@
     <ClCompile Include="Utilities\OS.cpp" />
     <ClCompile Include="Randomizer\Randomizer.cpp" />
     <ClCompile Include="OpenGLFacade.cpp" />
+    <ClCompile Include="Program\GlfwFacade.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -200,6 +201,7 @@
     <ClInclude Include="Randomizer\Randomizer.h" />
     <ClInclude Include="Functionalities\BaseFunctionality.h" />
     <ClInclude Include="OpenGLFacade.h" />
+    <ClInclude Include="Program\GlfwFacade.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

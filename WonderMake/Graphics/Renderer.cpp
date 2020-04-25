@@ -5,6 +5,7 @@
 #include "EngineUniformBuffer.h"
 #include "Camera/Camera.h"
 #include <GLFW/glfw3.h>
+#include "Program/GlfwFacade.h"
 
 void GLAPIENTRY
 MessageCallback([[maybe_unused]] GLenum source,
@@ -45,7 +46,9 @@ void Renderer::SetViewportSize(const SVector2<int> WindowSize)
 
 void Renderer::StartFrame()
 {
-	glfwSwapBuffers(myWindowPtr->myGlfwWindow);
+	SystemPtr<GlfwFacade> glfw;
+
+	glfw->SwapBuffers(myWindowPtr->myGlfwWindow);
 
 	myEngineUniformBufferPtr->Update();
 
@@ -82,9 +85,10 @@ void Renderer::Debug()
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	
 	ImGui::Begin("Game Window");
+	SystemPtr<GlfwFacade> glfw;
 
 	i32 windowX, windowY;
-	glfwGetWindowPos(myWindowPtr->myGlfwWindow, &windowX, &windowY);
+	glfw->GetWindowPos(myWindowPtr->myGlfwWindow, &windowX, &windowY);
 	myCameraPtr->SetImguiWindowOffset(
 		{ ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x - windowX
 		, ImGui::GetWindowContentRegionMin().y + ImGui::GetWindowPos().y - windowY });

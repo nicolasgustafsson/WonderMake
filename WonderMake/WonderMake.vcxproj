@@ -200,6 +200,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Program\GlfwFacade.cpp" />
     <ClCompile Include="OpenGLFacade.cpp" />
     <ClCompile Include="Utilities\BezierCurve.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
@@ -258,6 +259,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Functionalities\BaseFunctionality.h" />
+    <ClInclude Include="Program\GlfwFacade.h" />
     <ClInclude Include="OpenGLFacade.h" />
     <ClInclude Include="Utilities\BezierCurve.h" />
     <ClInclude Include="Camera\Camera.h" />

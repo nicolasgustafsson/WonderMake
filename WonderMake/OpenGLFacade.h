@@ -12,15 +12,15 @@ public:
 	void SetBlendFunction(const GLenum aSourceFactor, const GLenum aDestinationFactor);
 
 	void SetClearColor(const SColor aColor);
-	void Clear(GLbitfield aMask);
+	void Clear(const GLbitfield aMask);
 	
-	u32 GenerateFramebuffer();
+	[[nodiscard]] u32 GenerateFramebuffer();
 	void DeleteFramebuffer(const u32 aFramebuffer);
 	void BindFramebuffer(const GLenum aTarget, const u32 aFramebuffer);
-	GLenum CheckFramebufferStatus(const GLenum aTarget);
-	GLenum CheckNamedFramebufferStatus(const GLenum aTarget, const u32 aFramebuffer);
+	[[nodiscard]] GLenum CheckFramebufferStatus(const GLenum aTarget);
+	[[nodiscard]] GLenum CheckNamedFramebufferStatus(const GLenum aTarget, const u32 aFramebuffer);
 
-	u32 GenerateTexture();
+	[[nodiscard]] u32 GenerateTexture();
 	void DeleteTexture(const u32 aFramebuffer);
 	void BindTexture(const GLenum aTarget, const u32 aTexture);
 	void UploadTextureData(const GLenum aTarget, const i32 aLevelOfDetail, const i32 aInternalFormat, const i32 aWidth, const i32 aHeight, const GLenum aPixelDataFormat, const GLenum aPixelDataType, const void* aPixelData);
@@ -30,14 +30,14 @@ public:
 
 	void SetFramebufferTexture(const GLenum aAttachment, const GLenum aTextureTarget, const u32 aTexture);
 
-	u32 GenerateRenderbuffer();
+	[[nodiscard]] u32 GenerateRenderbuffer();
 	void DeleteRenderbuffer(const u32 aRenderbuffer);
 	void BindRenderbuffer(const u32 aRenderBuffer);
 	void SetRenderbufferStorageParameters(const GLenum aInternalFormat, const i32 aWidth, const i32 aHeight);
 
 	void AttachRenderbufferToFramebuffer(const GLenum aAttachment, const u32 aRenderbuffer);
 
-	u32 GenerateBuffer();
+	[[nodiscard]] u32 GenerateBuffer();
 	void DeleteBuffer(const u32 aBuffer);
 	void BindBuffer(const GLenum aTarget, const u32 aBuffer);
 	void BindBufferToSlot(const GLenum aTarget, const u32 aIndex, const u32 aBuffer);
@@ -47,27 +47,27 @@ public:
 	void DefineVertexAttributeData(const u32 aIndex, const i32 aSize, const GLenum aType, const bool aNormalized, const i32 aStride, const void* aOffset);
 	void EnableVertexAttributeArray(const u32 aIndex);
 
-	u32 GenerateVertexArray();
+	[[nodiscard]] u32 GenerateVertexArray();
 	void DeleteVertexArray(const u32 aVertexArray);
 	void BindVertexArray(const u32 aVertexArray);
 
 	void DrawArrays(const GLenum aDrawMode, const i32 aFirstIndex, const i32 aAmount);
 
-	u32 CreateShader(const GLenum aShaderType);
+	[[nodiscard]] u32 CreateShader(const GLenum aShaderType);
 	void DeleteShader(const u32 aShader);
 	void SetShaderSource(const u32 aShader, const char* aSource);
 	void CompileShader(const u32 aShader);
-	i32 GetShaderParameter(const u32 aShader, const GLenum aParameterName);
-	std::string GetShaderInfoLog(const u32 aShader);
+	[[nodiscard]] i32 GetShaderParameter(const u32 aShader, const GLenum aParameterName);
+	[[nodiscard]] std::string GetShaderInfoLog(const u32 aShader);
 
-	u32 CreateShaderProgram();
+	[[nodiscard]] u32 CreateShaderProgram();
 	void DeleteShaderProgram(const u32 aShaderProgram);
 	void AttachShaderToProgram(const u32 aShaderProgram, const u32 aShader);
 	void LinkShaderProgram(const u32 aShaderProgram);
 	void UseShaderProgram(const u32 aShaderProgram);
-	i32 GetShaderProgramParameter(const u32 aShaderProgram, const GLenum aParameterName);
-	std::string GetShaderProgramInfoLog(const u32 aShaderProgram);
-	i32 GetUniformVariableLocation(const u32 aShaderProgram, const char* aVariableName);
+	[[nodiscard]] i32 GetShaderProgramParameter(const u32 aShaderProgram, const GLenum aParameterName);
+	[[nodiscard]] std::string GetShaderProgramInfoLog(const u32 aShaderProgram);
+	[[nodiscard]] i32 GetUniformVariableLocation(const u32 aShaderProgram, const char* aVariableName);
 
 	template<typename TVariableType>
 	void SetUniformVariable(const u32 aLocation, TVariableType aProperty);

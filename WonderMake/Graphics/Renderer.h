@@ -10,6 +10,7 @@
 #include "Message/MessageSubscriber.h"
 #include "Utilities/Debugging/Debugged.h"
 #include "Debugging/DebugLineDrawer.h"
+#include "OpenGLFacade.h"
 
 class Renderer 
 	: public System
@@ -33,6 +34,7 @@ private:
 	SystemPtr<EngineUniformBuffer> myEngineUniformBufferPtr;
 	SystemPtr<Window> myWindowPtr;
 	SystemPtr<DebugLineDrawer> myLineDrawer;
+	SystemPtr<OpenGLFacade> myOpenGLInterface;
 
 	const SColor ClearColor = SColor::CornflowerBlue;
 };

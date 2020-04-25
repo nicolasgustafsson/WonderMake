@@ -5,12 +5,15 @@
 #include "Resources/ResourceSystem.h"
 #include "System/SystemPtr.h"
 #include "Texture.h"
+#include "OpenGLFacade.h"
 
 ShaderProgram::ShaderProgram(const std::filesystem::path& VertexShaderPath, const std::filesystem::path& FragmentShaderPath, const std::filesystem::path& GeometryShaderPath)
 {
 	SystemPtr<ResourceSystem<Shader<EShaderType::Vertex>>> rmVertex;
 	SystemPtr<ResourceSystem<Shader<EShaderType::Fragment>>> rmFragment;
-	
+
+	SystemPtr<OpenGLFacade> openGL;
+
 	myVertexShader = rmVertex->GetResource(VertexShaderPath);
 	myFragmentShader = rmFragment->GetResource(FragmentShaderPath);
 
@@ -21,40 +24,46 @@ ShaderProgram::ShaderProgram(const std::filesystem::path& VertexShaderPath, cons
 		myGeometryShader.emplace(rmGeometry->GetResource(GeometryShaderPath));
 	}
 
-	myProgramHandle = glCreateProgram();
+	myProgramHandle = openGL->CreateShaderProgram();
 
-	glAttachShader(myProgramHandle, myVertexShader->ShaderHandle);
-	glAttachShader(myProgramHandle, myFragmentShader->ShaderHandle);
+	openGL->AttachShaderToProgram(myProgramHandle, myVertexShader->myShaderHandle);
+	openGL->AttachShaderToProgram(myProgramHandle, myFragmentShader->myShaderHandle);
 
 	if (myGeometryShader)
 	{
-		glAttachShader(myProgramHandle, (*myGeometryShader)->ShaderHandle);
+		openGL->AttachShaderToProgram(myProgramHandle, (*myGeometryShader)->myShaderHandle);
 	}
 
-	glLinkProgram(myProgramHandle);
+	openGL->LinkShaderProgram(myProgramHandle);
 
-	i32 Success;
-	char ErrorMessage[512];
-	glGetProgramiv(myProgramHandle, GL_LINK_STATUS, &Success);
+	const i32 success = openGL->GetShaderProgramParameter(myProgramHandle, GL_LINK_STATUS);
 
-	if (!Success)
+	if (!success)
 	{
-		glGetProgramInfoLog(myProgramHandle, 512, nullptr, ErrorMessage);
+		const std::string errorMessage = openGL->GetShaderProgramInfoLog(myProgramHandle);
 
-		WmLog(TagError, "Error: Shader program linking failed: ", ErrorMessage);
+		WmLog(TagError, "Error: Shader program linking failed: ", errorMessage);
 
-		glDeleteProgram(myProgramHandle);
+		openGL->DeleteShaderProgram(myProgramHandle);
+		myProgramHandle = 0;
 	}
 }
 
 ShaderProgram::~ShaderProgram()
 {
 	if (myProgramHandle)
-		glDeleteProgram(myProgramHandle);
+	{
+		SystemPtr<OpenGLFacade> openGL;
+		openGL->DeleteShaderProgram(myProgramHandle);
+		myProgramHandle = 0;
+	}
 }
 
 void ShaderProgram::Activate()
 {
 	if (myProgramHandle)
-		glUseProgram(myProgramHandle);
+	{
+		SystemPtr<OpenGLFacade> openGL;
+		openGL->UseShaderProgram(myProgramHandle);
+	}
 }

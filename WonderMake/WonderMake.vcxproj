@@ -200,6 +200,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="OpenGLFacade.cpp" />
     <ClCompile Include="Utilities\BezierCurve.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Collision\ColliderDebug.cpp" />
@@ -256,6 +257,8 @@
     <ClCompile Include="Utilities\OS.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Functionalities\BaseFunctionality.h" />
+    <ClInclude Include="OpenGLFacade.h" />
     <ClInclude Include="Utilities\BezierCurve.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Collision\ColliderDebug.h" />

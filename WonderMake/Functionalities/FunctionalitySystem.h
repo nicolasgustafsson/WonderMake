@@ -1,6 +1,7 @@
 #pragma once
 #include "Utilities/plf_colony.h"
 #include "System/System.h"
+#include "BaseFunctionality.h"
 
 class Object;
 

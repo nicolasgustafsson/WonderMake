@@ -27,19 +27,19 @@ Renderer::Renderer() noexcept
 	: myRenderTarget({ {1600, 900}, false })
 	, myCopyPass(std::filesystem::current_path() / "Shaders/Fragment/Copy.frag")
 {
-	glEnable(GL_DEBUG_OUTPUT);
-	
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE); additive
+	myOpenGLInterface->Enable(GL_DEBUG_OUTPUT);
+	myOpenGLInterface->Enable(GL_BLEND);
 
-	glDebugMessageCallback(MessageCallback, nullptr);
+	myOpenGLInterface->SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//myOpenGLInterface->SetBlendFunction(GL_SRC_ALPHA, GL_ONE); additive
+
+	myOpenGLInterface->SetDebugMessageCallback(MessageCallback);
 	myCameraPtr->SetViewportSize({1600, 900});
 }
 
 void Renderer::SetViewportSize(const SVector2<int> WindowSize)
 {
-	glViewport(0, 0, WindowSize.X, WindowSize.Y);
+	myOpenGLInterface->SetViewportSize(WindowSize);
 	myCameraPtr->SetViewportSize(WindowSize);
 }
 
@@ -52,18 +52,18 @@ void Renderer::StartFrame()
 	//first pass
 	myRenderTarget.BindAsTarget();
 
-	glClearColor(ClearColor.R, ClearColor.G, ClearColor.B, ClearColor.A);
-	glClear(GL_COLOR_BUFFER_BIT);
+	myOpenGLInterface->SetClearColor(ClearColor);
+	myOpenGLInterface->Clear(GL_COLOR_BUFFER_BIT);
 }
 
 void Renderer::FinishFrame()
 {
 	myLineDrawer->Render();
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	myOpenGLInterface->BindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	myOpenGLInterface->SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+	myOpenGLInterface->Clear(GL_COLOR_BUFFER_BIT);
 
 	if constexpr (!Constants::IsDebugging)
 	{
@@ -98,8 +98,6 @@ void Renderer::Debug()
 #pragma warning(default: 4312 26493)
 
 	myCameraPtr->SetViewportSize(ViewportSize);
-
-
 
 	ImGui::End();
 }

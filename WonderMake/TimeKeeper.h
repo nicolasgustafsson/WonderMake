@@ -8,7 +8,7 @@ class TimeKeeper
 	, public Debugged
 {
 public:
-	TimeKeeper() = default;
+	TimeKeeper() : Debugged("Time Keeper") {}
 	~TimeKeeper() = default;
 
 	f32 Update() noexcept;

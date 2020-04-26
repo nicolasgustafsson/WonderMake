@@ -1,19 +1,8 @@
 #pragma once
 #include "Object/Dependency.h"
+#include "BaseFunctionality.h"
 
 class Object;
-class _BaseFunctionality
-	: public NonCopyable
-{
-public:
-	_BaseFunctionality() = default;
-
-	virtual ~_BaseFunctionality() = default;
-
-	virtual void Destroy([[maybe_unused]]Object& aObject) = 0;
-
-	void Tick() noexcept {}
-};
 
 //[Nicos]: Describes a functionality for an object. Template params are 1. Type that is self type and 2. Dependencies.
 template<typename TSelfType, typename ... TDependencies>

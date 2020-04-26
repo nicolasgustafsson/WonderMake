@@ -9,6 +9,7 @@
 #include "System/SystemPtr.h"
 #include "TimeKeeper.h"
 #include "Input/InputSystem.h"
+#include "Debugging/DebugSettingsSystem.h"
 
 class Program
 {
@@ -39,6 +40,7 @@ private:
 	SystemPtr<Camera> myCameraPtr;
 	SystemPtr<TimeKeeper> myTimeKeeperPtr;
 	SystemPtr<InputSystem> myInputSystem;
+	SystemPtr<DebugSettingsSystem> myDebugSettingsPtr;
 
 	static constexpr SVector2<i32> WindowSize = {1600, 900};
 };

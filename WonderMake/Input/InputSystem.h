@@ -10,6 +10,7 @@ class InputSystem
 	, public Debugged
 {
 public:
+	InputSystem() : Debugged("Input") {}
 	void Update() noexcept;
 
 	void UpdateKeyboard() noexcept;

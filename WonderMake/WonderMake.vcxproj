@@ -230,6 +230,7 @@
     <ClCompile Include="Logging\ConsoleLogger.cpp" />
     <ClCompile Include="Functionalities\SpriteRenderingFunctionality.cpp" />
     <ClCompile Include="Object\Object.cpp" />
+    <ClCompile Include="Policies\Scheduler.cpp" />
     <ClCompile Include="Program\Engine.cpp" />
     <ClCompile Include="Message\DispatchableBuffer.cpp" />
     <ClCompile Include="Graphics\RenderTarget.cpp" />
@@ -263,6 +264,7 @@
   <ItemGroup>
     <ClInclude Include="Debugging\DebugSettingsSystem.h" />
     <ClInclude Include="Imgui\JsonInspector.h" />
+    <ClInclude Include="Policies\SystemId.h" />
     <ClInclude Include="Utilities\BezierCurve.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Collision\ColliderDebug.h" />
@@ -306,6 +308,8 @@
     <ClInclude Include="Functionalities\Functionality.h" />
     <ClInclude Include="Functionalities\FunctionalitySystem.h" />
     <ClInclude Include="Object\Object.h" />
+    <ClInclude Include="Policies\Policy.h" />
+    <ClInclude Include="Policies\Scheduler.h" />
     <ClInclude Include="Program\Engine.h" />
     <ClInclude Include="Graphics\VertexAttributes.h" />
     <ClInclude Include="Message\DispatchableBuffer.h" />

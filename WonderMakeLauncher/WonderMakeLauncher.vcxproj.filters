@@ -4,41 +4,11 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Registry\*.cpp" />
-    <ClCompile Include="Registry\*.cpp" />
-    <ClCompile Include="Registry\*.cpp" />
-    <ClCompile Include="Registry\*.cpp" />
-    <ClCompile Include="Registry\*.cpp" />
-    <ClCompile Include="Registry\*.cpp" />
-    <ClCompile Include="Registry\*.cpp" />
-    <ClCompile Include="Registry\*.cpp" />
-    <ClCompile Include="Registry\*.cpp" />
-    <ClCompile Include="Registry\*.cpp" />
-    <ClCompile Include="Registry\*.cpp" />
-    <ClCompile Include="Registry\*.cpp" />
-    <ClCompile Include="Registry\*.cpp" />
-    <ClCompile Include="Registry\*.cpp" />
-    <ClCompile Include="Registry\*.cpp" />
-    <ClCompile Include="Registry\*.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Registry\*.h" />
-    <ClInclude Include="Registry\*.h" />
-    <ClInclude Include="Registry\*.h" />
-    <ClInclude Include="Registry\*.h" />
-    <ClInclude Include="Registry\*.h" />
-    <ClInclude Include="Registry\*.h" />
-    <ClInclude Include="Registry\*.h" />
-    <ClInclude Include="Registry\*.h" />
-    <ClInclude Include="Registry\*.h" />
-    <ClInclude Include="Registry\*.h" />
-    <ClInclude Include="Registry\*.h" />
-    <ClInclude Include="Registry\*.h" />
-    <ClInclude Include="Registry\*.h" />
-    <ClInclude Include="Registry\*.h" />
-    <ClInclude Include="Registry\*.h" />
-    <ClInclude Include="Registry\*.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="registryConfig.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Registry\*.h" />
   </ItemGroup>
 </Project>

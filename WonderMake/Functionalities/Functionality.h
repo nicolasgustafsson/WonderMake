@@ -1,6 +1,6 @@
 #pragma once
 #include "Object/Dependency.h"
-#include "BaseFunctionality.h"
+#include "Functionalities/BaseFunctionality.h"
 
 class Object;
 

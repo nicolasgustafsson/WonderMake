@@ -3,6 +3,7 @@
 #include "Window.h"
 #include "GLFW/glfw3.h"
 #include "Imgui/ImguiInclude.h"
+#include "Program/GlfwFacade.h"
 
 ImguiWrapper::ImguiWrapper()
 {
@@ -39,6 +40,9 @@ void ImguiWrapper::EndFrame()
 	GLFWwindow* backup_current_context = glfwGetCurrentContext();
 	ImGui::UpdatePlatformWindows();
 	ImGui::RenderPlatformWindowsDefault();
-	glfwMakeContextCurrent(backup_current_context);
+
+	SystemPtr<GlfwFacade> glfw;
+
+	glfw->MakeContextCurrent(backup_current_context);
 }
 

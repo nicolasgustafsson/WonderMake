@@ -3,6 +3,7 @@
 #include "VertexBuffer.h"
 
 #include "Utilities/Utility.h"
+#include "OpenGLFacade.h"
 
 template<EVertexAttribute TAttribute>
 class SVertexAttributeContainer final
@@ -55,6 +56,7 @@ class VertexBufferArray final : NonCopyable
 {
 public:
 	VertexBufferArray();
+	~VertexBufferArray();
 	VertexBufferArray(const u32 aSize);
 
 	void Render();
@@ -68,13 +70,21 @@ public:
 private:
 	std::tuple<SVertexAttributeContainer<TAttributes>...> myAttributeData;
 
-	u32 myVAO;
+	u32 myVao;
 };
+
+template<EVertexAttribute... TAttributes>
+VertexBufferArray<TAttributes...>::~VertexBufferArray()
+{
+	SystemPtr<OpenGLFacade> openGL;
+	openGL->DeleteVertexArray(myVao);
+}
 
 template<EVertexAttribute... TAttributes>
 VertexBufferArray<TAttributes...>::VertexBufferArray()
 {
-	glGenVertexArrays(1, &myVAO);
+	SystemPtr<OpenGLFacade> openGL;
+	myVao = openGL->GenerateVertexArray();
 
 	(std::get<SVertexAttributeContainer<TAttributes>>(myAttributeData).SetVertexAttributeIndex
 		(Utility::TupleIndex<SVertexAttributeContainer<TAttributes>, decltype(myAttributeData)>::Index), ...);
@@ -90,7 +100,8 @@ VertexBufferArray<TAttributes...>::VertexBufferArray(const u32 aSize)
 template<EVertexAttribute... TAttributes>
 void VertexBufferArray<TAttributes...>::Render()
 {
-	glBindVertexArray(myVAO);
+	SystemPtr<OpenGLFacade> openGL;
+	openGL->BindVertexArray(myVao);
 
 	(std::get<SVertexAttributeContainer<TAttributes>>(myAttributeData).Update(), ...);
 }

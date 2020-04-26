@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <algorithm>
 #include "Graphics/Renderer.h"
+#include "Program/GlfwFacade.h"
 
 void InputSystem::Update() noexcept
 {
@@ -14,9 +15,11 @@ void InputSystem::Update() noexcept
 
 void InputSystem::UpdateKeyboard() noexcept
 {
+	SystemPtr<GlfwFacade> glfw;
+
 	for (u32 i = 0; i < KeyboardKeyCount; i++)
 	{
-		const i32 glfwKeyState = glfwGetKey(myWindowSystemPtr->myGlfwWindow, InputUtility::GetGlfwKey(static_cast<EKeyboardKey>(i)));
+		const i32 glfwKeyState = glfw->GetKey(myWindowSystemPtr->myGlfwWindow, InputUtility::GetGlfwKey(static_cast<EKeyboardKey>(i)));
 
 		const bool bIsPressed = glfwKeyState == GLFW_PRESS;
 
@@ -28,9 +31,11 @@ void InputSystem::UpdateKeyboard() noexcept
 
 void InputSystem::UpdateMouse() noexcept
 {
+	SystemPtr<GlfwFacade> glfw;
+
 	for (u32 i = 0; i < MouseButtonCount; i++)
 	{
-		const i32 glfwKeyState = glfwGetMouseButton(myWindowSystemPtr->myGlfwWindow, InputUtility::GetGlfwMouseButton(static_cast<EMouseButton>(i)));
+		const i32 glfwKeyState = glfw->GetMouseButton(myWindowSystemPtr->myGlfwWindow, InputUtility::GetGlfwMouseButton(static_cast<EMouseButton>(i)));
 
 		const bool bIsPressed = glfwKeyState == GLFW_PRESS;
 
@@ -43,7 +48,9 @@ void InputSystem::UpdateMouse() noexcept
 void InputSystem::UpdateGamepad() noexcept
 {
 	i32 gamepadButtonCount;
-	const u8* inputArray = glfwGetJoystickButtons(0, &gamepadButtonCount);
+	SystemPtr<GlfwFacade> glfw;
+
+	const u8* inputArray = glfw->GetJoystickButtons(0, &gamepadButtonCount);
 
 	//no gamepad present
 	if (gamepadButtonCount == 0)
@@ -69,8 +76,9 @@ SVector2f InputSystem::GetMousePositionInWorld() const noexcept
 SVector2f InputSystem::GetMousePositionOnWindow() const noexcept
 {
 	f64 x, y;
+	SystemPtr<GlfwFacade> glfw;
 
-	glfwGetCursorPos(myWindowSystemPtr->myGlfwWindow, &x, &y);
+	glfw->GetCursorPos(myWindowSystemPtr->myGlfwWindow, &x, &y);
 
 	return { static_cast<f32>(x), static_cast<f32>(y) };
 }

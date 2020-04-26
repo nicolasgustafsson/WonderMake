@@ -12,14 +12,14 @@ BuffTimedTickProperty::BuffTimedTickProperty(const f32 aTimeBetweenTicks)
 
 void BuffTimedTickProperty::ApplyOnBuff(BuffInstance& aBuff)
 {
-	BuffTimedTickPropertyInstance& instance = *reinterpret_cast<BuffTimedTickPropertyInstance*>((aBuff.myPropertyInstances.emplace(std::make_unique<BuffTimedTickPropertyInstance>(*this, aBuff.myCharacter)))->get());
+	BuffTimedTickPropertyInstance& instance = *static_cast<BuffTimedTickPropertyInstance*>((aBuff.myPropertyInstances.emplace(std::make_unique<BuffTimedTickPropertyInstance>(*this, aBuff.myCharacter)))->get());
 	instance.myTimeUntilTick = myTimeBetweenTicks;
 }
 
 void BuffTimedTickProperty::Tick(BuffBlueprintPropertyInstance& aBuffPropertyInstance)
 {
 	const f32 deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
-	BuffTimedTickPropertyInstance& instance = *reinterpret_cast<BuffTimedTickPropertyInstance*>(&aBuffPropertyInstance);
+	BuffTimedTickPropertyInstance& instance = *static_cast<BuffTimedTickPropertyInstance*>(&aBuffPropertyInstance);
 
 	instance.myTimeUntilTick -= deltaTime;
 
@@ -37,7 +37,7 @@ void BuffTimedTickProperty::Inspect() const
 
 void BuffTimedTickProperty::InspectInstance(BuffBlueprintPropertyInstance& aBuffPropertyInstance) const
 {
-	BuffTimedTickPropertyInstance& instance = *reinterpret_cast<BuffTimedTickPropertyInstance*>(&aBuffPropertyInstance);
+	BuffTimedTickPropertyInstance& instance = *static_cast<BuffTimedTickPropertyInstance*>(&aBuffPropertyInstance);
 
 	std::string timeUntilTickString = ("Time ") + std::to_string(instance.myTimeUntilTick) + "/" + std::to_string(myTimeBetweenTicks);
 

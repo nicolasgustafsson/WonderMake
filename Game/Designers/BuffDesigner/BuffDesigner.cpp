@@ -7,6 +7,12 @@
 #include "Designers/EffectDesigner/EffectDesigner.h"
 #include "Character/Effects/CharacterEffect.h"
 
+BuffDesigner::BuffDesigner() 
+	: Debugged("Buff Designer")
+{
+
+}
+
 BuffBlueprint& BuffDesigner::DesignBuff(SBuffRequirements aBuffRequirements)
 {
 	SBuffDesign design;

@@ -10,14 +10,14 @@ void BuffLifetimeProperty::ApplyOnBuff(BuffInstance& aBuff)
 void BuffLifetimeProperty::Tick(BuffBlueprintPropertyInstance& aBuffPropertyInstance)
 {
 	const f32 deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
-	BuffLifetimePropertyInstance& instance = *reinterpret_cast<BuffLifetimePropertyInstance*>(&aBuffPropertyInstance);
+	BuffLifetimePropertyInstance& instance = *static_cast<BuffLifetimePropertyInstance*>(&aBuffPropertyInstance);
 
 	instance.myLifeLeft -= deltaTime;
 }
 
 bool BuffLifetimeProperty::BuffShouldDie(const BuffBlueprintPropertyInstance& aBuffPropertyInstance) const
 {
-	const BuffLifetimePropertyInstance& instance = *reinterpret_cast<const BuffLifetimePropertyInstance*>(&aBuffPropertyInstance);
+	const BuffLifetimePropertyInstance& instance = *static_cast<const BuffLifetimePropertyInstance*>(&aBuffPropertyInstance);
 	return instance.myLifeLeft < 0.f;
 }
 
@@ -28,7 +28,7 @@ void BuffLifetimeProperty::Inspect() const
 
 void BuffLifetimeProperty::InspectInstance(BuffBlueprintPropertyInstance& aBuffPropertyInstance) const
 {
-	const BuffLifetimePropertyInstance& instance = *reinterpret_cast<const BuffLifetimePropertyInstance*>(&aBuffPropertyInstance);
+	const BuffLifetimePropertyInstance& instance = *static_cast<const BuffLifetimePropertyInstance*>(&aBuffPropertyInstance);
 
 	std::string timeLeftTickString = ("Time left = ") + std::to_string(instance.myLifeLeft) + "/" + std::to_string(myLifeTime);
 

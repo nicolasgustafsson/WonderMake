@@ -32,6 +32,7 @@ struct SBuffDesign
 class BuffDesigner : public System, public Debugged
 {
 public:
+	BuffDesigner();
 	BuffBlueprint& DesignBuff(SBuffRequirements aBuffRequirements = {});
 
 private:

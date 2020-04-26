@@ -12,7 +12,7 @@ struct SMovementInputComponent
 };
 
 class MovementInputFunctionality :
-	public Functionality<MovementInputFunctionality, SMovementInputComponent, ImpulseFunctionality>
+	public Functionality<MovementInputFunctionality, SMovementInputComponent>
 {
 public:
 	MovementInputFunctionality(Object& aOwner);

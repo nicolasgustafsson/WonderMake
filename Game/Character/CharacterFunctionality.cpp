@@ -11,10 +11,20 @@ CharacterFunctionality::CharacterFunctionality(Object& aOwner) noexcept
 			const SVector2f selfPosition = Get<TransformFunctionality>().GetPosition();
 			const SVector2f otherPosition = aOther.Get<TransformFunctionality>().GetPosition();
 
-			SVector2f direction = (otherPosition - selfPosition).GetNormalized();
+			const SVector2f direction = (otherPosition - selfPosition).GetNormalized();
 			const f32 distance = selfPosition.DistanceTo(otherPosition);
 			aOther.Get<DefaultMovementFunctionality>().AddForce(direction * 100.f * (30.f - distance) * 0.5f);
 		});
+
+	Get<CharacterStatsFunctionality>().Get<SCharacterStatsComponent>().Character = this;
+}
+
+void CharacterFunctionality::Heal(const i32 aHealAmount)
+{
+	if (IsDead())
+		return;
+
+	Get<SHealthComponent>().Health += aHealAmount;
 }
 
 void CharacterFunctionality::Damage(const i32 aDamage)
@@ -52,3 +62,14 @@ EFaction CharacterFunctionality::GetFaction() const noexcept
 {
 	return Get<SFactionComponent>().Faction;
 }
+
+void CharacterFunctionality::Inspect()
+{
+	auto& healthComponent = Get<SHealthComponent>();
+	std::string healthString = ("Health ") + std::to_string(healthComponent.Health) + "/" + std::to_string(healthComponent.MaxHealth);
+
+	ImGui::ProgressBar(static_cast<f32>(healthComponent.Health) / static_cast<f32>(healthComponent.MaxHealth), ImVec2(-1.f, 0.f), healthString.c_str());
+
+	Get<CharacterBuffsFunctionality>().Inspect();
+}
+

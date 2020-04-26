@@ -38,6 +38,8 @@ private:
 
 	virtual void Debug() override;
 
+	bool ShouldCaptureMouseInput() const noexcept;
+
 	std::array<EInputItemState, KeyboardKeyCount> myKeyboardKeyStates		{ EInputItemState::Up };
 	std::array<EInputItemState, MouseButtonCount> myMouseButtonStates		{ EInputItemState::Up };
 	std::array<EInputItemState, GamepadButtonCount> myGamepadButtonStates	{ EInputItemState::Up };

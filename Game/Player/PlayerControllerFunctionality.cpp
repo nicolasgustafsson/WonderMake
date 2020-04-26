@@ -11,8 +11,7 @@ PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
 	auto& collider = collision.AddSphereCollider(*this, SVector2f::Zero(), 10.f);
 
 	Get<CharacterFunctionality>().SetFaction(EFaction::Player);
-
-	Get<DefaultMovementFunctionality>().Get<SDefaultMovementComponent>().MaxMovementSpeed = 250.f; 
+	Get<CharacterFunctionality>().Get<CharacterStatsFunctionality>().SetBaseValue(ECharacterStat::MovementSpeed, 200.f);
 
 	Get<ImpulseFunctionality>().Subscribe<SDiedImpulse>(*this, [&](auto) 
 		{
@@ -77,15 +76,17 @@ void PlayerControllerFunctionality::Debug()
 
 	Get<MeleeWeaponUserFunctionality>().Inspect();
 
-	if (ImGui::Button("Send cool impulse"))
-	{
-		WmSendObjectImpulse(Get<OwnerFunctionality>().GetOwner(), SCoolImpulse());
-	}
+	Get<CharacterFunctionality>().Inspect();
 
-	if (ImGui::Button("Generate held weapon"))
-	{
-		Get<MeleeWeaponUserFunctionality>().SetWeapon(SystemPtr<MeleeWeaponDesigner>()->DesignWeapon());
-	}
+	//if (ImGui::Button("Send cool impulse"))
+	//{
+	//	WmSendObjectImpulse(Get<OwnerFunctionality>().GetOwner(), SCoolImpulse());
+	//}
+	//
+	//if (ImGui::Button("Generate held weapon"))
+	//{
+	//	Get<MeleeWeaponUserFunctionality>().SetWeapon(SystemPtr<MeleeWeaponDesigner>()->DesignWeapon());
+	//}
 
 	ImGui::End();
 }

@@ -63,6 +63,8 @@ protected:
 
 	plf::colony<Object> DesignEnemies(const SSpace& aSpace);
 	void DesignPortal(const SSpace& aSpace);
+	void DesignBuffTotems(const SSpace& aSpace);
+	void DesignBuffTotem(const SSpace& aSpace);
 	void DesignStartPoint(const SSpace& aSpace);
 	void CreateEnemy(const SVector2f aPosition);
 

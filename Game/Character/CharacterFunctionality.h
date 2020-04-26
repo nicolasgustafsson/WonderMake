@@ -5,10 +5,15 @@
 #include "Functionalities/OwnerFunctionality.h"
 #include "Functionalities/SpriteRenderingFunctionality.h"
 #include "Movement/DefaultMovementFunctionality.h"
+#include "Character/Stats/CharacterStatsFunctionality.h"
+#include "Character/Buffs/CharacterBuffsFunctionality.h"
+
+class CharacterStatsFunctionality;
 
 struct SHealthComponent : public  SComponent
 {
-	i32 Health = 200;
+	i32 MaxHealth = 200;
+	i32 Health = MaxHealth;
 };
 
 struct SDiedImpulse
@@ -33,11 +38,13 @@ class CharacterFunctionality
 	: public Functionality<CharacterFunctionality, OwnerFunctionality
 	, CollisionFunctionality, SHealthComponent
 	, SFactionComponent, TransformFunctionality
-	, DefaultMovementFunctionality>
+	, DefaultMovementFunctionality, CharacterStatsFunctionality
+	, CharacterBuffsFunctionality>
 {
 public:
 	CharacterFunctionality(Object& aOwner) noexcept;
 
+	void Heal(const i32 aHealAmount);
 	void Damage(const i32 aDamage);
 
 	[[nodiscard]] bool IsDead() const noexcept;
@@ -46,5 +53,7 @@ public:
 	void SetFaction(const EFaction aFaction) noexcept;
 	[[nodiscard]] bool IsFriendlyWith(const EFaction aFaction) const noexcept;
 	[[nodiscard]] EFaction GetFaction() const noexcept;
+
+	void Inspect();
 };
 

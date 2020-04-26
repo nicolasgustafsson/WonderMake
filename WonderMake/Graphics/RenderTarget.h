@@ -11,7 +11,7 @@ struct SRenderTargetSettings
 class RenderTarget : NonCopyable
 {
 public:
-	RenderTarget(const SRenderTargetSettings& Settings) noexcept;
+	RenderTarget(const SRenderTargetSettings& Settings);
 	~RenderTarget();
 
 	void BindAsTarget();
@@ -22,6 +22,6 @@ public:
 private:
 	u32 myFrameBufferObject = std::numeric_limits<u32>::max();
 	u32 myRenderTexture = std::numeric_limits<u32>::max();
-	u32 myDepthStencilRBO = std::numeric_limits<u32>::max();
+	u32 myDepthStencilRbo = std::numeric_limits<u32>::max();
 };
 

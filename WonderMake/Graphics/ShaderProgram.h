@@ -7,6 +7,7 @@
 
 #include <filesystem>
 #include <optional>
+#include "OpenGLFacade.h"
 
 class ShaderProgram : NonCopyable
 {
@@ -21,27 +22,12 @@ public:
 	void SetProperty(std::string_view aName, TProperty aProperty)
 	{
 		Activate();
-		const auto Location = glGetUniformLocation(myProgramHandle, aName.data());
+		SystemPtr<OpenGLFacade> openGL;
 
-		if constexpr (std::is_same_v<TProperty, i32>)
-			glUniform1i(Location, aProperty);
-		else if constexpr (std::is_same_v<TProperty, f32>)
-			glUniform1f(Location, aProperty);
-		else if constexpr (std::is_same_v<TProperty, bool>)
-			glUniform1i(Location, aProperty);
-		else if constexpr (std::is_same_v<TProperty, f64>)
-			glUniform1d(Location, aProperty);
-		else if constexpr (std::is_same_v<TProperty, SVector2f>)
-			glUniform2f(Location, aProperty.X, aProperty.Y);
-		else if constexpr (std::is_same_v<TProperty, SVector2i>)
-			glUniform2i(Location, aProperty.X, aProperty.Y);
-		else if constexpr (std::is_same_v<TProperty, SVector3f>)
-			glUniform3f(Location, aProperty.X, aProperty.Y, aProperty.Z);
-		else if constexpr (std::is_same_v<TProperty, SVector4f>)
-			glUniform4f(Location, aProperty.X, aProperty.Y, aProperty.Z, aProperty.W);
-		else if constexpr (std::is_same_v<TProperty, SColor>)
-			glUniform4f(Location, aProperty.R, aProperty.G, aProperty.B, aProperty.A);
-	}
+		const i32 location = openGL->GetUniformVariableLocation(myProgramHandle, aName.data());
+
+		openGL->SetUniformVariable(location, aProperty);
+	}	
 
 private:
 	u32 myProgramHandle = std::numeric_limits<u32>::max();

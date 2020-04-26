@@ -10,6 +10,7 @@
 #include "Message/MessageSubscriber.h"
 #include "Utilities/Debugging/Debugged.h"
 #include "Debugging/DebugLineDrawer.h"
+#include "OpenGLFacade.h"
 
 class Renderer 
 	: public System
@@ -24,6 +25,8 @@ public:
 
 	void FinishFrame();
 
+	bool DebugWindowHasFocus() const noexcept { return myDebugWindowHasFocus; };
+
 private:
 	virtual void Debug() override;
 
@@ -33,6 +36,9 @@ private:
 	SystemPtr<EngineUniformBuffer> myEngineUniformBufferPtr;
 	SystemPtr<Window> myWindowPtr;
 	SystemPtr<DebugLineDrawer> myLineDrawer;
+	SystemPtr<OpenGLFacade> myOpenGLInterface;
+
+	bool myDebugWindowHasFocus = false;
 
 	const SColor ClearColor = SColor::CornflowerBlue;
 };

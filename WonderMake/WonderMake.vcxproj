@@ -201,7 +201,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Program\GlfwFacade.cpp" />
-    <ClCompile Include="OpenGLFacade.cpp" />
+    <ClCompile Include="Graphics\OpenGLFacade.cpp" />
     <ClCompile Include="Debugging\DebugSettingsSystem.cpp" />
     <ClCompile Include="Imgui\JsonInspector.cpp" />
     <ClCompile Include="Utilities\BezierCurve.cpp" />
@@ -218,7 +218,7 @@
     <ClCompile Include="Object\ObjectImpulseRouter.cpp" />
     <ClCompile Include="Randomizer\Randomizer.cpp" />
     <ClCompile Include="Serialization\SerializationSystem.cpp" />
-    <ClCompile Include="TimeKeeper.cpp" />
+    <ClCompile Include="Utilities\TimeKeeper.cpp" />
     <ClCompile Include="Utilities\Debugging\Debugged.cpp" />
     <ClCompile Include="Threads\RoutineDebug.cpp" />
     <ClCompile Include="FileSystem\ReadFileAsStringJob.cpp" />
@@ -263,7 +263,7 @@
   <ItemGroup>
     <ClInclude Include="Functionalities\BaseFunctionality.h" />
     <ClInclude Include="Program\GlfwFacade.h" />
-    <ClInclude Include="OpenGLFacade.h" />
+    <ClInclude Include="Graphics\OpenGLFacade.h" />
     <ClInclude Include="Debugging\DebugSettingsSystem.h" />
     <ClInclude Include="Imgui\JsonInspector.h" />
     <ClInclude Include="Policies\SystemId.h" />
@@ -287,7 +287,7 @@
     <ClInclude Include="Object\ObjectImpulseRouter.h" />
     <ClInclude Include="Randomizer\Randomizer.h" />
     <ClInclude Include="Serialization\SerializationSystem.h" />
-    <ClInclude Include="TimeKeeper.h" />
+    <ClInclude Include="Utilities\TimeKeeper.h" />
     <ClInclude Include="Utilities\MathUtility.h" />
     <ClInclude Include="Utilities\Stopwatch.h" />
     <ClInclude Include="Utilities\Debugging\Debugged.h" />

@@ -5,9 +5,10 @@
 #include "ColliderDebug.h"
 
 #include "System/SystemPtr.h"
+#include "Debugging/DebugSettingsSystem.h"
 
 CollisionFunctionality::CollisionFunctionality(Object& aOwner) noexcept
-	: Super(aOwner)
+	: Super(aOwner), Debugged("Collision")
 {
 
 }
@@ -28,6 +29,19 @@ CollisionFunctionality::~CollisionFunctionality()
 void CollisionFunctionality::Tick()
 {
 	UpdateCollisionTransforms();
+
+	if (!SystemPtr<DebugSettingsSystem>()->GetOrCreateDebugValue("Should draw colliders", true))
+		return;
+
+	auto& collisionComponent = Get<SCollisionComponent>();
+	for (auto& collider : collisionComponent.Colliders)
+	{
+		if (!collider.Collider)
+		{
+			continue;
+		}
+		DrawCollider(*collider.Collider);
+	}
 }
 
 void CollisionFunctionality::Debug()

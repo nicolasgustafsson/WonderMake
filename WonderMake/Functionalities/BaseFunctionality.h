@@ -1,5 +1,4 @@
 #pragma once
-
 class Object;
 
 class _BaseFunctionality
@@ -14,4 +13,3 @@ public:
 
 	void Tick() noexcept {}
 };
-

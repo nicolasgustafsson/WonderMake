@@ -5,7 +5,7 @@
 
 
 PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
-	: Super(aOwner)
+	: Super(aOwner), Debugged("Player Controller")
 {
 	CollisionFunctionality& collision = Get<CollisionFunctionality>();
 	auto& collider = collision.AddSphereCollider(*this, SVector2f::Zero(), 10.f);

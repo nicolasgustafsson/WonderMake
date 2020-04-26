@@ -8,6 +8,7 @@
 #include "Resources/ResourceSystem.h"
 
 #include "System/SystemPtr.h"
+#include "OpenGLFacade.h"
 
 //everything needed to create a renderobject
 struct SRenderObjectInfo
@@ -87,7 +88,8 @@ void RenderObject<TAttributes...>::Render()
 	BindTextures();
 
 	const u32 renderCount = myRenderCount ? *myRenderCount : myVertexCount;
-	glDrawArrays(myGeometryType, 0, renderCount);
+	
+	SystemPtr<OpenGLFacade>()->DrawArrays(myGeometryType, 0, renderCount);
 }
 
 template<EVertexAttribute... TAttributes>

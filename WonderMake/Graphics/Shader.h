@@ -6,6 +6,7 @@
 #include "Utilities/RestrictTypes.h"
 
 #include <glad/glad.h>
+#include "OpenGLFacade.h"
 
 enum class EShaderType
 {
@@ -22,33 +23,32 @@ class Shader
 public:
 	Shader(const std::filesystem::path Path)
 	{
-		std::ifstream File{ Path };
+		SystemPtr<OpenGLFacade> openGL;
+		std::ifstream file{ Path };
 
-		const size_t FileSize = std::filesystem::file_size(Path);
+		const size_t fileSize = std::filesystem::file_size(Path);
 
-		std::string ShaderString(FileSize, ' ');
+		std::string shaderString(fileSize, ' ');
 
-		File.read(ShaderString.data(), FileSize);
+		file.read(shaderString.data(), fileSize);
 
 		if constexpr (ShaderType == EShaderType::Vertex)
-			ShaderHandle = glCreateShader(GL_VERTEX_SHADER);
+			myShaderHandle = openGL->CreateShader(GL_VERTEX_SHADER);
 		else if constexpr (ShaderType == EShaderType::Fragment)
-			ShaderHandle = glCreateShader(GL_FRAGMENT_SHADER);
+			myShaderHandle = openGL->CreateShader(GL_FRAGMENT_SHADER);
 		else if constexpr (ShaderType == EShaderType::Geometry)
-			ShaderHandle = glCreateShader(GL_GEOMETRY_SHADER);
+			myShaderHandle = openGL->CreateShader(GL_GEOMETRY_SHADER);
 
-		const char* Raw = ShaderString.data();
-		glShaderSource(ShaderHandle, 1, &Raw, nullptr);
-		glCompileShader(ShaderHandle);
+		const char* raw = shaderString.data();
+		openGL->SetShaderSource(myShaderHandle, raw);
+		openGL->CompileShader(myShaderHandle);
 
-		i32  Success;
-		char ErrorMessage[512];
-		glGetShaderiv(ShaderHandle, GL_COMPILE_STATUS, &Success);
+		const i32 compileWasSuccessful = openGL->GetShaderParameter(myShaderHandle, GL_COMPILE_STATUS);
 
-		if (!Success)
+		if (!compileWasSuccessful)
 		{
-			glGetShaderInfoLog(ShaderHandle, 512, nullptr, ErrorMessage);
-			WmLog(TagError, TagOpenGL, "Shader compilation failed: ", ErrorMessage);
+			const std::string errorMessage = openGL->GetShaderInfoLog(myShaderHandle);
+			WmLog(TagError, TagOpenGL, "Shader compilation failed: ", errorMessage);
 		}
 	}
 
@@ -57,8 +57,9 @@ public:
 
 	~Shader()
 	{
-		glDeleteShader(ShaderHandle);
+		SystemPtr<OpenGLFacade> openGL;
+		openGL->DeleteShader(myShaderHandle);
 	}
 
-	u32 ShaderHandle;
+	u32 myShaderHandle;
 };

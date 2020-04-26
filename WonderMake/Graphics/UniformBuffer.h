@@ -13,23 +13,27 @@ public:
 
 	void Update() noexcept
 	{
-		glBindBuffer(GL_UNIFORM_BUFFER, myUniformBufferObject);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(TBuffer), &myBuffer);
+		SystemPtr<OpenGLFacade> openGL;
+		openGL->BindBuffer(GL_UNIFORM_BUFFER, myUniformBufferObject);
+		openGL->UpdateBufferData(GL_UNIFORM_BUFFER, 0, sizeof(TBuffer), &myBuffer);
 	}
 
 protected:
 	UniformBuffer(const u32 aBufferBindIndex)
 	{
-		glGenBuffers(1, &myUniformBufferObject);
-		glBindBuffer(GL_UNIFORM_BUFFER, myUniformBufferObject);
-		glBufferData(GL_UNIFORM_BUFFER, sizeof(TBuffer), nullptr, GL_STATIC_DRAW);
+		SystemPtr<OpenGLFacade> openGL;
+		
+		myUniformBufferObject = openGL->GenerateBuffer();
+		openGL->BindBuffer(GL_UNIFORM_BUFFER, myUniformBufferObject);
+		openGL->AllocateBufferData(GL_UNIFORM_BUFFER, sizeof(TBuffer), &myBuffer, GL_STATIC_DRAW);
 
-		glBindBufferBase(GL_UNIFORM_BUFFER, aBufferBindIndex, myUniformBufferObject);
+		openGL->BindBufferToSlot(GL_UNIFORM_BUFFER, aBufferBindIndex, myUniformBufferObject);
 	}
 
 	~UniformBuffer() noexcept
 	{
-		glDeleteBuffers(1, &myUniformBufferObject);
+		SystemPtr<OpenGLFacade> openGL;
+		openGL->DeleteBuffer(myUniformBufferObject);
 	}
 
 private:

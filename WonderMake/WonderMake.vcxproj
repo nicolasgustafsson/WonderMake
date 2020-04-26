@@ -200,10 +200,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Program\GlfwFacade.cpp" />
+    <ClCompile Include="OpenGLFacade.cpp" />
     <ClCompile Include="Debugging\DebugSettingsSystem.cpp" />
-    <ClInclude Include="Functionalities\BaseFunctionality.h">
-      <FileType>CppCode</FileType>
-    </ClInclude>
     <ClCompile Include="Imgui\JsonInspector.cpp" />
     <ClCompile Include="Utilities\BezierCurve.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
@@ -262,6 +261,9 @@
     <ClCompile Include="Utilities\OS.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Functionalities\BaseFunctionality.h" />
+    <ClInclude Include="Program\GlfwFacade.h" />
+    <ClInclude Include="OpenGLFacade.h" />
     <ClInclude Include="Debugging\DebugSettingsSystem.h" />
     <ClInclude Include="Imgui\JsonInspector.h" />
     <ClInclude Include="Policies\SystemId.h" />

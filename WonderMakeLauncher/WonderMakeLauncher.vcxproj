@@ -216,10 +216,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Registry\*.h" />
+    <None Include="registryConfig.json" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="registryConfig.json" />
+    <ClInclude Include="Registry\*.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

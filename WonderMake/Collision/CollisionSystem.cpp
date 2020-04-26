@@ -145,7 +145,7 @@ bool CollisionSystem::TestSphereVsLineCollision(const Colliders::SSphere& aSpher
 	return false;
 }
 
-bool CollisionSystem::TestLineVsLineCollision(const Colliders::SLine& aLineA, const Colliders::SLine& aLineB) noexcept
+bool CollisionSystem::TestLineVsLineCollision(const Colliders::SLine& /*aLineA*/, const Colliders::SLine& /*aLineB*/) noexcept
 {
 	WmLog(TagError, "Line-line collision not implemented yet!");
 	return false;

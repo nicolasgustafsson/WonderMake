@@ -8,6 +8,7 @@
 #include "Camera/Camera.h"
 #include "Graphics/EngineUniformBuffer.h"
 #include "Imgui/ImguiInclude.h"
+#include "Program/GlfwFacade.h"
 
 Program::Program()
 {
@@ -42,12 +43,14 @@ void Program::FinishPreviousFrame()
 
 void Program::SetupCallbacks()
 {
+	SystemPtr<GlfwFacade> glfw;
 	//sets the user pointer so we can access ourself from the lambda
-	glfwSetWindowUserPointer(myWindowPtr->myGlfwWindow, this);
+	glfw->SetWindowUserPointer(myWindowPtr->myGlfwWindow, this);
 
-	glfwSetFramebufferSizeCallback(myWindowPtr->myGlfwWindow, [](GLFWwindow* Window, int X, int Y) -> void
+	glfw->SetFramebufferSizeCallback(myWindowPtr->myGlfwWindow, [](GLFWwindow* Window, int X, int Y) -> void
 	{
-		Program* SelfPointer = static_cast<Program*>(glfwGetWindowUserPointer(Window));
+			SystemPtr<GlfwFacade> glfw;
+			Program* SelfPointer = static_cast<Program*>(glfw->GetWindowUserPointer(Window));
 		SelfPointer->OnWindowSizeChanged(Window, X, Y);
 	});
 }

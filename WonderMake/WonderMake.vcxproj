@@ -203,9 +203,11 @@
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="Debugging\DebugSettingsSystem.cpp" />
     <ClInclude Include="AudioManager.h" />
+    <ClInclude Include="Imgui\FileSelector.h" />
     <ClInclude Include="Functionalities\BaseFunctionality.h">
       <FileType>CppCode</FileType>
     </ClInclude>
+    <ClCompile Include="Imgui\FileSelector.cpp" />
     <ClCompile Include="Imgui\JsonInspector.cpp" />
     <ClCompile Include="Utilities\BezierCurve.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />

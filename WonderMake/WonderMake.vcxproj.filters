@@ -53,6 +53,7 @@
     <ClCompile Include="Debugging\DebugSettingsSystem.cpp" />
     <ClCompile Include="Imgui\JsonInspector.cpp" />
     <ClCompile Include="AudioManager.cpp" />
+    <ClCompile Include="Imgui\FileSelector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -204,6 +205,7 @@
     <ClInclude Include="Functionalities\BaseFunctionality.h" />
     <ClInclude Include="Imgui\JsonInspector.h" />
     <ClInclude Include="AudioManager.h" />
+    <ClInclude Include="Imgui\FileSelector.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

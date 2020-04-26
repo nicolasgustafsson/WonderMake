@@ -6,7 +6,7 @@
 #include "Enemy/EnemyActions/TackleAction.h"
 
 EnemyControllerFunctionality::EnemyControllerFunctionality(Object& aOwner)
-	: Super(aOwner)
+	: Super(aOwner), Debugged("Enemy Controller")
 {
 	Get<CharacterFunctionality>().SetFaction(EFaction::Enemy);
 

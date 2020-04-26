@@ -200,6 +200,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Debugging\DebugSettingsSystem.cpp" />
+    <ClInclude Include="Functionalities\BaseFunctionality.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClCompile Include="Imgui\JsonInspector.cpp" />
     <ClCompile Include="Utilities\BezierCurve.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Collision\ColliderDebug.cpp" />
@@ -257,6 +262,8 @@
     <ClCompile Include="Utilities\OS.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Debugging\DebugSettingsSystem.h" />
+    <ClInclude Include="Imgui\JsonInspector.h" />
     <ClInclude Include="Policies\SystemId.h" />
     <ClInclude Include="Utilities\BezierCurve.h" />
     <ClInclude Include="Camera\Camera.h" />

@@ -4,7 +4,7 @@
 class Debugged
 {
 public:
-	Debugged() noexcept;
+	Debugged(const std::string aName) noexcept;
 	virtual ~Debugged() = default;
 
 protected:
@@ -14,5 +14,6 @@ private:
 	void OnDebugMessage(const SDebugMessage&);
 
 	MessageSubscriber myDebugSubscriber;
+	std::string DebugName;
 };
 

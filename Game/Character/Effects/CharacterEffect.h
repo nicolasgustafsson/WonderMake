@@ -6,6 +6,7 @@ class BuffBlueprint;
 class CharacterEffect
 {
 public:
+	virtual ~CharacterEffect() {}
 	virtual void Apply(CharacterFunctionality& aCharacter) = 0;
 
 	virtual void Inspect() = 0;

@@ -2,7 +2,7 @@
 #include "Functionality.h"
 #include "Components/SpriteComponent.h"
 #include "Components/TransformComponent.h"
-#include "TimeKeeper.h"
+#include "Utilities/TimeKeeper.h"
 
 class SpriteRenderingFunctionality
 	: public Functionality<SpriteRenderingFunctionality, STransformComponent, SSpriteComponent>

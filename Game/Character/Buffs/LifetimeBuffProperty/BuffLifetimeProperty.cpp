@@ -4,7 +4,7 @@
 
 void BuffLifetimeProperty::ApplyOnBuff(BuffInstance& aBuff)
 {
-	aBuff.myPropertyInstances.emplace(std::make_unique<BuffLifetimePropertyInstance>(*this, aBuff.myCharacter, myLifeTime));
+	aBuff.myPropertyInstances.emplace(std::make_unique<BuffLifetimePropertyInstance>(*this, aBuff.myCharacter, myTimeToLive));
 }
 
 void BuffLifetimeProperty::Tick(BuffBlueprintPropertyInstance& aBuffPropertyInstance)
@@ -23,14 +23,14 @@ bool BuffLifetimeProperty::BuffShouldDie(const BuffBlueprintPropertyInstance& aB
 
 void BuffLifetimeProperty::Inspect() const
 {
-	ImGui::Text("Lifetime = %f", myLifeTime);
+	ImGui::Text("Lifetime = %f", myTimeToLive);
 }
 
 void BuffLifetimeProperty::InspectInstance(BuffBlueprintPropertyInstance& aBuffPropertyInstance) const
 {
 	const BuffLifetimePropertyInstance& instance = *static_cast<const BuffLifetimePropertyInstance*>(&aBuffPropertyInstance);
 
-	std::string timeLeftTickString = ("Time left = ") + std::to_string(instance.myLifeLeft) + "/" + std::to_string(myLifeTime);
+	std::string timeLeftTickString = ("Time left = ") + std::to_string(instance.myLifeLeft) + "/" + std::to_string(myTimeToLive);
 
-	ImGui::ProgressBar((instance.myLifeLeft) / (myLifeTime), ImVec2(-1.f, 0.f), timeLeftTickString.c_str());
+	ImGui::ProgressBar((instance.myLifeLeft) / (myTimeToLive), ImVec2(-1.f, 0.f), timeLeftTickString.c_str());
 }

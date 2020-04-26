@@ -162,7 +162,7 @@ Geometry::PolygonSideOperator LevelDesigner::DesignStartRoom(SLevelGeometry& aGe
 }
 
 Geometry::PolygonSideOperator LevelDesigner::DesignChallengeRoom(Geometry::PolygonSideOperator aWallOfExistingRoom, SLevelGeometry& aGeometry) const
-{
+{ 
 	aWallOfExistingRoom = aWallOfExistingRoom.GetMiddle()		//get middle of newly extruded side
 		.SplitIntoSide(50.f)									//make 2 new points with a width of 50.f to become entrance
 		.Extrude(30.f)											//extrude to make passage into new room
@@ -205,8 +205,8 @@ plf::colony<Object> LevelDesigner::InstantiateSpaces(const SLevelGeometry& aGeom
 
 		case ELevelStage::Challenge:
 		{
-			//auto enemies = DesignEnemies(space);
-			//objects.splice(enemies);
+			auto enemies = DesignEnemies(space);
+			objects.splice(enemies);
 			DesignBuffTotems(space);
 			break;
 		}

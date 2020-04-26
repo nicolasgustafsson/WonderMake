@@ -2,7 +2,7 @@ Buffs are limited scope modifications of characters. They can be applied through
 
 These are some examples of what the buff system should be able to do minimally (procedurally):
 
-* A buff that deals damage every 3 seconds for 10 seconds
+* A buff that deals damage every second for 10 seconds
 * A buff that increases the movespeed of the character while in a certain radius
 
 These are some examples of what a buff system **ideally** should be able to do (procedurally):
@@ -27,5 +27,5 @@ Buffs have 2 parts. One blueprint part, and one instanced part:
 For example, a weapon might apply a buff on hit. The weapon then has the buff blueprint create an instance on the character when hitting them.
 
 
-BuffBlueprint     | LifetimeBuffProperty
-BuffInstance	  | TimeLeft
+BuffBlueprint		| LifetimeBuffProperty
+BuffInstance		| TimeLeft

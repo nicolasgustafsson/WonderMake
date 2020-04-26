@@ -5,7 +5,7 @@ class BuffLifetimeProperty : public BuffBlueprintProperty
 {
 public:
 	BuffLifetimeProperty(const f32 aLifeTime)
-		: BuffBlueprintProperty(), myLifeTime(aLifeTime) {}
+		: BuffBlueprintProperty(), myTimeToLive(aLifeTime) {}
 
 	virtual void ApplyOnBuff(BuffInstance& aBuff) override;
 	virtual void Tick(BuffBlueprintPropertyInstance& aBuffPropertyInstance) override;
@@ -15,7 +15,7 @@ public:
 	virtual void InspectInstance(BuffBlueprintPropertyInstance& aBuffPropertyInstance) const override;
 
 private:
-	const f32 myLifeTime = 0.f;
+	const f32 myTimeToLive = 0.f;
 };
 
 class BuffLifetimePropertyInstance : public BuffBlueprintPropertyInstance

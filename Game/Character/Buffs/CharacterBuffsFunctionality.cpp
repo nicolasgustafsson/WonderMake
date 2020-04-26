@@ -21,28 +21,19 @@ void CharacterBuffsFunctionality::ApplyBuff(class CharacterFunctionality& aChara
 void CharacterBuffsFunctionality::ClearBuffs()
 {
 	auto& buffs = Get<SCharacterBuffComponent>().Buffs;
-	for (auto it = buffs.begin(); it != buffs.end(); it++)
+	for (auto& buff : buffs)
 	{
-		auto& buff = *it;
 		buff.myBlueprint.RemoveFrom(buff.myCharacter);
-
-		it = buffs.erase(it);
-		if (it == buffs.end())
-			return;
 	}
+
+	buffs.clear();
 }
 
 bool CharacterBuffsFunctionality::HasBuff(BuffBlueprint& aBuffBlueprint) const
 {
 	auto& buffs = Get<SCharacterBuffComponent>().Buffs;
 
-	for (auto& buff : buffs)
-	{
-		if (&buff.myBlueprint == &aBuffBlueprint)
-			return true;
-	}
-
-	return false;
+	return std::find_if(buffs.cbegin(), buffs.cend(), [&aBuffBlueprint](const BuffInstance& aBuffInstance) {return &aBuffInstance.myBlueprint == &aBuffBlueprint; }) != buffs.cend();
 }
 
 void CharacterBuffsFunctionality::Tick()
@@ -50,7 +41,8 @@ void CharacterBuffsFunctionality::Tick()
 	const f32 deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
 	SCharacterBuffComponent& buffComponent = Get<SCharacterBuffComponent>();
 
-	for (auto it = buffComponent.Buffs.begin(); it != buffComponent.Buffs.end(); it++)
+	auto it = buffComponent.Buffs.begin();
+	while (it != buffComponent.Buffs.end())
 	{
 		auto& buff = *it;
 
@@ -59,10 +51,11 @@ void CharacterBuffsFunctionality::Tick()
 		if (buff.ShouldDie())
 		{
 			buff.myBlueprint.RemoveFrom(buff.myCharacter);
-
 			it = buffComponent.Buffs.erase(it);
-			if (it == buffComponent.Buffs.end())
-				return;
+		}
+		else
+		{
+			it++;
 		}
 	}
 }

@@ -16,7 +16,7 @@ class BuffBlueprint final
 public:
 	plf::colony<std::unique_ptr<BuffBlueprintProperty>> myProperties;
 
-	class BuffInstance Instantiate(CharacterFunctionality& aCharacter) const;
+	[[nodiscard]] class BuffInstance Instantiate(CharacterFunctionality& aCharacter) const;
 
 	void RemoveFrom(CharacterFunctionality& aCharacter) const;
 
@@ -39,7 +39,7 @@ public:
 
 	void Tick();
 
-	bool ShouldDie() const;
+	[[nodiscard]] bool ShouldDie() const;
 
 	//f32 GetEstimatedPercentLeft() const;
 

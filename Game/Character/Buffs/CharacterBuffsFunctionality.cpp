@@ -33,7 +33,7 @@ bool CharacterBuffsFunctionality::HasBuff(BuffBlueprint& aBuffBlueprint) const
 {
 	auto& buffs = Get<SCharacterBuffComponent>().Buffs;
 
-	return std::find_if(buffs.cbegin(), buffs.cend(), [&aBuffBlueprint](const BuffInstance& aBuffInstance) {return &aBuffInstance.myBlueprint == &aBuffBlueprint; }) != buffs.cend();
+	return std::find_if(buffs.cbegin(), buffs.cend(), [&aBuffBlueprint](const auto& aBuffInstance) {return &aBuffInstance.myBlueprint == &aBuffBlueprint; }) != buffs.cend();
 }
 
 void CharacterBuffsFunctionality::Tick()

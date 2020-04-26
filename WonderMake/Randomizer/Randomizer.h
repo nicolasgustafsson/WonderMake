@@ -12,6 +12,19 @@ public:
 
 	bool GetRandomBool();
 
+	template <typename T, T... TOptions>
+	T SelectOne()
+	{
+		const size_t numberOfOptions = sizeof...(TOptions);
+
+		const size_t selectedOption = GetRandomNumber<size_t>(0, numberOfOptions);
+
+		std::array<T, numberOfOptions> optionsAsArray = { { TOptions... } };
+
+		return optionsAsArray[selectedOption];
+	}
+
+
 private:
 	std::random_device myRandomDevice;
 	std::mt19937 myRandomGenerator;
@@ -31,4 +44,3 @@ T Randomizer::GetRandomNumber(T aMin, T aMax)
 		return distribution(myRandomGenerator);
 	}
 }
-

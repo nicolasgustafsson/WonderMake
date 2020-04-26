@@ -3,6 +3,7 @@
 #include "System/System.h"
 #include "Levels/Level.h"
 #include "Message/MessageSubscriber.h"
+#include "Designers/BuffDesigner/BuffDesigner.h"
 
 struct SPlayerDiedMessage;
 class TransformFunctionality;
@@ -24,6 +25,8 @@ private:
 
 	void OnPlayerDeath(const SPlayerDiedMessage&);
 	MessageSubscriber mySubscriber;
+
+	SystemPtr<BuffDesigner> myBuffDesigner;
 
 	std::optional<Object> myDeathScreen;
 };

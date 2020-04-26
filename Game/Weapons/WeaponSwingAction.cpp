@@ -9,10 +9,11 @@
 #include "Enemy/EnemyControllerFunctionality.h"
 #include "Character/CharacterFunctionality.h"
 
-WeaponSwingAction::WeaponSwingAction(MeleeWeaponFunctionality& aMeleeWeaponFunctionality, TransformFunctionality& aUserTransform, const SSwing aSwingToPerform) noexcept
-	: myUserTransform(aUserTransform)
+WeaponSwingAction::WeaponSwingAction(CharacterFunctionality& aCharacter, MeleeWeaponFunctionality& aMeleeWeaponFunctionality, TransformFunctionality& aUserTransform, const SSwing aSwing) noexcept
+	: myCharacter(aCharacter)
+	, myUserTransform(aUserTransform)
 	, myWeaponFunctionality(aMeleeWeaponFunctionality)
-	, mySwing(aSwingToPerform)  {}
+	, mySwing(aSwing)  {}
 
 void WeaponSwingAction::BeginAction()
 {
@@ -77,7 +78,7 @@ void WeaponSwingAction::TestSwingCollision()
 				return;
 			}
 
-			aHitCharacter.Damage(myWeaponFunctionality.GetWeapon().myBaseWeaponDamage);
+			aHitCharacter.Damage(myWeaponFunctionality.GetWeapon().myBaseWeaponDamage * myCharacter.Get<CharacterStatsFunctionality>().GetStatMultiplier(ECharacterStat::MeleeAttackDamage));
 
 			hitCharacters.push_back(&aHitCharacter);
 		});
@@ -146,7 +147,9 @@ void WeaponSwingAction::UpdateSwing() noexcept
 	IncreaseProgress((deltaTime / mySwing.SwingTime) * myWeaponFunctionality.GetWeapon().myBaseWeaponSwingRate);
 
 	const f32 progressDelta = myStateProgress - oldStateProgress;
-	myUserTransform.Move(myUserTransform.GetForwardVector() * progressDelta * mySwing.StepLength);
+
+	const f32 movementSpeedMultiplier = myCharacter.Get<CharacterStatsFunctionality>().GetStatMultiplier(ECharacterStat::MovementSpeed);
+	myUserTransform.Move(myUserTransform.GetForwardVector() * progressDelta * mySwing.StepLength * movementSpeedMultiplier);
 }
 
 void WeaponSwingAction::UpdateBackswing() noexcept 

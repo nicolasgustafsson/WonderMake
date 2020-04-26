@@ -3,7 +3,7 @@
 #include "OpenGLFacade.h"
 
 
-RenderTarget::RenderTarget(const SRenderTargetSettings& aSettings) noexcept
+RenderTarget::RenderTarget(const SRenderTargetSettings& aSettings)
 {
 	SystemPtr<OpenGLFacade> openGL;
 

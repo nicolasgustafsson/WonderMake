@@ -18,8 +18,8 @@ enum class ESwingState
 class WeaponSwingAction
 	: public Action
 {
-public:
-	WeaponSwingAction(MeleeWeaponFunctionality& aMeleeWeaponFunctionality, TransformFunctionality& aUserTransform, const SSwing aSwing) noexcept;
+public: 
+	WeaponSwingAction(CharacterFunctionality& aCharacter, MeleeWeaponFunctionality& aMeleeWeaponFunctionality, TransformFunctionality& aUserTransform, const SSwing aSwing) noexcept;
 
 	virtual void BeginAction() override;
 
@@ -41,6 +41,7 @@ private:
 	void UpdateSwing() noexcept;
 	void UpdateBackswing() noexcept;
 
+	CharacterFunctionality& myCharacter;
 	TransformFunctionality& myUserTransform;
 	MeleeWeaponFunctionality& myWeaponFunctionality;
 	const SSwing mySwing;

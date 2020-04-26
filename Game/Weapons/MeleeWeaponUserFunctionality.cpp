@@ -33,7 +33,8 @@ void MeleeWeaponUserFunctionality::SwingWeapon()
 	component.CurrentSwingIndex %= weapon.mySwings.size();
 
 	EActionResult result = actionFunctionality.StartAction(WeaponSwingAction
-		( *component.Weapon
+		( Get<CharacterFunctionality>()
+		, *component.Weapon
 		, Get<TransformFunctionality>()
 		, weapon.mySwings[component.CurrentSwingIndex]));
 

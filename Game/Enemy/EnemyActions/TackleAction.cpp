@@ -36,7 +36,8 @@ void TackleAction::StartTackling()
 {
 	myStartPosition = myCharacter->Get<TransformFunctionality>().GetPosition();
 
-	myEndPosition = (myTarget->GetPosition() - myStartPosition).GetNormalized() * myChargeDistance + myStartPosition;
+	const f32 movementSpeedMultiplier = myCharacter->Get<CharacterStatsFunctionality>().GetStatMultiplier(ECharacterStat::MovementSpeed);
+	myEndPosition = (myTarget->GetPosition() - myStartPosition).GetNormalized() * myChargeDistance * movementSpeedMultiplier + myStartPosition;
 
 	myVelocity = (myEndPosition - myStartPosition) / myTackleTime;
 
@@ -65,7 +66,7 @@ void TackleAction::TickTackling()
 			if (std::find(myHitCharacters.begin(), myHitCharacters.end(), &aHitCharacter) != myHitCharacters.end())
 				return;
 
-			aHitCharacter.Damage(50.f);
+			aHitCharacter.Damage(50.f * myCharacter->Get<CharacterStatsFunctionality>().GetStatMultiplier(ECharacterStat::MeleeAttackDamage));
 			aHitCharacter.Get<DefaultMovementFunctionality>().AddImpulse((aHitCharacter.Get<TransformFunctionality>().GetPosition() - selfPosition).GetNormalized() * 1000.f);
 
 			myHitCharacters.push_back(&aHitCharacter);

@@ -10,6 +10,7 @@
 #include "TimeKeeper.h"
 #include "Input/InputSystem.h"
 #include "Debugging/DebugSettingsSystem.h"
+#include "AudioManager.h"
 
 class Program
 {
@@ -41,6 +42,7 @@ private:
 	SystemPtr<TimeKeeper> myTimeKeeperPtr;
 	SystemPtr<InputSystem> myInputSystem;
 	SystemPtr<DebugSettingsSystem> myDebugSettingsPtr;
+	SystemPtr<AudioManager> myAudioManagerPtr;
 
 	static constexpr SVector2<i32> WindowSize = {1600, 900};
 };

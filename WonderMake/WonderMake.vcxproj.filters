@@ -52,6 +52,7 @@
     <ClCompile Include="Randomizer\Randomizer.cpp" />
     <ClCompile Include="Debugging\DebugSettingsSystem.cpp" />
     <ClCompile Include="Imgui\JsonInspector.cpp" />
+    <ClCompile Include="AudioManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -202,6 +203,7 @@
     <ClInclude Include="Debugging\DebugSettingsSystem.h" />
     <ClInclude Include="Functionalities\BaseFunctionality.h" />
     <ClInclude Include="Imgui\JsonInspector.h" />
+    <ClInclude Include="AudioManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

@@ -10,7 +10,7 @@
 #include "Utilities/TimeKeeper.h"
 #include "Input/InputSystem.h"
 #include "Debugging/DebugSettingsSystem.h"
-#include "AudioManager.h"
+#include "Audio/AudioManager.h"
 
 class Program
 {

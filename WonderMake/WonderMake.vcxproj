@@ -200,13 +200,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AudioManager.cpp" />
+    <ClCompile Include="Audio\AudioFile.cpp" />
+    <ClCompile Include="Audio\AudioManager.cpp" />
+    <ClCompile Include="Imgui\FileSelector.cpp" />
     <ClCompile Include="Program\GlfwFacade.cpp" />
     <ClCompile Include="Graphics\OpenGLFacade.cpp" />
     <ClCompile Include="Debugging\DebugSettingsSystem.cpp" />
-    <ClInclude Include="AudioManager.h" />
-    <ClInclude Include="Imgui\FileSelector.h" />
-    <ClInclude Include="Functionalities\BaseFunctionality.cpp">
     <ClCompile Include="Imgui\JsonInspector.cpp" />
     <ClCompile Include="Utilities\BezierCurve.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
@@ -265,7 +264,10 @@
     <ClCompile Include="Utilities\OS.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Audio\AudioFile.h" />
+    <ClInclude Include="Audio\AudioManager.h" />
     <ClInclude Include="Functionalities\BaseFunctionality.h" />
+    <ClInclude Include="Imgui\FileSelector.h" />
     <ClInclude Include="Program\GlfwFacade.h" />
     <ClInclude Include="Graphics\OpenGLFacade.h" />
     <ClInclude Include="Debugging\DebugSettingsSystem.h" />
@@ -364,6 +366,7 @@
     <ClInclude Include="Utilities\Vector.h" />
     <ClInclude Include="Graphics\VertexTypes.h" />
     <ClInclude Include="Graphics\VertexBufferArray.h" />
+    <ClInclude Include="Audio\AudioStructs.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

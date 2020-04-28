@@ -35,6 +35,7 @@ private:
 	void TestSwingCollision();
 	void SetSwingTransform(const f32 aPercentageInSwing) noexcept;
 	void UpdateCharge() noexcept;
+	void StartState(const ESwingState aNewState);
 
 	void IncreaseProgress(const f32 progressIncrease);
 

@@ -8,6 +8,7 @@
 #include "Collision/CollisionSystem.h"
 #include "Enemy/EnemyControllerFunctionality.h"
 #include "Character/CharacterFunctionality.h"
+#include "Audio/AudioManager.h"
 
 WeaponSwingAction::WeaponSwingAction(CharacterFunctionality& aCharacter, MeleeWeaponFunctionality& aMeleeWeaponFunctionality, TransformFunctionality& aUserTransform, const SSwing aSwing) noexcept
 	: myCharacter(aCharacter)
@@ -42,6 +43,8 @@ void WeaponSwingAction::Tick() noexcept
 		myStateProgress -= 1.0f;
 
 		myCurrentState = (myCurrentState == ESwingState::Charge) ? ESwingState::Swing : ESwingState::Backswing;
+
+		StartState(myCurrentState);
 	}
 }
 
@@ -79,6 +82,9 @@ void WeaponSwingAction::TestSwingCollision()
 			}
 
 			aHitCharacter.Damage(myWeaponFunctionality.GetWeapon().myBaseWeaponDamage * myCharacter.Get<CharacterStatsFunctionality>().GetStatMultiplier(ECharacterStat::MeleeAttackDamage));
+
+			SystemPtr<AudioManager> audioManager;
+			audioManager->PlayAudio(std::filesystem::current_path() / "Audio/SoundEffects/Hits/SwingHit.wav");
 
 			hitCharacters.push_back(&aHitCharacter);
 		});
@@ -162,4 +168,13 @@ void WeaponSwingAction::UpdateBackswing() noexcept
 
 	const f32 deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
 	IncreaseProgress((deltaTime / mySwing.BackswingTime) * myWeaponFunctionality.GetWeapon().myBaseWeaponSwingRate);
+}
+
+void WeaponSwingAction::StartState(const ESwingState aNewState)
+{
+	if (aNewState == ESwingState::Swing)
+	{
+		SystemPtr<AudioManager> audioManager;
+		audioManager->PlayAudio(std::filesystem::current_path() / "Audio/SoundEffects/Hits/Swing.wav");
+	}
 }

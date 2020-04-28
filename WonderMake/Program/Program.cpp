@@ -33,6 +33,8 @@ void Program::StartNewFrame()
 	myCameraPtr->Update();
 
 	myRendererPtr->StartFrame();
+
+	myAudioManagerPtr->Update();
 }
 
 void Program::FinishPreviousFrame()

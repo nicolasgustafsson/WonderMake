@@ -20,6 +20,7 @@ void Program::Update()
 	FinishPreviousFrame();
 
 	myInputSystem->Update();
+	myAudioManagerPtr->Update();
 
 	StartNewFrame();
 }
@@ -34,7 +35,6 @@ void Program::StartNewFrame()
 
 	myRendererPtr->StartFrame();
 
-	myAudioManagerPtr->Update();
 }
 
 void Program::FinishPreviousFrame()

@@ -14,7 +14,6 @@
     <ClCompile Include="Functionalities\ImpulseFunctionality.cpp" />
     <ClCompile Include="Object\ObjectImpulseRouter.cpp" />
     <ClCompile Include="Serialization\SerializationSystem.cpp" />
-    <ClCompile Include="TimeKeeper.cpp" />
     <ClCompile Include="Utilities\Debugging\Debugged.cpp" />
     <ClCompile Include="Threads\RoutineDebug.cpp" />
     <ClCompile Include="FileSystem\ReadFileAsStringJob.cpp" />
@@ -53,10 +52,14 @@
     <ClCompile Include="Functionalities\SpriteRenderingFunctionality.cpp" />
     <ClCompile Include="Policies\Scheduler.cpp" />
     <ClCompile Include="Randomizer\Randomizer.cpp" />
-    <ClCompile Include="OpenGLFacade.cpp" />
     <ClCompile Include="Program\GlfwFacade.cpp" />
     <ClCompile Include="Debugging\DebugSettingsSystem.cpp" />
     <ClCompile Include="Imgui\JsonInspector.cpp" />
+    <ClCompile Include="Graphics\OpenGLFacade.cpp" />
+    <ClCompile Include="Utilities\TimeKeeper.cpp" />
+    <ClCompile Include="Imgui\FileSelector.cpp" />
+    <ClCompile Include="Audio\AudioManager.cpp" />
+    <ClCompile Include="Audio\AudioFile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -78,7 +81,6 @@
     <ClInclude Include="Functionalities\ImpulseFunctionality.h" />
     <ClInclude Include="Object\ObjectImpulseRouter.h" />
     <ClInclude Include="Serialization\SerializationSystem.h" />
-    <ClInclude Include="TimeKeeper.h" />
     <ClInclude Include="Utilities\MathUtility.h" />
     <ClInclude Include="Utilities\Stopwatch.h" />
     <ClInclude Include="Utilities\Debugging\Debugged.h" />
@@ -184,7 +186,6 @@
     <ClInclude Include="Threads\RoutineDebug.h" />
     <ClInclude Include="Utilities\Debugging\Debugged.h" />
     <ClInclude Include="Utilities\Stopwatch.h" />
-    <ClInclude Include="TimeKeeper.h" />
     <ClInclude Include="Debugging\DebugLineDrawer.h" />
     <ClInclude Include="Debugging\DebugLine.h" />
     <ClInclude Include="Debugging\DebugLineRenderObject.h" />
@@ -205,7 +206,6 @@
     <ClInclude Include="Serialization\SerializationSystem.h" />
     <ClInclude Include="Randomizer\Randomizer.h" />
     <ClInclude Include="Functionalities\BaseFunctionality.h" />
-    <ClInclude Include="OpenGLFacade.h" />
     <ClInclude Include="Program\GlfwFacade.h" />
     <ClInclude Include="Debugging\DebugSettingsSystem.h" />
     <ClInclude Include="Functionalities\BaseFunctionality.h" />
@@ -213,6 +213,12 @@
     <ClInclude Include="Policies\Policy.h" />
     <ClInclude Include="Policies\Scheduler.h" />
     <ClInclude Include="Policies\SystemId.h" />
+    <ClInclude Include="Graphics\OpenGLFacade.h" />
+    <ClInclude Include="Utilities\TimeKeeper.h" />
+    <ClInclude Include="Imgui\FileSelector.h" />
+    <ClInclude Include="Audio\AudioManager.h" />
+    <ClInclude Include="Audio\AudioStructs.h" />
+    <ClInclude Include="Audio\AudioFile.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

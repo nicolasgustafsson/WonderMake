@@ -7,6 +7,7 @@ class AudioManager : public System, Debugged
 {
 public:
 	AudioManager();
+	~AudioManager();
 
 	void Update() noexcept;
 
@@ -20,8 +21,9 @@ protected:
 	virtual void Debug() override;
 
 	SoLoud::Soloud mySoloudEngine;
+	SoLoud::Bus myBus;
 	
-	std::optional<SoLoud::handle> myBgmHandle;
+	std::optional<SoLoud::handle> myBusHandle;
 
 	plf::colony<SPlayingAudioFile> myCurrentlyPlayingAudioFiles;
 	plf::colony<SQueuedAudioFile> myQueuedAudioFiles;

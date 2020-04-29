@@ -71,6 +71,7 @@ void ImGui::JsonInspector::InspectObject(nlohmann::json::iterator aElementIterat
 {
 	nlohmann::json& element = *aElementIterator;
 
+	ImGui::PushID(&element);
 	bool node_open = ImGui::TreeNode("Object", aElementIterator.key().c_str());
 	ImGui::NextColumn();
 	ImGui::NextColumn();
@@ -83,6 +84,7 @@ void ImGui::JsonInspector::InspectObject(nlohmann::json::iterator aElementIterat
 		}
 		ImGui::TreePop();
 	}
+	ImGui::PopID();
 }
 
 void ImGui::JsonInspector::InspectInteger(nlohmann::json::iterator aElementIterator)

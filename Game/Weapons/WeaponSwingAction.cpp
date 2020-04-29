@@ -80,7 +80,7 @@ void WeaponSwingAction::TestSwingCollision()
 			{
 				return;
 			}
-
+			
 			aHitCharacter.Damage(myWeaponFunctionality.GetWeapon().myBaseWeaponDamage * myCharacter.Get<CharacterStatsFunctionality>().GetStatMultiplier(ECharacterStat::MeleeAttackDamage));
 
 			SystemPtr<AudioManager> audioManager;

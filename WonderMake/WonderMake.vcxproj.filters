@@ -60,6 +60,7 @@
     <ClCompile Include="Imgui\FileSelector.cpp" />
     <ClCompile Include="Audio\AudioManager.cpp" />
     <ClCompile Include="Audio\AudioFile.cpp" />
+    <ClCompile Include="Imgui\Canvas.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -219,6 +220,7 @@
     <ClInclude Include="Audio\AudioManager.h" />
     <ClInclude Include="Audio\AudioStructs.h" />
     <ClInclude Include="Audio\AudioFile.h" />
+    <ClInclude Include="Imgui\Canvas.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

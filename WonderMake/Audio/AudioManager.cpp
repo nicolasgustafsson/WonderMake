@@ -12,6 +12,7 @@
 #include <System/SystemPtr.h>
 #include "Audio/AudioStructs.h"
 #include <soloud_speech.h>
+#include "Imgui/Canvas.h"
 
 AudioManager::AudioManager()
 	: Debugged("Audio Manager")
@@ -140,4 +141,18 @@ I will shit fury all over you and you will drown in it. You're fucking dead, kid
 	}
 
 	ImGui::End(); 
+
+	bool showNodeGragh = debugSettings->GetOrCreateDebugValue("Audio/NodeGraph", false);
+
+	if (showNodeGragh)
+	{
+		ImGui::Begin("Node graph editor", &showNodeGragh);
+
+		static WmGui::SCanvasState state;
+		WmGui::BeginCanvas(&state);
+
+		WmGui::EndCanvas();
+
+		ImGui::End();
+	}
 }

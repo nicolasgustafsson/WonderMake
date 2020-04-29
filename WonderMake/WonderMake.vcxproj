@@ -202,6 +202,7 @@
   <ItemGroup>
     <ClCompile Include="Audio\AudioFile.cpp" />
     <ClCompile Include="Audio\AudioManager.cpp" />
+    <ClCompile Include="Imgui\Canvas.cpp" />
     <ClCompile Include="Imgui\FileSelector.cpp" />
     <ClCompile Include="Program\GlfwFacade.cpp" />
     <ClCompile Include="Graphics\OpenGLFacade.cpp" />
@@ -266,6 +267,7 @@
   <ItemGroup>
     <ClInclude Include="Audio\AudioFile.h" />
     <ClInclude Include="Audio\AudioManager.h" />
+    <ClInclude Include="Imgui\Canvas.h" />
     <ClInclude Include="Functionalities\BaseFunctionality.h" />
     <ClInclude Include="Imgui\FileSelector.h" />
     <ClInclude Include="Program\GlfwFacade.h" />

@@ -12,7 +12,8 @@
 #include <System/SystemPtr.h>
 #include "Audio/AudioStructs.h"
 #include <soloud_speech.h>
-#include "Imgui/Canvas.h"
+#include "Imgui/NodeGraphGui.h"
+#include "Audio/AudioMixingNodeGraph.h"
 
 AudioManager::AudioManager()
 	: Debugged("Audio Manager")
@@ -130,7 +131,7 @@ If only you could have known what unholy retribution your little 'clever' commen
 But you couldn't, you didn't, and now you're paying the price, you goddamn idiot. \n\
 I will shit fury all over you and you will drown in it. You're fucking dead, kiddo.";
 
-	ImGui::InputTextMultiline("", buffer, 2048);
+	ImGui::InputTextMultiline("Text", buffer, 2048);
 
 	if (ImGui::Button("Play"))
 	{
@@ -142,17 +143,19 @@ I will shit fury all over you and you will drown in it. You're fucking dead, kid
 
 	ImGui::End(); 
 
-	bool showNodeGragh = debugSettings->GetOrCreateDebugValue("Audio/NodeGraph", false);
+	bool showNodeGraph = debugSettings->GetOrCreateDebugValue("Audio/NodeGraph", false);
 
-	if (showNodeGragh)
+	if (showNodeGraph)
 	{
-		ImGui::Begin("Node graph editor", &showNodeGragh);
+		static AudioMixingNodeGraph graph;
 
-		static WmGui::SCanvasState state;
-		WmGui::BeginCanvas(&state);
+		static bool once = false;
+		if (!once)
+		{
+			once = true;
+		}
 
-		WmGui::EndCanvas();
-
-		ImGui::End();
+		static bool shouldShow = true;
+		WmGui::NodeGraphEditor(graph, &shouldShow);
 	}
 }

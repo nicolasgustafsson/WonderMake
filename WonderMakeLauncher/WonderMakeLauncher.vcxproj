@@ -73,29 +73,29 @@
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <LibraryPath>$(SolutionDir)External\glfw-3.3\Lib;$(SolutionDir)External\SoLoud\Lib;$(SolutionDir)External\Imgui-1.68 WIP\Lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\SoLoud\Inc;$(SolutionDir)External\MetaStuff\Inc;$(SolutionDir)External\stb\Inc;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)External\glfw-3.3\Lib;$(SolutionDir)External\SoLoud\Lib;$(SolutionDir)External\Imgui\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\SoLoud\Inc;$(SolutionDir)External\MetaStuff\Inc;$(SolutionDir)External\stb\Inc;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <LibraryPath>$(SolutionDir)External\glfw-3.3\Lib;$(SolutionDir)External\SoLoud\Lib;$(SolutionDir)External\Imgui-1.68 WIP\Lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\SoLoud\Inc;$(SolutionDir)External\MetaStuff\Inc;$(SolutionDir)External\stb\Inc;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)External\glfw-3.3\Lib;$(SolutionDir)External\SoLoud\Lib;$(SolutionDir)External\Imgui\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\SoLoud\Inc;$(SolutionDir)External\MetaStuff\Inc;$(SolutionDir)External\stb\Inc;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\SoLoud\Inc;$(SolutionDir)External\MetaStuff\Inc;$(SolutionDir)External\stb\Inc;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)External\glfw-3.3\Lib;$(SolutionDir)External\SoLoud\Lib;$(SolutionDir)External\Imgui-1.68 WIP\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\SoLoud\Inc;$(SolutionDir)External\MetaStuff\Inc;$(SolutionDir)External\stb\Inc;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)External\glfw-3.3\Lib;$(SolutionDir)External\SoLoud\Lib;$(SolutionDir)External\Imgui\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\SoLoud\Inc;$(SolutionDir)External\MetaStuff\Inc;$(SolutionDir)External\stb\Inc;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)External\glfw-3.3\Lib;$(SolutionDir)External\SoLoud\Lib;$(SolutionDir)External\Imgui-1.68 WIP\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\SoLoud\Inc;$(SolutionDir)External\MetaStuff\Inc;$(SolutionDir)External\stb\Inc;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)External\glfw-3.3\Lib;$(SolutionDir)External\SoLoud\Lib;$(SolutionDir)External\Imgui\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -205,7 +205,29 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Registry\*.cpp" />
+    <ClCompile Include="Registry\Register_ActionFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_BuffGiverFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_CameraFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_CharacterBuffsFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_CharacterFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_CharacterStatsFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_CollisionFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_DefaultMovementFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_EnemyControllerFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_ImpulseFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_LevelPortalFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_MeleeWeaponFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_MeleeWeaponUserFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_MovementInputFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_OwnerFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_PlayerControllerFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_SpinnerFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_SpriteComponent.cpp" />
+    <ClCompile Include="Registry\Register_SpriteRenderingFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_StaticGeometryFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_TargetFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_TransformFunctionality.cpp" />
+    <ClCompile Include="Registry\Registry.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Game\Game.vcxproj">
@@ -219,7 +241,29 @@
     <None Include="registryConfig.json" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Registry\*.h" />
+    <ClInclude Include="Registry\Register_ActionFunctionality.h" />
+    <ClInclude Include="Registry\Register_BuffGiverFunctionality.h" />
+    <ClInclude Include="Registry\Register_CameraFunctionality.h" />
+    <ClInclude Include="Registry\Register_CharacterBuffsFunctionality.h" />
+    <ClInclude Include="Registry\Register_CharacterFunctionality.h" />
+    <ClInclude Include="Registry\Register_CharacterStatsFunctionality.h" />
+    <ClInclude Include="Registry\Register_CollisionFunctionality.h" />
+    <ClInclude Include="Registry\Register_DefaultMovementFunctionality.h" />
+    <ClInclude Include="Registry\Register_EnemyControllerFunctionality.h" />
+    <ClInclude Include="Registry\Register_ImpulseFunctionality.h" />
+    <ClInclude Include="Registry\Register_LevelPortalFunctionality.h" />
+    <ClInclude Include="Registry\Register_MeleeWeaponFunctionality.h" />
+    <ClInclude Include="Registry\Register_MeleeWeaponUserFunctionality.h" />
+    <ClInclude Include="Registry\Register_MovementInputFunctionality.h" />
+    <ClInclude Include="Registry\Register_OwnerFunctionality.h" />
+    <ClInclude Include="Registry\Register_PlayerControllerFunctionality.h" />
+    <ClInclude Include="Registry\Register_SpinnerFunctionality.h" />
+    <ClInclude Include="Registry\Register_SpriteComponent.h" />
+    <ClInclude Include="Registry\Register_SpriteRenderingFunctionality.h" />
+    <ClInclude Include="Registry\Register_StaticGeometryFunctionality.h" />
+    <ClInclude Include="Registry\Register_TargetFunctionality.h" />
+    <ClInclude Include="Registry\Register_TransformFunctionality.h" />
+    <ClInclude Include="Registry\Registry.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

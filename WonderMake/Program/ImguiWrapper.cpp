@@ -15,6 +15,14 @@ ImguiWrapper::ImguiWrapper()
 
 	ImGuiIO& io = ImGui::GetIO();
 
+	io.Fonts->AddFontFromFileTTF("Fonts/ProggyClean.ttf", 13.f);
+	io.Fonts->AddFontFromFileTTF("Fonts/Roboto-Medium.ttf", 15.f);
+	io.Fonts->AddFontFromFileTTF("Fonts/DroidSans.ttf", 13.f);
+	io.Fonts->AddFontFromFileTTF("Fonts/Cousine-Regular.ttf", 13.f);
+	io.Fonts->AddFontFromFileTTF("Fonts/Karla-Regular.ttf", 13.f);
+	io.Fonts->AddFontFromFileTTF("Fonts/Cousine-Regular.ttf", 13.f);
+	io.Fonts->AddFontFromFileTTF("Fonts/ProggyTiny.ttf", 13.f);
+	io.Fonts->AddFontFromFileTTF("Fonts/Roboto-Medium.ttf", 13.f);
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	io.ConfigDockingWithShift = true;

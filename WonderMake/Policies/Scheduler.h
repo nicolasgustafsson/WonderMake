@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Typedefs.h"
+
 #include "Policies/Policy.h"
 #include "Policies/SystemId.h"
 
@@ -14,34 +16,34 @@ public:
 	void AddToSchedule(const SystemId aSystemId, std::vector<Policy> aPolicyList);
 	[[nodiscard]] bool Schedule();
 
-	void ResetQueue();
+	void AddSystem(const SystemId aSystemId);
 	[[nodiscard]] std::optional<SystemId> DequeueSystem();
 	void MarkSystemAsDone(const SystemId aSystemId);
-	[[nodiscard]] bool IsDone() const noexcept;
 
 private:
-	struct SchedulingInfo
+
+	struct SSchedulingInfo
 	{
-		SystemId mySystemId;
-		std::vector<Policy>		myPolicies;
-		std::vector<SystemId>	myDependsOnThis;
-		std::vector<SystemId>	myThisDependsOn;
-		std::vector<SystemId>	myCanRunParallelWith;
+		SystemId						Id;
+		std::vector<Policy>				Policies;
+
+		std::unordered_set<SystemId>	DependencyHierarchy;
+		std::unordered_set<SystemId>	DependsOnThis;
+		std::unordered_set<SystemId>	ThisDependsOn;
+		std::unordered_set<SystemId>	CanRunParallelWith;
 	};
 
-	void ConstructItemDependencies(SchedulingInfo& aSystem);
-	[[nodiscard]] bool TraverseDown(const SchedulingInfo& aRootSystem, const SchedulingInfo& aSystem, std::unordered_set<SystemId>& aOutList) const;
-	[[nodiscard]] bool TraverseUp(const SchedulingInfo& aRootSystem, const SchedulingInfo& aSystem, std::unordered_set<SystemId>& aOutList) const;
-	[[nodiscard]] bool SystemCanRunParallelWith(const SchedulingInfo& aSystem, const SchedulingInfo& aOtherSystem) const noexcept;
-	[[nodiscard]] bool ValidateSystem(SchedulingInfo& aSystem);
+	struct SEnqueuedSystem
+	{
+		SystemId						Id;
+		u32								Priority = 1;
+	};
 
-	[[nodiscard]] bool CanItemRun(const SchedulingInfo& aSystem) const;
-	void TryToAddToQueue(const SystemId aSystemId);
+	[[nodiscard]] bool ConstructSystemDependencies(SSchedulingInfo& aSystemInfo);
+	void ConstructSystemParallels(SSchedulingInfo& aSystemInfo);
+	[[nodiscard]] bool ConstructDependencyHierarchy(SSchedulingInfo& aSystemInfo);
 
-	std::unordered_map<SystemId, SchedulingInfo> mySystems;
-
-	std::unordered_set<SystemId> myQueueTemplate;
-	std::unordered_set<SystemId> myQueueReady;
-	std::unordered_set<SystemId> mySystemRunning;
-	std::unordered_set<SystemId> mySystemCompleted;
+	std::unordered_map<SystemId, SSchedulingInfo>	mySystemsInfo;
+	std::vector<SEnqueuedSystem>					myEnqueuedSystems;
+	std::unordered_set<SystemId>					myRunningSystem;
 };

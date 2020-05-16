@@ -1,5 +1,6 @@
 #pragma once
 #include "NodeGraph/Node.h"
+#include "AudioMixingNodeGraph.h"
 
 namespace AudioFlow
 {
@@ -43,6 +44,15 @@ namespace NodeTypes
 			AddSlot<AudioFlow::SAudioFlowDummy>(ESlotIo::Output, "Audio Wave");
 		}
 	};
+
+	struct SAudioNodeGraphNode : public NodeType<SAudioNodeGraphNode>
+	{
+		SAudioNodeGraphNode() : NodeType("Audio Node Graph")
+		{
+			AddSlot<AudioMixingNodeGraph>(ESlotIo::Input, "Node Graph In");
+			AddSlot<AudioMixingNodeGraph>(ESlotIo::Output, "Node Graph Out");
+		}
+	};
 }
 
 namespace SlotColors
@@ -52,5 +62,17 @@ namespace SlotColors
 	{
 		return ImColor(255, 192, 32, 255);
 		//return ImColor(128, 192, 255, 255); // teal
+	}
+}
+
+namespace InputSlotEdits
+{
+	template<>
+	inline void EditInputSlot<AudioMixingNodeGraph>(AudioMixingNodeGraph& aInput)
+	{
+		if (ImGui::Button("Show Node Graph"))
+			aInput.ShouldBeVisible = true;
+
+		WmGui::NodeGraphEditor::NodeGraphEdit(aInput);
 	}
 }

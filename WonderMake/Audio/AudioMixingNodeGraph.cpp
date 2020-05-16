@@ -11,6 +11,8 @@ AudioMixingNodeGraph::AudioMixingNodeGraph()
 	RegisterNode<NodeTypes::SAudioSourceBusNode>();
 	RegisterNode<NodeTypes::SAddFloatsNode>();
 	RegisterNode<NodeTypes::SPickColorNode>();
+	RegisterNode<NodeTypes::SAudioNodeGraphNode>();
+	
 
 	Name = "Audio Mixing Node Graph";
 }

@@ -203,6 +203,7 @@
     <ClCompile Include="Audio\AudioMixingNodeGraph.cpp" />
     <ClCompile Include="Audio\AudioFile.cpp" />
     <ClCompile Include="Audio\AudioManager.cpp" />
+    <ClCompile Include="Imgui\Canvas.cpp" />
     <ClCompile Include="Imgui\FileSelector.cpp" />
     <ClCompile Include="Imgui\NodeGraphGui.cpp" />
     <ClCompile Include="NodeGraph\NodeGraph.cpp" />
@@ -272,6 +273,7 @@
     <ClInclude Include="Audio\AudioFile.h" />
     <ClInclude Include="Audio\AudioManager.h" />
     <ClInclude Include="Audio\AudioNodeTypes.h" />
+    <ClInclude Include="Imgui\Canvas.h" />
     <ClInclude Include="Functionalities\BaseFunctionality.h" />
     <ClInclude Include="Imgui\FileSelector.h" />
     <ClInclude Include="Imgui\NodeGraphGui.h" />

@@ -3,7 +3,9 @@
 #include "NodeGraph/NodeGraph.h"
 #include "NodeGraph/Node.h"
 
-static WmGui::SCanvasState* CurrentCanvasState;
+//stack so that we can nest node graphs
+static std::vector<WmGui::NodeGraphEditor::SNodeGraphState*> NodeGraphStack;
+static WmGui::NodeGraphEditor::SNodeGraphState* CurrentNodeGraph;
 
 /// Struct containing information about connection source node and slot.
 struct _DragConnectionPayload
@@ -21,36 +23,54 @@ struct _DragConnectionPayload
 	ImColor SlotColor;
 };
 
-void WmGui::NodeGraphEditor(NodeGraph& aNodeGraph, bool* aShouldShow)
+void WmGui::NodeGraphEditor::NodeGraphEdit(NodeGraph& aNodeGraph)
 {
-	ImGui::Begin(aNodeGraph.Name.c_str(), aShouldShow);
+	if (!aNodeGraph.ShouldBeVisible)
+		return;
 
-	WmGui::BeginCanvas(&aNodeGraph.CanvasState);
+	//[Nicos]: inline unique id into the name as push id doesn't work with begin -- otherwise we would not be able to stack several node graphs with the same name.
+	std::string name = aNodeGraph.Name + "###" + std::to_string(aNodeGraph.UniqueId);
+	if (ImGui::Begin(name.c_str(), &aNodeGraph.ShouldBeVisible))
+	{
+		CurrentNodeGraph = &aNodeGraph.NodeGraphGuiState;
+		CurrentNodeGraph->Id = aNodeGraph.UniqueId;
+		NodeGraphStack.push_back(CurrentNodeGraph);
 
-	ImDrawList* drawList = ImGui::GetWindowDrawList();
+		WmGui::BeginCanvas(&aNodeGraph.NodeGraphGuiState.CanvasState);
 
-	drawList->ChannelsSplit(4);
+		ImDrawList* drawList = ImGui::GetWindowDrawList();
 
-	WmGui::Nodes(aNodeGraph.Nodes);
+		drawList->ChannelsSplit(4);
 
-	drawList->ChannelsSetCurrent(0);
+		WmGui::NodeGraphEditor::Nodes(aNodeGraph.Nodes);
 
-	WmGui::Connections(aNodeGraph.Connections);
+		drawList->ChannelsSetCurrent(0);
 
-	WmGui::PotentialConnection(aNodeGraph);
+		WmGui::NodeGraphEditor::Connections(aNodeGraph.Connections);
 
-	WmGui::DrawPendingConnection();
+		WmGui::NodeGraphEditor::PotentialConnection(aNodeGraph);
 
-	drawList->ChannelsSetCurrent(3);
-	WmGui::ContextMenu(aNodeGraph);
+		WmGui::NodeGraphEditor::DrawPendingConnection();
 
-	drawList->ChannelsMerge();
-	WmGui::EndCanvas();
+		drawList->ChannelsSetCurrent(3);
+		WmGui::NodeGraphEditor::ContextMenu(aNodeGraph);
+
+		drawList->ChannelsMerge();
+
+		WmGui::NodeGraphEditor::UpdateNodeGraphCursor();
+
+		WmGui::EndCanvas();
+
+		NodeGraphStack.erase(NodeGraphStack.end() - 1);
+		if (NodeGraphStack.size() > 0)
+			CurrentNodeGraph = NodeGraphStack[NodeGraphStack.size() - 1];
+	}
+
 
 	ImGui::End();
 }
 
-ImU32 WmGui::MakeSlotDataID(const char* aData, const char* aSlotTitle, void* aNodeId, bool aIsInput)
+ImU32 WmGui::NodeGraphEditor::MakeSlotDataID(const char* aData, const char* aSlotTitle, void* aNodeId, bool aIsInput)
 {
 	ImU32 SlotId = ImHashStr(aSlotTitle, 0, ImHashData(&aNodeId, sizeof(aNodeId)));
 	if (aIsInput)
@@ -61,44 +81,67 @@ ImU32 WmGui::MakeSlotDataID(const char* aData, const char* aSlotTitle, void* aNo
 	return ImHashStr(aData, 0, SlotId);
 }
 
-bool WmGui::RenderConnection(const ImVec2& aInputPosition, const ImVec2& aOutputPosition, float aThickness, const ImColor color)
+bool WmGui::NodeGraphEditor::RenderConnection(const ImVec2& aInputPosition, const ImVec2& aOutputPosition, float aThiccness, const ImColor color)
 {
+	ImVec2 outDentOffset = { 30.f, 0.f };
+
+	ImVec2 inputOutdent = aInputPosition - outDentOffset;
+	ImVec2 outputOutdent = aOutputPosition + outDentOffset;
+
+	ImVec2 direction = outputOutdent - inputOutdent;
+
+	SVector2f directionNormalized = { direction.x, direction.y };
+	directionNormalized.Normalize();
+	f32 dot = fabsf(directionNormalized.Dot({ 0.f, 1.f }));
+	directionNormalized *= dot;
+
 	ImDrawList* drawList = ImGui::GetWindowDrawList();
 
-	aThickness *= CurrentCanvasState->ZoomLevel;
+	aThiccness *= CurrentNodeGraph->CanvasState.ZoomLevel;
 
-	ImVec2 closestPoint = ImLineClosestPoint(aInputPosition, aOutputPosition, ImGui::GetMousePos());
-	float minimumSquareDistance = ImFabs(ImLengthSqr(ImGui::GetMousePos() - closestPoint));
-	bool isClose = minimumSquareDistance <= 200;
+	auto isCloseLambda = [](ImVec2 aStart, ImVec2 aEnd) {
+		const ImVec2 closestPoint = ImLineClosestPoint(aStart, aEnd, ImGui::GetMousePos());
+		const float minimumSquareDistance = ImFabs(ImLengthSqr(ImGui::GetMousePos() - closestPoint));
+		const bool isClose = minimumSquareDistance <= 200;
 
-	drawList->AddLine(aInputPosition, aOutputPosition, color, isClose ? aThickness * 2.f : aThickness);
+		return isClose;
+	};
 
-	if(isClose)
-		drawList->AddLine(aInputPosition, aOutputPosition, IM_COL32(255, 255, 255, 100), aThickness * 2.f);
+	const bool isClose = isCloseLambda(inputOutdent, outputOutdent) || isCloseLambda(aInputPosition, inputOutdent) || isCloseLambda(outputOutdent, aOutputPosition);
+
+	if (!isClose)
+		directionNormalized *= 0.5f;
+
+	ImVec2 imDirectionNormalized = { directionNormalized.X, directionNormalized.Y };
+	aThiccness = isClose ? aThiccness * 2.f : aThiccness;
+
+	drawList->AddLine(inputOutdent - (imDirectionNormalized * (aThiccness) * 0.5f) + ImVec2{ dot * aThiccness , 0.f }, outputOutdent + (imDirectionNormalized * (aThiccness) * 0.5f) - ImVec2{ dot * aThiccness + 0.2f, 0.f }, color, (aThiccness));
+	drawList->AddLine(aInputPosition, inputOutdent + ImVec2{ dot * aThiccness * 1.f, 0.f }, color, aThiccness);
+	drawList->AddLine(aOutputPosition, outputOutdent - ImVec2{ dot * aThiccness * 1.f, 0.f }, color, aThiccness);
 
 	return isClose;
 }
 
-bool WmGui::GetNewConnection(void** aInputNodeId, const char** aInputTitle, void** aOutputNodeId, const char** aOutputTitle, ImColor* aColor, SInputSlotInstanceBase** aInputSlotInstance, SOutputSlotInstanceBase** aOutputSlotInstance)
+bool WmGui::NodeGraphEditor::GetNewConnection(void** aInputNodeId, const char** aInputTitle, void** aOutputNodeId, const char** aOutputTitle, ImColor* aColor, SInputSlotInstanceBase** aInputSlotInstance, SOutputSlotInstanceBase** aOutputSlotInstance)
 {
-	assert(CurrentCanvasState != nullptr);
+	assert(CurrentNodeGraph != nullptr);
 	assert(aInputNodeId != nullptr);
 	assert(aInputTitle != nullptr);
 	assert(aOutputNodeId != nullptr);
 	assert(aOutputTitle != nullptr);
 	assert(aColor != nullptr);
 
-	auto* canvas = CurrentCanvasState;
-	auto& nodeGraphState = canvas->NodeGraphState;
+	auto& canvas = CurrentNodeGraph->CanvasState;
+	auto& nodeGraphState = *CurrentNodeGraph;
 
 	if (nodeGraphState.NewConnection.OutputNodeId != nullptr)
 	{
-		*aInputNodeId = CurrentCanvasState->NodeGraphState.NewConnection.InputNodeId;
-		*aInputTitle = CurrentCanvasState->NodeGraphState.NewConnection.InputSlotName;
-		*aOutputNodeId = CurrentCanvasState->NodeGraphState.NewConnection.OutputNodeId;
-		*aOutputTitle = CurrentCanvasState->NodeGraphState.NewConnection.OutputSlotName;
-		*aInputSlotInstance = CurrentCanvasState->NodeGraphState.NewConnection.InputSlot;
-		*aOutputSlotInstance = CurrentCanvasState->NodeGraphState.NewConnection.OutputSlot;
+		*aInputNodeId = nodeGraphState.NewConnection.InputNodeId;
+		*aInputTitle = nodeGraphState.NewConnection.InputSlotName;
+		*aOutputNodeId = nodeGraphState.NewConnection.OutputNodeId;
+		*aOutputTitle = nodeGraphState.NewConnection.OutputSlotName;
+		*aInputSlotInstance = nodeGraphState.NewConnection.InputSlot;
+		*aOutputSlotInstance = nodeGraphState.NewConnection.OutputSlot;
 		*aColor = nodeGraphState.NewConnection.Color;
 
 		memset(&nodeGraphState.NewConnection, 0, sizeof(nodeGraphState.NewConnection));
@@ -108,25 +151,25 @@ bool WmGui::GetNewConnection(void** aInputNodeId, const char** aInputTitle, void
 	return false;
 }
 
-bool WmGui::Connection(void* aInputNode, const char* aInputSlot, void* aOutputNode, const char* aOutputSlot, ImColor color)
+bool WmGui::NodeGraphEditor::Connection(void* aInputNode, const char* aInputSlot, void* aOutputNode, const char* aOutputSlot, ImColor color)
 {
-	assert(CurrentCanvasState != nullptr);
+	assert(CurrentNodeGraph != nullptr);
 	assert(aInputNode != nullptr);
 	assert(aInputSlot != nullptr);
 	assert(aOutputNode != nullptr);
 	assert(aOutputSlot != nullptr);
 
 	bool isConnected = true;
-	auto* canvas = CurrentCanvasState;
+	auto& canvas = CurrentNodeGraph->CanvasState;
 
 	ImVec2 input_slot_pos{
-		canvas->CachedData.GetFloat(MakeSlotDataID("x", aInputSlot, aInputNode, true)),
-		canvas->CachedData.GetFloat(MakeSlotDataID("y", aInputSlot, aInputNode, true)),
+		CurrentNodeGraph->CachedData.GetFloat(MakeSlotDataID("x", aInputSlot, aInputNode, true)),
+		CurrentNodeGraph->CachedData.GetFloat(MakeSlotDataID("y", aInputSlot, aInputNode, true)),
 	};
 
 	ImVec2 output_slot_pos{
-		canvas->CachedData.GetFloat(MakeSlotDataID("x", aOutputSlot, aOutputNode, false)),
-		canvas->CachedData.GetFloat(MakeSlotDataID("y", aOutputSlot, aOutputNode, false)),
+		CurrentNodeGraph->CachedData.GetFloat(MakeSlotDataID("x", aOutputSlot, aOutputNode, false)),
+		CurrentNodeGraph->CachedData.GetFloat(MakeSlotDataID("y", aOutputSlot, aOutputNode, false)),
 	};
 
 	// Indent connection a bit into slot widget.
@@ -143,179 +186,39 @@ bool WmGui::Connection(void* aInputNode, const char* aInputSlot, void* aOutputNo
 			isConnected = false;
 	}
 
-	canvas->CachedData.SetBool(MakeSlotDataID("hovered", aInputSlot, aInputNode, true), isCurveHovered && isConnected);
-	canvas->CachedData.SetBool(MakeSlotDataID("hovered", aOutputSlot, aOutputNode, false), isCurveHovered && isConnected);
+	CurrentNodeGraph->CachedData.SetBool(MakeSlotDataID("hovered", aInputSlot, aInputNode, true), isCurveHovered && isConnected);
+	CurrentNodeGraph->CachedData.SetBool(MakeSlotDataID("hovered", aOutputSlot, aOutputNode, false), isCurveHovered && isConnected);
 
 	return isConnected;
 }
 
-void WmGui::BeginCanvas(SCanvasState* aCanvasState)
+
+void WmGui::NodeGraphEditor::Node(SNode& node)
 {
-	assert(aCanvasState != nullptr);
+	WmGui::NodeGraphEditor::BeginNode(&node, &node.Position, &node.Selected);
+	WmGui::NodeGraphEditor::NodeTitle(node.NodeType.Title.c_str());
 
-	CurrentCanvasState = aCanvasState;
-	ImGui::PushID(aCanvasState);
-	ImGui::BeginGroup();
+	WmGui::NodeGraphEditor::InputSlots(node.InputSlotInstances);
 
-	// Create our child canvas
-	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(1, 1));
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-	ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(55, 55, 60, 200));
-	ImGui::BeginChild("scrolling_region", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollWithMouse);
-	ImGui::PushItemWidth(120.0f);
+	//[Nicos]: TODO add a way to preview stuff here - depending on compiler
 
-	const f32 gridSize = 64.0f * aCanvasState->ZoomLevel;
-
-	ImVec2 windowPosition = ImGui::GetWindowPos();
-	ImVec2 windowSize = ImGui::GetWindowSize();
-	ImDrawList* drawList = ImGui::GetWindowDrawList();
-
-	auto& imguiStyle = ImGui::GetStyle();
-
-	ImGuiIO& io = ImGui::GetIO();
-
-	if (!ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
-	{
-		if (ImGui::IsMouseDragging(2))
-		{
-			aCanvasState->Offset.x += io.MouseDelta.x;
-			aCanvasState->Offset.y += io.MouseDelta.y;
-		}
-
-		if (io.KeyCtrl)
-		{
-			if (io.MouseWheel != 0)
-			{
-				ImVec2 mouseRel = ImVec2{ ImGui::GetMousePos().x - ImGui::GetWindowPos().x, ImGui::GetMousePos().y - ImGui::GetWindowPos().y };
-				float prevZoom = aCanvasState->ZoomLevel;
-				aCanvasState->ZoomLevel = std::clamp(aCanvasState->ZoomLevel + io.MouseWheel * aCanvasState->ZoomLevel / 16.f, 0.3f, 3.f);
-				float zoomFactor = (prevZoom - aCanvasState->ZoomLevel) / prevZoom;
-
-				aCanvasState->Offset.x += ImVec2((mouseRel.x - aCanvasState->Offset.x) * zoomFactor, (mouseRel.y - aCanvasState->Offset.y) * zoomFactor).x;
-				aCanvasState->Offset.y += ImVec2((mouseRel.x - aCanvasState->Offset.x) * zoomFactor, (mouseRel.y - aCanvasState->Offset.y) * zoomFactor).y;
-			}
-		}
-	}
-
-	ImU32 gridColor = IM_COL32(100, 100, 110, 200);
-
-	for (f32 x = fmodf(aCanvasState->Offset.x, gridSize); x < windowSize.x;)
-	{
-		drawList->AddLine(ImVec2(x + windowPosition.x, 0 + windowPosition.y), ImVec2(x + windowPosition.x, windowSize.y + windowPosition.y), gridColor);
-		x += gridSize;
-	}
-
-	for (f32 y = fmodf(aCanvasState->Offset.y, gridSize); y < windowSize.y;)
-	{
-		drawList->AddLine(ImVec2(0 + windowPosition.x, y + windowPosition.y), ImVec2(windowSize.x + windowPosition.x, y + windowPosition.y), gridColor);
-		y += gridSize;
-	}
-
-	ImGui::SetWindowFontScale(CurrentCanvasState->ZoomLevel);
+	WmGui::NodeGraphEditor::OutputSlots(node.OutputSlotInstances);
+	WmGui::NodeGraphEditor::EndNode();
 }
 
-void WmGui::Node(SNode& node)
-{
-	WmGui::BeginNode(&node, &node.Position, &node.Selected);
-	WmGui::NodeTitle(node.NodeType.Title.c_str());
-
-	WmGui::InputSlots(node.InputSlotInstances);
-
-	//ImGui::Text("Testing 123"); //[Nicos]: TODO add a way to preview stuff here - depending on compiler
-
-	WmGui::OutputSlots(node.OutputSlotInstances);
-	WmGui::EndNode();
-}
-
-void WmGui::EndCanvas()
-{
-	ImDrawList* drawList = ImGui::GetWindowDrawList();
-	
-	if (CurrentCanvasState->NodeGraphState.CurrentGraphInfo.DoSelectionsFrame <= ImGui::GetCurrentContext()->FrameCount)
-		CurrentCanvasState->NodeGraphState.CurrentGraphInfo.SingleSelectedNodeId = nullptr;
-
-	switch (CurrentCanvasState->NodeGraphState.CurrentGraphInfo.CurrentCursorState)
-	{
-	case SNodeGraphState::CursorState::None:
-	{
-		ImGuiID canvasId = ImGui::GetID("canvas");
-		if (ImGui::IsMouseDown(0) && ImGui::GetCurrentWindow()->ContentRegionRect.Contains(ImGui::GetMousePos()))
-		{
-			if (ImGui::IsWindowHovered())
-			{
-				if (!ImGui::IsWindowFocused())
-					ImGui::FocusWindow(ImGui::GetCurrentWindow());
-
-				if (!ImGui::IsAnyItemActive())
-				{
-					ImGui::SetActiveID(canvasId, ImGui::GetCurrentWindow());
-					const ImGuiIO& io = ImGui::GetIO();
-					if (!io.KeyCtrl && !io.KeyShift)
-					{
-						CurrentCanvasState->NodeGraphState.CurrentGraphInfo.SingleSelectedNodeId = nullptr;   // unselect all
-						CurrentCanvasState->NodeGraphState.CurrentGraphInfo.DoSelectionsFrame = ImGui::GetCurrentContext()->FrameCount + 1;
-					}
-				}
-			}
-
-			if (ImGui::GetActiveID() == canvasId && ImGui::IsMouseDragging(0))
-			{
-				CurrentCanvasState->NodeGraphState.CurrentGraphInfo.selection_start = ImGui::GetMousePos();
-				CurrentCanvasState->NodeGraphState.CurrentGraphInfo.CurrentCursorState = SNodeGraphState::CursorState::DragSelecting;
-			}
-		}
-		else if (ImGui::GetActiveID() == canvasId)
-			ImGui::ClearActiveID();
-		break;
-	}
-	case SNodeGraphState::CursorState::Dragging:
-	{
-		if (!ImGui::IsMouseDown(0))
-		{
-			CurrentCanvasState->NodeGraphState.CurrentGraphInfo.CurrentCursorState = SNodeGraphState::CursorState::None;
-			CurrentCanvasState->NodeGraphState.CurrentGraphInfo.DraggedNodeId = nullptr;
-		}
-		break;
-	}
-	case SNodeGraphState::CursorState::DragSelecting:
-	{
-		if (ImGui::IsMouseDown(0))
-		{
-			drawList->AddRectFilled(CurrentCanvasState->NodeGraphState.CurrentGraphInfo.selection_start, ImGui::GetMousePos(), CurrentCanvasState->colors[ColSelectBg]);
-			drawList->AddRect(CurrentCanvasState->NodeGraphState.CurrentGraphInfo.selection_start, ImGui::GetMousePos(), CurrentCanvasState->colors[ColSelectBorder]);
-		}
-		else
-		{
-			ImGui::ClearActiveID();
-			CurrentCanvasState->NodeGraphState.CurrentGraphInfo.CurrentCursorState = SNodeGraphState::CursorState::None;
-		}
-		break;
-	}
-	}
-
-	ImGui::PopItemWidth();
-	ImGui::EndChild();
-	ImGui::PopStyleColor();
-	ImGui::PopStyleVar(2);
-	ImGui::EndGroup();
-
-	ImGui::SetWindowFontScale(1.f);
-	ImGui::PopID();
-}
-
-void WmGui::Nodes(plf::colony<SNode>& aNodes)
+void WmGui::NodeGraphEditor::Nodes(plf::colony<SNode>& aNodes)
 {
 	for (auto&& node : aNodes)
 	{
-		WmGui::Node(node);
+		WmGui::NodeGraphEditor::Node(node);
 	}
 }
 
-void WmGui::BeginNode(void* aNodeId, ImVec2* aPosition, bool* aSelected)
+void WmGui::NodeGraphEditor::BeginNode(void* aNodeId, ImVec2* aPosition, bool* aSelected)
 {
 	ImDrawList* drawList = ImGui::GetWindowDrawList();
 	//auto* canvas = gCanvas;
-	auto& nodeGraphState = CurrentCanvasState->NodeGraphState;
+	auto& nodeGraphState = *CurrentNodeGraph;
 	//
 	nodeGraphState.CurrentNodeInfo.Id = aNodeId;
 	nodeGraphState.CurrentNodeInfo.Position = aPosition;
@@ -327,15 +230,16 @@ void WmGui::BeginNode(void* aNodeId, ImVec2* aPosition, bool* aSelected)
 	// 3 - node content
 
 	// Top-let corner of the node
-	ImGui::SetCursorScreenPos(ImGui::GetWindowPos() + (*aPosition) * CurrentCanvasState->ZoomLevel + CurrentCanvasState->Offset);
+	ImGui::SetCursorScreenPos(ImGui::GetWindowPos() + (*aPosition) * CurrentNodeGraph->CanvasState.ZoomLevel + CurrentNodeGraph->CanvasState.Offset);
 
 	ImGui::PushID(aNodeId);
+	IdCount++;
 
 	ImGui::BeginGroup();    // Slots and content group
 	drawList->ChannelsSetCurrent(3);
 }
 
-void WmGui::NodeTitle(const char* aTitle)
+void WmGui::NodeGraphEditor::NodeTitle(const char* aTitle)
 {
 	auto* storage = ImGui::GetStateStorage();
 	float nodeWidth = storage->GetFloat(ImGui::GetID("node-width"));
@@ -350,11 +254,9 @@ void WmGui::NodeTitle(const char* aTitle)
 
 	auto& io = ImGui::GetIO();
 	ImGui::PushFont(io.Fonts->Fonts[1]);
-	//ImVec2 cursorPos = ImGui::GetCursorPos();
 
 	ImGui::Text(aTitle);
 
-	//ImGui::NewLine();
 	ImGui::Dummy({ 0.f, 1.f });
 	ImGui::PopFont();
 	//ImDrawList* drawList = ImGui::GetWindowDrawList();
@@ -370,11 +272,10 @@ void WmGui::NodeTitle(const char* aTitle)
 	//drawList->AddRectFilled(nodeRect.Min, nodeRect.Max, nodeColor);
 }
 
-bool WmGui::IsConnectingCompatibleSlot()
+bool WmGui::NodeGraphEditor::IsConnectingCompatibleSlot()
 {
-	assert(CurrentCanvasState != nullptr);
-	auto* canvas = CurrentCanvasState;
-	auto& nodeGraphState = canvas->NodeGraphState;
+	assert(CurrentNodeGraph != nullptr);
+	auto& nodeGraphState = *CurrentNodeGraph;
 
 	if (auto* payload = ImGui::GetDragDropPayload())
 	{
@@ -393,31 +294,31 @@ bool WmGui::IsConnectingCompatibleSlot()
 	return false;
 }
 
-void WmGui::Slot(const bool aIsInput, SSlotInstanceBase& aSlotInstance)
+void WmGui::NodeGraphEditor::Slot(const bool aIsInput, SSlotInstanceBase& aSlotInstance)
 {
-	CurrentCanvasState->NodeGraphState.CurrentSlotInfo.Title = aSlotInstance.SlotType.Name.c_str();
-	CurrentCanvasState->NodeGraphState.CurrentSlotInfo.IsInput = aIsInput;
-	CurrentCanvasState->NodeGraphState.CurrentSlotInfo.Color = aSlotInstance.SlotType.GetColor();
+	CurrentNodeGraph->CurrentSlotInfo.Title = aSlotInstance.SlotType.Name.c_str();
+	CurrentNodeGraph->CurrentSlotInfo.IsInput = aIsInput;
+	CurrentNodeGraph->CurrentSlotInfo.Color = aSlotInstance.SlotType.GetColor();
 	if (aIsInput)
 	{
-		CurrentCanvasState->NodeGraphState.CurrentSlotInfo.OutputSlotInstance = nullptr;
-		CurrentCanvasState->NodeGraphState.CurrentSlotInfo.InputSlotInstance = static_cast<SInputSlotInstanceBase*>(&aSlotInstance);
+		CurrentNodeGraph->CurrentSlotInfo.OutputSlotInstance = nullptr;
+		CurrentNodeGraph->CurrentSlotInfo.InputSlotInstance = static_cast<SInputSlotInstanceBase*>(&aSlotInstance);
 	}
 	else
 	{
-		CurrentCanvasState->NodeGraphState.CurrentSlotInfo.InputSlotInstance = nullptr;
-		CurrentCanvasState->NodeGraphState.CurrentSlotInfo.OutputSlotInstance = static_cast<SOutputSlotInstanceBase*>(&aSlotInstance);
+		CurrentNodeGraph->CurrentSlotInfo.InputSlotInstance = nullptr;
+		CurrentNodeGraph->CurrentSlotInfo.OutputSlotInstance = static_cast<SOutputSlotInstanceBase*>(&aSlotInstance);
 	}
 
 	ImGui::BeginGroup();
 
 	auto* storage = ImGui::GetStateStorage();
 	const auto& style = ImGui::GetStyle();
-	const float circleRadius = 5.f * CurrentCanvasState->ZoomLevel;
+	const float circleRadius = 6.5f * CurrentNodeGraph->CanvasState.ZoomLevel;
 
 	ImVec2 titleSize = ImGui::CalcTextSize(aSlotInstance.SlotType.Name.c_str());
 
-	float itemOffsetX = 1.f + style.ItemSpacing.x * CurrentCanvasState->ZoomLevel;
+	float itemOffsetX = 2.5f + style.ItemSpacing.x * CurrentNodeGraph->CanvasState.ZoomLevel;
 	if (aIsInput)
 		itemOffsetX = -itemOffsetX;
 
@@ -433,11 +334,11 @@ void WmGui::Slot(const bool aIsInput, SSlotInstanceBase& aSlotInstance)
 
 		// Reset max width if zoom has changed
 		ImGuiID canvasZoomLevel = ImGui::GetID("canvas-zoom");
-		if (storage->GetFloat(canvasZoomLevel, CurrentCanvasState->ZoomLevel) != CurrentCanvasState->ZoomLevel)
+		if (storage->GetFloat(canvasZoomLevel, CurrentNodeGraph->CanvasState.ZoomLevel) != CurrentNodeGraph->CanvasState.ZoomLevel)
 		{
 			storage->SetFloat(maxWidthId, 0.0f);
 		}
-		storage->SetFloat(canvasZoomLevel, CurrentCanvasState->ZoomLevel);
+		storage->SetFloat(canvasZoomLevel, CurrentNodeGraph->CanvasState.ZoomLevel);
 
 		const f32 outputMaxTitleWidth = ImMax(storage->GetFloat(maxWidthId, titleSize.x), titleSize.x);
 		storage->SetFloat(maxWidthId, outputMaxTitleWidth);
@@ -465,8 +366,8 @@ void WmGui::Slot(const bool aIsInput, SSlotInstanceBase& aSlotInstance)
 	}
 	else if (const ImGuiPayload* payload = ImGui::GetDragDropPayload())
 	{
-		char dataTypeFragment[] = "new-node-connection-";
-		if (strncmp(payload->DataType, dataTypeFragment, sizeof(dataTypeFragment) - 1) == 0)
+		std::string connection = WmGui::NodeGraphEditor::GetNewNodeConnectionString();
+		if (strncmp(payload->DataType, connection.c_str(), connection.size()) == 0)
 		{
 			auto* dragPayload = (_DragConnectionPayload*)payload->Data;
 
@@ -484,10 +385,10 @@ void WmGui::Slot(const bool aIsInput, SSlotInstanceBase& aSlotInstance)
 		
 		ImColor nodeBgColor;
 
-		if (CurrentCanvasState->NodeGraphState.CurrentNodeInfo.Selected && *CurrentCanvasState->NodeGraphState.CurrentNodeInfo.Selected)
-			nodeBgColor = CurrentCanvasState->colors[ColNodeActiveBg];
+		if (CurrentNodeGraph->CurrentNodeInfo.Selected && *(CurrentNodeGraph->CurrentNodeInfo.Selected))
+			nodeBgColor = CurrentNodeGraph->Colors[ColNodeActiveBg];
 		else
-			nodeBgColor = CurrentCanvasState->colors[ColNodeBg];
+			nodeBgColor = CurrentNodeGraph->Colors[ColNodeBg];
 
 		drawList->AddCircleFilled(circleRect.GetCenter(), circleRadius - 0.5f, nodeBgColor);
 		//drawList->AddCircleFilled(circleRect.GetCenter(), circleRadius, CurrentCanvasState->colors[ColNodeBg]);
@@ -501,6 +402,7 @@ void WmGui::Slot(const bool aIsInput, SSlotInstanceBase& aSlotInstance)
 	ImGui::ItemAdd(circleRect, ImGui::GetID(aSlotInstance.SlotType.Name.c_str()));
 
 	ImGui::PushID(&aSlotInstance);
+	IdCount++;
 
 	if (aIsInput)
 	{
@@ -519,19 +421,19 @@ void WmGui::Slot(const bool aIsInput, SSlotInstanceBase& aSlotInstance)
 	//	ImGui::NewLine();
 
 	ImGui::PopID();
+	IdCount--;
 
 	bool shouldDrawHover = false;
 	if (ImGui::IsItemHovered())
 		shouldDrawHover = true;
-
+	
 	//const ImGuiStyle& style = ImGui::GetStyle();
 
-
-	ImGui::PushID(CurrentCanvasState->NodeGraphState.CurrentSlotInfo.Title);
-	//ImGui::PushID(impl->slot.kind);
+	ImGui::PushID(CurrentNodeGraph->CurrentSlotInfo.Title);
+	IdCount++;
 
 	ImRect slotRect{ ImGui::GetItemRectMin(), ImGui::GetItemRectMax() };
-	ImGui::ItemAdd(slotRect, ImGui::GetID(CurrentCanvasState->NodeGraphState.CurrentSlotInfo.Title));
+	ImGui::ItemAdd(slotRect, ImGui::GetID(CurrentNodeGraph->CurrentSlotInfo.Title));
 
 	if (ImGui::IsMouseClicked(0) && ImGui::IsItemHovered())
 	{
@@ -555,8 +457,8 @@ void WmGui::Slot(const bool aIsInput, SSlotInstanceBase& aSlotInstance)
 		else
 			x = slotRect.Max.x;
 
-		CurrentCanvasState->CachedData.SetFloat(MakeSlotDataID("x", CurrentCanvasState->NodeGraphState.CurrentSlotInfo.Title, CurrentCanvasState->NodeGraphState.CurrentNodeInfo.Id, CurrentCanvasState->NodeGraphState.CurrentSlotInfo.IsInput), circleRect.GetCenter().x);
-		CurrentCanvasState->CachedData.SetFloat(MakeSlotDataID("y", CurrentCanvasState->NodeGraphState.CurrentSlotInfo.Title, CurrentCanvasState->NodeGraphState.CurrentNodeInfo.Id, CurrentCanvasState->NodeGraphState.CurrentSlotInfo.IsInput),
+		CurrentNodeGraph->CachedData.SetFloat(MakeSlotDataID("x", CurrentNodeGraph->CurrentSlotInfo.Title, CurrentNodeGraph->CurrentNodeInfo.Id, CurrentNodeGraph->CurrentSlotInfo.IsInput), circleRect.GetCenter().x);
+		CurrentNodeGraph->CachedData.SetFloat(MakeSlotDataID("y", CurrentNodeGraph->CurrentSlotInfo.Title, CurrentNodeGraph->CurrentNodeInfo.Id, CurrentNodeGraph->CurrentSlotInfo.IsInput),
 			circleRect.GetCenter().y);
 	}
 
@@ -564,65 +466,69 @@ void WmGui::Slot(const bool aIsInput, SSlotInstanceBase& aSlotInstance)
 	{
 		auto* payload = ImGui::GetDragDropPayload();
 		char dragId[32];
-		snprintf(dragId, sizeof(dragId), "new-node-connection-%08X", !CurrentCanvasState->NodeGraphState.CurrentSlotInfo.IsInput);
+
+		std::string connectionStr = WmGui::NodeGraphEditor::GetNewNodeConnectionString();
+		connectionStr += !CurrentNodeGraph->CurrentSlotInfo.IsInput;
 		if (payload == nullptr || !payload->IsDataType(dragId))
 		{
 			_DragConnectionPayload dragPayload{ };
-			dragPayload.NodeId = CurrentCanvasState->NodeGraphState.CurrentNodeInfo.Id;
-			dragPayload.IsInput = CurrentCanvasState->NodeGraphState.CurrentSlotInfo.IsInput;
-			dragPayload.SlotTitle = CurrentCanvasState->NodeGraphState.CurrentSlotInfo.Title;
-			dragPayload.SlotColor = CurrentCanvasState->NodeGraphState.CurrentSlotInfo.Color;
-			dragPayload.InputSlotInstance = CurrentCanvasState->NodeGraphState.CurrentSlotInfo.InputSlotInstance;
-			dragPayload.OutputSlotInstance = CurrentCanvasState->NodeGraphState.CurrentSlotInfo.OutputSlotInstance;
+			dragPayload.NodeId = CurrentNodeGraph->CurrentNodeInfo.Id;
+			dragPayload.IsInput = CurrentNodeGraph->CurrentSlotInfo.IsInput;
+			dragPayload.SlotTitle = CurrentNodeGraph->CurrentSlotInfo.Title;
+			dragPayload.SlotColor = CurrentNodeGraph->CurrentSlotInfo.Color;
+			dragPayload.InputSlotInstance = CurrentNodeGraph->CurrentSlotInfo.InputSlotInstance;
+			dragPayload.OutputSlotInstance = CurrentNodeGraph->CurrentSlotInfo.OutputSlotInstance;
 
-			ImGui::SetDragDropPayload(dragId, &dragPayload, sizeof(dragPayload));
+			ImGui::SetDragDropPayload(connectionStr.c_str(), &dragPayload, sizeof(dragPayload));
 
 			// Clear new connection info
-			CurrentCanvasState->NodeGraphState.NewConnection.InputNodeId	= nullptr;
-			CurrentCanvasState->NodeGraphState.NewConnection.InputSlot		= nullptr;
-			CurrentCanvasState->NodeGraphState.NewConnection.OutputNodeId	= nullptr;
-			CurrentCanvasState->NodeGraphState.NewConnection.OutputSlot = nullptr;
-			CurrentCanvasState->NodeGraphState.NewConnection.InputSlotName = nullptr;
-			CurrentCanvasState->NodeGraphState.NewConnection.OutputSlotName = nullptr;
+			CurrentNodeGraph->NewConnection.InputNodeId	= nullptr;
+			CurrentNodeGraph->NewConnection.InputSlot		= nullptr;
+			CurrentNodeGraph->NewConnection.OutputNodeId	= nullptr;
+			CurrentNodeGraph->NewConnection.OutputSlot = nullptr;
+			CurrentNodeGraph->NewConnection.InputSlotName = nullptr;
+			CurrentNodeGraph->NewConnection.OutputSlotName = nullptr;
 		}
 		//ImGui::TextUnformatted(CurrentCanvasState->NodeGraphState.CurrentSlotInfo.Title);
 		ImGui::EndDragDropSource();
 	}
 
-	if (IsConnectingCompatibleSlot() && ImGui::BeginDragDropTarget())
+	std::string connectionStr = WmGui::NodeGraphEditor::GetNewNodeConnectionString();
+
+	// Accept drags from opposite type (input <-> output)
+	connectionStr += CurrentNodeGraph->CurrentSlotInfo.IsInput;
+
+	auto* payload = ImGui::GetDragDropPayload();
+	if (IsConnectingCompatibleSlot() && ImGui::BeginDragDropTarget() && payload->IsDataType(connectionStr.c_str()))
 	{
 		shouldDrawHover = true;
 
-		// Accept drags from opposite type (input <-> output)
-		char dragId[32];
-		snprintf(dragId, sizeof(dragId), "new-node-connection-%08X", CurrentCanvasState->NodeGraphState.CurrentSlotInfo.IsInput);
-
-		if (auto* payload = ImGui::AcceptDragDropPayload(dragId, ImGuiDragDropFlags_AcceptNoDrawDefaultRect))
+		if (payload = ImGui::AcceptDragDropPayload(connectionStr.c_str(), ImGuiDragDropFlags_AcceptNoDrawDefaultRect))
 		{
 			auto* dragData = (_DragConnectionPayload*)payload->Data;
 
 			// Store info of source slot to be queried by ImNodes::GetConnection()
-			if (!CurrentCanvasState->NodeGraphState.CurrentSlotInfo.IsInput)
+			if (!CurrentNodeGraph->CurrentSlotInfo.IsInput)
 			{
-				CurrentCanvasState->NodeGraphState.NewConnection.InputNodeId = dragData->NodeId;
-				CurrentCanvasState->NodeGraphState.NewConnection.InputSlotName = dragData->SlotTitle;
-				CurrentCanvasState->NodeGraphState.NewConnection.InputSlot = dragData->InputSlotInstance;
-				CurrentCanvasState->NodeGraphState.NewConnection.OutputNodeId = CurrentCanvasState->NodeGraphState.CurrentNodeInfo.Id;
-				CurrentCanvasState->NodeGraphState.NewConnection.OutputSlotName = CurrentCanvasState->NodeGraphState.CurrentSlotInfo.Title;
-				CurrentCanvasState->NodeGraphState.NewConnection.OutputSlot = CurrentCanvasState->NodeGraphState.CurrentSlotInfo.OutputSlotInstance;
-				CurrentCanvasState->NodeGraphState.NewConnection.Color = dragData->SlotColor;
+				CurrentNodeGraph->NewConnection.InputNodeId = dragData->NodeId;
+				CurrentNodeGraph->NewConnection.InputSlotName = dragData->SlotTitle;
+				CurrentNodeGraph->NewConnection.InputSlot = dragData->InputSlotInstance;
+				CurrentNodeGraph->NewConnection.OutputNodeId = CurrentNodeGraph->CurrentNodeInfo.Id;
+				CurrentNodeGraph->NewConnection.OutputSlotName = CurrentNodeGraph->CurrentSlotInfo.Title;
+				CurrentNodeGraph->NewConnection.OutputSlot = CurrentNodeGraph->CurrentSlotInfo.OutputSlotInstance;
+				CurrentNodeGraph->NewConnection.Color = dragData->SlotColor;
 			}
 			else
 			{
-				CurrentCanvasState->NodeGraphState.NewConnection.InputNodeId = CurrentCanvasState->NodeGraphState.CurrentNodeInfo.Id;
-				CurrentCanvasState->NodeGraphState.NewConnection.InputSlotName = CurrentCanvasState->NodeGraphState.CurrentSlotInfo.Title;
-				CurrentCanvasState->NodeGraphState.NewConnection.InputSlot = CurrentCanvasState->NodeGraphState.CurrentSlotInfo.InputSlotInstance;
-				CurrentCanvasState->NodeGraphState.NewConnection.OutputNodeId = dragData->NodeId;
-				CurrentCanvasState->NodeGraphState.NewConnection.OutputSlotName = dragData->SlotTitle;
-				CurrentCanvasState->NodeGraphState.NewConnection.Color = dragData->SlotColor;
-				CurrentCanvasState->NodeGraphState.NewConnection.OutputSlot = dragData->OutputSlotInstance;
+				CurrentNodeGraph->NewConnection.InputNodeId = CurrentNodeGraph->CurrentNodeInfo.Id;
+				CurrentNodeGraph->NewConnection.InputSlotName = CurrentNodeGraph->CurrentSlotInfo.Title;
+				CurrentNodeGraph->NewConnection.InputSlot = CurrentNodeGraph->CurrentSlotInfo.InputSlotInstance;
+				CurrentNodeGraph->NewConnection.OutputNodeId = dragData->NodeId;
+				CurrentNodeGraph->NewConnection.OutputSlotName = dragData->SlotTitle;
+				CurrentNodeGraph->NewConnection.Color = dragData->SlotColor;
+				CurrentNodeGraph->NewConnection.OutputSlot = dragData->OutputSlotInstance;
 			}
-			CurrentCanvasState->NodeGraphState.JustConnected = true;
+			CurrentNodeGraph->JustConnected = true;
 		}
 
 		ImGui::EndDragDropTarget();
@@ -641,23 +547,26 @@ void WmGui::Slot(const bool aIsInput, SSlotInstanceBase& aSlotInstance)
 
 	if (aIsInput)
 	{
+		ImGuiWindow* window = ImGui::GetCurrentWindow();
+		auto before = window->IDStack.Size;
 		ImGui::BeginGroup();
 		if (!aSlotInstance.Connection)
 			aSlotInstance.Inspect();
 		ImGui::EndGroup();
+		auto after = window->IDStack.Size;
+
+		assert(before == after);
 	}
 
-
-	//ImGui::PopID(); // kind
 	ImGui::PopID(); // name
-
+	IdCount--;
 	//[Nicos]: Somehow this makes output nodes appear on the edge instead of completely inside the node
 	ImGui::GetCurrentWindow()->DC.CursorMaxPos.x -= itemOffsetX;
 
 	ImGui::EndGroup();
 }
 
-void WmGui::InputSlots(std::vector<std::unique_ptr<SInputSlotInstanceBase>>& slots)
+void WmGui::NodeGraphEditor::InputSlots(std::vector<std::unique_ptr<SInputSlotInstanceBase>>& slots)
 {
 	const auto& style = ImGui::GetStyle();
 
@@ -679,7 +588,7 @@ void WmGui::InputSlots(std::vector<std::unique_ptr<SInputSlotInstanceBase>>& slo
 	ImGui::BeginGroup();
 }
 
-void WmGui::OutputSlots(std::vector<std::unique_ptr<SOutputSlotInstanceBase>>& slots)
+void WmGui::NodeGraphEditor::OutputSlots(std::vector<std::unique_ptr<SOutputSlotInstanceBase>>& slots)
 {
 	const auto& style = ImGui::GetStyle();
 
@@ -696,7 +605,7 @@ void WmGui::OutputSlots(std::vector<std::unique_ptr<SOutputSlotInstanceBase>>& s
 	ImGui::EndGroup();
 }
 
-void WmGui::EndNode()
+void WmGui::NodeGraphEditor::EndNode()
 {
 	//assert(gCanvas != nullptr);
 
@@ -704,7 +613,7 @@ void WmGui::EndNode()
 	const ImGuiStyle& style = ImGui::GetStyle();
 	ImDrawList* drawList = ImGui::GetWindowDrawList();
 	//auto* canvas = gCanvas;
-	auto& nodeGraphState = CurrentCanvasState->NodeGraphState;
+	auto& nodeGraphState = *CurrentNodeGraph;
 	auto* nodeId = nodeGraphState.CurrentNodeInfo.Id;
 	//
 	bool& isNodeSelected = *nodeGraphState.CurrentNodeInfo.Selected;
@@ -714,16 +623,16 @@ void WmGui::EndNode()
 	ImGui::EndGroup();    // Slots and content group
 
 	ImRect nodeRect{
-		ImGui::GetItemRectMin() - style.ItemInnerSpacing * CurrentCanvasState->ZoomLevel,
-		ImGui::GetItemRectMax() + style.ItemInnerSpacing * CurrentCanvasState->ZoomLevel
+		ImGui::GetItemRectMin() - style.ItemInnerSpacing * nodeGraphState.CanvasState.ZoomLevel,
+		ImGui::GetItemRectMax() + style.ItemInnerSpacing * nodeGraphState.CanvasState.ZoomLevel
 	};
 
 	// Render frame
 	drawList->ChannelsSetCurrent(1);
 	
-	ImColor nodeColor = isNodeSelected ? CurrentCanvasState->colors[ColNodeActiveBg] : CurrentCanvasState->colors[ColNodeBg];
+	ImColor nodeColor = isNodeSelected ? nodeGraphState.Colors[ColNodeActiveBg] : nodeGraphState.Colors[ColNodeBg];
 	drawList->AddRectFilled(nodeRect.Min, nodeRect.Max, nodeColor, 5.0f);
-	drawList->AddRect(nodeRect.Min, nodeRect.Max, CurrentCanvasState->colors[ColNodeBorder], 5.0f, 15, 2.f);
+	drawList->AddRect(nodeRect.Min, nodeRect.Max, nodeGraphState.Colors[ColNodeBorder], 5.0f, 15, 2.f);
 
 	// Create node item
 	ImGuiID nodeItemId = ImGui::GetID(nodeId);
@@ -739,12 +648,12 @@ void WmGui::EndNode()
 	// Save last selection state in case we are about to start dragging multiple selected nodes
 	if (ImGui::IsMouseClicked(0))
 	{
-		ImGuiID previouslySelectedId = ImHashStr("prev-selected", 0, ImHashData(&CurrentCanvasState->NodeGraphState.CurrentNodeInfo.Id, sizeof(CurrentCanvasState->NodeGraphState.CurrentNodeInfo.Id)));
-		CurrentCanvasState->CachedData.SetBool(previouslySelectedId, isNodeSelected);
+		ImGuiID previouslySelectedId = ImHashStr("prev-selected", 0, ImHashData(&CurrentNodeGraph->CurrentNodeInfo.Id, sizeof(CurrentNodeGraph->CurrentNodeInfo.Id)));
+		CurrentNodeGraph->CachedData.SetBool(previouslySelectedId, isNodeSelected);
 	}
 
 	ImGuiIO& io = ImGui::GetIO();
-	switch (CurrentCanvasState->NodeGraphState.CurrentGraphInfo.CurrentCursorState)
+	switch (CurrentNodeGraph->CurrentGraphInfo.CurrentCursorState)
 	{
 	case SNodeGraphState::CursorState::None:
 	{
@@ -768,9 +677,10 @@ void WmGui::EndNode()
 
 	ImGui::PopStyleVar();
 	ImGui::PopID();
+	IdCount--;
 }
 
-void WmGui::Connections(plf::colony<SConnection>& aConnections)
+void WmGui::NodeGraphEditor::Connections(plf::colony<SConnection>& aConnections)
 {
 	auto it = aConnections.begin();
 
@@ -778,7 +688,7 @@ void WmGui::Connections(plf::colony<SConnection>& aConnections)
 	{
 		auto&& connection = *it;
 		auto& style = ImGui::GetStyle();
-		if (!WmGui::Connection(connection.InputNodeId, connection.InputSlotName, connection.OutputNodeId, connection.OutputSlotName, connection.Color))
+		if (!WmGui::NodeGraphEditor::Connection(connection.InputNodeId, connection.InputSlotName, connection.OutputNodeId, connection.OutputSlotName, connection.Color))
 		{
 			it->InputSlot->Connection = nullptr;
 			it->OutputSlot->Connection = nullptr;
@@ -791,11 +701,11 @@ void WmGui::Connections(plf::colony<SConnection>& aConnections)
 	}
 }
 
-void WmGui::PotentialConnection(NodeGraph& aNodeGraph)
+void WmGui::NodeGraphEditor::PotentialConnection(NodeGraph& aNodeGraph)
 {
 	SConnection potentialConnection;
 
-	if (WmGui::GetNewConnection(&potentialConnection.InputNodeId, &potentialConnection.InputSlotName, &potentialConnection.OutputNodeId, &potentialConnection.OutputSlotName, &potentialConnection.Color, &potentialConnection.InputSlot, &potentialConnection.OutputSlot))
+	if (WmGui::NodeGraphEditor::GetNewConnection(&potentialConnection.InputNodeId, &potentialConnection.InputSlotName, &potentialConnection.OutputNodeId, &potentialConnection.OutputSlotName, &potentialConnection.Color, &potentialConnection.InputSlot, &potentialConnection.OutputSlot))
 	{
 		for (auto it = aNodeGraph.Connections.begin(); it != aNodeGraph.Connections.end(); it++)
 		{
@@ -813,23 +723,23 @@ void WmGui::PotentialConnection(NodeGraph& aNodeGraph)
 	}
 }
 
-void WmGui::DrawPendingConnection()
+void WmGui::NodeGraphEditor::DrawPendingConnection()
 {
 	if (const ImGuiPayload* payload = ImGui::GetDragDropPayload())
 	{
-		char dataTypeFragment[] = "new-node-connection-";
-		if (strncmp(payload->DataType, dataTypeFragment, sizeof(dataTypeFragment) - 1) == 0)
+		std::string connection = WmGui::NodeGraphEditor::GetNewNodeConnectionString();
+		if (strncmp(payload->DataType, connection.c_str(), connection.size()) == 0)
 		{
 			auto* dragPayload = (_DragConnectionPayload*)payload->Data;
 
 			ImVec2 slotPosition{
-				CurrentCanvasState->CachedData.GetFloat(MakeSlotDataID("x", dragPayload->SlotTitle, dragPayload->NodeId,
+				CurrentNodeGraph->CachedData.GetFloat(MakeSlotDataID("x", dragPayload->SlotTitle, dragPayload->NodeId,
 					dragPayload->IsInput)),
-				CurrentCanvasState->CachedData.GetFloat(MakeSlotDataID("y", dragPayload->SlotTitle, dragPayload->NodeId,
+				CurrentNodeGraph->CachedData.GetFloat(MakeSlotDataID("y", dragPayload->SlotTitle, dragPayload->NodeId,
 					dragPayload->IsInput)),
 			};
 
-			const float connectionIndent = 5.f * CurrentCanvasState->ZoomLevel;
+			const float connectionIndent = 5.f * CurrentNodeGraph->CanvasState.ZoomLevel;
 
 			ImVec2 inputPosition, outputPosition;
 			if (dragPayload->IsInput)
@@ -851,87 +761,106 @@ void WmGui::DrawPendingConnection()
 	}
 }
 
-bool WmGui::NodeSelectionBehavior(const bool aWasSelected)
+bool WmGui::NodeGraphEditor::NodeSelectionBehavior(const bool aWasSelected)
 {
 	auto& io = ImGui::GetIO();
 	bool isNodeSelected = aWasSelected;
-	auto* nodeId = CurrentCanvasState->NodeGraphState.CurrentNodeInfo.Id;
+	auto* nodeId = CurrentNodeGraph->CurrentNodeInfo.Id;
 	// Node selection behavior. Selection can change only when no node is being dragged and connections are not being made.
-	if (CurrentCanvasState->NodeGraphState.JustConnected || ImGui::GetDragDropPayload() != nullptr)
+	if (CurrentNodeGraph->JustConnected || ImGui::GetDragDropPayload() != nullptr)
 	{
 		// No selections are performed when nodes are being connected.
-		CurrentCanvasState->NodeGraphState.JustConnected = false;
+		CurrentNodeGraph->JustConnected = false;
 	}
-	else if (CurrentCanvasState->NodeGraphState.CurrentGraphInfo.DoSelectionsFrame == ImGui::GetCurrentContext()->FrameCount)
+	else if (CurrentNodeGraph->CurrentGraphInfo.DoSelectionsFrame == ImGui::GetCurrentContext()->FrameCount)
 	{
 		// Unselect other nodes when some node was left-clicked.
-		isNodeSelected = CurrentCanvasState->NodeGraphState.CurrentGraphInfo.SingleSelectedNodeId == nodeId;
+		isNodeSelected = CurrentNodeGraph->CurrentGraphInfo.SingleSelectedNodeId == nodeId;
 	}
 	else if (ImGui::IsMouseClicked(0) && ImGui::IsItemHovered() && ImGui::IsItemActive())
 	{
 		isNodeSelected = true;
-		if (!io.KeyCtrl && isNodeSelected)
+		if (!io.KeyCtrl && !aWasSelected)
 		{
-			CurrentCanvasState->NodeGraphState.CurrentGraphInfo.SingleSelectedNodeId = nodeId;
-			CurrentCanvasState->NodeGraphState.CurrentGraphInfo.DoSelectionsFrame = ImGui::GetCurrentContext()->FrameCount + 1;
+			CurrentNodeGraph->CurrentGraphInfo.SingleSelectedNodeId = nodeId;
+			CurrentNodeGraph->CurrentGraphInfo.DoSelectionsFrame = ImGui::GetCurrentContext()->FrameCount + 1;
+		}
+	}
+	else if (ImGui::IsMouseReleased(0) && ImGui::IsItemHovered())
+	{
+		if (io.KeyAlt)
+		{
+			isNodeSelected = false;
+		}
+		else if (!io.KeyCtrl)
+		{
+			CurrentNodeGraph->CurrentGraphInfo.SingleSelectedNodeId = nodeId;
+			CurrentNodeGraph->CurrentGraphInfo.DoSelectionsFrame = ImGui::GetCurrentContext()->FrameCount + 1;
 		}
 	}
 	else if (ImGui::IsItemActive() && ImGui::IsMouseDragging(0))
 	{
-		CurrentCanvasState->NodeGraphState.CurrentGraphInfo.CurrentCursorState = SNodeGraphState::CursorState::Dragging;
-		if (CurrentCanvasState->NodeGraphState.CurrentGraphInfo.DraggedNodeId == nullptr)
+		CurrentNodeGraph->CurrentGraphInfo.CurrentCursorState = SNodeGraphState::CursorState::Dragging;
+		if (CurrentNodeGraph->CurrentGraphInfo.DraggedNodeId == nullptr)
 		{
-			CurrentCanvasState->NodeGraphState.CurrentGraphInfo.DraggedNodeId = nodeId;
-			CurrentCanvasState->NodeGraphState.CurrentGraphInfo.ShouldDragAllSelectedNodes = isNodeSelected;
+			CurrentNodeGraph->CurrentGraphInfo.DraggedNodeId = nodeId;
+			CurrentNodeGraph->CurrentGraphInfo.ShouldDragAllSelectedNodes = isNodeSelected;
 		}
 		else
 		{
 
-			CurrentCanvasState->NodeGraphState.CurrentGraphInfo.SingleSelectedNodeId = nullptr;
+			CurrentNodeGraph->CurrentGraphInfo.SingleSelectedNodeId = nullptr;
 		}	
 	}
 
 	return isNodeSelected;
 }
 
-ImVec2 WmGui::NodeDraggingBehavior(const bool isNodeSelected, const ImVec2 aInitialNodePosition)
+ImVec2 WmGui::NodeGraphEditor::NodeDraggingBehavior(const bool isNodeSelected, const ImVec2 aInitialNodePosition)
 {
 	ImVec2 newNodePosition = aInitialNodePosition;
 	if (ImGui::IsMouseDown(0))
 	{
 		// Node dragging behavior. Drag node under mouse and other selected nodes if current node is selected.
-		if ((ImGui::IsItemActive() || (CurrentCanvasState->NodeGraphState.CurrentGraphInfo.DraggedNodeId && CurrentCanvasState->NodeGraphState.CurrentGraphInfo.ShouldDragAllSelectedNodes && isNodeSelected)))
-			newNodePosition += ImGui::GetIO().MouseDelta / CurrentCanvasState->ZoomLevel;
+		if ((ImGui::IsItemActive() || (CurrentNodeGraph->CurrentGraphInfo.DraggedNodeId && CurrentNodeGraph->CurrentGraphInfo.ShouldDragAllSelectedNodes && isNodeSelected)))
+			newNodePosition += ImGui::GetIO().MouseDelta / CurrentNodeGraph->CanvasState.ZoomLevel;
 	}	
 
 	return newNodePosition;
 }
 
-bool WmGui::DragSelectionBehavior(ImRect nodeRect, const bool aNodeWasInitiallySelected)
+bool WmGui::NodeGraphEditor::DragSelectionBehavior(ImRect nodeRect, const bool aNodeWasInitiallySelected)
 {
 	bool isSelected = aNodeWasInitiallySelected;
 	ImRect selectionArea;
-	selectionArea.Min.x = ImMin(CurrentCanvasState->NodeGraphState.CurrentGraphInfo.selection_start.x, ImGui::GetMousePos().x);
-	selectionArea.Min.y = ImMin(CurrentCanvasState->NodeGraphState.CurrentGraphInfo.selection_start.y, ImGui::GetMousePos().y);
-	selectionArea.Max.x = ImMax(CurrentCanvasState->NodeGraphState.CurrentGraphInfo.selection_start.x, ImGui::GetMousePos().x);
-	selectionArea.Max.y = ImMax(CurrentCanvasState->NodeGraphState.CurrentGraphInfo.selection_start.y, ImGui::GetMousePos().y);
+	selectionArea.Min.x = ImMin(CurrentNodeGraph->CurrentGraphInfo.selection_start.x, ImGui::GetMousePos().x);
+	selectionArea.Min.y = ImMin(CurrentNodeGraph->CurrentGraphInfo.selection_start.y, ImGui::GetMousePos().y);
+	selectionArea.Max.x = ImMax(CurrentNodeGraph->CurrentGraphInfo.selection_start.x, ImGui::GetMousePos().x);
+	selectionArea.Max.y = ImMax(CurrentNodeGraph->CurrentGraphInfo.selection_start.y, ImGui::GetMousePos().y);
 
-	ImGuiID prevoiusSelectedId = ImHashStr("prev-selected", 0, ImHashData(&CurrentCanvasState->NodeGraphState.CurrentNodeInfo.Id, sizeof(CurrentCanvasState->NodeGraphState.CurrentNodeInfo.Id)));
+	ImGuiID prevoiusSelectedId = ImHashStr("prev-selected", 0, ImHashData(&CurrentNodeGraph->CurrentNodeInfo.Id, sizeof(CurrentNodeGraph->CurrentNodeInfo.Id)));
 	if (ImGui::GetIO().KeyShift)
 	{
 		// Append selection
 		if (selectionArea.Overlaps(nodeRect))
 			isSelected = true;
 		else
-			isSelected = CurrentCanvasState->CachedData.GetBool(prevoiusSelectedId);
+			isSelected = CurrentNodeGraph->CachedData.GetBool(prevoiusSelectedId);
 	}
 	else if (ImGui::GetIO().KeyCtrl)
 	{
-		// Subtract from selection
+
+		// Append selection
 		if (selectionArea.Overlaps(nodeRect))
-			isSelected = false;
+			isSelected = true;
 		else
-			isSelected = CurrentCanvasState->CachedData.GetBool(prevoiusSelectedId);
+			isSelected = CurrentNodeGraph->CachedData.GetBool(prevoiusSelectedId);
+
+		//// Subtract from selection
+		//if (selectionArea.Overlaps(nodeRect))
+		//	isSelected = false;
+		//else
+		//	isSelected = CurrentNodeGraph->CachedData.GetBool(prevoiusSelectedId);
 	}
 	else
 	{
@@ -942,14 +871,14 @@ bool WmGui::DragSelectionBehavior(ImRect nodeRect, const bool aNodeWasInitiallyS
 	return isSelected;
 }
 
-void WmGui::ContextMenu(NodeGraph& aNodeGraph)
+void WmGui::NodeGraphEditor::ContextMenu(NodeGraph& aNodeGraph)
 {
 	bool shouldOpenContextMenu = false;
 
 	const ImVec2 canvasPos = ImGui::GetCurrentWindow()->Pos;
 
 	// Open context menu
-	if (ImGui::IsMouseReleased(ImGuiMouseButton_Right) && (ImGui::IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup) || !ImGui::IsAnyItemHovered()))
+	if (ImGui::IsMouseReleased(ImGuiMouseButton_Right) && (ImGui::IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup)))
 		shouldOpenContextMenu = true;
 
 	if (shouldOpenContextMenu)
@@ -962,7 +891,10 @@ void WmGui::ContextMenu(NodeGraph& aNodeGraph)
 	{
 		for(auto& availableNode : aNodeGraph.RegisteredNodes)
 		{
-			if (ImGui::MenuItem(availableNode.Name.c_str(), nullptr, false)) { availableNode.AddNodeLambda(ImGui::GetMousePos() - canvasPos); }
+			if (ImGui::MenuItem(availableNode.Name.c_str(), nullptr, false))
+			{ 
+				availableNode.AddNodeLambda(ImGui::GetMousePos() - canvasPos);
+			}
 		}
 		ImGui::EndPopup();
 	}
@@ -970,13 +902,87 @@ void WmGui::ContextMenu(NodeGraph& aNodeGraph)
 	ImGui::PopStyleVar();
 }
 
-WmGui::SCanvasState::SCanvasState()
+void WmGui::NodeGraphEditor::UpdateNodeGraphCursor()
+{
+	ImDrawList* drawList = ImGui::GetWindowDrawList();
+
+	if (CurrentNodeGraph->CurrentGraphInfo.DoSelectionsFrame <= ImGui::GetCurrentContext()->FrameCount)
+		CurrentNodeGraph->CurrentGraphInfo.SingleSelectedNodeId = nullptr;
+
+	switch (CurrentNodeGraph->CurrentGraphInfo.CurrentCursorState)
+	{
+	case SNodeGraphState::CursorState::None:
+	{
+		ImGuiID canvasId = ImGui::GetID("canvas");
+		if (ImGui::IsMouseDown(0) && ImGui::GetCurrentWindow()->ContentRegionRect.Contains(ImGui::GetMousePos()))
+		{
+			if (ImGui::IsWindowHovered())
+			{
+				if (!ImGui::IsWindowFocused())
+					ImGui::FocusWindow(ImGui::GetCurrentWindow());
+
+				if (!ImGui::IsAnyItemActive())
+				{
+					ImGui::SetActiveID(canvasId, ImGui::GetCurrentWindow());
+					const ImGuiIO& io = ImGui::GetIO();
+					if (!io.KeyCtrl && !io.KeyShift)
+					{
+						CurrentNodeGraph->CurrentGraphInfo.SingleSelectedNodeId = nullptr;   // unselect all
+						CurrentNodeGraph->CurrentGraphInfo.DoSelectionsFrame = ImGui::GetCurrentContext()->FrameCount + 1;
+					}
+				}
+			}
+
+			if (ImGui::GetActiveID() == canvasId && ImGui::IsMouseDragging(0))
+			{
+				CurrentNodeGraph->CurrentGraphInfo.selection_start = ImGui::GetMousePos();
+				CurrentNodeGraph->CurrentGraphInfo.CurrentCursorState = SNodeGraphState::CursorState::DragSelecting;
+			}
+		}
+		else if (ImGui::GetActiveID() == canvasId)
+			ImGui::ClearActiveID();
+		break;
+	}
+	case SNodeGraphState::CursorState::Dragging:
+	{
+		if (!ImGui::IsMouseDown(0))
+		{
+			CurrentNodeGraph->CurrentGraphInfo.CurrentCursorState = SNodeGraphState::CursorState::None;
+			CurrentNodeGraph->CurrentGraphInfo.DraggedNodeId = nullptr;
+		}
+		break;
+	}
+	case SNodeGraphState::CursorState::DragSelecting:
+	{
+		if (ImGui::IsMouseDown(0))
+		{
+			drawList->AddRectFilled(CurrentNodeGraph->CurrentGraphInfo.selection_start, ImGui::GetMousePos(), CurrentNodeGraph->Colors[ColSelectBg]);
+			drawList->AddRect(CurrentNodeGraph->CurrentGraphInfo.selection_start, ImGui::GetMousePos(), CurrentNodeGraph->Colors[ColSelectBorder]);
+		}
+		else
+		{
+			ImGui::ClearActiveID();
+			CurrentNodeGraph->CurrentGraphInfo.CurrentCursorState = SNodeGraphState::CursorState::None;
+		}
+		break;
+	}
+	}
+}
+
+std::string WmGui::NodeGraphEditor::GetNewNodeConnectionString()
+{
+	std::string name = "NNconnect" + std::to_string(CurrentNodeGraph->Id);
+
+	return name;
+}
+
+WmGui::NodeGraphEditor::SNodeGraphState::SNodeGraphState()
 {
 	auto& imguiStyle = ImGui::GetStyle();
-	colors[ColNodeBg] = IM_COL32(20, 20, 22, 255);
-	colors[ColNodeActiveBg] = IM_COL32(85, 85, 110, 255);
-	colors[ColNodeBorder] = IM_COL32(115, 115, 130, 255);
-	colors[ColSelectBg] = imguiStyle.Colors[ImGuiCol_FrameBgActive];
-	colors[ColSelectBg].Value.w = 0.25f;
-	colors[ColSelectBorder] = imguiStyle.Colors[ImGuiCol_Border];
+	Colors[ColNodeBg] = IM_COL32(20, 20, 22, 255);
+	Colors[ColNodeActiveBg] = IM_COL32(85, 85, 110, 255);
+	Colors[ColNodeBorder] = IM_COL32(115, 115, 130, 255);
+	Colors[ColSelectBg] = imguiStyle.Colors[ImGuiCol_FrameBgActive];
+	Colors[ColSelectBg].Value.w = 0.25f;
+	Colors[ColSelectBorder] = imguiStyle.Colors[ImGuiCol_Border];
 }

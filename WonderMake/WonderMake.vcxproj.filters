@@ -64,6 +64,7 @@
     <ClCompile Include="Imgui\NodeGraphGui.cpp" />
     <ClCompile Include="NodeGraph\NodeGraph.cpp" />
     <ClCompile Include="Audio\AudioMixingNodeGraph.cpp" />
+    <ClCompile Include="Imgui\Canvas.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -231,6 +232,7 @@
     <ClInclude Include="Audio\AudioNodeTypes.h" />
     <ClInclude Include="NodeGraph\SlotColors.h" />
     <ClInclude Include="NodeGraph\InputSlotEdits.h" />
+    <ClInclude Include="Imgui\Canvas.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

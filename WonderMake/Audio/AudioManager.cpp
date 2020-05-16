@@ -148,14 +148,8 @@ I will shit fury all over you and you will drown in it. You're fucking dead, kid
 	if (showNodeGraph)
 	{
 		static AudioMixingNodeGraph graph;
+		graph.ShouldBeVisible = true;
 
-		static bool once = false;
-		if (!once)
-		{
-			once = true;
-		}
-
-		static bool shouldShow = true;
-		WmGui::NodeGraphEditor(graph, &shouldShow);
+		WmGui::NodeGraphEditor::NodeGraphEdit(graph);
 	}
 }

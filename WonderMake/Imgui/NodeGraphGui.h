@@ -1,5 +1,6 @@
 #pragma once
 #include "NodeGraph/Node.h"
+#include "Canvas.h"
 
 class NodeGraph;
 struct SNode;
@@ -9,7 +10,7 @@ struct SInputSlotInstanceBase;
 struct SOutputSlotInstanceBase;
 struct SSlotInstanceBase;
 
-namespace WmGui
+namespace WmGui::NodeGraphEditor
 {
 	enum StyleColor
 	{
@@ -21,9 +22,9 @@ namespace WmGui
 		ColMax
 	};
 
-
 	struct SNodeGraphState
 	{
+		SNodeGraphState();
 		enum class CursorState
 		{
 			None,
@@ -33,24 +34,24 @@ namespace WmGui
 
 		struct SCurrentNodeInfo
 		{
-			ImVec2* Position;
-			void* Id;
-			bool* Selected;
+			ImVec2* Position = {};
+			void* Id = {};
+			bool* Selected = {};
 		};
 
 		struct SCurrentSlotInfo
 		{
-			const char* Title;
-			bool IsInput;
-			ImColor Color;
+			const char* Title = {};
+			bool IsInput = {};
+			ImColor Color = {};
 
-			SInputSlotInstanceBase* InputSlotInstance;
-			SOutputSlotInstanceBase* OutputSlotInstance;
+			SInputSlotInstanceBase* InputSlotInstance = {};
+			SOutputSlotInstanceBase* OutputSlotInstance = {};
 		};
 
 		struct SCurrentGraphInfo
 		{
-			CursorState CurrentCursorState;
+			CursorState CurrentCursorState = {};
 
 			/// Starting position of node selection rect.
 			ImVec2 selection_start{};
@@ -64,39 +65,28 @@ namespace WmGui
 			i32 DoSelectionsFrame = 0;
 		};
 
+		u64 Id;
 		bool JustConnected = false;
-		SCurrentGraphInfo CurrentGraphInfo;
-		SCurrentNodeInfo CurrentNodeInfo;
-		SCurrentSlotInfo CurrentSlotInfo;
-		SConnection NewConnection;
-	};
+		SCurrentGraphInfo CurrentGraphInfo = {};
+		SCurrentNodeInfo CurrentNodeInfo = {};
+		SCurrentSlotInfo CurrentSlotInfo = {};
+		SConnection NewConnection = {};
+		ImColor Colors[StyleColor::ColMax];
 
-	struct SCanvasState
-	{
-		SCanvasState();
-		ImColor colors[StyleColor::ColMax];
 		ImGuiStorage CachedData{};
 
-		f32 ZoomLevel = 1;
-		ImVec2 Offset = { 0.f, 0.f };
-
-		//[Nicos]: May want to separate this from canvas in the future
-		SNodeGraphState NodeGraphState;
+		SCanvasState CanvasState = {};
 	};
 
-	void NodeGraphEditor(NodeGraph& aNodeGraph, bool* aShouldShow);
+	void NodeGraphEdit(NodeGraph& aNodeGraph);
 
-	ImU32 MakeSlotDataID(const char* data, const char* slot_title, void* node_id, bool input_slot);
+	ImU32 MakeSlotDataID(const char* aData, const char* aSlotTitle, void* aNodeId, bool aInputSlot);
 
-	bool RenderConnection(const ImVec2& input_pos, const ImVec2& output_pos, float thickness, const ImColor aColor);
+	bool RenderConnection(const ImVec2& aInputPos, const ImVec2& aOutputPos, float aThiccness, const ImColor aColor);
 
 	bool GetNewConnection(void** aInputNodeId, const char** aInputTitle, void** aOutputNodeId, const char** aOutputTitle, ImColor* aColor, SInputSlotInstanceBase** aInput, SOutputSlotInstanceBase** aOutput);
 
-	bool Connection(void* input_node, const char* input_slot, void* output_node, const char* output_slot, ImColor color);
-
-	void BeginCanvas(SCanvasState* aCanvasState);
-
-	void EndCanvas();
+	bool Connection(void* aInputNode, const char* aInputSlot, void* aOutputNode, const char* aOutputSlot, ImColor aColor);
 
 	void Nodes(plf::colony<SNode>& aNodes);
 	void Node(SNode& node);
@@ -127,6 +117,10 @@ namespace WmGui
 
 	bool DragSelectionBehavior(ImRect nodeRect, const bool aNodeWasInitiallySelected);
 
+	std::string GetNewNodeConnectionString();
+
 	void ContextMenu(NodeGraph& aNodeGraph);
+
+	void UpdateNodeGraphCursor();
 }
 

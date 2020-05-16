@@ -31,14 +31,20 @@ struct SRegisteredNode
 class NodeGraph
 {
 public:
+	NodeGraph();
+
+	u64 UniqueId;
+
 	std::string Name = "Unnamed Node Graph";
 
 	plf::colony<SConnection> Connections;
 	plf::colony<SNode> Nodes;
 
-	WmGui::SCanvasState CanvasState;
+	WmGui::NodeGraphEditor::SNodeGraphState NodeGraphGuiState;
 
 	std::vector<SRegisteredNode> RegisteredNodes;
+
+	bool ShouldBeVisible = false;
 
 protected:
 	template<typename T>

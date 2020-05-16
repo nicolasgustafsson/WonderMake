@@ -114,10 +114,10 @@ struct SNodeTypeBase
 	{
 
 	}
-	std::string Title;
+	std::string Title = "";
 
-	std::vector<std::unique_ptr<SSlotTypeBase>> InputSlots;
-	std::vector<std::unique_ptr<SSlotTypeBase>> OutputSlots;
+	std::vector<std::unique_ptr<SSlotTypeBase>> InputSlots = {};
+	std::vector<std::unique_ptr<SSlotTypeBase>> OutputSlots = {};
 
 	std::vector<std::unique_ptr<SInputSlotInstanceBase>> CreateInputSlotInstances() const
 	{
@@ -159,7 +159,7 @@ protected:
 	template <typename T>
 	void AddSlot(ESlotIo aIoType, std::string aSlotName)
 	{
-		SSlotType<T> slot;
+		SSlotType<T> slot = {};
 
 		slot.Name = aSlotName;
 
@@ -178,4 +178,4 @@ protected:
 };
 
 template<typename TNodeType>
-TNodeType NodeType<TNodeType>::StaticObject;
+TNodeType NodeType<TNodeType>::StaticObject = {};

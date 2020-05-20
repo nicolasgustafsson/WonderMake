@@ -2,25 +2,6 @@
 #include "NodeGraph/Node.h"
 #include "Imgui/NodeGraphGui.h"
 
-struct SNode
-{
-	SNode(SNodeTypeBase& aNodeType)
-		: NodeType(aNodeType)
-	{
-
-	}
-
-	SNodeTypeBase& NodeType;
-
-	size_t Id;
-
-	ImVec2 Position;
-
-	bool Selected;
-
-	std::vector<std::unique_ptr<SInputSlotInstanceBase>> InputSlotInstances;
-	std::vector<std::unique_ptr<SOutputSlotInstanceBase>> OutputSlotInstances;
-};
 
 struct SRegisteredNode
 {
@@ -48,14 +29,14 @@ public:
 
 protected:
 	template<typename T>
-	void AddNode(ImVec2 InLocation);
+	SNode& AddNode(ImVec2 InLocation);
 
 	template<typename T>
 	void RegisterNode();
 };
 
 template<typename T>
-void NodeGraph::AddNode(ImVec2 InLocation)
+SNode& NodeGraph::AddNode(ImVec2 InLocation)
 {
 	static size_t index = 0;
 
@@ -67,9 +48,9 @@ void NodeGraph::AddNode(ImVec2 InLocation)
 	node.InputSlotInstances = T::StaticObject.CreateInputSlotInstances();
 	node.OutputSlotInstances = T::StaticObject.CreateOutputSlotInstances();
 
-	Nodes.insert(std::move(node));
-
 	index++;
+
+	return *Nodes.insert(std::move(node));
 }
 
 template<typename T>

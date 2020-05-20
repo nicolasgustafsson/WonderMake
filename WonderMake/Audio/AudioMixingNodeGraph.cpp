@@ -5,7 +5,7 @@
 
 AudioMixingNodeGraph::AudioMixingNodeGraph()
 {
-	AddNode<NodeTypes::SAudioMixingResultNode>({1000, 400});
+	AddNode<NodeTypes::SAudioMixingResultNode>({1000, 400}).IsImmortal = true;
 	RegisterNode<NodeTypes::SAudioMixNode>();
 	RegisterNode<NodeTypes::SAudioFilterNode>();
 	RegisterNode<NodeTypes::SAudioSourceBusNode>();

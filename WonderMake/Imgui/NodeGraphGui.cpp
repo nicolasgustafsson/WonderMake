@@ -38,11 +38,12 @@ void WmGui::NodeGraphEditor::NodeGraphEdit(NodeGraph& aNodeGraph)
 
 		WmGui::BeginCanvas(&aNodeGraph.NodeGraphGuiState.CanvasState);
 
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, IM_COL32(50, 50, 55, 255));
 		ImDrawList* drawList = ImGui::GetWindowDrawList();
 
 		drawList->ChannelsSplit(4);
 
-		WmGui::NodeGraphEditor::Nodes(aNodeGraph.Nodes);
+		WmGui::NodeGraphEditor::Nodes(aNodeGraph);
 
 		drawList->ChannelsSetCurrent(0);
 
@@ -59,6 +60,7 @@ void WmGui::NodeGraphEditor::NodeGraphEdit(NodeGraph& aNodeGraph)
 
 		WmGui::NodeGraphEditor::UpdateNodeGraphCursor();
 
+		ImGui::PopStyleColor();
 		WmGui::EndCanvas();
 
 		NodeGraphStack.erase(NodeGraphStack.end() - 1);
@@ -107,7 +109,7 @@ bool WmGui::NodeGraphEditor::RenderConnection(const ImVec2& aInputPosition, cons
 		return isClose;
 	};
 
-	const bool isClose = isCloseLambda(inputOutdent, outputOutdent) || isCloseLambda(aInputPosition, inputOutdent) || isCloseLambda(outputOutdent, aOutputPosition);
+	bool isClose = isCloseLambda(inputOutdent, outputOutdent) || isCloseLambda(aInputPosition, inputOutdent) || isCloseLambda(outputOutdent, aOutputPosition);
 
 	if (!isClose)
 		directionNormalized *= 0.5f;
@@ -182,7 +184,7 @@ bool WmGui::NodeGraphEditor::Connection(void* aInputNode, const char* aInputSlot
 	{
 		ImGuiIO& io = ImGui::GetIO();
 
-		if ((ImGui::IsMouseClicked(0) && io.KeyAlt) || ImGui::IsMouseClicked(2))
+		if ((ImGui::IsMouseReleased(0) && io.KeyAlt) || ImGui::IsMouseReleased(2))
 			isConnected = false;
 	}
 
@@ -192,26 +194,74 @@ bool WmGui::NodeGraphEditor::Connection(void* aInputNode, const char* aInputSlot
 	return isConnected;
 }
 
-
-void WmGui::NodeGraphEditor::Node(SNode& node)
+void WmGui::NodeGraphEditor::Node(SNode& aNode)
 {
-	WmGui::NodeGraphEditor::BeginNode(&node, &node.Position, &node.Selected);
-	WmGui::NodeGraphEditor::NodeTitle(node.NodeType.Title.c_str());
+	WmGui::NodeGraphEditor::BeginNode(&aNode, &aNode.Position, &aNode.Selected);
+	WmGui::NodeGraphEditor::NodeTitle(aNode.NodeType.Title.c_str());
 
-	WmGui::NodeGraphEditor::InputSlots(node.InputSlotInstances);
+	ImU32 col = aNode.Selected ? CurrentNodeGraph->Colors[ColSlotEditActiveBg] : CurrentNodeGraph->Colors[ColSlotEditBg];
+	ImGui::PushStyleColor(ImGuiCol_FrameBg, col);
+
+	WmGui::NodeGraphEditor::InputSlots(aNode.InputSlotInstances);
 
 	//[Nicos]: TODO add a way to preview stuff here - depending on compiler
 
-	WmGui::NodeGraphEditor::OutputSlots(node.OutputSlotInstances);
+	WmGui::NodeGraphEditor::OutputSlots(aNode.OutputSlotInstances);
+
+	ImGui::PopStyleColor();
+
 	WmGui::NodeGraphEditor::EndNode();
+
+	ImGuiIO& io = ImGui::GetIO();
+
+	constexpr i32 deleteKey = 261; //[Nicos]: TODO Proper inputs for imgui
+
+	if (aNode.Selected && io.KeysDown[deleteKey] && !aNode.IsImmortal)
+		aNode.IWantToDie = true;
 }
 
-void WmGui::NodeGraphEditor::Nodes(plf::colony<SNode>& aNodes)
+void WmGui::NodeGraphEditor::Nodes(NodeGraph& aNodeGraph)
 {
-	for (auto&& node : aNodes)
-	{
+	for (auto&& node : aNodeGraph.Nodes)
 		WmGui::NodeGraphEditor::Node(node);
+
+	plf::colony<SNode>::colony_iterator<false> it = aNodeGraph.Nodes.begin();
+	
+	while (it != aNodeGraph.Nodes.end())
+	{
+		if (it->IWantToDie)
+			it = KillNode(aNodeGraph, it);
+		else
+			it++;
 	}
+}
+
+plf::colony<SNode>::colony_iterator<false> WmGui::NodeGraphEditor::KillNode(NodeGraph& aNodeGraph, plf::colony<SNode>::colony_iterator<false> aIterator)
+{
+	for (auto& inputSlot : aIterator->InputSlotInstances)
+	{
+		if (inputSlot->Connection)
+		{
+			auto it = aNodeGraph.Connections.get_iterator_from_pointer(inputSlot->Connection);
+			if (it != aNodeGraph.Connections.end())
+				aNodeGraph.Connections.erase(it);
+		}
+	}
+
+	for (auto& outputSlot : aIterator->OutputSlotInstances)
+	{
+		for (auto&& connection : outputSlot->Connections)
+		{
+			if (connection)
+			{
+				auto it = aNodeGraph.Connections.get_iterator_from_pointer(connection);
+				if (it != aNodeGraph.Connections.end())
+					aNodeGraph.Connections.erase(it);
+			}
+		}
+	}
+
+	return aNodeGraph.Nodes.erase(aIterator);
 }
 
 void WmGui::NodeGraphEditor::BeginNode(void* aNodeId, ImVec2* aPosition, bool* aSelected)
@@ -360,7 +410,7 @@ void WmGui::NodeGraphEditor::Slot(const bool aIsInput, SSlotInstanceBase& aSlotI
 
 	bool shouldDrawHollowConnection = true;
 
-	if (aSlotInstance.Connection)
+	if (aSlotInstance.HasConnection())
 	{
 		shouldDrawHollowConnection = false;
 	}
@@ -550,7 +600,7 @@ void WmGui::NodeGraphEditor::Slot(const bool aIsInput, SSlotInstanceBase& aSlotI
 		ImGuiWindow* window = ImGui::GetCurrentWindow();
 		auto before = window->IDStack.Size;
 		ImGui::BeginGroup();
-		if (!aSlotInstance.Connection)
+		if (!aSlotInstance.HasConnection())
 			aSlotInstance.Inspect();
 		ImGui::EndGroup();
 		auto after = window->IDStack.Size;
@@ -686,12 +736,10 @@ void WmGui::NodeGraphEditor::Connections(plf::colony<SConnection>& aConnections)
 
 	while (it != aConnections.end())
 	{
-		auto&& connection = *it;
+		auto& connection = *it;
 		auto& style = ImGui::GetStyle();
 		if (!WmGui::NodeGraphEditor::Connection(connection.InputNodeId, connection.InputSlotName, connection.OutputNodeId, connection.OutputSlotName, connection.Color))
 		{
-			it->InputSlot->Connection = nullptr;
-			it->OutputSlot->Connection = nullptr;
 			it = aConnections.erase(it);
 		}
 		else
@@ -707,19 +755,27 @@ void WmGui::NodeGraphEditor::PotentialConnection(NodeGraph& aNodeGraph)
 
 	if (WmGui::NodeGraphEditor::GetNewConnection(&potentialConnection.InputNodeId, &potentialConnection.InputSlotName, &potentialConnection.OutputNodeId, &potentialConnection.OutputSlotName, &potentialConnection.Color, &potentialConnection.InputSlot, &potentialConnection.OutputSlot))
 	{
+		bool shouldAddConnection = true;
 		for (auto it = aNodeGraph.Connections.begin(); it != aNodeGraph.Connections.end(); it++)
 		{
 			if (it->InputNodeId == potentialConnection.InputNodeId && strcmp(it->InputSlotName, potentialConnection.InputSlotName) == 0)
 			{
+				//[Nicos]: dragging the same connection should remove it
+				if (it->OutputNodeId == potentialConnection.OutputNodeId && strcmp(it->OutputSlotName, potentialConnection.OutputSlotName) == 0)
+					shouldAddConnection = false;
+
 				aNodeGraph.Connections.erase(it);
 				break;
 			}
 		}
 
-		auto insertedConnectionIt = aNodeGraph.Connections.insert(potentialConnection);
+		if (shouldAddConnection)
+		{
+			auto insertedConnectionIt = aNodeGraph.Connections.insert(std::move(potentialConnection));
 
-		insertedConnectionIt->InputSlot->Connection = &*insertedConnectionIt;
-		insertedConnectionIt->OutputSlot->Connection = &*insertedConnectionIt;
+			insertedConnectionIt->InputSlot->Connection = &*insertedConnectionIt;
+			insertedConnectionIt->OutputSlot->Connections.push_back(&*insertedConnectionIt);
+		}
 	}
 }
 
@@ -786,7 +842,7 @@ bool WmGui::NodeGraphEditor::NodeSelectionBehavior(const bool aWasSelected)
 			CurrentNodeGraph->CurrentGraphInfo.DoSelectionsFrame = ImGui::GetCurrentContext()->FrameCount + 1;
 		}
 	}
-	else if (ImGui::IsMouseReleased(0) && ImGui::IsItemHovered())
+	else if (ImGui::IsMouseReleased(0) && ImGui::IsItemHovered() && ImGui::IsItemActive())
 	{
 		if (io.KeyAlt)
 		{
@@ -980,6 +1036,8 @@ WmGui::NodeGraphEditor::SNodeGraphState::SNodeGraphState()
 {
 	auto& imguiStyle = ImGui::GetStyle();
 	Colors[ColNodeBg] = IM_COL32(20, 20, 22, 255);
+	Colors[ColSlotEditBg] = IM_COL32(50, 50, 55, 255);
+	Colors[ColSlotEditActiveBg] = IM_COL32(100, 100, 120, 255);
 	Colors[ColNodeActiveBg] = IM_COL32(85, 85, 110, 255);
 	Colors[ColNodeBorder] = IM_COL32(115, 115, 130, 255);
 	Colors[ColSelectBg] = imguiStyle.Colors[ImGuiCol_FrameBgActive];

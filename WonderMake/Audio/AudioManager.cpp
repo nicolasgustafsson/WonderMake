@@ -152,4 +152,6 @@ I will shit fury all over you and you will drown in it. You're fucking dead, kid
 
 		WmGui::NodeGraphEditor::NodeGraphEdit(graph);
 	}
+
+	//ImGui::ShowDemoWindow( );
 }

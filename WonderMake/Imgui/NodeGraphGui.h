@@ -15,6 +15,8 @@ namespace WmGui::NodeGraphEditor
 	enum StyleColor
 	{
 		ColNodeBg,
+		ColSlotEditBg,
+		ColSlotEditActiveBg,
 		ColNodeActiveBg,
 		ColNodeBorder,
 		ColSelectBg,
@@ -88,8 +90,9 @@ namespace WmGui::NodeGraphEditor
 
 	bool Connection(void* aInputNode, const char* aInputSlot, void* aOutputNode, const char* aOutputSlot, ImColor aColor);
 
-	void Nodes(plf::colony<SNode>& aNodes);
-	void Node(SNode& node);
+	void Nodes(NodeGraph& aNodeGraph);
+	void Node(SNode& aNode);
+	plf::colony<SNode>::colony_iterator<false> KillNode(NodeGraph& aNodeGraph, plf::colony<SNode>::colony_iterator<false> aIterator);
 
 	void BeginNode(void* aNodeId, ImVec2* aPosition, bool* aSelected);
 

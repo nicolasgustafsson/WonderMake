@@ -6,13 +6,15 @@ struct SSlotTypeBase;
 
 struct SConnection
 {
-	void* InputNodeId;
-	void* OutputNodeId;
-	const char* InputSlotName;
-	const char* OutputSlotName;
+	void* InputNodeId = nullptr;
+	void* OutputNodeId = nullptr;
+	const char* InputSlotName = nullptr;
+	const char* OutputSlotName = nullptr;
 
-	class SInputSlotInstanceBase* InputSlot;
-	class SOutputSlotInstanceBase* OutputSlot;
+	struct SInputSlotInstanceBase* InputSlot = nullptr;
+	struct SOutputSlotInstanceBase* OutputSlot = nullptr;
+
+	~SConnection();
 
 	ImColor Color;
 };
@@ -32,8 +34,8 @@ struct SSlotInstanceBase
 
 	}
 	const SSlotTypeBase& SlotType;
-	SConnection* Connection = nullptr;
 	virtual void Inspect() {};
+	virtual bool HasConnection() const = 0;
 };
 
 struct SOutputSlotInstanceBase : public SSlotInstanceBase
@@ -41,13 +43,25 @@ struct SOutputSlotInstanceBase : public SSlotInstanceBase
 	SOutputSlotInstanceBase(const SSlotTypeBase& aSlotType)
 		: SSlotInstanceBase(aSlotType) {}
 
+	std::vector<SConnection*> Connections;
 	virtual void Inspect() override final {};
+	virtual bool HasConnection() const override final
+	{
+		return Connections.size() != 0;
+	}
 };
 
 struct SInputSlotInstanceBase : public SSlotInstanceBase
 {
 	SInputSlotInstanceBase(const SSlotTypeBase& aSlotType)
 		: SSlotInstanceBase(aSlotType) {}
+
+	SConnection* Connection = nullptr;
+
+	virtual bool HasConnection() const override final
+	{
+		return Connection != nullptr;
+	}
 };
 
 template<typename T>
@@ -179,3 +193,27 @@ protected:
 
 template<typename TNodeType>
 TNodeType NodeType<TNodeType>::StaticObject = {};
+
+struct SNode
+{
+	SNode(SNodeTypeBase& aNodeType)
+		: NodeType(aNodeType)
+	{
+
+	}
+
+	SNodeTypeBase& NodeType;
+
+	size_t Id;
+
+	ImVec2 Position;
+
+	bool Selected;
+
+	bool IWantToDie = false;
+
+	bool IsImmortal = false;
+
+	std::vector<std::unique_ptr<SInputSlotInstanceBase>> InputSlotInstances;
+	std::vector<std::unique_ptr<SOutputSlotInstanceBase>> OutputSlotInstances;
+};

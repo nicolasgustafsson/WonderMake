@@ -1,6 +1,8 @@
 #pragma once
 #include "NodeGraph/SlotColors.h"
 #include "NodeGraph/InputSlotEdits.h"
+#include <any>
+#include <unordered_map>
 
 struct SSlotTypeBase;
 
@@ -83,6 +85,8 @@ struct SOutputSlotInstance : public SOutputSlotInstanceBase
 {
 	SOutputSlotInstance(const SSlotTypeBase& aSlotType)
 		: SOutputSlotInstanceBase(aSlotType) {}
+
+	T OutputValue = {};
 };
 
 
@@ -156,12 +160,16 @@ struct SNodeTypeBase
 
 		return slotInstances;
 	}
+
+	virtual void Execute(struct SNode& aNode) {}
+
+	virtual void ExecuteBackwards(struct SNode& aNode) {}
 };
 
 template<typename TNodeType>
-struct NodeType : public SNodeTypeBase
+struct SNodeType : public SNodeTypeBase
 {
-	NodeType(std::string aTitle)
+	SNodeType(std::string aTitle)
 		: SNodeTypeBase(aTitle)
 	{
 
@@ -188,11 +196,10 @@ protected:
 			break;
 		}
 	}
-
 };
 
 template<typename TNodeType>
-TNodeType NodeType<TNodeType>::StaticObject = {};
+TNodeType SNodeType<TNodeType>::StaticObject = {};
 
 struct SNode
 {
@@ -202,18 +209,53 @@ struct SNode
 
 	}
 
+	template<typename TOutputType>
+	void SetOutput(i32 aIndex, TOutputType aOutputValue);
+
+	template<typename TInputType>
+	TInputType GetInput(i32 aIndex);
+
+	template<typename TNode>
+	SNodeType<TNode>& GetNodeType()
+	{
+		return SNodeType<TNode>::StaticObject;
+	}
+
 	SNodeTypeBase& NodeType;
 
-	size_t Id;
+	size_t Id = {};
 
-	ImVec2 Position;
+	ImVec2 Position = {0.f, 0.f};
 
-	bool Selected;
+	bool Selected = false;
 
 	bool IWantToDie = false;
 
 	bool IsImmortal = false;
 
+	std::unordered_map<std::string, std::any> NodeData;
+
 	std::vector<std::unique_ptr<SInputSlotInstanceBase>> InputSlotInstances;
 	std::vector<std::unique_ptr<SOutputSlotInstanceBase>> OutputSlotInstances;
 };
+
+template<typename TOutputType>
+void SNode::SetOutput(i32 aIndex, TOutputType aOutputValue)
+{
+	SOutputSlotInstance<TOutputType>& output = static_cast<SOutputSlotInstance<TOutputType>&>(*OutputSlotInstances[aIndex]);
+
+	output.OutputValue = aOutputValue;
+}
+
+template<typename TInputType>
+TInputType SNode::GetInput(i32 aIndex)
+{
+	SInputSlotInstance<TInputType>& input = static_cast<SInputSlotInstance<TInputType>&>(*InputSlotInstances[aIndex]);
+
+	if (!input.HasConnection())
+		return input.EditableValue;
+
+	SOutputSlotInstance<TInputType>& correspondingOutput = static_cast<SOutputSlotInstance<TInputType>&>(*input.Connection->OutputSlot);
+
+	return correspondingOutput.OutputValue;
+}

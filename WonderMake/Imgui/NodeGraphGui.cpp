@@ -30,8 +30,17 @@ void WmGui::NodeGraphEditor::NodeGraphEdit(NodeGraph& aNodeGraph)
 
 	//[Nicos]: inline unique id into the name as push id doesn't work with begin -- otherwise we would not be able to stack several node graphs with the same name.
 	std::string name = aNodeGraph.Name + "###" + std::to_string(aNodeGraph.UniqueId);
-	if (ImGui::Begin(name.c_str(), &aNodeGraph.ShouldBeVisible))
+	if (ImGui::Begin(name.c_str(), &aNodeGraph.ShouldBeVisible, ImGuiWindowFlags_MenuBar))
 	{
+		if (ImGui::BeginMenuBar())
+		{
+			if (ImGui::Button("Compile"))
+			{
+				aNodeGraph.Compile();
+			}
+			ImGui::EndMenuBar();
+		}
+
 		CurrentNodeGraph = &aNodeGraph.NodeGraphGuiState;
 		CurrentNodeGraph->Id = aNodeGraph.UniqueId;
 		NodeGraphStack.push_back(CurrentNodeGraph);
@@ -204,7 +213,7 @@ void WmGui::NodeGraphEditor::Node(SNode& aNode)
 
 	WmGui::NodeGraphEditor::InputSlots(aNode.InputSlotInstances);
 
-	//[Nicos]: TODO add a way to preview stuff here - depending on compiler
+	//[Nicos]: TODO add a way to preview stuff here - depending on compiler and node
 
 	WmGui::NodeGraphEditor::OutputSlots(aNode.OutputSlotInstances);
 
@@ -214,7 +223,7 @@ void WmGui::NodeGraphEditor::Node(SNode& aNode)
 
 	ImGuiIO& io = ImGui::GetIO();
 
-	constexpr i32 deleteKey = 261; //[Nicos]: TODO Proper inputs for imgui
+	constexpr i32 deleteKey = 261; //[Nicos]: TODO Proper inputs for imgui | ImGuiKey_Delete is incorrect here, but not sure why.
 
 	if (aNode.Selected && io.KeysDown[deleteKey] && !aNode.IsImmortal)
 		aNode.IWantToDie = true;
@@ -226,7 +235,7 @@ void WmGui::NodeGraphEditor::Nodes(NodeGraph& aNodeGraph)
 		WmGui::NodeGraphEditor::Node(node);
 
 	plf::colony<SNode>::colony_iterator<false> it = aNodeGraph.Nodes.begin();
-	
+
 	while (it != aNodeGraph.Nodes.end())
 	{
 		if (it->IWantToDie)
@@ -432,7 +441,7 @@ void WmGui::NodeGraphEditor::Slot(const bool aIsInput, SSlotInstanceBase& aSlotI
 	if (shouldDrawHollowConnection)
 	{
 		drawList->ChannelsSetCurrent(2);
-		
+
 		ImColor nodeBgColor;
 
 		if (CurrentNodeGraph->CurrentNodeInfo.Selected && *(CurrentNodeGraph->CurrentNodeInfo.Selected))
@@ -476,7 +485,7 @@ void WmGui::NodeGraphEditor::Slot(const bool aIsInput, SSlotInstanceBase& aSlotI
 	bool shouldDrawHover = false;
 	if (ImGui::IsItemHovered())
 		shouldDrawHover = true;
-	
+
 	//const ImGuiStyle& style = ImGui::GetStyle();
 
 	ImGui::PushID(CurrentNodeGraph->CurrentSlotInfo.Title);
@@ -532,9 +541,9 @@ void WmGui::NodeGraphEditor::Slot(const bool aIsInput, SSlotInstanceBase& aSlotI
 			ImGui::SetDragDropPayload(connectionStr.c_str(), &dragPayload, sizeof(dragPayload));
 
 			// Clear new connection info
-			CurrentNodeGraph->NewConnection.InputNodeId	= nullptr;
-			CurrentNodeGraph->NewConnection.InputSlot		= nullptr;
-			CurrentNodeGraph->NewConnection.OutputNodeId	= nullptr;
+			CurrentNodeGraph->NewConnection.InputNodeId = nullptr;
+			CurrentNodeGraph->NewConnection.InputSlot = nullptr;
+			CurrentNodeGraph->NewConnection.OutputNodeId = nullptr;
 			CurrentNodeGraph->NewConnection.OutputSlot = nullptr;
 			CurrentNodeGraph->NewConnection.InputSlotName = nullptr;
 			CurrentNodeGraph->NewConnection.OutputSlotName = nullptr;
@@ -679,7 +688,7 @@ void WmGui::NodeGraphEditor::EndNode()
 
 	// Render frame
 	drawList->ChannelsSetCurrent(1);
-	
+
 	ImColor nodeColor = isNodeSelected ? nodeGraphState.Colors[ColNodeActiveBg] : nodeGraphState.Colors[ColNodeBg];
 	drawList->AddRectFilled(nodeRect.Min, nodeRect.Max, nodeColor, 5.0f);
 	drawList->AddRect(nodeRect.Min, nodeRect.Max, nodeGraphState.Colors[ColNodeBorder], 5.0f, 15, 2.f);
@@ -866,7 +875,7 @@ bool WmGui::NodeGraphEditor::NodeSelectionBehavior(const bool aWasSelected)
 		{
 
 			CurrentNodeGraph->CurrentGraphInfo.SingleSelectedNodeId = nullptr;
-		}	
+		}
 	}
 
 	return isNodeSelected;
@@ -880,7 +889,7 @@ ImVec2 WmGui::NodeGraphEditor::NodeDraggingBehavior(const bool isNodeSelected, c
 		// Node dragging behavior. Drag node under mouse and other selected nodes if current node is selected.
 		if ((ImGui::IsItemActive() || (CurrentNodeGraph->CurrentGraphInfo.DraggedNodeId && CurrentNodeGraph->CurrentGraphInfo.ShouldDragAllSelectedNodes && isNodeSelected)))
 			newNodePosition += ImGui::GetIO().MouseDelta / CurrentNodeGraph->CanvasState.ZoomLevel;
-	}	
+	}
 
 	return newNodePosition;
 }
@@ -945,10 +954,10 @@ void WmGui::NodeGraphEditor::ContextMenu(NodeGraph& aNodeGraph)
 
 	if (ImGui::BeginPopup("context_menu"))
 	{
-		for(auto& availableNode : aNodeGraph.RegisteredNodes)
+		for (auto& availableNode : aNodeGraph.RegisteredNodes)
 		{
 			if (ImGui::MenuItem(availableNode.Name.c_str(), nullptr, false))
-			{ 
+			{
 				availableNode.AddNodeLambda(ImGui::GetMousePos() - canvasPos);
 			}
 		}

@@ -20,6 +20,7 @@ AudioManager::AudioManager()
 {
 	mySoloudEngine.init(mySoloudEngine.FLAGS::CLIP_ROUNDOFF, mySoloudEngine.BACKENDS::WASAPI, SoLoud::Soloud::AUTO, 2048, 2);
 	myBusHandle = mySoloudEngine.play(myBus);
+
 	mySoloudEngine.setMaxActiveVoiceCount(255);
 }
 
@@ -45,8 +46,18 @@ void AudioManager::PlayAudio(const std::filesystem::path& aAudioPath)
 
 void AudioManager::PlayAudio(ResourceProxy<AudioFile> aAudioFileToPlay)
 {
-	auto handle = myBus.play(aAudioFileToPlay->GetSource());
+	auto handle = myBusses["Gameplay"].play(aAudioFileToPlay->GetSource());
 	myCurrentlyPlayingAudioFiles.insert({ handle, aAudioFileToPlay });
+}
+
+SoLoud::Bus& AudioManager::GetBus(std::string aBusName)
+{
+	return myBusses[aBusName];
+}
+
+SoLoud::Soloud& AudioManager::GetSoloudEngine()
+{
+	return mySoloudEngine;
 }
 
 void AudioManager::TryPlayQueuedAudioFiles()
@@ -152,6 +163,4 @@ I will shit fury all over you and you will drown in it. You're fucking dead, kid
 
 		WmGui::NodeGraphEditor::NodeGraphEdit(graph);
 	}
-
-	//ImGui::ShowDemoWindow( );
 }

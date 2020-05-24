@@ -1,78 +1,81 @@
 #pragma once
 #include "NodeGraph/Node.h"
-#include "AudioMixingNodeGraph.h"
-
-namespace AudioFlow
-{
-	struct SAudioFlowDummy {};
-}
+#include <soloud.h>
 
 namespace NodeTypes
 {
-	struct SAudioMixingResultNode : public NodeType<SAudioMixingResultNode>
+	struct SAudioMixingResultNode : public SNodeType<SAudioMixingResultNode>
 	{
-		SAudioMixingResultNode() : NodeType("Final Mix")
+		SAudioMixingResultNode() : SNodeType("Final Mix")
 		{
-			AddSlot<AudioFlow::SAudioFlowDummy>(ESlotIo::Input, "Mix");
+			AddSlot<SoLoud::AudioSource*>(ESlotIo::Input, "Mix");
 		}
+
+		virtual void ExecuteBackwards(SNode& aNode) override;
 	};
 
-	struct SAudioMixNode : public NodeType<SAudioMixNode>
+	struct SAudioMixNode : public SNodeType<SAudioMixNode>
 	{
-		SAudioMixNode() : NodeType("Mix")
-		{
-			AddSlot<AudioFlow::SAudioFlowDummy>(ESlotIo::Input, "First");
-			AddSlot<AudioFlow::SAudioFlowDummy>(ESlotIo::Input, "Second");
-			AddSlot<AudioFlow::SAudioFlowDummy>(ESlotIo::Output, "Mixed");
+		SAudioMixNode() : SNodeType("Mix")
+		{ 
+			AddSlot<SoLoud::AudioSource*>(ESlotIo::Input, "First");
+			AddSlot<SoLoud::AudioSource*>(ESlotIo::Input, "Second");
+			AddSlot<SoLoud::Bus*>(ESlotIo::Output, "Mixed");
 		}
+
+		virtual void Execute(SNode& aNode) override;
+		virtual void ExecuteBackwards(SNode& aNode) override;
 	};
 
-	struct SAudioFilterNode : public NodeType<SAudioFilterNode>
-	{
-		SAudioFilterNode() : NodeType("Filter")
-		{
-			AddSlot<AudioFlow::SAudioFlowDummy>(ESlotIo::Input, "Input");
-			AddSlot<AudioFlow::SAudioFlowDummy>(ESlotIo::Output, "Filtered");
-		}
-	};
+	//struct SAudioFilterNode : public SNodeType<SAudioFilterNode>
+	//{
+	//	SAudioFilterNode() : SNodeType("Filter")
+	//	{
+	//		AddSlot<AudioFlow::SAudioFlowDummy>(ESlotIo::Input, "Input");
+	//		AddSlot<AudioFlow::SAudioFlowDummy>(ESlotIo::Output, "Filtered");
+	//	}
+	//};
 
-	struct SAudioSourceBusNode : public NodeType<SAudioSourceBusNode>
+	struct SAudioSourceBusNode : public SNodeType<SAudioSourceBusNode>
 	{
-		SAudioSourceBusNode() : NodeType("Source Bus")
+		SAudioSourceBusNode() : SNodeType("Source Bus")
 		{
 			AddSlot<std::string>(ESlotIo::Input, "Bus Name");
-			AddSlot<AudioFlow::SAudioFlowDummy>(ESlotIo::Output, "Audio Wave");
+			AddSlot<SoLoud::Bus*>(ESlotIo::Output, "Audio Bus");
 		}
+
+		virtual void Execute(SNode& aNode) override;
 	};
 
-	struct SAudioNodeGraphNode : public NodeType<SAudioNodeGraphNode>
+	struct SEchoFilter : public SNodeType<SEchoFilter>
 	{
-		SAudioNodeGraphNode() : NodeType("Audio Node Graph")
+		SEchoFilter() : SNodeType("Echo Filter")
 		{
-			AddSlot<AudioMixingNodeGraph>(ESlotIo::Input, "Node Graph In");
-			AddSlot<AudioMixingNodeGraph>(ESlotIo::Output, "Node Graph Out");
+			AddSlot<SoLoud::AudioSource*>(ESlotIo::Input, "Input");
+			AddSlot<f32>(ESlotIo::Input, "Delay");
+			AddSlot<f32>(ESlotIo::Input, "Decay");
+			AddSlot<SoLoud::AudioSource*>(ESlotIo::Output, "Output");
 		}
+
+		virtual void Execute(SNode& aNode) override;
+
+		virtual void ExecuteBackwards(SNode& aNode) override;
 	};
 }
 
 namespace SlotColors
 {
 	template<>
-	inline ImColor GetColor<AudioFlow::SAudioFlowDummy>()
+	inline ImColor GetColor<SoLoud::Bus*>()
 	{
 		return ImColor(255, 192, 32, 255);
 		//return ImColor(128, 192, 255, 255); // teal
 	}
-}
 
-namespace InputSlotEdits
-{
 	template<>
-	inline void EditInputSlot<AudioMixingNodeGraph>(AudioMixingNodeGraph& aInput)
+	inline ImColor GetColor<SoLoud::AudioSource*>()
 	{
-		if (ImGui::Button("Show Node Graph"))
-			aInput.ShouldBeVisible = true;
-
-		WmGui::NodeGraphEditor::NodeGraphEdit(aInput);
+		return ImColor(255, 192, 32, 255);
+		//return ImColor(128, 192, 255, 255); // teal
 	}
 }

@@ -3,9 +3,9 @@
 
 namespace NodeTypes
 {
-	struct SAddFloatsNode : public NodeType<SAddFloatsNode>
+	struct SAddFloatsNode : public SNodeType<SAddFloatsNode>
 	{
-		SAddFloatsNode() : NodeType("Add Floats")
+		SAddFloatsNode() : SNodeType("Add Floats")
 		{
 			AddSlot<float>(ESlotIo::Input, "First");
 			AddSlot<float>(ESlotIo::Input, "Second");
@@ -13,9 +13,9 @@ namespace NodeTypes
 		}
 	};
 
-	struct SPickColorNode : public NodeType<SPickColorNode>
+	struct SPickColorNode : public SNodeType<SPickColorNode>
 	{
-		SPickColorNode() : NodeType("Pick Color")
+		SPickColorNode() : SNodeType("Pick Color")
 		{
 			AddSlot<SColor>(ESlotIo::Input, "Input Color");
 			AddSlot<SColor>(ESlotIo::Output, "Output Color");

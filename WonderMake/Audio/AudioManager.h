@@ -12,6 +12,10 @@ public:
 	void Update() noexcept;
 
 	void PlayAudio(const std::filesystem::path& aAudioPath);
+
+	SoLoud::Bus& GetBus(std::string aBusName);
+	SoLoud::Soloud& GetSoloudEngine();
+
 protected:
 	void PlayAudio(ResourceProxy<AudioFile> aAudioFileToPlay);
 
@@ -27,5 +31,6 @@ protected:
 
 	plf::colony<SPlayingAudioFile> myCurrentlyPlayingAudioFiles;
 	plf::colony<SQueuedAudioFile> myQueuedAudioFiles;
-};
 
+	std::unordered_map<std::string, SoLoud::Bus> myBusses;
+};

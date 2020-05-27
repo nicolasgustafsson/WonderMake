@@ -20,28 +20,19 @@ namespace NodeTypes
 		{ 
 			AddSlot<SoLoud::AudioSource*>(ESlotIo::Input, "First");
 			AddSlot<SoLoud::AudioSource*>(ESlotIo::Input, "Second");
-			AddSlot<SoLoud::Bus*>(ESlotIo::Output, "Mixed");
+			AddSlot<SoLoud::AudioSource*>(ESlotIo::Output, "Mixed");
 		}
 
 		virtual void Execute(SNode& aNode) override;
 		virtual void ExecuteBackwards(SNode& aNode) override;
 	};
 
-	//struct SAudioFilterNode : public SNodeType<SAudioFilterNode>
-	//{
-	//	SAudioFilterNode() : SNodeType("Filter")
-	//	{
-	//		AddSlot<AudioFlow::SAudioFlowDummy>(ESlotIo::Input, "Input");
-	//		AddSlot<AudioFlow::SAudioFlowDummy>(ESlotIo::Output, "Filtered");
-	//	}
-	//};
-
 	struct SAudioSourceBusNode : public SNodeType<SAudioSourceBusNode>
 	{
 		SAudioSourceBusNode() : SNodeType("Source Bus")
 		{
 			AddSlot<std::string>(ESlotIo::Input, "Bus Name");
-			AddSlot<SoLoud::Bus*>(ESlotIo::Output, "Audio Bus");
+			AddSlot<SoLoud::AudioSource*>(ESlotIo::Output, "Audio Bus");
 		}
 
 		virtual void Execute(SNode& aNode) override;
@@ -65,13 +56,6 @@ namespace NodeTypes
 
 namespace SlotColors
 {
-	template<>
-	inline ImColor GetColor<SoLoud::Bus*>()
-	{
-		return ImColor(255, 192, 32, 255);
-		//return ImColor(128, 192, 255, 255); // teal
-	}
-
 	template<>
 	inline ImColor GetColor<SoLoud::AudioSource*>()
 	{

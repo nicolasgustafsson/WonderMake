@@ -99,6 +99,11 @@ struct SSlotTypeBase abstract
 
 	virtual std::unique_ptr<SInputSlotInstanceBase> CreateInputSlotInstance() const = 0;
 	virtual std::unique_ptr<SOutputSlotInstanceBase> CreateOutputSlotInstance() const = 0;
+
+	bool IsCompatibleWith(const SSlotTypeBase& aOther) const
+	{
+		return GetTypeHash() == aOther.GetTypeHash();
+	}
 };
 
 template<typename TSlotType>

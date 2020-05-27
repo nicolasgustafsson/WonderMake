@@ -347,6 +347,12 @@ bool WmGui::NodeGraphEditor::IsConnectingCompatibleSlot()
 		if (dragPayload->IsInput == nodeGraphState.CurrentSlotInfo.IsInput)
 			return false;
 
+		if (dragPayload->IsInput && !dragPayload->InputSlotInstance->SlotType.IsCompatibleWith(nodeGraphState.CurrentSlotInfo.OutputSlotInstance->SlotType))
+			return false;
+
+		if (!dragPayload->IsInput && !dragPayload->OutputSlotInstance->SlotType.IsCompatibleWith(nodeGraphState.CurrentSlotInfo.InputSlotInstance->SlotType))
+			return false;
+
 		return true;
 	}
 

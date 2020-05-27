@@ -7,7 +7,6 @@ struct SRegisteredNode
 {
 	std::string Name;
 	std::function<void(ImVec2 InLocation)> AddNodeLambda;
-	std::function<void(const SNode&)> CompileNodeLambda;
 };
 
 struct SCompiledNode
@@ -40,7 +39,7 @@ protected:
 	SNode& AddNode(ImVec2 InLocation);
 
 	template<typename T>
-	void RegisterNode(std::function<void(const SNode&)>);
+	void RegisterNode();
 
 	SNode* FindNodeById(const size_t aId);
 
@@ -52,7 +51,7 @@ protected:
 		{
 			if (slotInstance->HasConnection())
 			{
-				auto id = slotInstance->Connection->OutputNodeId;
+				auto id = slotInstance->Connection->OutputNodePointer;
 				SNode* node = static_cast<SNode*>(id);
 
 				if (node)
@@ -85,12 +84,11 @@ SNode& NodeGraph::AddNode(ImVec2 InLocation)
 }
 
 template<typename T>
-void NodeGraph::RegisterNode(std::function<void(const SNode&)> aNodeCompilationLambda)
+void NodeGraph::RegisterNode()
 {
 	SRegisteredNode node;
 	node.Name = T::StaticObject.Title;
 	node.AddNodeLambda = [this](ImVec2 InLocation) {AddNode<T>(InLocation); };
-	node.CompileNodeLambda = aNodeCompilationLambda;
 
 	RegisteredNodes.push_back(node);
 }

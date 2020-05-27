@@ -12,7 +12,7 @@ struct SSlotInstanceBase;
 
 namespace WmGui::NodeGraphEditor
 {
-	enum StyleColor
+	enum class StyleColor
 	{
 		ColNodeBg,
 		ColSlotEditBg,
@@ -37,7 +37,7 @@ namespace WmGui::NodeGraphEditor
 		struct SCurrentNodeInfo
 		{
 			ImVec2* Position = {};
-			void* Id = {};
+			void* NodePointer = {};
 			bool* Selected = {};
 		};
 
@@ -56,7 +56,7 @@ namespace WmGui::NodeGraphEditor
 			CursorState CurrentCursorState = {};
 
 			/// Starting position of node selection rect.
-			ImVec2 selection_start{};
+			ImVec2 SelectionStart{};
 			/// Node id of node that is being dragged.
 			void* DraggedNodeId = nullptr;
 			/// Flag indicating that all selected nodes should be dragged.
@@ -67,15 +67,15 @@ namespace WmGui::NodeGraphEditor
 			i32 DoSelectionsFrame = 0;
 		};
 
-		u64 Id;
+		u64 Id = {};
 		bool JustConnected = false;
 		SCurrentGraphInfo CurrentGraphInfo = {};
 		SCurrentNodeInfo CurrentNodeInfo = {};
 		SCurrentSlotInfo CurrentSlotInfo = {};
 		SConnection NewConnection = {};
-		ImColor Colors[StyleColor::ColMax];
+		ImColor Colors[static_cast<i32>(StyleColor::ColMax)];
 
-		ImGuiStorage CachedData{};
+		ImGuiStorage CachedData = {};
 
 		SCanvasState CanvasState = {};
 	};
@@ -84,7 +84,7 @@ namespace WmGui::NodeGraphEditor
 
 	ImU32 MakeSlotDataID(const char* aData, const char* aSlotTitle, void* aNodeId, bool aInputSlot);
 
-	bool RenderConnection(const ImVec2& aInputPos, const ImVec2& aOutputPos, float aThiccness, const ImColor aColor);
+	bool RenderConnection(const ImVec2& aInputPos, const ImVec2& aOutputPos, f32 aThiccness, const ImColor aColor);
 
 	bool GetNewConnection(void** aInputNodeId, const char** aInputTitle, void** aOutputNodeId, const char** aOutputTitle, ImColor* aColor, SInputSlotInstanceBase** aInput, SOutputSlotInstanceBase** aOutput);
 
@@ -102,9 +102,9 @@ namespace WmGui::NodeGraphEditor
 	
 	void Slot(const bool aIsInput, SSlotInstanceBase& aSlotInstance); //[Nicos] TODO: make IsInput into slot type instead
 
-	void InputSlots(std::vector<std::unique_ptr<SInputSlotInstanceBase>>& slots);
+	void InputSlots(std::vector<std::unique_ptr<SInputSlotInstanceBase>>& aSlots);
 
-	void OutputSlots(std::vector<std::unique_ptr<SOutputSlotInstanceBase>>& slots);
+	void OutputSlots(std::vector<std::unique_ptr<SOutputSlotInstanceBase>>& aSlots);
 
 	void EndNode();
 
@@ -116,7 +116,7 @@ namespace WmGui::NodeGraphEditor
 
 	bool NodeSelectionBehavior(const bool aWasSelected);
 
-	ImVec2 NodeDraggingBehavior(const bool isNodeSelected, const ImVec2 aInitialNodePosition);
+	ImVec2 NodeDraggingBehavior(const bool aIsNodeSelected, const ImVec2 aInitialNodePosition);
 
 	bool DragSelectionBehavior(ImRect nodeRect, const bool aNodeWasInitiallySelected);
 

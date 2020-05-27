@@ -8,8 +8,8 @@ struct SSlotTypeBase;
 
 struct SConnection
 {
-	void* InputNodeId = nullptr;
-	void* OutputNodeId = nullptr;
+	void* InputNodePointer = nullptr;
+	void* OutputNodePointer = nullptr;
 	const char* InputSlotName = nullptr;
 	const char* OutputSlotName = nullptr;
 
@@ -35,6 +35,8 @@ struct SSlotInstanceBase
 	{
 
 	}
+	virtual ~SSlotInstanceBase() {};
+
 	const SSlotTypeBase& SlotType;
 	virtual void Inspect() {};
 	virtual bool HasConnection() const = 0;
@@ -92,6 +94,8 @@ struct SOutputSlotInstance : public SOutputSlotInstanceBase
 
 struct SSlotTypeBase abstract
 {
+	virtual ~SSlotTypeBase() {};
+
 	std::string Name = "";
 
 	virtual ImColor GetColor() const = 0;
@@ -133,10 +137,10 @@ struct SSlotType : public SSlotTypeBase
 struct SNodeTypeBase
 {
 	SNodeTypeBase(std::string aTitle)
-		: Title(aTitle)
-	{
+		: Title(aTitle) {}
 
-	}
+	virtual ~SNodeTypeBase() {};
+
 	std::string Title = "";
 
 	std::vector<std::unique_ptr<SSlotTypeBase>> InputSlots = {};
@@ -166,9 +170,9 @@ struct SNodeTypeBase
 		return slotInstances;
 	}
 
-	virtual void Execute(struct SNode& aNode) {}
+	virtual void Execute(struct SNode&) {}
 
-	virtual void ExecuteBackwards(struct SNode& aNode) {}
+	virtual void ExecuteBackwards(struct SNode&) {}
 };
 
 template<typename TNodeType>
@@ -206,13 +210,10 @@ protected:
 template<typename TNodeType>
 TNodeType SNodeType<TNodeType>::StaticObject = {};
 
-struct SNode
+struct SNode final
 {
 	SNode(SNodeTypeBase& aNodeType)
-		: NodeType(aNodeType)
-	{
-
-	}
+		: NodeType(aNodeType) {}
 
 	template<typename TOutputType>
 	void SetOutput(i32 aIndex, TOutputType aOutputValue);

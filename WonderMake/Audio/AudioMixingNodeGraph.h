@@ -12,17 +12,22 @@ struct SAudioNodeStack
 class AudioMixingNodeGraph : public NodeGraph
 {
 public:
-	AudioMixingNodeGraph();
+	AudioMixingNodeGraph(std::filesystem::path aPath);
 
 	void Compile() override;
 
 	virtual void Execute() override;
 
-private:
+protected:
+	virtual void RegisterNodes() override;
 
+	virtual void FirstTimeSetup() override;
+
+private:
 	SNode* myRootNode;
 
 	std::vector<SoLoud::Bus> myBusses;
 
 	std::vector<SCompiledNode> myCompiledNodeStack;
+
 };

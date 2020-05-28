@@ -158,7 +158,7 @@ I will shit fury all over you and you will drown in it. You're fucking dead, kid
 
 	if (showNodeGraph)
 	{
-		static AudioMixingNodeGraph graph;
+		static AudioMixingNodeGraph graph(std::filesystem::path("NodeGraphs") / "Audio" / "AudioNodeGraph.json");
 		graph.ShouldBeVisible = true;
 
 		WmGui::NodeGraphEditor::NodeGraphEdit(graph);

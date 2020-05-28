@@ -28,7 +28,7 @@ void WmGui::NodeGraphEditor::NodeGraphEdit(NodeGraph& aNodeGraph)
 		return;
 
 	//[Nicos]: inline unique id into the name as push id doesn't work with begin -- otherwise we would not be able to stack several node graphs with the same name.
-	std::string name = aNodeGraph.Name + "###" + std::to_string(aNodeGraph.UniqueId);
+	std::string name = aNodeGraph.Name;
 	if (ImGui::Begin(name.c_str(), &aNodeGraph.ShouldBeVisible, ImGuiWindowFlags_MenuBar))
 	{
 		if (ImGui::BeginMenuBar())

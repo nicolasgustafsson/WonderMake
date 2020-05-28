@@ -2,11 +2,13 @@
 #include "NodeGraph/Node.h"
 #include "Imgui/NodeGraphGui.h"
 #include <stack>
+#include <json/json.hpp>
+#include <filesystem>
 
 struct SRegisteredNode
 {
 	std::string Name;
-	std::function<void(ImVec2 InLocation)> AddNodeLambda;
+	std::function<SNode& (ImVec2 InLocation)> AddNodeLambda;
 };
 
 struct SCompiledNode
@@ -17,11 +19,14 @@ struct SCompiledNode
 class NodeGraph
 {
 public:
-	NodeGraph();
+	NodeGraph(std::filesystem::path aFilePath);
 
 	virtual void Compile() = 0;
 
-	u64 UniqueId;
+	void Save();
+	void Load();
+
+	size_t UniqueId;
 
 	std::string Name = "Unnamed Node Graph";
 
@@ -35,32 +40,33 @@ public:
 	bool ShouldBeVisible = false;
 
 protected:
+	virtual void FirstTimeSetup() {};
+	virtual void RegisterNodes() = 0;
+	
+	nlohmann::json Serialize();
+	void Deserialize(const nlohmann::json& aJsonFile);
+
+	void SerializeNode(SNode& aNode, nlohmann::json& aJson);
+	void DeserializeNode(const nlohmann::json& aJson);
+
+	void SerializeConnection(SConnection& aNode, nlohmann::json& aJson);
+	void DeserializeConnection(const nlohmann::json& aJson);
+
+	size_t NextNodeIndex = 0;
+
+	std::filesystem::path myPath;
+
 	template<typename T>
 	SNode& AddNode(ImVec2 InLocation);
+
+	SNode* AddNode(std::string NodeType);
 
 	template<typename T>
 	void RegisterNode();
 
 	SNode* FindNodeById(const size_t aId);
 
-	void CompileNodeGraph(SNode& aRoot, std::vector<SCompiledNode>& aNodeStack)
-	{
-		aNodeStack.push_back({ aRoot });
-
-		for (auto& slotInstance : aRoot.InputSlotInstances)
-		{
-			if (slotInstance->HasConnection())
-			{
-				auto id = slotInstance->Connection->OutputNodePointer;
-				SNode* node = static_cast<SNode*>(id);
-
-				if (node)
-				{
-					CompileNodeGraph(*node, aNodeStack);
-				}
-			}
-		}
-	}
+	void CompileNodeGraph(SNode& aRoot, std::vector<SCompiledNode>& aNodeStack);
 
 	virtual void Execute() {}
 };
@@ -68,17 +74,15 @@ protected:
 template<typename T>
 SNode& NodeGraph::AddNode(ImVec2 InLocation)
 {
-	static size_t index = 0;
-
 	SNode node(T::StaticObject);
 
-	node.Id = index;
+	node.Id = NextNodeIndex;
 	node.Position = InLocation;
 	node.Selected = false;
 	node.InputSlotInstances = T::StaticObject.CreateInputSlotInstances();
 	node.OutputSlotInstances = T::StaticObject.CreateOutputSlotInstances();
 
-	index++;
+	NextNodeIndex++;
 
 	return *Nodes.insert(std::move(node));
 }
@@ -88,7 +92,7 @@ void NodeGraph::RegisterNode()
 {
 	SRegisteredNode node;
 	node.Name = T::StaticObject.Title;
-	node.AddNodeLambda = [this](ImVec2 InLocation) {AddNode<T>(InLocation); };
+	node.AddNodeLambda = [this](ImVec2 InLocation) -> SNode& {return AddNode<T>(InLocation); };
 
 	RegisteredNodes.push_back(node);
 }

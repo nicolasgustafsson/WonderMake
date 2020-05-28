@@ -21,7 +21,6 @@ struct SConnection
 	ImColor Color;
 };
 
-
 enum class ESlotIo
 {
 	Input,

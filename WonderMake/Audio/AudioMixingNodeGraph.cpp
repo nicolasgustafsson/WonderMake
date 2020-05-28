@@ -4,17 +4,25 @@
 #include "Audio/AudioNodeTypes.h"
 
 
-AudioMixingNodeGraph::AudioMixingNodeGraph()
+AudioMixingNodeGraph::AudioMixingNodeGraph(std::filesystem::path aPath)
+	:  NodeGraph(aPath)
 {
 	Name = "Audio Mixing Node Graph";
 
-	myRootNode = &AddNode<NodeTypes::SAudioMixingResultNode>({ 1000, 400 });
+	Load();
+}
 
+void AudioMixingNodeGraph::RegisterNodes()
+{
 	RegisterNode<NodeTypes::SAudioMixingResultNode>();
 	RegisterNode<NodeTypes::SAudioMixNode>();
 	RegisterNode<NodeTypes::SAudioSourceBusNode>();
 	RegisterNode<NodeTypes::SEchoFilter>();
+}
 
+void AudioMixingNodeGraph::FirstTimeSetup()
+{
+	myRootNode = &AddNode<NodeTypes::SAudioMixingResultNode>({ 1000, 400 });
 	myRootNode->IsImmortal = true;
 }
 
@@ -25,6 +33,8 @@ void AudioMixingNodeGraph::Compile()
 	CompileNodeGraph(*myRootNode, myCompiledNodeStack);
 
 	Execute();
+
+	Save();
 }
 
 void AudioMixingNodeGraph::Execute()
@@ -45,3 +55,4 @@ void AudioMixingNodeGraph::Execute()
 		compiledNode.Node.NodeType.ExecuteBackwards(compiledNode.Node);
 	}
 }
+

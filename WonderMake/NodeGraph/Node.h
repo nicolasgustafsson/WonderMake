@@ -5,18 +5,23 @@
 #include <unordered_map>
 
 struct SSlotTypeBase;
+struct SNode;
+struct SInputSlotInstanceBase;
+struct SOutputSlotInstanceBase;
 
-struct SConnection
+struct SConnection final
 {
-	void* InputNodePointer = nullptr;
-	void* OutputNodePointer = nullptr;
-	const char* InputSlotName = nullptr;
-	const char* OutputSlotName = nullptr;
+	SNode* InputNodePointer = nullptr;
+	SNode* OutputNodePointer = nullptr;
 
-	struct SInputSlotInstanceBase* InputSlot = nullptr;
-	struct SOutputSlotInstanceBase* OutputSlot = nullptr;
+	SInputSlotInstanceBase* InputSlot = nullptr;
+	SOutputSlotInstanceBase* OutputSlot = nullptr;
 
+	SConnection() = default;
 	~SConnection();
+
+	SConnection(SConnection&& aOther);
+	SConnection& operator=(SConnection&& aOther);
 
 	ImColor Color;
 };
@@ -34,6 +39,7 @@ struct SSlotInstanceBase
 	{
 
 	}
+
 	virtual ~SSlotInstanceBase() {};
 
 	const SSlotTypeBase& SlotType;
@@ -218,10 +224,13 @@ struct SNode final
 	void SetOutput(i32 aIndex, TOutputType aOutputValue);
 
 	template<typename TInputType>
-	TInputType GetInput(i32 aIndex);
+	[[nodiscard]] TInputType GetInput(i32 aIndex);
+
+	[[nodiscard]] std::optional<i32> GetIndexOfInputSlot(SInputSlotInstanceBase* aSlot) const;
+	[[nodiscard]] std::optional<i32> GetIndexOfOutputSlot(SOutputSlotInstanceBase* aSlot) const;
 
 	template<typename TNode>
-	SNodeType<TNode>& GetNodeType()
+	[[nodiscard]] SNodeType<TNode>& GetNodeType()
 	{
 		return SNodeType<TNode>::StaticObject;
 	}

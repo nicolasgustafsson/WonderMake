@@ -49,7 +49,7 @@ protected:
 	void SerializeNode(SNode& aNode, nlohmann::json& aJson);
 	void DeserializeNode(const nlohmann::json& aJson);
 
-	void SerializeConnection(SConnection& aNode, nlohmann::json& aJson);
+	void SerializeConnection(SConnection& aConnection, nlohmann::json& aJson);
 	void DeserializeConnection(const nlohmann::json& aJson);
 
 	size_t NextNodeIndex = 0;

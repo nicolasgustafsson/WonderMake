@@ -44,14 +44,23 @@ nlohmann::json NodeGraph::Serialize()
 {
 	nlohmann::json jsonFile;
 
-	json empty_array_explicit = jsonFile.array();
+	json nodeArray = jsonFile.array();
 
 	for (SNode& node : Nodes)
 	{
-		SerializeNode(node, empty_array_explicit);
+		SerializeNode(node, nodeArray);
 	}
 
-	jsonFile["Nodes"] = empty_array_explicit;
+	jsonFile["Nodes"] = nodeArray;
+
+	json connectionArray = jsonFile.array();
+
+	for (SConnection& connection : Connections)
+	{
+		SerializeConnection(connection, connectionArray);
+	}
+
+	jsonFile["Connections"] = connectionArray;
 
 	return jsonFile;
 }
@@ -61,6 +70,11 @@ void NodeGraph::Deserialize(const nlohmann::json& aJsonFile)
 	for (auto& it : aJsonFile["Nodes"].items())
 	{
 		DeserializeNode(it.value());
+	}
+
+	for (auto& it : aJsonFile["Connections"].items())
+	{
+		DeserializeConnection(it.value());
 	}
 }
 
@@ -85,14 +99,40 @@ void NodeGraph::DeserializeNode(const nlohmann::json& aJson)
 	}
 }
 
-void NodeGraph::SerializeConnection(SConnection& aNode, nlohmann::json& aJson)
+void NodeGraph::SerializeConnection(SConnection& aConnection, nlohmann::json& aJson)
 {
-	//aJson.push_back(aJson.object({ {"Connection", aNode.NodeType.Title}, {"IsImmortal", aNode.IsImmortal}, {"PositionX", aNode.Position.x}, {"PositionY", aNode.Position.y}, {"Id", aNode.Id} }));
+	const std::optional<i32> outputSlot = aConnection.OutputNodePointer->GetIndexOfOutputSlot(aConnection.OutputSlot);
+	const std::optional<i32> inputSlot = aConnection.InputNodePointer->GetIndexOfInputSlot(aConnection.InputSlot);
+	aJson.push_back(aJson.object({ {"NodeFrom", aConnection.OutputNodePointer->Id},{"NodeTo", aConnection.InputNodePointer->Id}, {"SlotFrom", outputSlot ? *outputSlot : 0}, {"SlotTo", inputSlot ? *inputSlot : 0} }));
 }
 
 void NodeGraph::DeserializeConnection(const nlohmann::json& aJson)
 {
+	SConnection connection;
+	
+	const i32 nodeFromId = aJson["NodeFrom"].get<i32>();
+	const i32 nodeToId = aJson["NodeTo"].get<i32>();
 
+	connection.OutputNodePointer = FindNodeById(nodeFromId);
+	connection.InputNodePointer = FindNodeById(nodeToId);
+
+	if (!connection.OutputNodePointer)
+		return;
+	if (!connection.InputNodePointer)
+		return;
+
+	const i32 slotFromId = aJson["SlotFrom"].get<i32>();
+	const i32 slotToId = aJson["SlotTo"].get<i32>();
+
+	connection.OutputSlot = connection.OutputNodePointer->OutputSlotInstances[slotFromId].get();
+	connection.InputSlot = connection.InputNodePointer->InputSlotInstances[slotToId].get();
+
+	connection.Color = connection.InputSlot->SlotType.GetColor();
+
+	SConnection& connectionRef = *Connections.insert(std::move(connection));
+
+	connectionRef.OutputSlot->Connections.push_back(&connectionRef);
+	connectionRef.InputSlot->Connection = &connectionRef;
 }
 
 SNode* NodeGraph::AddNode(std::string NodeType)

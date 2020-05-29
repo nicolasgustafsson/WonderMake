@@ -37,13 +37,13 @@ namespace WmGui::NodeGraphEditor
 		struct SCurrentNodeInfo
 		{
 			ImVec2* Position = {};
-			void* NodePointer = {};
+			SNode* NodePointer = {};
 			bool* Selected = {};
 		};
 
 		struct SCurrentSlotInfo
 		{
-			const char* Title = {};
+			std::string Title = {};
 			bool IsInput = {};
 			ImColor Color = {};
 
@@ -58,11 +58,11 @@ namespace WmGui::NodeGraphEditor
 			/// Starting position of node selection rect.
 			ImVec2 SelectionStart{};
 			/// Node id of node that is being dragged.
-			void* DraggedNodeId = nullptr;
+			SNode* DraggedNodePointer = nullptr;
 			/// Flag indicating that all selected nodes should be dragged.
 			bool ShouldDragAllSelectedNodes = false;
 			/// Node id of node that should be selected on next frame, while deselecting any other nodes.
-			void* SingleSelectedNodeId = nullptr;
+			SNode* SingleSelectedNodePointer = nullptr;
 			//if this matches the current frame, we should try to select things
 			i32 DoSelectionsFrame = 0;
 		};
@@ -82,19 +82,20 @@ namespace WmGui::NodeGraphEditor
 
 	void NodeGraphEdit(NodeGraph& aNodeGraph);
 
-	ImU32 MakeSlotDataID(const char* aData, const char* aSlotTitle, void* aNodeId, bool aInputSlot);
+	ImU32 MakeSlotDataID(const char* aData, const char* aSlotTitle, SNode* aNodePointer, bool aInputSlot);
 
 	bool RenderConnection(const ImVec2& aInputPos, const ImVec2& aOutputPos, f32 aThiccness, const ImColor aColor);
 
-	bool GetNewConnection(void** aInputNodeId, const char** aInputTitle, void** aOutputNodeId, const char** aOutputTitle, ImColor* aColor, SInputSlotInstanceBase** aInput, SOutputSlotInstanceBase** aOutput);
+	//[Nicos]: TODO return optional connection instead of pointer stuffs
+	bool GetNewConnection(SNode** aInputNodePointer, SNode** aOutputNodePointer, ImColor* aColor, SInputSlotInstanceBase** aInput, SOutputSlotInstanceBase** aOutput);
 
-	bool Connection(void* aInputNode, const char* aInputSlot, void* aOutputNode, const char* aOutputSlot, ImColor aColor);
+	bool Connection(SNode* aInputNode, SInputSlotInstanceBase* aInputSlot, SNode* aOutputNode, SOutputSlotInstanceBase* aOutputSlot, ImColor aColor);
 
 	void Nodes(NodeGraph& aNodeGraph);
 	void Node(SNode& aNode);
 	plf::colony<SNode>::colony_iterator<false> KillNode(NodeGraph& aNodeGraph, plf::colony<SNode>::colony_iterator<false> aIterator);
 
-	void BeginNode(void* aNodeId, ImVec2* aPosition, bool* aSelected);
+	void BeginNode(SNode* aNodeId, ImVec2* aPosition, bool* aSelected);
 
 	void NodeTitle(const char* aTitle);
 

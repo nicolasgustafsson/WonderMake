@@ -30,6 +30,15 @@ void AudioMixingNodeGraph::Compile()
 {
 	myCompiledNodeStack.clear();
 
+	if (!myRootNode)
+	{
+		for (auto& node : Nodes)
+		{
+			if (&(node.NodeType) == &NodeTypes::SAudioMixingResultNode::StaticObject)
+				myRootNode = &node;
+		}
+	}
+
 	CompileNodeGraph(*myRootNode, myCompiledNodeStack);
 
 	Execute();

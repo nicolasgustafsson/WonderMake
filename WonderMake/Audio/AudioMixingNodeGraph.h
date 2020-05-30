@@ -23,6 +23,8 @@ protected:
 
 	virtual void FirstTimeSetup() override;
 
+	void PostLoad() override;
+
 private:
 	SNode* myRootNode;
 

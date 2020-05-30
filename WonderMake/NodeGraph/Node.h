@@ -3,6 +3,7 @@
 #include "NodeGraph/InputSlotEdits.h"
 #include <any>
 #include <unordered_map>
+#include <json/json.hpp>
 
 struct SSlotTypeBase;
 struct SNode;
@@ -67,6 +68,9 @@ struct SInputSlotInstanceBase : public SSlotInstanceBase
 
 	SConnection* Connection = nullptr;
 
+	virtual void SerializeInlineInput(const i32 aNodeId, const i32 aSlotId, json& aJson) const = 0;
+	virtual void DeserializeInlineInput(const json& aJson) = 0;
+
 	virtual bool HasConnection() const override final
 	{
 		return Connection != nullptr;
@@ -79,9 +83,22 @@ struct SInputSlotInstance : public SInputSlotInstanceBase
 	SInputSlotInstance(const SSlotTypeBase& aSlotType)
 		: SInputSlotInstanceBase(aSlotType) {}
 
-	virtual void Inspect()
+	virtual void Inspect() override
 	{
 		InputSlotEdits::template EditInputSlot<T>(EditableValue);
+	}
+
+	virtual void SerializeInlineInput(const i32 aNodeId, const i32 aSlotId, json& aJson) const override
+	{
+		InputSlotSerialization::template SerializeInput<T>(aNodeId, aSlotId, aJson, EditableValue);
+
+		//if constexpr (std::is_same_v<f32, T>)
+		//	InputSlotSerialization::template SerializeInputProxy<T>(aNodeId, aSlotId, aJson, EditableValue);
+	}
+
+	virtual void DeserializeInlineInput(const json& aJson) override
+	{
+		EditableValue = InputSlotSerialization::template DeserializeInput<T>(aJson);
 	}
 
 	T EditableValue = {};

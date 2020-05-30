@@ -38,6 +38,8 @@ void NodeGraph::Load()
 	{
 		FirstTimeSetup();
 	}
+
+	PostLoad();
 }
 
 nlohmann::json NodeGraph::Serialize()
@@ -62,6 +64,15 @@ nlohmann::json NodeGraph::Serialize()
 
 	jsonFile["Connections"] = connectionArray;
 
+	json inlineValueArray = jsonFile.array();
+
+	for (SNode& node : Nodes)
+	{
+		SerializeInlineInputs(node, inlineValueArray);
+	}
+
+	jsonFile["InlineInputValues"] = inlineValueArray;
+
 	return jsonFile;
 }
 
@@ -75,6 +86,11 @@ void NodeGraph::Deserialize(const nlohmann::json& aJsonFile)
 	for (auto& it : aJsonFile["Connections"].items())
 	{
 		DeserializeConnection(it.value());
+	}
+
+	for (auto& it : aJsonFile["InlineInputValues"].items())
+	{
+		DeserializeInput(it.value());
 	}
 }
 
@@ -176,4 +192,31 @@ void NodeGraph::CompileNodeGraph(SNode& aRoot, std::vector<SCompiledNode>& aNode
 			}
 		}
 	}
+}
+
+void NodeGraph::SerializeInlineInputs(SNode& aNode, json& aInputArray)
+{
+	for (i32 i = 0; i < aNode.InputSlotInstances.size(); i++)
+	{
+		auto* inputSlotInstance = aNode.InputSlotInstances[i].get();
+
+		if (inputSlotInstance->HasConnection())
+			return;
+
+		inputSlotInstance->SerializeInlineInput(aNode.Id, i, aInputArray);
+	}
+}
+
+void NodeGraph::DeserializeInput(const nlohmann::json& aInput)
+{
+	const i32 nodeId = aInput["NodeId"].get<i32>();
+	const i32 slotId = aInput["SlotId"].get<i32>();
+
+	SNode* node = FindNodeById(nodeId);
+
+	if (!node)
+		return;
+
+	node->InputSlotInstances[slotId]->DeserializeInlineInput(aInput);
+
 }

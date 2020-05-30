@@ -26,6 +26,11 @@ void AudioMixingNodeGraph::FirstTimeSetup()
 	myRootNode->IsImmortal = true;
 }
 
+void AudioMixingNodeGraph::PostLoad()
+{
+	Compile();
+}
+
 void AudioMixingNodeGraph::Compile()
 {
 	myCompiledNodeStack.clear();

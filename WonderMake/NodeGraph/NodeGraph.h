@@ -40,6 +40,8 @@ public:
 	bool ShouldBeVisible = false;
 
 protected:
+	virtual void PostLoad() {}
+
 	virtual void FirstTimeSetup() {};
 	virtual void RegisterNodes() = 0;
 	
@@ -69,6 +71,9 @@ protected:
 	void CompileNodeGraph(SNode& aRoot, std::vector<SCompiledNode>& aNodeStack);
 
 	virtual void Execute() {}
+private:
+	void SerializeInlineInputs(SNode& aNode, nlohmann::json& aInputArray);
+	void DeserializeInput(const nlohmann::json& aInput);
 };
 
 template<typename T>

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "NodeGraphGui.h"
 #include "NodeGraph/NodeGraph.h"
-#include "NodeGraph/Node.h"
+#include "NodeGraph/NodeTypes.h"
 
 //stack so that we can nest node graphs
 static std::vector<WmGui::NodeGraphEditor::SNodeGraphState*> NodeGraphStack;
@@ -28,15 +28,20 @@ void WmGui::NodeGraphEditor::NodeGraphEdit(NodeGraph& aNodeGraph)
 		return;
 
 	//[Nicos]: inline unique id into the name as push id doesn't work with begin -- otherwise we would not be able to stack several node graphs with the same name.
-	std::string name = aNodeGraph.Name;
+	std::string name = aNodeGraph.myPath.string();
 	if (ImGui::Begin(name.c_str(), &aNodeGraph.ShouldBeVisible, ImGuiWindowFlags_MenuBar))
 	{
 		if (ImGui::BeginMenuBar())
 		{
 			if (ImGui::Button("Compile"))
-			{
-				aNodeGraph.Compile();
-			}
+				aNodeGraph.CompileExternal();
+			
+			if (ImGui::Button("Save"))
+				aNodeGraph.Save();
+			
+			if (ImGui::Button("Execute"))
+				aNodeGraph.ExecuteExternal();
+
 			ImGui::EndMenuBar();
 		}
 
@@ -216,7 +221,7 @@ void WmGui::NodeGraphEditor::Node(SNode& aNode)
 
 	constexpr i32 deleteKey = 261; //[Nicos]: TODO Proper inputs for imgui | ImGuiKey_Delete is incorrect here, but not sure why.
 
-	if (aNode.Selected && io.KeysDown[deleteKey] && !aNode.IsImmortal)
+	if (aNode.Selected && io.KeysDown[deleteKey])
 		aNode.IWantToDie = true;
 }
 
@@ -225,44 +230,9 @@ void WmGui::NodeGraphEditor::Nodes(NodeGraph& aNodeGraph)
 	for (auto&& node : aNodeGraph.Nodes)
 		WmGui::NodeGraphEditor::Node(node);
 
-	plf::colony<SNode>::colony_iterator<false> it = aNodeGraph.Nodes.begin();
-
-	while (it != aNodeGraph.Nodes.end())
-	{
-		if (it->IWantToDie)
-			it = KillNode(aNodeGraph, it);
-		else
-			it++;
-	}
+	aNodeGraph.KillNodesThatWantToDie();
 }
 
-plf::colony<SNode>::colony_iterator<false> WmGui::NodeGraphEditor::KillNode(NodeGraph& aNodeGraph, plf::colony<SNode>::colony_iterator<false> aIterator)
-{
-	for (auto& inputSlot : aIterator->InputSlotInstances)
-	{
-		if (inputSlot->Connection)
-		{
-			auto it = aNodeGraph.Connections.get_iterator_from_pointer(inputSlot->Connection);
-			if (it != aNodeGraph.Connections.end())
-				aNodeGraph.Connections.erase(it);
-		}
-	}
-
-	for (auto& outputSlot : aIterator->OutputSlotInstances)
-	{
-		for (auto&& connection : outputSlot->Connections)
-		{
-			if (connection)
-			{
-				auto it = aNodeGraph.Connections.get_iterator_from_pointer(connection);
-				if (it != aNodeGraph.Connections.end())
-					aNodeGraph.Connections.erase(it);
-			}
-		}
-	}
-
-	return aNodeGraph.Nodes.erase(aIterator);
-}
 
 void WmGui::NodeGraphEditor::BeginNode(SNode* aNodePointer, ImVec2* aPosition, bool* aSelected)
 {
@@ -316,22 +286,30 @@ bool WmGui::NodeGraphEditor::IsConnectingCompatibleSlot()
 
 	if (auto* payload = ImGui::GetDragDropPayload())
 	{
-		auto* dragPayload = (_DragConnectionPayload*)payload->Data;
+		std::string connection = WmGui::NodeGraphEditor::GetNewNodeConnectionString();
+		if (strncmp(payload->DataType, connection.c_str(), connection.size()) == 0)
+		{
+			auto* dragPayload = (_DragConnectionPayload*)payload->Data;
 
-		// Node can not connect to itself
-		if (dragPayload->NodePointer == nodeGraphState.CurrentNodeInfo.NodePointer)
+			// Node can not connect to itself
+			if (dragPayload->NodePointer == nodeGraphState.CurrentNodeInfo.NodePointer)
+				return false;
+
+			if (dragPayload->IsInput == nodeGraphState.CurrentSlotInfo.IsInput)
+				return false;
+
+			if (dragPayload->IsInput && !dragPayload->InputSlotInstance->SlotType.IsCompatibleWith(nodeGraphState.CurrentSlotInfo.OutputSlotInstance->SlotType))
+				return false;
+
+			if (!dragPayload->IsInput && !dragPayload->OutputSlotInstance->SlotType.IsCompatibleWith(nodeGraphState.CurrentSlotInfo.InputSlotInstance->SlotType))
+				return false;
+
+			return true;
+		}
+		else
+		{
 			return false;
-
-		if (dragPayload->IsInput == nodeGraphState.CurrentSlotInfo.IsInput)
-			return false;
-
-		if (dragPayload->IsInput && !dragPayload->InputSlotInstance->SlotType.IsCompatibleWith(nodeGraphState.CurrentSlotInfo.OutputSlotInstance->SlotType))
-			return false;
-
-		if (!dragPayload->IsInput && !dragPayload->OutputSlotInstance->SlotType.IsCompatibleWith(nodeGraphState.CurrentSlotInfo.InputSlotInstance->SlotType))
-			return false;
-
-		return true;
+		}
 	}
 
 	return false;
@@ -885,6 +863,10 @@ void WmGui::NodeGraphEditor::ContextMenu(NodeGraph& aNodeGraph)
 	{
 		for (auto& availableNode : aNodeGraph.RegisteredNodes)
 		{
+			//you shouldn't be able to have several root nodes
+			if (aNodeGraph.IsNodeTypeRoot(availableNode.NodeType))
+				continue;
+
 			if (ImGui::MenuItem(availableNode.Name.c_str(), nullptr, false))
 			{
 				availableNode.AddNodeLambda(ImGui::GetMousePos() - canvasPos);

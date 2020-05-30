@@ -31,8 +31,8 @@ namespace InputSlotEdits
 
 namespace InputSlotSerialization
 {
-	template<typename TSlotType>
-	void SerializeInput(const i32 aNodeId, const i32 aSlotId, json& aJson, TSlotType aSlotValue)
+	template<typename TSlotType> //[Nicos]: I use maybe_unused here to keep the names as an example
+	void SerializeInput([[maybe_unused]] const i32 aNodeId, [[maybe_unused]] const i32 aSlotId, [[maybe_unused]] json& aJson, [[maybe_unused]] TSlotType aSlotValue)
 	{
 
 	}
@@ -51,7 +51,7 @@ namespace InputSlotSerialization
 	}
 
 	template<typename TSlotType>
-	TSlotType DeserializeInput(const json& aJson)
+	TSlotType DeserializeInput(const json&)
 	{
 		return TSlotType();
 	}

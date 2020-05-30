@@ -60,12 +60,12 @@
     <ClCompile Include="Imgui\FileSelector.cpp" />
     <ClCompile Include="Audio\AudioManager.cpp" />
     <ClCompile Include="Audio\AudioFile.cpp" />
-    <ClCompile Include="NodeGraph\Node.cpp" />
     <ClCompile Include="Imgui\NodeGraphGui.cpp" />
     <ClCompile Include="NodeGraph\NodeGraph.cpp" />
     <ClCompile Include="Audio\AudioMixingNodeGraph.cpp" />
     <ClCompile Include="Imgui\Canvas.cpp" />
     <ClCompile Include="Audio\AudioNodeTypes.cpp" />
+    <ClCompile Include="NodeGraph\NodeTypes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -225,15 +225,15 @@
     <ClInclude Include="Audio\AudioManager.h" />
     <ClInclude Include="Audio\AudioStructs.h" />
     <ClInclude Include="Audio\AudioFile.h" />
-    <ClInclude Include="NodeGraph\Node.h" />
     <ClInclude Include="Imgui\NodeGraphGui.h" />
     <ClInclude Include="NodeGraph\NodeGraph.h" />
-    <ClInclude Include="NodeGraph\NodeTypes.h" />
     <ClInclude Include="Audio\AudioMixingNodeGraph.h" />
     <ClInclude Include="Audio\AudioNodeTypes.h" />
     <ClInclude Include="NodeGraph\SlotColors.h" />
     <ClInclude Include="NodeGraph\InputSlotEdits.h" />
     <ClInclude Include="Imgui\Canvas.h" />
+    <ClInclude Include="NodeGraph\CommonNodes.h" />
+    <ClInclude Include="NodeGraph\NodeTypes.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

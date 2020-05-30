@@ -1,5 +1,5 @@
 #pragma once
-#include "NodeGraph/Node.h"
+#include "NodeGraph/NodeTypes.h"
 #include "Imgui/NodeGraphGui.h"
 #include <stack>
 #include <json/json.hpp>
@@ -8,7 +8,8 @@
 struct SRegisteredNode
 {
 	std::string Name;
-	std::function<SNode& (ImVec2 InLocation)> AddNodeLambda;
+	std::function<SNode& (const ImVec2 InLocation)> AddNodeLambda;
+	SNodeTypeBase& NodeType;
 };
 
 struct SCompiledNode
@@ -21,14 +22,20 @@ class NodeGraph
 public:
 	NodeGraph(std::filesystem::path aFilePath);
 
-	virtual void Compile() = 0;
+	//[Nicos]: This differs from compile in that it will save after compilation if the flag is set
+	void CompileExternal();
 
 	void Save();
-	void Load();
+
+	void ExecuteExternal();
+
+	virtual void Execute() {}
+
+	void KillNodesThatWantToDie();
+
+	[[nodiscard]] bool IsNodeTypeRoot(const SNodeTypeBase& aNodeType) const;
 
 	size_t UniqueId;
-
-	std::string Name = "Unnamed Node Graph";
 
 	plf::colony<SConnection> Connections;
 	plf::colony<SNode> Nodes;
@@ -39,55 +46,70 @@ public:
 
 	bool ShouldBeVisible = false;
 
+	std::filesystem::path myPath;
+
 protected:
+	virtual void Compile() = 0;
+
+	void Load();
+
+	[[nodiscard]] plf::colony<SNode>::colony_iterator<false> KillNode(plf::colony<SNode>::colony_iterator<false> aIterator);
+
 	virtual void PostLoad() {}
 
-	virtual void FirstTimeSetup() {};
+	virtual void FirstTimeSetup();
+
+	void SetupRootNode();
+
 	virtual void RegisterNodes() = 0;
 	
-	nlohmann::json Serialize();
+	[[nodiscard]] nlohmann::json Serialize();
 	void Deserialize(const nlohmann::json& aJsonFile);
 
-	void SerializeNode(SNode& aNode, nlohmann::json& aJson);
+	void SerializeNode(const SNode& aNode, nlohmann::json& aJson);
 	void DeserializeNode(const nlohmann::json& aJson);
 
 	void SerializeConnection(SConnection& aConnection, nlohmann::json& aJson);
 	void DeserializeConnection(const nlohmann::json& aJson);
 
-	size_t NextNodeIndex = 0;
-
-	std::filesystem::path myPath;
+	size_t NextNodeId = 0;
 
 	template<typename T>
 	SNode& AddNode(ImVec2 InLocation);
 
-	SNode* AddNode(std::string NodeType);
+	SNode* AddNode(const std::string aNodeType, const ImVec2 aLocation = {0.f, 0.f});
 
 	template<typename T>
 	void RegisterNode();
 
-	SNode* FindNodeById(const size_t aId);
+	template<typename T>
+	void RegisterRootNode();
 
-	void CompileNodeGraph(SNode& aRoot, std::vector<SCompiledNode>& aNodeStack);
+	[[nodiscard]] SNode* FindNodeById(const size_t aId);
 
-	virtual void Execute() {}
+	void CompileNodeGraph(SNode& aRoot, std::vector<SCompiledNode>& aNodeStack, const bool aIsFirstCompileCall = true);
+
+	SNode* myRootNode = nullptr;
+
 private:
 	void SerializeInlineInputs(SNode& aNode, nlohmann::json& aInputArray);
 	void DeserializeInput(const nlohmann::json& aInput);
+
+	SNodeTypeBase* myRootNodeType = nullptr;
 };
 
 template<typename T>
-SNode& NodeGraph::AddNode(ImVec2 InLocation)
+SNode& NodeGraph::AddNode(const ImVec2 InLocation)
 {
 	SNode node(T::StaticObject);
 
-	node.Id = NextNodeIndex;
+	node.Id = NextNodeId;
 	node.Position = InLocation;
 	node.Selected = false;
 	node.InputSlotInstances = T::StaticObject.CreateInputSlotInstances();
 	node.OutputSlotInstances = T::StaticObject.CreateOutputSlotInstances();
 
-	NextNodeIndex++;
+	NextNodeId++;
 
 	return *Nodes.insert(std::move(node));
 }
@@ -95,10 +117,21 @@ SNode& NodeGraph::AddNode(ImVec2 InLocation)
 template<typename T>
 void NodeGraph::RegisterNode()
 {
-	SRegisteredNode node;
-	node.Name = T::StaticObject.Title;
-	node.AddNodeLambda = [this](ImVec2 InLocation) -> SNode& {return AddNode<T>(InLocation); };
+	SRegisteredNode node
+	{
+		T::StaticObject.Title,
+		[this](const ImVec2 InLocation) -> SNode& {return AddNode<T>(InLocation); },
+		T::StaticObject
+	};
 
 	RegisteredNodes.push_back(node);
+}
+
+template<typename T>
+void NodeGraph::RegisterRootNode()
+{
+	RegisterNode<T>();
+
+	myRootNodeType = &T::StaticObject;
 }
 

@@ -60,6 +60,8 @@ void ImGuiLogger::OnLogMessage(const SLogMessage& aMessage)
 		color = SColor::Red;
 	if (aMessage.HasTag(TagWarning))
 		color = SColor::Yellow;
+	if (aMessage.HasTag(TagSuccess))
+		color = SColor::Green;
 
 	myLogMessages.push_back({ color, std::move(aMessage.LogText) });
 }

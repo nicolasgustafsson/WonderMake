@@ -1,54 +1,33 @@
 #include "pch.h"
 #include "AudioMixingNodeGraph.h"
-#include "NodeGraph/NodeTypes.h"
 #include "Audio/AudioNodeTypes.h"
 
 
 AudioMixingNodeGraph::AudioMixingNodeGraph(std::filesystem::path aPath)
 	:  NodeGraph(aPath)
 {
-	Name = "Audio Mixing Node Graph";
-
 	Load();
 }
 
 void AudioMixingNodeGraph::RegisterNodes()
 {
-	RegisterNode<NodeTypes::SAudioMixingResultNode>();
+	RegisterRootNode<NodeTypes::SAudioMixingResultNode>();
 	RegisterNode<NodeTypes::SAudioMixNode>();
 	RegisterNode<NodeTypes::SAudioSourceBusNode>();
 	RegisterNode<NodeTypes::SEchoFilter>();
 }
 
-void AudioMixingNodeGraph::FirstTimeSetup()
-{
-	myRootNode = &AddNode<NodeTypes::SAudioMixingResultNode>({ 1000, 400 });
-	myRootNode->IsImmortal = true;
-}
-
 void AudioMixingNodeGraph::PostLoad()
 {
 	Compile();
+	Execute();
 }
 
 void AudioMixingNodeGraph::Compile()
 {
 	myCompiledNodeStack.clear();
 
-	if (!myRootNode)
-	{
-		for (auto& node : Nodes)
-		{
-			if (&(node.NodeType) == &NodeTypes::SAudioMixingResultNode::StaticObject)
-				myRootNode = &node;
-		}
-	}
-
 	CompileNodeGraph(*myRootNode, myCompiledNodeStack);
-
-	Execute();
-
-	Save();
 }
 
 void AudioMixingNodeGraph::Execute()

@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "Node.h"
+#include "NodeTypes.h"
 
 SConnection::~SConnection()
 {

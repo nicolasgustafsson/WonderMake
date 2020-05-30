@@ -154,11 +154,12 @@ I will shit fury all over you and you will drown in it. You're fucking dead, kid
 
 	ImGui::End(); 
 
+	static AudioMixingNodeGraph graph(std::filesystem::path("NodeGraphs") / "Audio" / "AudioNodeGraph.json");
+
 	bool showNodeGraph = debugSettings->GetOrCreateDebugValue("Audio/NodeGraph", false);
 
 	if (showNodeGraph)
 	{
-		static AudioMixingNodeGraph graph(std::filesystem::path("NodeGraphs") / "Audio" / "AudioNodeGraph.json");
 		graph.ShouldBeVisible = true;
 
 		WmGui::NodeGraphEditor::NodeGraphEdit(graph);

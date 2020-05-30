@@ -14,6 +14,8 @@ void ConsoleLogger::OnLogMessage(const SLogMessage& aMessage)
 		SetColor(EConsoleColor::Red);
 	else if (aMessage.HasTag(TagWarning))
 		SetColor(EConsoleColor::Yellow);
+	else if (aMessage.HasTag(TagSuccess))
+		SetColor(EConsoleColor::Green);
 	else
 		SetColor(EConsoleColor::Default);
 

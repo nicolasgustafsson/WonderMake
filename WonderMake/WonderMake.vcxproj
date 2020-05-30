@@ -208,7 +208,7 @@
     <ClCompile Include="Imgui\FileSelector.cpp" />
     <ClCompile Include="Imgui\NodeGraphGui.cpp" />
     <ClCompile Include="NodeGraph\NodeGraph.cpp" />
-    <ClCompile Include="NodeGraph\Node.cpp" />
+    <ClCompile Include="NodeGraph\NodeTypes.cpp" />
     <ClCompile Include="Program\GlfwFacade.cpp" />
     <ClCompile Include="Graphics\OpenGLFacade.cpp" />
     <ClCompile Include="Debugging\DebugSettingsSystem.cpp" />
@@ -280,8 +280,8 @@
     <ClInclude Include="Imgui\NodeGraphGui.h" />
     <ClInclude Include="NodeGraph\InputSlotEdits.h" />
     <ClInclude Include="NodeGraph\NodeGraph.h" />
-    <ClInclude Include="NodeGraph\Node.h" />
     <ClInclude Include="NodeGraph\NodeTypes.h" />
+    <ClInclude Include="NodeGraph\CommonNodes.h" />
     <ClInclude Include="Program\GlfwFacade.h" />
     <ClInclude Include="Graphics\OpenGLFacade.h" />
     <ClInclude Include="Debugging\DebugSettingsSystem.h" />

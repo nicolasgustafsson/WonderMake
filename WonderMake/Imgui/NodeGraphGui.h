@@ -1,5 +1,5 @@
 #pragma once
-#include "NodeGraph/Node.h"
+#include "NodeGraph/NodeTypes.h"
 #include "Canvas.h"
 
 class NodeGraph;
@@ -82,24 +82,23 @@ namespace WmGui::NodeGraphEditor
 
 	void NodeGraphEdit(NodeGraph& aNodeGraph);
 
-	ImU32 MakeSlotDataID(const char* aData, const char* aSlotTitle, SNode* aNodePointer, bool aInputSlot);
+	[[nodiscard]] ImU32 MakeSlotDataID(const char* aData, const char* aSlotTitle, SNode* aNodePointer, bool aInputSlot);
 
 	bool RenderConnection(const ImVec2& aInputPos, const ImVec2& aOutputPos, f32 aThiccness, const ImColor aColor);
 
 	//[Nicos]: TODO return optional connection instead of pointer stuffs
-	bool GetNewConnection(SNode** aInputNodePointer, SNode** aOutputNodePointer, ImColor* aColor, SInputSlotInstanceBase** aInput, SOutputSlotInstanceBase** aOutput);
+	[[nodiscard]] bool GetNewConnection(SNode** aInputNodePointer, SNode** aOutputNodePointer, ImColor* aColor, SInputSlotInstanceBase** aInput, SOutputSlotInstanceBase** aOutput);
 
-	bool Connection(SNode* aInputNode, SInputSlotInstanceBase* aInputSlot, SNode* aOutputNode, SOutputSlotInstanceBase* aOutputSlot, ImColor aColor);
+	[[nodiscard]] bool Connection(SNode* aInputNode, SInputSlotInstanceBase* aInputSlot, SNode* aOutputNode, SOutputSlotInstanceBase* aOutputSlot, ImColor aColor);
 
 	void Nodes(NodeGraph& aNodeGraph);
 	void Node(SNode& aNode);
-	plf::colony<SNode>::colony_iterator<false> KillNode(NodeGraph& aNodeGraph, plf::colony<SNode>::colony_iterator<false> aIterator);
 
 	void BeginNode(SNode* aNodeId, ImVec2* aPosition, bool* aSelected);
 
 	void NodeTitle(const char* aTitle);
 
-	bool IsConnectingCompatibleSlot();
+	[[nodiscard]] bool IsConnectingCompatibleSlot();
 	
 	void Slot(const bool aIsInput, SSlotInstanceBase& aSlotInstance); //[Nicos] TODO: make IsInput into slot type instead
 
@@ -115,13 +114,13 @@ namespace WmGui::NodeGraphEditor
 
 	void DrawPendingConnection();
 
-	bool NodeSelectionBehavior(const bool aWasSelected);
+	[[nodiscard]] bool NodeSelectionBehavior(const bool aWasSelected);
 
-	ImVec2 NodeDraggingBehavior(const bool aIsNodeSelected, const ImVec2 aInitialNodePosition);
+	[[nodiscard]] ImVec2 NodeDraggingBehavior(const bool aIsNodeSelected, const ImVec2 aInitialNodePosition);
 
-	bool DragSelectionBehavior(ImRect nodeRect, const bool aNodeWasInitiallySelected);
+	[[nodiscard]] bool DragSelectionBehavior(ImRect nodeRect, const bool aNodeWasInitiallySelected);
 
-	std::string GetNewNodeConnectionString();
+	[[nodiscard]] std::string GetNewNodeConnectionString();
 
 	void ContextMenu(NodeGraph& aNodeGraph);
 

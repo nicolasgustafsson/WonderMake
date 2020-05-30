@@ -1,5 +1,5 @@
 #pragma once
-#include "NodeGraph/Node.h"
+#include "NodeGraph/NodeTypes.h"
 #include <soloud.h>
 
 namespace NodeTypes

@@ -28,6 +28,8 @@ public:
 	//[Nicos]: This differs from execute in that it will compile before execution if the flag is set
 	void ExecuteExternal();
 
+	virtual void Execute();
+
 	void Save();
 
 	void KillNodesThatWantToDie();
@@ -47,7 +49,6 @@ public:
 	[[nodiscard]] std::string GetName() const { return myPath.string(); }
 
 protected:
-	virtual void Execute();
 	virtual void Compile();
 
 	void Load();

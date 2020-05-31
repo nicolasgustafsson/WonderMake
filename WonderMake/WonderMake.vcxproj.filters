@@ -60,6 +60,7 @@
     <ClCompile Include="Imgui\FileSelector.cpp" />
     <ClCompile Include="Audio\AudioManager.cpp" />
     <ClCompile Include="Audio\AudioFile.cpp" />
+    <ClCompile Include="Policies\TaskManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -181,6 +182,7 @@
     <ClInclude Include="Components\ComponentSystem.h" />
     <ClInclude Include="Components\Component.h" />
     <ClInclude Include="Threads\Thread.h" />
+    <ClInclude Include="Threads\ThreadNaming.h" />
     <ClInclude Include="Threads\RoutineDebug.h" />
     <ClInclude Include="Utilities\Debugging\Debugged.h" />
     <ClInclude Include="Utilities\Stopwatch.h" />
@@ -217,6 +219,7 @@
     <ClInclude Include="Audio\AudioManager.h" />
     <ClInclude Include="Audio\AudioStructs.h" />
     <ClInclude Include="Audio\AudioFile.h" />
+    <ClInclude Include="Policies\TaskManager.h" />
     <ClInclude Include="Threads\ThreadChecker.h" />
   </ItemGroup>
   <ItemGroup>

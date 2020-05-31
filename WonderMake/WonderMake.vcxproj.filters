@@ -217,6 +217,7 @@
     <ClInclude Include="Audio\AudioManager.h" />
     <ClInclude Include="Audio\AudioStructs.h" />
     <ClInclude Include="Audio\AudioFile.h" />
+    <ClInclude Include="Threads\ThreadChecker.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

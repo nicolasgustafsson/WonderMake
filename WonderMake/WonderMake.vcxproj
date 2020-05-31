@@ -273,6 +273,7 @@
     <ClInclude Include="Debugging\DebugSettingsSystem.h" />
     <ClInclude Include="Imgui\JsonInspector.h" />
     <ClInclude Include="Policies\SystemId.h" />
+    <ClInclude Include="Threads\ThreadChecker.h" />
     <ClInclude Include="Utilities\BezierCurve.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Collision\ColliderDebug.h" />

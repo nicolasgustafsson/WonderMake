@@ -15,7 +15,6 @@
     <ClCompile Include="Object\ObjectImpulseRouter.cpp" />
     <ClCompile Include="Serialization\SerializationSystem.cpp" />
     <ClCompile Include="Utilities\Debugging\Debugged.cpp" />
-    <ClCompile Include="Threads\RoutineDebug.cpp" />
     <ClCompile Include="FileSystem\ReadFileAsStringJob.cpp" />
     <ClCompile Include="Graphics\EngineUniformBuffer.cpp" />
     <ClCompile Include="Imgui\DockSpace.cpp" />
@@ -30,11 +29,6 @@
     <ClCompile Include="Graphics\ScreenPassRenderObject.cpp" />
     <ClCompile Include="System\SystemContainer.cpp" />
     <ClCompile Include="System\System.cpp" />
-    <ClCompile Include="Threads\Thread.cpp" />
-    <ClCompile Include="Threads\Routine.cpp" />
-    <ClCompile Include="Threads\RoutineIds.cpp" />
-    <ClCompile Include="Threads\RoutineMain.cpp" />
-    <ClCompile Include="Threads\DataThreads.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
     <ClCompile Include="Message\DispatchRouter.cpp" />
     <ClCompile Include="Message\MessageSubscriber.cpp" />
@@ -66,6 +60,12 @@
     <ClCompile Include="Imgui\Canvas.cpp" />
     <ClCompile Include="Audio\AudioNodeTypes.cpp" />
     <ClCompile Include="NodeGraph\NodeTypes.cpp" />
+    <ClCompile Include="Threads\DataThreads.cpp" />
+    <ClCompile Include="Threads\Routine.cpp" />
+    <ClCompile Include="Threads\RoutineDebug.cpp" />
+    <ClCompile Include="Threads\RoutineIds.cpp" />
+    <ClCompile Include="Threads\RoutineMain.cpp" />
+    <ClCompile Include="Threads\Thread.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -90,7 +90,6 @@
     <ClInclude Include="Utilities\MathUtility.h" />
     <ClInclude Include="Utilities\Stopwatch.h" />
     <ClInclude Include="Utilities\Debugging\Debugged.h" />
-    <ClInclude Include="Threads\RoutineDebug.h" />
     <ClInclude Include="FileSystem\FileSystem.h" />
     <ClInclude Include="FileSystem\ReadFileAsStringJob.h" />
     <ClInclude Include="Graphics\EngineUniformBuffer.h" />
@@ -121,10 +120,6 @@
     <ClInclude Include="Resources\CreateResource.h" />
     <ClInclude Include="Resources\Resource.h" />
     <ClInclude Include="Resources\ResourceProxy.h" />
-    <ClInclude Include="Threads\Thread.h" />
-    <ClInclude Include="Threads\Routine.h" />
-    <ClInclude Include="Threads\RoutineMain.h" />
-    <ClInclude Include="Threads\DataThreads.h" />
     <ClInclude Include="Graphics\VertexBuffer.h" />
     <ClInclude Include="Graphics\Shader.h" />
     <ClInclude Include="Graphics\Renderer.h" />
@@ -132,8 +127,6 @@
     <ClInclude Include="Message\DispatchRouter.h" />
     <ClInclude Include="Message\MessageTypes.h" />
     <ClInclude Include="Message\MessageSubscriber.h" />
-    <ClInclude Include="Threads\DoubleBuffer.h" />
-    <ClInclude Include="Threads\RoutineIds.h" />
     <ClInclude Include="Program\ImguiWrapper.h" />
     <ClInclude Include="Program\Program.h" />
     <ClInclude Include="Graphics\ShaderProgram.h" />
@@ -141,7 +134,6 @@
     <ClInclude Include="Resources\ResourceSystem.h" />
     <ClInclude Include="Graphics\SpriteRenderObject.h" />
     <ClInclude Include="Graphics\UniformBuffer.h" />
-    <ClInclude Include="Threads\ThreadNaming.h" />
     <ClInclude Include="Utilities\Matrix33.h" />
     <ClInclude Include="Utilities\OS.h" />
     <ClInclude Include="Utilities\plf_colony.h" />
@@ -229,14 +221,25 @@
     <ClInclude Include="NodeGraph\NodeGraph.h" />
     <ClInclude Include="Audio\AudioMixingNodeGraph.h" />
     <ClInclude Include="Audio\AudioNodeTypes.h" />
-    <ClInclude Include="NodeGraph\SlotColors.h" />
-    <ClInclude Include="NodeGraph\InputSlotEdits.h" />
     <ClInclude Include="Imgui\Canvas.h" />
     <ClInclude Include="NodeGraph\CommonNodes.h" />
     <ClInclude Include="NodeGraph\NodeTypes.h" />
+    <ClInclude Include="NodeGraph\SlotCustomization\SlotColors.h" />
+    <ClInclude Include="NodeGraph\SlotCustomization\SlotSerialization.h" />
+    <ClInclude Include="Threads\DataThreads.h" />
+    <ClInclude Include="Threads\DoubleBuffer.h" />
+    <ClInclude Include="Threads\Routine.h" />
+    <ClInclude Include="Threads\RoutineDebug.h" />
+    <ClInclude Include="Threads\RoutineIds.h" />
+    <ClInclude Include="Threads\RoutineMain.h" />
+    <ClInclude Include="Threads\Thread.h" />
+    <ClInclude Include="Threads\ThreadNaming.h" />
+    <ClInclude Include="NodeGraph\SlotCustomization\SlotInputEdits.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
     <None Include="Utilities\Matrix33.inl" />
+    <None Include="NodeGraph\SlotCustomization\SlotCustomization.md" />
+    <None Include="NodeGraph\Nodegraph.md" />
   </ItemGroup>
 </Project>

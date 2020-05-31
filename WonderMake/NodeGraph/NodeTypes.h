@@ -1,6 +1,7 @@
 #pragma once
-#include "NodeGraph/SlotColors.h"
-#include "NodeGraph/InputSlotEdits.h"
+#include "NodeGraph/SlotCustomization/SlotColors.h"
+#include "NodeGraph/SlotCustomization/SlotInputEdits.h"
+#include "NodeGraph/SlotCustomization/SlotSerialization.h"
 #include <any>
 #include <unordered_map>
 #include <json/json.hpp>
@@ -85,7 +86,7 @@ struct SInputSlotInstance : public SInputSlotInstanceBase
 
 	virtual void Inspect() override
 	{
-		InputSlotEdits::template EditInputSlot<T>(EditableValue);
+		SlotInputEdits::template EditInputSlot<T>(EditableValue);
 	}
 
 	virtual void SerializeInlineInput(const i32 aNodeId, const i32 aSlotId, json& aJson) const override
@@ -192,9 +193,10 @@ struct SNodeTypeBase
 		return slotInstances;
 	}
 
-	virtual void Execute(struct SNode&) {}
+	virtual void PrepareNode(struct SNode&) {}
 
-	virtual void ExecuteBackwards(struct SNode&) {}
+	virtual void ExecuteNodeRightToLeft(struct SNode&) {}
+	virtual void ExecuteNodeLeftToRight(struct SNode&) {}
 };
 
 template<typename TNodeType>

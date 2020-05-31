@@ -28,7 +28,7 @@ void WmGui::NodeGraphEditor::NodeGraphEdit(NodeGraph& aNodeGraph)
 		return;
 
 	//[Nicos]: inline unique id into the name as push id doesn't work with begin -- otherwise we would not be able to stack several node graphs with the same name.
-	std::string name = aNodeGraph.myPath.string();
+	const std::string name = aNodeGraph.GetName();
 	if (ImGui::Begin(name.c_str(), &aNodeGraph.ShouldBeVisible, ImGuiWindowFlags_MenuBar))
 	{
 		if (ImGui::BeginMenuBar())
@@ -45,11 +45,11 @@ void WmGui::NodeGraphEditor::NodeGraphEdit(NodeGraph& aNodeGraph)
 			ImGui::EndMenuBar();
 		}
 
-		CurrentNodeGraph = &aNodeGraph.NodeGraphGuiState;
-		CurrentNodeGraph->Id = aNodeGraph.UniqueId;
+		CurrentNodeGraph = &aNodeGraph.GetNodeGraphGuiState();
+		CurrentNodeGraph->Id = aNodeGraph.GetUniqueId();
 		NodeGraphStack.push_back(CurrentNodeGraph);
 
-		WmGui::BeginCanvas(&aNodeGraph.NodeGraphGuiState.CanvasState);
+		WmGui::BeginCanvas(&CurrentNodeGraph->CanvasState);
 
 		ImGui::PushStyleColor(ImGuiCol_FrameBg, IM_COL32(50, 50, 55, 255));
 		ImDrawList* drawList = ImGui::GetWindowDrawList();
@@ -60,7 +60,7 @@ void WmGui::NodeGraphEditor::NodeGraphEdit(NodeGraph& aNodeGraph)
 
 		drawList->ChannelsSetCurrent(0);
 
-		WmGui::NodeGraphEditor::Connections(aNodeGraph.Connections);
+		WmGui::NodeGraphEditor::Connections(aNodeGraph.GetConnections());
 
 		WmGui::NodeGraphEditor::PotentialConnection(aNodeGraph);
 
@@ -227,7 +227,7 @@ void WmGui::NodeGraphEditor::Node(SNode& aNode)
 
 void WmGui::NodeGraphEditor::Nodes(NodeGraph& aNodeGraph)
 {
-	for (auto&& node : aNodeGraph.Nodes)
+	for (auto&& node : aNodeGraph.GetNodes())
 		WmGui::NodeGraphEditor::Node(node);
 
 	aNodeGraph.KillNodesThatWantToDie();
@@ -693,23 +693,25 @@ void WmGui::NodeGraphEditor::PotentialConnection(NodeGraph& aNodeGraph)
 
 	if (WmGui::NodeGraphEditor::GetNewConnection(&potentialConnection.InputNodePointer, &potentialConnection.OutputNodePointer, &potentialConnection.Color, &potentialConnection.InputSlot, &potentialConnection.OutputSlot))
 	{
+		auto& connections = aNodeGraph.GetConnections();
+
 		bool shouldAddConnection = true;
-		for (auto it = aNodeGraph.Connections.begin(); it != aNodeGraph.Connections.end(); it++)
+		for (auto it = connections.begin(); it != connections.begin(); it++)
 		{
 			if (it->InputNodePointer == potentialConnection.InputNodePointer && it->InputSlot == potentialConnection.InputSlot)
 			{
-				//[Nicos]: dragging the same connection should remove it
+				//[Nicos]: dragging the same connection removes it
 				if (it->OutputNodePointer == potentialConnection.OutputNodePointer && it->OutputSlot != potentialConnection.OutputSlot)
 					shouldAddConnection = false;
 
-				aNodeGraph.Connections.erase(it);
+				connections.erase(it);
 				break;
 			}
 		}
 
 		if (shouldAddConnection)
 		{
-			auto insertedConnectionIt = aNodeGraph.Connections.insert(std::move(potentialConnection));
+			auto insertedConnectionIt = connections.insert(std::move(potentialConnection));
 
 			insertedConnectionIt->InputSlot->Connection = &*insertedConnectionIt;
 			insertedConnectionIt->OutputSlot->Connections.push_back(&*insertedConnectionIt);
@@ -861,7 +863,7 @@ void WmGui::NodeGraphEditor::ContextMenu(NodeGraph& aNodeGraph)
 
 	if (ImGui::BeginPopup("context_menu"))
 	{
-		for (auto& availableNode : aNodeGraph.RegisteredNodes)
+		for (auto& availableNode : aNodeGraph.GetRegisteredNodes())
 		{
 			//you shouldn't be able to have several root nodes
 			if (aNodeGraph.IsNodeTypeRoot(availableNode.NodeType))

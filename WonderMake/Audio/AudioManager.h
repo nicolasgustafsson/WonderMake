@@ -2,6 +2,7 @@
 #include <soloud.h>
 #include <soloud_wav.h>
 #include "Audio/AudioStructs.h"
+#include "Audio/AudioMixingNodeGraph.h"
 
 class AudioManager : public System, Debugged
 {
@@ -24,6 +25,8 @@ protected:
 
 	virtual void Debug() override;
 
+	bool myHasInitializedAudio = false;
+
 	SoLoud::Soloud mySoloudEngine;
 	SoLoud::Bus myBus;
 	
@@ -31,6 +34,8 @@ protected:
 
 	plf::colony<SPlayingAudioFile> myCurrentlyPlayingAudioFiles;
 	plf::colony<SQueuedAudioFile> myQueuedAudioFiles;
+
+	AudioMixingNodeGraph myAudioMixingNodeGraph;
 
 	std::unordered_map<std::string, SoLoud::Bus> myBusses;
 };

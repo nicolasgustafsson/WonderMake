@@ -16,7 +16,7 @@
 #include "Audio/AudioMixingNodeGraph.h"
 
 AudioManager::AudioManager()
-	: Debugged("Audio Manager")
+	: Debugged("Audio Manager"), myAudioMixingNodeGraph(std::filesystem::path("NodeGraphs") / "Audio" / "AudioNodeGraph.json")
 {
 	mySoloudEngine.init(mySoloudEngine.FLAGS::CLIP_ROUNDOFF, mySoloudEngine.BACKENDS::WASAPI, SoLoud::Soloud::AUTO, 2048, 2);
 	myBusHandle = mySoloudEngine.play(myBus);
@@ -31,6 +31,12 @@ AudioManager::~AudioManager()
 
 void AudioManager::Update() noexcept
 {
+	if (!myHasInitializedAudio)
+	{
+		myAudioMixingNodeGraph.ExecuteExternal();
+		myHasInitializedAudio = true;
+	}
+
 	TryPlayQueuedAudioFiles();
 }
 
@@ -154,14 +160,15 @@ I will shit fury all over you and you will drown in it. You're fucking dead, kid
 
 	ImGui::End(); 
 
-	static AudioMixingNodeGraph graph(std::filesystem::path("NodeGraphs") / "Audio" / "AudioNodeGraph.json");
 
-	bool showNodeGraph = debugSettings->GetOrCreateDebugValue("Audio/NodeGraph", false);
+	myAudioMixingNodeGraph.ShouldBeVisible = debugSettings->GetOrCreateDebugValue("Audio/NodeGraph", false);
 
-	if (showNodeGraph)
+	if (myAudioMixingNodeGraph.ShouldBeVisible)
 	{
-		graph.ShouldBeVisible = true;
+		myAudioMixingNodeGraph.ShouldBeVisible = true;
 
-		WmGui::NodeGraphEditor::NodeGraphEdit(graph);
+		WmGui::NodeGraphEditor::NodeGraphEdit(myAudioMixingNodeGraph);
+
+		debugSettings->SetDebugValue("Audio/NodeGraph", myAudioMixingNodeGraph.ShouldBeVisible);
 	}
 }

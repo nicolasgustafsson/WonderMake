@@ -11,7 +11,7 @@ namespace NodeTypes
 			AddSlot<SoLoud::AudioSource*>(ESlotIo::Input, "Mix");
 		}
 
-		virtual void ExecuteBackwards(SNode& aNode) override;
+		virtual void ExecuteNodeLeftToRight(SNode& aNode) override;
 	};
 
 	struct SAudioMixNode : public SNodeType<SAudioMixNode>
@@ -23,8 +23,8 @@ namespace NodeTypes
 			AddSlot<SoLoud::AudioSource*>(ESlotIo::Output, "Mixed");
 		}
 
-		virtual void Execute(SNode& aNode) override;
-		virtual void ExecuteBackwards(SNode& aNode) override;
+		virtual void PrepareNode(SNode& aNode) override;
+		virtual void ExecuteNodeLeftToRight(SNode& aNode) override;
 	};
 
 	struct SAudioSourceBusNode : public SNodeType<SAudioSourceBusNode>
@@ -35,7 +35,7 @@ namespace NodeTypes
 			AddSlot<SoLoud::AudioSource*>(ESlotIo::Output, "Audio Bus");
 		}
 
-		virtual void Execute(SNode& aNode) override;
+		virtual void PrepareNode(SNode& aNode) override;
 	};
 
 	struct SEchoFilter : public SNodeType<SEchoFilter>
@@ -48,9 +48,9 @@ namespace NodeTypes
 			AddSlot<SoLoud::AudioSource*>(ESlotIo::Output, "Output");
 		}
 
-		virtual void Execute(SNode& aNode) override;
+		virtual void PrepareNode(SNode& aNode) override;
 
-		virtual void ExecuteBackwards(SNode& aNode) override;
+		virtual void ExecuteNodeLeftToRight(SNode& aNode) override;
 	};
 }
 

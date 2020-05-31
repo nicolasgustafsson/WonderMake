@@ -1,0 +1,2 @@
+You can customize how slots act through specializing the template functions inside the files of this folder.
+There are examples of this in AudioNodeTypes.h as well as common examples in the file itself.

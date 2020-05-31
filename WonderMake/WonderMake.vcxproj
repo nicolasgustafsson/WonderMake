@@ -278,16 +278,17 @@
     <ClInclude Include="Functionalities\BaseFunctionality.h" />
     <ClInclude Include="Imgui\FileSelector.h" />
     <ClInclude Include="Imgui\NodeGraphGui.h" />
-    <ClInclude Include="NodeGraph\InputSlotEdits.h" />
+    <ClInclude Include="NodeGraph\SlotCustomization\SlotInputEdits.h" />
     <ClInclude Include="NodeGraph\NodeGraph.h" />
     <ClInclude Include="NodeGraph\NodeTypes.h" />
     <ClInclude Include="NodeGraph\CommonNodes.h" />
+    <ClInclude Include="NodeGraph\SlotCustomization\SlotSerialization.h" />
     <ClInclude Include="Program\GlfwFacade.h" />
     <ClInclude Include="Graphics\OpenGLFacade.h" />
     <ClInclude Include="Debugging\DebugSettingsSystem.h" />
     <ClInclude Include="Imgui\JsonInspector.h" />
     <ClInclude Include="Policies\SystemId.h" />
-    <ClInclude Include="NodeGraph\SlotColors.h" />
+    <ClInclude Include="NodeGraph\SlotCustomization\SlotColors.h" />
     <ClInclude Include="Utilities\BezierCurve.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Collision\ColliderDebug.h" />
@@ -385,6 +386,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
+    <None Include="NodeGraph\Nodegraph.md" />
+    <None Include="NodeGraph\SlotCustomization\SlotCustomization.md" />
     <None Include="Utilities\Matrix33.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

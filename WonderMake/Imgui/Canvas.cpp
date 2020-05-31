@@ -23,8 +23,6 @@ void WmGui::BeginCanvas(SCanvasState* aCanvasState)
 	const ImVec2 windowSize = ImGui::GetWindowSize();
 	ImDrawList* drawList = ImGui::GetWindowDrawList();
 
-	auto& imguiStyle = ImGui::GetStyle();
-
 	ImGuiIO& io = ImGui::GetIO();
 
 	if (!ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())

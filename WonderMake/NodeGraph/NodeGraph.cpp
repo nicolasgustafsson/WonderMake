@@ -6,7 +6,7 @@ NodeGraph::NodeGraph(std::filesystem::path aFilePath)
 	: myPath(aFilePath)
 {
 	static u64 uniqueIdCounter = 0;
-	UniqueId = uniqueIdCounter;
+	myUniqueId = uniqueIdCounter;
 	uniqueIdCounter++;
 }
 
@@ -72,11 +72,44 @@ void NodeGraph::Load()
 	PostLoad();
 }
 
+
+void NodeGraph::Compile()
+{
+	myCompiledNodeStack.clear();
+
+	CompileNodeGraph(*myRootNode, myCompiledNodeStack);
+}
+
+void NodeGraph::Execute()
+{
+	//this sets up inputs/outputs
+	for (size_t i = myCompiledNodeStack.size() - 1; i < myCompiledNodeStack.size(); i--)
+	{
+		auto&& compiledNode = myCompiledNodeStack[i];
+
+		compiledNode.Node.NodeType.PrepareNode(compiledNode.Node);
+	}
+
+	for (size_t i = 0; i < myCompiledNodeStack.size(); i++)
+	{
+		auto&& compiledNode = myCompiledNodeStack[i];
+
+		compiledNode.Node.NodeType.ExecuteNodeRightToLeft(compiledNode.Node);
+	}
+
+	for (size_t i = 0; i < myCompiledNodeStack.size(); i++)
+	{
+		auto&& compiledNode = myCompiledNodeStack[i];
+
+		compiledNode.Node.NodeType.ExecuteNodeLeftToRight(compiledNode.Node);
+	}
+}
+
 void NodeGraph::KillNodesThatWantToDie()
 {
-	plf::colony<SNode>::colony_iterator<false> it = Nodes.begin();
+	plf::colony<SNode>::colony_iterator<false> it = myNodes.begin();
 
-	while (it != Nodes.end())
+	while (it != myNodes.end())
 	{
 		//[Nicos]: Root nodes can't die even if they want to
 		if (it->IWantToDie && !IsNodeTypeRoot(it->NodeType))
@@ -84,6 +117,14 @@ void NodeGraph::KillNodesThatWantToDie()
 		else
 			it++;
 	}
+}
+
+WmGui::NodeGraphEditor::SNodeGraphState& NodeGraph::GetNodeGraphGuiState()
+{
+	if (!myNodeGraphGuiState)
+		myNodeGraphGuiState.emplace();
+
+	return *myNodeGraphGuiState;
 }
 
 bool NodeGraph::IsNodeTypeRoot(const SNodeTypeBase& aNodeType) const
@@ -97,9 +138,9 @@ plf::colony<SNode>::colony_iterator<false> NodeGraph::KillNode(plf::colony<SNode
 	{
 		if (inputSlot->Connection)
 		{
-			auto it = Connections.get_iterator_from_pointer(inputSlot->Connection);
-			if (it != Connections.end())
-				Connections.erase(it);
+			auto it = myConnections.get_iterator_from_pointer(inputSlot->Connection);
+			if (it != myConnections.end())
+				myConnections.erase(it);
 		}
 	}
 
@@ -109,14 +150,14 @@ plf::colony<SNode>::colony_iterator<false> NodeGraph::KillNode(plf::colony<SNode
 		{
 			if (connection)
 			{
-				auto it = Connections.get_iterator_from_pointer(connection);
-				if (it != Connections.end())
-					Connections.erase(it);
+				auto it = myConnections.get_iterator_from_pointer(connection);
+				if (it != myConnections.end())
+					myConnections.erase(it);
 			}
 		}
 	}
 
-	return Nodes.erase(aIterator);
+	return myNodes.erase(aIterator);
 }
 
 void NodeGraph::FirstTimeSetup()
@@ -138,7 +179,7 @@ nlohmann::json NodeGraph::Serialize()
 
 	json nodeArray = jsonFile.array();
 
-	for (SNode& node : Nodes)
+	for (SNode& node : myNodes)
 	{
 		SerializeNode(node, nodeArray);
 	}
@@ -147,7 +188,7 @@ nlohmann::json NodeGraph::Serialize()
 
 	json connectionArray = jsonFile.array();
 
-	for (SConnection& connection : Connections)
+	for (SConnection& connection : myConnections)
 	{
 		SerializeConnection(connection, connectionArray);
 	}
@@ -156,7 +197,7 @@ nlohmann::json NodeGraph::Serialize()
 
 	json inlineValueArray = jsonFile.array();
 
-	for (SNode& node : Nodes)
+	for (SNode& node : myNodes)
 	{
 		SerializeInlineInputs(node, inlineValueArray);
 	}
@@ -185,7 +226,7 @@ void NodeGraph::Deserialize(const nlohmann::json& aJsonFile)
 
 	if (!myRootNode && myRootNodeType)
 	{
-		for (auto& node : Nodes)
+		for (auto& node : myNodes)
 		{
 			if (&node.NodeType == myRootNodeType)
 			{
@@ -253,7 +294,7 @@ void NodeGraph::DeserializeConnection(const nlohmann::json& aJson)
 
 	connection.Color = connection.InputSlot->SlotType.GetColor();
 
-	SConnection& connectionRef = *Connections.insert(std::move(connection));
+	SConnection& connectionRef = *myConnections.insert(std::move(connection));
 
 	connectionRef.OutputSlot->Connections.push_back(&connectionRef);
 	connectionRef.InputSlot->Connection = &connectionRef;
@@ -261,7 +302,7 @@ void NodeGraph::DeserializeConnection(const nlohmann::json& aJson)
 
 SNode* NodeGraph::AddNode(const std::string aNodeType, const ImVec2 aLocation)
 {
-	for (auto& registeredNode : RegisteredNodes)
+	for (auto& registeredNode : myRegisteredNodes)
 	{
 		if (registeredNode.Name == aNodeType)
 		{
@@ -274,7 +315,7 @@ SNode* NodeGraph::AddNode(const std::string aNodeType, const ImVec2 aLocation)
 
 SNode* NodeGraph::FindNodeById(const size_t aId)
 {
-	for (SNode& node : Nodes)
+	for (SNode& node : myNodes)
 	{
 		if (node.Id == aId)
 			return &node;

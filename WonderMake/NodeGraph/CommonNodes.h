@@ -11,6 +11,8 @@ namespace NodeTypes
 			AddSlot<float>(ESlotIo::Input, "Second");
 			AddSlot<float>(ESlotIo::Output, "Result");
 		}
+
+		//[Nicos]: TODO Implement execution
 	};
 
 	struct SPickColorNode : public SNodeType<SPickColorNode>
@@ -20,5 +22,7 @@ namespace NodeTypes
 			AddSlot<SColor>(ESlotIo::Input, "Input Color");
 			AddSlot<SColor>(ESlotIo::Output, "Output Color");
 		}
+
+		//[Nicos]: TODO Implement execution
 	};
 }

@@ -11,8 +11,6 @@ static WmGui::NodeGraphEditor::SNodeGraphState* CurrentNodeGraph;
 struct _DragConnectionPayload
 {
 	SNode* NodePointer = nullptr;
-
-	std::string SlotTitle = {};
 	
 	bool IsInput = 0;
 
@@ -479,7 +477,7 @@ void WmGui::NodeGraphEditor::Slot(const bool aIsInput, SSlotInstanceBase& aSlotI
 			_DragConnectionPayload dragPayload{ };
 			dragPayload.NodePointer = CurrentNodeGraph->CurrentNodeInfo.NodePointer;
 			dragPayload.IsInput = CurrentNodeGraph->CurrentSlotInfo.IsInput;
-			dragPayload.SlotTitle = CurrentNodeGraph->CurrentSlotInfo.Title;
+
 			dragPayload.SlotColor = CurrentNodeGraph->CurrentSlotInfo.Color;
 			dragPayload.InputSlotInstance = CurrentNodeGraph->CurrentSlotInfo.InputSlotInstance;
 			dragPayload.OutputSlotInstance = CurrentNodeGraph->CurrentSlotInfo.OutputSlotInstance;
@@ -696,7 +694,7 @@ void WmGui::NodeGraphEditor::PotentialConnection(NodeGraph& aNodeGraph)
 		auto& connections = aNodeGraph.GetConnections();
 
 		bool shouldAddConnection = true;
-		for (auto it = connections.begin(); it != connections.begin(); it++)
+		for (auto it = connections.begin(); it != connections.end(); it++)
 		{
 			if (it->InputNodePointer == potentialConnection.InputNodePointer && it->InputSlot == potentialConnection.InputSlot)
 			{
@@ -709,7 +707,7 @@ void WmGui::NodeGraphEditor::PotentialConnection(NodeGraph& aNodeGraph)
 			}
 		}
 
-		if (shouldAddConnection)
+		if (shouldAddConnection) 
 		{
 			auto insertedConnectionIt = connections.insert(std::move(potentialConnection));
 
@@ -729,9 +727,9 @@ void WmGui::NodeGraphEditor::DrawPendingConnection()
 			auto* dragPayload = (_DragConnectionPayload*)payload->Data;
 
 			ImVec2 slotPosition{
-				CurrentNodeGraph->CachedData.GetFloat(MakeSlotDataID("x", dragPayload->SlotTitle.c_str(), dragPayload->NodePointer,
+				CurrentNodeGraph->CachedData.GetFloat(MakeSlotDataID("x", dragPayload->IsInput ? dragPayload->InputSlotInstance->SlotType.Name.c_str() : dragPayload->OutputSlotInstance->SlotType.Name.c_str(), dragPayload->NodePointer,
 					dragPayload->IsInput)),
-				CurrentNodeGraph->CachedData.GetFloat(MakeSlotDataID("y", dragPayload->SlotTitle.c_str(), dragPayload->NodePointer,
+				CurrentNodeGraph->CachedData.GetFloat(MakeSlotDataID("y",  dragPayload->IsInput ? dragPayload->InputSlotInstance->SlotType.Name.c_str() : dragPayload->OutputSlotInstance->SlotType.Name.c_str(), dragPayload->NodePointer,
 					dragPayload->IsInput)),
 			};
 

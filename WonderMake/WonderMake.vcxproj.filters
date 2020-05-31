@@ -66,6 +66,7 @@
     <ClCompile Include="Threads\RoutineIds.cpp" />
     <ClCompile Include="Threads\RoutineMain.cpp" />
     <ClCompile Include="Threads\Thread.cpp" />
+    <ClCompile Include="Audio\SoundEffectNodeGraph.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -235,6 +236,7 @@
     <ClInclude Include="Threads\Thread.h" />
     <ClInclude Include="Threads\ThreadNaming.h" />
     <ClInclude Include="NodeGraph\SlotCustomization\SlotInputEdits.h" />
+    <ClInclude Include="Audio\SoundEffectNodeGraph.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

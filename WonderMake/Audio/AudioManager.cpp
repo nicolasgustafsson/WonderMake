@@ -42,12 +42,19 @@ void AudioManager::Update() noexcept
 
 void AudioManager::PlayAudio(const std::filesystem::path& aAudioPath)
 {
-	ResourceProxy<AudioFile> audioFile = SystemPtr<ResourceSystem<AudioFile>>()->GetResource(aAudioPath);
+	auto it = std::find_if(mySoundEffects.begin(), mySoundEffects.end(), [aAudioPath](const SoundEffectNodeGraph& aSoundEffect) { return aSoundEffect.GetName() == aAudioPath.string(); });
 
-	if (audioFile.IsValid())
-		PlayAudio(audioFile);
-	else
-		myQueuedAudioFiles.insert({ audioFile });
+	if (it == mySoundEffects.end())
+		it = mySoundEffects.emplace(aAudioPath);
+
+	(*it).ExecuteExternal();
+
+	//ResourceProxy<AudioFile> audioFile = SystemPtr<ResourceSystem<AudioFile>>()->GetResource(aAudioPath);
+	//
+	//if (audioFile.IsValid())
+	//	PlayAudio(audioFile);
+	//else
+	//	myQueuedAudioFiles.insert({ audioFile });
 }
 
 void AudioManager::PlayAudio(ResourceProxy<AudioFile> aAudioFileToPlay)
@@ -158,17 +165,25 @@ I will shit fury all over you and you will drown in it. You're fucking dead, kid
 		TtsHandle = mySoloudEngine.play(speech);
 	}
 
-	ImGui::End(); 
-
-
-	myAudioMixingNodeGraph.ShouldBeVisible = debugSettings->GetOrCreateDebugValue("Audio/NodeGraph", false);
-
-	if (myAudioMixingNodeGraph.ShouldBeVisible)
-	{
+	if (ImGui::Button("Edit audio mixing node graph"))
 		myAudioMixingNodeGraph.ShouldBeVisible = true;
 
+	if (myAudioMixingNodeGraph.ShouldBeVisible)
 		WmGui::NodeGraphEditor::NodeGraphEdit(myAudioMixingNodeGraph);
 
-		debugSettings->SetDebugValue("Audio/NodeGraph", myAudioMixingNodeGraph.ShouldBeVisible);
+	ImGui::Separator();
+
+	ImGui::Text("Loaded sound effects");
+
+	for (auto& soundEffectNodeGraph : mySoundEffects)
+	{
+		if (ImGui::Button(soundEffectNodeGraph.GetName().c_str()))
+			soundEffectNodeGraph.ShouldBeVisible = true;
+
+		ImGui::PushID("Hejsan");
+		WmGui::NodeGraphEditor::NodeGraphEdit(soundEffectNodeGraph);
+		ImGui::PopID();
 	}
+
+	ImGui::End(); 
 }

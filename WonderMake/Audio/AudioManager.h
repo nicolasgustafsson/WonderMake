@@ -3,6 +3,7 @@
 #include <soloud_wav.h>
 #include "Audio/AudioStructs.h"
 #include "Audio/AudioMixingNodeGraph.h"
+#include "Audio/SoundEffectNodeGraph.h"
 
 class AudioManager : public System, Debugged
 {
@@ -36,6 +37,8 @@ protected:
 	plf::colony<SQueuedAudioFile> myQueuedAudioFiles;
 
 	AudioMixingNodeGraph myAudioMixingNodeGraph;
+
+	plf::colony<SoundEffectNodeGraph> mySoundEffects;
 
 	std::unordered_map<std::string, SoLoud::Bus> myBusses;
 };

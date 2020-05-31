@@ -213,6 +213,7 @@
     <ClCompile Include="Graphics\OpenGLFacade.cpp" />
     <ClCompile Include="Debugging\DebugSettingsSystem.cpp" />
     <ClCompile Include="Imgui\JsonInspector.cpp" />
+    <ClCompile Include="Audio\SoundEffectNodeGraph.cpp" />
     <ClCompile Include="Utilities\BezierCurve.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Collision\ColliderDebug.cpp" />
@@ -289,6 +290,7 @@
     <ClInclude Include="Imgui\JsonInspector.h" />
     <ClInclude Include="Policies\SystemId.h" />
     <ClInclude Include="NodeGraph\SlotCustomization\SlotColors.h" />
+    <ClInclude Include="Audio\SoundEffectNodeGraph.h" />
     <ClInclude Include="Utilities\BezierCurve.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Collision\ColliderDebug.h" />

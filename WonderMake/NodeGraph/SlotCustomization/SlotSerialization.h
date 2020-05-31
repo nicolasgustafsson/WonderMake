@@ -10,28 +10,31 @@ namespace InputSlotSerialization
 	}
 
 	template<typename TSlotType>
-	concept AutomaticallySerializable = requires(const i32 aNodeId, const i32 aSlotId, json & aJson, TSlotType aSlotValue) { aJson.push_back(aJson.object({ {"NodeId", aNodeId}, {"SlotId", aSlotId}, {"Value", aSlotValue} })); };
+	concept AutomaticallySerializable = requires(const i32 aNodeId, const i32 aSlotId, json & aJson, TSlotType aSlotValue) 
+	{ 
+		aJson.push_back(aJson.object({ {"NodeId", aNodeId}, {"SlotId", aSlotId}, {"Value", aSlotValue} })); 
+	};
 
 	template<typename TSlotType> requires AutomaticallySerializable<TSlotType>
-		void SerializeInput(const i32 aNodeId, const i32 aSlotId, json& aJson, TSlotType aSlotValue)
+	void SerializeInput(const i32 aNodeId, const i32 aSlotId, json& aJson, TSlotType aSlotValue)
+	{
+		TSlotType defaultValue = {};
+		if (aSlotValue == defaultValue)
+			return;
+
+		aJson.push_back(aJson.object({ {"NodeId", aNodeId}, {"SlotId", aSlotId}, {"Value", aSlotValue} }));
+	}
+
+	template<typename TSlotType>
+	TSlotType DeserializeInput(const json&)
+	{
+		return TSlotType();
+	}
+
+	//[Nicos]: if we can serialize it we should be able to deserialize it
+	template<typename TSlotType> requires AutomaticallySerializable<TSlotType> 
+		TSlotType DeserializeInput(const json& aJson)
 		{
-			TSlotType defaultValue = {};
-			if (aSlotValue == defaultValue)
-				return;
-
-			aJson.push_back(aJson.object({ {"NodeId", aNodeId}, {"SlotId", aSlotId}, {"Value", aSlotValue} }));
+			return aJson["Value"].get<TSlotType>();
 		}
-
-		template<typename TSlotType>
-		TSlotType DeserializeInput(const json&)
-		{
-			return TSlotType();
-		}
-
-		//[Nicos]: if we can serialize it we should be able to deserialize it
-		template<typename TSlotType> requires AutomaticallySerializable<TSlotType>
-			TSlotType DeserializeInput(const json& aJson)
-			{
-				return aJson["Value"].get<TSlotType>();
-			}
 }

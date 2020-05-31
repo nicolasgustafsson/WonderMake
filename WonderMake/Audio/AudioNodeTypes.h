@@ -14,6 +14,18 @@ namespace NodeTypes
 		virtual void ExecuteNodeLeftToRight(SNode& aNode) override;
 	};
 
+	struct SSoundEffectResultNode : public SNodeType<SSoundEffectResultNode>
+	{
+		SSoundEffectResultNode() : SNodeType("Play sound effect on bus")
+		{
+			AddSlot<SoLoud::AudioSource*>(ESlotIo::Input, "Sound effect");
+			AddSlot<std::string>(ESlotIo::Input, "Bus name");
+			AddSlot<f32>(ESlotIo::Input, "Volume");
+		}
+
+		virtual void ExecuteNodeLeftToRight(SNode& aNode) override;
+	};
+
 	struct SAudioMixNode : public SNodeType<SAudioMixNode>
 	{
 		SAudioMixNode() : SNodeType("Mix")
@@ -43,14 +55,25 @@ namespace NodeTypes
 		SEchoFilter() : SNodeType("Echo Filter")
 		{
 			AddSlot<SoLoud::AudioSource*>(ESlotIo::Input, "Input");
-			AddSlot<f32>(ESlotIo::Input, "Delay");
-			AddSlot<f32>(ESlotIo::Input, "Decay");
+			AddSlot<f32>(ESlotIo::Input, "Delay", 0.5f);
+			AddSlot<f32>(ESlotIo::Input, "Decay", 0.5f);
 			AddSlot<SoLoud::AudioSource*>(ESlotIo::Output, "Output");
 		}
 
 		virtual void PrepareNode(SNode& aNode) override;
 
 		virtual void ExecuteNodeLeftToRight(SNode& aNode) override;
+	};
+
+	struct SGetSoundEffect : public SNodeType<SGetSoundEffect>
+	{
+		SGetSoundEffect() : SNodeType("Get sound effect")
+		{
+			AddSlot<std::string>(ESlotIo::Input, "Sound effect name"); //[Nicos]: TODO make this a path
+			AddSlot<SoLoud::AudioSource*>(ESlotIo::Output, "Output");
+		}
+
+		virtual void PrepareNode(SNode& aNode) override;
 	};
 }
 

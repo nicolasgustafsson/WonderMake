@@ -86,10 +86,59 @@ namespace NodeTypes
 			const f32 delay = aNode.GetInput<f32>(1);
 			const f32 decay = aNode.GetInput<f32>(2);
 
-			static SoLoud::EchoFilter filter;
-			filter.setParams(delay, decay);
-			audioSource->setFilter(0, &filter);
+			std::any& anyFilter = aNode.NodeData["filter"];
 
+			SoLoud::EchoFilter* filter = nullptr;
+
+			if (anyFilter.has_value())
+			{
+				filter = &std::any_cast<SoLoud::EchoFilter&>(anyFilter);
+			}
+			else
+			{
+				filter = &anyFilter.emplace<SoLoud::EchoFilter>();
+			}
+
+			filter->setParams(delay, decay);
+
+			audioSource->setFilter(0, filter);
 		}
+	}
+
+	void SSoundEffectResultNode::ExecuteNodeLeftToRight(SNode& aNode)
+	{
+		auto* audioSource = aNode.GetInput<SoLoud::AudioSource*>(0);
+
+		if (!audioSource)
+			return;
+
+		const std::string busName = aNode.GetInput<std::string>(1);
+		const f32 volume = aNode.GetInput<f32>(2);
+
+		SystemPtr<AudioManager> audioManager;
+		SoLoud::Bus& bus = audioManager->GetBus(busName);
+		
+		bus.play(*audioSource, volume);
+	}
+
+	void SGetSoundEffect::PrepareNode(SNode& aNode)
+	{
+		const std::string audioEffectName = aNode.GetInput<std::string>(0);
+
+		ResourceProxy<AudioFile> audioFile = SystemPtr<ResourceSystem<AudioFile>>()->GetResource(audioEffectName);
+
+		std::any& resourceSave = aNode.NodeData["resource"];
+
+		resourceSave.emplace<ResourceProxy<AudioFile>>(audioFile);
+		
+		SoLoud::Wav& wav = audioFile->GetSource();
+
+		wav.setFilter(0, nullptr);
+		wav.setFilter(1, nullptr);
+		wav.setFilter(2, nullptr);
+		wav.setFilter(3, nullptr);
+		wav.setSingleInstance(true);
+
+		aNode.SetOutput<SoLoud::AudioSource*>(0, &wav);
 	}
 }

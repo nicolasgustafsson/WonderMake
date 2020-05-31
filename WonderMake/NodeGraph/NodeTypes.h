@@ -46,7 +46,7 @@ struct SSlotInstanceBase
 
 	const SSlotTypeBase& SlotType;
 	virtual void Inspect() {};
-	virtual bool HasConnection() const = 0;
+	[[nodiscard]] virtual bool HasConnection() const = 0;
 };
 
 struct SOutputSlotInstanceBase : public SSlotInstanceBase
@@ -56,7 +56,7 @@ struct SOutputSlotInstanceBase : public SSlotInstanceBase
 
 	std::vector<SConnection*> Connections;
 	virtual void Inspect() override final {};
-	virtual bool HasConnection() const override final
+	[[nodiscard]] virtual bool HasConnection() const override final
 	{
 		return Connections.size() != 0;
 	}
@@ -91,7 +91,10 @@ struct SInputSlotInstance : public SInputSlotInstanceBase
 
 	virtual void SerializeInlineInput(const i32 aNodeId, const i32 aSlotId, json& aJson) const override
 	{
-		InputSlotSerialization::template SerializeInput<T>(aNodeId, aSlotId, aJson, EditableValue);
+		const auto& baseSlotType = static_cast<const SSlotType<T>&>(SlotType);
+
+		if (EditableValue != baseSlotType.DefaultValue)
+			InputSlotSerialization::template SerializeInput<T>(aNodeId, aSlotId, aJson, EditableValue);
 
 		//if constexpr (std::is_same_v<f32, T>)
 		//	InputSlotSerialization::template SerializeInputProxy<T>(aNodeId, aSlotId, aJson, EditableValue);
@@ -121,13 +124,13 @@ struct SSlotTypeBase abstract
 
 	std::string Name = "";
 
-	virtual ImColor GetColor() const = 0;
-	virtual size_t GetTypeHash() const = 0;
+	[[nodiscard]] virtual ImColor GetColor() const = 0;
+	[[nodiscard]] virtual size_t GetTypeHash() const = 0;
 
-	virtual std::unique_ptr<SInputSlotInstanceBase> CreateInputSlotInstance() const = 0;
-	virtual std::unique_ptr<SOutputSlotInstanceBase> CreateOutputSlotInstance() const = 0;
+	[[nodiscard]] virtual std::unique_ptr<SInputSlotInstanceBase> CreateInputSlotInstance() const = 0;
+	[[nodiscard]] virtual std::unique_ptr<SOutputSlotInstanceBase> CreateOutputSlotInstance() const = 0;
 
-	bool IsCompatibleWith(const SSlotTypeBase& aOther) const
+	[[nodiscard]] bool IsCompatibleWith(const SSlotTypeBase& aOther) const
 	{
 		return GetTypeHash() == aOther.GetTypeHash();
 	}
@@ -136,25 +139,30 @@ struct SSlotTypeBase abstract
 template<typename TSlotType>
 struct SSlotType : public SSlotTypeBase
 {
-	virtual ImColor GetColor() const override
+	[[nodiscard]] virtual ImColor GetColor() const override
 	{
 		return SlotColors::template GetColor<TSlotType>();
 	}
 
-	virtual size_t GetTypeHash() const override
+	[[nodiscard]] virtual size_t GetTypeHash() const override
 	{
 		return typeid(TSlotType).hash_code();
 	}
 
-	virtual std::unique_ptr<SInputSlotInstanceBase> CreateInputSlotInstance() const override
+	[[nodiscard]] virtual std::unique_ptr<SInputSlotInstanceBase> CreateInputSlotInstance() const override
 	{
-		return std::make_unique<SInputSlotInstance<TSlotType>>(( *this ));
+		std::unique_ptr<SInputSlotInstance<TSlotType>> ptr = std::make_unique<SInputSlotInstance<TSlotType>>(( *this ));
+		ptr->EditableValue = DefaultValue;
+		return ptr;
 	}
 
-	virtual std::unique_ptr<SOutputSlotInstanceBase> CreateOutputSlotInstance() const override
+	[[nodiscard]] virtual std::unique_ptr<SOutputSlotInstanceBase> CreateOutputSlotInstance() const override
 	{
 		return std::make_unique<SOutputSlotInstance<TSlotType>>(( *this ));
 	}
+
+	//[Nicos]: Default value is nonsensical on an output node, but we have no SOutputSlotType
+	TSlotType DefaultValue;
 };
 
 struct SNodeTypeBase
@@ -169,7 +177,7 @@ struct SNodeTypeBase
 	std::vector<std::unique_ptr<SSlotTypeBase>> InputSlots = {};
 	std::vector<std::unique_ptr<SSlotTypeBase>> OutputSlots = {};
 
-	std::vector<std::unique_ptr<SInputSlotInstanceBase>> CreateInputSlotInstances() const
+	[[nodiscard]] std::vector<std::unique_ptr<SInputSlotInstanceBase>> CreateInputSlotInstances() const
 	{
 		std::vector<std::unique_ptr<SInputSlotInstanceBase>> slotInstances;
 
@@ -181,7 +189,7 @@ struct SNodeTypeBase
 		return slotInstances;
 	}
 
-	std::vector<std::unique_ptr<SOutputSlotInstanceBase>> CreateOutputSlotInstances() const
+	[[nodiscard]] std::vector<std::unique_ptr<SOutputSlotInstanceBase>> CreateOutputSlotInstances() const
 	{
 		std::vector<std::unique_ptr<SOutputSlotInstanceBase>> slotInstances;
 
@@ -212,11 +220,12 @@ struct SNodeType : public SNodeTypeBase
 
 protected:
 	template <typename T>
-	void AddSlot(ESlotIo aIoType, std::string aSlotName)
+	void AddSlot(ESlotIo aIoType, std::string aSlotName, const T aDefaultValue = {})
 	{
 		SSlotType<T> slot = {};
 
 		slot.Name = aSlotName;
+		slot.DefaultValue = aDefaultValue;
 
 		switch (aIoType)
 		{

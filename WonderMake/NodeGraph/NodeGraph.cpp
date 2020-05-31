@@ -351,7 +351,7 @@ void NodeGraph::SerializeInlineInputs(SNode& aNode, json& aInputArray)
 		auto* inputSlotInstance = aNode.InputSlotInstances[i].get();
 
 		if (inputSlotInstance->HasConnection())
-			return;
+			continue;
 
 		inputSlotInstance->SerializeInlineInput(static_cast<i32>(aNode.Id), i, aInputArray);
 	}

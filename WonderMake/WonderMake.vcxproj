@@ -73,7 +73,7 @@
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\SoLoud\Inc;$(SolutionDir)External\MetaStuff\Inc;$(SolutionDir)External\stb\Inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\CTPL\Inc;$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\SoLoud\Inc;$(SolutionDir)External\MetaStuff\Inc;$(SolutionDir)External\stb\Inc;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -82,7 +82,7 @@
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\SoLoud\Inc;$(SolutionDir)External\MetaStuff\Inc;$(SolutionDir)External\stb\Inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\CTPL\Inc;$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\SoLoud\Inc;$(SolutionDir)External\MetaStuff\Inc;$(SolutionDir)External\stb\Inc;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -91,7 +91,7 @@
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\SoLoud\Inc;$(SolutionDir)External\MetaStuff\Inc;$(SolutionDir)External\stb\Inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\CTPL\Inc;$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\SoLoud\Inc;$(SolutionDir)External\MetaStuff\Inc;$(SolutionDir)External\stb\Inc;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -100,7 +100,7 @@
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\SoLoud\Inc;$(SolutionDir)External\MetaStuff\Inc;$(SolutionDir)External\stb\Inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\CTPL\Inc;$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui-1.68 WIP\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\SoLoud\Inc;$(SolutionDir)External\MetaStuff\Inc;$(SolutionDir)External\stb\Inc;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -207,6 +207,7 @@
     <ClCompile Include="Graphics\OpenGLFacade.cpp" />
     <ClCompile Include="Debugging\DebugSettingsSystem.cpp" />
     <ClCompile Include="Imgui\JsonInspector.cpp" />
+    <ClCompile Include="Policies\TaskManager.cpp" />
     <ClCompile Include="Utilities\BezierCurve.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Collision\ColliderDebug.cpp" />
@@ -261,7 +262,7 @@
     <ClCompile Include="Utilities\Color.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Program\Window.cpp" />
-    <ClCompile Include="Utilities\OS.cpp" />
+    <ClCompile Include="Utilities\Platform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioFile.h" />
@@ -273,6 +274,8 @@
     <ClInclude Include="Debugging\DebugSettingsSystem.h" />
     <ClInclude Include="Imgui\JsonInspector.h" />
     <ClInclude Include="Policies\SystemId.h" />
+    <ClInclude Include="Policies\TaskManager.h" />
+    <ClInclude Include="Threads\ThreadChecker.h" />
     <ClInclude Include="Utilities\BezierCurve.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Collision\ColliderDebug.h" />
@@ -350,9 +353,8 @@
     <ClInclude Include="Resources\ResourceSystem.h" />
     <ClInclude Include="Graphics\SpriteRenderObject.h" />
     <ClInclude Include="Graphics\UniformBuffer.h" />
-    <ClInclude Include="Threads\ThreadNaming.h" />
     <ClInclude Include="Utilities\Matrix33.h" />
-    <ClInclude Include="Utilities\OS.h" />
+    <ClInclude Include="Utilities\Platform.h" />
     <ClInclude Include="Utilities\plf_colony.h" />
     <ClInclude Include="Utilities\Singleton.h" />
     <ClInclude Include="pch.h" />

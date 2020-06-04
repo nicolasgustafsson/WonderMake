@@ -2,250 +2,240 @@
 
 #include "Policies/Scheduler.h"
 
+#include <algorithm>
+
 void Scheduler::AddToSchedule(const SystemId aSystemId, std::vector<Policy> aPolicyList)
 {
-	SchedulingInfo item = {
+	SSchedulingInfo item = {
 		aSystemId,
 		std::move(aPolicyList)
 	};
-	mySystems.emplace(std::make_pair(aSystemId, std::move(item)));
+
+	mySystemsInfo.emplace(std::make_pair(aSystemId, std::move(item)));
 }
 
 [[nodiscard]] bool Scheduler::Schedule()
 {
-	myQueueTemplate.clear();
-
-	for (auto& systemIt : mySystems)
+	for (auto& systemIt : mySystemsInfo)
 	{
-		systemIt.second.myDependsOnThis.clear();
-		systemIt.second.myThisDependsOn.clear();
-		systemIt.second.myCanRunParallelWith.clear();
-	}
-
-	for (auto& systemIt : mySystems)
-	{
-		ConstructItemDependencies(systemIt.second);
-	}
-
-	for (auto& systemIt : mySystems)
-	{
-		if (systemIt.second.myThisDependsOn.empty())
-		{
-			myQueueTemplate.insert(systemIt.second.mySystemId);
-		}
-
-		if (!ValidateSystem(systemIt.second))
+		if (!ConstructSystemDependencies(systemIt.second))
 		{
 			return false;
 		}
 	}
 
+	for (auto& systemInfoPair : mySystemsInfo)
+	{
+		auto& systemInfo = systemInfoPair.second;
+
+		if (!ConstructDependencyHierarchy(systemInfo))
+		{
+			return false;
+		}
+
+		ConstructSystemParallels(systemInfo);
+	}
+
 	return true;
 }
 
-void Scheduler::ResetQueue()
+void Scheduler::AddSystem(const SystemId aSystemId)
 {
-	myQueueReady = myQueueTemplate;
-	mySystemRunning.clear();
-	mySystemCompleted.clear();
+	myEnqueuedSystems.push_back({ aSystemId });
 }
 
 [[nodiscard]] std::optional<SystemId> Scheduler::DequeueSystem()
 {
-	if (myQueueReady.empty())
+	const auto canSystemRun = [&runningSystems = myRunningSystem](const auto& aSystemInfo)
 	{
-		return std::optional<SystemId>();
-	}
-
-	for (const auto systemId : myQueueReady)
-	{
-		const auto itemIt = mySystems.find(systemId);
-		if (itemIt == mySystems.end())
+		for (const auto runningSystem : runningSystems)
 		{
-			// TODO(Kevin): Assert, something has gone terribly wrong.
-			WmLog(TagError, "Unknown system id found.");
-			return std::optional<SystemId>();
-		}
-		
-		const auto& item = itemIt->second;
-		if (!CanItemRun(item))
-		{
-			continue;
-		}
-
-		myQueueReady.erase(systemId);
-		mySystemRunning.insert(systemId);
-		return systemId;
-	}
-
-	return std::optional<SystemId>();
-}
-
-void Scheduler::MarkSystemAsDone(const SystemId aSystemId)
-{
-	mySystemRunning.erase(aSystemId);
-	mySystemCompleted.insert(aSystemId);
-
-	const auto itemIt = mySystems.find(aSystemId);
-	if (itemIt == mySystems.end())
-	{
-		// TODO(Kevin): Assert, something has gone terribly wrong.
-		WmLog(TagError, "Unknown system id found.");
-		return;
-	}
-
-	const auto& item = itemIt->second;
-	for (const auto dependencyId : item.myDependsOnThis)
-	{
-		TryToAddToQueue(dependencyId);
-	}
-}
-
-[[nodiscard]] bool Scheduler::IsDone() const noexcept
-{
-	return myQueueReady.empty()
-		&& mySystemRunning.empty();
-}
-
-void Scheduler::ConstructItemDependencies(SchedulingInfo& aSystem)
-{
-	for (const auto policy : aSystem.myPolicies)
-	{
-		const auto it = mySystems.find(policy.myDependencyId);
-		if (it == mySystems.cend())
-		{
-			continue;
-		}
-
-		it->second.myThisDependsOn.emplace_back(aSystem.mySystemId);
-		aSystem.myDependsOnThis.emplace_back(policy.myDependencyId);
-	}
-}
-
-
-[[nodiscard]] bool Scheduler::TraverseDown(const SchedulingInfo& aRootSystem, const SchedulingInfo& aSystem, std::unordered_set<SystemId>& aOutList) const
-{
-	for (const auto policy : aSystem.myPolicies)
-	{
-		if (policy.myDependencyId == aRootSystem.mySystemId)
-		{
-			WmLog(TagError, "Circular System dependency!");
-			return false;
-		}
-
-		const auto it = mySystems.find(policy.myDependencyId);
-		if (it == mySystems.cend())
-		{
-			continue;
-		}
-
-		aOutList.insert(policy.myDependencyId);
-		if (!TraverseDown(aRootSystem, it->second, aOutList))
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
-
-[[nodiscard]] bool Scheduler::TraverseUp(const SchedulingInfo& aRootSystem, const SchedulingInfo& aSystem, std::unordered_set<SystemId>& aOutList) const
-{
-	for (const auto policy : aSystem.myPolicies)
-	{
-		if (policy.myDependencyId == aRootSystem.mySystemId)
-		{
-			WmLog(TagError, "Circular System dependency!");
-			return false;
-		}
-
-		const auto it = mySystems.find(policy.myDependencyId);
-		if (it == mySystems.cend())
-		{
-			continue;
-		}
-
-		aOutList.insert(policy.myDependencyId);
-		if (!TraverseUp(aRootSystem, it->second, aOutList))
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
-[[nodiscard]] bool Scheduler::SystemCanRunParallelWith(const SchedulingInfo& aSystem, const SchedulingInfo& aOtherSystem) const noexcept
-{
-	for (const auto& policy : aSystem.myPolicies)
-	{
-		for (const auto& otherPolicy : aOtherSystem.myPolicies)
-		{
-			if (policy.Conflicts(otherPolicy))
+			if (aSystemInfo.CanRunParallelWith.find(runningSystem) == aSystemInfo.CanRunParallelWith.cend())
 			{
 				return false;
 			}
 		}
-	}
-	return true;
-}
-
-[[nodiscard]] bool Scheduler::ValidateSystem(SchedulingInfo& aSystem)
-{
-	std::unordered_set<SystemId> dependencySet;
-
-	if (!TraverseDown(aSystem, aSystem, dependencySet)
-		&& !TraverseUp(aSystem, aSystem, dependencySet))
+		return true;
+	};
+	const auto calculateAveragePriority = [&enqueuedSystems = myEnqueuedSystems](const auto& aSystemInfo) -> u32
 	{
-		return false;
+		u32 dependencyCount = 0;
+		u32 priority = 1;
+
+		for (const auto& system : enqueuedSystems)
+		{
+			if (aSystemInfo.DependencyHierarchy.find(system.Id) == aSystemInfo.DependencyHierarchy.cend())
+			{
+				continue;
+			}
+
+			++dependencyCount;
+			priority += system.Priority;
+		}
+
+		if (dependencyCount == 0)
+		{
+			return 1;
+		}
+
+		return priority / dependencyCount;
+	};
+
+	const auto dequeuedIt = std::find_if(myEnqueuedSystems.begin(), myEnqueuedSystems.end(), [&systemsInfo = mySystemsInfo, &canSystemRun, &calculateAveragePriority](const auto& aSystem)
+		{
+			const auto systemIt = systemsInfo.find(aSystem.Id);
+			if (systemIt == systemsInfo.cend())
+			{
+				// TODO(Kevin): Assert, something has gone terribly wrong.
+				WmLog(TagError, "Unknown system id found.");
+
+				return false;
+			}
+
+			const auto& systemInfo = systemIt->second;
+
+			if (!canSystemRun(systemInfo))
+			{
+				return false;
+			}
+
+			const auto magicWeightValueWhichIsTotallyLegit = 2;
+			const auto averagePriority = calculateAveragePriority(systemInfo);
+
+			return aSystem.Priority * magicWeightValueWhichIsTotallyLegit > averagePriority;
+		});
+
+	if (dequeuedIt == myEnqueuedSystems.cend())
+	{
+		return std::optional<SystemId>();
 	}
 
-	for (auto& systemIt : mySystems)
+	const auto dequeuedId = dequeuedIt->Id;
+
+	const auto systemIt = mySystemsInfo.find(dequeuedId);
+	if (systemIt == mySystemsInfo.cend())
 	{
-		if (systemIt.second.mySystemId == aSystem.mySystemId
-			|| dependencySet.find(systemIt.second.mySystemId) != dependencySet.end()
-			|| std::find(aSystem.myCanRunParallelWith.begin(), aSystem.myCanRunParallelWith.end(), systemIt.second.mySystemId) != aSystem.myCanRunParallelWith.end()
-			|| !SystemCanRunParallelWith(aSystem, systemIt.second))
+		// TODO(Kevin): Assert, something has gone terribly wrong.
+		WmLog(TagError, "Unknown system id found.");
+
+		return std::optional<SystemId>();
+	}
+
+	myRunningSystem.emplace(dequeuedId);
+	myEnqueuedSystems.erase(dequeuedIt);
+
+	const auto& systemInfo = systemIt->second;
+
+	for (auto& system : myEnqueuedSystems)
+	{
+		if (systemInfo.DependencyHierarchy.find(system.Id) == systemInfo.DependencyHierarchy.cend())
 		{
 			continue;
 		}
 
-		aSystem.myCanRunParallelWith.emplace_back(systemIt.second.mySystemId);
-		systemIt.second.myCanRunParallelWith.emplace_back(aSystem.mySystemId);
+		++system.Priority;
 	}
 
-	return true;
+	return dequeuedId;
 }
 
-[[nodiscard]] bool Scheduler::CanItemRun(const SchedulingInfo& aSystem) const
+void Scheduler::MarkSystemAsDone(const SystemId aSystemId)
 {
-	for (const auto runningSystem : mySystemRunning)
+	myRunningSystem.erase(aSystemId);
+}
+
+[[nodiscard]] bool Scheduler::ConstructSystemDependencies(SSchedulingInfo& aSystemInfo)
+{
+	for (const auto policy : aSystemInfo.Policies)
 	{
-		if (std::find(aSystem.myCanRunParallelWith.begin(), aSystem.myCanRunParallelWith.end(), runningSystem) == aSystem.myCanRunParallelWith.end())
+		const auto it = mySystemsInfo.find(policy.myDependencyId);
+		if (it == mySystemsInfo.cend())
 		{
+			// TODO(Kevin): Assert, something has gone terribly wrong.
+			WmLog(TagError, "Unknown system id found.");
+
 			return false;
 		}
+
+		it->second.DependsOnThis.emplace(aSystemInfo.Id);
+		aSystemInfo.ThisDependsOn.emplace(policy.myDependencyId);
 	}
+
 	return true;
 }
 
-void Scheduler::TryToAddToQueue(const SystemId aSystemId)
+void Scheduler::ConstructSystemParallels(SSchedulingInfo& aSystemInfo)
 {
-	const auto itemIt = mySystems.find(aSystemId);
-	if (itemIt == mySystems.end())
+	const auto canRunParallelWith = [](const auto& aSystemInfo, const auto& aOtherSystem)
 	{
-		// TODO(Kevin): Assert, something has gone terribly wrong.
-		WmLog(TagError, "Unknown system id found.");
-		return;
-	}
-
-	const auto& item = itemIt->second;
-	for (const auto dependencyId : item.myThisDependsOn)
-	{
-		if (mySystemCompleted.find(dependencyId) == mySystemCompleted.end())
+		for (const auto& policy : aSystemInfo.Policies)
 		{
-			return;
+			for (const auto& otherPolicy : aOtherSystem.Policies)
+			{
+				if (policy.Conflicts(otherPolicy))
+				{
+					return false;
+				}
+			}
 		}
+		return true;
+	};
+
+	for (auto& systemIt : mySystemsInfo)
+	{
+		if (systemIt.second.Id == aSystemInfo.Id
+			|| aSystemInfo.DependencyHierarchy.find(systemIt.second.Id) != aSystemInfo.DependencyHierarchy.end()
+			|| aSystemInfo.CanRunParallelWith.find(systemIt.second.Id) != aSystemInfo.CanRunParallelWith.cend()
+			|| !canRunParallelWith(aSystemInfo, systemIt.second))
+		{
+			continue;
+		}
+
+		aSystemInfo.CanRunParallelWith.emplace(systemIt.second.Id);
+		systemIt.second.CanRunParallelWith.emplace(aSystemInfo.Id);
+	}
+}
+
+[[nodiscard]] bool Scheduler::ConstructDependencyHierarchy(SSchedulingInfo& aSystemInfo)
+{
+	enum class EDirection
+	{
+		Up,
+		Down
+	};
+
+	const auto traverse = [&rootSystemInfo = aSystemInfo, &systems = mySystemsInfo](const auto aTraverseFunc, const EDirection aDirection, const auto& aSystem) -> bool
+	{
+		auto& dependencyList = aDirection == EDirection::Up ? aSystem.ThisDependsOn : aSystem.DependsOnThis;
+
+		for (const auto dependencyId : dependencyList)
+		{
+			if (dependencyId == rootSystemInfo.Id)
+			{
+				WmLog(TagError, "Circular System dependency!");
+				return false;
+			}
+
+			const auto it = systems.find(dependencyId);
+			if (it == systems.cend())
+			{
+				continue;
+			}
+
+			rootSystemInfo.DependencyHierarchy.insert(dependencyId);
+			if (!aTraverseFunc(aTraverseFunc, aDirection, it->second))
+			{
+				return false;
+			}
+		}
+		return true;
+	};
+
+	if (!traverse(traverse, EDirection::Down, aSystemInfo)
+		|| !traverse(traverse, EDirection::Up, aSystemInfo))
+	{
+		return false;
 	}
 
-	myQueueReady.insert(aSystemId);
+	return true;
 }

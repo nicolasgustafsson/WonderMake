@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Thread.h"
 #include "Routine.h"
-#include "Utilities/OS.h"
+#include "Utilities/Platform.h"
 
 
 Thread::Thread(const std::string& aName)
@@ -18,7 +18,7 @@ Thread::~Thread()
 
 void Thread::SetName(const std::string& aName)
 {
-	SetThreadName(myThread, aName.c_str());
+	Platform::SetThreadName(myThread, aName.c_str());
 }
 
 void Thread::AddRoutine(Routine& aRoutine)

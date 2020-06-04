@@ -2,7 +2,7 @@
 
 #include "Logging/FileLogger.h"
 
-#include "Utilities/OS.h"
+#include "Utilities/Platform.h"
 
 #include <algorithm>
 #include <filesystem>
@@ -20,7 +20,7 @@ FileLogger::FileLogger() noexcept
 		std::filesystem::create_directories(logDir);
 	}
 
-	const std::string fileName(GetDateTime() + LogFileSuffix);
+	const std::string fileName(Platform::GetDateTime() + LogFileSuffix);
 	const std::filesystem::path filePath = logDir / fileName;
 	myFileStream.open(filePath, std::fstream::out | std::fstream::app);
 	if (!myFileStream)

@@ -5,7 +5,7 @@
 
 #include "Debugging/DebugLine.h"
 
-#include "Utilities/OS.h"
+#include "Utilities/Platform.h"
 
 #include <sstream>
 #include <memory>
@@ -79,7 +79,7 @@ inline static void WmLog(TMessageArgs... aMessageArgs)
 {
 	std::stringstream MessageStream;
 
-	MessageStream << '[' << GetDateTime() << ']';
+	MessageStream << '[' << Platform::GetDateTime() << ']';
 
 	(MessageStream << ... << aMessageArgs);
 

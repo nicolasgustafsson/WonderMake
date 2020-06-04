@@ -262,7 +262,7 @@
     <ClCompile Include="Utilities\Color.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Program\Window.cpp" />
-    <ClCompile Include="Utilities\OS.cpp" />
+    <ClCompile Include="Utilities\Platform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioFile.h" />
@@ -354,7 +354,7 @@
     <ClInclude Include="Graphics\SpriteRenderObject.h" />
     <ClInclude Include="Graphics\UniformBuffer.h" />
     <ClInclude Include="Utilities\Matrix33.h" />
-    <ClInclude Include="Utilities\OS.h" />
+    <ClInclude Include="Utilities\Platform.h" />
     <ClInclude Include="Utilities\plf_colony.h" />
     <ClInclude Include="Utilities\Singleton.h" />
     <ClInclude Include="pch.h" />

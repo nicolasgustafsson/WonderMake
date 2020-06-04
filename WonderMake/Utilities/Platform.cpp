@@ -1,13 +1,17 @@
-#pragma once
-#include <Windows.h>
-#include "Typedefs.h"
-#include <thread>
+#include "pch.h"
 
-namespace ThreadNaming
+#include "Utilities/Platform.h"
+
+#include <processthreadsapi.h>
+#include <string>
+#include <time.h>
+#include <windows.h>
+
+namespace Platform
 {
 	const DWORD MS_VC_EXCEPTION = 0x406D1388;
 
-	#pragma pack(push,8)
+#pragma pack(push,8)
 	typedef struct tagTHREADNAME_INFO
 	{
 		DWORD dwType; // Must be 0x1000.
@@ -15,16 +19,14 @@ namespace ThreadNaming
 		DWORD dwThreadID; // Thread ID (-1=caller thread).
 		DWORD dwFlags; // Reserved for future use, must be zero.
 	} THREADNAME_INFO;
-	#pragma pack(pop)
+#pragma pack(pop)
 
 
-	void SetThreadName(u32 aThreadId, const char* threadName)
+	void SetThreadName(const u32 aThreadId, const std::string& threadName)
 	{
-		// DWORD dwThreadID = ::GetThreadId( static_cast<HANDLE>( t.native_handle() ) );
-
 		THREADNAME_INFO info;
 		info.dwType = 0x1000;
-		info.szName = threadName;
+		info.szName = threadName.c_str();
 		info.dwThreadID = aThreadId;
 		info.dwFlags = 0;
 
@@ -35,17 +37,29 @@ namespace ThreadNaming
 		__except (EXCEPTION_EXECUTE_HANDLER)
 		{
 		}
-
 	}
 
-	void SetThreadName(const char* threadName)
+	void SetThreadName(const std::string& threadName)
 	{
 		SetThreadName(GetCurrentThreadId(), threadName);
 	}
 
-	void SetThreadName(std::thread& aThread, const char* threadName)
+	void SetThreadName(std::thread& aThread, const std::string& threadName)
 	{
 		DWORD threadId = ::GetThreadId(static_cast<HANDLE>(aThread.native_handle()));
 		SetThreadName(threadId, threadName);
+	}
+
+	std::string GetDateTime()
+	{
+		std::time_t rawtime;
+		std::tm timeinfo;
+		char buffer[80];
+
+		std::time(&rawtime);
+		localtime_s(&timeinfo, &rawtime);
+
+		std::strftime(buffer, sizeof(buffer), "%Y-%m-%d-%H-%M-%S", &timeinfo);
+		return buffer;
 	}
 }

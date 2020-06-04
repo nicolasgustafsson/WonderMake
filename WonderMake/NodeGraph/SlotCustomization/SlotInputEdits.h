@@ -1,4 +1,5 @@
 #pragma once
+#include "Imgui/FileSelector.h"
 
 namespace SlotInputEdits
 {
@@ -24,5 +25,11 @@ namespace SlotInputEdits
 	inline void EditInputSlot<SColor>(SColor& aInput)
 	{
 		ImGui::ColorEdit4("", ((f32*)&aInput));
+	}
+
+	template<>
+	inline void EditInputSlot<std::filesystem::path>(std::filesystem::path& aInput)
+	{
+		ImGui::FileSelector::SelectFile(aInput);
 	}
 };

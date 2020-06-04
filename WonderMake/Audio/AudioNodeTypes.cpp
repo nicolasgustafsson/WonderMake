@@ -123,7 +123,7 @@ namespace NodeTypes
 
 	void SGetSoundEffect::PrepareNode(SNode& aNode)
 	{
-		const std::string audioEffectName = aNode.GetInput<std::string>(0);
+		const std::filesystem::path audioEffectName = aNode.GetInput<std::filesystem::path>(0);
 
 		ResourceProxy<AudioFile> audioFile = SystemPtr<ResourceSystem<AudioFile>>()->GetResource(audioEffectName);
 

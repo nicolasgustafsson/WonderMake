@@ -1,6 +1,7 @@
 #pragma once
 #include "NodeGraph/NodeTypes.h"
 #include <soloud.h>
+#include <filesystem>
 
 namespace NodeTypes
 {
@@ -69,7 +70,7 @@ namespace NodeTypes
 	{
 		SGetSoundEffect() : SNodeType("Get sound effect")
 		{
-			AddSlot<std::string>(ESlotIo::Input, "Sound effect name"); //[Nicos]: TODO make this a path
+			AddSlot<std::filesystem::path>(ESlotIo::Input, "Sound effect name"); //[Nicos]: TODO make this a path
 			AddSlot<SoLoud::AudioSource*>(ESlotIo::Output, "Output");
 		}
 

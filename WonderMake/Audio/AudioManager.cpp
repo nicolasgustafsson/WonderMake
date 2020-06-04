@@ -48,13 +48,6 @@ void AudioManager::PlayAudio(const std::filesystem::path& aAudioPath)
 		it = mySoundEffects.emplace(aAudioPath);
 
 	(*it).Execute();
-
-	//ResourceProxy<AudioFile> audioFile = SystemPtr<ResourceSystem<AudioFile>>()->GetResource(aAudioPath);
-	//
-	//if (audioFile.IsValid())
-	//	PlayAudio(audioFile);
-	//else
-	//	myQueuedAudioFiles.insert({ audioFile });
 }
 
 void AudioManager::PlayAudio(ResourceProxy<AudioFile> aAudioFileToPlay)
@@ -63,7 +56,7 @@ void AudioManager::PlayAudio(ResourceProxy<AudioFile> aAudioFileToPlay)
 	myCurrentlyPlayingAudioFiles.insert({ handle, aAudioFileToPlay });
 }
 
-SoLoud::Bus& AudioManager::GetBus(std::string aBusName)
+SoLoud::Bus& AudioManager::GetBus(const std::string& aBusName)
 {
 	return myBusses[aBusName];
 }

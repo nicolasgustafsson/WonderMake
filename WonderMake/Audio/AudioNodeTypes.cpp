@@ -43,17 +43,16 @@ namespace NodeTypes
 	void SAudioMixNode::ExecuteNodeLeftToRight(SNode& aNode)
 	{
 		std::any& audioMix = aNode.NodeData["AudioMix"];
-		SoLoud::Bus* busPointer = nullptr;
-		busPointer = &std::any_cast<SoLoud::Bus&>(audioMix);
+		SoLoud::Bus& busPointer = std::any_cast<SoLoud::Bus&>(audioMix);
 
 		auto* firstSource = aNode.GetInput<SoLoud::AudioSource*>(0);
 		auto* secondSource = aNode.GetInput<SoLoud::AudioSource*>(1);
 
 		if (firstSource)
-			busPointer->play(*firstSource);
+			busPointer.play(*firstSource);
 
 		if (secondSource)
-			busPointer->play(*secondSource);
+			busPointer.play(*secondSource);
 	}
 
 	void SAudioSourceBusNode::PrepareNode(SNode& aNode)

@@ -15,7 +15,7 @@ public:
 
 	void PlayAudio(const std::filesystem::path& aAudioPath);
 
-	SoLoud::Bus& GetBus(std::string aBusName);
+	SoLoud::Bus& GetBus(const std::string& aBusName);
 	SoLoud::Soloud& GetSoloudEngine();
 
 protected:

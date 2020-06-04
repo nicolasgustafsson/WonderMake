@@ -3,7 +3,7 @@
 #include "Audio/AudioNodeTypes.h"
 
 AudioMixingNodeGraph::AudioMixingNodeGraph(std::filesystem::path aPath)
-	:  NodeGraph(aPath)
+	:  NodeGraph(std::move(aPath))
 {
 	Load();
 }

@@ -24,9 +24,9 @@ void Scheduler::AddToSchedule(const SystemId aSystemId, std::vector<Policy> aPol
 		}
 	}
 
-	for (auto& system : mySystemsInfo)
+	for (auto& systemInfoPair : mySystemsInfo)
 	{
-		auto& systemInfo = system.second;
+		auto& systemInfo = systemInfoPair.second;
 
 		if (!ConstructDependencyHierarchy(systemInfo))
 		{

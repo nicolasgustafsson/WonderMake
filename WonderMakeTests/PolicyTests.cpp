@@ -10,7 +10,6 @@
 
 TEST_CASE("SystemId can be created and copied", "[SystemId]")
 {
-
 	class SystemA;
 	class SystemB;
 
@@ -40,14 +39,14 @@ TEST_CASE("SystemId can be created and copied", "[SystemId]")
 
 		REQUIRE(idSystemA.Hash() == idSystemB.Hash());
 	}
-
 }
 
 TEST_CASE("Policies can be created and can be tested for conflicts", "[Policy]")
 {
-
 	class SystemA;
 	class SystemB;
+	class SystemC;
+	class SystemD;
 
 	SECTION("Policy can be created")
 	{
@@ -56,6 +55,68 @@ TEST_CASE("Policies can be created and can be tested for conflicts", "[Policy]")
 
 		REQUIRE(policy.myDependencyId == idSystemA);
 		REQUIRE(policy.myPermission == Policy::EPermission::Read);
+	}
+
+	SECTION("Policy::Set can converted to a list")
+	{
+		using setA = Policy::Set<>;
+		using setB = Policy::Set<
+			Policy::Add<SystemA, Policy::EPermission::Read>>;
+		using setC = Policy::Set<
+			Policy::Add<SystemA, Policy::EPermission::Write>>;
+		using setD = Policy::Set<
+			Policy::Add<SystemB, Policy::EPermission::Read>,
+			Policy::Add<SystemC, Policy::EPermission::Write>>;
+
+		static_assert(!setA::HasDependency_v<SystemA>,	"setA should not depend on SystemA.");
+		static_assert(!setA::HasDependency_v<SystemB>,	"setA should not depend on SystemB.");
+		static_assert(!setA::HasDependency_v<SystemC>,	"setA should not depend on SystemC.");
+		static_assert(!setA::HasDependency_v<SystemD>,	"setA should not depend on SystemD.");
+
+		static_assert(setB::HasDependency_v<SystemA>,	"setB should depend on SystemA.");
+		static_assert(!setB::HasDependency_v<SystemB>,	"setB should not depend on SystemB.");
+		static_assert(!setB::HasDependency_v<SystemC>,	"setB should not depend on SystemC.");
+		static_assert(!setB::HasDependency_v<SystemD>,	"setB should not depend on SystemD.");
+		
+		static_assert(setC::HasDependency_v<SystemA>,	"setC should depend on SystemA.");
+		static_assert(!setC::HasDependency_v<SystemC>,	"setC should not depend on SystemB.");
+		static_assert(!setC::HasDependency_v<SystemC>, "setC should not depend on SystemC.");
+		static_assert(!setC::HasDependency_v<SystemD>, "setC should not depend on SystemD.");
+
+		static_assert(!setD::HasDependency_v<SystemA>,	"setD should not depend on SystemA.");
+		static_assert(setD::HasDependency_v<SystemB>,	"setD should depend on SystemB.");
+		static_assert(setD::HasDependency_v<SystemC>,	"setD should depend on SystemC.");
+		static_assert(!setD::HasDependency_v<SystemD>,	"setD should not depend on SystemD.");
+
+		static_assert(!setA::HasPolicy_v<SystemA, Policy::EPermission::Read>, "setA should not have read permisson for SystemA.");
+		static_assert(!setA::HasPolicy_v<SystemA, Policy::EPermission::Write>, "setA should not have write permisson for SystemA.");
+
+		static_assert(setB::HasPolicy_v<SystemA, Policy::EPermission::Read>,	"setB should have read permisson for SystemA.");
+		static_assert(!setB::HasPolicy_v<SystemA, Policy::EPermission::Write>,	"setB should not have write permisson for SystemA.");
+
+		static_assert(!setC::HasPolicy_v<SystemA, Policy::EPermission::Read>, "setC should not have read permisson for SystemA."); 
+		static_assert(setC::HasPolicy_v<SystemA, Policy::EPermission::Write>, "setC should have write permisson for SystemA.");
+
+		const auto listA = setA::GetPolicies();
+		const auto listB = setB::GetPolicies();
+		const auto listC = setC::GetPolicies();
+		const auto listD = setD::GetPolicies();
+
+		REQUIRE(listA.size() == 0);
+
+		REQUIRE(listB.size() == 1);
+		REQUIRE(listB[0].myDependencyId == SystemId::Create<SystemA>());
+		REQUIRE(listB[0].myPermission == Policy::EPermission::Read);
+
+		REQUIRE(listC.size() == 1);
+		REQUIRE(listC[0].myDependencyId == SystemId::Create<SystemA>());
+		REQUIRE(listC[0].myPermission == Policy::EPermission::Write);
+
+		REQUIRE(listD.size() == 2);
+		REQUIRE(listD[0].myDependencyId == SystemId::Create<SystemB>());
+		REQUIRE(listD[0].myPermission == Policy::EPermission::Read);
+		REQUIRE(listD[1].myDependencyId == SystemId::Create<SystemC>());
+		REQUIRE(listD[1].myPermission == Policy::EPermission::Write);
 	}
 
 	SECTION("Policy can be copied")
@@ -83,7 +144,6 @@ TEST_CASE("Policies can be created and can be tested for conflicts", "[Policy]")
 		REQUIRE(policy1.Conflicts(policy4));
 		REQUIRE(policy4.Conflicts(policy1));
 	}
-
 }
 
 TEST_CASE("Scheduler detects circular dependencies", "[Scheduler]")

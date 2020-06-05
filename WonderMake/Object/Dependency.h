@@ -1,7 +1,5 @@
 #pragma once
-#include "System/SystemPtr.h"
 #include "Object.h"
-#include "Functionalities/FunctionalitySystem.h"
 #include <type_traits>
 
 struct SComponent;

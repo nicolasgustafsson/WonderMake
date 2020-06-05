@@ -136,7 +136,7 @@ namespace NodeTypes
 		wav.setFilter(1, nullptr);
 		wav.setFilter(2, nullptr);
 		wav.setFilter(3, nullptr);
-		wav.setSingleInstance(true);
+		//wav.setSingleInstance(true);
 
 		aNode.SetOutput<SoLoud::AudioSource*>(0, &wav);
 	}

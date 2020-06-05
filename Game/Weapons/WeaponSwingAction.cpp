@@ -80,6 +80,9 @@ void WeaponSwingAction::TestSwingCollision()
 			{
 				return;
 			}
+
+			if (&aHitCharacter == &myCharacter)
+				return;
 			
 			aHitCharacter.Damage(myWeaponFunctionality.GetWeapon().myBaseWeaponDamage * myCharacter.Get<CharacterStatsFunctionality>().GetStatMultiplier(ECharacterStat::MeleeAttackDamage));
 

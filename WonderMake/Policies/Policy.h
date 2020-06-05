@@ -9,7 +9,8 @@ struct Policy final
 	enum class EPermission
 	{
 		Write,
-		Read
+		Read,
+		Unrestricted
 	};
 
 	SystemId		myDependencyId;
@@ -58,7 +59,9 @@ template<typename TDependency>
 
 [[nodiscard]] inline bool Policy::Conflicts(const Policy& aOther) const noexcept
 {
-	return myDependencyId == aOther.myDependencyId
+	return myPermission != EPermission::Unrestricted
+		&& aOther.myPermission != EPermission::Unrestricted
+		&& myDependencyId == aOther.myDependencyId
 		&& (myPermission == EPermission::Write
 			|| aOther.myPermission == EPermission::Write);
 }

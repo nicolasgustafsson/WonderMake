@@ -1,0 +1,17 @@
+NOTICE: This is for internal use only, and does not represent a list of licenses used by this project.
+
+Libraries:
+catch    - Boost Software License 1.0 - can be found in header
+CTPL	 - Apache License 2.0	      - has license file
+glad	 - MIT License		      - has license file
+glfw 	 - zlib License		      - has license file
+dear imgui - MIT License	      - has license file
+json	 - MIT License  	      - can be found in header
+khronos  - Custom		      - can be found in header
+meta stuff - MIT License	      - has license file
+soloud	 - ZLib/LibPNG License	      - can be found in header
+
+Audio:
+GDC bundle - no attribution or credit required - https://sonniss.com/gdc-bundle-license
+pmsfx - no attribution or credit required - https://www.pmsfx.com/legal-1
+freetousesounds - no attribution or credit required - https://www.freetousesounds.com/about/the-license-agreement/

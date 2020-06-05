@@ -1,4 +1,7 @@
 #pragma once
+
+#include "Utilities/RestrictTypes.h"
+
 struct SComponent : public NonCopyable
 {
 public:

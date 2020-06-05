@@ -186,6 +186,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DependencyTests.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ObjectTests.cpp" />
     <ClCompile Include="PolicyTests.cpp" />

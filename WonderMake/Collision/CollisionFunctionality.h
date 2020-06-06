@@ -16,8 +16,9 @@ namespace Colliders
 class CollisionFunctionality final
 	: public Functionality<
 		CollisionFunctionality,
-		SCollisionComponent,
-		TransformFunctionality>
+		Policy::Set<
+			Policy::Add<SCollisionComponent, Policy::EPermission::Write>,
+			Policy::Add<TransformFunctionality, Policy::EPermission::Read>>>
 	, public Debugged
 {
 public:

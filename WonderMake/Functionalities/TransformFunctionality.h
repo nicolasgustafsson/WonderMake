@@ -5,7 +5,10 @@
 #include "Utilities/Matrix33.h"
 
 class TransformFunctionality
-	: public Functionality<TransformFunctionality, STransformComponent>
+	: public Functionality<
+		TransformFunctionality, 
+		Policy::Set<
+			Policy::Add<STransformComponent, Policy::EPermission::Write>>>
 {
 public:
 	TransformFunctionality(Object& aOwner) noexcept;

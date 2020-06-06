@@ -9,7 +9,12 @@ struct SCharacterBuffComponent : public SComponent
 	plf::colony<BuffInstance> Buffs;
 };
 
-class CharacterBuffsFunctionality : public Functionality<CharacterBuffsFunctionality, SCharacterBuffComponent, ImpulseFunctionality>
+class CharacterBuffsFunctionality
+	: public Functionality<
+		CharacterBuffsFunctionality,
+		Policy::Set<
+			Policy::Add<SCharacterBuffComponent, Policy::EPermission::Write>,
+			Policy::Add<ImpulseFunctionality, Policy::EPermission::Write>>>
 {
 public:
 	CharacterBuffsFunctionality(Object& aOwner);

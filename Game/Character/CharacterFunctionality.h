@@ -35,11 +35,17 @@ struct SFactionComponent : public SComponent
 };
 
 class CharacterFunctionality
-	: public Functionality<CharacterFunctionality, OwnerFunctionality
-	, CollisionFunctionality, SHealthComponent
-	, SFactionComponent, TransformFunctionality
-	, DefaultMovementFunctionality, CharacterStatsFunctionality
-	, CharacterBuffsFunctionality>
+	: public Functionality<
+		CharacterFunctionality,
+		Policy::Set<
+			Policy::Add<OwnerFunctionality, Policy::EPermission::Write>,
+			Policy::Add<CollisionFunctionality, Policy::EPermission::Write>,
+			Policy::Add<SHealthComponent, Policy::EPermission::Write>,
+			Policy::Add<SFactionComponent, Policy::EPermission::Write>,
+			Policy::Add<TransformFunctionality, Policy::EPermission::Write>,
+			Policy::Add<DefaultMovementFunctionality, Policy::EPermission::Write>,
+			Policy::Add<CharacterStatsFunctionality, Policy::EPermission::Write>,
+			Policy::Add<CharacterBuffsFunctionality, Policy::EPermission::Write>>>
 {
 public:
 	CharacterFunctionality(Object& aOwner) noexcept;

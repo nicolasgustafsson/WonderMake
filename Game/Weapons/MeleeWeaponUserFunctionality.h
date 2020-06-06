@@ -23,7 +23,13 @@ struct SMeleeWeaponUserComponent
 };
 
 class MeleeWeaponUserFunctionality
-	: public Functionality<MeleeWeaponUserFunctionality, SMeleeWeaponUserComponent, TransformFunctionality, ActionFunctionality, CharacterFunctionality>
+	: public Functionality<
+		MeleeWeaponUserFunctionality,
+		Policy::Set<
+			Policy::Add<SMeleeWeaponUserComponent, Policy::EPermission::Write>,
+			Policy::Add<TransformFunctionality, Policy::EPermission::Write>,
+			Policy::Add<ActionFunctionality, Policy::EPermission::Write>,
+			Policy::Add<CharacterFunctionality, Policy::EPermission::Write>>>
 {
 public:
 	MeleeWeaponUserFunctionality(Object& aOwner);

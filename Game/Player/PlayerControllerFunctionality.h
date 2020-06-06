@@ -27,12 +27,18 @@ struct SPlayerDiedMessage
 
 class PlayerControllerFunctionality
 	: public Functionality<
-		PlayerControllerFunctionality, TransformFunctionality,
-		MovementInputFunctionality, DefaultMovementFunctionality,
-		OwnerFunctionality, MeleeWeaponUserFunctionality,
-		ActionFunctionality, CollisionFunctionality,
-		CharacterFunctionality, ImpulseFunctionality,
-		SpriteRenderingFunctionality>
+		PlayerControllerFunctionality,
+		Policy::Set<
+			Policy::Add<TransformFunctionality, Policy::EPermission::Write>,
+			Policy::Add<MovementInputFunctionality, Policy::EPermission::Write>,
+			Policy::Add<DefaultMovementFunctionality, Policy::EPermission::Write>,
+			Policy::Add<OwnerFunctionality, Policy::EPermission::Write>,
+			Policy::Add<MeleeWeaponUserFunctionality, Policy::EPermission::Write>,
+			Policy::Add<ActionFunctionality, Policy::EPermission::Write>,
+			Policy::Add<CollisionFunctionality, Policy::EPermission::Write>,
+			Policy::Add<CharacterFunctionality, Policy::EPermission::Write>,
+			Policy::Add<ImpulseFunctionality, Policy::EPermission::Write>,
+			Policy::Add<SpriteRenderingFunctionality, Policy::EPermission::Write>>>
 	, public Debugged
 {
 public:

@@ -1,5 +1,9 @@
 #pragma once
+
 #include "Object.h"
+
+#include "Policies/Policy.h"
+
 #include <type_traits>
 
 struct SComponent;
@@ -45,7 +49,7 @@ void Dependency<TDependency>::Destroy(Object& aOwningObject, [[maybe_unused]] _B
 	aOwningObject.Remove<TDependency>();
 }
 
-template<typename ... TDependencies>
+template<typename PolicySet>
 class Dependencies
 {
 public:
@@ -58,30 +62,44 @@ public:
 	constexpr __forceinline TDependency& Get() const;
 
 private:
-	std::tuple<Dependency<TDependencies>...> myDependencies;
+	using DependencyTuple = typename PolicySet::template ExtractDependencies<Dependency>;
+
+	DependencyTuple myDependencies;
 };
 
-template<typename ... TDependencies>
-void Dependencies<TDependencies...>::Create(Object& aObject)
+template<typename PolicySet>
+void Dependencies<PolicySet>::Create(Object& aObject)
 {
-	(std::get<Dependency<TDependencies>>(myDependencies).Create(aObject), ...);
+	const auto create = [&aObject](auto& aDependency) -> auto&
+	{
+		aDependency.Create(aObject);
+		return aDependency;
+	};
+
+	std::apply([&create](auto& ...x) { auto t = std::make_tuple(create(x)...); t; }, myDependencies);
 }
 
-template<typename ... TDependencies>
-void Dependencies<TDependencies...>::Destroy(Object& aObject, _BaseFunctionality& aFunctionality)
+template<typename PolicySet>
+void Dependencies<PolicySet>::Destroy(Object& aObject, _BaseFunctionality& aFunctionality)
 {
-	(std::get<Dependency<TDependencies>>(myDependencies).Destroy(aObject, aFunctionality), ...);
+	const auto destroy = [&aObject, &aFunctionality](auto& aDependency) -> auto &
+	{
+		aDependency.Destroy(aObject, aFunctionality);
+		return aDependency;
+	};
+
+	std::apply([&destroy](auto& ...x) { auto t = std::make_tuple(destroy(x)...); t; }, myDependencies);
 }
 
-template<typename ... TDependencies>
+template<typename PolicySet>
 template<typename TDependency>
-constexpr TDependency& Dependencies<TDependencies...>::Get() const
+constexpr TDependency& Dependencies<PolicySet>::Get() const
 {
 	return *std::get<Dependency<TDependency>>(myDependencies);
 }
 
-template<typename ... TDependencies>
-Dependencies<TDependencies...>::Dependencies(Object& aObject)
+template<typename PolicySet>
+Dependencies<PolicySet>::Dependencies(Object& aObject)
 {
 	Create(aObject);
 }

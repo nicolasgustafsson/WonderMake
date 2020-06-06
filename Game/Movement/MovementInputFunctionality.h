@@ -11,8 +11,11 @@ struct SMovementInputComponent
 	SVector2f myMovementInput;
 };
 
-class MovementInputFunctionality :
-	public Functionality<MovementInputFunctionality, SMovementInputComponent>
+class MovementInputFunctionality
+	: public Functionality<
+		MovementInputFunctionality,
+		Policy::Set<
+			Policy::Add<SMovementInputComponent, Policy::EPermission::Write>>>
 {
 public:
 	MovementInputFunctionality(Object& aOwner);

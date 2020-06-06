@@ -1,4 +1,7 @@
 #pragma once
+
+#include "Functionality.h"
+
 class OwnerFunctionality
 	: public Functionality<OwnerFunctionality>
 {

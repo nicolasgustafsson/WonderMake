@@ -4,7 +4,10 @@
 #include "Character/CharacterFunctionality.h"
 
 class TargetFunctionality
-	: public Functionality<TargetFunctionality, TransformFunctionality>
+	: public Functionality<
+		TargetFunctionality,
+		Policy::Set<
+			Policy::Add<TransformFunctionality, Policy::EPermission::Write>>>
 {
 public:
 	TargetFunctionality(Object& aOwner);

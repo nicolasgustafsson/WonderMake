@@ -2,7 +2,11 @@
 #include "Collision/CollisionFunctionality.h"
 
  //basically just acts as an identifier for static geometry
-class StaticGeometryFunctionality : public Functionality<StaticGeometryFunctionality, CollisionFunctionality>
+class StaticGeometryFunctionality
+	: public Functionality<
+		StaticGeometryFunctionality,
+		Policy::Set<
+			Policy::Add<CollisionFunctionality, Policy::EPermission::Write>>>
 {
 public:
 	StaticGeometryFunctionality(Object& aObject);

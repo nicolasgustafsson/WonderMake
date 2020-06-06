@@ -5,40 +5,43 @@
 class Object;
 
 //[Nicos]: Describes a functionality for an object. Template params are 1. Type that is self type and 2. Dependencies.
-template<typename TSelfType, typename ... TDependencies>
+template<
+	typename TSelfType,
+	typename TPolicySet = Policy::Set<>>
 class Functionality
 	: public _BaseFunctionality
 {
 public:
 	inline virtual void Destroy(Object& aObject) override final;
 
-	using Super = Functionality<TSelfType, TDependencies...>;
+	using Super = Functionality<TSelfType, TPolicySet>;
+	using PolicySet = TPolicySet;
 
 	template<typename TDependency>
 	constexpr __forceinline TDependency& Get() const
 	{
-		static_assert((std::is_same_v<TDependency, TDependencies> || ...), "Functionality::Get: type is not a dependency listed in your functionality declaration!");
+		static_assert(TPolicySet::template HasDependency_v<TDependency>, "Functionality::Get: type is not a dependency listed in your functionality declaration!");
 
 		return myDependencies.Get<TDependency>();
 	}
 
 protected:
-	Dependencies<TDependencies...> myDependencies;
+	Dependencies<TPolicySet> myDependencies;
 
 private:
 	Functionality(Object& aObject);
 	friend TSelfType;
 };
 
-template<typename TSelfType, typename ... TDependencies>
-void Functionality<TSelfType, TDependencies...>::Destroy(Object& aObject)
+template<typename TSelfType, typename TPolicySet>
+void Functionality<TSelfType, TPolicySet>::Destroy(Object& aObject)
 {
 	myDependencies.Destroy(aObject, *this);
 	SystemPtr<FunctionalitySystem<TSelfType>>()->RemoveFunctionality(static_cast<TSelfType&>(*this));
 }
 
-template<typename TSelfType, typename ... TDependencies>
-Functionality<TSelfType, TDependencies...>::Functionality(Object& aObject)
+template<typename TSelfType, typename TPolicySet>
+Functionality<TSelfType, TPolicySet>::Functionality(Object& aObject)
 	: myDependencies(aObject)
 {}
 

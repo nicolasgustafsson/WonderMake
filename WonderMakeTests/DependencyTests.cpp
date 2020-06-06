@@ -16,7 +16,10 @@ struct SHamsterTerrariumComponent
 };
 
 class HamsterTerrariumFunctionality
-	: public Functionality<HamsterTerrariumFunctionality, SHamsterTerrariumComponent>
+	: public Functionality<HamsterTerrariumFunctionality
+	, Policy::Set<
+		Policy::Add<SHamsterTerrariumComponent, Policy::EPermission::Write>>>
+		
 {
 public:
 	HamsterTerrariumFunctionality(Object& aOwner) noexcept
@@ -77,11 +80,15 @@ TEST_CASE("Dependency can be created, dereferenced and destroyed", "[Dependency]
 
 TEST_CASE("Dependencies can be created, dereferenced and destroyed", "[Dependencies]")
 {
+	using HamsterTerrariumPolicySet = Policy::Set<
+		Policy::Add<HamsterTerrariumFunctionality, Policy::EPermission::Write>,
+		Policy::Add<SHamsterTerrariumComponent, Policy::EPermission::Write>>;
+
 	Object object;
 
 	SECTION("Dependencies can be created and dereferenced")
 	{
-		Dependencies<HamsterTerrariumFunctionality, SHamsterTerrariumComponent> dependencies(object);
+		Dependencies<HamsterTerrariumPolicySet> dependencies(object);
 
 		auto& terrariumFunctionality = dependencies.Get<HamsterTerrariumFunctionality>();
 		auto& terrariumComponent = dependencies.Get<SHamsterTerrariumComponent>();
@@ -97,7 +104,7 @@ TEST_CASE("Dependencies can be created, dereferenced and destroyed", "[Dependenc
 
 	SECTION("Dependencies are reset after being destroyed")
 	{
-		Dependencies<HamsterTerrariumFunctionality, SHamsterTerrariumComponent> dependencies(object);
+		Dependencies<HamsterTerrariumPolicySet> dependencies(object);
 
 		{
 			auto& terrariumFunctionality = dependencies.Get<HamsterTerrariumFunctionality>();

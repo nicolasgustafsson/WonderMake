@@ -6,7 +6,12 @@ struct SCameraComponent : public SComponent
 	TransformFunctionality* Target;
 };
 
-class CameraFunctionality : public Functionality<CameraFunctionality, TransformFunctionality, SCameraComponent>
+class CameraFunctionality
+	: public Functionality<
+		CameraFunctionality,
+		Policy::Set<
+			Policy::Add<TransformFunctionality, Policy::EPermission::Write>,
+			Policy::Add<SCameraComponent, Policy::EPermission::Write>>>
 {
 public:
 	CameraFunctionality(Object& aObject);

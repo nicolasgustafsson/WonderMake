@@ -193,9 +193,6 @@
     <ClCompile Include="Registry\*.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Game\Game.vcxproj">
-      <Project>{77e9f800-69e1-4f4a-adfc-6344830a711b}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\WonderMake\WonderMake.vcxproj">
       <Project>{bb396f7d-1134-4dae-b855-1ca77a2b0c04}</Project>
     </ProjectReference>

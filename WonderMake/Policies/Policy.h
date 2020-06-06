@@ -1,5 +1,6 @@
 #pragma once
 
+#include <tuple>
 #include <vector>
 
 #include "Policies/SystemId.h"
@@ -28,9 +29,19 @@ struct Policy final
 		static constexpr auto Permission = TPermission;
 	};
 
-	template<typename... TPolicies>
+	template<typename ... TPolicies>
 	struct Set
 	{
+	private:
+		template<typename TPolicy>
+		using ExtractDependency = typename TPolicy::Dependency;
+
+	public:
+		using Dependencies = std::tuple<ExtractDependency<TPolicies>...>;
+
+		template<template<typename> typename TExpectedType>
+		using ExtractDependencies = std::tuple<TExpectedType<ExtractDependency<TPolicies>>...>;
+
 		[[nodiscard]] inline static std::vector<Policy> GetPolicies();
 
 		template<typename TDependency>
@@ -66,7 +77,7 @@ template<typename TDependency>
 			|| aOther.myPermission == EPermission::Write);
 }
 
-template<typename... TPolicies>
+template<typename ... TPolicies>
 [[nodiscard]] inline std::vector<Policy> Policy::Set<TPolicies...>::GetPolicies()
 {
 	std::vector<Policy> policies;
@@ -76,14 +87,14 @@ template<typename... TPolicies>
 	return policies;
 }
 
-template<typename... TPolicies>
+template<typename ... TPolicies>
 template<typename TDependency>
 [[nodiscard]] inline static constexpr bool Policy::Set<TPolicies...>::HasDependency() noexcept
 {
 	return (PolicyHasDependency<TPolicies, TDependency>() || ...);
 }
 
-template<typename... TPolicies>
+template<typename ... TPolicies>
 template<typename TDependency, Policy::EPermission TPermission>
 [[nodiscard]] inline static constexpr bool Policy::Set<TPolicies...>::HasPolicy() noexcept
 {

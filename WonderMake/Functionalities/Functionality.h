@@ -17,11 +17,18 @@ public:
 	using Super = Functionality<TSelfType, TPolicySet>;
 	using PolicySet = TPolicySet;
 
-	template<typename TDependency>
-	constexpr __forceinline TDependency& Get() const
+	template<typename TDependency> requires
+		TPolicySet::template HasPolicy_v<TDependency, Policy::EPermission::Write>
+		|| TPolicySet::template HasPolicy_v<TDependency, Policy::EPermission::Unrestricted>
+		constexpr __forceinline TDependency & Get()
 	{
-		static_assert(TPolicySet::template HasDependency_v<TDependency>, "Functionality::Get: type is not a dependency listed in your functionality declaration!");
+		return myDependencies.Get<TDependency>();
+	}
 
+	template<typename TDependency> requires
+		TPolicySet::template HasDependency_v<TDependency>
+		constexpr __forceinline const TDependency& Get() const
+	{
 		return myDependencies.Get<TDependency>();
 	}
 

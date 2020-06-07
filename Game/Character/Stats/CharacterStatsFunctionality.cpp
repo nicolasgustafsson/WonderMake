@@ -58,7 +58,7 @@ void CharacterStatsFunctionality::RemoveMultiplier(const ECharacterStat aStat, c
 	RefreshStats();
 }
 
-void CharacterStatsFunctionality::ApplyStatToCharacter(const ECharacterStat aStat, const CharacterFunctionality& aCharacter) const
+void CharacterStatsFunctionality::ApplyStatToCharacter(const ECharacterStat aStat, CharacterFunctionality& aCharacter) const
 {
 	switch (aStat)
 	{
@@ -72,7 +72,12 @@ void CharacterStatsFunctionality::ApplyStatToCharacter(const ECharacterStat aSta
 	}
 }
 
-SStat& CharacterStatsFunctionality::GetStat(const ECharacterStat aStat) const noexcept
+SStat& CharacterStatsFunctionality::GetStat(const ECharacterStat aStat) noexcept
+{
+	return Get<SCharacterStatsComponent>().Stats[static_cast<u32>(aStat)];
+}
+
+const SStat& CharacterStatsFunctionality::GetStat(const ECharacterStat aStat) const noexcept
 {
 	return Get<SCharacterStatsComponent>().Stats[static_cast<u32>(aStat)];
 }

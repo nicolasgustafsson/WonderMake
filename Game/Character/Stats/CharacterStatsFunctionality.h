@@ -55,8 +55,9 @@ public:
 	void RemoveMultiplier(const ECharacterStat aStat, const f32 aMultiplier);
 
 private:
-	void ApplyStatToCharacter(const ECharacterStat aStat, const CharacterFunctionality& aCharacter) const;
+	void ApplyStatToCharacter(const ECharacterStat aStat, CharacterFunctionality& aCharacter) const;
 
-	SStat& GetStat(const ECharacterStat aStat) const noexcept;
+	SStat& GetStat(const ECharacterStat aStat) noexcept;
+	const SStat& GetStat(const ECharacterStat aStat) const noexcept;
 };
 

@@ -25,7 +25,7 @@ struct Policy final
 	template<typename TDependency, Policy::EPermission TPermission>
 	struct Add
 	{
-		using Dependency = TDependency;
+		using Dependency = typename std::decay_t<TDependency>;
 		static constexpr auto Permission = TPermission;
 	};
 
@@ -104,7 +104,7 @@ template<typename TDependency, Policy::EPermission TPermission>
 template<typename TPolicy, typename TDependency>
 [[nodiscard]] inline static constexpr bool Policy::PolicyHasDependency() noexcept
 {
-	return std::is_same_v<TPolicy::Dependency, TDependency>;
+	return std::is_same_v<TPolicy::Dependency, std::decay_t<TDependency>>;
 }
 
 template<typename TPolicy, Policy::EPermission TPermission>

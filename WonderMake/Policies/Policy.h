@@ -70,9 +70,14 @@ template<typename TDependency>
 
 [[nodiscard]] inline bool Policy::Conflicts(const Policy& aOther) const noexcept
 {
-	return myPermission != EPermission::Unrestricted
-		&& aOther.myPermission != EPermission::Unrestricted
-		&& myDependencyId == aOther.myDependencyId
+	if (myPermission == EPermission::Unrestricted
+		|| aOther.myPermission == EPermission::Unrestricted)
+	{
+		return !(myPermission == EPermission::Unrestricted
+			&& aOther.myPermission == EPermission::Unrestricted);
+	}
+
+	return myDependencyId == aOther.myDependencyId
 		&& (myPermission == EPermission::Write
 			|| aOther.myPermission == EPermission::Write);
 }

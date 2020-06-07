@@ -146,18 +146,21 @@ TEST_CASE("Policies can be created and can be tested for conflicts", "[Policy]")
 		const Policy policy3 = Policy::Create<SystemB>(Policy::EPermission::Read);
 		const Policy policy4 = Policy::Create<SystemA>(Policy::EPermission::Write);
 		const Policy policy5 = Policy::Create<SystemA>(Policy::EPermission::Unrestricted);
+		const Policy policy6 = Policy::Create<SystemA>(Policy::EPermission::Unrestricted);
 
 		REQUIRE_FALSE(policy1.Conflicts(policy2));
 		REQUIRE_FALSE(policy2.Conflicts(policy1));
 		REQUIRE_FALSE(policy1.Conflicts(policy3));
 		REQUIRE_FALSE(policy3.Conflicts(policy1));
-		REQUIRE_FALSE(policy1.Conflicts(policy5));
-		REQUIRE_FALSE(policy2.Conflicts(policy5));
-		REQUIRE_FALSE(policy3.Conflicts(policy5));
-		REQUIRE_FALSE(policy4.Conflicts(policy5));
 
 		REQUIRE(policy1.Conflicts(policy4));
 		REQUIRE(policy4.Conflicts(policy1));
+
+		REQUIRE(policy1.Conflicts(policy6));
+		REQUIRE(policy2.Conflicts(policy6));
+		REQUIRE(policy3.Conflicts(policy6));
+		REQUIRE(policy4.Conflicts(policy6));
+		REQUIRE_FALSE(policy5.Conflicts(policy6));
 	}
 }
 

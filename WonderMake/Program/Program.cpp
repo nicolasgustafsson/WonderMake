@@ -34,7 +34,6 @@ void Program::StartNewFrame()
 	myCameraPtr->Update();
 
 	myRendererPtr->StartFrame();
-
 }
 
 void Program::FinishPreviousFrame()

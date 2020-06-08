@@ -32,8 +32,13 @@ TSettingType DebugSettingsSystem::GetOrCreateDebugValue(const std::string aSetti
 	auto it = leaf.first.find(leaf.second);
 	if (it != leaf.first.end())
 		return (*it).get<TSettingType>();
+	
+	leaf.first[leaf.second] = aDefault;
 
-	return leaf.first[leaf.second] = aDefault;
+	//[Nicos]: Make sure that the settings will save even if they arent changed.
+	SaveSettings();
+
+	return aDefault;
 }
 
 template<typename TSettingType>

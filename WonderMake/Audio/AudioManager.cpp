@@ -11,12 +11,15 @@
 #include <System/SystemPtr.h>
 #include "Audio/AudioStructs.h"
 #include <soloud_speech.h>
+#include "Imgui/NodeGraphGui.h"
+#include "Audio/AudioMixingNodeGraph.h"
 
 AudioManager::AudioManager()
-	: Debugged("Audio Manager")
+	: Debugged("Audio Manager"), myAudioMixingNodeGraph(std::filesystem::path("NodeGraphs") / "Audio" / "AudioNodeGraph.json")
 {
 	mySoloudEngine.init(mySoloudEngine.FLAGS::CLIP_ROUNDOFF, mySoloudEngine.BACKENDS::WASAPI, SoLoud::Soloud::AUTO, 2048, 2);
 	myBusHandle = mySoloudEngine.play(myBus);
+
 	mySoloudEngine.setMaxActiveVoiceCount(255);
 }
 
@@ -27,23 +30,39 @@ AudioManager::~AudioManager()
 
 void AudioManager::Update() noexcept
 {
+	if (!myHasInitializedAudio)
+	{
+		myAudioMixingNodeGraph.ExecuteExternal();
+		myHasInitializedAudio = true;
+	}
+
 	TryPlayQueuedAudioFiles();
 }
 
 void AudioManager::PlayAudio(const std::filesystem::path& aAudioPath)
 {
-	ResourceProxy<AudioFile> audioFile = SystemPtr<ResourceSystem<AudioFile>>()->GetResource(aAudioPath);
+	auto it = std::find_if(mySoundEffects.begin(), mySoundEffects.end(), [aAudioPath](const SoundEffectNodeGraph& aSoundEffect) { return aSoundEffect.GetName() == aAudioPath.string(); });
 
-	if (audioFile.IsValid())
-		PlayAudio(audioFile);
-	else
-		myQueuedAudioFiles.insert({ audioFile });
+	if (it == mySoundEffects.end())
+		it = mySoundEffects.emplace(aAudioPath);
+
+	it->Execute();
 }
 
 void AudioManager::PlayAudio(ResourceProxy<AudioFile> aAudioFileToPlay)
 {
-	auto handle = myBus.play(aAudioFileToPlay->GetSource());
+	auto handle = myBusses["Gameplay"].play(aAudioFileToPlay->GetSource());
 	myCurrentlyPlayingAudioFiles.insert({ handle, aAudioFileToPlay });
+}
+
+SoLoud::Bus& AudioManager::GetBus(const std::string& aBusName)
+{
+	return myBusses[aBusName];
+}
+
+SoLoud::Soloud& AudioManager::GetSoloudEngine()
+{
+	return mySoloudEngine;
 }
 
 void AudioManager::TryPlayQueuedAudioFiles()
@@ -128,7 +147,7 @@ If only you could have known what unholy retribution your little 'clever' commen
 But you couldn't, you didn't, and now you're paying the price, you goddamn idiot. \n\
 I will shit fury all over you and you will drown in it. You're fucking dead, kiddo.";
 
-	ImGui::InputTextMultiline("", buffer, 2048);
+	ImGui::InputTextMultiline("Text", buffer, 2048);
 
 	if (ImGui::Button("Play"))
 	{
@@ -136,6 +155,26 @@ I will shit fury all over you and you will drown in it. You're fucking dead, kid
 		static SoLoud::Speech speech;
 		speech.setText(buffer);
 		TtsHandle = mySoloudEngine.play(speech);
+	}
+
+	if (ImGui::Button("Edit audio mixing node graph"))
+		myAudioMixingNodeGraph.ShouldBeVisible = true;
+
+	if (myAudioMixingNodeGraph.ShouldBeVisible)
+		WmGui::NodeGraphEditor::NodeGraphEdit(myAudioMixingNodeGraph);
+
+	ImGui::Separator();
+
+	ImGui::Text("Loaded sound effects");
+
+	for (auto& soundEffectNodeGraph : mySoundEffects)
+	{
+		if (ImGui::Button(soundEffectNodeGraph.GetName().c_str()))
+			soundEffectNodeGraph.ShouldBeVisible = true;
+
+		ImGui::PushID("Hejsan");
+		WmGui::NodeGraphEditor::NodeGraphEdit(soundEffectNodeGraph);
+		ImGui::PopID();
 	}
 
 	ImGui::End(); 

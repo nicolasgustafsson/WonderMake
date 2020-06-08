@@ -80,11 +80,14 @@ void WeaponSwingAction::TestSwingCollision()
 			{
 				return;
 			}
+
+			if (&aHitCharacter == &myCharacter)
+				return;
 			
 			aHitCharacter.Damage(myWeaponFunctionality.GetWeapon().myBaseWeaponDamage * myCharacter.Get<CharacterStatsFunctionality>().GetStatMultiplier(ECharacterStat::MeleeAttackDamage));
 
 			SystemPtr<AudioManager> audioManager;
-			audioManager->PlayAudio(std::filesystem::current_path() / "Audio/SoundEffects/Hits/SwingHit.wav");
+			audioManager->PlayAudio(std::filesystem::current_path() / "Nodegraphs/Audio/SwingHit.json");
 
 			hitCharacters.push_back(&aHitCharacter);
 		});
@@ -175,6 +178,6 @@ void WeaponSwingAction::StartState(const ESwingState aNewState)
 	if (aNewState == ESwingState::Swing)
 	{
 		SystemPtr<AudioManager> audioManager;
-		audioManager->PlayAudio(std::filesystem::current_path() / "Audio/SoundEffects/Hits/Swing.wav");
+		audioManager->PlayAudio(std::filesystem::current_path() / "Nodegraphs/Audio/Swing.json");
 	}
 }

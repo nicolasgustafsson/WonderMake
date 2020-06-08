@@ -46,7 +46,7 @@ void AudioManager::PlayAudio(const std::filesystem::path& aAudioPath)
 	if (it == mySoundEffects.end())
 		it = mySoundEffects.emplace(aAudioPath);
 
-	(*it).Execute();
+	it->Execute();
 }
 
 void AudioManager::PlayAudio(ResourceProxy<AudioFile> aAudioFileToPlay)

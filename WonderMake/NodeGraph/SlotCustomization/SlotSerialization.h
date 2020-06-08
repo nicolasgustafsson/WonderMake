@@ -35,14 +35,14 @@ namespace InputSlotSerialization
 
 	//[Nicos]: if we can serialize it we should be able to deserialize it
 	template<typename TSlotType> requires AutomaticallySerializable<TSlotType> 
-		TSlotType DeserializeInput(const json& aJson)
-		{
-			return aJson["Value"].get<TSlotType>();
-		}
+	TSlotType DeserializeInput(const json& aJson)
+	{
+		return aJson["Value"].get<TSlotType>();
+	}
 
-		template<>
-		inline std::filesystem::path DeserializeInput<std::filesystem::path>(const json& aJson)
-			{
-				return std::filesystem::path(aJson["Value"].get<std::string>());
-			}
+	template<>
+	inline std::filesystem::path DeserializeInput<std::filesystem::path>(const json& aJson)
+	{
+		return std::filesystem::path(aJson["Value"].get<std::string>());
+	}
 }

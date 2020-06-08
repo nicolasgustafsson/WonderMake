@@ -22,22 +22,14 @@ namespace NodeTypes
 
 		SoLoud::Bus* busPointer = nullptr;
 
-		if (audioMix.has_value())
-		{
-			busPointer = &std::any_cast<SoLoud::Bus&>(audioMix);
-			aNode.SetOutput<SoLoud::Bus*>(0, busPointer);
-		}
-		else
-		{
-			busPointer = &audioMix.emplace<SoLoud::Bus>(SoLoud::Bus());
-		}
+		auto& bus = audioMix.has_value() ? std::any_cast<SoLoud::Bus&>(audioMix) : audioMix.emplace<SoLoud::Bus>();
 
-		busPointer->setFilter(0, nullptr);
-		busPointer->setFilter(1, nullptr);
-		busPointer->setFilter(2, nullptr);
-		busPointer->setFilter(3, nullptr);
+		bus.setFilter(0, nullptr);
+		bus.setFilter(1, nullptr);
+		bus.setFilter(2, nullptr);
+		bus.setFilter(3, nullptr);
 
-		aNode.SetOutput<SoLoud::Bus*>(0, busPointer);
+		aNode.SetOutput<SoLoud::Bus*>(0, &bus);
 	}
 
 	void SAudioMixNode::ExecuteNodeLeftToRight(SNode& aNode)
@@ -87,20 +79,11 @@ namespace NodeTypes
 
 			std::any& anyFilter = aNode.NodeData["filter"];
 
-			SoLoud::EchoFilter* filter = nullptr;
+			auto& filter = anyFilter.has_value() ? std::any_cast<SoLoud::EchoFilter&>(anyFilter) : anyFilter.emplace<SoLoud::EchoFilter>();
 
-			if (anyFilter.has_value())
-			{
-				filter = &std::any_cast<SoLoud::EchoFilter&>(anyFilter);
-			}
-			else
-			{
-				filter = &anyFilter.emplace<SoLoud::EchoFilter>();
-			}
+			filter.setParams(delay, decay);
 
-			filter->setParams(delay, decay);
-
-			audioSource->setFilter(0, filter);
+			audioSource->setFilter(0, &filter);
 		}
 	}
 

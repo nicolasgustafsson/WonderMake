@@ -15,7 +15,10 @@ struct SCatComponent
 };
 
 class CatFunctionality
-	: public Functionality<CatFunctionality, SCatComponent>
+	: public Functionality<
+		CatFunctionality,
+		Policy::Set<
+			Policy::Add<SCatComponent, Policy::EPermission::Write>>>
 {
 public:
 	CatFunctionality(Object& aOwner) noexcept
@@ -40,7 +43,10 @@ struct SBagComponent
 };
 
 class BagFunctionality
-	: public Functionality<BagFunctionality, SBagComponent>
+	: public Functionality<
+		BagFunctionality,
+		Policy::Set<
+			Policy::Add<SBagComponent, Policy::EPermission::Write>>>
 {
 public:
 	BagFunctionality(Object& aOwner) noexcept

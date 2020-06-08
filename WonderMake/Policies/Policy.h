@@ -1,5 +1,6 @@
 #pragma once
 
+#include <tuple>
 #include <vector>
 
 #include "Policies/SystemId.h"
@@ -24,13 +25,23 @@ struct Policy final
 	template<typename TDependency, Policy::EPermission TPermission>
 	struct Add
 	{
-		using Dependency = TDependency;
+		using Dependency = typename std::decay_t<TDependency>;
 		static constexpr auto Permission = TPermission;
 	};
 
-	template<typename... TPolicies>
+	template<typename ... TPolicies>
 	struct Set
 	{
+	private:
+		template<typename TPolicy>
+		using ExtractDependency = typename TPolicy::Dependency;
+
+	public:
+		using Dependencies = std::tuple<ExtractDependency<TPolicies>...>;
+
+		template<template<typename> typename TExpectedType>
+		using ExtractDependencies = std::tuple<TExpectedType<ExtractDependency<TPolicies>>...>;
+
 		[[nodiscard]] inline static std::vector<Policy> GetPolicies();
 
 		template<typename TDependency>
@@ -59,14 +70,19 @@ template<typename TDependency>
 
 [[nodiscard]] inline bool Policy::Conflicts(const Policy& aOther) const noexcept
 {
-	return myPermission != EPermission::Unrestricted
-		&& aOther.myPermission != EPermission::Unrestricted
-		&& myDependencyId == aOther.myDependencyId
+	if (myPermission == EPermission::Unrestricted
+		|| aOther.myPermission == EPermission::Unrestricted)
+	{
+		return !(myPermission == EPermission::Unrestricted
+			&& aOther.myPermission == EPermission::Unrestricted);
+	}
+
+	return myDependencyId == aOther.myDependencyId
 		&& (myPermission == EPermission::Write
 			|| aOther.myPermission == EPermission::Write);
 }
 
-template<typename... TPolicies>
+template<typename ... TPolicies>
 [[nodiscard]] inline std::vector<Policy> Policy::Set<TPolicies...>::GetPolicies()
 {
 	std::vector<Policy> policies;
@@ -76,14 +92,14 @@ template<typename... TPolicies>
 	return policies;
 }
 
-template<typename... TPolicies>
+template<typename ... TPolicies>
 template<typename TDependency>
 [[nodiscard]] inline static constexpr bool Policy::Set<TPolicies...>::HasDependency() noexcept
 {
 	return (PolicyHasDependency<TPolicies, TDependency>() || ...);
 }
 
-template<typename... TPolicies>
+template<typename ... TPolicies>
 template<typename TDependency, Policy::EPermission TPermission>
 [[nodiscard]] inline static constexpr bool Policy::Set<TPolicies...>::HasPolicy() noexcept
 {
@@ -93,7 +109,7 @@ template<typename TDependency, Policy::EPermission TPermission>
 template<typename TPolicy, typename TDependency>
 [[nodiscard]] inline static constexpr bool Policy::PolicyHasDependency() noexcept
 {
-	return std::is_same_v<TPolicy::Dependency, TDependency>;
+	return std::is_same_v<TPolicy::Dependency, std::decay_t<TDependency>>;
 }
 
 template<typename TPolicy, Policy::EPermission TPermission>

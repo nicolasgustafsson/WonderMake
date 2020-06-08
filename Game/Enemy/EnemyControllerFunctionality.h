@@ -15,16 +15,17 @@
 class EnemyControllerFunctionality
 	: public Functionality<
 		EnemyControllerFunctionality,
-		EnemyControllerComponent,
-		TransformFunctionality,
-		TargetFunctionality,
-		MovementInputFunctionality,
-		DefaultMovementFunctionality,
-		CharacterFunctionality,
-		CollisionFunctionality,
-		ImpulseFunctionality,
-		SpriteRenderingFunctionality,
-		ActionFunctionality>
+		Policy::Set<
+			Policy::Add<EnemyControllerComponent, Policy::EPermission::Write>,
+			Policy::Add<TransformFunctionality, Policy::EPermission::Write>,
+			Policy::Add<TargetFunctionality, Policy::EPermission::Write>,
+			Policy::Add<MovementInputFunctionality, Policy::EPermission::Write>,
+			Policy::Add<DefaultMovementFunctionality, Policy::EPermission::Write>,
+			Policy::Add<CharacterFunctionality, Policy::EPermission::Write>,
+			Policy::Add<CollisionFunctionality, Policy::EPermission::Write>,
+			Policy::Add<ImpulseFunctionality, Policy::EPermission::Write>,
+			Policy::Add<SpriteRenderingFunctionality, Policy::EPermission::Write>,
+			Policy::Add<ActionFunctionality, Policy::EPermission::Write>>>
 	, public Debugged
 {
 public:

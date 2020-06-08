@@ -5,7 +5,11 @@
 #include "Utilities/TimeKeeper.h"
 
 class SpriteRenderingFunctionality
-	: public Functionality<SpriteRenderingFunctionality, STransformComponent, SSpriteComponent>
+	: public Functionality<
+		SpriteRenderingFunctionality,
+		Policy::Set<
+			Policy::Add<STransformComponent, Policy::EPermission::Read>,
+			Policy::Add<SSpriteComponent, Policy::EPermission::Write>>>
 {
 public:
 	SpriteRenderingFunctionality(Object& aOwner);

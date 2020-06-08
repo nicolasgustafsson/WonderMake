@@ -16,7 +16,12 @@ struct SDefaultMovementComponent
 };
 
 class DefaultMovementFunctionality
-	: public Functionality<DefaultMovementFunctionality, SMovementInputComponent, STransformComponent, SDefaultMovementComponent>
+	: public Functionality<
+		DefaultMovementFunctionality,
+		Policy::Set<
+			Policy::Add<SMovementInputComponent, Policy::EPermission::Write>,
+			Policy::Add<STransformComponent, Policy::EPermission::Write>,
+			Policy::Add<SDefaultMovementComponent, Policy::EPermission::Write>>>
 {
 public:
 	DefaultMovementFunctionality(Object& aOwner);

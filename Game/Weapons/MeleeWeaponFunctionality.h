@@ -11,11 +11,12 @@ struct SMeleeWeaponComponent
 };
 
 class MeleeWeaponFunctionality
-	: public Functionality
-	< MeleeWeaponFunctionality
-	, SpriteRenderingFunctionality
-	, TransformFunctionality
-	, SMeleeWeaponComponent>
+	: public Functionality<
+		MeleeWeaponFunctionality,
+		Policy::Set<
+			Policy::Add<SpriteRenderingFunctionality, Policy::EPermission::Write>,
+			Policy::Add<TransformFunctionality, Policy::EPermission::Write>,
+			Policy::Add<SMeleeWeaponComponent, Policy::EPermission::Write>>>
 {
 public:
 	MeleeWeaponFunctionality(Object& aObject);

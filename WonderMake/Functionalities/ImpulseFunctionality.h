@@ -16,7 +16,11 @@ struct SImpulseListComponent
 };
 
 class ImpulseFunctionality
-	: public Functionality<ImpulseFunctionality, OwnerFunctionality, SImpulseListComponent>
+	: public Functionality<
+		ImpulseFunctionality,
+		Policy::Set<
+			Policy::Add<OwnerFunctionality, Policy::EPermission::Read>,
+			Policy::Add<SImpulseListComponent, Policy::EPermission::Write>>>
 {
 public:
 	ImpulseFunctionality(Object& aOwner);

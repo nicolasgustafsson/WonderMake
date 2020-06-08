@@ -35,7 +35,10 @@ struct SCharacterStatsComponent : public SComponent
 };
 
 class CharacterStatsFunctionality												//Nicos: having 2 functionalities depending on eachother is currently not supported :/
-	: public Functionality<CharacterStatsFunctionality, SCharacterStatsComponent/*, CharacterFunctionality*/>
+	: public Functionality<
+		CharacterStatsFunctionality,
+		Policy::Set<
+			Policy::Add<SCharacterStatsComponent, Policy::EPermission::Write>>>/*, CharacterFunctionality*/
 {
 public:
 	CharacterStatsFunctionality(Object& aOwner);
@@ -52,8 +55,9 @@ public:
 	void RemoveMultiplier(const ECharacterStat aStat, const f32 aMultiplier);
 
 private:
-	void ApplyStatToCharacter(const ECharacterStat aStat, const CharacterFunctionality& aCharacter) const;
+	void ApplyStatToCharacter(const ECharacterStat aStat, CharacterFunctionality& aCharacter) const;
 
-	SStat& GetStat(const ECharacterStat aStat) const noexcept;
+	SStat& GetStat(const ECharacterStat aStat) noexcept;
+	const SStat& GetStat(const ECharacterStat aStat) const noexcept;
 };
 

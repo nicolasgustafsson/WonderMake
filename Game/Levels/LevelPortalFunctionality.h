@@ -7,7 +7,8 @@
 class LevelPortalFunctionality
 	: public Functionality<
 		LevelPortalFunctionality,
-		CollisionFunctionality>
+		Policy::Set<
+			Policy::Add<CollisionFunctionality, Policy::EPermission::Write>>>
 {
 public:
 	LevelPortalFunctionality(Object& aOwner);

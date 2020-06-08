@@ -16,7 +16,12 @@ struct SBuffGiverComponent : public SComponent
 };
 
 class BuffGiverFunctionality
-	: public Functionality<BuffGiverFunctionality, SBuffGiverComponent, CollisionFunctionality, TransformFunctionality>
+	: public Functionality<
+		BuffGiverFunctionality,
+		Policy::Set<
+			Policy::Add<SBuffGiverComponent, Policy::EPermission::Write>,
+			Policy::Add<CollisionFunctionality, Policy::EPermission::Write>,
+			Policy::Add<TransformFunctionality, Policy::EPermission::Write>>>
 {
 public:
 	BuffGiverFunctionality(Object& aOwner) noexcept;

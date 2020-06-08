@@ -14,8 +14,9 @@ struct SSpinnerComponent
 class SpinnerFunctionality
 	: public Functionality<
 		SpinnerFunctionality,
-		SSpinnerComponent,
-		TransformFunctionality>
+		Policy::Set<
+			Policy::Add<SSpinnerComponent, Policy::EPermission::Write>,
+			Policy::Add<TransformFunctionality, Policy::EPermission::Write>>>
 {
 public:
 	SpinnerFunctionality(Object& aOwner) noexcept;

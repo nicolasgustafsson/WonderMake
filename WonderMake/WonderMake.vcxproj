@@ -215,6 +215,7 @@
     <ClCompile Include="Imgui\JsonInspector.cpp" />
     <ClCompile Include="Audio\SoundEffectNodeGraph.cpp" />
     <ClCompile Include="Policies\TaskManager.cpp" />
+    <ClCompile Include="Functionalities\TimerFunctionality.cpp" />
     <ClCompile Include="Utilities\BezierCurve.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Collision\ColliderDebug.cpp" />
@@ -294,6 +295,7 @@
     <ClInclude Include="Audio\SoundEffectNodeGraph.h" />
     <ClInclude Include="Policies\TaskManager.h" />
     <ClInclude Include="Threads\ThreadChecker.h" />
+    <ClInclude Include="Functionalities\TimerFunctionality.h" />
     <ClInclude Include="Utilities\BezierCurve.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Collision\ColliderDebug.h" />

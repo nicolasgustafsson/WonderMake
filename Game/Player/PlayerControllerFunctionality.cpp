@@ -49,7 +49,7 @@ void PlayerControllerFunctionality::UpdateMovement()
 	if (myInputSystem->IsKeyDown(EKeyboardKey::S) || myInputSystem->IsKeyDown(EKeyboardKey::Down))
 		movementInput += {0.f, 1.f};
 	if (myInputSystem->IsKeyDown(EKeyboardKey::D) || myInputSystem->IsKeyDown(EKeyboardKey::Right))
-		movementInput += {1.f, 0.f};	
+		movementInput += {1.f, 0.f};
 	if (myInputSystem->IsKeyDown(EKeyboardKey::Backspace))
 		Get<TransformFunctionality>().SetPosition(SVector2f::Zero());
 
@@ -64,6 +64,9 @@ void PlayerControllerFunctionality::OnDeath()
 	Get<SpriteRenderingFunctionality>().SetTexture("Textures/deadPlayer.png");
 
 	WmDispatchMessage(SPlayerDiedMessage());
+
+	Get<TimerFunctionality>().AddTimer(3.f, []() {WmLog("wao!"); });
+	Get<TimerFunctionality>().AddTimer(5.f, [&]() {WmLog("do it again!"); 	Get<TimerFunctionality>().AddTimer(5.f, [&]() {WmLog("and again!"); }); });
 }
 
 void PlayerControllerFunctionality::Debug()
@@ -77,16 +80,6 @@ void PlayerControllerFunctionality::Debug()
 	Get<MeleeWeaponUserFunctionality>().Inspect();
 
 	Get<CharacterFunctionality>().Inspect();
-
-	//if (ImGui::Button("Send cool impulse"))
-	//{
-	//	WmSendObjectImpulse(Get<OwnerFunctionality>().GetOwner(), SCoolImpulse());
-	//}
-	//
-	//if (ImGui::Button("Generate held weapon"))
-	//{
-	//	Get<MeleeWeaponUserFunctionality>().SetWeapon(SystemPtr<MeleeWeaponDesigner>()->DesignWeapon());
-	//}
 
 	ImGui::End();
 }

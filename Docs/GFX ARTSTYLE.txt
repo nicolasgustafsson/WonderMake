@@ -1,0 +1,28 @@
+Requirements
+	Easy to make content for with 0 talent
+	Should look good enough to not be distractingly ugly
+	Should have a flowy, animated feel
+
+Thematics
+	Should be abstract enough to allow any kind of object in (sword + gun for instance)
+
+Colors
+	Subdued colors in background
+	Effects and dangers have high saturation + flashes of white
+	Characters have somewhat low saturation but still distinct from background(white vs black?)
+
+Shapes
+	Relevant information has clear contours
+		Hitboxes
+		Damageboxes
+		Geometry
+
+Animation
+	Use shader tricks to make it all flowy like
+	Animation node graphs for rudimentary animation
+
+Camera orientation
+	top down 45-60 degree
+
+
+	

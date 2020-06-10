@@ -226,6 +226,7 @@
     <ClCompile Include="Registry\Register_SpriteRenderingFunctionality.cpp" />
     <ClCompile Include="Registry\Register_StaticGeometryFunctionality.cpp" />
     <ClCompile Include="Registry\Register_TargetFunctionality.cpp" />
+	<ClCompile Include="Registry\Register_TimerFunctionality.cpp" />
     <ClCompile Include="Registry\Register_TransformFunctionality.cpp" />
     <ClCompile Include="Registry\Registry.cpp" />
   </ItemGroup>
@@ -262,6 +263,7 @@
     <ClInclude Include="Registry\Register_SpriteRenderingFunctionality.h" />
     <ClInclude Include="Registry\Register_StaticGeometryFunctionality.h" />
     <ClInclude Include="Registry\Register_TargetFunctionality.h" />
+	<ClInclude Include="Registry\Register_TimerFunctionality.h" />
     <ClInclude Include="Registry\Register_TransformFunctionality.h" />
     <ClInclude Include="Registry\Registry.h" />
   </ItemGroup>

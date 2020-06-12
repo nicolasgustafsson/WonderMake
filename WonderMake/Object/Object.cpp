@@ -16,3 +16,18 @@ void Object::Destroy() noexcept
 		myFunctionalities.erase(myFunctionalities.end() - 1);
 	}
 }
+
+Object::Object(Object&& aOther)
+{
+	myFunctionalities = std::move(aOther.myFunctionalities);
+	myComponents = std::move(aOther.myComponents);
+}
+
+Object& Object::operator=(Object&& aOther)
+{
+	Destroy();
+	myFunctionalities = std::move(aOther.myFunctionalities);
+	myComponents = std::move(aOther.myComponents);
+
+	return *this;
+}

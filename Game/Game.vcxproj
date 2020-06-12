@@ -228,6 +228,8 @@
     <ClInclude Include="Character\Buffs\StatChangeProperty\BuffStatChangeProperty.h" />
     <ClInclude Include="Character\Buffs\TimedTickBuffProperty\BuffTimedTickProperty.h" />
     <ClInclude Include="Designers\EffectDesigner\EffectDesigner.h" />
+    <ClInclude Include="Levels\LevelDenizenFunctionality.h" />
+    <ClInclude Include="Levels\LevelFunctionality.h" />
     <ClInclude Include="Levels\BuffGiver\BuffGiverRenderObject.h" />
     <ClInclude Include="Character\Buffs\BuffProperties.h" />
     <ClInclude Include="Designers\BuffDesigner\BuffDesigner.h" />
@@ -244,7 +246,6 @@
     <ClInclude Include="Enemy\TargetFunctionality.h" />
     <ClInclude Include="Enemy\EnemyControllerComponent.h" />
     <ClInclude Include="Designers\MeleeWeaponDesigner\MeleeWeaponDesigner.h" />
-    <ClInclude Include="Levels\Level.h" />
     <ClInclude Include="Levels\LevelPortalFunctionality.h" />
     <ClInclude Include="Physics\StaticGeometryFunctionality.h" />
     <ClInclude Include="Designers\LevelDesigner\Geometry\Polygon.h" />
@@ -271,6 +272,8 @@
     <ClCompile Include="Character\Buffs\StatChangeProperty\BuffStatChangeProperty.cpp" />
     <ClCompile Include="Character\Buffs\TimedTickBuffProperty\BuffTimedTickProperty.cpp" />
     <ClCompile Include="Designers\EffectDesigner\EffectDesigner.cpp" />
+    <ClCompile Include="Levels\LevelDenizenFunctionality.cpp" />
+    <ClCompile Include="Levels\LevelFunctionality.cpp" />
     <ClCompile Include="Levels\BuffGiver\BuffGiverRenderObject.cpp" />
     <ClCompile Include="Character\Buffs\BuffProperties.cpp" />
     <ClCompile Include="Designers\BuffDesigner\BuffDesigner.cpp" />

@@ -43,12 +43,17 @@ private:
 template<typename TSelfType, typename TPolicySet>
 void Functionality<TSelfType, TPolicySet>::Destroy(Object& aObject)
 {
-	myDependencies.Destroy(aObject, *this);
+	class ImpulseFunctionality;
+
+	if constexpr (TPolicySet::template HasDependency_v<ImpulseFunctionality>)
+		Get<ImpulseFunctionality>().UnsubscribeAll(*this);
+
 	SystemPtr<FunctionalitySystem<TSelfType>>()->RemoveFunctionality(static_cast<TSelfType&>(*this));
+
+	myDependencies.Destroy(aObject, *this);
 }
 
 template<typename TSelfType, typename TPolicySet>
 Functionality<TSelfType, TPolicySet>::Functionality(Object& aObject)
 	: myDependencies(aObject)
 {}
-

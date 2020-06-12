@@ -1,7 +1,6 @@
 #pragma once
 #include "Object/Object.h"
 #include "System/System.h"
-#include "Levels/Level.h"
 #include "Message/MessageSubscriber.h"
 #include "Designers/BuffDesigner/BuffDesigner.h"
 
@@ -17,7 +16,7 @@ public:
 
 	Object myPlayer;
 	Object myCameraController;
-	SLevel myLevel;
+	Object myLevel;
 
 private:
 	TransformFunctionality* myPlayerTransform;

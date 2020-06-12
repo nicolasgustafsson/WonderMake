@@ -215,6 +215,8 @@
     <ClCompile Include="Registry\Register_DefaultMovementFunctionality.cpp" />
     <ClCompile Include="Registry\Register_EnemyControllerFunctionality.cpp" />
     <ClCompile Include="Registry\Register_ImpulseFunctionality.cpp" />
+	<ClCompile Include="Registry\Register_LevelDenizenFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_LevelFunctionality.cpp" />
     <ClCompile Include="Registry\Register_LevelPortalFunctionality.cpp" />
     <ClCompile Include="Registry\Register_MeleeWeaponFunctionality.cpp" />
     <ClCompile Include="Registry\Register_MeleeWeaponUserFunctionality.cpp" />
@@ -252,6 +254,8 @@
     <ClInclude Include="Registry\Register_DefaultMovementFunctionality.h" />
     <ClInclude Include="Registry\Register_EnemyControllerFunctionality.h" />
     <ClInclude Include="Registry\Register_ImpulseFunctionality.h" />
+	<ClInclude Include="Registry\Register_LevelDenizenFunctionality.h" />
+    <ClInclude Include="Registry\Register_LevelFunctionality.h" />
     <ClInclude Include="Registry\Register_LevelPortalFunctionality.h" />
     <ClInclude Include="Registry\Register_MeleeWeaponFunctionality.h" />
     <ClInclude Include="Registry\Register_MeleeWeaponUserFunctionality.h" />

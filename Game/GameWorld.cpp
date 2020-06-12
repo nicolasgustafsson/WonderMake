@@ -9,6 +9,7 @@
 
 #include "Designers/LevelDesigner/LevelDesigner.h"
 #include "Camera/CameraFunctionality.h"
+#include <Levels/LevelFunctionality.h>
 
 GameWorld::GameWorld()
 	:mySubscriber(ERoutineId::Logic, BindHelper(&GameWorld::OnPlayerDeath, this))
@@ -23,10 +24,15 @@ GameWorld::GameWorld()
 void GameWorld::RestartLevel()
 {
 	SystemPtr<LevelDesigner> levelDesigner;
+	
+	Object newLevel;
 
-	myLevel = levelDesigner->DesignLevel();
+	LevelFunctionality& levelFunctionality = newLevel.Add<LevelFunctionality>();
+	levelDesigner->DesignLevel(levelFunctionality);
 
-	myPlayerTransform->SetPosition(myLevel.StartPosition);
+	myPlayerTransform->SetPosition(levelFunctionality.GetStartPosition());
+
+	myLevel = std::move(newLevel);
 }
 
 void GameWorld::SetupPlayer()

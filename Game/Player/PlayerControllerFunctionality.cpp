@@ -2,6 +2,9 @@
 #include "PlayerControllerFunctionality.h"
 #include "Weapons/MeleeWeapon.h"
 #include "Designers/MeleeWeaponDesigner/MeleeWeaponDesigner.h"
+#include <Enemy/EnemyControllerFunctionality.h>
+#include <UtilityFunctionalities/TimeToLiveFunctionality.h>
+#include <Levels/LevelFunctionality.h>
 
 
 PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
@@ -57,7 +60,15 @@ void PlayerControllerFunctionality::UpdateMovement()
 
 	if (myInputSystem->IsKeyDown(EKeyboardKey::Enter))
 	{
-
+		LevelFunctionality* level = Get<SLevelDenizenComponent>().Level;
+		if (level)
+		{
+			Object enemy;
+			enemy.Add<EnemyControllerFunctionality>().Get<TransformFunctionality>().SetPosition(Get<TransformFunctionality>().GetPosition());
+			enemy.Add<TimeToLiveFunctionality>().SetTimeToLive(5.f);
+			
+			level->AddDenizen(std::move(enemy));
+		}
 	}
 
 	if (movementInput != SVector2f::Zero())

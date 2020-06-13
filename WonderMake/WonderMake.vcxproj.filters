@@ -69,6 +69,7 @@
     <ClCompile Include="Policies\TaskManager.cpp" />
     <ClCompile Include="Utilities\Platform.cpp" />
     <ClCompile Include="Functionalities\TimerFunctionality.cpp" />
+    <ClCompile Include="Functionalities\BaseFunctionality.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />

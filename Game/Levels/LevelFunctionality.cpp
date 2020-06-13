@@ -8,14 +8,45 @@ LevelFunctionality::LevelFunctionality(Object& aOwner)
 
 }
 
+void LevelFunctionality::Tick()
+{
+	auto&& denizens = Get<SLevelComponent>().Denizens;
+	
+	auto&& it = denizens.begin();
+	
+	while (it != denizens.end())
+	{
+		if (it->DenizenFunctionality.Get<SLevelDenizenComponent>().SlatedForRemoval)
+			it = denizens.erase(it);
+		else
+			it++;
+	}
+}
+
 Object& LevelFunctionality::AddDenizen(Object&& aObject)
 {
-	return Get<SLevelComponent>().Denizens.emplace(std::move(aObject), aObject.Add<LevelDenizenFunctionality>())->DenizenObject;
+	 auto&& denizen = Get<SLevelComponent>().Denizens.emplace(std::move(aObject), aObject.Add<LevelDenizenFunctionality>());
+
+	 denizen->DenizenFunctionality.Get<SLevelDenizenComponent>().Level = this;
+
+	 return denizen->DenizenObject;
 }
 
 Object& LevelFunctionality::AddDenizen()
 {
 	return AddDenizen({});
+}
+
+void LevelFunctionality::RemoveDenizen(Object& aObject)
+{
+	auto& denizens = Get<SLevelComponent>().Denizens;
+
+	Object* objectPtr = &aObject;
+
+	auto it = std::find_if(denizens.begin(), denizens.end(), [objectPtr](SLevelComponent::SDenizen& aDenizen) {return &aDenizen.DenizenObject == objectPtr; });
+
+	if (it != denizens.end())
+		denizens.erase(it);
 }
 
 void LevelFunctionality::AddDenizens(plf::colony<Object>&& aObjects)

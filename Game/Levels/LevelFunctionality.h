@@ -31,8 +31,12 @@ class LevelFunctionality : public Functionality<
 public:
 	LevelFunctionality(Object& aOwner);
 
+	void Tick();
+
 	Object& AddDenizen();
 	Object& AddDenizen(Object&& aObject);
+
+	void RemoveDenizen(Object& aObject);
 
 	void AddDenizens(plf::colony<Object>&& aObjects);
 

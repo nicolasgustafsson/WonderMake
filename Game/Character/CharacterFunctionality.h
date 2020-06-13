@@ -7,6 +7,8 @@
 #include "Movement/DefaultMovementFunctionality.h"
 #include "Character/Stats/CharacterStatsFunctionality.h"
 #include "Character/Buffs/CharacterBuffsFunctionality.h"
+#include "Levels/LevelDenizenFunctionality.h"
+#include "HitShapes/HitShapeSpawnerFunctionality.h"
 
 class CharacterStatsFunctionality;
 
@@ -45,6 +47,8 @@ class CharacterFunctionality
 			Policy::Add<TransformFunctionality, Policy::EPermission::Write>,
 			Policy::Add<DefaultMovementFunctionality, Policy::EPermission::Write>,
 			Policy::Add<CharacterStatsFunctionality, Policy::EPermission::Write>,
+			Policy::Add<HitShapeSpawnerFunctionality, Policy::EPermission::Write>,
+			Policy::Add<LevelDenizenFunctionality, Policy::EPermission::Write>,
 			Policy::Add<CharacterBuffsFunctionality, Policy::EPermission::Write>>>
 {
 public:

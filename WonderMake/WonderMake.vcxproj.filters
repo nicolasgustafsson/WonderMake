@@ -70,6 +70,7 @@
     <ClCompile Include="Utilities\Platform.cpp" />
     <ClCompile Include="Functionalities\TimerFunctionality.cpp" />
     <ClCompile Include="Functionalities\BaseFunctionality.cpp" />
+    <ClCompile Include="Utilities\Math.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -240,6 +241,7 @@
     <ClInclude Include="Threads\ThreadChecker.h" />
     <ClInclude Include="Utilities\Platform.h" />
     <ClInclude Include="Functionalities\TimerFunctionality.h" />
+    <ClInclude Include="Utilities\Math.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

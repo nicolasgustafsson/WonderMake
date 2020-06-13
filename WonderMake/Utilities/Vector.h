@@ -280,6 +280,21 @@ struct SVector
 		}
 	}
 
+	constexpr SVector<T, Size> GetPerpendicularCounterClockWise() noexcept requires (Size == 2)
+	{
+		return SVector<T, Size>(-(*this).Y, (*this).X);
+	}
+
+	constexpr SVector<T, Size> GetPerpendicularClockWise() noexcept requires (Size == 2)
+	{
+		return SVector<T, 2>((*this).Y, -(*this).X);
+	}
+
+	constexpr SVector<T, Size> GetNormal() noexcept requires (Size == 2)
+	{
+		return GetPerpendicularClockWise();
+	}
+
 	[[nodiscard]] constexpr T Dot(const SVector<T, Size> aOther) const noexcept
 	{
 		T sum = 0;

@@ -4,6 +4,7 @@
 #include "Enemy/TargetFunctionality.h"
 #include "Actions/ActionFunctionality.h"
 #include "Enemy/EnemyActions/TackleAction.h"
+#include "EnemyActions/PunchAction.h"
 
 EnemyControllerFunctionality::EnemyControllerFunctionality(Object& aOwner)
 	: Super(aOwner), Debugged("Enemy Controller")
@@ -50,7 +51,7 @@ void EnemyControllerFunctionality::Tick() noexcept
 	{
 		movementInputFunctionality.SetMovementInput({ 0.f, 0.f });
 
-		TackleAction action(Get<CharacterFunctionality>(), *target);
+		PunchAction action(Get<CharacterFunctionality>(), *target);
 
 		Get<ActionFunctionality>().StartAction(action);
 		return;

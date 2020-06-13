@@ -42,6 +42,10 @@
     <ClCompile Include="Levels\LevelFunctionality.cpp" />
     <ClCompile Include="Levels\LevelDenizenFunctionality.cpp" />
     <ClCompile Include="UtilityFunctionalities\TimeToLiveFunctionality.cpp" />
+    <ClCompile Include="HitShapes\HitShapeFunctionality.cpp" />
+    <ClCompile Include="Enemy\EnemyActions\PunchAction.cpp" />
+    <ClCompile Include="HitShapes\HitShapeSpawnerFunctionality.cpp" />
+    <ClCompile Include="HitShapes\HitShapeRenderObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWorld.h" />
@@ -88,6 +92,10 @@
     <ClInclude Include="Levels\LevelFunctionality.h" />
     <ClInclude Include="Levels\LevelDenizenFunctionality.h" />
     <ClInclude Include="UtilityFunctionalities\TimeToLiveFunctionality.h" />
+    <ClInclude Include="HitShapes\HitShapeFunctionality.h" />
+    <ClInclude Include="Enemy\EnemyActions\PunchAction.h" />
+    <ClInclude Include="HitShapes\HitShapeSpawnerFunctionality.h" />
+    <ClInclude Include="HitShapes\HitShapeRenderObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Character\Buffs\BuffDesign.md" />

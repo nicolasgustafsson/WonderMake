@@ -9,6 +9,7 @@
 
 #include <sstream>
 #include <memory>
+#include "Utilities/BezierCurve.h"
 
 template<typename TMessage>
 inline static void WmDispatchMessage(const TMessage& aMessage)
@@ -96,6 +97,17 @@ inline static void WmDrawDebugLine(const SVector2f& aStart, const SVector2f& aEn
 	SDebugLine line{ aColor, aStart, aEnd, aDuration };
 
 	WmDrawDebugLine(line);
+}
+
+inline static void WmDrawDebugBezier(const BezierCurve& aCurve, const SColor& aColor, const i32 aSegments = 10, const f32 aDuration = 0.0f)
+{
+	SVector2f previousLocation = aCurve.GetConstantLocationAt(0.f);
+	for (i32 i = 1; i <= aSegments - 1; i++)
+	{
+		const SVector2f location = aCurve.GetConstantLocationAt(static_cast<f32>(i) / static_cast<f32>(aSegments));
+		WmDrawDebugLine(previousLocation, location, aColor, aDuration);
+		previousLocation = location;
+	}
 }
 
 class Job;

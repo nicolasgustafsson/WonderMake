@@ -17,7 +17,7 @@ public:
 	{
 		const size_t numberOfOptions = sizeof...(TOptions);
 
-		const size_t selectedOption = GetRandomNumber<size_t>(0, numberOfOptions);
+		const size_t selectedOption = GetRandomNumber<size_t>(0, numberOfOptions - 1);
 
 		std::array<T, numberOfOptions> optionsAsArray = { { TOptions... } };
 

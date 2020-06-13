@@ -24,6 +24,7 @@ public:
 	[[nodiscard]] f32 GetRotation() const noexcept;
 
 	SVector2f GetForwardVector() const noexcept;
+	SVector2f GetRightVector() const noexcept;
 
 	void Move(const SVector2f aMovement) noexcept;
 

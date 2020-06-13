@@ -6,6 +6,8 @@ class LevelFunctionality;
 struct SLevelDenizenComponent : public SComponent
 {
 	LevelFunctionality* Level = nullptr;
+
+	bool PersistentOnLevelChange = false;
 };
 
 class LevelDenizenFunctionality : public Functionality<

@@ -24,6 +24,15 @@ void LevelFunctionality::AddDenizens(plf::colony<Object>&& aObjects)
 		AddDenizen(std::move(object));
 }
 
+void LevelFunctionality::TransferToNewLevel(LevelFunctionality& aNewLevel)
+{
+	for (auto&& denizen : Get<SLevelComponent>().Denizens)
+	{
+		if (denizen.DenizenFunctionality.Get<SLevelDenizenComponent>().PersistentOnLevelChange)
+			aNewLevel.AddDenizen(std::move(denizen.DenizenObject));
+	}
+}
+
 void LevelFunctionality::SetStartPosition(const SVector2f aPosition)
 {
 	Get<SLevelComponent>().StartPosition = aPosition;

@@ -3,12 +3,15 @@
 
 class LevelDenizenFunctionality;
 
+//[Nicos]: This kind of Level-Leveldenizen structure can probably be generalized into a more generic architecture of using some kind of object container functionality in the future.
+//[Nicos]: The basic idea is just to be able to access the level to spawn and remove objects whenever
+
 struct SLevelComponent : public SComponent
 {
 	struct SDenizen
 	{
 		SDenizen(Object&& aDenizen, LevelDenizenFunctionality& aDenizenFunctionality)
-			: DenizenObject(std::move(aDenizen)/*WHY IS THIS MOVE NEEDED I DONT GET IT AAAAAAA*/), DenizenFunctionality(aDenizenFunctionality)
+			: DenizenObject(std::move(aDenizen)), DenizenFunctionality(aDenizenFunctionality)
 		{
 
 		}
@@ -32,6 +35,8 @@ public:
 	Object& AddDenizen(Object&& aObject);
 
 	void AddDenizens(plf::colony<Object>&& aObjects);
+
+	void TransferToNewLevel(LevelFunctionality& aNewLevel);
 
 	void SetStartPosition(const SVector2f aPosition);
 	[[nodiscard]] SVector2f GetStartPosition() const noexcept { return Get<SLevelComponent>().StartPosition; }

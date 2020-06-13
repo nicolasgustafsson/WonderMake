@@ -6,21 +6,23 @@
 
 struct SPlayerDiedMessage;
 class TransformFunctionality;
+class LevelFunctionality;
 
 class GameWorld : public System
 {
 public:
 	GameWorld();
 
-	void RestartLevel();
+	LevelFunctionality& RestartLevel();
 
-	Object myPlayer;
 	Object myCameraController;
 	Object myLevel;
 
 private:
-	TransformFunctionality* myPlayerTransform;
-	void SetupPlayer();
+	TransformFunctionality* myPlayerTransform = nullptr;
+	LevelFunctionality* myCurrentLevelFunctionality = nullptr;
+
+	Object SetupPlayer();
 
 	void OnPlayerDeath(const SPlayerDiedMessage&);
 	MessageSubscriber mySubscriber;

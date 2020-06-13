@@ -17,6 +17,8 @@ PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
 		{
 			OnDeath();
 		});
+
+	Get<SLevelDenizenComponent>().PersistentOnLevelChange = true;
 }
 
 void PlayerControllerFunctionality::Tick() noexcept
@@ -52,6 +54,11 @@ void PlayerControllerFunctionality::UpdateMovement()
 		movementInput += {1.f, 0.f};
 	if (myInputSystem->IsKeyDown(EKeyboardKey::Backspace))
 		Get<TransformFunctionality>().SetPosition(SVector2f::Zero());
+
+	if (myInputSystem->IsKeyDown(EKeyboardKey::Enter))
+	{
+
+	}
 
 	if (movementInput != SVector2f::Zero())
 		Get<TransformFunctionality>().FaceDirection(movementInput);

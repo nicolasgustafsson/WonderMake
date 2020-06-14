@@ -5,7 +5,8 @@ layout (location = 2) in float aProgress;
 
 
 out float uv;
-//out float progress;
+out float progress;
+out vec2 coord;
 
 layout (std140, binding = 0) uniform Engine
 {
@@ -15,16 +16,17 @@ layout (std140, binding = 0) uniform Engine
     float Time;
 };
 
-
 void main() 
 {
   vec3 transformedPosition = ViewProjectionMatrix * vec3(aPos.x, aPos.y, 1.0);
   
   gl_Position.xy = transformedPosition.xy;
 
-  gl_Position.z = 0.0;
+  gl_Position.z = -1.0;
   gl_Position.w = 1.0;
   
   uv = aUV;
-  //progress = aProgress;
+  progress = aProgress;
+  
+  coord = transformedPosition.xy;
 };

@@ -40,6 +40,6 @@ private:
 
 	bool myDebugWindowHasFocus = false;
 
-	const SColor ClearColor = SColor::CornflowerBlue;
+	const SColor ClearColor = SColor::Grey;
 };
 

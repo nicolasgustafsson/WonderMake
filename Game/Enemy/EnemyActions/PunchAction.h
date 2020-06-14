@@ -18,6 +18,6 @@ public:
 private:
 	CharacterFunctionality& myUser;
 	TransformFunctionality& myTarget;
-	f32 myCooldown = 1.f;
+	f32 myCooldown = 3.f;
 };
 

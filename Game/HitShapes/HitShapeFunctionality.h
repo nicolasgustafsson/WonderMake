@@ -22,5 +22,8 @@ public:
 	void Tick();
 
 	void SetFromBezier(BezierCurve aCurve, const f32 aWidth, const f32 aLifetime);
+
+private:
+	float myTime = 0.f;
 };
 

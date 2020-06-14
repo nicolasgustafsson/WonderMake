@@ -4,6 +4,7 @@
 #include "Levels/LevelDenizenFunctionality.h"
 #include "Levels/LevelFunctionality.h"
 #include <Randomizer/Randomizer.h>
+#include "Utilities/Math.h"
 
 HitShapeSpawnerFunctionality::HitShapeSpawnerFunctionality(Object& aOwner)
 	: Super(aOwner)
@@ -29,18 +30,18 @@ void HitShapeSpawnerFunctionality::SpawnPunch(const f32 aLength)
 	f32 control1Offset = SystemPtr<Randomizer>()->GetRandomNumber(0.f, 30.f) * directionSign;
 	f32 control2Offset = SystemPtr<Randomizer>()->GetRandomNumber(0.f, 30.f) * directionSign;
 
-	const SVector2f start = characterPosition + transform.GetRightVector() * offset;
+	const SVector2f start = characterPosition + transform.GetRightVector() * offset - transform.GetForwardVector() * 20.f;
 	const SVector2f end = transform.GetPosition() + transform.GetForwardVector() * aLength;
 
 	SVector2f normal = (end - start).GetNormalized().GetPerpendicularClockWise() * offset;
 	SVector2f control1Normal = (end - start).GetNormalized().GetPerpendicularClockWise() * control1Offset;
 	SVector2f control2Normal = (end - start).GetNormalized().GetPerpendicularClockWise() * control2Offset;
 
-	const SVector2f control1 = start + control1Normal;
-	const SVector2f control2 = end + control2Normal;
+	const SVector2f control1 = WmMath::Lerp(start, end, 0.33f) + control1Normal;
+	const SVector2f control2 = WmMath::Lerp(start, end, 0.66f) + control2Normal;
 	BezierCurve curve(start, end, control1, control2);
 
-	hitShapeFunctionality.SetFromBezier(curve, 10.f, 2.f);
+	hitShapeFunctionality.SetFromBezier(curve, 20.f, 3.f);
 
 	Get<SLevelDenizenComponent>().Level->AddDenizen(std::move(hitShape));
 }

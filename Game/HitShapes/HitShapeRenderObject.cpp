@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "HitShapeRenderObject.h"
 #include <Utilities/Math.h>
+#include "Utilities/TimeKeeper.h"
 
 HitShapeRenderObject::HitShapeRenderObject(const BezierCurve& aCurve, const i32 aSegments, const f32 aThickness)
 	:RenderObject(SRenderObjectInfo
@@ -12,6 +13,16 @@ HitShapeRenderObject::HitShapeRenderObject(const BezierCurve& aCurve, const i32 
 		, GL_TRIANGLE_STRIP }), myNumberOfSegments(aSegments), myThickness(aThickness)
 {
 	SetVerticesFromCurve(aCurve);
+}
+
+void HitShapeRenderObject::SetAnticipationProgress(const f32 aAnticipationProgress)
+{
+	myShaderProgram.SetProperty("AnticipationProgress", aAnticipationProgress);
+}
+
+void HitShapeRenderObject::SetHitProgress(const f32 aHitProgress)
+{
+	myShaderProgram.SetProperty("HitProgress", aHitProgress);
 }
 
 void HitShapeRenderObject::SetVerticesFromCurve(const BezierCurve& aCurve)
@@ -36,5 +47,10 @@ void HitShapeRenderObject::SetVerticesFromCurve(const BezierCurve& aCurve)
 		SetAttribute<EVertexAttribute::OneDimensionalUV>(i * 2, 0.f);
 		SetAttribute<EVertexAttribute::OneDimensionalUV>(i * 2 + 1.f, 1.f);
 	}
+
+	myShaderProgram.SetProperty("Size", SVector2f(myThickness, aCurve.GetLength()));
+
+	myShaderProgram.SetProperty("SpawnTime", SystemPtr<TimeKeeper>()->GetGameTime());
+
 }
 

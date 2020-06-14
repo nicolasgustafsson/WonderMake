@@ -20,7 +20,8 @@ SVector2f BezierCurve::GetConstantLocationAt(f32 aProgress) const
 	if (!myConstantLengthProgressList)
 		EvaluatePoints();
 
-	aProgress = WmMath::Clamp(0.001f, 1.f - 0.001f, aProgress);
+	if (aProgress <= 0.0f || aProgress >= 1.0f)
+		return GetLocationAt(aProgress);
 
 	auto firstLocation = std::lower_bound(myConstantLengthProgressList->begin(), myConstantLengthProgressList->end(), aProgress,
 		[](SCachedBezierConstantLocation& first, const f32 second )
@@ -40,6 +41,11 @@ SVector2f BezierCurve::GetConstantLocationAt(f32 aProgress) const
 	const f32 progressBetweenLocations = (aProgress - (*firstLocation).Progress) / progressDelta;
 	
 	return ((*firstLocation).Location) + progressBetweenLocations * locationDelta;
+}
+
+float BezierCurve::GetLength() const noexcept
+{
+	return (myStart.DistanceTo(myEnd));
 }
 
 void BezierCurve::EvaluatePoints(const i32 aPointCount) const

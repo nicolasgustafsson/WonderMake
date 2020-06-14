@@ -16,6 +16,7 @@ public:
 	SVector2f GetLocationAt(const f32 aProgress) const noexcept;
 	SVector2f GetConstantLocationAt(f32 aProgress) const;
 
+	[[nodiscard]] float GetLength() const noexcept;
 private:
 	void EvaluatePoints(const i32 aPointCount = 20) const;
 	

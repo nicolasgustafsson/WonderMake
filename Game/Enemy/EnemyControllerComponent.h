@@ -5,5 +5,5 @@
 struct EnemyControllerComponent
 	: public SComponent
 {
-	f32 FollowRangeMin = 100.f;
+	f32 FollowRangeMin = 50.f;
 };

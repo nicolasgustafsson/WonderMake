@@ -9,6 +9,9 @@ class HitShapeRenderObject :
 public:
     HitShapeRenderObject(const BezierCurve& aCurve,  const i32 aSegments, const f32 aThickness);
 
+	void SetAnticipationProgress(const f32 aAnticipationProgress);
+	void SetHitProgress(const f32 aHitProgress);
+
 private:
 	void SetVerticesFromCurve(const BezierCurve& aCurve);
 

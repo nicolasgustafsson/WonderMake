@@ -71,6 +71,7 @@
     <ClCompile Include="Functionalities\TimerFunctionality.cpp" />
     <ClCompile Include="Functionalities\BaseFunctionality.cpp" />
     <ClCompile Include="Utilities\Math.cpp" />
+    <ClCompile Include="FileWatcher.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -242,6 +243,7 @@
     <ClInclude Include="Utilities\Platform.h" />
     <ClInclude Include="Functionalities\TimerFunctionality.h" />
     <ClInclude Include="Utilities\Math.h" />
+    <ClInclude Include="FileWatcher.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

@@ -21,6 +21,7 @@ void Program::Update()
 
 	myInputSystem->Update();
 	myAudioManagerPtr->Update();
+	myFileWatcher->UpdateFileChanges();
 
 	StartNewFrame();
 }

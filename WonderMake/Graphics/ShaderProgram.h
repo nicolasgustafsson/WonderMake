@@ -14,7 +14,10 @@ class ShaderProgram : NonCopyable
 public:
 	ShaderProgram() = delete;
 	ShaderProgram(const std::filesystem::path& aVertexShaderPath, const std::filesystem::path& aFragmentShaderPath, const std::filesystem::path& aGeometryShaderPath = "");
+
+
 	~ShaderProgram();
+
 
 	void Activate();
 
@@ -30,6 +33,11 @@ public:
 	}	
 
 private:
+	void Create();
+	void Destroy();
+	void Recreate();
+	bool CheckIfUpToDate();
+
 	u32 myProgramHandle = std::numeric_limits<u32>::max();
 
 	ResourceProxy<Shader<EShaderType::Vertex>> myVertexShader;

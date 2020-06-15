@@ -12,18 +12,22 @@ ShaderProgram::ShaderProgram(const std::filesystem::path& VertexShaderPath, cons
 	SystemPtr<ResourceSystem<Shader<EShaderType::Vertex>>> rmVertex;
 	SystemPtr<ResourceSystem<Shader<EShaderType::Fragment>>> rmFragment;
 
-	SystemPtr<OpenGLFacade> openGL;
-
 	myVertexShader = rmVertex->GetResource(VertexShaderPath);
 	myFragmentShader = rmFragment->GetResource(FragmentShaderPath);
 
 	if (!GeometryShaderPath.empty())
 	{
 		SystemPtr<ResourceSystem<Shader<EShaderType::Geometry>>> rmGeometry;
-
+		
 		myGeometryShader.emplace(rmGeometry->GetResource(GeometryShaderPath));
 	}
 
+	Create();
+}
+
+void ShaderProgram::Create()
+{
+	SystemPtr<OpenGLFacade> openGL;
 	myProgramHandle = openGL->CreateShaderProgram();
 
 	openGL->AttachShaderToProgram(myProgramHandle, myVertexShader->myShaderHandle);
@@ -53,17 +57,48 @@ ShaderProgram::~ShaderProgram()
 {
 	if (myProgramHandle)
 	{
-		SystemPtr<OpenGLFacade> openGL;
-		openGL->DeleteShaderProgram(myProgramHandle);
-		myProgramHandle = 0;
+		Destroy();
 	}
+}
+
+void ShaderProgram::Destroy()
+{
+	SystemPtr<OpenGLFacade> openGL;
+	openGL->DeleteShaderProgram(myProgramHandle);
+	myProgramHandle = 0;
+}
+
+void ShaderProgram::Recreate()
+{
+	Destroy();
+	Create();
 }
 
 void ShaderProgram::Activate()
 {
+	if constexpr (Constants::EnableAssetHotReload)
+	{
+		if (!CheckIfUpToDate())
+		{
+			Recreate();
+		}
+	}
+
 	if (myProgramHandle)
 	{
 		SystemPtr<OpenGLFacade> openGL;
 		openGL->UseShaderProgram(myProgramHandle);
 	}
+}
+
+bool ShaderProgram::CheckIfUpToDate()
+{
+	if (myFragmentShader.CheckGeneration() == EResourceGenerationResult::NewGeneration)
+		return false;
+	if (myVertexShader.CheckGeneration() == EResourceGenerationResult::NewGeneration)
+		return false;
+	if (myGeometryShader && myGeometryShader->CheckGeneration() == EResourceGenerationResult::NewGeneration)
+		return false;
+
+	return true;
 }

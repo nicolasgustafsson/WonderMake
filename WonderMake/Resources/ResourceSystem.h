@@ -10,12 +10,14 @@
 #include <memory>
 #include <mutex>
 #include <unordered_map>
+#include "Message/MessageTypes.h"
 
 template<typename TResource>
 class ResourceSystem
 	: public System
 {
 public:
+	ResourceSystem();
 	ResourceProxy<TResource> GetResource(const std::filesystem::path& aPath);
 
 	template<typename TJob>
@@ -26,12 +28,44 @@ protected:
 
 	inline void OnCreateResourceComplete(const std::filesystem::path aPath);
 
+	inline void OnFileChange(const SFileChangedMessage& aFileChangedMessage);
+
 	std::function<void(const std::filesystem::path&)> myStartCreateJob;
 
+	MessageSubscriber mySubscriber;
 	std::mutex myLock;
 	std::unordered_map<std::string, std::weak_ptr<SResource<TResource>>> myResources;
 	std::unordered_map<std::string, std::shared_ptr<CreateResource<TResource>>> myCreateResourceJobs;
 };
+
+template<typename TResource>
+void ResourceSystem<TResource>::OnFileChange(const SFileChangedMessage& aFileChangedMessage)
+{
+	if (!std::filesystem::exists(aFileChangedMessage.FilePath))
+		return;
+
+	for (auto&& str : myResources)
+	{
+		std::filesystem::path strPath(str.first);
+		
+		if (std::filesystem::equivalent(strPath, aFileChangedMessage.FilePath))
+		{
+			std::weak_ptr<SResource<TResource>> weakResource = myResources[str.first];
+
+			if (std::shared_ptr<SResource<TResource>> strongResource = weakResource.lock())
+			{
+				std::lock_guard<decltype(strongResource->myLock)> lock(strongResource->myLock);
+				strongResource->myPointer = std::make_shared<TResource>(aFileChangedMessage.FilePath);
+
+				strongResource->myGeneration++;
+			}
+		}
+	}
+}
+
+template<typename TResource>
+ResourceSystem<TResource>::ResourceSystem()
+	:mySubscriber(ERoutineId::Logic, BindHelper(&ResourceSystem<TResource>::OnFileChange, this)) { }
 
 template<typename TResource>
 ResourceProxy<TResource> ResourceSystem<TResource>::GetResource(const std::filesystem::path& aPath)

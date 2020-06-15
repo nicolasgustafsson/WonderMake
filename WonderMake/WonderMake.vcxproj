@@ -204,6 +204,7 @@
     <ClCompile Include="Audio\AudioFile.cpp" />
     <ClCompile Include="Audio\AudioManager.cpp" />
     <ClCompile Include="Audio\AudioNodeTypes.cpp" />
+    <ClCompile Include="FileWatcher.cpp" />
     <ClCompile Include="Functionalities\BaseFunctionality.cpp" />
     <ClCompile Include="Imgui\Canvas.cpp" />
     <ClCompile Include="Imgui\FileSelector.cpp" />
@@ -279,6 +280,7 @@
     <ClInclude Include="Audio\AudioFile.h" />
     <ClInclude Include="Audio\AudioManager.h" />
     <ClInclude Include="Audio\AudioNodeTypes.h" />
+    <ClInclude Include="FileWatcher.h" />
     <ClInclude Include="Imgui\Canvas.h" />
     <ClInclude Include="Functionalities\BaseFunctionality.h" />
     <ClInclude Include="Imgui\FileSelector.h" />

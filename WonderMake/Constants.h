@@ -7,7 +7,7 @@ namespace Constants
 	constexpr bool IsDebugging = true;
 #endif
 
-	constexpr bool EnableAssetHotReload = false;
+	constexpr bool EnableAssetHotReload = IsDebugging;
 
 	constexpr f32 Pi = 3.141592f;
 	constexpr f32 HalfPi = Pi / 2.f;

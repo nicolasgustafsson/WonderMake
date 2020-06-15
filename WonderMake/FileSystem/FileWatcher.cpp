@@ -6,7 +6,6 @@
 FileWatcher::FileWatcher()
 {
 	myShouldStop.store(false);
-	myMinimumTimeDifference = 0.5f;
 
 	myThread = std::thread([&]() { Watch(); });
 }
@@ -73,7 +72,7 @@ void FileWatcher::Watch()
 				auto&& lastTimeIt = lastTime.find(fileName);
 
 				if (lastTime.find(fileName) == lastTime.end() ||
-					currentTime > lastTimeIt->second + myMinimumTimeDifference)
+					currentTime > lastTimeIt->second + myThresholdForUpdate)
 				{
 					std::lock_guard<std::mutex> lock(myMutex);
 

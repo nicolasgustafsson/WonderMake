@@ -56,7 +56,7 @@ void ResourceSystem<TResource>::OnFileChange(const SFileChangedMessage& aFileCha
 			{
 				if (myStartCreateJob)
 				{
-					myStartCreateJob(aPath);
+					myStartCreateJob(strPath);
 				}
 				else
 				{
@@ -65,6 +65,8 @@ void ResourceSystem<TResource>::OnFileChange(const SFileChangedMessage& aFileCha
 				}
 
 				strongResource->myGeneration++;
+
+				WmLog(TagSuccess, "Reloaded asset: ", aFileChangedMessage.FilePath.string());
 			}
 		}
 	}

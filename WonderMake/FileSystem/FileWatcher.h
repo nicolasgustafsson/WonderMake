@@ -4,6 +4,8 @@
 //[Nicos]: Basically stolen from my TGA engine project :P
 //[Nicos]: We *do* use a separate thread for this, but it's spending most of its time snoozing.
 
+//[Nicos]: Also it's windows specific, so we will have to turn it off on linux :(
+
 class FileWatcher 
 	: public System
 {
@@ -22,6 +24,6 @@ private:
 	std::mutex myMutex;
 	std::queue<std::string> myQueuedChanges;
 
-	float myMinimumTimeDifference;
+	f32 myThresholdForUpdate = 0.5f;
 };
 

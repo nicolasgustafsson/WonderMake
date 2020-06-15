@@ -54,8 +54,15 @@ void ResourceSystem<TResource>::OnFileChange(const SFileChangedMessage& aFileCha
 
 			if (std::shared_ptr<SResource<TResource>> strongResource = weakResource.lock())
 			{
-				std::lock_guard<decltype(strongResource->myLock)> lock(strongResource->myLock);
-				strongResource->myPointer = std::make_shared<TResource>(aFileChangedMessage.FilePath);
+				if (myStartCreateJob)
+				{
+					myStartCreateJob(aPath);
+				}
+				else
+				{
+					std::lock_guard<decltype(strongResource->myLock)> lock(strongResource->myLock);
+					strongResource->myPointer = std::make_shared<TResource>(aFileChangedMessage.FilePath);
+				}
 
 				strongResource->myGeneration++;
 			}

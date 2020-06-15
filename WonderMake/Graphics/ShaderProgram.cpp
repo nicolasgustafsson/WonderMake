@@ -93,11 +93,11 @@ void ShaderProgram::Activate()
 
 bool ShaderProgram::CheckIfUpToDate()
 {
-	if (myFragmentShader.CheckGeneration() == EResourceGenerationResult::NewGeneration)
+	if (myFragmentShader.UpdateGeneration() == EResourceGenerationResult::NewGeneration)
 		return false;
-	if (myVertexShader.CheckGeneration() == EResourceGenerationResult::NewGeneration)
+	if (myVertexShader.UpdateGeneration() == EResourceGenerationResult::NewGeneration)
 		return false;
-	if (myGeometryShader && myGeometryShader->CheckGeneration() == EResourceGenerationResult::NewGeneration)
+	if (myGeometryShader && myGeometryShader->UpdateGeneration() == EResourceGenerationResult::NewGeneration)
 		return false;
 
 	return true;

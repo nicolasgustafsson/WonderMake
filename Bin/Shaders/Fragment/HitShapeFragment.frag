@@ -5,13 +5,7 @@ in float uv;
 in float progress;
 in vec2 coord;
 
-layout (std140, binding = 0) uniform Engine
-{
-	mat3 ViewMatrix;
-	mat3 ProjectionMatrix;
-	mat3 ViewProjectionMatrix;
-    float Time;
-};
+//!#include "Common.glsl"
 uniform vec2 Size;
 uniform float AnticipationProgress;
 uniform float SpawnTime;

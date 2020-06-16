@@ -8,13 +8,7 @@ out float uv;
 out float progress;
 out vec2 coord;
 
-layout (std140, binding = 0) uniform Engine
-{
-	mat3 ViewMatrix;
-	mat3 ProjectionMatrix;
-	mat3 ViewProjectionMatrix;
-    float Time;
-};
+//!#include "Common.glsl"
 
 void main() 
 {

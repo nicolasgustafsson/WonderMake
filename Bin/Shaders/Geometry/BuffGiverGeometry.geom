@@ -8,13 +8,7 @@ in vec4 vertexColor[];
 out vec2 TexCoord;
 out vec4 Color;
 
-layout (std140, binding = 0) uniform Engine
-{
-	mat3 ViewMatrix;
-	mat3 ProjectionMatrix;
-	mat3 ViewProjectionMatrix;
-    float Time;
-};
+//!#include "Common.glsl"
 
 void ConstructSpriteRectangle(vec2 position, vec2 scale, vec4 color)
 {    

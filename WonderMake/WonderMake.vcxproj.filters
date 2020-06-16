@@ -72,6 +72,7 @@
     <ClCompile Include="Functionalities\BaseFunctionality.cpp" />
     <ClCompile Include="Utilities\Math.cpp" />
     <ClCompile Include="FileSystem\FileWatcher.cpp" />
+    <ClCompile Include="Graphics\ShaderParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -244,6 +245,7 @@
     <ClInclude Include="Functionalities\TimerFunctionality.h" />
     <ClInclude Include="Utilities\Math.h" />
     <ClInclude Include="FileSystem\FileWatcher.h" />
+    <ClInclude Include="Graphics\ShaderParser.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

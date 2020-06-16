@@ -84,23 +84,19 @@ in vec4 Color;
 
 uniform sampler2D ourTexture;
 
-layout (std140, binding = 0) uniform Engine
-{
-	mat3 ViewMatrix;
-	mat3 ProjectionMatrix;
-	mat3 ViewProjectionMatrix;
-    float Time;
-};
+//!#include "Common.glsl"
 
 void main()
 {
 	float dist = ((distance(TexCoord, vec2(0.5, 0.5)) * 2.0) + 0.5f) / 1.5f;
 	float noise = simplex3d(vec3(TexCoord * 15.f, Time));
-	dist += noise * 0.03;
+	dist += noise * 0.1;
     float withinCircle = 1.0 - smoothstep(dist + 0.01f, dist, 1.0);
     
     float renderAlpha = min(withinCircle, dist + simplex3d(vec3(TexCoord * 45.f, Time * 0.1)) * 0.1);
 
+	vec4 color = Color;
+	
     // Output to screen
-    FragColor = Color * renderAlpha;
+    FragColor = color * renderAlpha;
 }

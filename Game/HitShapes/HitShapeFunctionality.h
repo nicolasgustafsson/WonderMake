@@ -21,9 +21,21 @@ public:
 
 	void Tick();
 
-	void SetFromBezier(BezierCurve aCurve, const f32 aWidth, const f32 aLifetime);
+	void SetFromBezier(BezierCurve aCurve, const f32 aWidth, const f32 aLifetime, const f32 aDelay);
 
 private:
-	float myTime = 0.f;
+	void Start();
+
+	[[nodiscard]] f32 GetProgressFromTime(const f32 aTime) const noexcept;
+
+	f32 AnticipationDuration = 0.5f;
+	f32 FadeoutDuration = 1.f;
+
+	f32 myTime = 0.f;
+	f32 myDelay = 0.f;
+
+	f32 myActiveDuration = 0.f;
+
+	f32 myWidth = 0.f;
 };
 

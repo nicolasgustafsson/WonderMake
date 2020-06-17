@@ -13,9 +13,9 @@ void PunchAction::BeginAction()
 
 	HitShapeSpawnerFunctionality& hitShapeSpawner = myUser.Get<HitShapeSpawnerFunctionality>();
 
-	hitShapeSpawner.SpawnPunch(50);
-	hitShapeSpawner.SpawnPunch(75);
-	hitShapeSpawner.SpawnPunch(100);
+	hitShapeSpawner.SpawnPunch(50.f, 1.f, 0.8f);
+	hitShapeSpawner.SpawnPunch(150, 1.5f, 0.8f);
+	hitShapeSpawner.SpawnPunch(250, 2.f, 0.8f);
 }
 
 void PunchAction::Tick()

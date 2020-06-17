@@ -103,5 +103,6 @@
     <None Include="Designers\DesignerPhilosophy.md" />
     <None Include="Character\Effects\CharacterEffectPhilosophy.md" />
     <None Include="Designers\EffectDesigner\EffectDesignerPhilosophy.md" />
+    <None Include="HitShapes\Hitshapes.md" />
   </ItemGroup>
 </Project>

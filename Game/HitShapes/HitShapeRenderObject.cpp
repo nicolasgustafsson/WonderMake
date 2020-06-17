@@ -25,6 +25,11 @@ void HitShapeRenderObject::SetHitProgress(const f32 aHitProgress)
 	myShaderProgram.SetProperty("HitProgress", aHitProgress);
 }
 
+void HitShapeRenderObject::SetHitDelay(const f32 aDelay)
+{
+	myShaderProgram.SetProperty("Delay", aDelay);
+}
+
 void HitShapeRenderObject::SetVerticesFromCurve(const BezierCurve& aCurve)
 {
 	for (i32 i = 0; i < myNumberOfSegments; i++)

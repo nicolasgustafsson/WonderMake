@@ -19,6 +19,6 @@ class HitShapeSpawnerFunctionality
 {
 public:
 	HitShapeSpawnerFunctionality(Object& aOwner);
-	void SpawnPunch(const f32 aLength = 100.f);
+	void SpawnPunch(const f32 aLength, const f32 aDelay, const f32 aDuration);
 };
 

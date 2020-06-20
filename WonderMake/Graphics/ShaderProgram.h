@@ -27,7 +27,7 @@ public:
 		Activate();
 		SystemPtr<OpenGLFacade> openGL;
 
-		const i32 location = openGL->GetUniformVariableLocation(myProgramHandle, aName.data());
+		const i32 location = openGL->GetUniformVariableLocation(*myProgramHandle, aName.data());
 
 		openGL->SetUniformVariable(location, aProperty);
 	}	
@@ -38,7 +38,7 @@ private:
 	void Recreate();
 	bool CheckIfUpToDate();
 
-	u32 myProgramHandle = std::numeric_limits<u32>::max();
+	std::optional<u32> myProgramHandle;
 
 	ResourceProxy<Shader<EShaderType::Vertex>> myVertexShader;
 	ResourceProxy<Shader<EShaderType::Fragment>> myFragmentShader;

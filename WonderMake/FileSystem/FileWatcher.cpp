@@ -44,7 +44,7 @@ void FileWatcher::Watch()
 		FILE_NOTIFY_INFORMATION* current = notifications;
 		DWORD bytesReturned;
 
-		if (ReadDirectoryChangesW(directory, notifications, sizeof(notifications), true, FILE_NOTIFY_CHANGE_LAST_WRITE, &bytesReturned, nullptr, nullptr))
+		if (ReadDirectoryChangesW(directory, notifications, sizeof(notifications), true, FILE_NOTIFY_CHANGE_LAST_WRITE | FILE_ACTION_MODIFIED, &bytesReturned, nullptr, nullptr))
 		{
 			for (;;)
 			{

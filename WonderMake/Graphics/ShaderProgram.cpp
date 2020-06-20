@@ -30,26 +30,26 @@ void ShaderProgram::Create()
 	SystemPtr<OpenGLFacade> openGL;
 	myProgramHandle = openGL->CreateShaderProgram();
 
-	openGL->AttachShaderToProgram(myProgramHandle, myVertexShader->myShaderHandle);
-	openGL->AttachShaderToProgram(myProgramHandle, myFragmentShader->myShaderHandle);
+	openGL->AttachShaderToProgram(*myProgramHandle, myVertexShader->myShaderHandle);
+	openGL->AttachShaderToProgram(*myProgramHandle, myFragmentShader->myShaderHandle);
 
 	if (myGeometryShader)
 	{
-		openGL->AttachShaderToProgram(myProgramHandle, (*myGeometryShader)->myShaderHandle);
+		openGL->AttachShaderToProgram(*myProgramHandle, (*myGeometryShader)->myShaderHandle);
 	}
 
-	openGL->LinkShaderProgram(myProgramHandle);
+	openGL->LinkShaderProgram(*myProgramHandle);
 
-	const i32 success = openGL->GetShaderProgramParameter(myProgramHandle, GL_LINK_STATUS);
+	const i32 success = openGL->GetShaderProgramParameter(*myProgramHandle, GL_LINK_STATUS);
 
 	if (!success)
 	{
-		const std::string errorMessage = openGL->GetShaderProgramInfoLog(myProgramHandle);
+		const std::string errorMessage = openGL->GetShaderProgramInfoLog(*myProgramHandle);
 
 		WmLog(TagError, "Error: Shader program linking failed: ", errorMessage);
 
-		openGL->DeleteShaderProgram(myProgramHandle);
-		myProgramHandle = 0;
+		openGL->DeleteShaderProgram(*myProgramHandle);
+		myProgramHandle.reset();
 	}
 }
 
@@ -64,8 +64,8 @@ ShaderProgram::~ShaderProgram()
 void ShaderProgram::Destroy()
 {
 	SystemPtr<OpenGLFacade> openGL;
-	openGL->DeleteShaderProgram(myProgramHandle);
-	myProgramHandle = 0;
+	openGL->DeleteShaderProgram(*myProgramHandle);
+	myProgramHandle.reset();
 }
 
 void ShaderProgram::Recreate()
@@ -87,7 +87,7 @@ void ShaderProgram::Activate()
 	if (myProgramHandle)
 	{
 		SystemPtr<OpenGLFacade> openGL;
-		openGL->UseShaderProgram(myProgramHandle);
+		openGL->UseShaderProgram(*myProgramHandle);
 	}
 }
 

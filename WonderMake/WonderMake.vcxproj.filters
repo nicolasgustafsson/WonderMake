@@ -239,11 +239,13 @@
     <ClInclude Include="Policies\TaskManager.h" />
     <ClInclude Include="Threads\ThreadChecker.h" />
     <ClInclude Include="Utilities\Platform.h" />
+    <ClInclude Include="Utilities\Rotation.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
     <None Include="Utilities\Matrix33.inl" />
     <None Include="NodeGraph\SlotCustomization\SlotCustomization.md" />
     <None Include="NodeGraph\Nodegraph.md" />
+    <None Include="Utilities\Rotation.inl" />
   </ItemGroup>
 </Project>

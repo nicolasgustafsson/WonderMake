@@ -12,6 +12,7 @@
     <ClCompile Include="Registry\Register_CollisionFunctionality.cpp" />
     <ClCompile Include="Registry\Register_DefaultMovementFunctionality.cpp" />
     <ClCompile Include="Registry\Register_EnemyControllerFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_FactionFunctionality.cpp" />
     <ClCompile Include="Registry\Register_HitShapeFunctionality.cpp" />
     <ClCompile Include="Registry\Register_HitShapeSpawnerFunctionality.cpp" />
     <ClCompile Include="Registry\Register_ImpulseFunctionality.cpp" />
@@ -46,6 +47,7 @@
     <ClInclude Include="Registry\Register_CollisionFunctionality.h" />
     <ClInclude Include="Registry\Register_DefaultMovementFunctionality.h" />
     <ClInclude Include="Registry\Register_EnemyControllerFunctionality.h" />
+    <ClInclude Include="Registry\Register_FactionFunctionality.h" />
     <ClInclude Include="Registry\Register_HitShapeFunctionality.h" />
 	<ClInclude Include="Registry\Register_HitShapeSpawnerFunctionality.h" />
     <ClInclude Include="Registry\Register_ImpulseFunctionality.h" />

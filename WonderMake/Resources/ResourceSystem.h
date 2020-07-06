@@ -41,13 +41,15 @@ protected:
 template<typename TResource>
 void ResourceSystem<TResource>::OnFileChange(const SFileChangedMessage& aFileChangedMessage)
 {
-	if (!std::filesystem::exists(aFileChangedMessage.FilePath))
-		return;
-
 	for (auto&& str : myResources)
 	{
 		std::filesystem::path strPath(str.first);
 		
+		//[Nicos]: The file may have been destroyed(if it is a temporary) which makes equivalent crash, so check it in the hot loop
+		//[Nicos]: TODO: Solve this properly; we should not send file changed messages when a file has been created.
+		if (!std::filesystem::exists(aFileChangedMessage.FilePath))
+			return;
+
 		if (std::filesystem::equivalent(strPath, aFileChangedMessage.FilePath))
 		{
 			std::weak_ptr<SResource<TResource>> weakResource = myResources[str.first];

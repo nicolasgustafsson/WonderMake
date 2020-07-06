@@ -2,6 +2,7 @@
 #include "Utilities/BezierCurve.h"
 #include <UtilityFunctionalities/TimeToLiveFunctionality.h>
 #include "HitShapeRenderObject.h"
+#include "Character/CharacterFunctionality.h"
 
 struct SHitShapeComponent : public SComponent
 {
@@ -21,12 +22,13 @@ public:
 
 	void Tick();
 
-	void SetFromBezier(BezierCurve aCurve, const f32 aWidth, const f32 aLifetime, const f32 aDelay);
+	void SetFromBezier(BezierCurve aCurve, const f32 aWidth, const f32 aLifetime, const f32 aDelay, const EFaction aFaction);
 
 private:
 	void Start();
 
 	[[nodiscard]] f32 GetProgressFromTime(const f32 aTime) const noexcept;
+	[[nodiscard]] f32 GetHitProgressFromTime(const f32 aTime) const noexcept;
 
 	f32 AnticipationDuration = 0.5f;
 	f32 FadeoutDuration = 1.f;
@@ -37,5 +39,7 @@ private:
 	f32 myActiveDuration = 0.f;
 
 	f32 myWidth = 0.f;
+
+	EFaction myFaction = EFaction::Neutral;
 };
 

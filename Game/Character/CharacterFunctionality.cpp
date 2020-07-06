@@ -48,21 +48,6 @@ bool CharacterFunctionality::IsAlive() const noexcept
 	return !IsDead();
 }
 
-void CharacterFunctionality::SetFaction(const EFaction aFaction) noexcept
-{
-	Get<SFactionComponent>().Faction = aFaction;
-}
-
-bool CharacterFunctionality::IsFriendlyWith(const EFaction aFaction) const noexcept
-{
-	return aFaction == Get<SFactionComponent>().Faction;
-}
-
-EFaction CharacterFunctionality::GetFaction() const noexcept
-{
-	return Get<SFactionComponent>().Faction;
-}
-
 void CharacterFunctionality::Inspect()
 {
 	auto& healthComponent = Get<SHealthComponent>();

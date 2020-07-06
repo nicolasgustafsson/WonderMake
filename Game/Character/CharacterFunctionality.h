@@ -9,6 +9,7 @@
 #include "Character/Buffs/CharacterBuffsFunctionality.h"
 #include "Levels/LevelDenizenFunctionality.h"
 #include "HitShapes/HitShapeSpawnerFunctionality.h"
+#include "UtilityFunctionalities/FactionFunctionality.h"
 
 class CharacterStatsFunctionality;
 
@@ -24,18 +25,6 @@ struct SDiedImpulse
 
 };
 
-enum class EFaction
-{
-	Player,
-	Enemy,
-	Neutral
-};
-
-struct SFactionComponent : public SComponent
-{
-	EFaction Faction;
-};
-
 class CharacterFunctionality
 	: public Functionality<
 		CharacterFunctionality,
@@ -43,7 +32,7 @@ class CharacterFunctionality
 			Policy::Add<OwnerFunctionality, Policy::EPermission::Write>,
 			Policy::Add<CollisionFunctionality, Policy::EPermission::Write>,
 			Policy::Add<SHealthComponent, Policy::EPermission::Write>,
-			Policy::Add<SFactionComponent, Policy::EPermission::Write>,
+			Policy::Add<FactionFunctionality, Policy::EPermission::Write>,
 			Policy::Add<TransformFunctionality, Policy::EPermission::Write>,
 			Policy::Add<DefaultMovementFunctionality, Policy::EPermission::Write>,
 			Policy::Add<CharacterStatsFunctionality, Policy::EPermission::Write>,
@@ -59,10 +48,6 @@ public:
 
 	[[nodiscard]] bool IsDead() const noexcept;
 	[[nodiscard]] bool IsAlive() const noexcept;
-	//Nicos: might want to move faction code to its own functionality in the future
-	void SetFaction(const EFaction aFaction) noexcept;
-	[[nodiscard]] bool IsFriendlyWith(const EFaction aFaction) const noexcept;
-	[[nodiscard]] EFaction GetFaction() const noexcept;
 
 	void Inspect();
 };

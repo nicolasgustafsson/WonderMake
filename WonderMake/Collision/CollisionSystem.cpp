@@ -137,7 +137,17 @@ void CollisionSystem::OverlapAgainstFunctionalityInternal(const Colliders::Shape
 
 bool CollisionSystem::TestSphereVsLineCollision(const Colliders::SSphere& aSphereA, const Colliders::SLine& aLineB) noexcept
 {
-	const SVector2f closestPoint = GetClosestPointOnLine(aLineB, aSphereA.Position);
+	SVector2f closestPoint = GetClosestPointOnLine(aLineB, aSphereA.Position);
+
+	const SVector2f lineDelta = aLineB.GetLineEnd() - aLineB.Position;
+
+	const SVector2f lineNormal = lineDelta.GetNormal().GetNormalized();
+	
+	Colliders::SLine newLine;
+	newLine.Position = closestPoint - lineNormal * aLineB.Width;
+	newLine.EndOffsetFromPosition = lineNormal * aLineB.Width * 2.f;
+
+	closestPoint = GetClosestPointOnLine(newLine, aSphereA.Position);
 
 	if (closestPoint.DistanceTo(aSphereA.Position) < aSphereA.Radius)
 		return true;

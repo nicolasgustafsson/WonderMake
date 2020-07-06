@@ -46,6 +46,7 @@
     <ClCompile Include="Enemy\EnemyActions\PunchAction.cpp" />
     <ClCompile Include="HitShapes\HitShapeSpawnerFunctionality.cpp" />
     <ClCompile Include="HitShapes\HitShapeRenderObject.cpp" />
+    <ClCompile Include="UtilityFunctionalities\FactionFunctionality.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWorld.h" />
@@ -96,6 +97,7 @@
     <ClInclude Include="Enemy\EnemyActions\PunchAction.h" />
     <ClInclude Include="HitShapes\HitShapeSpawnerFunctionality.h" />
     <ClInclude Include="HitShapes\HitShapeRenderObject.h" />
+    <ClInclude Include="UtilityFunctionalities\FactionFunctionality.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Character\Buffs\BuffDesign.md" />

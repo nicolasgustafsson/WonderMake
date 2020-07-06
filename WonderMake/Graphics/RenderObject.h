@@ -83,7 +83,11 @@ void RenderObject<TAttributes...>::BindTextures()
 template<EVertexAttribute... TAttributes>
 void RenderObject<TAttributes...>::Render()
 {
-	myShaderProgram.Activate();
+	const bool shaderProgramActivated = myShaderProgram.Activate();
+
+	if (!shaderProgramActivated)
+		return;
+
 	myVertexBufferArray.Render();
 	BindTextures();
 

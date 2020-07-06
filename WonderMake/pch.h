@@ -20,5 +20,3 @@
 #include "Components/SpriteComponent.h"
 #include "Components/Component.h"
 #include "Utilities/TimeKeeper.h"
-
-

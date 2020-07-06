@@ -12,7 +12,7 @@ HitShapeSpawnerFunctionality::HitShapeSpawnerFunctionality(Object& aOwner)
 
 }
 
-void HitShapeSpawnerFunctionality::SpawnPunch(const f32 aLength, const f32 aDelay, const f32 aDuration)
+void HitShapeSpawnerFunctionality::SpawnPunch(const f32 aLength, const f32 aDelay, const f32 aDuration, const f32 aWidth)
 {
 	Object hitShape;
 
@@ -41,7 +41,7 @@ void HitShapeSpawnerFunctionality::SpawnPunch(const f32 aLength, const f32 aDela
 	const SVector2f control2 = WmMath::Lerp(start, end, 0.66f) + control2Normal;
 	BezierCurve curve(start, end, control1, control2);
 
-	hitShapeFunctionality.SetFromBezier(curve, 20.f, aDuration, aDelay);
+	hitShapeFunctionality.SetFromBezier(curve, aWidth, aDuration, aDelay, Get<FactionFunctionality>().GetFaction());
 
 	Get<SLevelDenizenComponent>().Level->AddDenizen(std::move(hitShape));
 }

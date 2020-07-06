@@ -9,9 +9,9 @@
 EnemyControllerFunctionality::EnemyControllerFunctionality(Object& aOwner)
 	: Super(aOwner), Debugged("Enemy Controller")
 {
-	Get<CharacterFunctionality>().SetFaction(EFaction::Enemy);
+	Get<FactionFunctionality>().SetFaction(EFaction::Enemy);
 
-	Get<CharacterFunctionality>().Get<CharacterStatsFunctionality>().SetBaseValue(ECharacterStat::MovementSpeed, 150.f);
+	Get<CharacterFunctionality>().Get<CharacterStatsFunctionality>().SetBaseValue(ECharacterStat::MovementSpeed, 250.f);
 	Get<DefaultMovementFunctionality>().Get<SDefaultMovementComponent>().Friction = 15.f;
 	Get<CollisionFunctionality>().AddSphereCollider(*this, SVector2f::Zero(), 10.f);
 
@@ -39,7 +39,7 @@ void EnemyControllerFunctionality::Tick() noexcept
 
 	const auto target = targetFunctionality.FindTarget([&](CharacterFunctionality& aCharacter)
 		{
-			return !aCharacter.IsFriendlyWith(Get<CharacterFunctionality>().GetFaction());
+			return !aCharacter.Get<FactionFunctionality>().IsFriendlyWith(Get<FactionFunctionality>().GetFaction());
 		});
 
 	if (!target)

@@ -74,7 +74,7 @@ void ShaderProgram::Recreate()
 	Create();
 }
 
-void ShaderProgram::Activate()
+bool ShaderProgram::Activate()
 {
 	if constexpr (Constants::EnableAssetHotReload)
 	{
@@ -88,7 +88,11 @@ void ShaderProgram::Activate()
 	{
 		SystemPtr<OpenGLFacade> openGL;
 		openGL->UseShaderProgram(*myProgramHandle);
+
+		return true;
 	}
+
+	return false;
 }
 
 bool ShaderProgram::CheckIfUpToDate()

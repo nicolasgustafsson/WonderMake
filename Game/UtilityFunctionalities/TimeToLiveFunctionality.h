@@ -2,7 +2,7 @@
 #include "Functionalities/TimerFunctionality.h"
 #include "Levels/LevelDenizenFunctionality.h"
 #include "Functionalities/Functionality.h"
-#include <Functionalities/OwnerFunctionality.h>
+#include "Functionalities/OwnerFunctionality.h"
 
 class TimeToLiveFunctionality : public Functionality<
 	TimeToLiveFunctionality,

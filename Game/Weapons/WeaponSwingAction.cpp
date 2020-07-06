@@ -70,12 +70,19 @@ void WeaponSwingAction::TestSwingCollision()
 {
 	auto& weaponTransform = myWeaponFunctionality.GetTransform();
 
-	const SVector2f start = weaponTransform.GetPosition();
-	const SVector2f end = start + SVector2f(0.f, -100.f).Rotate(weaponTransform.GetRotation());
+	const SVector2f end = weaponTransform.GetPosition() + weaponTransform.GetForwardVector() * 50.f;
 
+	if (!myPreviousSwingPosition)
+	{
+		myPreviousSwingPosition = end;
+		return;
+	}
+
+	const SVector2f start = *myPreviousSwingPosition;
 	SystemPtr<CollisionSystem> collision;
-	collision->OverlapLineAgainstFunctionality<CharacterFunctionality>(start, end, [&](CharacterFunctionality& aHitCharacter, Colliders::SCollisionInfo)
+	collision->OverlapLineAgainstFunctionality<EnemyControllerFunctionality>(start, end, 50.f, [&](EnemyControllerFunctionality& aHitEnemy, Colliders::SCollisionInfo)
 		{
+			auto& aHitCharacter = aHitEnemy.Get<CharacterFunctionality>();
 			if (std::find(hitCharacters.begin(), hitCharacters.end(), &aHitCharacter) != hitCharacters.end())
 			{
 				return;
@@ -91,6 +98,8 @@ void WeaponSwingAction::TestSwingCollision()
 
 			hitCharacters.push_back(&aHitCharacter);
 		});
+
+	myPreviousSwingPosition = end;
 }
 
 void WeaponSwingAction::SetSwingTransform(const f32 aPercentageInSwing) noexcept

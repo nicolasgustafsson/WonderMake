@@ -51,6 +51,8 @@ private:
 	f32 myStateProgress = 0.f;
 	f32 myPreviousStateProgress = 0.f;
 
+	std::optional<SVector2f> myPreviousSwingPosition;
+
 	std::vector<CharacterFunctionality*> hitCharacters;
 };
 

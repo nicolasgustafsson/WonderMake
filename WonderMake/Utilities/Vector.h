@@ -94,8 +94,7 @@ struct SVector
 		return (*this)[0];
 	}
 
-	template<class Q = T>
-	constexpr typename std::enable_if_t<(Size == 2), SVector<Q, Size>&> Rotate(const f32 aRotation) noexcept
+	constexpr SVector<T, Size> Rotate(const f32 aRotation) noexcept requires (Size == 2)
 	{
 		f32 rotation = this->GetRotation();
 		const f32 length = this->Length();
@@ -280,17 +279,17 @@ struct SVector
 		}
 	}
 
-	constexpr SVector<T, Size> GetPerpendicularCounterClockWise() noexcept requires (Size == 2)
+	constexpr SVector<T, Size> GetPerpendicularCounterClockWise() const noexcept requires (Size == 2)
 	{
 		return SVector<T, Size>(-(*this).Y, (*this).X);
 	}
 
-	constexpr SVector<T, Size> GetPerpendicularClockWise() noexcept requires (Size == 2)
+	constexpr SVector<T, Size> GetPerpendicularClockWise() const noexcept requires (Size == 2)
 	{
 		return SVector<T, 2>((*this).Y, -(*this).X);
 	}
 
-	constexpr SVector<T, Size> GetNormal() noexcept requires (Size == 2)
+	constexpr SVector<T, Size> GetNormal() const noexcept requires (Size == 2)
 	{
 		return GetPerpendicularClockWise();
 	}

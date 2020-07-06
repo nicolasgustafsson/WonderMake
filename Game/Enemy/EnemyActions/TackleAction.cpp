@@ -3,6 +3,7 @@
 #include "Functionalities/TransformFunctionality.h"
 #include "Character/CharacterFunctionality.h"
 #include "Movement/DefaultMovementFunctionality.h"
+#include "UtilityFunctionalities/FactionFunctionality.h"
 
 TackleAction::TackleAction(CharacterFunctionality& aUser, TransformFunctionality& aTarget) noexcept
 {
@@ -60,7 +61,7 @@ void TackleAction::TickTackling()
 	SystemPtr<CollisionSystem>()->OverlapSphereAgainstFunctionality<CharacterFunctionality>(
 		myCharacter->Get<TransformFunctionality>().GetPosition(), 20.f, [&](CharacterFunctionality& aHitCharacter, Colliders::SCollisionInfo)
 		{
-			if (myCharacter->IsFriendlyWith(aHitCharacter.GetFaction()))
+			if (myCharacter->Get<FactionFunctionality>().IsFriendlyWith(aHitCharacter.Get<FactionFunctionality>().GetFaction()))
 				return;
 
 			if (std::find(myHitCharacters.begin(), myHitCharacters.end(), &aHitCharacter) != myHitCharacters.end())

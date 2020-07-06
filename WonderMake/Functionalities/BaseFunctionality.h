@@ -5,8 +5,6 @@ class _BaseFunctionality
 	: public NonCopyable
 {
 public:
-	_BaseFunctionality();
-
 	virtual ~_BaseFunctionality() = default;
 
 	virtual void OnOwnerMoved([[maybe_unused]] Object& aObject) noexcept {};

@@ -6,8 +6,8 @@ struct SDefaultMovementComponent
 	: public SComponent
 {
 	SVector2f CurrentVelocity;
-	float AccelerationSpeed = 6700.f;
-	float Friction = 7.0f;
+	float AccelerationSpeed = 50000.f;
+	float Friction = 30.0f;
 	float MaxMovementSpeed = 911.f;
 	
 	static const i32 CollisionIterations = 4;

@@ -18,13 +18,14 @@ public:
 
 	~ShaderProgram();
 
-
-	void Activate();
+	bool Activate();
 
 	template<typename TProperty>
 	void SetProperty(std::string_view aName, TProperty aProperty)
 	{
-		Activate();
+		if (!Activate())
+			return;
+
 		SystemPtr<OpenGLFacade> openGL;
 
 		const i32 location = openGL->GetUniformVariableLocation(*myProgramHandle, aName.data());

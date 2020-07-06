@@ -40,6 +40,7 @@ class PlayerControllerFunctionality
 			Policy::Add<CollisionFunctionality, Policy::EPermission::Write>,
 			Policy::Add<CharacterFunctionality, Policy::EPermission::Write>,
 			Policy::Add<ImpulseFunctionality, Policy::EPermission::Write>,
+			Policy::Add<FactionFunctionality, Policy::EPermission::Write>,
 			Policy::Add<TimerFunctionality, Policy::EPermission::Write>,
 			Policy::Add<SLevelDenizenComponent, Policy::EPermission::Write>,
 			Policy::Add<SpriteRenderingFunctionality, Policy::EPermission::Write>>>

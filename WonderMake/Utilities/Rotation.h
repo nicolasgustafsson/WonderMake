@@ -68,4 +68,31 @@ using SRadian = SRotation<TRepresentation, RadianRatio<TRepresentation>>;
 using SRadianF32 = SRadian<f32>;
 using SRadianF64 = SRadian<f64>;
 
+namespace MathUtility
+{
+	template<typename TRotation>
+	inline [[nodiscard]] typename TRotation::Representation Atan(const TRotation aRotation) noexcept
+	{
+		return MathUtility::Atan(RotationCast<SRadian<typename TRotation::Representation>>(aRotation).Rotation());
+	}
+
+	template<typename TRotation>
+	inline [[nodiscard]] TRotation Atan2(const typename TRotation::Representation aY, const typename TRotation::Representation aX) noexcept
+	{
+		return RotationCast<TRotation>(SRadian<typename TRotation::Representation>(Atan2(aY, aX)));
+	}
+
+	template<typename TRotation>
+	inline [[nodiscard]] typename TRotation::Representation Cos(const TRotation aRotation) noexcept
+	{
+		return MathUtility::Cos(RotationCast<SRadian<typename TRotation::Representation>>(aRotation).Rotation());
+	}
+
+	template<typename TRotation>
+	inline [[nodiscard]] typename TRotation::Representation Sin(const TRotation aRotation) noexcept
+	{
+		return MathUtility::Sin(RotationCast<SRadian<typename TRotation::Representation>>(aRotation).Rotation());
+	}
+}
+
 #include "Rotation.inl"

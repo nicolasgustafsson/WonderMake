@@ -5,5 +5,6 @@
     <ClCompile Include="PolicyTests.cpp" />
     <ClCompile Include="ObjectTests.cpp" />
     <ClCompile Include="DependencyTests.cpp" />
+    <ClCompile Include="RotationTests.cpp" />
   </ItemGroup>
 </Project>

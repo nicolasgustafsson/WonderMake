@@ -191,6 +191,7 @@
     <ClCompile Include="ObjectTests.cpp" />
     <ClCompile Include="PolicyTests.cpp" />
     <ClCompile Include="Registry\*.cpp" />
+    <ClCompile Include="RotationTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WonderMake\WonderMake.vcxproj">

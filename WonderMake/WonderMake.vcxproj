@@ -314,6 +314,7 @@
     <ClInclude Include="Object\ObjectImpulseRouter.h" />
     <ClInclude Include="Randomizer\Randomizer.h" />
     <ClInclude Include="Serialization\SerializationSystem.h" />
+    <ClInclude Include="Utilities\Rotation.h" />
     <ClInclude Include="Utilities\TimeKeeper.h" />
     <ClInclude Include="Utilities\MathUtility.h" />
     <ClInclude Include="Utilities\Stopwatch.h" />
@@ -393,6 +394,7 @@
     <None Include="NodeGraph\Nodegraph.md" />
     <None Include="NodeGraph\SlotCustomization\SlotCustomization.md" />
     <None Include="Utilities\Matrix33.inl" />
+    <None Include="Utilities\Rotation.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -89,9 +89,9 @@ vec3 anticipationThang(float outerBorder, float innerBorder, float aAnticipation
 
 vec3 hitProgressThang(float outerBorder, float innerBorder, float aHitProgress, float noise)
 {
-	vec3 red = vec3(1.0, 0.0, 0.0);
+	vec3 red = vec3(0.6, 0.0, 0.0);
 
-	return (red * max(0, aHitProgress) + vec3(0.3, 0.3, 0.3) * noise) - outerBorder * vec3(0.2, 0.2, 0.2);
+	return ((red + vec3(0.6, 0.6, 0.) * noise) - outerBorder * vec3(0.2, 0.2, 0.2)) * max(0, aHitProgress);
 }
 
 void main() 

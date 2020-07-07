@@ -5,6 +5,7 @@
 #include "Input/InputSystem.h"
 #include "Actions/ActionFunctionality.h"
 #include "Weapons/WeaponSwingAction.h"
+#include "Weapons/WeaponSwingHitShapeAction.h"
 
 MeleeWeaponUserFunctionality::MeleeWeaponUserFunctionality(Object& aOwner)
 	: Super(aOwner)
@@ -32,11 +33,16 @@ void MeleeWeaponUserFunctionality::SwingWeapon()
 
 	component.CurrentSwingIndex %= weapon.mySwings.size();
 
-	EActionResult result = actionFunctionality.StartAction(WeaponSwingAction
-		( Get<CharacterFunctionality>()
-		, *component.Weapon
-		, Get<TransformFunctionality>()
-		, weapon.mySwings[component.CurrentSwingIndex]));
+	//EActionResult result = actionFunctionality.StartAction(WeaponSwingAction
+	//(Get<CharacterFunctionality>()
+	//	, *component.Weapon
+	//	, Get<TransformFunctionality>()
+	//	, weapon.mySwings[component.CurrentSwingIndex]));
+
+	EActionResult result = actionFunctionality.StartAction(WeaponSwingHitShapeAction
+	(
+		Get<CharacterFunctionality>()
+	));
 
 	if (result == EActionResult::Succeeded)
 		component.CurrentSwingIndex++;

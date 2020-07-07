@@ -259,6 +259,7 @@
     <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonFloatingPointOperator.h" />
     <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonPointOperator.h" />
     <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonSideOperator.h" />
+    <ClInclude Include="Weapons\WeaponSwingHitShapeAction.h" />
     <ClInclude Include="Weapons\WeaponSwingAction.h" />
     <ClInclude Include="Weapons\WeaponSwing.h" />
     <ClInclude Include="Weapons\MeleeWeaponFunctionality.h" />
@@ -307,6 +308,7 @@
     <ClCompile Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonSideOperator.cpp" />
     <ClCompile Include="Enemy\EnemyActions\PunchAction.cpp" />
     <ClCompile Include="UtilityFunctionalities\TimeToLiveFunctionality.cpp" />
+    <ClCompile Include="Weapons\WeaponSwingHitShapeAction.cpp" />
     <ClCompile Include="Weapons\WeaponSwingAction.cpp" />
     <ClCompile Include="Weapons\MeleeWeaponFunctionality.cpp" />
     <ClCompile Include="Weapons\MeleeWeaponUserFunctionality.cpp" />

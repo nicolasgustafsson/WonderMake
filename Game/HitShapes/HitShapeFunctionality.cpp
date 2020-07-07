@@ -18,27 +18,27 @@ void HitShapeFunctionality::Tick()
 		return;
 
 	const f32 aDeltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
-	if (myDelay > 0.f)
+	if (hitShapeComponent.Delay > 0.f)
 	{
-		myDelay -= aDeltaTime;
+		hitShapeComponent.Delay -= aDeltaTime;
 
-		if (myDelay < 0.f)
+		if (hitShapeComponent.Delay < 0.f)
 			Start();
 
 		hitShapeComponent.RenderObject->Render();
 		return;
 	}
 	
-	const f32 previousTime = myTime;
+	const f32 previousTime = hitShapeComponent.Time;
 
-	myTime += aDeltaTime;
-	hitShapeComponent.RenderObject->SetAnticipationProgress(GetProgressFromTime(myTime));
-	hitShapeComponent.RenderObject->SetHitProgress(GetHitProgressFromTime(myTime));
+	hitShapeComponent.Time += aDeltaTime;
+	hitShapeComponent.RenderObject->SetAnticipationProgress(GetProgressFromTime(hitShapeComponent.Time));
+	hitShapeComponent.RenderObject->SetHitProgress(GetHitProgressFromTime(hitShapeComponent.Time));
 
 	hitShapeComponent.RenderObject->Render();
 
 	const f32 previousHitProgress = MathUtility::Clamp(0.1f, 0.9f, GetHitProgressFromTime(previousTime));
-	const f32 currentHitProgress = MathUtility::Clamp(0.1f, 0.9f, GetHitProgressFromTime(myTime));
+	const f32 currentHitProgress = MathUtility::Clamp(0.1f, 0.9f, GetHitProgressFromTime(hitShapeComponent.Time));
 
 	if (previousHitProgress == currentHitProgress)
 		return;
@@ -46,46 +46,63 @@ void HitShapeFunctionality::Tick()
 	const SVector2f previousLocation = hitShapeComponent.Bezier.GetConstantLocationAt(previousHitProgress);
 	const SVector2f currentLocation = hitShapeComponent.Bezier.GetConstantLocationAt(currentHitProgress);
 
-	SystemPtr<CollisionSystem>()->OverlapLineAgainstFunctionality<CharacterFunctionality>(previousLocation, currentLocation, myWidth * 0.5f, [&](CharacterFunctionality& aCharacter, const auto&&)
+	SystemPtr<CollisionSystem>()->OverlapLineAgainstFunctionality<CharacterFunctionality>(previousLocation, currentLocation, hitShapeComponent.Width * 0.5f, [&](CharacterFunctionality& aCharacter, const auto&&)
 		{
-			if (aCharacter.Get<FactionFunctionality>().GetFaction() == myFaction)
+			if (aCharacter.Get<FactionFunctionality>().GetFaction() == Get<FactionFunctionality>().GetFaction())
 				return;
 
-			aCharacter.Damage(20);
+			if (std::find(hitShapeComponent.HitCharacters.begin(), hitShapeComponent.HitCharacters.end(), &aCharacter) != hitShapeComponent.HitCharacters.end())
+				return;
+
+			aCharacter.Damage(hitShapeComponent.Damage);
+
+			hitShapeComponent.HitCharacters.push_back(&aCharacter);
 		});
 }
 
-void HitShapeFunctionality::SetFromBezier(BezierCurve aCurve, const f32 aWidth, const f32 aLifetime, const f32 aDelay, const EFaction aFaction)
+void HitShapeFunctionality::SetFromBezier(BezierCurve aCurve, const f32 aWidth, const f32 aLifetime, const f32 aDelay, const f32 aDamage, const EFaction aFaction)
 {
-	myFaction = aFaction;
-	Get<TimeToLiveFunctionality>().SetTimeToLive(aLifetime + aDelay + AnticipationDuration + FadeoutDuration);
+	auto& hitShapeComponent = Get<SHitShapeComponent>();
+
+	Get<FactionFunctionality>().SetFaction(aFaction);
+	Get<TimeToLiveFunctionality>().SetTimeToLive(aLifetime + aDelay + hitShapeComponent.AnticipationDuration + hitShapeComponent.FadeoutDuration);
 	Get<SHitShapeComponent>().Bezier = aCurve;
-	myWidth = aWidth;
+	hitShapeComponent.Width = aWidth;
 
-	myDelay = aDelay;
-
-	myActiveDuration = aLifetime;
+	hitShapeComponent.Delay = aDelay;
+	hitShapeComponent.ActiveDuration = aLifetime;
+	hitShapeComponent.Damage = aDamage;
 
 	//WmDrawDebugBezier(aCurve, SColor::Red, 30, aLifetime);
 
-	Get<SHitShapeComponent>().RenderObject.emplace(Get<SHitShapeComponent>().Bezier, 30, myWidth);
-	Get<SHitShapeComponent>().RenderObject->SetHitDelay(myDelay);
+	Get<SHitShapeComponent>().RenderObject.emplace(Get<SHitShapeComponent>().Bezier, 30, hitShapeComponent.Width);
+	Get<SHitShapeComponent>().RenderObject->SetHitDelay(hitShapeComponent.Delay);
+}
+
+void HitShapeFunctionality::SkipAnticipation()
+{
+	auto& hitShapeComponent = Get<SHitShapeComponent>();
+	
+	hitShapeComponent.Time += hitShapeComponent.AnticipationDuration;
 }
 
 void HitShapeFunctionality::Start()
 {
-	myTime += (-myDelay);
+	auto& hitShapeComponent = Get<SHitShapeComponent>();
+	hitShapeComponent.Time += (-hitShapeComponent.Delay);
 }
 
 f32 HitShapeFunctionality::GetProgressFromTime(const f32 aTime) const noexcept
 {
-	if (myActiveDuration == 0.f)
+	auto& hitShapeComponent = Get<SHitShapeComponent>();
+	if (hitShapeComponent.ActiveDuration == 0.f)
 		return 0.f;
 
-	return aTime / myActiveDuration;
+	return aTime / hitShapeComponent.ActiveDuration;
 }
 
 f32 HitShapeFunctionality::GetHitProgressFromTime(const f32 aTime) const noexcept
 {
-	return GetProgressFromTime(aTime - AnticipationDuration);
+	auto& hitShapeComponent = Get<SHitShapeComponent>();
+	return GetProgressFromTime(aTime - hitShapeComponent.AnticipationDuration);
 }

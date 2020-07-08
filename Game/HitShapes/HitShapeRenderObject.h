@@ -12,6 +12,7 @@ public:
 	void SetAnticipationProgress(const f32 aAnticipationProgress);
 	void SetHitProgress(const f32 aHitProgress);
 	void SetHitDelay(const f32 aDelay);
+	void SetMainColor(const SColor aColor);
 
 private:
 	void SetVerticesFromCurve(const BezierCurve& aCurve);

@@ -3,9 +3,9 @@
 
 #include "Functionalities/Functionality.h"
 #include "Functionalities/TransformFunctionality.h"
-#include "Weapons/WeaponSwingAction.h"
 #include "Actions/ActionFunctionality.h"
 #include "Character/CharacterFunctionality.h"
+#include "Weapons/MeleeWeapon.h"
 
 class MeleeWeaponFunctionality;
 class MeleeWeapon;
@@ -13,11 +13,7 @@ class MeleeWeapon;
 struct SMeleeWeaponUserComponent
 	: public SComponent
 {
-	Object WeaponObject;
-
-	MeleeWeaponFunctionality* Weapon = nullptr;
-
-	std::optional<WeaponSwingAction> SwingAction;
+	std::optional<MeleeWeapon> Weapon;
 
 	i32 CurrentSwingIndex = 0;
 };

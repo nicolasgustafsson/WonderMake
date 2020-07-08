@@ -1,17 +1,14 @@
 #include "pch.h"
 #include "MeleeWeaponUserFunctionality.h"
 #include "Functionalities/TransformFunctionality.h"
-#include "MeleeWeaponFunctionality.h"
 #include "Input/InputSystem.h"
 #include "Actions/ActionFunctionality.h"
-#include "Weapons/WeaponSwingAction.h"
 #include "Weapons/WeaponSwingHitShapeAction.h"
+#include "Weapons/MeleeWeapon.h"
 
 MeleeWeaponUserFunctionality::MeleeWeaponUserFunctionality(Object& aOwner)
 	: Super(aOwner)
-{
-	Get<SMeleeWeaponUserComponent>().Weapon = &Get<SMeleeWeaponUserComponent>().WeaponObject.Add<MeleeWeaponFunctionality>();
-}
+{}
 
 void MeleeWeaponUserFunctionality::Inspect()
 {
@@ -20,18 +17,22 @@ void MeleeWeaponUserFunctionality::Inspect()
 
 void MeleeWeaponUserFunctionality::SwingWeapon()
 {
-	auto& component = Get<SMeleeWeaponUserComponent>();
+	auto& meleeWeaponUserComponent = Get<SMeleeWeaponUserComponent>();
+
+	if (!meleeWeaponUserComponent.Weapon)
+		return;
+
 	auto& actionFunctionality = Get<ActionFunctionality>();
 
-	MeleeWeapon& weapon = component.Weapon->GetWeapon();
+	MeleeWeapon& weapon = *meleeWeaponUserComponent.Weapon;
 
 	if (weapon.mySwings.empty())
 		return;
 
-	if (!actionFunctionality.WasLastActionOfType<WeaponSwingAction>() || actionFunctionality.TimeSinceLastAction() > 0.5f)
-		component.CurrentSwingIndex = 0;
+	if (!actionFunctionality.WasLastActionOfType<WeaponSwingHitShapeAction>() || actionFunctionality.TimeSinceLastAction() > 0.5f)
+		meleeWeaponUserComponent.CurrentSwingIndex = 0;
 
-	component.CurrentSwingIndex %= weapon.mySwings.size();
+	meleeWeaponUserComponent.CurrentSwingIndex %= weapon.mySwings.size();
 
 	//EActionResult result = actionFunctionality.StartAction(WeaponSwingAction
 	//(Get<CharacterFunctionality>()
@@ -42,13 +43,14 @@ void MeleeWeaponUserFunctionality::SwingWeapon()
 	EActionResult result = actionFunctionality.StartAction(WeaponSwingHitShapeAction
 	(
 		Get<CharacterFunctionality>()
+		, weapon.mySwings[meleeWeaponUserComponent.CurrentSwingIndex]
 	));
 
 	if (result == EActionResult::Succeeded)
-		component.CurrentSwingIndex++;
+		meleeWeaponUserComponent.CurrentSwingIndex++;
 }
 
 void MeleeWeaponUserFunctionality::SetWeapon(MeleeWeapon&& aWeapon)
 {
-	Get<SMeleeWeaponUserComponent>().Weapon->SetWeapon(std::forward<MeleeWeapon>(aWeapon));
+	Get<SMeleeWeaponUserComponent>().Weapon.emplace(std::forward<MeleeWeapon>(aWeapon));
 }

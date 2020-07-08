@@ -5,6 +5,7 @@
 #include "Levels/LevelFunctionality.h"
 #include <Randomizer/Randomizer.h>
 #include "Utilities/Math.h"
+#include "Utility/Constants.h"
 
 HitShapeSpawnerFunctionality::HitShapeSpawnerFunctionality(Object& aOwner)
 	: Super(aOwner)
@@ -44,8 +45,20 @@ void HitShapeSpawnerFunctionality::SpawnPunch(const f32 aLength, const f32 aDela
 	const EFaction faction = Get<FactionFunctionality>().GetFaction();
 	hitShapeFunctionality.SetFromBezier(curve, aWidth, aDuration, aDelay, aDamage, faction);
 
-	if (faction == EFaction::Player)
-		hitShapeFunctionality.SkipAnticipation();
+	Get<SLevelDenizenComponent>().Level->AddDenizen(std::move(hitShape));
+}
+
+void HitShapeSpawnerFunctionality::SpawnSwordSwing(BezierCurve aSwordPath, const f32 aDelay, const f32 aDuration, const f32 aWidth, const f32 aDamage)
+{
+	Object hitShape;
+	TransformFunctionality& transform = Get<TransformFunctionality>();
+	HitShapeFunctionality& hitShapeFunctionality = hitShape.Add<HitShapeFunctionality>();
+
+	aSwordPath.Rotate(transform.GetRotation());
+	aSwordPath.Offset(transform.GetPosition());
+
+	const EFaction faction = Get<FactionFunctionality>().GetFaction();
+	hitShapeFunctionality.SetFromBezier(aSwordPath, aWidth, aDuration, aDelay, aDamage, faction);
 
 	Get<SLevelDenizenComponent>().Level->AddDenizen(std::move(hitShape));
 }

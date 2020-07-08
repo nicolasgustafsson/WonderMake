@@ -4,6 +4,7 @@
 #include "Collision/CollisionSystem.h"
 #include "UtilityFunctionalities/FactionFunctionality.h"
 #include "Utilities/MathUtility.h"
+#include "Utility/Constants.h"
 
 HitShapeFunctionality::HitShapeFunctionality(Object& aOwner)
 	: Super(aOwner)
@@ -43,10 +44,12 @@ void HitShapeFunctionality::Tick()
 	if (previousHitProgress == currentHitProgress)
 		return;
 
-	const SVector2f previousLocation = hitShapeComponent.Bezier.GetConstantLocationAt(previousHitProgress);
-	const SVector2f currentLocation = hitShapeComponent.Bezier.GetConstantLocationAt(currentHitProgress);
 
-	SystemPtr<CollisionSystem>()->OverlapLineAgainstFunctionality<CharacterFunctionality>(previousLocation, currentLocation, hitShapeComponent.Width * 0.5f, [&](CharacterFunctionality& aCharacter, const auto&&)
+	const SVector2f previousBezierPosition = hitShapeComponent.Bezier.GetConstantLocationAt(previousHitProgress);
+	const SVector2f currentBezierPosition = hitShapeComponent.Bezier.GetConstantLocationAt(currentHitProgress);
+
+	
+	SystemPtr<CollisionSystem>()->OverlapLineAgainstFunctionality<CharacterFunctionality>(previousBezierPosition, currentBezierPosition, hitShapeComponent.Width * 0.5f, [&](CharacterFunctionality& aCharacter, const auto&&)
 		{
 			if (aCharacter.Get<FactionFunctionality>().GetFaction() == Get<FactionFunctionality>().GetFaction())
 				return;
@@ -77,6 +80,23 @@ void HitShapeFunctionality::SetFromBezier(BezierCurve aCurve, const f32 aWidth, 
 
 	Get<SHitShapeComponent>().RenderObject.emplace(Get<SHitShapeComponent>().Bezier, 30, hitShapeComponent.Width);
 	Get<SHitShapeComponent>().RenderObject->SetHitDelay(hitShapeComponent.Delay);
+
+	if (aFaction == EFaction::Player)
+		SkipAnticipation();
+
+	switch (aFaction)
+	{
+	case EFaction::Enemy:
+		SetMainColor(ColorConstants::EnemyColor);
+		break;
+
+	case EFaction::Player:
+		SetMainColor(ColorConstants::PlayerColor);
+		break;
+
+	default:
+		break;
+	}
 }
 
 void HitShapeFunctionality::SkipAnticipation()
@@ -84,6 +104,14 @@ void HitShapeFunctionality::SkipAnticipation()
 	auto& hitShapeComponent = Get<SHitShapeComponent>();
 	
 	hitShapeComponent.Time += hitShapeComponent.AnticipationDuration;
+}
+
+void HitShapeFunctionality::SetMainColor(const SColor aColor)
+{
+	if (!Get<SHitShapeComponent>().RenderObject)
+		return;
+
+	Get<SHitShapeComponent>().RenderObject->SetMainColor(aColor);
 }
 
 void HitShapeFunctionality::Start()

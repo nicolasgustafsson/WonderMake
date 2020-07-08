@@ -41,11 +41,11 @@ public:
 
 	void SkipAnticipation();
 
+	void SetMainColor(const SColor aColor);
+
 private:
 	void Start();
 
 	[[nodiscard]] f32 GetProgressFromTime(const f32 aTime) const noexcept;
 	[[nodiscard]] f32 GetHitProgressFromTime(const f32 aTime) const noexcept;
-
 };
-

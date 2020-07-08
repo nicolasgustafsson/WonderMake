@@ -247,7 +247,6 @@
     <ClInclude Include="Movement\SpinnerFunctionality.h" />
     <ClInclude Include="Designers\LevelDesigner\LevelDesigner.h" />
     <ClInclude Include="Character\CharacterFunctionality.h" />
-    <ClInclude Include="Enemy\EnemyActions\TackleAction.h" />
     <ClInclude Include="Enemy\EnemyControllerFunctionality.h" />
     <ClInclude Include="Enemy\TargetFunctionality.h" />
     <ClInclude Include="Enemy\EnemyControllerComponent.h" />
@@ -259,10 +258,9 @@
     <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonFloatingPointOperator.h" />
     <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonPointOperator.h" />
     <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonSideOperator.h" />
+    <ClInclude Include="Utility\Constants.h" />
     <ClInclude Include="Weapons\WeaponSwingHitShapeAction.h" />
-    <ClInclude Include="Weapons\WeaponSwingAction.h" />
     <ClInclude Include="Weapons\WeaponSwing.h" />
-    <ClInclude Include="Weapons\MeleeWeaponFunctionality.h" />
     <ClInclude Include="Weapons\MeleeWeaponUserFunctionality.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Movement\DefaultMovementFunctionality.h" />
@@ -296,7 +294,6 @@
     <ClCompile Include="Movement\SpinnerFunctionality.cpp" />
     <ClCompile Include="Designers\LevelDesigner\LevelDesigner.cpp" />
     <ClCompile Include="Character\CharacterFunctionality.cpp" />
-    <ClCompile Include="Enemy\EnemyActions\TackleAction.cpp" />
     <ClCompile Include="Enemy\EnemyControllerFunctionality.cpp" />
     <ClCompile Include="Enemy\TargetFunctionality.cpp" />
     <ClCompile Include="Designers\MeleeWeaponDesigner\MeleeWeaponDesigner.cpp" />
@@ -309,8 +306,6 @@
     <ClCompile Include="Enemy\EnemyActions\PunchAction.cpp" />
     <ClCompile Include="UtilityFunctionalities\TimeToLiveFunctionality.cpp" />
     <ClCompile Include="Weapons\WeaponSwingHitShapeAction.cpp" />
-    <ClCompile Include="Weapons\WeaponSwingAction.cpp" />
-    <ClCompile Include="Weapons\MeleeWeaponFunctionality.cpp" />
     <ClCompile Include="Weapons\MeleeWeaponUserFunctionality.cpp" />
     <ClCompile Include="Movement\DefaultMovementFunctionality.cpp" />
     <ClCompile Include="Game.cpp" />

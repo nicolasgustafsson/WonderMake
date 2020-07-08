@@ -21,6 +21,8 @@ PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
 			OnDeath();
 		});
 
+	Get<MeleeWeaponUserFunctionality>().SetWeapon(SystemPtr<MeleeWeaponDesigner>()->DesignWeapon());
+
 	Get<SLevelDenizenComponent>().PersistentOnLevelChange = true;
 }
 

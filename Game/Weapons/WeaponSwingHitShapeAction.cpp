@@ -2,8 +2,8 @@
 #include "WeaponSwingHitShapeAction.h"
 #include "Input/InputSystem.h"
 
-WeaponSwingHitShapeAction::WeaponSwingHitShapeAction(CharacterFunctionality& aUser) noexcept
-	: myUser(aUser)
+WeaponSwingHitShapeAction::WeaponSwingHitShapeAction(CharacterFunctionality& aUser, const SSwing aSwing) noexcept
+	: myUser(aUser), mySwing(aSwing)
 {
 
 }
@@ -14,7 +14,9 @@ void WeaponSwingHitShapeAction::BeginAction()
 
 	HitShapeSpawnerFunctionality& hitShapeSpawner = myUser.Get<HitShapeSpawnerFunctionality>();
 
-	hitShapeSpawner.SpawnPunch(100.f, 0.0f, 0.1f, 50.f, 100.f);
+	hitShapeSpawner.SpawnSwordSwing(mySwing.SwingPath, mySwing.ChargeTime, mySwing.SwingTime, 50.f, 100.f);
+
+	myCooldown = mySwing.ChargeTime + mySwing.SwingTime;
 }
 
 void WeaponSwingHitShapeAction::Tick()
@@ -25,6 +27,5 @@ void WeaponSwingHitShapeAction::Tick()
 
 bool WeaponSwingHitShapeAction::IsCompleted() const
 {
-
 	return myCooldown < 0.f;
 }

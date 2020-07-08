@@ -2,12 +2,13 @@
 #include "Actions/Action.h"
 #include "Character/CharacterFunctionality.h"
 #include "Functionalities/TransformFunctionality.h"
+#include "Weapons/WeaponSwing.h"
 
 class WeaponSwingHitShapeAction
 	: public Action
 {
 public:
-	WeaponSwingHitShapeAction(CharacterFunctionality& aUser) noexcept;
+	WeaponSwingHitShapeAction(CharacterFunctionality& aUser, const SSwing aSwing) noexcept;
 
 	virtual void BeginAction() override;
 
@@ -16,6 +17,7 @@ public:
 	virtual bool IsCompleted() const override;
 
 private:
+	const SSwing mySwing;
 	CharacterFunctionality& myUser;
-	f32 myCooldown = 0.3f;
+	f32 myCooldown = 0.0f;
 };

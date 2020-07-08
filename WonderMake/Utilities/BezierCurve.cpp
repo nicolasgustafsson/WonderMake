@@ -43,6 +43,26 @@ SVector2f BezierCurve::GetConstantLocationAt(f32 aProgress) const
 	return ((*firstLocation).Location) + progressBetweenLocations * locationDelta;
 }
 
+void BezierCurve::Rotate(const f32 aRotation)
+{
+	myStart.Rotate(aRotation);
+	myEnd.Rotate(aRotation);
+	myFirstControl.Rotate(aRotation);
+	mySecondControl.Rotate(aRotation);
+
+	myConstantLengthProgressList.reset();
+}
+
+void BezierCurve::Offset(const SVector2f aOffset)
+{
+	myStart += aOffset;
+	myEnd += aOffset;
+	myFirstControl += aOffset;
+	mySecondControl += aOffset;
+
+	myConstantLengthProgressList.reset();
+}
+
 float BezierCurve::GetLength() const noexcept
 {
 	return (myStart.DistanceTo(myEnd));

@@ -19,7 +19,6 @@
 	<ClCompile Include="Registry\Register_LevelDenizenFunctionality.cpp" />
     <ClCompile Include="Registry\Register_LevelFunctionality.cpp" />
     <ClCompile Include="Registry\Register_LevelPortalFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_MeleeWeaponFunctionality.cpp" />
     <ClCompile Include="Registry\Register_MeleeWeaponUserFunctionality.cpp" />
     <ClCompile Include="Registry\Register_MovementInputFunctionality.cpp" />
     <ClCompile Include="Registry\Register_OwnerFunctionality.cpp" />
@@ -54,7 +53,6 @@
 	<ClInclude Include="Registry\Register_LevelDenizenFunctionality.h" />
     <ClInclude Include="Registry\Register_LevelFunctionality.h" />
     <ClInclude Include="Registry\Register_LevelPortalFunctionality.h" />
-    <ClInclude Include="Registry\Register_MeleeWeaponFunctionality.h" />
     <ClInclude Include="Registry\Register_MeleeWeaponUserFunctionality.h" />
     <ClInclude Include="Registry\Register_MovementInputFunctionality.h" />
     <ClInclude Include="Registry\Register_OwnerFunctionality.h" />

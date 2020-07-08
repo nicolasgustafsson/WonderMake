@@ -13,6 +13,7 @@ uniform float AnticipationProgress;
 uniform float SpawnTime;
 uniform float HitProgress;
 uniform float Delay;
+uniform vec4 MainColor = vec4(1.0, 1.0, 1.0, 1.0);
 
 float lifeTime;
 vec2 uvCoordinates;
@@ -89,9 +90,9 @@ vec3 anticipationThang(float outerBorder, float innerBorder, float aAnticipation
 
 vec3 hitProgressThang(float outerBorder, float innerBorder, float aHitProgress, float noise)
 {
-	vec3 red = vec3(0.6, 0.0, 0.0);
+	vec3 color = MainColor.rgb;
 
-	return ((red + vec3(0.6, 0.6, 0.) * noise) - outerBorder * vec3(0.2, 0.2, 0.2)) * max(0, aHitProgress);
+	return ((color + vec3(0.6, 0.6, 0.) * noise) - outerBorder * vec3(0.2, 0.2, 0.2)) * max(0, aHitProgress);
 }
 
 void main() 

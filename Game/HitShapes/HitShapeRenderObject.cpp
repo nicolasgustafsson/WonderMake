@@ -30,6 +30,11 @@ void HitShapeRenderObject::SetHitDelay(const f32 aDelay)
 	myShaderProgram.SetProperty("Delay", aDelay);
 }
 
+void HitShapeRenderObject::SetMainColor(const SColor aColor)
+{
+	myShaderProgram.SetProperty("MainColor", aColor);
+}
+
 void HitShapeRenderObject::SetVerticesFromCurve(const BezierCurve& aCurve)
 {
 	for (i32 i = 0; i < myNumberOfSegments; i++)

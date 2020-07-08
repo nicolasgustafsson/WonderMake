@@ -73,6 +73,9 @@ template <typename T, u32 Size>
 struct SVector 
 	: public SVectorBase<T, Size>
 {
+	using Representation = T;
+	static constexpr auto Size = Size;
+
 	//put generic vector stuff here
 	constexpr SVector() = default;
 
@@ -84,7 +87,7 @@ struct SVector
 	{
 		u32 i = 0;
 
-		(((*this)[i++] = aArgs), ...);
+		(((*this)[i++] = static_cast<T>(aArgs)), ...);
 	}
 
 	//lowers the dimension of the vector by one
@@ -164,7 +167,7 @@ struct SVector
 		case 3:
 			return 'W';
 		default:
-			return '1' + Index;
+			return '1' + char(Index);
 		}
 	}
 
@@ -258,7 +261,7 @@ struct SVector
 
 	[[nodiscard]] constexpr T Length() const noexcept
 	{
-		return std::sqrt(LengthSquared());
+		return static_cast<T>(std::sqrt(LengthSquared()));
 	}
 
 	[[nodiscard]] constexpr T DistanceTo(const SVector<T, Size> aOther) const noexcept

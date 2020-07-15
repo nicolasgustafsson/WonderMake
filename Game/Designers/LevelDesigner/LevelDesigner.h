@@ -46,9 +46,10 @@ struct SRoom
 };
 
 class LevelDesigner
-	: public System
+	: public System, public Debugged
 {
 public:
+	LevelDesigner();
 	void DesignLevel(LevelFunctionality& aLevel);
 
 protected:
@@ -69,4 +70,8 @@ protected:
 	void CreateEnemy(const SVector2f aPosition);
 
 	LevelFunctionality* myCurrentLevel;
+
+	SLevelGeometry myGeometry;
+
+	void Debug() override;
 };

@@ -1,6 +1,27 @@
 #include "pch.h"
 #include "Polygon.h"
 #include "Randomizer/Randomizer.h"
+#include <Utilities/Rotation.h>
+
+float sign(SVector2f p1, SVector2f p2, SVector2f p3)
+{
+	return (p1.X - p3.X) * (p2.Y - p3.Y) - (p2.X - p3.X) * (p1.Y - p3.Y);
+}
+
+bool PointInTriangle(SVector2f pt, SVector2f v1, SVector2f v2, SVector2f v3)
+{
+	float d1, d2, d3;
+	bool has_neg, has_pos;
+
+	d1 = sign(pt, v1, v2);
+	d2 = sign(pt, v2, v3);
+	d3 = sign(pt, v3, v1);
+
+	has_neg = (d1 < 0) || (d2 < 0) || (d3 < 0);
+	has_pos = (d1 > 0) || (d2 > 0) || (d3 > 0);
+
+	return !(has_neg && has_pos);
+}
 
 namespace Geometry
 {
@@ -56,25 +77,124 @@ namespace Geometry
 		return circumference;
 	}
 
-	void Polygon::Triangulate()
+	void Polygon::StartTriangulate()
 	{
-		Polygon copy = *this;
+		myTriangulationThing = new Polygon(*this);
 
-		PolygonLoopingPointOperator pointOperator = copy.FirstPoint();
+		myTriangulationThingOp.emplace(myTriangulationThing->FirstPoint());
+	}
 
-		while (copy.myPoints.size() >= 3)
+	void Polygon::TriangulateStep()
+	{
+		if (!myTriangulationThing)
+			return;
+
+		PolygonLoopingPointOperator& pointOperator = *myTriangulationThingOp;
+		STriangle triangle = pointOperator.GetTriangle();
+
+
+		if (myTriangulationThing->myPoints.size() == 3)
 		{
-			STriangle triangle = pointOperator.GetTriangle();
+			WmDrawDebugLine(triangle.First, triangle.Second, SColor::Green, 100.f);
+			WmDrawDebugLine(triangle.Second, triangle.Third, SColor::Green, 100.f);
+			WmDrawDebugLine(triangle.First, triangle.Third, SColor::Green, 100.f);
 
-			SVector2f tangentFirst = triangle.First;
-			SVector2f tangentThird = triangle.Third;
+			delete myTriangulationThing;
 
-			WmDrawDebugLine(triangle.First, triangle.Second, SColor::Red, 100.f);
-			WmDrawDebugLine(triangle.Second, triangle.Third, SColor::Red, 100.f);
-			WmDrawDebugLine(triangle.First, triangle.Third, SColor::Red, 100.f);
+			myTriangulationThing = nullptr;
 
-			pointOperator.RemovePoint();
-		}							
+			return;
+		}
+
+		auto nextSide = pointOperator.GetNextSide();
+		auto previousSide = pointOperator.GetPreviousSide();
+
+		++nextSide;
+		--previousSide;
+
+		SVector2f tangentFirst = triangle.First;
+		SVector2f tangentSecond = triangle.Third;
+
+		auto sideLooper = nextSide;
+		++sideLooper;
+
+		SVector2f firstRelative = triangle.First - triangle.Second;
+		SVector2f thirdRelative = triangle.Third - triangle.Second;
+
+		f32 dot = firstRelative.Dot(thirdRelative);
+		f32 det = firstRelative.X * thirdRelative.Y - firstRelative.Y * thirdRelative.X;
+
+		SRadianF32 angle(std::atan2f(det, dot));
+
+		if (angle < 0.f)
+		{
+			++pointOperator;
+			TriangulateStep();
+			return;
+		}
+
+		while (sideLooper != previousSide)
+		{
+			if (Intersects(tangentFirst, tangentSecond, *sideLooper.GetStart(), *sideLooper.GetEnd()))
+			{
+				++pointOperator;
+				TriangulateStep();
+				return;
+			}
+
+			++sideLooper;
+		}
+
+
+		auto startPoint = previousSide.GetStart();
+		auto endPoint = nextSide.GetEnd();
+
+		auto loopingPoint = endPoint;
+
+		while (loopingPoint != startPoint)
+		{
+			if (PointInTriangle(*loopingPoint, triangle.First, triangle.Second, triangle.Third))
+			{
+				++pointOperator;
+				TriangulateStep();
+				return;
+			}
+
+			++loopingPoint;
+		}
+
+		myLatestTriangle = triangle;
+
+		WmDrawDebugLine(triangle.First, triangle.Second, SColor::Green, 100.f);
+		WmDrawDebugLine(triangle.Second, triangle.Third, SColor::Green, 100.f);
+		WmDrawDebugLine(triangle.First, triangle.Third, SColor::Green, 100.f);
+
+		pointOperator.RemovePoint();
+	}
+
+	void Polygon::Draw()
+	{
+
+		if (!myTriangulationThing)
+			return;
+
+		auto side = myTriangulationThingOp->GetNextSide();
+
+		auto loopingSide = side;
+
+		SColor color = SColor{ 1.f, 0.f, 1.f, 1.f };
+		WmDrawDebugLine(*loopingSide.GetStart(), *loopingSide.GetEnd(), color, 0.f);
+
+		++loopingSide;
+		while (loopingSide != side)
+		{
+			WmDrawDebugLine(*loopingSide.GetStart(), *loopingSide.GetEnd(), color, 0.f);
+			++loopingSide;
+		}
+
+		WmDrawDebugLine(myLatestTriangle.First, myLatestTriangle.Second, SColor::Red, 0.f);
+		WmDrawDebugLine(myLatestTriangle.Second, myLatestTriangle.Third, SColor::Red, 0.f);
+		WmDrawDebugLine(myLatestTriangle.First, myLatestTriangle.Third, SColor::Red, 0.f);
 	}
 
 	bool Polygon::Intersects(const SVector2f aFirstPoint, const SVector2f aSecondPoint, const SVector2f aThirdPoint, const SVector2f aFourthPoint) const

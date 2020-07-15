@@ -15,16 +15,26 @@
 #include "Levels/BuffGiver/BuffGiverFunctionality.h"
 #include "Levels/LevelFunctionality.h"
 
+LevelDesigner::LevelDesigner()
+	: Debugged("Level Designer")
+{
+
+}
+
 void LevelDesigner::DesignLevel(LevelFunctionality& aLevel)
 {
-	SLevelGeometry geometry = DesignGeometry();
+	myGeometry = DesignGeometry();
+
+	myGeometry.MainGeometry.StartTriangulate();
 
 	myCurrentLevel = &aLevel;
-	auto walls = CreateWalls(geometry);
+	auto walls = CreateWalls(myGeometry);
 	myCurrentLevel->AddDenizens(std::move(walls));
 
-	auto objects = InstantiateSpaces(geometry);
-	myCurrentLevel->AddDenizens(std::move(objects));
+	auto objects = InstantiateSpaces(myGeometry);
+
+	if(objects.size() > 0)
+		myCurrentLevel->AddDenizens(std::move(objects));
 }
 
 plf::colony<Object> LevelDesigner::DesignEnemies(const SSpace& aSpace)
@@ -32,14 +42,14 @@ plf::colony<Object> LevelDesigner::DesignEnemies(const SSpace& aSpace)
 	SystemPtr<Randomizer> randomizer;
 	plf::colony<Object> enemies;
 
-	const auto enemyCount = randomizer->GetRandomNumber<size_t>(1, 3);
-
-	for (size_t i = 0; i < enemyCount; ++i)
-	{
-		const SVector2f position{ randomizer->GetRandomNumber<f32>(aSpace.TopLeft.X, aSpace.BottomRight.X), randomizer->GetRandomNumber<f32>(aSpace.BottomRight.Y, aSpace.TopLeft.Y) };
-
-		CreateEnemy(position);
-	}
+	//const auto enemyCount = randomizer->GetRandomNumber<size_t>(1, 3);
+	//
+	//for (size_t i = 0; i < enemyCount; ++i)
+	//{
+	//	const SVector2f position{ randomizer->GetRandomNumber<f32>(aSpace.TopLeft.X, aSpace.BottomRight.X), randomizer->GetRandomNumber<f32>(aSpace.BottomRight.Y, aSpace.TopLeft.Y) };
+	//
+	//	CreateEnemy(position);
+	//}
 
 	return enemies;
 }
@@ -110,6 +120,18 @@ void LevelDesigner::CreateEnemy(const SVector2f aPosition)
 	enemy.Add<EnemyControllerFunctionality>();
 	auto& transform = enemy.Add<TransformFunctionality>();
     transform.SetPosition(aPosition);
+}
+
+void LevelDesigner::Debug()
+{
+	myGeometry.MainGeometry.Draw();
+	ImGui::Begin("Level designer");
+	if (ImGui::Button("Step"))
+	{
+		myGeometry.MainGeometry.TriangulateStep();
+	}
+	
+	ImGui::End();
 }
 
 plf::colony<Object> LevelDesigner::CreateWalls(SLevelGeometry& aGeometry) const
@@ -204,8 +226,8 @@ plf::colony<Object> LevelDesigner::InstantiateSpaces(const SLevelGeometry& aGeom
 
 		case ELevelStage::Challenge:
 		{
-			auto enemies = DesignEnemies(space);
-			objects.splice(enemies);
+			//auto enemies = DesignEnemies(space);
+			//objects.splice(enemies);
 			DesignBuffTotems(space);
 			break;
 		}

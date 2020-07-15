@@ -13,22 +13,18 @@
 #include "Physics/StaticGeometryFunctionality.h"
 #include "Designers/BuffDesigner/BuffDesigner.h"
 #include "Levels/BuffGiver/BuffGiverFunctionality.h"
+#include "Levels/LevelFunctionality.h"
 
-SLevel LevelDesigner::DesignLevel()
+void LevelDesigner::DesignLevel(LevelFunctionality& aLevel)
 {
 	SLevelGeometry geometry = DesignGeometry();
 
-
-	geometry.MainGeometry.Triangulate();
-
-	myCurrentLevel = SLevel();
+	myCurrentLevel = &aLevel;
 	auto walls = CreateWalls(geometry);
-	myCurrentLevel.Objects.splice(walls);
+	myCurrentLevel->AddDenizens(std::move(walls));
 
 	auto objects = InstantiateSpaces(geometry);
-	myCurrentLevel.Objects.splice(objects);
-
-	return std::move(myCurrentLevel);
+	myCurrentLevel->AddDenizens(std::move(objects));
 }
 
 plf::colony<Object> LevelDesigner::DesignEnemies(const SSpace& aSpace)
@@ -36,7 +32,7 @@ plf::colony<Object> LevelDesigner::DesignEnemies(const SSpace& aSpace)
 	SystemPtr<Randomizer> randomizer;
 	plf::colony<Object> enemies;
 
-	const auto enemyCount = randomizer->GetRandomNumber<size_t>(2, 5);
+	const auto enemyCount = randomizer->GetRandomNumber<size_t>(1, 3);
 
 	for (size_t i = 0; i < enemyCount; ++i)
 	{
@@ -51,7 +47,7 @@ plf::colony<Object> LevelDesigner::DesignEnemies(const SSpace& aSpace)
 void LevelDesigner::DesignPortal(const SSpace& aSpace)
 {
 	SystemPtr<Randomizer> randomizer;
-	Object& portal = *myCurrentLevel.Objects.emplace();
+	Object& portal = myCurrentLevel->AddDenizen();
 
 	portal.Add<LevelPortalFunctionality>();
 	portal.Add<SpinnerFunctionality>();
@@ -76,7 +72,7 @@ void LevelDesigner::DesignBuffTotems(const SSpace& aSpace)
 void LevelDesigner::DesignBuffTotem(const SSpace& aSpace)
 {
 	SystemPtr<Randomizer> randomizer;
-	Object& totem = *myCurrentLevel.Objects.emplace();
+	Object& totem = myCurrentLevel->AddDenizen();
 
 	auto& buffGiver = totem.Add<BuffGiverFunctionality>();
 
@@ -104,12 +100,12 @@ void LevelDesigner::DesignStartPoint(const SSpace& aSpace)
 {
 	const SVector2f position = ((aSpace.BottomRight - aSpace.TopLeft) / 2.f) + aSpace.TopLeft;
 
-	myCurrentLevel.StartPosition = position;
+	myCurrentLevel->SetStartPosition(position);
 }
 
 void LevelDesigner::CreateEnemy(const SVector2f aPosition)
 {
-	Object& enemy = *myCurrentLevel.Objects.emplace();
+	Object& enemy = myCurrentLevel->AddDenizen();
 
 	enemy.Add<EnemyControllerFunctionality>();
 	auto& transform = enemy.Add<TransformFunctionality>();

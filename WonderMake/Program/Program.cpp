@@ -22,6 +22,9 @@ void Program::Update()
 	myInputSystem->Update();
 	myAudioManagerPtr->Update();
 
+	if constexpr (Constants::EnableAssetHotReload)
+		myFileWatcher->UpdateFileChanges();
+
 	StartNewFrame();
 }
 

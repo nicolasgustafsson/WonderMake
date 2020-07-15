@@ -19,7 +19,7 @@ LevelPortalFunctionality::LevelPortalFunctionality(Object& aOwner)
 				return;
 			}
 
-			if (aCharacter.GetFaction() != EFaction::Player)
+			if (aCharacter.Get<FactionFunctionality>().GetFaction() != EFaction::Player)
 			{
 				return;
 			}

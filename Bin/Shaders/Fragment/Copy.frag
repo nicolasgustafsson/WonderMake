@@ -5,6 +5,8 @@ in vec2 TexCoord;
 
 uniform sampler2D ourTexture;
 
+//!#include "Common.glsl"
+
 void main()
 {
     FragColor = texture(ourTexture, TexCoord).rgba;

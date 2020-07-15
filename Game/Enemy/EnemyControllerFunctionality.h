@@ -11,6 +11,7 @@
 #include "Functionalities/TransformFunctionality.h"
 #include "Collision/CollisionFunctionality.h"
 #include "Actions/ActionFunctionality.h"
+#include "UtilityFunctionalities/FactionFunctionality.h"
 
 class EnemyControllerFunctionality
 	: public Functionality<
@@ -23,6 +24,7 @@ class EnemyControllerFunctionality
 			Policy::Add<DefaultMovementFunctionality, Policy::EPermission::Write>,
 			Policy::Add<CharacterFunctionality, Policy::EPermission::Write>,
 			Policy::Add<CollisionFunctionality, Policy::EPermission::Write>,
+			Policy::Add<FactionFunctionality, Policy::EPermission::Write>,
 			Policy::Add<ImpulseFunctionality, Policy::EPermission::Write>,
 			Policy::Add<SpriteRenderingFunctionality, Policy::EPermission::Write>,
 			Policy::Add<ActionFunctionality, Policy::EPermission::Write>>>

@@ -31,10 +31,9 @@ SSwing MeleeWeaponDesigner::DesignSwing(const MeleeWeapon& aWeapon, const bool a
 	SSwing swing;
 
 	const bool isFirstSwing = aWeapon.mySwings.empty();
-	swing.ChargeTime = isFirstSwing ? 0.4f : 0.f;
+	swing.ChargeTime = isFirstSwing ? 0.1f : 0.f;
 
 	swing.SwingTime = 0.2f;
-	swing.BackswingTime = 0.2f;
 
 	swing.IsMirrored = aMirror;
 	swing.StepLength = 25.f;
@@ -42,9 +41,9 @@ SSwing MeleeWeaponDesigner::DesignSwing(const MeleeWeapon& aWeapon, const bool a
 	const f32 horizontalMultiplier = aMirror ? -1.f : 1.f;
 
 	swing.SwingPath = BezierCurve(
-		{ -25.f * horizontalMultiplier, 25.f },
-		{ 25.f * horizontalMultiplier, 25.f },
-		{ -25.f * horizontalMultiplier, -30.f },
+		{ -50.f * horizontalMultiplier, 25.f },
+		{ 50.f * horizontalMultiplier, 25.f },
+		{ -50.f * horizontalMultiplier, -30.f },
 		{ 0.f, -100.f });
 
 	return swing;
@@ -57,7 +56,6 @@ SSwing MeleeWeaponDesigner::DesignFinisher(const MeleeWeapon& aWeapon, const boo
 	finisher.IsFinisher = true;
 
 	finisher.ChargeTime = 0.2f;
-	finisher.BackswingTime = 0.6f;
 	finisher.StepLength = 100.f;
 
 	return finisher;

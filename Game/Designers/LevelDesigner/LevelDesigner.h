@@ -1,8 +1,8 @@
 #pragma once
-#include "Levels/Level.h"
-
 #include "System/System.h" 
 #include "Geometry/Polygon.h"
+
+class LevelFunctionality;
 
 namespace Geometry { class PolygonSideOperator; }
 
@@ -49,7 +49,7 @@ class LevelDesigner
 	: public System
 {
 public:
-	SLevel DesignLevel();
+	void DesignLevel(LevelFunctionality& aLevel);
 
 protected:
 	plf::colony<Object> CreateWalls(SLevelGeometry& aGeometry) const;
@@ -68,5 +68,5 @@ protected:
 	void DesignStartPoint(const SSpace& aSpace);
 	void CreateEnemy(const SVector2f aPosition);
 
-	SLevel myCurrentLevel;
+	LevelFunctionality* myCurrentLevel;
 };

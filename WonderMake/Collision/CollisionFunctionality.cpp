@@ -19,9 +19,7 @@ CollisionFunctionality::~CollisionFunctionality()
 	SystemPtr<CollisionSystem> collisionSystem;
 
 	for (auto& collider : collisionComponent.Colliders)
-	{
 		collisionSystem->DestroyCollider(*collider.Collider);
-	}
 
 	collisionComponent.Colliders.clear();
 }

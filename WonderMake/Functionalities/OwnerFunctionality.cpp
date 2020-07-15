@@ -3,12 +3,17 @@
 
 OwnerFunctionality::OwnerFunctionality(Object& aOwner)
 	: Super(aOwner)
-	, myOwner(aOwner)
+	, myOwner(&aOwner)
 {
 
 }
 
 Object& OwnerFunctionality::GetOwner() const
 {
-	return myOwner;
+	return *myOwner;
+}
+
+void OwnerFunctionality::OnOwnerMoved(Object& aNewAddress) noexcept
+{
+	myOwner = &aNewAddress;
 }

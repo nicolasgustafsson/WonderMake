@@ -14,6 +14,7 @@ public:
 	operator ImVec4() { return ImVec4(R, G, B, A); }
 
 	const static SColor CornflowerBlue;
+	const static SColor Grey;
 	const static SColor White;
 	const static SColor Yellow;
 	const static SColor Red;

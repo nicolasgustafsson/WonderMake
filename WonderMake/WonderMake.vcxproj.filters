@@ -68,6 +68,10 @@
     <ClCompile Include="Audio\SoundEffectNodeGraph.cpp" />
     <ClCompile Include="Policies\TaskManager.cpp" />
     <ClCompile Include="Utilities\Platform.cpp" />
+    <ClCompile Include="Functionalities\TimerFunctionality.cpp" />
+    <ClCompile Include="Utilities\Math.cpp" />
+    <ClCompile Include="FileSystem\FileWatcher.cpp" />
+    <ClCompile Include="Graphics\ShaderParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -169,7 +173,6 @@
     <ClInclude Include="FileSystem\ReadFileAsStringJob.h" />
     <ClInclude Include="Resources\ResourceSystem.h" />
     <ClInclude Include="Logging\FileLogger.h" />
-    <ClInclude Include="Utilities\OS.h" />
     <ClInclude Include="Utilities\plf_colony.h" />
     <ClInclude Include="Object\Object.h" />
     <ClInclude Include="Object\Dependency.h" />
@@ -233,12 +236,15 @@
     <ClInclude Include="Threads\RoutineIds.h" />
     <ClInclude Include="Threads\RoutineMain.h" />
     <ClInclude Include="Threads\Thread.h" />
-    <ClInclude Include="Threads\ThreadNaming.h" />
     <ClInclude Include="NodeGraph\SlotCustomization\SlotInputEdits.h" />
     <ClInclude Include="Audio\SoundEffectNodeGraph.h" />
     <ClInclude Include="Policies\TaskManager.h" />
     <ClInclude Include="Threads\ThreadChecker.h" />
     <ClInclude Include="Utilities\Platform.h" />
+    <ClInclude Include="Functionalities\TimerFunctionality.h" />
+    <ClInclude Include="Utilities\Math.h" />
+    <ClInclude Include="FileSystem\FileWatcher.h" />
+    <ClInclude Include="Graphics\ShaderParser.h" />
     <ClInclude Include="Utilities\Rotation.h" />
   </ItemGroup>
   <ItemGroup>

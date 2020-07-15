@@ -12,6 +12,8 @@
 #include "Functionalities/TransformFunctionality.h"
 #include "Functionalities/OwnerFunctionality.h"
 #include "Functionalities/ImpulseFunctionality.h"
+#include "Functionalities/TimerFunctionality.h"
+#include "Levels/LevelDenizenFunctionality.h"
 
 struct SCoolImpulse
 	: public SObjectImpulse<SCoolImpulse>
@@ -38,6 +40,9 @@ class PlayerControllerFunctionality
 			Policy::Add<CollisionFunctionality, Policy::EPermission::Write>,
 			Policy::Add<CharacterFunctionality, Policy::EPermission::Write>,
 			Policy::Add<ImpulseFunctionality, Policy::EPermission::Write>,
+			Policy::Add<FactionFunctionality, Policy::EPermission::Write>,
+			Policy::Add<TimerFunctionality, Policy::EPermission::Write>,
+			Policy::Add<SLevelDenizenComponent, Policy::EPermission::Write>,
 			Policy::Add<SpriteRenderingFunctionality, Policy::EPermission::Write>>>
 	, public Debugged
 {

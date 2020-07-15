@@ -204,9 +204,12 @@
     <ClCompile Include="Audio\AudioFile.cpp" />
     <ClCompile Include="Audio\AudioManager.cpp" />
     <ClCompile Include="Audio\AudioNodeTypes.cpp" />
+    <ClCompile Include="FileSystem\FileWatcher.cpp" />
     <ClCompile Include="Imgui\Canvas.cpp" />
     <ClCompile Include="Imgui\FileSelector.cpp" />
     <ClCompile Include="Imgui\NodeGraphGui.cpp" />
+    <ClCompile Include="Graphics\ShaderParser.cpp" />
+    <ClCompile Include="Utilities\Math.cpp" />
     <ClCompile Include="NodeGraph\NodeGraph.cpp" />
     <ClCompile Include="NodeGraph\NodeTypes.cpp" />
     <ClCompile Include="Program\GlfwFacade.cpp" />
@@ -215,6 +218,7 @@
     <ClCompile Include="Imgui\JsonInspector.cpp" />
     <ClCompile Include="Audio\SoundEffectNodeGraph.cpp" />
     <ClCompile Include="Policies\TaskManager.cpp" />
+    <ClCompile Include="Functionalities\TimerFunctionality.cpp" />
     <ClCompile Include="Utilities\BezierCurve.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Collision\ColliderDebug.cpp" />
@@ -276,10 +280,13 @@
     <ClInclude Include="Audio\AudioFile.h" />
     <ClInclude Include="Audio\AudioManager.h" />
     <ClInclude Include="Audio\AudioNodeTypes.h" />
+    <ClInclude Include="FileSystem\FileWatcher.h" />
     <ClInclude Include="Imgui\Canvas.h" />
     <ClInclude Include="Functionalities\BaseFunctionality.h" />
     <ClInclude Include="Imgui\FileSelector.h" />
     <ClInclude Include="Imgui\NodeGraphGui.h" />
+    <ClInclude Include="Graphics\ShaderParser.h" />
+    <ClInclude Include="Utilities\Math.h" />
     <ClInclude Include="NodeGraph\SlotCustomization\SlotInputEdits.h" />
     <ClInclude Include="NodeGraph\NodeGraph.h" />
     <ClInclude Include="NodeGraph\NodeTypes.h" />
@@ -294,6 +301,7 @@
     <ClInclude Include="Audio\SoundEffectNodeGraph.h" />
     <ClInclude Include="Policies\TaskManager.h" />
     <ClInclude Include="Threads\ThreadChecker.h" />
+    <ClInclude Include="Functionalities\TimerFunctionality.h" />
     <ClInclude Include="Utilities\BezierCurve.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Collision\ColliderDebug.h" />

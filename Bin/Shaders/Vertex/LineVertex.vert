@@ -4,14 +4,7 @@ layout (location = 1) in vec4 aColor;
 
 out vec4 vertexColor;
 
-layout (std140, binding = 0) uniform Engine
-{
-	mat3 ViewMatrix;
-	mat3 ProjectionMatrix;
-	mat3 ViewProjectionMatrix;
-    float Time;
-};
-
+//!#include "Common.glsl"
 
 void main() 
 {

@@ -15,6 +15,8 @@ class _BaseFunctionality;
 class Object final : public NonMovable, public NonCopyable
 {
 public:
+	Object(Object&& aOther);
+	Object& operator=(Object&& aOther);
 	Object() = default;
 	~Object() noexcept;
 
@@ -90,16 +92,19 @@ inline void Object::Remove()
 {
 	if constexpr (std::is_base_of<SComponent, TType>::value)
 	{
-		Remove<TType>(myComponents);
+		auto component = Remove<TType>(myComponents);
+
+		if (!component)
+			return;
+
+		return SystemPtr<ComponentSystem<TType>>()->RemoveComponent(*component);
 	}
 	else if constexpr (std::is_base_of<_BaseFunctionality, TType>::value)
 	{
 		auto functionality = Remove<TType>(myFunctionalities);
 
 		if (!functionality)
-		{
 			return;
-		}
 
 		functionality->Destroy(*this);
 	}

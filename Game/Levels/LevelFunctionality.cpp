@@ -47,7 +47,6 @@ void LevelFunctionality::RemoveDenizen(Object& aObject)
 
 	if (it != denizens.end())
 		denizens.erase(it);
-
 }
 
 void LevelFunctionality::AddDenizens(plf::colony<Object>&& aObjects)
@@ -65,6 +64,8 @@ void LevelFunctionality::TransferToNewLevel(LevelFunctionality& aNewLevel)
 		if (denizen.DenizenFunctionality.Get<SLevelDenizenComponent>().PersistentOnLevelChange)
 			aNewLevel.AddDenizen(std::move(denizen.DenizenObject));
 	}
+
+	Get<SLevelComponent>().Denizens.clear();
 }
 
 void LevelFunctionality::SetStartPosition(const SVector2f aPosition)

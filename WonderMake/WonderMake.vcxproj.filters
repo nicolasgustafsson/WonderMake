@@ -69,7 +69,6 @@
     <ClCompile Include="Policies\TaskManager.cpp" />
     <ClCompile Include="Utilities\Platform.cpp" />
     <ClCompile Include="Functionalities\TimerFunctionality.cpp" />
-    <ClCompile Include="Functionalities\BaseFunctionality.cpp" />
     <ClCompile Include="Utilities\Math.cpp" />
     <ClCompile Include="FileSystem\FileWatcher.cpp" />
     <ClCompile Include="Graphics\ShaderParser.cpp" />

@@ -3,7 +3,6 @@
 
 #include "Enemy/TargetFunctionality.h"
 #include "Actions/ActionFunctionality.h"
-#include "Enemy/EnemyActions/TackleAction.h"
 #include "EnemyActions/PunchAction.h"
 
 EnemyControllerFunctionality::EnemyControllerFunctionality(Object& aOwner)

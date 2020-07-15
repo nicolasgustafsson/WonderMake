@@ -2,9 +2,9 @@
 #include "PlayerControllerFunctionality.h"
 #include "Weapons/MeleeWeapon.h"
 #include "Designers/MeleeWeaponDesigner/MeleeWeaponDesigner.h"
-#include <Enemy/EnemyControllerFunctionality.h>
-#include <UtilityFunctionalities/TimeToLiveFunctionality.h>
-#include <Levels/LevelFunctionality.h>
+#include "Enemy/EnemyControllerFunctionality.h"
+#include "UtilityFunctionalities/TimeToLiveFunctionality.h"
+#include "Levels/LevelFunctionality.h"
 
 
 PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
@@ -84,9 +84,6 @@ void PlayerControllerFunctionality::OnDeath()
 	Get<SpriteRenderingFunctionality>().SetTexture("Textures/deadPlayer.png");
 
 	WmDispatchMessage(SPlayerDiedMessage());
-
-	Get<TimerFunctionality>().AddTimer(3.f, []() {WmLog("wao!"); });
-	Get<TimerFunctionality>().AddTimer(5.f, [&]() {WmLog("do it again!"); 	Get<TimerFunctionality>().AddTimer(5.f, [&]() {WmLog("and again!"); }); });
 }
 
 void PlayerControllerFunctionality::Debug()

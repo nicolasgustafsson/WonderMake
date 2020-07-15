@@ -47,12 +47,15 @@ void LevelFunctionality::RemoveDenizen(Object& aObject)
 
 	if (it != denizens.end())
 		denizens.erase(it);
+
 }
 
 void LevelFunctionality::AddDenizens(plf::colony<Object>&& aObjects)
 {
 	for (auto&& object : aObjects)
 		AddDenizen(std::move(object));
+
+	aObjects.clear();
 }
 
 void LevelFunctionality::TransferToNewLevel(LevelFunctionality& aNewLevel)

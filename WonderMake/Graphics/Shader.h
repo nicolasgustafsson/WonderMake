@@ -22,7 +22,7 @@ class Shader
 	, private NonCopyable
 {
 public:
-	Shader(const std::filesystem::path aPath)
+	Shader(const std::filesystem::path& aPath)
 	{
 		SystemPtr<OpenGLFacade> openGL;
 		

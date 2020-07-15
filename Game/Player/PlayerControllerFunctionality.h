@@ -12,8 +12,8 @@
 #include "Functionalities/TransformFunctionality.h"
 #include "Functionalities/OwnerFunctionality.h"
 #include "Functionalities/ImpulseFunctionality.h"
-#include <Functionalities/TimerFunctionality.h>
-#include <Levels/LevelDenizenFunctionality.h>
+#include "Functionalities/TimerFunctionality.h"
+#include "Levels/LevelDenizenFunctionality.h"
 
 struct SCoolImpulse
 	: public SObjectImpulse<SCoolImpulse>

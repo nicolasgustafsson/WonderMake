@@ -9,7 +9,7 @@ enum class EFaction
 
 struct SFactionComponent : public SComponent
 {
-	EFaction Faction;
+	EFaction Faction = EFaction::Neutral;
 };
 
 class FactionFunctionality : public Functionality<

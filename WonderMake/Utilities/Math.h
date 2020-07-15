@@ -30,11 +30,4 @@ namespace WmMath
 
 			return aValue;
 		}
-
-	//template <class T> requires std::totally_ordered_with<T, f32>
-	//T Sign(T)
-	//{
-	//	return aStart + ((aEnd - aStart) * aProgress);
-	//}
-
 }

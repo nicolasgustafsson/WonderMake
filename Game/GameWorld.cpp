@@ -9,7 +9,7 @@
 
 #include "Designers/LevelDesigner/LevelDesigner.h"
 #include "Camera/CameraFunctionality.h"
-#include <Levels/LevelFunctionality.h>
+#include "Levels/LevelFunctionality.h"
 
 GameWorld::GameWorld()
 	:mySubscriber(ERoutineId::Logic, BindHelper(&GameWorld::OnPlayerDeath, this))

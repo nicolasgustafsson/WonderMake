@@ -1,6 +1,8 @@
 #pragma once
 #include "Typedefs.h"
 
+#include "Utilities/Rotation.h"
+
 #include <array>
 
 template<typename TRep, u32 TSize>
@@ -79,22 +81,20 @@ struct SVector
 	template<typename ...TArgs, typename = TVectorMembers<TArgs...>>
 	constexpr SVector(TArgs... aArgs) noexcept;
 	
-	SVector<TRep, TSize>& Rotate(const f32 aRotation) noexcept requires (TSize == 2)
+	SVector<TRep, TSize>& Rotate(const SRadianF32 aRotation) noexcept requires (TSize == 2)
 	{
-		f32 rotation = GetRotation();
-		const f32 length = Length();
+		const auto rotation = GetRotation() + aRotation;
+		const auto length = Length();
 
-		rotation += aRotation;
-
-		SVectorBase<TRep, Size>::X = std::sinf(rotation);
-		SVectorBase<TRep, Size>::Y = std::cosf(rotation);
+		SVectorBase<TRep, Size>::X = std::sinf(rotation.Rotation());
+		SVectorBase<TRep, Size>::Y = std::cosf(rotation.Rotation());
 
 		SVectorBase<TRep, Size>::X *= length;
 		SVectorBase<TRep, Size>::Y *= length;
 
 		return (*this);
 	}
-	[[nodiscard]] f32 GetRotation() const noexcept requires (TSize == 2)
+	[[nodiscard]] SRadianF32 GetRotation() const noexcept requires (TSize == 2)
 	{
 		return std::atan2f(SVectorBase<TRep, Size>::X, SVectorBase<TRep, Size>::Y);
 	}

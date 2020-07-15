@@ -18,6 +18,9 @@ SLevel LevelDesigner::DesignLevel()
 {
 	SLevelGeometry geometry = DesignGeometry();
 
+
+	geometry.MainGeometry.Triangulate();
+
 	myCurrentLevel = SLevel();
 	auto walls = CreateWalls(geometry);
 	myCurrentLevel.Objects.splice(walls);

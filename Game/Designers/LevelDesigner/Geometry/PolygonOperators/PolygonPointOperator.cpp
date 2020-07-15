@@ -27,6 +27,24 @@ namespace Geometry
 		return GetNextSide();
 	}
 
+	Geometry::STriangle PolygonLoopingPointOperator::GetTriangle()
+	{
+		STriangle triangle;
+		
+		--(*this);
+		triangle.First = *myBaseIterator;
+
+		++(*this);
+		triangle.Second = *myBaseIterator;
+
+		++(*this);
+		triangle.Third = *myBaseIterator;
+
+		--(*this);
+
+		return triangle;
+	}
+
 	PolygonLoopingPointOperator& PolygonLoopingPointOperator::operator=(const PolygonLoopingPointOperator& aOther)
 	{
 		myBaseIterator = aOther.myBaseIterator;

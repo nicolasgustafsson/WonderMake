@@ -2,6 +2,13 @@
 
 namespace Geometry
 {
+	struct STriangle 
+	{
+		SVector2f First;
+		SVector2f Second;
+		SVector2f Third;
+	};
+
 	class PolygonPointOperatorBase
 	{
 	public:
@@ -88,6 +95,8 @@ namespace Geometry
 		}
 
 		PolygonSideOperator TurnIntoSide(PolygonLoopingPointOperator aEnd);
+
+		STriangle GetTriangle();
 
 	private:
 		PolygonLoopingPointOperator(std::list<SVector2f>::iterator aIterator, std::list<SVector2f>& aOriginalList);

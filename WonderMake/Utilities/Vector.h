@@ -1,120 +1,112 @@
 #pragma once
 #include "Typedefs.h"
 
+#include "Utilities/Rotation.h"
+
 #include <array>
 
-template<typename T, u32 Size, typename Enable = void>
+template<typename TRep, u32 TSize>
 struct SVectorBase;
 
 #pragma warning(push)
 #pragma warning(disable:4201)
-template <typename T>
-struct SVectorBase<T, 2>
+template <typename TRep>
+struct SVectorBase<TRep, 2>
 {
 public:
 	union
 	{
 		struct
 		{
-			T X;
-			T Y;
+			TRep X;
+			TRep Y;
 		};
-		std::array<T, 2> MemberArray = {};
-	};
-
-	[[nodiscard]] constexpr f32 GetRotation() const noexcept
-	{
-		return std::atan2f(X, Y);
-	}
-};
-
-template <typename T>
-struct SVectorBase<T, 3>
-{
-public:
-	union
-	{
-		struct
-		{
-			T X;
-			T Y;
-			T Z;
-		};
-		std::array<T, 3> MemberArray = {};
+		std::array<TRep, 2> MemberArray = {};
 	};
 };
 
-template <typename T>
-struct SVectorBase<T, 4>
+template <typename TRep>
+struct SVectorBase<TRep, 3>
 {
 public:
 	union
 	{
 		struct
 		{
-			T X;
-			T Y;
-			T Z;
-			T W;
+			TRep X;
+			TRep Y;
+			TRep Z;
 		};
-		std::array<T, 4> MemberArray = {};
+		std::array<TRep, 3> MemberArray = {};
+	};
+};
+
+template <typename TRep>
+struct SVectorBase<TRep, 4>
+{
+public:
+	union
+	{
+		struct
+		{
+			TRep X;
+			TRep Y;
+			TRep Z;
+			TRep W;
+		};
+		std::array<TRep, 4> MemberArray = {};
 	};
 };
 #pragma warning(pop)
 
-template <typename T, u32 Size> 
-struct SVectorBase<T, Size, std::enable_if_t<(Size > 4)>>
+template <typename TRep, u32 TSize> requires (TSize > 4)
+struct SVectorBase<TRep, TSize>
 {
 public:
-	std::array<T, Size> MemberArray = {};
+	std::array<TRep, TSize> MemberArray = {};
 };
 
-template <typename T, u32 Size>
+template <typename TRep, u32 TSize>
 struct SVector 
-	: public SVectorBase<T, Size>
+	: public SVectorBase<TRep, TSize>
 {
-	//put generic vector stuff here
+	using Representation = TRep;
+	static constexpr auto Size = TSize;
+
 	constexpr SVector() = default;
 
-	template<typename... Ts>
-	using TVectorMembers = typename std::enable_if_t<sizeof...(Ts) == Size && std::conjunction_v<std::is_convertible<Ts, T>...>>;
+	template<typename... Reps>
+	using TVectorMembers = typename std::enable_if_t<sizeof...(Reps) == TSize && std::conjunction_v<std::is_convertible<Reps, TRep>...>>;
 
 	template<typename ...TArgs, typename = TVectorMembers<TArgs...>>
-	constexpr SVector(TArgs... aArgs) noexcept
+	constexpr SVector(TArgs... aArgs) noexcept;
+	
+	SVector<TRep, TSize>& Rotate(const SRadianF32 aRotation) noexcept requires (TSize == 2)
 	{
-		u32 i = 0;
+		const auto rotation = GetRotation() + aRotation;
+		const auto length = Length();
 
-		(((*this)[i++] = aArgs), ...);
-	}
+		SVectorBase<TRep, Size>::X = std::sinf(rotation.Rotation());
+		SVectorBase<TRep, Size>::Y = std::cosf(rotation.Rotation());
 
-	//lowers the dimension of the vector by one
-	template<class Q = T>
-	[[nodiscard]] constexpr typename std::enable_if_t<(Size == 2), Q> Demote() const noexcept
-	{
-		return (*this)[0];
-	}
-
-	constexpr SVector<T, Size> Rotate(const f32 aRotation) noexcept requires (Size == 2)
-	{
-		f32 rotation = this->GetRotation();
-		const f32 length = this->Length();
-
-		rotation += aRotation;
-
-		this->X = std::sinf(rotation);
-		this->Y = std::cosf(rotation);
-
-		this->X *= length;
-		this->Y *= length;
+		SVectorBase<TRep, Size>::X *= length;
+		SVectorBase<TRep, Size>::Y *= length;
 
 		return (*this);
 	}
-
-	//lowers the dimension of the vector by one
-	template<class Q = T>
-	[[nodiscard]] constexpr typename std::enable_if_t<(Size > 2), SVector<Q, Size - 1>> Demote() const noexcept
+	[[nodiscard]] SRadianF32 GetRotation() const noexcept requires (TSize == 2)
 	{
-		SVector<Q, Size - 1> ReturnVal;
+		return std::atan2f(SVectorBase<TRep, Size>::X, SVectorBase<TRep, Size>::Y);
+	}
+
+	// Lowers or raises the dimension of the vector by one
+	[[nodiscard]] constexpr TRep Demote() const noexcept requires (TSize == 2)
+	{
+		return (*this)[0];
+	}
+	[[nodiscard]] constexpr SVector<TRep, TSize - 1> Demote() const noexcept requires (TSize > 2)
+	{
+		SVector<TRep, Size - 1> ReturnVal;
 
 		for (u32 u = 0; u < Size - 1; u++)
 		{
@@ -123,207 +115,55 @@ struct SVector
 
 		return ReturnVal;
 	}
+	[[nodiscard]] constexpr SVector<TRep, TSize + 1> Promote(const TRep LastValue = {}) const noexcept;
 
-	//raises the dimension of the vector by one
-	[[nodiscard]] constexpr SVector<T, Size + 1> Promote(const T LastValue = {}) const noexcept
+	[[nodiscard]] constexpr TRep& operator[] (const u32 Index) noexcept;
+	[[nodiscard]] constexpr const TRep& operator[] (const u32 Index) const noexcept;
+
+	[[nodiscard]] constexpr char GetMemberName(const u32 Index) const noexcept;
+
+	[[nodiscard]] constexpr SVector<TRep, TSize> operator-() const noexcept;
+
+	constexpr SVector<TRep, TSize>& operator*=(const TRep aMultiplier) noexcept;
+	constexpr SVector<TRep, TSize>& operator/=(const TRep aDivisor) noexcept;
+	constexpr SVector<TRep, TSize>& operator+=(const SVector<TRep, TSize>& aRightVector) noexcept;
+	constexpr SVector<TRep, TSize>& operator-=(const SVector<TRep, TSize>& aRightVector) noexcept;
+
+	constexpr bool operator==(const SVector<TRep, TSize>& aRightVector) const noexcept;
+	constexpr bool operator!=(const SVector<TRep, TSize>& aRightVector) const noexcept;
+
+	[[nodiscard]] constexpr TRep LengthSquared() const noexcept;
+	[[nodiscard]] constexpr TRep Length() const noexcept;
+	[[nodiscard]] constexpr TRep DistanceTo(const SVector<TRep, TSize> aOther) const noexcept;
+
+	[[nodiscard]] constexpr TRep Dot(const SVector<TRep, TSize> aOther) const noexcept;
+
+	constexpr void Normalize() noexcept;
+	[[nodiscard]] constexpr SVector<TRep, TSize> GetNormalized() const noexcept;
+	
+	[[nodiscard]] constexpr SVector<TRep, TSize> GetPerpendicularCounterClockWise() const noexcept requires (TSize == 2)
 	{
-		SVector<T, Size + 1> ReturnVal;
-
-		for (u32 u = 0; u < Size; u++)
-		{
-			ReturnVal[u] = (*this)[u];
-		}
-
-		ReturnVal[Size] = LastValue;
-
-		return ReturnVal;
+		return SVector<TRep, TSize>(-(*this).Y, (*this).X);
 	}
-
-	[[nodiscard]] constexpr T& operator[] (const u32 Index) noexcept
+	[[nodiscard]] constexpr SVector<TRep, TSize> GetPerpendicularClockWise() const noexcept requires (TSize == 2)
 	{
-		assert(Index < Size);
-		return this->MemberArray[Index];
+		return SVector<TRep, TSize>((*this).Y, -(*this).X);
 	}
-
-	[[nodiscard]] constexpr const T& operator[] (const u32 Index) const noexcept
-	{
-		assert(Index < Size);
-		return this->MemberArray[Index];
-	}
-
-	[[nodiscard]] constexpr char GetMemberName(const u32 Index) const noexcept
-	{
-		switch (Index)
-		{
-		case 0:
-			return 'X';
-		case 1:
-			return 'Y';
-		case 2:
-			return 'Z';
-		case 3:
-			return 'W';
-		default:
-			return '1' + Index;
-		}
-	}
-
-	[[nodiscard]] constexpr SVector<T, Size> operator-() const noexcept
-	{
-		SVector<T, Size> ReturnVal;
-
-		for (u32 u = 0; u < Size; u++)
-		{
-			ReturnVal[u] = -((*this)[u]);
-		}
-
-		return ReturnVal;
-	}
-
-
-	constexpr SVector<T, Size>& operator*=(const T aMultiplier) noexcept
-	{
-		*this = *this * aMultiplier;
-
-		return *this;
-	}
-
-	constexpr SVector<T, Size>& operator/=(const T aDivisor) noexcept
-	{
-		*this = *this / aDivisor;
-
-		return *this;
-	}
-
-	constexpr SVector<T, Size>& operator+=(const SVector<T, Size>& aRightVector) noexcept
-	{
-		*this = *this + aRightVector;
-
-		return *this;
-	}
-
-	constexpr SVector<T, Size>& operator-=(const SVector<T, Size>& aRightVector) noexcept
-	{
-		*this = *this - aRightVector;
-
-		return *this;
-	}
-
-	constexpr bool operator==(const SVector<T, Size>& aRightVector) const noexcept
-	{
-		for (u32 u = 0; u < Size; u++)
-		{
-			if ((*this)[u] != aRightVector[u])
-				return false;
-		}
-
-		return true;
-	}
-
-	constexpr bool operator!=(const SVector<T, Size>& aRightVector) const noexcept
-	{
-		return !(*this == aRightVector);
-	}
-
-	[[nodiscard]] constexpr static SVector<T, Size> Zero() noexcept
-	{
-		SVector<T, Size> ReturnVal;
-
-		return ReturnVal;
-	}
-
-	[[nodiscard]] constexpr static SVector<T, Size> One() noexcept
-	{
-		SVector<T, Size> ReturnVal;
-
-		for (u32 u = 0; u < Size; u++)
-		{
-			ReturnVal[u] = 1;
-		}
-
-		return ReturnVal;
-	}
-
-	[[nodiscard]] constexpr T LengthSquared() const noexcept
-	{
-		T total = 0;
-
-		for (u32 u = 0; u < Size; u++)
-		{
-			total += (*this)[u] * (*this)[u];
-		}
-
-		return total;
-	}
-
-	[[nodiscard]] constexpr T Length() const noexcept
-	{
-		return std::sqrt(LengthSquared());
-	}
-
-	[[nodiscard]] constexpr T DistanceTo(const SVector<T, Size> aOther) const noexcept
-	{
-		return (aOther - *this).Length();
-	}
-
-	constexpr void Normalize() noexcept
-	{
-		const T length = Length();
-
-		if (length == 0)
-			return;
-
-		for (u32 u = 0; u < Size; u++)
-		{
-			(*this)[u] /= length;
-		}
-	}
-
-	constexpr SVector<T, Size> GetPerpendicularCounterClockWise() const noexcept requires (Size == 2)
-	{
-		return SVector<T, Size>(-(*this).Y, (*this).X);
-	}
-
-	constexpr SVector<T, Size> GetPerpendicularClockWise() const noexcept requires (Size == 2)
-	{
-		return SVector<T, 2>((*this).Y, -(*this).X);
-	}
-
-	constexpr SVector<T, Size> GetNormal() const noexcept requires (Size == 2)
+	[[nodiscard]] constexpr SVector<TRep, TSize> GetNormal() const noexcept requires (TSize == 2)
 	{
 		return GetPerpendicularClockWise();
 	}
 
-	[[nodiscard]] constexpr T Dot(const SVector<T, Size> aOther) const noexcept
-	{
-		T sum = 0;
-		for (u32 i = 0; i < Size; i++)
-		{
-			sum += (*this)[i] * aOther[i];
-		}
-
-		return sum;
-	}
-
-	[[nodiscard]] constexpr SVector<T, Size> GetNormalized() const noexcept
-	{
-		SVector<T, Size> vec = *this;
-
-		vec.Normalize();
-
-		return vec;
-	}
+	[[nodiscard]] constexpr static SVector<TRep, TSize> Zero() noexcept;
+	[[nodiscard]] constexpr static SVector<TRep, TSize> One() noexcept;
 };
 
-template <typename T>
-using SVector2 = SVector<T, 2>;
-
-template <typename T>
-using SVector3 = SVector<T, 3>;
-
-template <typename T>
-using SVector4 = SVector<T, 4>;
-
+template <typename TRep>
+using SVector2 = SVector<TRep, 2>;
+template <typename TRep>
+using SVector3 = SVector<TRep, 3>;
+template <typename TRep>
+using SVector4 = SVector<TRep, 4>;
 
 using SVector2f = SVector2<f32>;
 using SVector3f = SVector3<f32>;
@@ -337,60 +177,15 @@ using SVector2u = SVector2<u32>;
 using SVector3u = SVector3<u32>;
 using SVector4u = SVector4<u32>;
 
-template <typename T, u32 Size>
-[[nodiscard]] constexpr static SVector<T, Size> operator-(const SVector<T, Size>& aLeftVector, const SVector<T, Size>& aRightVector) noexcept
-{
-	SVector<T, Size> ReturnVal = aLeftVector;
+template <typename TRep, u32 TSize>
+[[nodiscard]] constexpr static SVector<TRep, TSize> operator-(const SVector<TRep, TSize>& aLeftVector, const SVector<TRep, TSize>& aRightVector) noexcept;
+template <typename TRep, u32 TSize>
+[[nodiscard]] constexpr static SVector<TRep, TSize> operator+(const SVector<TRep, TSize>& aLeftVector, const SVector<TRep, TSize>& aRightVector) noexcept;
+template <typename TRep, u32 TSize>
+[[nodiscard]] constexpr static SVector<TRep, TSize> operator*(const TRep aMultiplier, const SVector<TRep, TSize>& aLeftVector) noexcept;
+template <typename TRep, u32 TSize>
+[[nodiscard]] constexpr static SVector<TRep, TSize> operator*(const SVector<TRep, TSize>& aLeftVector, const TRep aMultiplier) noexcept;
+template <typename TRep, u32 TSize>
+[[nodiscard]] constexpr static SVector<TRep, TSize> operator/(const SVector<TRep, TSize>& aLeftVector, const TRep aDivisor) noexcept;
 
-	for (u32 u = 0; u < Size; u++)
-	{
-		ReturnVal[u] -= aRightVector[u];
-	}
-
-	return ReturnVal;
-}
-
-template <typename T, u32 Size>
-[[nodiscard]] constexpr static SVector<T, Size> operator+(const SVector<T, Size>& aLeftVector, const SVector<T, Size>& aRightVector) noexcept
-{
-	SVector<T, Size> ReturnVal = aLeftVector;
-
-	for (u32 u = 0; u < Size; u++)
-	{
-		ReturnVal[u] += aRightVector[u];
-	}
-
-	return ReturnVal;
-}
-
-template <typename T, u32 Size>
-[[nodiscard]] constexpr static SVector<T, Size> operator*(const T aMultiplier, const SVector<T, Size>& aLeftVector) noexcept
-{
-	return aLeftVector * aMultiplier;
-}
-
-template <typename T, u32 Size>
-[[nodiscard]] constexpr static SVector<T, Size> operator*(const SVector<T, Size>& aLeftVector, const T aMultiplier) noexcept
-{
-	SVector<T, Size> ReturnVal = aLeftVector;
-
-	for (u32 u = 0; u < Size; u++)
-	{
-		ReturnVal[u] *= aMultiplier;
-	}
-
-	return ReturnVal;
-}
-
-template <typename T, u32 Size>
-[[nodiscard]] constexpr static SVector<T, Size> operator/(const SVector<T, Size>& aLeftVector, const T aDivisor) noexcept
-{
-	SVector<T, Size> ReturnVal = aLeftVector;
-
-	for (u32 u = 0; u < Size; u++)
-	{
-		ReturnVal[u] /= aDivisor;
-	}
-
-	return ReturnVal;
-}
+#include "Vector.inl"

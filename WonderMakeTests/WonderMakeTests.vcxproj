@@ -192,6 +192,7 @@
     <ClCompile Include="PolicyTests.cpp" />
     <ClCompile Include="Registry\*.cpp" />
     <ClCompile Include="RotationTests.cpp" />
+    <ClCompile Include="VectorTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WonderMake\WonderMake.vcxproj">

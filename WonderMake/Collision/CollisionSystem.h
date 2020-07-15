@@ -36,6 +36,10 @@ public:
 	template<typename TFunctionalityToReactAgainst>
 	void OverlapLineAgainstFunctionality(const SVector2f aStart, const SVector2f aEnd, std::function<void(TFunctionalityToReactAgainst&, Colliders::SCollisionInfo)> aCallback);
 
+	template<typename TFunctionalityToReactAgainst>
+	void OverlapLineAgainstFunctionality(const SVector2f aStart, const SVector2f aEnd, const f32 aWidth, std::function<void(TFunctionalityToReactAgainst&, Colliders::SCollisionInfo)> aCallback);
+
+
 	[[nodiscard]] static bool IsPointWithinSphere(const Colliders::SSphere& aSphere, const SVector2f aPoint) noexcept;
 	[[nodiscard]] static SVector2f GetClosestPointOnLine(const Colliders::SLine& aLine, const SVector2f aPoint) noexcept;
 
@@ -89,9 +93,16 @@ void CollisionSystem::OverlapSphereAgainstFunctionality(const SVector2f aPositio
 template<typename TFunctionalityToReactAgainst>
 void CollisionSystem::OverlapLineAgainstFunctionality(const SVector2f aStart, const SVector2f aEnd, std::function<void(TFunctionalityToReactAgainst&, Colliders::SCollisionInfo)> aCallback)
 {
+	OverlapLineAgainstFunctionality<TFunctionalityToReactAgainst>(aStart, aEnd, 0.f, aCallback);
+}
+
+template<typename TFunctionalityToReactAgainst>
+void CollisionSystem::OverlapLineAgainstFunctionality(const SVector2f aStart, const SVector2f aEnd, const f32 aWidth, std::function<void(TFunctionalityToReactAgainst&, Colliders::SCollisionInfo)> aCallback)
+{
 	Colliders::SLine collider;
 	collider.Position = aStart;
 	collider.EndOffsetFromPosition = aEnd - aStart;
+	collider.Width = aWidth;
 
 	OverlapAgainstFunctionality(collider, aCallback);
 }

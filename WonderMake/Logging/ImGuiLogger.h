@@ -24,5 +24,8 @@ private:
 	std::string myFilterText;
 
 	MessageSubscriber mySubscriber;
+
+	bool myIsAtBottom = true;
+	std::optional<f32> myPreviousScrollY;
 };
 

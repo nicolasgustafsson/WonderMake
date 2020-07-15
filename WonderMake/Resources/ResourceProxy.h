@@ -9,6 +9,13 @@ struct SResource
 {
 	std::mutex myLock;
 	std::shared_ptr<TResource> myPointer = nullptr;
+	i32 myGeneration = 0;
+};
+
+enum EResourceGenerationResult
+{
+	UpToDate,
+	NewGeneration
 };
 
 template<typename TResource>
@@ -27,11 +34,36 @@ public:
 
 	inline operator bool() const;
 
+	EResourceGenerationResult UpdateGeneration() requires Constants::EnableAssetHotReload;
+	constexpr EResourceGenerationResult UpdateGeneration() const requires (!Constants::EnableAssetHotReload);
+
 private:
 	inline void Validate() const;
 
 	std::shared_ptr<SResource<TResource>> myResource = nullptr;
+
+	i32 myGeneration = 0;
 };
+
+template<typename TResource>
+EResourceGenerationResult ResourceProxy<TResource>::UpdateGeneration() requires Constants::EnableAssetHotReload
+{
+	std::lock_guard<decltype(myResource->myLock)> lock(myResource->myLock);
+
+	if (myGeneration != myResource->myGeneration)
+	{
+		myGeneration = myResource->myGeneration;
+		return EResourceGenerationResult::NewGeneration;
+	}
+
+	return EResourceGenerationResult::UpToDate;
+}
+
+template<typename TResource>
+constexpr EResourceGenerationResult ResourceProxy<TResource>::UpdateGeneration() const requires (!Constants::EnableAssetHotReload)
+{
+	return EResourceGenerationResult::UpToDate;
+}
 
 template<typename TResource>
 inline bool ResourceProxy<TResource>::IsValid() const

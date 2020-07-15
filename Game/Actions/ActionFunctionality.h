@@ -31,7 +31,7 @@ class ActionFunctionality
 public:
 	ActionFunctionality(Object& aOwner);
 
-	template<typename TAction> //requires std::is_base_of_v<Action, TAction> uncomment this when concepts is a thing
+	template<typename TAction> requires std::is_base_of_v<Action, TAction>
 	inline EActionResult StartAction(TAction aAction)
 	{
 		if (IsInAction())

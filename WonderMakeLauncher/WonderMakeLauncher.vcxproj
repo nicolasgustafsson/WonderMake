@@ -214,9 +214,13 @@
     <ClCompile Include="Registry\Register_CollisionFunctionality.cpp" />
     <ClCompile Include="Registry\Register_DefaultMovementFunctionality.cpp" />
     <ClCompile Include="Registry\Register_EnemyControllerFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_FactionFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_HitShapeFunctionality.cpp" />
+	<ClCompile Include="Registry\Register_HitShapeSpawnerFunctionality.cpp" />
     <ClCompile Include="Registry\Register_ImpulseFunctionality.cpp" />
+	<ClCompile Include="Registry\Register_LevelDenizenFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_LevelFunctionality.cpp" />
     <ClCompile Include="Registry\Register_LevelPortalFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_MeleeWeaponFunctionality.cpp" />
     <ClCompile Include="Registry\Register_MeleeWeaponUserFunctionality.cpp" />
     <ClCompile Include="Registry\Register_MovementInputFunctionality.cpp" />
     <ClCompile Include="Registry\Register_OwnerFunctionality.cpp" />
@@ -226,6 +230,8 @@
     <ClCompile Include="Registry\Register_SpriteRenderingFunctionality.cpp" />
     <ClCompile Include="Registry\Register_StaticGeometryFunctionality.cpp" />
     <ClCompile Include="Registry\Register_TargetFunctionality.cpp" />
+	<ClCompile Include="Registry\Register_TimerFunctionality.cpp" />
+	<ClCompile Include="Registry\Register_TimeToLiveFunctionality.cpp" />
     <ClCompile Include="Registry\Register_TransformFunctionality.cpp" />
     <ClCompile Include="Registry\Registry.cpp" />
   </ItemGroup>
@@ -250,9 +256,13 @@
     <ClInclude Include="Registry\Register_CollisionFunctionality.h" />
     <ClInclude Include="Registry\Register_DefaultMovementFunctionality.h" />
     <ClInclude Include="Registry\Register_EnemyControllerFunctionality.h" />
+    <ClInclude Include="Registry\Register_FactionFunctionality.h" />
+    <ClInclude Include="Registry\Register_HitShapeFunctionality.h" />
+	<ClInclude Include="Registry\Register_HitShapeSpawnerFunctionality.h" />
     <ClInclude Include="Registry\Register_ImpulseFunctionality.h" />
+	<ClInclude Include="Registry\Register_LevelDenizenFunctionality.h" />
+    <ClInclude Include="Registry\Register_LevelFunctionality.h" />
     <ClInclude Include="Registry\Register_LevelPortalFunctionality.h" />
-    <ClInclude Include="Registry\Register_MeleeWeaponFunctionality.h" />
     <ClInclude Include="Registry\Register_MeleeWeaponUserFunctionality.h" />
     <ClInclude Include="Registry\Register_MovementInputFunctionality.h" />
     <ClInclude Include="Registry\Register_OwnerFunctionality.h" />
@@ -262,6 +272,8 @@
     <ClInclude Include="Registry\Register_SpriteRenderingFunctionality.h" />
     <ClInclude Include="Registry\Register_StaticGeometryFunctionality.h" />
     <ClInclude Include="Registry\Register_TargetFunctionality.h" />
+	<ClInclude Include="Registry\Register_TimerFunctionality.h" />
+	<ClInclude Include="Registry\Register_TimeToLiveFunctionality.h" />
     <ClInclude Include="Registry\Register_TransformFunctionality.h" />
     <ClInclude Include="Registry\Registry.h" />
   </ItemGroup>

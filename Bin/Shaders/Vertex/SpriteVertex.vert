@@ -10,6 +10,8 @@ out vec2 vertexOrigin;
 out vec4 vertexColor;
 out float vertexRotation;
 
+//!#include "Common.glsl"
+
 void main() 
 {
   gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0);

@@ -2,6 +2,7 @@
 #include "ImGuiLogger.h"
 #include "Imgui/ImguiInclude.h"
 #include <cctype>
+#include <iostream>
 
 ImGuiLogger::ImGuiLogger()
 	: mySubscriber(ERoutineId::Logic, BindHelper(&ImGuiLogger::OnLogMessage, this))
@@ -18,27 +19,46 @@ void ImGuiLogger::Debug()
 
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1)); // Tighten spacing
 
-	for (auto&& LogMessage : myLogMessages)
+
+	for (auto&& logMessage : myLogMessages)
 	{
 		//skip filtered messages
 		if (!myFilterText.empty())
 		{
 			auto searchResult = std::search(
-				LogMessage.Message.begin(), LogMessage.Message.end(),
+				logMessage.Message.begin(), logMessage.Message.end(),
 				myFilterText.begin(), myFilterText.end(),
 				[](char a, char b) {return std::tolower(a) == std::tolower(b); }
 			);
 
-			if (searchResult == LogMessage.Message.end())
+			if (searchResult == logMessage.Message.end())
 			{
 				continue;
 			}
 		}
 
-		ImGui::PushStyleColor(ImGuiCol_Text, LogMessage.Color);
-		ImGui::TextUnformatted(LogMessage.Message.c_str());
+		ImGui::PushStyleColor(ImGuiCol_Text, logMessage.Color);
+		ImGui::TextUnformatted(logMessage.Message.c_str());
 		ImGui::PopStyleColor();
 	}
+
+	const bool hasScrolled = myPreviousScrollY && ImGui::GetScrollY() != myPreviousScrollY;
+	
+	const bool shouldScrollToBottom = (!hasScrolled && myIsAtBottom);
+	if (shouldScrollToBottom)
+	{
+		ImGui::SetScrollY(ImGui::GetScrollMaxY());
+		myPreviousScrollY = ImGui::GetScrollMaxY();
+	}
+	else
+	{
+		myPreviousScrollY = ImGui::GetScrollY();
+	}
+
+	ImGuiWindow* window = ImGui::GetCurrentWindow();
+
+
+	myIsAtBottom = ImGui::GetScrollMaxY() == ImGui::GetScrollY() || ImGui::GetScrollMaxY() == window->ScrollTarget.y;
 
 	ImGui::PopStyleVar();
 

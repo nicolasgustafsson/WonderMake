@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "BezierCurve.h"
+#include "Math.h"
 
 BezierCurve::BezierCurve(const SVector2f aStart, const SVector2f aEnd, const SVector2f aFirstControl, const SVector2f aSecondControl) noexcept
 	: myStart(aStart), myEnd(aEnd), myFirstControl(aFirstControl), mySecondControl(aSecondControl)
@@ -14,10 +15,13 @@ SVector2f BezierCurve::GetLocationAt(const f32 aProgress) const noexcept
 		* std::powf(aProgress, 2.0f) * mySecondControl + std::powf(aProgress, 3.0f) * myEnd;
 }
 
-SVector2f BezierCurve::GetConstantLocationAt(const f32 aProgress) const
+SVector2f BezierCurve::GetConstantLocationAt(f32 aProgress) const
 {
 	if (!myConstantLengthProgressList)
 		EvaluatePoints();
+
+	if (aProgress <= 0.0f || aProgress >= 1.0f)
+		return GetLocationAt(aProgress);
 
 	auto firstLocation = std::lower_bound(myConstantLengthProgressList->begin(), myConstantLengthProgressList->end(), aProgress,
 		[](SCachedBezierConstantLocation& first, const f32 second )
@@ -39,13 +43,42 @@ SVector2f BezierCurve::GetConstantLocationAt(const f32 aProgress) const
 	return ((*firstLocation).Location) + progressBetweenLocations * locationDelta;
 }
 
+void BezierCurve::Rotate(const f32 aRotation)
+{
+	myStart.Rotate(aRotation);
+	myEnd.Rotate(aRotation);
+	myFirstControl.Rotate(aRotation);
+	mySecondControl.Rotate(aRotation);
+
+	myConstantLengthProgressList.reset();
+}
+
+void BezierCurve::Offset(const SVector2f aOffset)
+{
+	myStart += aOffset;
+	myEnd += aOffset;
+	myFirstControl += aOffset;
+	mySecondControl += aOffset;
+
+	myConstantLengthProgressList.reset();
+}
+
+float BezierCurve::GetLength() const noexcept
+{
+	return (myStart.DistanceTo(myEnd));
+}
+
 void BezierCurve::EvaluatePoints(const i32 aPointCount) const
 {
 	f32 length = 0.f;
 	SVector2f previousLocation = myStart;
 
 	myConstantLengthProgressList.emplace();
-	myConstantLengthProgressList->reserve(aPointCount);
+	myConstantLengthProgressList->reserve(aPointCount + 2);
+
+	const SVector2f preLocation = GetLocationAt(-0.5f);
+
+	myConstantLengthProgressList->push_back({ -0.5f, preLocation });
 
 	for (i32 i = 0; i < aPointCount; i++)
 	{
@@ -59,6 +92,11 @@ void BezierCurve::EvaluatePoints(const i32 aPointCount) const
 
 		myConstantLengthProgressList->push_back({ length, location });
 	}
+
+
+	const SVector2f postLocation = GetLocationAt(1.5f);
+
+	myConstantLengthProgressList->push_back({ 1.5f, postLocation });
 
 	for (i32 i = 0; i < aPointCount; i++)
 	{

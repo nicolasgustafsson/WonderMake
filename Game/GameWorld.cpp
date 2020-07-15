@@ -9,37 +9,55 @@
 
 #include "Designers/LevelDesigner/LevelDesigner.h"
 #include "Camera/CameraFunctionality.h"
+#include "Levels/LevelFunctionality.h"
 
 GameWorld::GameWorld()
 	:mySubscriber(ERoutineId::Logic, BindHelper(&GameWorld::OnPlayerDeath, this))
 {
 	EnableTick();
 
-	SetupPlayer();
+	Object player = SetupPlayer();
 
-	RestartLevel();
+	LevelFunctionality& level = RestartLevel();
+
+	level.AddDenizen(std::move(player));
 }
 
-void GameWorld::RestartLevel()
+LevelFunctionality& GameWorld::RestartLevel()
 {
 	SystemPtr<LevelDesigner> levelDesigner;
+	
+	Object newLevel;
 
-	myLevel = levelDesigner->DesignLevel();
+	LevelFunctionality& levelFunctionality = newLevel.Add<LevelFunctionality>();
+	levelDesigner->DesignLevel(levelFunctionality);
 
-	myPlayerTransform->SetPosition(myLevel.StartPosition);
+	if (myCurrentLevelFunctionality)
+		myCurrentLevelFunctionality->TransferToNewLevel(levelFunctionality);
+
+	myPlayerTransform->SetPosition(levelFunctionality.GetStartPosition());
+	
+	myLevel = std::move(newLevel);
+
+	myCurrentLevelFunctionality = &levelFunctionality;
+
+	return levelFunctionality;
 }
 
-void GameWorld::SetupPlayer()
+Object GameWorld::SetupPlayer()
 {
-	myPlayerTransform = &myPlayer.Add<TransformFunctionality>();
-	myPlayer.Add<PlayerControllerFunctionality>();
-	myPlayer.Add<DefaultMovementFunctionality>();
+	Object player;
+	myPlayerTransform = &player.Add<TransformFunctionality>();
+	player.Add<PlayerControllerFunctionality>();
+	player.Add<DefaultMovementFunctionality>();
 
-	auto& playerSprite = myPlayer.Add<SpriteRenderingFunctionality>();
+	auto& playerSprite = player.Add<SpriteRenderingFunctionality>();
 	playerSprite.SetTexture(std::filesystem::current_path() / "Textures/player.png");
 
 	auto& camera = myCameraController.Add<CameraFunctionality>();
 	camera.SetTarget(myPlayerTransform);
+
+	return player;
 }
 
 void GameWorld::OnPlayerDeath(const SPlayerDiedMessage&)

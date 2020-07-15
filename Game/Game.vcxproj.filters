@@ -12,15 +12,11 @@
     <ClCompile Include="Weapons\WeaponProperty\WeaponProperty.cpp" />
     <ClCompile Include="Weapons\MeleeWeaponUserFunctionality.cpp" />
     <ClCompile Include="Weapons\MeleeWeapon.cpp" />
-    <ClCompile Include="Weapons\MeleeWeaponFunctionality.cpp" />
     <ClCompile Include="Actions\ActionFunctionality.cpp" />
-    <ClCompile Include="Weapons\WeaponSwingAction.cpp" />
     <ClCompile Include="Designers\MeleeWeaponDesigner\MeleeWeaponDesigner.cpp" />
     <ClCompile Include="Designers\LevelDesigner\LevelDesigner.cpp" />
     <ClCompile Include="Character\CharacterFunctionality.cpp" />
-    <ClCompile Include="Levels\LevelPortalFunctionality.cpp" />
     <ClCompile Include="Movement\SpinnerFunctionality.cpp" />
-    <ClCompile Include="Enemy\EnemyActions\TackleAction.cpp" />
     <ClCompile Include="Physics\StaticGeometryFunctionality.cpp" />
     <ClCompile Include="Camera\CameraFunctionality.cpp" />
     <ClCompile Include="Designers\LevelDesigner\Geometry\Polygon.cpp" />
@@ -32,13 +28,23 @@
     <ClCompile Include="Character\Buffs\Buff.cpp" />
     <ClCompile Include="Designers\BuffDesigner\BuffDesigner.cpp" />
     <ClCompile Include="Character\Buffs\BuffProperties.cpp" />
-    <ClCompile Include="Levels\BuffGiver\BuffGiverFunctionality.cpp" />
-    <ClCompile Include="Levels\BuffGiver\BuffGiverRenderObject.cpp" />
     <ClCompile Include="Character\Buffs\LifetimeBuffProperty\BuffLifetimeProperty.cpp" />
     <ClCompile Include="Character\Buffs\TimedTickBuffProperty\BuffTimedTickProperty.cpp" />
     <ClCompile Include="Character\Buffs\StatChangeProperty\BuffStatChangeProperty.cpp" />
     <ClCompile Include="Character\Effects\CharacterEffect.cpp" />
     <ClCompile Include="Designers\EffectDesigner\EffectDesigner.cpp" />
+    <ClCompile Include="Levels\BuffGiver\BuffGiverFunctionality.cpp" />
+    <ClCompile Include="Levels\BuffGiver\BuffGiverRenderObject.cpp" />
+    <ClCompile Include="Levels\LevelPortalFunctionality.cpp" />
+    <ClCompile Include="Levels\LevelFunctionality.cpp" />
+    <ClCompile Include="Levels\LevelDenizenFunctionality.cpp" />
+    <ClCompile Include="UtilityFunctionalities\TimeToLiveFunctionality.cpp" />
+    <ClCompile Include="HitShapes\HitShapeFunctionality.cpp" />
+    <ClCompile Include="Enemy\EnemyActions\PunchAction.cpp" />
+    <ClCompile Include="HitShapes\HitShapeSpawnerFunctionality.cpp" />
+    <ClCompile Include="HitShapes\HitShapeRenderObject.cpp" />
+    <ClCompile Include="UtilityFunctionalities\FactionFunctionality.cpp" />
+    <ClCompile Include="Weapons\WeaponSwingHitShapeAction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWorld.h" />
@@ -51,19 +57,14 @@
     <ClInclude Include="Weapons\WeaponProperty\WeaponProperty.h" />
     <ClInclude Include="Weapons\MeleeWeaponUserFunctionality.h" />
     <ClInclude Include="Weapons\MeleeWeapon.h" />
-    <ClInclude Include="Weapons\MeleeWeaponFunctionality.h" />
     <ClInclude Include="Weapons\WeaponSwing.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Actions\ActionFunctionality.h" />
     <ClInclude Include="Actions\Action.h" />
-    <ClInclude Include="Weapons\WeaponSwingAction.h" />
     <ClInclude Include="Designers\MeleeWeaponDesigner\MeleeWeaponDesigner.h" />
     <ClInclude Include="Designers\LevelDesigner\LevelDesigner.h" />
-    <ClInclude Include="Levels\Level.h" />
     <ClInclude Include="Character\CharacterFunctionality.h" />
-    <ClInclude Include="Levels\LevelPortalFunctionality.h" />
     <ClInclude Include="Movement\SpinnerFunctionality.h" />
-    <ClInclude Include="Enemy\EnemyActions\TackleAction.h" />
     <ClInclude Include="Physics\StaticGeometryFunctionality.h" />
     <ClInclude Include="Camera\CameraFunctionality.h" />
     <ClInclude Include="Designers\LevelDesigner\Geometry\Polygon.h" />
@@ -76,13 +77,24 @@
     <ClInclude Include="Character\Buffs\Buff.h" />
     <ClInclude Include="Designers\BuffDesigner\BuffDesigner.h" />
     <ClInclude Include="Character\Buffs\BuffProperties.h" />
-    <ClInclude Include="Levels\BuffGiver\BuffGiverFunctionality.h" />
-    <ClInclude Include="Levels\BuffGiver\BuffGiverRenderObject.h" />
     <ClInclude Include="Character\Buffs\LifetimeBuffProperty\BuffLifetimeProperty.h" />
     <ClInclude Include="Character\Buffs\TimedTickBuffProperty\BuffTimedTickProperty.h" />
     <ClInclude Include="Character\Buffs\StatChangeProperty\BuffStatChangeProperty.h" />
     <ClInclude Include="Character\Effects\CharacterEffect.h" />
     <ClInclude Include="Designers\EffectDesigner\EffectDesigner.h" />
+    <ClInclude Include="Levels\BuffGiver\BuffGiverFunctionality.h" />
+    <ClInclude Include="Levels\BuffGiver\BuffGiverRenderObject.h" />
+    <ClInclude Include="Levels\LevelPortalFunctionality.h" />
+    <ClInclude Include="Levels\LevelFunctionality.h" />
+    <ClInclude Include="Levels\LevelDenizenFunctionality.h" />
+    <ClInclude Include="UtilityFunctionalities\TimeToLiveFunctionality.h" />
+    <ClInclude Include="HitShapes\HitShapeFunctionality.h" />
+    <ClInclude Include="Enemy\EnemyActions\PunchAction.h" />
+    <ClInclude Include="HitShapes\HitShapeSpawnerFunctionality.h" />
+    <ClInclude Include="HitShapes\HitShapeRenderObject.h" />
+    <ClInclude Include="UtilityFunctionalities\FactionFunctionality.h" />
+    <ClInclude Include="Weapons\WeaponSwingHitShapeAction.h" />
+    <ClInclude Include="Utility\Constants.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Character\Buffs\BuffDesign.md" />
@@ -90,5 +102,6 @@
     <None Include="Designers\DesignerPhilosophy.md" />
     <None Include="Character\Effects\CharacterEffectPhilosophy.md" />
     <None Include="Designers\EffectDesigner\EffectDesignerPhilosophy.md" />
+    <None Include="HitShapes\Hitshapes.md" />
   </ItemGroup>
 </Project>

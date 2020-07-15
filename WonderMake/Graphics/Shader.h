@@ -7,6 +7,7 @@
 
 #include <glad/glad.h>
 #include "OpenGLFacade.h"
+#include "Graphics/ShaderParser.h"
 
 enum class EShaderType
 {
@@ -21,16 +22,17 @@ class Shader
 	, private NonCopyable
 {
 public:
-	Shader(const std::filesystem::path Path)
+	Shader(const std::filesystem::path& aPath)
 	{
 		SystemPtr<OpenGLFacade> openGL;
-		std::ifstream file{ Path };
+		
+		std::optional<std::string> shaderString = ShaderParser::ParseShader(aPath);
 
-		const size_t fileSize = std::filesystem::file_size(Path);
-
-		std::string shaderString(fileSize, ' ');
-
-		file.read(shaderString.data(), fileSize);
+		if (!shaderString)
+		{
+			WmLog(TagError, "Shader preprocessing failed: ", aPath.string());
+			return;
+		}
 
 		if constexpr (ShaderType == EShaderType::Vertex)
 			myShaderHandle = openGL->CreateShader(GL_VERTEX_SHADER);
@@ -39,7 +41,7 @@ public:
 		else if constexpr (ShaderType == EShaderType::Geometry)
 			myShaderHandle = openGL->CreateShader(GL_GEOMETRY_SHADER);
 
-		const char* raw = shaderString.data();
+		const char* raw = shaderString->data();
 		openGL->SetShaderSource(myShaderHandle, raw);
 		openGL->CompileShader(myShaderHandle);
 

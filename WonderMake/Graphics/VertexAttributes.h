@@ -8,7 +8,9 @@ enum class EVertexAttribute
 	Scale,
 	Rotation,
 	Origin,
-	TexCoord
+	TexCoord,
+	OneDimensionalUV,
+	Progress
 };
 
 template<EVertexAttribute TVertexAttribute>
@@ -25,5 +27,9 @@ static auto constexpr GetValueFromAttribute()
 	else if constexpr (TVertexAttribute == EVertexAttribute::Origin)
 		return SVector2f();
 	else if constexpr (TVertexAttribute == EVertexAttribute::Rotation)
+		return 0.f;
+	else if constexpr (TVertexAttribute == EVertexAttribute::OneDimensionalUV)
+		return 0.f;
+	else if constexpr (TVertexAttribute == EVertexAttribute::Progress)
 		return 0.f;
 }

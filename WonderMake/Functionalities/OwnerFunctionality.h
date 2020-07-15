@@ -10,7 +10,9 @@ public:
 
 	Object& GetOwner() const;
 
+	virtual void OnOwnerMoved(Object& aNewAddress) noexcept override;
+
 private:
-	Object& myOwner;
+	Object* myOwner = nullptr;
 };
 

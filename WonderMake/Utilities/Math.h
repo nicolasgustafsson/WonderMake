@@ -20,14 +20,14 @@ namespace WmMath
 	}
 
 	template <class T> requires std::totally_ordered<T>
-		T Clamp(const T aMin, const T aMax, const T aValue)
-		{
-			if (aValue < aMin)
-				return aMin;
+	T Clamp(const T aMin, const T aMax, const T aValue)
+	{
+		if (aValue < aMin)
+			return aMin;
 
-			if (aValue > aMax)
-				return aMax;
+		if (aValue > aMax)
+			return aMax;
 
-			return aValue;
-		}
+		return aValue;
+	}
 }

@@ -1,4 +1,6 @@
 
+#include "Vector.h"
+
 template<typename TRep, u32 TSize>
 template<typename ...TArgs, typename>
 constexpr SVector<TRep, TSize>::SVector(TArgs... aArgs) noexcept

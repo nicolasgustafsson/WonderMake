@@ -27,5 +27,5 @@ private:
 
 	const ERoutineId myRoutineId;
 	MessageSubscriber mySubscriber;
-	std::vector<Closure> myProcedures;
+	plf::colony<Closure> myProcedures;
 };

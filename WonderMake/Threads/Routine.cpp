@@ -19,7 +19,7 @@ void Routine::Run()
 
 void Routine::AddProcedure(Closure aClosure)
 {
-	myProcedures.push_back(aClosure);
+	myProcedures.insert(aClosure);
 }
 
 void Routine::Procedure() 

@@ -2,6 +2,7 @@
 #include "Polygon.h"
 #include "Randomizer/Randomizer.h"
 #include <Utilities/Rotation.h>
+#include "Physics/Navmesh.h"
 
 float sign(SVector2f p1, SVector2f p2, SVector2f p3)
 {
@@ -77,33 +78,20 @@ namespace Geometry
 		return circumference;
 	}
 
-	void Polygon::StartTriangulate()
+	STriangle Polygon::TriangulateStep(Polygon& aPolygon, PolygonLoopingPointOperator& aOperator) const
 	{
-		myTriangulationThing = new Polygon(*this);
-
-		myTriangulationThingOp.emplace(myTriangulationThing->FirstPoint());
-	}
-
-	void Polygon::TriangulateStep()
-	{
-		if (!myTriangulationThing)
-			return;
-
-		PolygonLoopingPointOperator& pointOperator = *myTriangulationThingOp;
+		PolygonLoopingPointOperator& pointOperator = aOperator;
 		STriangle triangle = pointOperator.GetTriangle();
 
-
-		if (myTriangulationThing->myPoints.size() == 3)
+		if (aPolygon.myPoints.size() == 3)
 		{
 			WmDrawDebugLine(triangle.First, triangle.Second, SColor::Green, 100.f);
 			WmDrawDebugLine(triangle.Second, triangle.Third, SColor::Green, 100.f);
 			WmDrawDebugLine(triangle.First, triangle.Third, SColor::Green, 100.f);
 
-			delete myTriangulationThing;
+			pointOperator.RemovePoint();
 
-			myTriangulationThing = nullptr;
-
-			return;
+			return triangle;
 		}
 
 		auto nextSide = pointOperator.GetNextSide();
@@ -129,8 +117,7 @@ namespace Geometry
 		if (angle < 0.f)
 		{
 			++pointOperator;
-			TriangulateStep();
-			return;
+			return TriangulateStep(aPolygon, pointOperator);
 		}
 
 		while (sideLooper != previousSide)
@@ -138,8 +125,7 @@ namespace Geometry
 			if (Intersects(tangentFirst, tangentSecond, *sideLooper.GetStart(), *sideLooper.GetEnd()))
 			{
 				++pointOperator;
-				TriangulateStep();
-				return;
+				return TriangulateStep(aPolygon, pointOperator);
 			}
 
 			++sideLooper;
@@ -156,46 +142,35 @@ namespace Geometry
 			if (PointInTriangle(*loopingPoint, triangle.First, triangle.Second, triangle.Third))
 			{
 				++pointOperator;
-				TriangulateStep();
-				return;
+				return TriangulateStep(aPolygon, pointOperator);
 			}
 
 			++loopingPoint;
 		}
-
-		myLatestTriangle = triangle;
 
 		WmDrawDebugLine(triangle.First, triangle.Second, SColor::Green, 100.f);
 		WmDrawDebugLine(triangle.Second, triangle.Third, SColor::Green, 100.f);
 		WmDrawDebugLine(triangle.First, triangle.Third, SColor::Green, 100.f);
 
 		pointOperator.RemovePoint();
+
+		return triangle;
 	}
 
-	void Polygon::Draw()
+	Navmesh Polygon::GenerateNavmesh() const
 	{
+		Navmesh navmesh;
 
-		if (!myTriangulationThing)
-			return;
+		Polygon copy = *this;
 
-		auto side = myTriangulationThingOp->GetNextSide();
+		auto firstPoint = copy.FirstPoint();
 
-		auto loopingSide = side;
+		while(copy.myPoints.size() > 2)
+			navmesh.AddTriangle(TriangulateStep(copy, firstPoint));
 
-		SColor color = SColor{ 1.f, 0.f, 1.f, 1.f };
-		WmDrawDebugLine(*loopingSide.GetStart(), *loopingSide.GetEnd(), color, 0.f);
-
-		++loopingSide;
-		while (loopingSide != side)
-		{
-			WmDrawDebugLine(*loopingSide.GetStart(), *loopingSide.GetEnd(), color, 0.f);
-			++loopingSide;
-		}
-
-		WmDrawDebugLine(myLatestTriangle.First, myLatestTriangle.Second, SColor::Red, 0.f);
-		WmDrawDebugLine(myLatestTriangle.Second, myLatestTriangle.Third, SColor::Red, 0.f);
-		WmDrawDebugLine(myLatestTriangle.First, myLatestTriangle.Third, SColor::Red, 0.f);
+		return navmesh;
 	}
+
 
 	bool Polygon::Intersects(const SVector2f aFirstPoint, const SVector2f aSecondPoint, const SVector2f aThirdPoint, const SVector2f aFourthPoint) const
 	{

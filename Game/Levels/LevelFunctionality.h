@@ -1,6 +1,8 @@
 #pragma once
 #include "Functionalities/Functionality.h"
 
+#include "Physics/Navmesh/NavmeshFunctionality.h"
+
 class LevelDenizenFunctionality;
 
 //[Nicos]: This kind of Level-Leveldenizen structure can probably be generalized into a more generic architecture of using some kind of object container functionality in the future.
@@ -26,7 +28,9 @@ struct SLevelComponent : public SComponent
 
 class LevelFunctionality : public Functionality<
 	LevelFunctionality,
-	Policy::Set<Policy::Add<SLevelComponent, Policy::EPermission::Write>>>
+	Policy::Set<
+	Policy::Add<SLevelComponent, Policy::EPermission::Write>,
+	Policy::Add<NavmeshFunctionality, Policy::EPermission::Write>>>
 {
 public:
 	LevelFunctionality(Object& aOwner);

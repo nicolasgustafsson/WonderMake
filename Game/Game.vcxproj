@@ -228,6 +228,9 @@
     <ClInclude Include="Character\Buffs\StatChangeProperty\BuffStatChangeProperty.h" />
     <ClInclude Include="Character\Buffs\TimedTickBuffProperty\BuffTimedTickProperty.h" />
     <ClInclude Include="Designers\EffectDesigner\EffectDesigner.h" />
+    <ClInclude Include="Physics\Navmesh\NavmeshFunctionality.h" />
+    <ClInclude Include="Physics\Navmesh\NavmeshRenderObject.h" />
+    <ClInclude Include="Physics\Navmesh\Navmesh.h" />
     <ClInclude Include="UtilityFunctionalities\FactionFunctionality.h" />
     <ClInclude Include="HitShapes\HitShapeRenderObject.h" />
     <ClInclude Include="HitShapes\HitShapeSpawnerFunctionality.h" />
@@ -277,6 +280,9 @@
     <ClCompile Include="Character\Buffs\StatChangeProperty\BuffStatChangeProperty.cpp" />
     <ClCompile Include="Character\Buffs\TimedTickBuffProperty\BuffTimedTickProperty.cpp" />
     <ClCompile Include="Designers\EffectDesigner\EffectDesigner.cpp" />
+    <ClCompile Include="Physics\Navmesh\NavmeshFunctionality.cpp" />
+    <ClCompile Include="Physics\Navmesh\NavmeshRenderObject.cpp" />
+    <ClCompile Include="Physics\Navmesh\Navmesh.cpp" />
     <ClCompile Include="UtilityFunctionalities\FactionFunctionality.cpp" />
     <ClCompile Include="HitShapes\HitShapeRenderObject.cpp" />
     <ClCompile Include="HitShapes\HitShapeSpawnerFunctionality.cpp" />

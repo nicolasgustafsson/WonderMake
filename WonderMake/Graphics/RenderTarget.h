@@ -5,7 +5,7 @@ struct SRenderTargetSettings
 {
 	SVector2u Size;
 
-	bool UseDepthStencilBuffer = false;
+	bool UseDepthStencilBuffer = true;
 };
 
 class RenderTarget : NonCopyable

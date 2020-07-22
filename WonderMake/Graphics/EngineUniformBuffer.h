@@ -55,6 +55,8 @@ struct SEngineUniformBufferData
 	SPaddedMatrix33 ViewMatrix;
 	SPaddedMatrix33 ViewProjectionMatrix;
 
+	SVector2f Resolution;
+
 	float Time = 0;
 };
 

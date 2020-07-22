@@ -6,7 +6,6 @@ in float progress;
 in vec2 coord;
 
 //!#include "Common.glsl"
-//!#include "SimplexNoise.glsl"
 
 uniform vec2 Size;
 uniform float AnticipationProgress;

@@ -21,6 +21,7 @@
     <ClCompile Include="Registry\Register_LevelPortalFunctionality.cpp" />
     <ClCompile Include="Registry\Register_MeleeWeaponUserFunctionality.cpp" />
     <ClCompile Include="Registry\Register_MovementInputFunctionality.cpp" />
+    <ClCompile Include="Registry\Register_NavmeshFunctionality.cpp" />
     <ClCompile Include="Registry\Register_OwnerFunctionality.cpp" />
     <ClCompile Include="Registry\Register_PlayerControllerFunctionality.cpp" />
     <ClCompile Include="Registry\Register_SpinnerFunctionality.cpp" />
@@ -55,6 +56,7 @@
     <ClInclude Include="Registry\Register_LevelPortalFunctionality.h" />
     <ClInclude Include="Registry\Register_MeleeWeaponUserFunctionality.h" />
     <ClInclude Include="Registry\Register_MovementInputFunctionality.h" />
+    <ClInclude Include="Registry\Register_NavmeshFunctionality.h" />
     <ClInclude Include="Registry\Register_OwnerFunctionality.h" />
     <ClInclude Include="Registry\Register_PlayerControllerFunctionality.h" />
     <ClInclude Include="Registry\Register_SpinnerFunctionality.h" />

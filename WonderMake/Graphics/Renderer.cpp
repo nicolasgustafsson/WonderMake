@@ -25,15 +25,20 @@ MessageCallback([[maybe_unused]] GLenum source,
 }
 
 Renderer::Renderer() noexcept
-	: myRenderTarget({ {1600, 900}, false })
+	: myRenderTarget({ {1600, 900}, true })
 	, myCopyPass(std::filesystem::current_path() / "Shaders/Fragment/Copy.frag")
 	, Debugged("Renderer")
 {
 	myOpenGLInterface->Enable(GL_DEBUG_OUTPUT);
 	myOpenGLInterface->Enable(GL_BLEND);
 
+	myOpenGLInterface->Enable(GL_DEPTH_TEST);
+
+	glDepthFunc(GL_GEQUAL);
+	glClearDepth(-1000);
+
 	myOpenGLInterface->SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//myOpenGLInterface->SetBlendFunction(GL_SRC_ALPHA, GL_ONE); additive
+	//myOpenGLInterface->SetBlendFunction(GL_SRC_ALPHA, GL_ONE); //additive
 
 	myOpenGLInterface->SetDebugMessageCallback(MessageCallback);
 	myCameraPtr->SetViewportSize({1600, 900});
@@ -57,7 +62,7 @@ void Renderer::StartFrame()
 	myRenderTarget.BindAsTarget();
 
 	myOpenGLInterface->SetClearColor(ClearColor);
-	myOpenGLInterface->Clear(GL_COLOR_BUFFER_BIT);
+	myOpenGLInterface->Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Renderer::FinishFrame()
@@ -67,7 +72,7 @@ void Renderer::FinishFrame()
 	myOpenGLInterface->BindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	myOpenGLInterface->SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
-	myOpenGLInterface->Clear(GL_COLOR_BUFFER_BIT);
+	myOpenGLInterface->Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	if constexpr (!Constants::IsDebugging)
 	{

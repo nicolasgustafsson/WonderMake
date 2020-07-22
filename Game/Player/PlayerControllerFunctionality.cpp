@@ -34,6 +34,7 @@ void PlayerControllerFunctionality::Tick() noexcept
 	Action* currentAction = Get<ActionFunctionality>().GetCurrentAction();
 
 	const bool canMove = !(currentAction && currentAction->BlocksMovementInput());
+
 	if (canMove)
 		UpdateMovement();
 	else

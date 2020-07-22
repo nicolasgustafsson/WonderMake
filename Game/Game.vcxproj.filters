@@ -45,6 +45,9 @@
     <ClCompile Include="HitShapes\HitShapeRenderObject.cpp" />
     <ClCompile Include="UtilityFunctionalities\FactionFunctionality.cpp" />
     <ClCompile Include="Weapons\WeaponSwingHitShapeAction.cpp" />
+    <ClCompile Include="Physics\Navmesh\Navmesh.cpp" />
+    <ClCompile Include="Physics\Navmesh\NavmeshFunctionality.cpp" />
+    <ClCompile Include="Physics\Navmesh\NavmeshRenderObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWorld.h" />
@@ -95,6 +98,9 @@
     <ClInclude Include="UtilityFunctionalities\FactionFunctionality.h" />
     <ClInclude Include="Weapons\WeaponSwingHitShapeAction.h" />
     <ClInclude Include="Utility\Constants.h" />
+    <ClInclude Include="Physics\Navmesh\NavmeshFunctionality.h" />
+    <ClInclude Include="Physics\Navmesh\Navmesh.h" />
+    <ClInclude Include="Physics\Navmesh\NavmeshRenderObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Character\Buffs\BuffDesign.md" />

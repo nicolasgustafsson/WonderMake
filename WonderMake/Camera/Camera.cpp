@@ -34,6 +34,8 @@ void Camera::Update()
 	buffer.ProjectionMatrix = projectionMatrix;
 	buffer.ViewMatrix = viewMatrix;
 	buffer.ViewProjectionMatrix = viewProjectionMatrix;
+
+	buffer.Resolution = myViewportSize;
 }
 
 void Camera::Debug()

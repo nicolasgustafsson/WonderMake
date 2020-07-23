@@ -10,16 +10,16 @@ void Camera::Update()
 
 	auto viewInverse = myViewMatrix;
 
-	const SMatrix33f rotationMatrix = SMatrix33f::CreateRotateAroundZ(myRotation);
+	const SMatrix33f rotationMatrix = SMatrix33f::CreateRotationZ(myRotation);
 
 	viewInverse = rotationMatrix * viewInverse;
 
-	viewInverse.m11 *= myScale;
-	viewInverse.m12 *= myScale;
-	viewInverse.m22 *= myScale;
-	viewInverse.m21 *= myScale;
+	viewInverse[0][0] *= myScale;
+	viewInverse[1][0] *= myScale;
+	viewInverse[1][1] *= myScale;
+	viewInverse[0][1] *= myScale;
 
-	viewInverse.Inverse();
+	viewInverse.FastInverse();
 
 	auto& buffer = myEngineBufferPtr->GetBuffer();
 
@@ -49,11 +49,11 @@ void Camera::Debug()
 
 void Camera::SetViewportSize(const SVector2i aViewportSize) noexcept
 {
-	myProjectionMatrix.m11 = 2.0f / aViewportSize.X;
-	myProjectionMatrix.m22 = 2.0f / aViewportSize.Y;
+	myProjectionMatrix[0][0] = 2.0f / aViewportSize.X;
+	myProjectionMatrix[1][1] = 2.0f / aViewportSize.Y;
 
-	myProjectionMatrixInverse.m11 = aViewportSize.X / 2.0f;
-	myProjectionMatrixInverse.m22 = aViewportSize.Y / 2.0f;
+	myProjectionMatrixInverse[0][0] = aViewportSize.X / 2.0f;
+	myProjectionMatrixInverse[1][1] = aViewportSize.Y / 2.0f;
 	myViewportSize = { aViewportSize.X, aViewportSize.Y };
 }
 
@@ -61,14 +61,14 @@ SVector2f Camera::ConvertToWorldPosition(const SVector2f aWindowPosition) const 
 {
 	SMatrix33f view = myViewMatrix;
 
-	const SMatrix33f rotationMatrix = SMatrix33f::CreateRotateAroundZ(myRotation);
+	const SMatrix33f rotationMatrix = SMatrix33f::CreateRotationZ(myRotation);
 
 	view = rotationMatrix * myViewMatrix;
 
-	view.m11 /= myScale;
-	view.m12 /= myScale;
-	view.m22 /= myScale;
-	view.m21 /= myScale;
+	view[0][0] /= myScale;
+	view[1][0] /= myScale;
+	view[1][1] /= myScale;
+	view[0][1] /= myScale;
 
 	SVector2f offsetScreenPosition = aWindowPosition - myImguiWindowOffset;
 	offsetScreenPosition -= myViewportSize / 2.f;

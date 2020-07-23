@@ -59,9 +59,6 @@ constexpr static auto RepresentationPrecision = MathUtility::Pow<intmax_t>(10, s
 template<class TRep>
 using RadianRatio = std::ratio<static_cast<intmax_t>(std::numbers::pi_v<TRep> * 2 * RepresentationPrecision), RepresentationPrecision>;
 
-using RadianF32 = RadianRatio<f32>;
-using RadianF64 = RadianRatio<f64>;
-
 template<class TRep>
 using SRadian = SRotation<TRep, RadianRatio<TRep>>;
 

@@ -322,6 +322,7 @@
     <ClInclude Include="Object\ObjectImpulseRouter.h" />
     <ClInclude Include="Randomizer\Randomizer.h" />
     <ClInclude Include="Serialization\SerializationSystem.h" />
+    <ClInclude Include="Utilities\Matrix.h" />
     <ClInclude Include="Utilities\Rotation.h" />
     <ClInclude Include="Utilities\TimeKeeper.h" />
     <ClInclude Include="Utilities\MathUtility.h" />
@@ -380,7 +381,6 @@
     <ClInclude Include="Resources\ResourceSystem.h" />
     <ClInclude Include="Graphics\SpriteRenderObject.h" />
     <ClInclude Include="Graphics\UniformBuffer.h" />
-    <ClInclude Include="Utilities\Matrix33.h" />
     <ClInclude Include="Utilities\Platform.h" />
     <ClInclude Include="Utilities\plf_colony.h" />
     <ClInclude Include="Utilities\Singleton.h" />
@@ -401,7 +401,7 @@
     <None Include="imgui.ini" />
     <None Include="NodeGraph\Nodegraph.md" />
     <None Include="NodeGraph\SlotCustomization\SlotCustomization.md" />
-    <None Include="Utilities\Matrix33.inl" />
+    <None Include="Utilities\Matrix.inl" />
     <None Include="Utilities\Rotation.inl" />
     <None Include="Utilities\Vector.inl" />
   </ItemGroup>

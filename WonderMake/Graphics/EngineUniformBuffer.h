@@ -1,6 +1,6 @@
 #pragma once
 #include "UniformBuffer.h"
-#include "Utilities/Matrix33.h"
+#include "Utilities/Matrix.h"
 #include "System/System.h"
 #include "Message/MessageSubscriber.h"
 #include "Utilities/Debugging/Debugged.h"
@@ -9,19 +9,19 @@ struct SPaddedMatrix33
 {
 	SPaddedMatrix33& operator=(const SMatrix33f& aMatrix) noexcept
 	{
-		Data[0] = aMatrix.m11;
-		Data[1] = aMatrix.m12;
-		Data[2] = aMatrix.m13;
-		Data[3] = 0.f;// aMatrix.m11;
+		Data[0] = aMatrix[0][0];
+		Data[1] = aMatrix[1][0];
+		Data[2] = aMatrix[2][0];
+		Data[3] = 0.f;
 
-		Data[4] = aMatrix.m21;
-		Data[5] = aMatrix.m22;
-		Data[6] = aMatrix.m23;
+		Data[4] = aMatrix[0][1];
+		Data[5] = aMatrix[1][1];
+		Data[6] = aMatrix[2][1];
 		Data[7] = 0.f;
 
-		Data[8] = aMatrix.m31;
-		Data[9] = aMatrix.m32;
-		Data[10] = aMatrix.m33;
+		Data[8] = aMatrix[0][2];
+		Data[9] = aMatrix[1][2];
+		Data[10] = aMatrix[2][2];
 		Data[11] = 0.f;
 
 		return *this;

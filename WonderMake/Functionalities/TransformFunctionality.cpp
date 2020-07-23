@@ -70,7 +70,7 @@ void TransformFunctionality::Move(const SVector2f aMovement) noexcept
 	SMatrix33f matrix;
 
 	matrix.SetPosition(GetPosition());
-	matrix.Set2DRotation(GetRotation());
+	matrix.SetRotation2D(GetRotation());
 
 	return matrix;
 }

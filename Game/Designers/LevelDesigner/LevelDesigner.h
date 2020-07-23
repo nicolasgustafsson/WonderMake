@@ -46,9 +46,11 @@ struct SRoom
 };
 
 class LevelDesigner
-	: public System
+	: public System<>
 {
 public:
+	using Super::Super;
+
 	void DesignLevel(LevelFunctionality& aLevel);
 
 protected:
@@ -70,3 +72,5 @@ protected:
 
 	LevelFunctionality* myCurrentLevel;
 };
+
+REGISTER_SYSTEM(LevelDesigner);

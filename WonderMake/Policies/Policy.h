@@ -38,9 +38,13 @@ struct Policy final
 
 	public:
 		using Dependencies = std::tuple<ExtractDependency<TPolicies>...>;
+		using DependenciesRef = std::tuple<ExtractDependency<TPolicies>&...>;
 
 		template<template<typename> typename TExpectedType>
 		using ExtractDependencies = std::tuple<TExpectedType<ExtractDependency<TPolicies>>...>;
+
+		template<template<typename...> typename TPolicyContainer>
+		using ExtractPolicies = TPolicyContainer<TPolicies...>;
 
 		[[nodiscard]] inline static std::vector<Policy> GetPolicies();
 

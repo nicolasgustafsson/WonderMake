@@ -5,10 +5,10 @@
 #include "Utilities/TimeKeeper.h"
 
 class DebugLineDrawer
-	: public System
+	: public System<>
 {
 public:
-	DebugLineDrawer() noexcept;
+	DebugLineDrawer(Dependencies&& aDependencies) noexcept;
 
 	void Render();
 
@@ -21,3 +21,4 @@ private:
 	SystemPtr<TimeKeeper> myTimeKeeperPtr;
 };
 
+REGISTER_SYSTEM(DebugLineDrawer);

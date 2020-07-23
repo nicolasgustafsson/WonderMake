@@ -62,3 +62,4 @@ private:
 };
 
 REGISTER_COMPONENT(SCharacterStatsComponent);
+REGISTER_FUNCTIONALITY(CharacterStatsFunctionality);

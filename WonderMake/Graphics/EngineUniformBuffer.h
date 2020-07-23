@@ -58,16 +58,22 @@ struct SEngineUniformBufferData
 	float Time = 0;
 };
 
+class Window;
+
 class EngineUniformBuffer 
 	: public UniformBuffer<SEngineUniformBufferData>
-	, public System
+	, public System<
+		Policy::Set<
+			Policy::Add<Window, Policy::EPermission::Write>,
+			Policy::Add<OpenGLFacade, Policy::EPermission::Write>>>
 	, public Debugged
 	
 {
 public:
-	EngineUniformBuffer();
+	EngineUniformBuffer(Dependencies&& aDependencies);
 
 private:
 	virtual void Debug() override;
 };
 
+REGISTER_SYSTEM(EngineUniformBuffer);

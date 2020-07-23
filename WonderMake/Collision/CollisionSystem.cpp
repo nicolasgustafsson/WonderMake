@@ -4,7 +4,8 @@
 #include "CollisionFunctionality.h"
 #include "Collision/Colliders.h"
 
-CollisionSystem::CollisionSystem() noexcept
+CollisionSystem::CollisionSystem(Dependencies&& aDependencies) noexcept
+	: Super(std::move(aDependencies))
 {
 	EnableTick();
 }

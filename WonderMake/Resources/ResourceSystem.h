@@ -11,13 +11,14 @@
 #include <mutex>
 #include <unordered_map>
 #include "Message/MessageTypes.h"
+#include "Message/MessageSubscriber.h"
 
 template<typename TResource>
 class ResourceSystem
-	: public System
+	: public System<>
 {
 public:
-	ResourceSystem();
+	ResourceSystem(Dependencies&& aDependencies);
 	ResourceProxy<TResource> GetResource(const std::filesystem::path& aPath);
 
 	template<typename TJob>
@@ -37,6 +38,8 @@ protected:
 	std::unordered_map<std::string, std::weak_ptr<SResource<TResource>>> myResources;
 	std::unordered_map<std::string, std::shared_ptr<CreateResource<TResource>>> myCreateResourceJobs;
 };
+
+#define REGISTER_RESOURCE_SYSTEM(aResource) _REGISTER_SYSTEM_IMPL(ResourceSystem<aResource>, aResource)
 
 template<typename TResource>
 void ResourceSystem<TResource>::OnFileChange(const SFileChangedMessage& aFileChangedMessage)
@@ -75,8 +78,10 @@ void ResourceSystem<TResource>::OnFileChange(const SFileChangedMessage& aFileCha
 }
 
 template<typename TResource>
-ResourceSystem<TResource>::ResourceSystem()
-	:mySubscriber(ERoutineId::Logic, BindHelper(&ResourceSystem<TResource>::OnFileChange, this)) { }
+ResourceSystem<TResource>::ResourceSystem(Dependencies&& aDependencies)
+	: Super(std::move(aDependencies))
+	, mySubscriber(ERoutineId::Logic, BindHelper(&ResourceSystem<TResource>::OnFileChange, this))
+{}
 
 template<typename TResource>
 ResourceProxy<TResource> ResourceSystem<TResource>::GetResource(const std::filesystem::path& aPath)

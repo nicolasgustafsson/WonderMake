@@ -4,9 +4,11 @@
 
 template<typename TData>
 class ComponentSystem
-	: public System
+	: public System<>
 {
 public:
+	using Super::Super;
+
 	TData& AddComponent();
 	void RemoveComponent(TData& aComponent);
 
@@ -15,6 +17,8 @@ public:
 private:
 	plf::colony<TData> myData;
 };
+
+#define REGISTER_COMPONENT_SYSTEM(aComponent) _REGISTER_SYSTEM_IMPL(ComponentSystem<aComponent>, aComponent)
 
 template<typename TData>
 bool ComponentSystem<TData>::IsEmpty() const

@@ -1,14 +1,16 @@
 #pragma once
 #include <System/System.h>
 
+class GlfwFacade;
 struct GLFWwindow;
 
-class Window : public System
+class Window
+	: public System<
+		Policy::Set<
+			Policy::Add<GlfwFacade, Policy::EPermission::Write>>>
 {
 public:
-	Window();
-
-	~Window();
+	Window(Dependencies&& aDependencies);
 
 	void Update();
 
@@ -17,3 +19,4 @@ public:
 	GLFWwindow* myGlfwWindow = nullptr;
 };
 
+REGISTER_SYSTEM(Window);

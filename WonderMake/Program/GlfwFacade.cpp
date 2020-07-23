@@ -3,7 +3,8 @@
 #include "GLFW/glfw3.h"
 #include <glad/glad.h>
 
-void GlfwFacade::Init()
+GlfwFacade::GlfwFacade(Dependencies&& aDependencies)
+	: Super(std::move(aDependencies))
 {
 	glfwInit();
 }

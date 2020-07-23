@@ -6,11 +6,13 @@
 #include "InputItems.h"
 
 class InputSystem
-	: public System
+	: public System<>
 	, public Debugged
 {
 public:
-	InputSystem() : Debugged("Input") {}
+	InputSystem(Dependencies&& aDependencies)
+		: Super(std::move(aDependencies))
+		, Debugged("Input") {}
 	void Update() noexcept;
 
 	void UpdateKeyboard() noexcept;
@@ -47,3 +49,4 @@ private:
 	SystemPtr<Window> myWindowSystemPtr;
 };
 
+REGISTER_SYSTEM(InputSystem);

@@ -1,11 +1,14 @@
 #pragma once
+
+#include "System/System.h"
+
 #include <random>
 
 class Randomizer
-	: public System
+	: public System<>
 {
 public:
-	Randomizer();
+	Randomizer(Dependencies&& aDependencies);
 
 	template <typename T = f32>
 	T GetRandomNumber(T aMin = 0, T aMax = 1);
@@ -29,6 +32,8 @@ private:
 	std::random_device myRandomDevice;
 	std::mt19937 myRandomGenerator;
 };
+
+REGISTER_SYSTEM(Randomizer);
 
 template <typename T /*= f32*/>
 T Randomizer::GetRandomNumber(T aMin, T aMax)

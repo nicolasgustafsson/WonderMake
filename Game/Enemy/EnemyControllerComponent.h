@@ -7,3 +7,5 @@ struct EnemyControllerComponent
 {
 	f32 FollowRangeMin = 50.f;
 };
+
+REGISTER_COMPONENT(EnemyControllerComponent)

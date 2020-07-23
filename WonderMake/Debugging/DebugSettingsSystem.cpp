@@ -2,8 +2,9 @@
 #include "DebugSettingsSystem.h"
 #include "Imgui/JsonInspector.h"
 
-DebugSettingsSystem::DebugSettingsSystem()
-	: Debugged("Debug Settings")
+DebugSettingsSystem::DebugSettingsSystem(Dependencies&& aDependencies)
+	: Super(std::move(aDependencies))
+	, Debugged("Debug Settings")
 {
 	std::ifstream debugSettingsFile("debugSettings.json", std::fstream::app);
 

@@ -21,7 +21,7 @@ void Camera::Update()
 
 	viewInverse.FastInverse();
 
-	auto& buffer = myEngineBufferPtr->GetBuffer();
+	auto& buffer = Get<EngineUniformBuffer>().GetBuffer();
 
 	const auto projectionMatrix = myProjectionMatrix;
 	const auto viewMatrix = viewInverse;

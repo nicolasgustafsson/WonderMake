@@ -7,11 +7,16 @@
 #include <Utilities/Debugging/Debugged.h>
 
 class Camera final
-	: public System
+	: public System<
+		Policy::Set<
+			Policy::Add<EngineUniformBuffer, Policy::EPermission::Write>>>
 	, public Debugged
 {
 public:
-	Camera() : Debugged("Camera Settings") {}
+	Camera(Dependencies&& aDependencies)
+		: Super(std::move(aDependencies))
+		, Debugged("Camera Settings")
+	{}
 	void Update();
 
 	void SetViewportSize(const SVector2i aViewportSize) noexcept;
@@ -23,7 +28,6 @@ public:
 private:
 	virtual void Debug() override;
 
-	SystemPtr<EngineUniformBuffer> myEngineBufferPtr;
 	SVector2f myPosition;
 	SVector2f myImguiWindowOffset;
 	float myRotation = 0.f;
@@ -34,3 +38,4 @@ private:
 	SVector2f myViewportSize;
 };
 
+REGISTER_SYSTEM(Camera);

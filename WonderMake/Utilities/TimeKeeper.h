@@ -4,11 +4,13 @@
 #include "Utilities/Stopwatch.h"
 
 class TimeKeeper
-	: public System
+	: public System<>
 	, public Debugged
 {
 public:
-	TimeKeeper() : Debugged("Time Keeper") {}
+	TimeKeeper(Dependencies&& aDependencies)
+		: Super(std::move(aDependencies))
+		, Debugged("Time Keeper") {}
 	~TimeKeeper() = default;
 
 	f32 Update() noexcept;
@@ -34,6 +36,8 @@ protected:
 	f32 myTotalTimePassed = 0.f;
 	f32 myTimeDilation = 1.f;
 };
+
+REGISTER_SYSTEM(TimeKeeper);
 
 [[nodiscard]] __forceinline f32 TimeKeeper::GetDeltaSeconds() const noexcept
 {

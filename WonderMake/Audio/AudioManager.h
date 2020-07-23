@@ -5,10 +5,10 @@
 #include "Audio/AudioMixingNodeGraph.h"
 #include "Audio/SoundEffectNodeGraph.h"
 
-class AudioManager : public System, Debugged
+class AudioManager : public System<>, Debugged
 {
 public:
-	AudioManager();
+	AudioManager(Dependencies&& aDependencies);
 	~AudioManager();
 
 	void Update() noexcept;
@@ -42,3 +42,5 @@ protected:
 
 	std::unordered_map<std::string, SoLoud::Bus> myBusses;
 };
+
+REGISTER_SYSTEM(AudioManager);

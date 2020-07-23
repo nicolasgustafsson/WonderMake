@@ -5,49 +5,45 @@
 #include <fstream>
 #include "Program/GlfwFacade.h"
 
-Window::Window()
+Window::Window(Dependencies&& aDependencies)
+	: Super(std::move(aDependencies))
 {
 	std::ifstream windowSettingsFile("windowSettings.json");
 	json windowSettings;
 
 	windowSettingsFile >> windowSettings;
 
-	SystemPtr<GlfwFacade> glfw;
-	glfw->Init();
-	glfw->SetWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfw->SetWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-	glfw->SetWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	auto& glfw = Get<GlfwFacade>();
+	glfw.SetWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfw.SetWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+	glfw.SetWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	myGlfwWindow = glfw->CreateGlfwWindow(windowSettings["X"].get<i32>(), windowSettings["Y"].get<i32>(), "WonderMake", NULL, NULL);
+	myGlfwWindow = glfw.CreateGlfwWindow(windowSettings["X"].get<i32>(), windowSettings["Y"].get<i32>(), "WonderMake", NULL, NULL);
 	if (!myGlfwWindow)
 	{
 		WmLog(TagError, TagOpenGL, "Failed to create GLFW window!");
-		glfw->Terminate();
+		glfw.Terminate();
 		return;
 	}
 
-	glfw->MakeContextCurrent(myGlfwWindow);
+	glfw.MakeContextCurrent(myGlfwWindow);
 
-	if (!glfw->InitializeGlad())
+	if (!glfw.InitializeGlad())
 	{
 		WmLog(TagError, TagOpenGL, "Failed to initialize GLAD");
 	}
 }
 
-Window::~Window()
-{
-}
-
 void Window::Update()
 {
-	SystemPtr<GlfwFacade> glfw;
+	auto& glfw = Get<GlfwFacade>();
 
-	if (glfw->GetKey(myGlfwWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfw->SetWindowShouldClose(myGlfwWindow, true);
+	if (glfw.GetKey(myGlfwWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfw.SetWindowShouldClose(myGlfwWindow, true);
 
-	glfw->PollEvents();
+	glfw.PollEvents();
 
-	if (glfw->ShouldWindowClose(myGlfwWindow))
+	if (glfw.ShouldWindowClose(myGlfwWindow))
 	{
 		WmDispatchTask([]() {quick_exit(0);}, ERoutineId::Logic);
 	}

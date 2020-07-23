@@ -24,50 +24,51 @@ MessageCallback([[maybe_unused]] GLenum source,
 	WmLog(severityTag, TagOpenGL, " type = ", type, " severity: ", severity, "\n", message);
 }
 
-Renderer::Renderer() noexcept
-	: myRenderTarget({ {1600, 900}, false })
-	, myCopyPass(std::filesystem::current_path() / "Shaders/Fragment/Copy.frag")
+Renderer::Renderer(Dependencies&& aDependencies) noexcept
+	: Super(std::move(aDependencies))
 	, Debugged("Renderer")
+	, myRenderTarget(SRenderTargetSettings{ {1600, 900}, false })
+	, myCopyPass(std::filesystem::current_path() / "Shaders/Fragment/Copy.frag")
 {
-	myOpenGLInterface->Enable(GL_DEBUG_OUTPUT);
-	myOpenGLInterface->Enable(GL_BLEND);
+	Get<OpenGLFacade>().Enable(GL_DEBUG_OUTPUT);
+	Get<OpenGLFacade>().Enable(GL_BLEND);
 
-	myOpenGLInterface->SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//myOpenGLInterface->SetBlendFunction(GL_SRC_ALPHA, GL_ONE); additive
+	Get<OpenGLFacade>().SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//Get<OpenGLFacade>().SetBlendFunction(GL_SRC_ALPHA, GL_ONE); additive
 
-	myOpenGLInterface->SetDebugMessageCallback(MessageCallback);
-	myCameraPtr->SetViewportSize({1600, 900});
+	Get<OpenGLFacade>().SetDebugMessageCallback(MessageCallback);
+	Get<Camera>().SetViewportSize({ 1600, 900 });
 }
 
 void Renderer::SetViewportSize(const SVector2<int> WindowSize)
 {
-	myOpenGLInterface->SetViewportSize(WindowSize);
-	myCameraPtr->SetViewportSize(WindowSize);
+	Get<OpenGLFacade>().SetViewportSize(WindowSize);
+	Get<Camera>().SetViewportSize(WindowSize);
 }
 
 void Renderer::StartFrame()
 {
-	SystemPtr<GlfwFacade> glfw;
+	auto& glfw = Get<GlfwFacade>();
 
-	glfw->SwapBuffers(myWindowPtr->myGlfwWindow);
+	glfw.SwapBuffers(Get<Window>().myGlfwWindow);
 
-	myEngineUniformBufferPtr->Update();
+	Get<EngineUniformBuffer>().Update();
 
 	//first pass
 	myRenderTarget.BindAsTarget();
 
-	myOpenGLInterface->SetClearColor(ClearColor);
-	myOpenGLInterface->Clear(GL_COLOR_BUFFER_BIT);
+	Get<OpenGLFacade>().SetClearColor(ClearColor);
+	Get<OpenGLFacade>().Clear(GL_COLOR_BUFFER_BIT);
 }
 
 void Renderer::FinishFrame()
 {
-	myLineDrawer->Render();
+	Get<DebugLineDrawer>().Render();
 
-	myOpenGLInterface->BindFramebuffer(GL_FRAMEBUFFER, 0);
+	Get<OpenGLFacade>().BindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	myOpenGLInterface->SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
-	myOpenGLInterface->Clear(GL_COLOR_BUFFER_BIT);
+	Get<OpenGLFacade>().SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+	Get<OpenGLFacade>().Clear(GL_COLOR_BUFFER_BIT);
 
 	if constexpr (!Constants::IsDebugging)
 	{
@@ -86,13 +87,13 @@ void Renderer::Debug()
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	
 	ImGui::Begin("Game Window");
-	SystemPtr<GlfwFacade> glfw;
+	auto& glfw = Get<GlfwFacade>();
 
 	myDebugWindowHasFocus = ImGui::IsWindowFocused();
 
 	i32 windowX, windowY;
-	glfw->GetWindowPos(myWindowPtr->myGlfwWindow, &windowX, &windowY);
-	myCameraPtr->SetImguiWindowOffset(
+	glfw.GetWindowPos(Get<Window>().myGlfwWindow, &windowX, &windowY);
+	Get<Camera>().SetImguiWindowOffset(
 		{ ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x - windowX
 		, ImGui::GetWindowContentRegionMin().y + ImGui::GetWindowPos().y - windowY });
 
@@ -104,7 +105,7 @@ void Renderer::Debug()
 	ImGui::Image((ImTextureID)myRenderTarget.GetTexture(), ImVec2(static_cast<float>(ViewportSize.X), static_cast<float>(ViewportSize.Y)));
 #pragma warning(default: 4312 26493)
 
-	myCameraPtr->SetViewportSize(ViewportSize);
+	Get<Camera>().SetViewportSize(ViewportSize);
 
 	ImGui::End();
 }

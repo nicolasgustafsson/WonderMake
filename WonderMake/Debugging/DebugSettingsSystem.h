@@ -4,10 +4,12 @@
 #include <json/json.hpp>
 #include <string>
 
-class DebugSettingsSystem : public System, public Debugged
+class DebugSettingsSystem 
+	: public System<>
+	, public Debugged
 {
 public:
-	DebugSettingsSystem();
+	DebugSettingsSystem(Dependencies&& aDependencies);
 
 	void SaveSettings();
 
@@ -23,6 +25,8 @@ protected:
 
 	nlohmann::json mySettings;
 };
+
+REGISTER_SYSTEM(DebugSettingsSystem);
 
 template<typename TSettingType>
 TSettingType DebugSettingsSystem::GetOrCreateDebugValue(const std::string aSettingName, TSettingType aDefault)
@@ -47,4 +51,3 @@ void DebugSettingsSystem::SetDebugValue(const std::string aSettingName, TSetting
 	std::pair<nlohmann::json&, std::string> leaf = GetLeaf(aSettingName);
 	leaf.first[leaf.second] = aSettingValue;
 }
-

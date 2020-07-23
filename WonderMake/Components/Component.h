@@ -2,7 +2,7 @@
 
 #include "Utilities/RestrictTypes.h"
 
-#define REGISTER_COMPONENT(aComponent)
+#define REGISTER_COMPONENT(aComponent) REGISTER_COMPONENT_SYSTEM(aComponent)
 
 struct SComponent : public NonCopyable
 {

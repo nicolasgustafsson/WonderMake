@@ -4,7 +4,7 @@
 
 #include "Object/Dependency.h"
 
-#define REGISTER_FUNCTIONALITY(aFunctionality)
+#define REGISTER_FUNCTIONALITY(aFunctionality) REGISTER_FUNCTIONALITY_SYSTEM(aFunctionality)
 
 class Object;
 
@@ -24,7 +24,7 @@ public:
 	template<typename TDependency> requires
 		TPolicySet::template HasPolicy_v<TDependency, Policy::EPermission::Write>
 		|| TPolicySet::template HasPolicy_v<TDependency, Policy::EPermission::Unrestricted>
-		constexpr __forceinline TDependency & Get()
+		constexpr __forceinline TDependency& Get()
 	{
 		return myDependencies.Get<TDependency>();
 	}

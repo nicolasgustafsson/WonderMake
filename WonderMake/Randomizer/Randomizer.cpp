@@ -1,9 +1,10 @@
 #include "pch.h"
-#include "Randomizer.h"
-#include <random>
 
-Randomizer::Randomizer()
-	: myRandomGenerator(myRandomDevice())
+#include "Randomizer.h"
+
+Randomizer::Randomizer(Dependencies&& aDependencies)
+	: Super(std::move(aDependencies))
+	, myRandomGenerator(myRandomDevice())
 {
 
 }

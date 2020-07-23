@@ -1,6 +1,12 @@
 #pragma once
 
+#include "System/System.h"
+
+#include "Utilities/plf_colony.h"
+
+class BuffDesigner;
 class CharacterEffect;
+class Randomizer;
 
 enum class EEffectType
 {
@@ -23,18 +29,24 @@ struct SEffectDesign
 
 class CharacterEffect;
 
-class EffectDesigner : public System
+class EffectDesigner
+	: public System<
+		Policy::Set<
+			Policy::Add<Randomizer, Policy::EPermission::Write>>>
 {
 public:
+	using Super::Super;
+
 	CharacterEffect& DesignCharacterEffect(SEffectRequirements aRequirements);
 
 private:
-	std::unique_ptr<CharacterEffect> DecideEffect(const SEffectDesign& aExistingDesign) const;
-	std::unique_ptr<CharacterEffect> DecidePositiveEffect(const SEffectDesign& aExistingDesign) const;
-	std::unique_ptr<CharacterEffect> DecideNegativeEffect(const SEffectDesign& aExistingDesign) const;
-	EEffectType DecideEffectType() const;
-	f32 DecideEffectStrength() const;
+	std::unique_ptr<CharacterEffect> DecideEffect(const SEffectDesign& aExistingDesign);
+	std::unique_ptr<CharacterEffect> DecidePositiveEffect(const SEffectDesign& aExistingDesign);
+	std::unique_ptr<CharacterEffect> DecideNegativeEffect(const SEffectDesign& aExistingDesign);
+	EEffectType DecideEffectType();
+	f32 DecideEffectStrength();
 
 	plf::colony<std::unique_ptr<CharacterEffect>> myEffects;
 };
 
+REGISTER_SYSTEM(EffectDesigner);

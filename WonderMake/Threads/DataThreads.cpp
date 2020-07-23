@@ -1,22 +1,32 @@
 #include "pch.h"
 #include "DataThreads.h"
 
+#include "Program/Program.h"
+
 #include "Threads/Routine.h"
 #include "Threads/RoutineIds.h"
-#include "Threads/RoutineMain.h"
 #include "Threads/RoutineDebug.h"
+
 #include "Utilities/Stopwatch.h"
 
-void DataThreads::Start(Program& aProgramReference, Closure&& aCallback)
+DataThreads::DataThreads()
 {
 	myRoutines.resize(RoutineCount);
-	myRoutines[static_cast<size_t>(ERoutineId::Logic)] = std::make_unique<RoutineMain>(aProgramReference);
+	myRoutines[static_cast<size_t>(ERoutineId::Logic)] = std::make_unique<Routine>(ERoutineId::Logic);
 	myRoutines[static_cast<size_t>(ERoutineId::Render)] = std::make_unique<Routine>(ERoutineId::Render);
 	myRoutines[static_cast<size_t>(ERoutineId::File)] = std::make_unique<Routine>(ERoutineId::File);
 
 	if constexpr (Constants::IsDebugging)
 		myRoutines[static_cast<size_t>(ERoutineId::Debug)] = std::make_unique<RoutineDebug>();
-	
+}
+
+void DataThreads::Start(Program& aProgramReference, Closure&& aCallback)
+{
+	GetRoutine(ERoutineId::Logic).AddProcedure([&aProgramReference]()
+		{
+			aProgramReference.Update();
+		});
+
 	myFileThread.emplace("File Thread").AddRoutine(*myRoutines[static_cast<size_t>(ERoutineId::File)]);
 	myRenderThread.emplace("Render Thread").AddRoutine(*myRoutines[static_cast<size_t>(ERoutineId::Render)]);
 

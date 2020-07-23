@@ -29,3 +29,4 @@ public:
 };
 
 REGISTER_COMPONENT(SCharacterBuffComponent);
+REGISTER_FUNCTIONALITY(CharacterBuffsFunctionality);

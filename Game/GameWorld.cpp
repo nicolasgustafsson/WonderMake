@@ -11,11 +11,10 @@
 #include "Camera/CameraFunctionality.h"
 #include "Levels/LevelFunctionality.h"
 
-GameWorld::GameWorld()
-	:mySubscriber(ERoutineId::Logic, BindHelper(&GameWorld::OnPlayerDeath, this))
+GameWorld::GameWorld(Dependencies&& aDependencies)
+	: Super(std::move(aDependencies))
+	, mySubscriber(ERoutineId::Logic, BindHelper(&GameWorld::OnPlayerDeath, this))
 {
-	EnableTick();
-
 	Object player = SetupPlayer();
 
 	LevelFunctionality& level = RestartLevel();

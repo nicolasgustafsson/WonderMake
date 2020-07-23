@@ -8,10 +8,10 @@ struct SPlayerDiedMessage;
 class TransformFunctionality;
 class LevelFunctionality;
 
-class GameWorld : public System
+class GameWorld : public System<>
 {
 public:
-	GameWorld();
+	GameWorld(Dependencies&& aDependencies);
 
 	LevelFunctionality& RestartLevel();
 
@@ -32,3 +32,4 @@ private:
 	std::optional<Object> myDeathScreen;
 };
 
+REGISTER_SYSTEM(GameWorld);

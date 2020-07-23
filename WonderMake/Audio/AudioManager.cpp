@@ -14,8 +14,10 @@
 #include "Imgui/NodeGraphGui.h"
 #include "Audio/AudioMixingNodeGraph.h"
 
-AudioManager::AudioManager()
-	: Debugged("Audio Manager"), myAudioMixingNodeGraph(std::filesystem::path("NodeGraphs") / "Audio" / "AudioNodeGraph.json")
+AudioManager::AudioManager(Dependencies&& aDependencies)
+	: Super(std::move(aDependencies))
+	, Debugged("Audio Manager")
+	, myAudioMixingNodeGraph(std::filesystem::path("NodeGraphs") / "Audio" / "AudioNodeGraph.json")
 {
 	mySoloudEngine.init(mySoloudEngine.FLAGS::CLIP_ROUNDOFF, mySoloudEngine.BACKENDS::WASAPI, SoLoud::Soloud::AUTO, 2048, 2);
 	myBusHandle = mySoloudEngine.play(myBus);

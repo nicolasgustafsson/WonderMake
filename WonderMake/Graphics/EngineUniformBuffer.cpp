@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "EngineUniformBuffer.h"
 
-EngineUniformBuffer::EngineUniformBuffer()
-	: UniformBuffer<SEngineUniformBufferData>(0), Debugged("Engine Uniform Buffer")
+EngineUniformBuffer::EngineUniformBuffer(Dependencies&& aDependencies)
+	: Super(std::move(aDependencies))
+	, UniformBuffer<SEngineUniformBufferData>(0), Debugged("Engine Uniform Buffer")
 {
 
 }

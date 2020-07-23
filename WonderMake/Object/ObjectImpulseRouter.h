@@ -9,10 +9,10 @@
 class _BaseFunctionality;
 
 class ObjectImpulseRouter
-	: public System
+	: public System<>
 {
 public:
-	ObjectImpulseRouter();
+	ObjectImpulseRouter(Dependencies&& aDependencies);
 
 	template<typename TMessage, typename TFunction>
 	void Subscribe(Object& aObject, _BaseFunctionality& aFunctionality, TFunction aCallback);
@@ -38,6 +38,8 @@ private:
 
 	MessageSubscriber mySubscriber;
 };
+
+REGISTER_SYSTEM(ObjectImpulseRouter);
 
 template<typename TMessage, typename TFunction>
 void ObjectImpulseRouter::Subscribe(Object& aObject, _BaseFunctionality& aFunctionality, TFunction aCallback)

@@ -9,10 +9,10 @@
 class CollisionFunctionality;
 
 class CollisionSystem final
-	: public System
+	: public System<>
 {
 public:
-	CollisionSystem() noexcept;
+	CollisionSystem(Dependencies&& aDependencies) noexcept;
 
 	virtual void Tick() noexcept override;
 
@@ -60,6 +60,8 @@ private:
 	//test these every frame
 	plf::colony<Colliders::Shape*> myCollidersWithReactions;
 };
+
+REGISTER_SYSTEM(CollisionSystem);
 
 template<typename TFunctionalityToReactAgainst>
 void CollisionSystem::AddReaction(Colliders::Shape& aShape, std::function<void(TFunctionalityToReactAgainst&, Colliders::SCollisionInfo)> aCallback)

@@ -3,13 +3,14 @@
 #include "Typedefs.h"
 
 #include "Logging/LogMessageTags.h"
-#include "Object/Object.h"
 
 #include <atomic>
 #include <filesystem>
 #include <functional>
 #include <limits>
 #include <typeinfo>
+
+class Object;
 
 class Dispatchable
 {

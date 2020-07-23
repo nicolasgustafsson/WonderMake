@@ -2,8 +2,9 @@
 
 #include "ObjectImpulseRouter.h"
 
-ObjectImpulseRouter::ObjectImpulseRouter()
-	:mySubscriber(ERoutineId::Logic)
+ObjectImpulseRouter::ObjectImpulseRouter(Dependencies&& aDependencies)
+	: Super(std::move(aDependencies))
+	, mySubscriber(ERoutineId::Logic)
 {
 
 }

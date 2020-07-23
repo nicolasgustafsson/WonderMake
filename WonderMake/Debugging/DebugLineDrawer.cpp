@@ -2,8 +2,9 @@
 #include "DebugLineDrawer.h"
 #include "Utilities/Utility.h"
 
-DebugLineDrawer::DebugLineDrawer() noexcept
-	: myRenderObject(10000)
+DebugLineDrawer::DebugLineDrawer(Dependencies&& aDependencies) noexcept
+	: Super(std::move(aDependencies))
+	, myRenderObject(10000)
 	, mySubscriber(ERoutineId::Logic, BindHelper(&DebugLineDrawer::OnGotDebugLineMessage, this))
 {
 

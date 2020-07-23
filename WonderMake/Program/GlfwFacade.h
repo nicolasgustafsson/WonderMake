@@ -4,10 +4,11 @@ struct GLFWwindow;
 
 typedef void (*GLFWframebuffersizefun)(GLFWwindow*, int, int);
 
-class GlfwFacade : public System
+class GlfwFacade : public System<>
 {
 public:
-	void Init();
+	GlfwFacade(Dependencies&& aDependencies);
+
 	void Terminate();
 	void SetWindowShouldClose(GLFWwindow* aWindow, const bool aShouldClose);
 	void PollEvents();
@@ -37,3 +38,4 @@ public:
 	[[nodiscard]] i32 GetMouseButton(GLFWwindow* aWindow, const i32 aButton);
 };
 
+REGISTER_SYSTEM(GlfwFacade);

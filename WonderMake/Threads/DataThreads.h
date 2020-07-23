@@ -14,10 +14,12 @@
 class Program;
 class Routine;
 
-class DataThreads :
-	public Singleton<DataThreads>
+class DataThreads
+	: public Singleton<DataThreads>
 {
 public:
+	DataThreads();
+
 	void Start(Program& aProgramReference, Closure&& aCallback);
 
 	Routine& GetRoutine(const ERoutineId aRoutine);

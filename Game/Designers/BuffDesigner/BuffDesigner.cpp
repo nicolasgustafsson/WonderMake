@@ -7,11 +7,10 @@
 #include "Designers/EffectDesigner/EffectDesigner.h"
 #include "Character/Effects/CharacterEffect.h"
 
-BuffDesigner::BuffDesigner() 
-	: Debugged("Buff Designer")
-{
-
-}
+BuffDesigner::BuffDesigner(Dependencies&& aDependencies)
+	: Super(std::move(aDependencies))
+	, Debugged("Buff Designer")
+{}
 
 BuffBlueprint& BuffDesigner::DesignBuff(SBuffRequirements aBuffRequirements)
 {
@@ -43,22 +42,22 @@ BuffBlueprint& BuffDesigner::DesignBuff(SBuffRequirements aBuffRequirements)
 	return *myBlueprints.insert(std::move(blueprint));
 }
 
-EBuffType BuffDesigner::DecideBuffType() const
+EBuffType BuffDesigner::DecideBuffType()
 {
 	return SystemPtr<Randomizer>()->SelectOne<EBuffType, EBuffType::Debuff, EBuffType::Buff>();
 }
 
-f32 BuffDesigner::DecideBuffStrength() const
+f32 BuffDesigner::DecideBuffStrength()
 {
 	return SystemPtr<Randomizer>()->GetRandomNumber(50.f, 150.f);
 }
 
-f32 BuffDesigner::DecideBuffIntensity() const
+f32 BuffDesigner::DecideBuffIntensity()
 {
 	return std::powf(SystemPtr<Randomizer>()->GetRandomNumber(1.f, 1000.f) / 1000.f, 2.f) * 10.f;
 }
 
-void BuffDesigner::MakeBuffBetter(const f32 aHowMuch, SBuffDesign& aBuffDesign) const
+void BuffDesigner::MakeBuffBetter(const f32 aHowMuch, SBuffDesign& aBuffDesign)
 {
 	switch (SystemPtr<Randomizer>()->GetRandomNumber<i32>(0, 1))
 	{
@@ -71,7 +70,7 @@ void BuffDesigner::MakeBuffBetter(const f32 aHowMuch, SBuffDesign& aBuffDesign) 
 	}
 }
 
-void BuffDesigner::MakeBuffWorse(const f32 aHowMuch, SBuffDesign& aBuffDesign) const
+void BuffDesigner::MakeBuffWorse(const f32 aHowMuch, SBuffDesign& aBuffDesign)
 {
 	switch (SystemPtr<Randomizer>()->GetRandomNumber<i32>(0, 1))
 	{
@@ -84,7 +83,7 @@ void BuffDesigner::MakeBuffWorse(const f32 aHowMuch, SBuffDesign& aBuffDesign) c
 	}
 }
 
-void BuffDesigner::AddStatProperty(bool aIncrease, const f32 aStrength, SBuffDesign& aBuffDesign) const
+void BuffDesigner::AddStatProperty(bool aIncrease, const f32 aStrength, SBuffDesign& aBuffDesign)
 {
 	f32 strength = (aBuffDesign.NumericIntensity * aStrength) / 100.f + 1.0f;
 
@@ -98,14 +97,14 @@ void BuffDesigner::AddStatProperty(bool aIncrease, const f32 aStrength, SBuffDes
 	aBuffDesign.Properties.insert(std::move(statChangeProperty));
 }
 
-void BuffDesigner::AddEffectOverTimeProperty(const f32 aEffectStrength, SBuffDesign& aBuffDesign) const
+void BuffDesigner::AddEffectOverTimeProperty(const f32 aEffectStrength, SBuffDesign& aBuffDesign)
 {
 	const f32 tickTime = 1.0f;
 
 	SEffectRequirements effectRequirements;
 	effectRequirements.Strength = aEffectStrength / aBuffDesign.Duration;
 	effectRequirements.Type = aBuffDesign.Type == EBuffType::Buff ? EEffectType::Positive : EEffectType::Negative;
-	std::unique_ptr<BuffEffectOverTimeProperty> characterEffect = std::make_unique<BuffEffectOverTimeProperty>(tickTime, SystemPtr<EffectDesigner>()->DesignCharacterEffect(effectRequirements));
+	std::unique_ptr<BuffEffectOverTimeProperty> characterEffect = std::make_unique<BuffEffectOverTimeProperty>(tickTime, Get<EffectDesigner>().DesignCharacterEffect(effectRequirements));
 	aBuffDesign.Properties.insert(std::move(characterEffect));
 }
 

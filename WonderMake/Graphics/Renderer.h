@@ -12,12 +12,21 @@
 #include "Debugging/DebugLineDrawer.h"
 #include "OpenGLFacade.h"
 
-class Renderer 
-	: public System
+class GlfwFacade;
+
+class Renderer
+	: public System<
+		Policy::Set<
+			Policy::Add<Camera, Policy::EPermission::Write>,
+			Policy::Add<EngineUniformBuffer, Policy::EPermission::Write>,
+			Policy::Add<Window, Policy::EPermission::Write>,
+			Policy::Add<DebugLineDrawer, Policy::EPermission::Write>,
+			Policy::Add<GlfwFacade, Policy::EPermission::Write>,
+			Policy::Add<OpenGLFacade, Policy::EPermission::Write>>>
 	, public Debugged
 {
 public:
-	Renderer() noexcept;
+	Renderer(Dependencies&& aDependencies) noexcept;
 
 	void SetViewportSize(const SVector2<int> WindowSize);
 
@@ -32,14 +41,10 @@ private:
 
 	RenderTarget myRenderTarget;
 	ScreenPassRenderObject myCopyPass;
-	SystemPtr<Camera> myCameraPtr;
-	SystemPtr<EngineUniformBuffer> myEngineUniformBufferPtr;
-	SystemPtr<Window> myWindowPtr;
-	SystemPtr<DebugLineDrawer> myLineDrawer;
-	SystemPtr<OpenGLFacade> myOpenGLInterface;
 
 	bool myDebugWindowHasFocus = false;
 
 	const SColor ClearColor = SColor::Grey;
 };
 
+REGISTER_SYSTEM(Renderer);

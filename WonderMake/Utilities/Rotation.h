@@ -21,12 +21,12 @@ public:
     inline constexpr SRotation(const TRepresentation aRotation) noexcept;
 
     inline [[nodiscard]] constexpr bool operator==(const TRepresentation aRhs) const noexcept;
-    inline [[nodiscard]] constexpr std::partial_ordering operator<=>(const TRepresentation aRhs) const noexcept;
+    inline [[nodiscard]] constexpr auto operator<=>(const TRepresentation aRhs) const noexcept;
 
     template<class TFromRepresentation, class TFromRatio>
     inline [[nodiscard]] constexpr bool operator==(const SRotation<TFromRepresentation, TFromRatio> aRhs) const noexcept;
     template<class TFromRepresentation, class TFromRatio>
-    inline [[nodiscard]] constexpr std::partial_ordering operator<=>(const SRotation<TFromRepresentation, TFromRatio> aRhs) const noexcept;
+    inline [[nodiscard]] constexpr auto operator<=>(const SRotation<TFromRepresentation, TFromRatio> aRhs) const noexcept;
 
     inline constexpr SRotation& operator=(const TRepresentation aRhs) noexcept;
     inline constexpr SRotation& operator+=(const TRepresentation aRhs) noexcept;

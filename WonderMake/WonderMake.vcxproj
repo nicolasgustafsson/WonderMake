@@ -205,10 +205,12 @@
     <ClCompile Include="Audio\AudioManager.cpp" />
     <ClCompile Include="Audio\AudioNodeTypes.cpp" />
     <ClCompile Include="FileSystem\FileWatcher.cpp" />
+    <ClCompile Include="Graphics\RenderObject.cpp" />
     <ClCompile Include="Imgui\Canvas.cpp" />
     <ClCompile Include="Imgui\FileSelector.cpp" />
     <ClCompile Include="Imgui\NodeGraphGui.cpp" />
     <ClCompile Include="Graphics\ShaderParser.cpp" />
+    <ClCompile Include="Graphics\RenderCommandProcessor.cpp" />
     <ClCompile Include="Utilities\Math.cpp" />
     <ClCompile Include="NodeGraph\NodeGraph.cpp" />
     <ClCompile Include="NodeGraph\NodeTypes.cpp" />
@@ -286,6 +288,7 @@
     <ClInclude Include="Imgui\FileSelector.h" />
     <ClInclude Include="Imgui\NodeGraphGui.h" />
     <ClInclude Include="Graphics\ShaderParser.h" />
+    <ClInclude Include="Graphics\RenderCommandProcessor.h" />
     <ClInclude Include="Utilities\Math.h" />
     <ClInclude Include="NodeGraph\SlotCustomization\SlotInputEdits.h" />
     <ClInclude Include="NodeGraph\NodeGraph.h" />

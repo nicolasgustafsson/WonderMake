@@ -25,4 +25,6 @@ NavmeshRenderObject::NavmeshRenderObject(Navmesh& aNavmesh, u32 aTriangleCount)
 
 		i += 3;
 	}
+
+	myRenderOrder = -1000;
 }

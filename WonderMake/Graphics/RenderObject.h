@@ -21,15 +21,50 @@ struct SRenderObjectInfo
 	u32 GeometryType = GL_POINTS;
 };
 
+class BaseRenderObject
+{
+public:
+	void Render();
+
+	friend class RenderCommand;
+protected:
+
+	virtual void RenderInternal() = 0;
+	i32 myRenderOrder = 0;
+};
+
+class RenderCommand : public NonCopyable
+{
+public:
+	RenderCommand(BaseRenderObject& aRenderObject, const u32 aRenderOrder) : myRenderObject(aRenderObject), myRenderOrder(aRenderOrder) {}
+
+	RenderCommand& operator=(RenderCommand&&) = default;
+	RenderCommand(RenderCommand&&) = default;
+
+	void Execute();
+
+	inline [[nodiscard]] bool operator==(const RenderCommand& aRhs) const noexcept
+	{
+		return myRenderOrder == aRhs.myRenderOrder;
+	}
+
+	inline [[nodiscard]] auto operator<=>(const RenderCommand& aRhs) const noexcept
+	{
+		return myRenderOrder <=> aRhs.myRenderOrder;
+	}
+
+private:
+	std::reference_wrapper<BaseRenderObject> myRenderObject;
+	i32 myRenderOrder;
+};
+
 template<EVertexAttribute... TAttributes>
-class RenderObject
+class RenderObject : public BaseRenderObject
 {
 public:
 	RenderObject(const SRenderObjectInfo& aRenderObjectInfo);
 
 	void SetTexture(std::filesystem::path aTexturePath);
-
-	void Render();
 
 	void BindTextures();
 
@@ -39,13 +74,32 @@ public:
 	void SetAttribute(const u32 aIndex, decltype(GetValueFromAttribute<TAttribute>()) aAttribute);
 
 protected:
+
+	virtual void RenderInternal() override;
+
 	ShaderProgram myShaderProgram;
 	VertexBufferArray<TAttributes...> myVertexBufferArray;
 	std::vector<ResourceProxy<Texture>> myTextures;
+	std::optional<u32> myRenderCount;
 	u32 myGeometryType;
 	u32 myVertexCount;
-	std::optional<u32> myRenderCount;
 };
+
+template<EVertexAttribute... TAttributes>
+void RenderObject<TAttributes...>::RenderInternal()
+{
+	const bool shaderProgramActivated = myShaderProgram.Activate();
+
+	if (!shaderProgramActivated)
+		return;
+
+	myVertexBufferArray.Render();
+	BindTextures();
+
+	const u32 renderCount = myRenderCount ? *myRenderCount : myVertexCount;
+
+	SystemPtr<OpenGLFacade>()->DrawArrays(myGeometryType, 0, renderCount);
+}
 
 template<EVertexAttribute... TAttributes>
 void RenderObject<TAttributes...>::SetTexture(std::filesystem::path aTexturePath)
@@ -78,22 +132,6 @@ void RenderObject<TAttributes...>::BindTextures()
 		if (texture)
 			texture->Bind(static_cast<u32>(i));
 	}
-}
-
-template<EVertexAttribute... TAttributes>
-void RenderObject<TAttributes...>::Render()
-{
-	const bool shaderProgramActivated = myShaderProgram.Activate();
-
-	if (!shaderProgramActivated)
-		return;
-
-	myVertexBufferArray.Render();
-	BindTextures();
-
-	const u32 renderCount = myRenderCount ? *myRenderCount : myVertexCount;
-	
-	SystemPtr<OpenGLFacade>()->DrawArrays(myGeometryType, 0, renderCount);
 }
 
 template<EVertexAttribute... TAttributes>

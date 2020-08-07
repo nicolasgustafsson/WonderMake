@@ -12,7 +12,7 @@ inline [[nodiscard]] constexpr bool SRotation<TRepresentation, TRatio>::operator
 }
 
 template<class TRepresentation, class TRatio>
-inline [[nodiscard]] constexpr std::partial_ordering SRotation<TRepresentation, TRatio>::operator<=>(const TRepresentation aRhs) const noexcept
+inline [[nodiscard]] constexpr auto SRotation<TRepresentation, TRatio>::operator<=>(const TRepresentation aRhs) const noexcept
 {
     return myRotation <=> aRhs;
 }
@@ -26,7 +26,7 @@ inline [[nodiscard]] constexpr bool SRotation<TRepresentation, TRatio>::operator
 
 template<class TRepresentation, class TRatio>
 template<class TFromRepresentation, class TFromRatio>
-inline [[nodiscard]] constexpr std::partial_ordering SRotation<TRepresentation, TRatio>::operator<=>(const SRotation<TFromRepresentation, TFromRatio> aRhs) const noexcept
+inline [[nodiscard]] constexpr auto SRotation<TRepresentation, TRatio>::operator<=>(const SRotation<TFromRepresentation, TFromRatio> aRhs) const noexcept
 {
     return *this <=> RotationCast<SRotation<TRepresentation, TRatio>>(aRhs).myRotation;
 }

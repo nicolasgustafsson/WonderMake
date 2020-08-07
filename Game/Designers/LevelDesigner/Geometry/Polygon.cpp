@@ -2,7 +2,7 @@
 #include "Polygon.h"
 #include "Randomizer/Randomizer.h"
 #include <Utilities/Rotation.h>
-#include "Physics/Navmesh.h"
+#include "Physics/Navmesh/Navmesh.h"
 
 float sign(SVector2f p1, SVector2f p2, SVector2f p3)
 {

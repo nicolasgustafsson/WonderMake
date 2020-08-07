@@ -32,10 +32,10 @@ Renderer::Renderer() noexcept
 	myOpenGLInterface->Enable(GL_DEBUG_OUTPUT);
 	myOpenGLInterface->Enable(GL_BLEND);
 
-	myOpenGLInterface->Enable(GL_DEPTH_TEST);
-
-	glDepthFunc(GL_GEQUAL);
-	glClearDepth(-1000);
+	//myOpenGLInterface->Enable(GL_DEPTH_TEST);
+	//
+	//glDepthFunc(GL_GEQUAL);
+	//glClearDepth(-1000);
 
 	myOpenGLInterface->SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//myOpenGLInterface->SetBlendFunction(GL_SRC_ALPHA, GL_ONE); //additive

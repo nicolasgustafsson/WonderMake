@@ -72,6 +72,8 @@
     <ClCompile Include="Utilities\Math.cpp" />
     <ClCompile Include="FileSystem\FileWatcher.cpp" />
     <ClCompile Include="Graphics\ShaderParser.cpp" />
+    <ClCompile Include="Graphics\RenderCommandProcessor.cpp" />
+    <ClCompile Include="Graphics\RenderObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -246,6 +248,7 @@
     <ClInclude Include="FileSystem\FileWatcher.h" />
     <ClInclude Include="Graphics\ShaderParser.h" />
     <ClInclude Include="Utilities\Rotation.h" />
+    <ClInclude Include="Graphics\RenderCommandProcessor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

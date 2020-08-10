@@ -85,9 +85,9 @@ namespace Geometry
 
 		if (aPolygon.myPoints.size() == 3)
 		{
-			WmDrawDebugLine(triangle.First, triangle.Second, SColor::Green, 100.f);
-			WmDrawDebugLine(triangle.Second, triangle.Third, SColor::Green, 100.f);
-			WmDrawDebugLine(triangle.First, triangle.Third, SColor::Green, 100.f);
+			//WmDrawDebugLine(triangle.First, triangle.Second, SColor::Green, 100.f);
+			//WmDrawDebugLine(triangle.Second, triangle.Third, SColor::Green, 100.f);
+			//WmDrawDebugLine(triangle.First, triangle.Third, SColor::Green, 100.f);
 
 			pointOperator.RemovePoint();
 
@@ -148,9 +148,9 @@ namespace Geometry
 			++loopingPoint;
 		}
 
-		WmDrawDebugLine(triangle.First, triangle.Second, SColor::Green, 100.f);
-		WmDrawDebugLine(triangle.Second, triangle.Third, SColor::Green, 100.f);
-		WmDrawDebugLine(triangle.First, triangle.Third, SColor::Green, 100.f);
+		//WmDrawDebugLine(triangle.First, triangle.Second, SColor::Green, 100.f);
+		//WmDrawDebugLine(triangle.Second, triangle.Third, SColor::Green, 100.f);
+		//WmDrawDebugLine(triangle.First, triangle.Third, SColor::Green, 100.f);
 
 		pointOperator.RemovePoint();
 

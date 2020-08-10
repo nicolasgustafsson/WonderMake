@@ -56,6 +56,7 @@ struct SEngineUniformBufferData
 	SPaddedMatrix33 ViewProjectionMatrix;
 
 	SVector2f Resolution;
+	SVector2f CameraPosition;
 
 	float Time = 0;
 };

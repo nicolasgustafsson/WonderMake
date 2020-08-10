@@ -11,6 +11,11 @@ using u64 = uint64_t;
 using i8 = int8_t;
 using u8 = uint8_t;
 
+inline constexpr u8 operator "" _u8(unsigned long long aNumber) noexcept
+{
+	return static_cast<u8>(aNumber);
+}
+
 using Closure = std::function<void()>;
 
 namespace WmChrono

@@ -27,6 +27,8 @@ public:
 	void Render();
 
 	friend class RenderCommand;
+
+	void SetRenderOrder(i32 aRenderOrder) { myRenderOrder = aRenderOrder; }
 protected:
 
 	virtual void RenderInternal() = 0;
@@ -73,8 +75,10 @@ public:
 	template<EVertexAttribute TAttribute>
 	void SetAttribute(const u32 aIndex, decltype(GetValueFromAttribute<TAttribute>()) aAttribute);
 
-protected:
+	template<typename TProperty>
+	void SetProperty(std::string_view aName, TProperty aProperty);
 
+protected:
 	virtual void RenderInternal() override;
 
 	ShaderProgram myShaderProgram;
@@ -84,6 +88,13 @@ protected:
 	u32 myGeometryType;
 	u32 myVertexCount;
 };
+
+template<EVertexAttribute... TAttributes>
+template<typename TProperty>
+void RenderObject<TAttributes...>::SetProperty(std::string_view aName, TProperty aProperty)
+{
+	myShaderProgram.SetProperty(aName, aProperty);
+}
 
 template<EVertexAttribute... TAttributes>
 void RenderObject<TAttributes...>::RenderInternal()

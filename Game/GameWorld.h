@@ -3,6 +3,7 @@
 #include "System/System.h"
 #include "Message/MessageSubscriber.h"
 #include "Designers/BuffDesigner/BuffDesigner.h"
+#include "Graphics/ScreenPassRenderObject.h"
 
 struct SPlayerDiedMessage;
 class TransformFunctionality;
@@ -18,9 +19,13 @@ public:
 	Object myCameraController;
 	Object myLevel;
 
+	void Tick() noexcept override;
+
 private:
 	TransformFunctionality* myPlayerTransform = nullptr;
 	LevelFunctionality* myCurrentLevelFunctionality = nullptr;
+
+	ScreenPassRenderObject myBackground;
 
 	Object SetupPlayer();
 

@@ -12,11 +12,15 @@
 #include "Levels/LevelFunctionality.h"
 
 GameWorld::GameWorld()
-	:mySubscriber(ERoutineId::Logic, BindHelper(&GameWorld::OnPlayerDeath, this))
+	:mySubscriber(ERoutineId::Logic, BindHelper(&GameWorld::OnPlayerDeath, this)), myBackground(std::filesystem::current_path() / "Shaders/Fragment/Background.frag")
 {
 	EnableTick();
 
 	Object player = SetupPlayer();
+
+	myBackground.SetRenderOrder(-9999);
+	myBackground.SetProperty("MainColor", SColor::RaisinBlack);
+	myBackground.SetProperty("DetailColor", SColor::SpanishGray);
 
 	LevelFunctionality& level = RestartLevel();
 
@@ -42,6 +46,13 @@ LevelFunctionality& GameWorld::RestartLevel()
 	myCurrentLevelFunctionality = &levelFunctionality;
 
 	return levelFunctionality;
+}
+
+void GameWorld::Tick() noexcept
+{
+	myBackground.SetProperty("MainColor", SColor::RaisinBlack);
+	myBackground.SetProperty("DetailColor", SColor::Seashell);
+	myBackground.Render();
 }
 
 Object GameWorld::SetupPlayer()

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CameraFunctionality.h"
 #include "Camera/Camera.h"
+#include "CameraManager.h"
 
 CameraFunctionality::CameraFunctionality(Object& aObject)
 	: Super(aObject)
@@ -16,11 +17,11 @@ void CameraFunctionality::Tick()
 	if (!cameraComponent.Target)
 		return;
 	
-	SystemPtr<Camera> cameraSystem;
+	SystemPtr<CameraManager> cameraSystem;
 
 	transform.SetPosition(cameraComponent.Target->GetPosition());
 
-	cameraSystem->SetPosition(transform.GetPosition());
+	cameraSystem->GetMainCamera().SetPosition(transform.GetPosition());
 }
 
 void CameraFunctionality::SetTarget(TransformFunctionality* aTarget)

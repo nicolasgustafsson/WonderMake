@@ -34,7 +34,7 @@ void Program::StartNewFrame()
 
 	myWindowPtr->Update();
 
-	myCameraPtr->Update();
+	myCameraManagerPtr->Update();
 
 	myRendererPtr->StartFrame();
 }

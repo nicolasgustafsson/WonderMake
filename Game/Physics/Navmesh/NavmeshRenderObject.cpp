@@ -2,10 +2,10 @@
 #include "NavmeshRenderObject.h"
 #include "Physics/Navmesh/Navmesh.h"
 
-NavmeshRenderObject::NavmeshRenderObject(Navmesh& aNavmesh, u32 aTriangleCount, const SVector2f aOffset, const i32 aRenderOrder, const SColor aColor)
+NavmeshRenderObject::NavmeshRenderObject(Navmesh& aNavmesh, u32 aTriangleCount, const SVector2f aOffset, const i32 aRenderOrder, const SColor aColor, const f32 aDepth)
 	:
 	RenderObject(SRenderObjectInfo
-	{ std::filesystem::current_path() / "Shaders/Vertex/CommonVertexShader.vert"
+	{ std::filesystem::current_path() / "Shaders/Vertex/NavmeshVertexShader.vert"
 	, ""
 	,	std::filesystem::current_path() / "Shaders/Fragment/ColorFragment.frag"
 	,	""
@@ -23,8 +23,19 @@ NavmeshRenderObject::NavmeshRenderObject(Navmesh& aNavmesh, u32 aTriangleCount, 
 		RenderObject::SetAttribute<EVertexAttribute::Color>(i + 1, aColor);
 		RenderObject::SetAttribute<EVertexAttribute::Color>(i + 2, aColor);
 
+		RenderObject::SetAttribute<EVertexAttribute::Depth>(i, aDepth);
+		RenderObject::SetAttribute<EVertexAttribute::Depth>(i + 1, aDepth);
+		RenderObject::SetAttribute<EVertexAttribute::Depth>(i + 2, aDepth);
+
 		i += 3;
 	}
 
 	myRenderOrder = aRenderOrder;
+}
+
+void NavmeshRenderObject::RenderInternal()
+{
+	glDepthFunc(GL_LEQUAL);
+	RenderObject::RenderInternal();
+	glDepthFunc(GL_GEQUAL);
 }

@@ -12,6 +12,7 @@
 #include "Debugging/DebugSettingsSystem.h"
 #include "Audio/AudioManager.h"
 #include "FileSystem/FileWatcher.h"
+#include "CameraManager.h"
 
 
 class Program
@@ -40,7 +41,7 @@ private:
 	SystemPtr<EngineUniformBuffer> myEngineUniformBufferPtr;
 	//-------KEEP THIS IN ORDER-------
 
-	SystemPtr<Camera> myCameraPtr;
+	SystemPtr<CameraManager> myCameraManagerPtr;
 	SystemPtr<TimeKeeper> myTimeKeeperPtr;
 	SystemPtr<InputSystem> myInputSystem;
 	SystemPtr<DebugSettingsSystem> myDebugSettingsPtr;

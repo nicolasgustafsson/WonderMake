@@ -12,6 +12,11 @@ class RenderTarget : NonCopyable
 {
 public:
 	RenderTarget(const SRenderTargetSettings& Settings);
+
+	RenderTarget(RenderTarget&&);
+	
+	RenderTarget& operator=(RenderTarget&&);
+
 	~RenderTarget();
 
 	void BindAsTarget();

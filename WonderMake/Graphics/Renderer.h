@@ -4,13 +4,14 @@
 #include "RenderTarget.h"
 #include "ScreenPassRenderObject.h"
 #include "System/System.h"
-#include "Camera/Camera.h"
+#include "CameraManager.h"
 #include "System/SystemPtr.h"
 #include "Program/Window.h"
 #include "Message/MessageSubscriber.h"
 #include "Utilities/Debugging/Debugged.h"
 #include "Debugging/DebugLineDrawer.h"
 #include "OpenGLFacade.h"
+
 
 class Renderer 
 	: public System
@@ -30,16 +31,13 @@ public:
 private:
 	virtual void Debug() override;
 
-	RenderTarget myRenderTarget;
 	ScreenPassRenderObject myCopyPass;
-	SystemPtr<Camera> myCameraPtr;
+	SystemPtr<CameraManager> myCameraManagerPtr;
 	SystemPtr<EngineUniformBuffer> myEngineUniformBufferPtr;
 	SystemPtr<Window> myWindowPtr;
 	SystemPtr<DebugLineDrawer> myLineDrawer;
 	SystemPtr<OpenGLFacade> myOpenGLInterface;
 
-	bool myDebugWindowHasFocus = false;
-
-	const SColor ClearColor = SColor::Grey;
+	bool myDebugWindowHasFocus = true;
 };
 

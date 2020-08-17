@@ -12,10 +12,8 @@ class SystemContainer : public Singleton<SystemContainer>
 public:
 
 	template<typename TSystem>
-	TSystem& GetSystem()
+	TSystem& GetSystem() requires std::is_base_of_v<System, TSystem>
 	{
-		static_assert(std::is_base_of<System, TSystem>::value, "Tried to get system that does not inherit from System!");
-
 		std::lock_guard<decltype(myMutex)> lock(myMutex);
 
 		static struct SystemConstructionWrapper

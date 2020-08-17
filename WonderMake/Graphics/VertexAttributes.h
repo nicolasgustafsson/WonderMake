@@ -10,6 +10,7 @@ enum class EVertexAttribute
 	Origin,
 	TexCoord,
 	OneDimensionalUV,
+	Depth,
 	Progress
 };
 
@@ -29,6 +30,8 @@ static auto constexpr GetValueFromAttribute()
 	else if constexpr (TVertexAttribute == EVertexAttribute::Rotation)
 		return 0.f;
 	else if constexpr (TVertexAttribute == EVertexAttribute::OneDimensionalUV)
+		return 0.f;
+	else if constexpr (TVertexAttribute == EVertexAttribute::Depth)
 		return 0.f;
 	else if constexpr (TVertexAttribute == EVertexAttribute::Progress)
 		return 0.f;

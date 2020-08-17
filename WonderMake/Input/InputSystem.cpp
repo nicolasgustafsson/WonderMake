@@ -5,6 +5,7 @@
 #include <algorithm>
 #include "Graphics/Renderer.h"
 #include "Program/GlfwFacade.h"
+#include "CameraManager.h"
 
 void InputSystem::Update() noexcept
 {
@@ -70,7 +71,7 @@ void InputSystem::UpdateGamepad() noexcept
 
 SVector2f InputSystem::GetMousePositionInWorld() const noexcept
 {
-	return SystemPtr<Camera>()->ConvertToWorldPosition(GetMousePositionOnWindow());
+	return SystemPtr<CameraManager>()->GetMainCamera().ConvertToWorldPosition(GetMousePositionOnWindow());
 }
 
 SVector2f InputSystem::GetMousePositionOnWindow() const noexcept

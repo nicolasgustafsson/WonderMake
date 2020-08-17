@@ -4,14 +4,14 @@
 #include "Graphics/EngineUniformBuffer.h"
 #include "Message/MessageTypes.h"
 #include "Message/MessageSubscriber.h"
-#include <Utilities/Debugging/Debugged.h>
+#include "Graphics/RenderTarget.h"
 
 class Camera final
-	: public System
-	, public Debugged
 {
 public:
-	Camera() : Debugged("Camera Settings") {}
+	Camera(std::string aName);
+
+	Camera(Camera&& aOther) = default;
 	void Update();
 
 	void SetViewportSize(const SVector2i aViewportSize) noexcept;
@@ -19,9 +19,11 @@ public:
 
 	void SetPosition(const SVector2f aPosition);
 
+	void FinishFrame();
+	void FinishDebugFrame();
+
 	[[nodiscard]] SVector2f ConvertToWorldPosition(const SVector2f aWindowPosition) const noexcept;
 private:
-	virtual void Debug() override;
 
 	SystemPtr<EngineUniformBuffer> myEngineBufferPtr;
 	SVector2f myPosition;
@@ -32,5 +34,11 @@ private:
 	SMatrix33f myProjectionMatrixInverse;
 	SMatrix33f myViewMatrix;
 	SVector2f myViewportSize;
+
+	std::string myName;
+
+	RenderTarget myRenderTarget;
+
+	const SColor ClearColor = SColor::Grey;
 };
 

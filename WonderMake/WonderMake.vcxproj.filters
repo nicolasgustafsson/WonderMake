@@ -74,6 +74,7 @@
     <ClCompile Include="Graphics\ShaderParser.cpp" />
     <ClCompile Include="Graphics\RenderCommandProcessor.cpp" />
     <ClCompile Include="Graphics\RenderObject.cpp" />
+    <ClCompile Include="CameraManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -249,6 +250,7 @@
     <ClInclude Include="Graphics\ShaderParser.h" />
     <ClInclude Include="Utilities\Rotation.h" />
     <ClInclude Include="Graphics\RenderCommandProcessor.h" />
+    <ClInclude Include="CameraManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

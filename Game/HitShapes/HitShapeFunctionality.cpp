@@ -87,11 +87,11 @@ void HitShapeFunctionality::SetFromBezier(BezierCurve aCurve, const f32 aWidth, 
 	switch (aFaction)
 	{
 	case EFaction::Enemy:
-		SetMainColor(ColorConstants::EnemyColor);
+		SetMainColor(Palette::EnemyColor);
 		break;
 
 	case EFaction::Player:
-		SetMainColor(ColorConstants::PlayerColor);
+		SetMainColor(Palette::PlayerColor);
 		break;
 
 	default:

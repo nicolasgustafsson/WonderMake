@@ -39,6 +39,30 @@ RenderTarget::RenderTarget(const SRenderTargetSettings& aSettings)
 	openGL->BindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+RenderTarget::RenderTarget(RenderTarget&& aOther)
+{
+	myFrameBufferObject = aOther.myFrameBufferObject;
+	myRenderTexture = aOther.myRenderTexture;
+	myDepthStencilRbo = aOther.myDepthStencilRbo;
+
+	aOther.myFrameBufferObject = std::numeric_limits<u32>::max();
+	aOther.myRenderTexture     = std::numeric_limits<u32>::max();
+	aOther.myDepthStencilRbo   = std::numeric_limits<u32>::max();
+}
+
+RenderTarget& RenderTarget::operator=(RenderTarget&& aOther)
+{
+	myFrameBufferObject = aOther.myFrameBufferObject;
+	myRenderTexture = aOther.myRenderTexture;
+	myDepthStencilRbo = aOther.myDepthStencilRbo;
+
+	aOther.myFrameBufferObject = std::numeric_limits<u32>::max();
+	aOther.myRenderTexture = std::numeric_limits<u32>::max();
+	aOther.myDepthStencilRbo = std::numeric_limits<u32>::max();
+
+	return *this;
+}
+
 RenderTarget::~RenderTarget()
 {
 	SystemPtr<OpenGLFacade> openGL;

@@ -22,6 +22,8 @@ public:
 	void FinishFrame();
 	void FinishDebugFrame();
 
+	void BindAsTexture();
+
 	[[nodiscard]] SVector2f ConvertToWorldPosition(const SVector2f aWindowPosition) const noexcept;
 private:
 

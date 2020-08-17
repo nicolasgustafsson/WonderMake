@@ -147,3 +147,8 @@ void Camera::FinishFrame()
 
 	SystemPtr<RenderCommandProcessor>()->ProcessQueue();
 }
+
+void Camera::BindAsTexture()
+{
+	myRenderTarget.BindAsTexture();
+}

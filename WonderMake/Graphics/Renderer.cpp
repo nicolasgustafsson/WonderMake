@@ -52,31 +52,36 @@ void Renderer::SetViewportSize(const SVector2<int> WindowSize)
 
 void Renderer::StartFrame()
 {
-	SystemPtr<GlfwFacade> glfw;
-
-	glfw->SwapBuffers(myWindowPtr->myGlfwWindow);
+	if constexpr (Constants::IsDebugging)
+	{
+		SystemPtr<GlfwFacade> glfw;
+		glfw->SwapBuffers(myWindowPtr->myGlfwWindow);
+	}
 }
 
 void Renderer::FinishFrame()
 {
-	myLineDrawer->Render();
-
 	myCameraManagerPtr->FinishFrame();
+
+	myLineDrawer->Render();
 
 	myOpenGLInterface->BindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	myOpenGLInterface->SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 	myOpenGLInterface->Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	SystemPtr<RenderCommandProcessor>()->ClearQueue();
-
 	if constexpr (!Constants::IsDebugging)
 	{
 		//second pass - copy directly to backbuffer if we are not debugging
-		//myRenderTarget.BindAsTexture();
+		myCameraManagerPtr->GetMainCamera().BindAsTexture();
 
-		//myCopyPass.Render();
+		myCopyPass.RenderImmediate();
+
+		SystemPtr<GlfwFacade> glfw;
+		glfw->SwapBuffers(myWindowPtr->myGlfwWindow);
 	}
+
+	SystemPtr<RenderCommandProcessor>()->ClearQueue();
 }
 
 void Renderer::Debug()

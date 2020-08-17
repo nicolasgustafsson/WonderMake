@@ -25,6 +25,7 @@ class BaseRenderObject
 {
 public:
 	void Render();
+	void RenderImmediate();
 
 	friend class RenderCommand;
 

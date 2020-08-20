@@ -17,7 +17,7 @@ struct SCompiledNode
 	SNode& Node;
 };
 
-class NodeGraph
+class NodeGraph : public NonCopyable, public NonMovable
 {
 public:
 	NodeGraph(std::filesystem::path aFilePath);
@@ -48,10 +48,10 @@ public:
 
 	[[nodiscard]] std::string GetName() const { return myPath.string(); }
 
+	void Load();
 protected:
 	virtual void Compile();
 
-	void Load();
 
 	[[nodiscard]] plf::colony<SNode>::colony_iterator<false> KillNode(plf::colony<SNode>::colony_iterator<false> aIterator);
 
@@ -103,6 +103,7 @@ private:
 	size_t myUniqueId;
 	SNodeTypeBase* myRootNodeType = nullptr;
 	std::filesystem::path myPath;
+	bool myNeedsRecompile = false; 
 };
 
 template<typename T>
@@ -127,7 +128,7 @@ void NodeGraph::RegisterNode()
 	SRegisteredNode node
 	{
 		T::StaticObject.Title,
-		[this](const ImVec2 InLocation) -> SNode& {return AddNode<T>(InLocation); },
+		[&](const ImVec2 InLocation) -> SNode& {return AddNode<T>(InLocation); },
 		T::StaticObject
 	};
 

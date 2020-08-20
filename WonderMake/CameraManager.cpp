@@ -4,7 +4,7 @@
 CameraManager::CameraManager()
 	: Debugged("Camera Manager")
 {
-	myCameras.insert(std::move(Camera("Main Camera")));
+	myCameras.emplace(("Main Camera"));
 }
 
 Camera& CameraManager::GetMainCamera()
@@ -42,7 +42,12 @@ void CameraManager::Debug()
 
 	if (ImGui::Button("Add Camera"))
 	{
-		myCameras.insert(std::move(Camera(std::string("Camera ") + std::to_string(myCameras.size() + 1))));
+		myCameras.emplace(std::string("Camera ") + std::to_string(myCameras.size() + 1));
+	}
+
+	for (auto&& camera : myCameras)
+	{
+		camera.Inspect();
 	}
 
 	ImGui::End();

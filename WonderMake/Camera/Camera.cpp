@@ -95,10 +95,10 @@ void Camera::SetPosition(const SVector2f aPosition)
 	myPosition = aPosition;
 }
 
-Camera::Camera(std::string aName)
-	: myRenderTarget({ {1600, 900}, true }), myName(aName)
+Camera::Camera(const std::string& aName)
+	: myRenderTarget({ {1600, 900}, true }), myName(aName), myRenderGraph(std::filesystem::path("NodeGraphs") / "Render" / "MainCamera.json")
 {
-
+	myRenderGraph.Load();
 }
 
 void Camera::FinishDebugFrame()
@@ -123,9 +123,15 @@ void Camera::FinishDebugFrame()
 	ImGui::PopStyleVar();
 
 	const SVector2i ViewportSize = { static_cast<i32>(ImGui::GetContentRegionAvail().x), static_cast<i32>(ImGui::GetContentRegionAvail().y) };
+
+	RenderTarget* finalRenderTarget = myRenderGraph.GetFinalRenderTarget();
+
+	if (finalRenderTarget)
+	{
 #pragma warning(disable: 4312 26493)
-	ImGui::Image((ImTextureID)myRenderTarget.GetTexture(), ImVec2(static_cast<float>(ViewportSize.X), static_cast<float>(ViewportSize.Y)));
+		ImGui::Image((ImTextureID)finalRenderTarget->GetTexture(), ImVec2(static_cast<float>(ViewportSize.X), static_cast<float>(ViewportSize.Y)));
 #pragma warning(default: 4312 26493)
+	}
 
 	SetViewportSize(ViewportSize);
 
@@ -136,19 +142,30 @@ void Camera::FinishFrame()
 {
 	auto openGlInterface = SystemPtr<OpenGLFacade>();
 
-	//first pass
-	myRenderTarget.BindAsTarget();
-
 	Update();
 	SystemPtr<EngineUniformBuffer>()->Update();
+
+	//first pass
+	myRenderTarget.BindAsTarget();
 
 	openGlInterface->SetClearColor(ClearColor);
 	openGlInterface->Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	SystemPtr<RenderCommandProcessor>()->ProcessQueue();
+
+	myRenderGraph.Execute();
 }
 
 void Camera::BindAsTexture()
 {
 	myRenderTarget.BindAsTexture();
+}
+
+void Camera::Inspect()
+{
+	if (ImGui::Button("Edit render node graph"))
+		myRenderGraph.ShouldBeVisible = true;
+
+	if (myRenderGraph.ShouldBeVisible)
+		WmGui::NodeGraphEditor::NodeGraphEdit(myRenderGraph);
 }

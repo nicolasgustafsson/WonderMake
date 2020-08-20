@@ -2,7 +2,7 @@
 #include "System/SystemPtr.h"
 #include "Window.h"
 
-class ImguiWrapper
+class ImguiWrapper : public System
 {
 public:
 	ImguiWrapper();

@@ -1,7 +1,6 @@
 #pragma once
 #include "Graphics/Renderer.h"
 #include "Window.h"
-#include "ImguiWrapper.h"
 #include "Logging/ConsoleLogger.h"
 #include "Logging/FileLogger.h"
 #include "Logging/ImGuiLogger.h"
@@ -13,6 +12,7 @@
 #include "Audio/AudioManager.h"
 #include "FileSystem/FileWatcher.h"
 #include "CameraManager.h"
+#include "Program/ImguiWrapper.h"
 
 
 class Program
@@ -30,13 +30,13 @@ private:
 
 	void SetupCallbacks();
 	void OnWindowSizeChanged([[maybe_unused]]GLFWwindow* Window, i32 X, i32 Y);
-
 	//-------KEEP THIS IN ORDER-------
 	DockSpace myDockSpace;
 	ConsoleLogger myLogger;
 	FileLogger myFileLogger;
 	ImGuiLogger myImGuiLogger;
 	SystemPtr<Window> myWindowPtr;
+	SystemPtr<ImguiWrapper> myImguiWrapper;
 	SystemPtr<Renderer> myRendererPtr;
 	SystemPtr<EngineUniformBuffer> myEngineUniformBufferPtr;
 	//-------KEEP THIS IN ORDER-------

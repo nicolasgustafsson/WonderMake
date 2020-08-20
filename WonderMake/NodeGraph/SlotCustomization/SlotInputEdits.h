@@ -22,6 +22,22 @@ namespace SlotInputEdits
 	}
 
 	template<>
+	inline void EditInputSlot<bool>(bool& aInput)
+	{
+		ImGui::Checkbox("", &aInput);
+	}
+
+	template<>
+	inline void EditInputSlot<SVector2u>(SVector2u& aInput)
+	{
+		i32 inputs[]{ static_cast<i32>(aInput.X), static_cast<i32>(aInput.Y)};
+		ImGui::InputInt2("", inputs);
+
+		aInput.X = static_cast<u32>(inputs[0]);
+		aInput.Y = static_cast<u32>(inputs[1]);
+	}
+
+	template<>
 	inline void EditInputSlot<SColor>(SColor& aInput)
 	{
 		ImGui::ColorEdit4("", ((f32*)&aInput));

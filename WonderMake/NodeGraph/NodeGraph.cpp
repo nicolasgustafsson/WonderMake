@@ -78,10 +78,14 @@ void NodeGraph::Compile()
 	myCompiledNodeStack.clear();
 
 	CompileNodeGraph(*myRootNode, myCompiledNodeStack);
+	myNeedsRecompile = false;
 }
 
 void NodeGraph::Execute()
 {
+	if (myNeedsRecompile)
+		Compile();
+
 	//this sets up inputs/outputs
 	for (size_t i = myCompiledNodeStack.size() - 1; i < myCompiledNodeStack.size(); i--)
 	{
@@ -157,6 +161,7 @@ plf::colony<SNode>::colony_iterator<false> NodeGraph::KillNode(plf::colony<SNode
 		}
 	}
 
+	myNeedsRecompile = true;
 	return myNodes.erase(aIterator);
 }
 
@@ -334,6 +339,8 @@ void NodeGraph::CompileNodeGraph(SNode& aRoot, std::vector<SCompiledNode>& aNode
 		{
 			auto id = slotInstance->Connection->OutputNodePointer;
 			SNode* node = static_cast<SNode*>(id);
+
+			node->ClearNodeData();
 
 			if (node)
 				CompileNodeGraph(*node, aNodeStack, false);

@@ -13,6 +13,7 @@ HitShapeRenderObject::HitShapeRenderObject(const BezierCurve& aCurve, const i32 
 		, GL_TRIANGLE_STRIP }), myNumberOfSegments(aSegments), myThickness(aThickness)
 {
 	SetVerticesFromCurve(aCurve);
+	myRenderOrder = -10;
 }
 
 void HitShapeRenderObject::SetAnticipationProgress(const f32 aAnticipationProgress)

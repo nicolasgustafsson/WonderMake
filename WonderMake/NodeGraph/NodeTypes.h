@@ -201,6 +201,7 @@ struct SNodeTypeBase
 		return slotInstances;
 	}
 
+	//[Nicos]: Setup before executing a node graph
 	virtual void PrepareNode(struct SNode&) {}
 
 	virtual void ExecuteNodeRightToLeft(struct SNode&) {}
@@ -262,6 +263,8 @@ struct SNode final
 	{
 		return SNodeType<TNode>::StaticObject;
 	}
+
+	void ClearNodeData();
 
 	SNodeTypeBase& NodeType;
 

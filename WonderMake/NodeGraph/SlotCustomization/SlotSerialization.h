@@ -1,5 +1,7 @@
 #pragma once
 #include <json/json.hpp>
+#include <array>
+#include "Utilities/Vector.h"
 
 namespace InputSlotSerialization
 {
@@ -27,6 +29,13 @@ namespace InputSlotSerialization
 		aJson.push_back(aJson.object({ {"NodeId", aNodeId}, {"SlotId", aSlotId}, {"Value", aSlotValue.string()} }));
 	}
 
+	template<>
+	inline void SerializeInput<SVector2u>(const i32 aNodeId, const i32 aSlotId, json& aJson, SVector2u aSlotValue)
+	{
+		std::array<u32, 2> arr{ aSlotValue.X, aSlotValue.Y };
+		aJson.push_back(aJson.object({ {"NodeId", aNodeId}, {"SlotId", aSlotId}, {"Value", arr} }));
+	}
+
 	template<typename TSlotType>
 	TSlotType DeserializeInput(const json&)
 	{
@@ -44,5 +53,13 @@ namespace InputSlotSerialization
 	inline std::filesystem::path DeserializeInput<std::filesystem::path>(const json& aJson)
 	{
 		return std::filesystem::path(aJson["Value"].get<std::string>());
+	}
+
+	template<>
+	inline SVector2u DeserializeInput<SVector2u>(const json& aJson)
+	{
+		std::array<u32, 2> arr = (aJson["Value"].get<std::array<u32, 2>>());
+
+		return SVector2u(arr[0], arr[1]);
 	}
 }

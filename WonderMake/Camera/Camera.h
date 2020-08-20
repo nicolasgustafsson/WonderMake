@@ -5,11 +5,12 @@
 #include "Message/MessageTypes.h"
 #include "Message/MessageSubscriber.h"
 #include "Graphics/RenderTarget.h"
+#include "Graphics/RenderNodeGraph/RenderNodeGraph.h"
 
 class Camera final
 {
 public:
-	Camera(std::string aName);
+	Camera(const std::string& aName);
 
 	Camera(Camera&& aOther) = default;
 	void Update();
@@ -25,6 +26,8 @@ public:
 	void BindAsTexture();
 
 	[[nodiscard]] SVector2f ConvertToWorldPosition(const SVector2f aWindowPosition) const noexcept;
+
+	void Inspect();
 private:
 
 	SystemPtr<EngineUniformBuffer> myEngineBufferPtr;
@@ -40,6 +43,9 @@ private:
 	std::string myName;
 
 	RenderTarget myRenderTarget;
+	RenderTarget* myResultTexture;
+
+	RenderNodeGraph myRenderGraph;
 
 	const SColor ClearColor = SColor::Grey;
 };

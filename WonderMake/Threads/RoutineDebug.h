@@ -15,7 +15,7 @@ protected:
 	virtual void PreMessageRouting() override;
 	virtual void Procedure() override;
 private:
-	ImguiWrapper myImguiWrapper;
+	SystemPtr<ImguiWrapper> myImguiWrapper;
 
 	SystemPtr<Renderer> myRendererPtr;
 };

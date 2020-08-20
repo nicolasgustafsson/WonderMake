@@ -14,7 +14,7 @@ void RoutineDebug::PreMessageRouting()
 
 	//FinishFrame binds the backbuffer which we want to render to
 	myRendererPtr->FinishFrame();
-	myImguiWrapper.StartFrame();
+	myImguiWrapper->StartFrame();
 
 	WmDispatchMessage<SDebugMessage>({}, ERoutineId::Debug);
 }
@@ -22,5 +22,5 @@ void RoutineDebug::PreMessageRouting()
 void RoutineDebug::Procedure()
 {
 	Routine::Procedure();
-	myImguiWrapper.EndFrame();
+	myImguiWrapper->EndFrame();
 }

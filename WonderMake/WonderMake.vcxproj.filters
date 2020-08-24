@@ -72,6 +72,7 @@
     <ClCompile Include="FileSystem\FileWatcher.cpp" />
     <ClCompile Include="Graphics\ShaderParser.cpp" />
     <ClCompile Include="Utilities\Serialization.cpp" />
+    <ClCompile Include="Utilities\DependencyInjector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -201,7 +202,6 @@
     <ClInclude Include="Functionalities\ImpulseFunctionality.h" />
     <ClInclude Include="Object\ObjectImpulseRouter.h" />
     <ClInclude Include="Functionalities\OwnerFunctionality.h" />
-    <ClInclude Include="Serialization\SerializationSystem.h" />
     <ClInclude Include="Randomizer\Randomizer.h" />
     <ClInclude Include="Functionalities\BaseFunctionality.h" />
     <ClInclude Include="Program\GlfwFacade.h" />
@@ -245,6 +245,7 @@
     <ClInclude Include="Utilities\Rotation.h" />
     <ClInclude Include="Utilities\Matrix.h" />
     <ClInclude Include="Utilities\Serialization.h" />
+    <ClInclude Include="Utilities\DependencyInjector.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

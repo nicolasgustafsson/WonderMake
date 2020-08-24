@@ -43,13 +43,12 @@ Renderer::Renderer() noexcept
 	//myOpenGLInterface->SetBlendFunction(GL_SRC_ALPHA, GL_ONE); //additive
 
 	myOpenGLInterface->SetDebugMessageCallback(MessageCallback);
-	myCameraManagerPtr->GetMainCamera().SetViewportSize({1600, 900});
 }
 
 void Renderer::SetViewportSize(const SVector2<int> WindowSize)
 {
 	myOpenGLInterface->SetViewportSize(WindowSize);
-	myCameraManagerPtr->GetMainCamera().SetViewportSize(WindowSize);
+	//myCameraManagerPtr->GetMainCamera().SetViewportSize(WindowSize);
 }
 
 void Renderer::StartFrame()
@@ -75,7 +74,7 @@ void Renderer::FinishFrame()
 	if constexpr (!Constants::IsDebugging)
 	{
 		//second pass - copy directly to backbuffer if we are not debugging
-		myCameraManagerPtr->GetMainCamera().BindAsTexture();
+		//myCameraManagerPtr->GetMainCamera().BindAsTexture();
 
 		myCopyPass.RenderImmediate();
 
@@ -83,7 +82,7 @@ void Renderer::FinishFrame()
 		glfw->SwapBuffers(myWindowPtr->myGlfwWindow);
 	}
 
-	SystemPtr<RenderCommandProcessor>()->ClearQueue();
+	SystemPtr<RenderCommandProcessor>()->Clear();
 }
 
 void Renderer::Debug()

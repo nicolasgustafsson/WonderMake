@@ -4,7 +4,7 @@
 
 void BaseRenderObject::Render()
 {
-	SystemPtr<RenderCommandProcessor>()->AddToQueue(RenderCommand(*this, myRenderOrder));
+	SystemPtr<RenderCommandProcessor>()->GetRenderLayer(myRenderLayer).AddToQueue(RenderCommand(*this, myRenderOrder));
 }
 
 void BaseRenderObject::RenderImmediate()

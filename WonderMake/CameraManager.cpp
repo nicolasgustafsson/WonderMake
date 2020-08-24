@@ -36,6 +36,11 @@ void CameraManager::FinishFrame()
 	}
 }
 
+SVector2f CameraManager::ConvertToWorldPosition(const SVector2f aScreenPosition)
+{
+	return GetMainCamera().ConvertToWorldPosition(aScreenPosition);
+}
+
 void CameraManager::Debug()
 {
 	ImGui::Begin("Camera Manager");
@@ -45,9 +50,11 @@ void CameraManager::Debug()
 		myCameras.emplace(std::string("Camera ") + std::to_string(myCameras.size() + 1));
 	}
 
+	ImGui::Separator();
 	for (auto&& camera : myCameras)
 	{
 		camera.Inspect();
+		ImGui::Separator();
 	}
 
 	ImGui::End();

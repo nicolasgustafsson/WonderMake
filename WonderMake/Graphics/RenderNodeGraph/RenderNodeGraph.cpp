@@ -24,10 +24,7 @@ void RenderNodeGraph::RegisterNodes()
 {
 	RegisterRootNode<NodeTypes::SRenderResultNode>();
 	RegisterNode<NodeTypes::SRenderTextureNode>();
-	RegisterNode<NodeTypes::SProcessRenderCommandQueue>();
-	//RegisterNode<NodeTypes::SAudioMixNode>();
-	//RegisterNode<NodeTypes::SAudioSourceBusNode>();
-	//RegisterNode<NodeTypes::SEchoFilter>();
+	RegisterNode<NodeTypes::SProcessRenderLayer>();
 }
 
 void RenderNodeGraph::PostLoad()

@@ -32,6 +32,9 @@ void Program::StartNewFrame()
 {
 	myEngineUniformBufferPtr->GetBuffer().Time = myTimeKeeperPtr->GetGameTime();
 
+	myEngineUniformBufferPtr->GetBuffer().Resolution = {1600.f, 900.f};
+	myEngineUniformBufferPtr->Update();
+
 	myWindowPtr->Update();
 
 	myCameraManagerPtr->Update();

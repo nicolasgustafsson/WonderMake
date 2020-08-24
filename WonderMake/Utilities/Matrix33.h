@@ -92,18 +92,18 @@ std::string SMatrix33<TYPE>::ToString()  const
 using SMatrix33f = SMatrix33<float>;
 
 template<typename TYPE>
-SMatrix33<TYPE> operator +(SMatrix33<TYPE> aLeft, const SMatrix33<TYPE> & aRight)
+SMatrix33<TYPE> operator +(SMatrix33<TYPE> aLeft, const SMatrix33<TYPE>& aRight) noexcept
 {
 	return aLeft += aRight;
 }
 template<typename TYPE>
-SMatrix33<TYPE> operator -(SMatrix33<TYPE> aLeft, const SMatrix33<TYPE> & aRight)
-{
+SMatrix33<TYPE> operator -(SMatrix33<TYPE> aLeft, const SMatrix33<TYPE>& aRight) noexcept
+{ 
 	return aLeft -= aRight;
 }
 
 template<typename TYPE>
-SMatrix33<TYPE> operator *(const SMatrix33<TYPE> & aLeft, const SMatrix33<TYPE> & aRight)
+SMatrix33<TYPE> operator *(const SMatrix33<TYPE>& aLeft, const SMatrix33<TYPE>& aRight) noexcept
 {
 
 	SMatrix33<TYPE> matrix = SMatrix33<TYPE>::Zero;

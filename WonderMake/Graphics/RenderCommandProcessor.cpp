@@ -1,17 +1,12 @@
 #include "pch.h"
 #include "RenderCommandProcessor.h"
 
-RenderCommandProcessor::RenderCommandProcessor()
-{
-	EnableTick();
-}
-
-void RenderCommandProcessor::AddToQueue(RenderCommand aCommand)
+void RenderLayer::AddToQueue(RenderCommand aCommand)
 {
 	myRenderCommands.push_back(std::move(aCommand));
 }
 
-void RenderCommandProcessor::ProcessQueue()
+void RenderLayer::ProcessQueue()
 {
 	std::sort(myRenderCommands.begin(), myRenderCommands.end(), std::less<RenderCommand>());
 
@@ -21,7 +16,21 @@ void RenderCommandProcessor::ProcessQueue()
 	}
 }
 
-void RenderCommandProcessor::ClearQueue()
+void RenderLayer::ClearQueue()
 {
 	myRenderCommands.clear();
+}
+
+RenderLayer& RenderCommandProcessor::GetRenderLayer(std::string& aRenderLayerName)
+{
+	//[Nicos]: Change this to find to avoid creating unnecessary layers?
+	return myRenderLayers[aRenderLayerName];
+}
+
+void RenderCommandProcessor::Clear()
+{
+	for (auto& layer : myRenderLayers)
+	{
+		layer.second.ClearQueue();
+	}
 }

@@ -30,51 +30,19 @@ namespace NodeTypes
 		void ExecuteNodeRightToLeft(struct SNode&) override;
 	};
 
-	struct SProcessRenderCommandQueue : public SNodeType<SProcessRenderCommandQueue>
+	struct SProcessRenderLayer : public SNodeType<SProcessRenderLayer>
 	{
-		SProcessRenderCommandQueue() : SNodeType("Process Render Command queue")
+		SProcessRenderLayer() : SNodeType("Process Render Layer")
 		{
 			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Input, "In rendertarget");
+			AddSlot<std::string>(ESlotIo::Input, "In RenderLayer");
 			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Output, "Out rendertarget");
 		}
 
 		void ExecuteNodeLeftToRight(struct SNode&) override;
 	};
-
-	//
-	//struct SEchoFilter : public SNodeType<SEchoFilter>
-	//{
-	//	SEchoFilter() : SNodeType("Echo Filter")
-	//	{
-	//		AddSlot<SoLoud::AudioSource*>(ESlotIo::Input, "Input");
-	//		AddSlot<f32>(ESlotIo::Input, "Delay", 0.5f);
-	//		AddSlot<f32>(ESlotIo::Input, "Decay", 0.5f);
-	//		AddSlot<SoLoud::AudioSource*>(ESlotIo::Output, "Output");
-	//	}
-	//
-	//	virtual void PrepareNode(SNode& aNode) override;
-	//
-	//	virtual void ExecuteNodeLeftToRight(SNode& aNode) override;
-	//};
-	//
-	//struct SGetSoundEffect : public SNodeType<SGetSoundEffect>
-	//{
-	//	SGetSoundEffect() : SNodeType("Get sound effect")
-	//	{
-	//		AddSlot<std::filesystem::path>(ESlotIo::Input, "Sound effect name"); //[Nicos]: TODO make this a path
-	//		AddSlot<SoLoud::AudioSource*>(ESlotIo::Output, "Output");
-	//	}
-	//
-	//	virtual void PrepareNode(SNode& aNode) override;
-	//};
 }
 
 namespace SlotColors
 {
-	//template<>
-	//inline ImColor GetColor<SoLoud::AudioSource*>()
-	//{
-	//	return ImColor(255, 192, 32, 255);
-	//	//return ImColor(128, 192, 255, 255); // teal
-	//}
 }

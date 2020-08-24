@@ -51,26 +51,53 @@ struct SEngineUniformBufferData
 {
 	//MAKE SURE THESE ARE PROPERLY ALIGNED
 
-	SPaddedMatrix33 ProjectionMatrix;
-	SPaddedMatrix33 ViewMatrix;
-	SPaddedMatrix33 ViewProjectionMatrix;
 
 	SVector2f Resolution;
-	SVector2f CameraPosition;
-
 	float Time = 0;
+
+};
+
+struct SCameraUniformBufferData
+{
+	SPaddedMatrix33 ViewMatrix;
+
+	SVector2f CameraPosition;
+};
+
+struct SDisplayUniformBufferData
+{
+	SPaddedMatrix33 ProjectionMatrix;
+	SPaddedMatrix33 ViewProjectionMatrix;
 };
 
 class EngineUniformBuffer 
 	: public UniformBuffer<SEngineUniformBufferData>
 	, public System
-	, public Debugged
 	
 {
 public:
 	EngineUniformBuffer();
 
+};
+
+
+class CameraUniformBuffer
+	: public UniformBuffer<SCameraUniformBufferData>
+
+{
+public:
+	CameraUniformBuffer();
+
 private:
-	virtual void Debug() override;
+};
+
+class DisplayUniformBuffer
+	: public UniformBuffer<SDisplayUniformBufferData>
+
+{
+public:
+	DisplayUniformBuffer();
+
+private:
 };
 

@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <Program/GlfwFacade.h>
 #include "Graphics/RenderCommandProcessor.h"
+#include <utility>
 
 void Camera::Update()
 {
@@ -23,71 +24,14 @@ void Camera::Update()
 
 	viewInverse.Inverse();
 
-	auto& buffer = myEngineBufferPtr->GetBuffer();
+	auto& buffer = myCameraBuffer.GetBuffer();
 
-	const auto projectionMatrix = myProjectionMatrix;
 	const auto viewMatrix = viewInverse;
-	const auto viewProjectionMatrix = viewMatrix * myProjectionMatrix;
 
-	//projectionMatrix.Transpose();
-	//viewMatrix.Transpose();
-	//viewProjectionMatrix.Transpose();
-
-	buffer.ProjectionMatrix = projectionMatrix;
 	buffer.ViewMatrix = viewMatrix;
-	buffer.ViewProjectionMatrix = viewProjectionMatrix;
 
-	buffer.Resolution = myViewportSize;
 	buffer.CameraPosition = myPosition;
-}
-
-//void Camera::Debug()
-//{
-//	ImGui::Begin("Camera Debug Tool");
-//
-//	ImGui::SliderFloat2("Camera Position", &myPosition.X, -1000.f, 1000.f);
-//	ImGui::SliderFloat("Camera Rotation", &myRotation, -3.1415f, 3.1415f);
-//	ImGui::SliderFloat("Camera Scale", &myScale, 0.0f, 10.0f, "%.3f", 3.0f);
-//
-//	ImGui::End();
-//}
-
-void Camera::SetViewportSize(const SVector2i aViewportSize) noexcept
-{
-	myProjectionMatrix.m11 = 2.0f / aViewportSize.X;
-	myProjectionMatrix.m22 = 2.0f / aViewportSize.Y;
-
-	myProjectionMatrixInverse.m11 = aViewportSize.X / 2.0f;
-	myProjectionMatrixInverse.m22 = aViewportSize.Y / 2.0f;
-	myViewportSize = { aViewportSize.X, aViewportSize.Y };
-}
-
-SVector2f Camera::ConvertToWorldPosition(const SVector2f aWindowPosition) const noexcept
-{
-	SMatrix33f view = myViewMatrix;
-
-	const SMatrix33f rotationMatrix = SMatrix33f::CreateRotateAroundZ(myRotation);
-
-	view = rotationMatrix * myViewMatrix;
-
-	view.m11 /= myScale;
-	view.m12 /= myScale;
-	view.m22 /= myScale;
-	view.m21 /= myScale;
-
-	SVector2f offsetScreenPosition = aWindowPosition - myImguiWindowOffset;
-	offsetScreenPosition -= myViewportSize / 2.f;
-	SMatrix33f screenPositionMatrix;
-	screenPositionMatrix.SetPosition(offsetScreenPosition);
-	
-	screenPositionMatrix *= view;
-
-	return screenPositionMatrix.GetPosition();
-}
-
-void Camera::SetImguiWindowOffset(const SVector2f aImguiOffset) noexcept
-{
-	myImguiWindowOffset = aImguiOffset;
+	myCameraBuffer.Update();
 }
 
 void Camera::SetPosition(const SVector2f aPosition)
@@ -96,76 +40,49 @@ void Camera::SetPosition(const SVector2f aPosition)
 }
 
 Camera::Camera(const std::string& aName)
-	: myRenderTarget({ {1600, 900}, true }), myName(aName), myRenderGraph(std::filesystem::path("NodeGraphs") / "Render" / "MainCamera.json")
+	: myName(aName)
 {
-	myRenderGraph.Load();
+	std::string displayName = myName + " " + "Main Display";
+	myDisplays.emplace(std::piecewise_construct,
+		std::forward_as_tuple(displayName),
+		std::forward_as_tuple(displayName, *this));
 }
 
 void Camera::FinishDebugFrame()
 {
-	//if we are debugging, render the game window as an imgui image
-
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-
-	ImGui::Begin(myName.c_str());
-	SystemPtr<GlfwFacade> glfw;
-
-	//myDebugWindowHasFocus = ImGui::IsWindowFocused();
-
-	i32 windowX, windowY;
-	glfw->GetWindowPos(SystemPtr<Window>()->myGlfwWindow, &windowX, &windowY);
-	SetImguiWindowOffset(
-		{ ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x - windowX
-		, ImGui::GetWindowContentRegionMin().y + ImGui::GetWindowPos().y - windowY });
-
-	ImGui::PopStyleVar();
-	ImGui::PopStyleVar();
-
-	const SVector2i ViewportSize = { static_cast<i32>(ImGui::GetContentRegionAvail().x), static_cast<i32>(ImGui::GetContentRegionAvail().y) };
-
-	RenderTarget* finalRenderTarget = myRenderGraph.GetFinalRenderTarget();
-
-	if (finalRenderTarget)
+	for (auto& display : myDisplays)
 	{
-#pragma warning(disable: 4312 26493)
-		ImGui::Image((ImTextureID)finalRenderTarget->GetTexture(), ImVec2(static_cast<float>(ViewportSize.X), static_cast<float>(ViewportSize.Y)));
-#pragma warning(default: 4312 26493)
+		display.second.FinishDebugFrame();
 	}
-
-	SetViewportSize(ViewportSize);
-
-	ImGui::End();
 }
 
 void Camera::FinishFrame()
 {
-	auto openGlInterface = SystemPtr<OpenGLFacade>();
+	Update();	
 
-	Update();
-	SystemPtr<EngineUniformBuffer>()->Update();
-
-	//first pass
-	myRenderTarget.BindAsTarget();
-
-	openGlInterface->SetClearColor(ClearColor);
-	openGlInterface->Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	SystemPtr<RenderCommandProcessor>()->ProcessQueue();
-
-	myRenderGraph.Execute();
-}
-
-void Camera::BindAsTexture()
-{
-	myRenderTarget.BindAsTexture();
+	for (auto& display : myDisplays)
+	{
+		display.second.FinishFrame();
+	}
 }
 
 void Camera::Inspect()
 {
-	if (ImGui::Button("Edit render node graph"))
-		myRenderGraph.ShouldBeVisible = true;
+	ImGui::PushID(this);
 
-	if (myRenderGraph.ShouldBeVisible)
-		WmGui::NodeGraphEditor::NodeGraphEdit(myRenderGraph);
+	for (auto& display : myDisplays)
+	{
+		display.second.Inspect();
+	}
+	ImGui::PopID();
+}
+
+SVector2f Camera::ConvertToWorldPosition(const SVector2f aScreenPosition) const 
+{
+	for (auto& display : myDisplays)
+	{
+		return display.second.ConvertToWorldPosition(aScreenPosition);
+	}
+
+	return SVector2f::Zero();
 }

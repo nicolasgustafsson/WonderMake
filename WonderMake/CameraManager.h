@@ -13,6 +13,8 @@ public:
 
 	void FinishFrame();
 
+	[[nodiscard]] SVector2f ConvertToWorldPosition(const SVector2f aScreenPosition);
+
 protected:
 	void Debug() override;
 

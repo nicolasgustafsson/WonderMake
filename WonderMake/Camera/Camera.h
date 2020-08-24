@@ -6,8 +6,9 @@
 #include "Message/MessageSubscriber.h"
 #include "Graphics/RenderTarget.h"
 #include "Graphics/RenderNodeGraph/RenderNodeGraph.h"
+#include "Camera/Display.h"
 
-class Camera final
+class Camera final : public NonCopyable, public NonMovable
 {
 public:
 	Camera(const std::string& aName);
@@ -15,37 +16,32 @@ public:
 	Camera(Camera&& aOther) = default;
 	void Update();
 
-	void SetViewportSize(const SVector2i aViewportSize) noexcept;
-	void SetImguiWindowOffset(const SVector2f aImguiOffset) noexcept;
-
 	void SetPosition(const SVector2f aPosition);
 
 	void FinishFrame();
 	void FinishDebugFrame();
 
-	void BindAsTexture();
+	[[nodiscard]] SVector2f ConvertToWorldPosition(const SVector2f aScreenPosition) const;
 
-	[[nodiscard]] SVector2f ConvertToWorldPosition(const SVector2f aWindowPosition) const noexcept;
+	const SMatrix33f& GetViewMatrix() const noexcept { return myViewMatrix; }
+
+	[[nodiscard]] f32 GetRotation() const noexcept { return myRotation; }
+	[[nodiscard]] f32 GetScale() const noexcept { return myScale; }
 
 	void Inspect();
 private:
-
-	SystemPtr<EngineUniformBuffer> myEngineBufferPtr;
 	SVector2f myPosition;
-	SVector2f myImguiWindowOffset;
-	float myRotation = 0.f;
-	float myScale = 1.0f;
-	SMatrix33f myProjectionMatrix;
-	SMatrix33f myProjectionMatrixInverse;
+	
+	//[Nicos]: change this to proper rotation
+	f32 myRotation = 0.f;
+	f32 myScale = 1.0f;
 	SMatrix33f myViewMatrix;
-	SVector2f myViewportSize;
+
+	std::unordered_map<std::string, Display> myDisplays;
 
 	std::string myName;
 
-	RenderTarget myRenderTarget;
-	RenderTarget* myResultTexture;
-
-	RenderNodeGraph myRenderGraph;
+	CameraUniformBuffer myCameraBuffer;
 
 	const SColor ClearColor = SColor::Grey;
 };

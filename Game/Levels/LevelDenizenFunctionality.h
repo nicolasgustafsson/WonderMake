@@ -19,3 +19,4 @@ public:
 	LevelDenizenFunctionality(Object& aOwner);
 };
 
+REGISTER_FUNCTIONALITY(LevelDenizenFunctionality);

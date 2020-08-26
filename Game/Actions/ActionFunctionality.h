@@ -74,3 +74,4 @@ private:
 	void EndCurrentAction();
 };
 
+REGISTER_FUNCTIONALITY(ActionFunctionality);

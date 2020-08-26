@@ -60,3 +60,4 @@ private:
 	void OnDeath();
 };
 
+REGISTER_FUNCTIONALITY(PlayerControllerFunctionality);

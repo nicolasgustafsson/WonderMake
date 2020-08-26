@@ -40,3 +40,4 @@ private:
 	void TestCollision();
 };
 
+REGISTER_FUNCTIONALITY(DefaultMovementFunctionality);

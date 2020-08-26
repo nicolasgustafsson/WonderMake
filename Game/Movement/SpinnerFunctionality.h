@@ -26,3 +26,4 @@ public:
 	SystemPtr<TimeKeeper> myTimeKeeper;
 };
 
+REGISTER_FUNCTIONALITY(SpinnerFunctionality);

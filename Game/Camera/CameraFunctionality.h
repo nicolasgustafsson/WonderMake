@@ -22,3 +22,4 @@ public:
 private:
 };
 
+REGISTER_FUNCTIONALITY(CameraFunctionality);

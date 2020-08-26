@@ -26,3 +26,4 @@ private:
 	SystemPtr<TimeKeeper> myTimeKeeperPtr;
 };
 
+REGISTER_FUNCTIONALITY(SpriteRenderingFunctionality);

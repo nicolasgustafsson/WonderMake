@@ -28,3 +28,4 @@ public:
 	void Tick();
 };
 
+REGISTER_FUNCTIONALITY(TimerFunctionality);

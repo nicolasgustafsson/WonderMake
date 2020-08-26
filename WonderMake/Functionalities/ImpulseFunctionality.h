@@ -59,3 +59,5 @@ void ImpulseFunctionality::Unsubscribe(_BaseFunctionality& aSubscriber)
 {
 	Unsubscribe(aSubscriber, TMessage::GetTypeHash());
 }
+
+REGISTER_FUNCTIONALITY(ImpulseFunctionality);

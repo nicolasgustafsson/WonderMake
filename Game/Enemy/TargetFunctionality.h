@@ -29,3 +29,5 @@ template<typename TPredicate>
 
 	return targetTransform;
 }
+
+REGISTER_FUNCTIONALITY(TargetFunctionality);

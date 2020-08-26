@@ -46,3 +46,4 @@ public:
 	[[nodiscard]] SVector2f GetStartPosition() const noexcept { return Get<SLevelComponent>().StartPosition; }
 };
 
+REGISTER_FUNCTIONALITY(LevelFunctionality);

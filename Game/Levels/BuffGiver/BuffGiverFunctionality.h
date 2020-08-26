@@ -31,3 +31,4 @@ public:
 	void Tick();
 };
 
+REGISTER_FUNCTIONALITY(BuffGiverFunctionality);

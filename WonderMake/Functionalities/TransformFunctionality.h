@@ -34,3 +34,5 @@ public:
 
 private:
 };
+
+REGISTER_FUNCTIONALITY(TransformFunctionality);

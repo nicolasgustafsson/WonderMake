@@ -52,3 +52,4 @@ public:
 	void Inspect();
 };
 
+REGISTER_FUNCTIONALITY(CharacterFunctionality);

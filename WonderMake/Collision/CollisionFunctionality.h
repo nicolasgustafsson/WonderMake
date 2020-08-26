@@ -83,3 +83,5 @@ SCollider& CollisionFunctionality::AddSphereCollider(TIdentifyingFunctionality& 
 
 	return *collisionComponent.Colliders.emplace(collider);
 }
+
+REGISTER_FUNCTIONALITY(CollisionFunctionality);

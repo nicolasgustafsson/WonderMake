@@ -20,7 +20,7 @@ void InputSystem::UpdateKeyboard() noexcept
 
 	for (u32 i = 0; i < KeyboardKeyCount; i++)
 	{
-		const i32 glfwKeyState = glfw->GetKey(myWindowSystemPtr->myGlfwWindow, InputUtility::GetGlfwKey(static_cast<EKeyboardKey>(i)));
+		const i32 glfwKeyState = glfw->GetKey(GetCurrentWindow(), InputUtility::GetGlfwKey(static_cast<EKeyboardKey>(i)));
 
 		const bool bIsPressed = glfwKeyState == GLFW_PRESS;
 
@@ -36,7 +36,7 @@ void InputSystem::UpdateMouse() noexcept
 
 	for (u32 i = 0; i < MouseButtonCount; i++)
 	{
-		const i32 glfwKeyState = glfw->GetMouseButton(myWindowSystemPtr->myGlfwWindow, InputUtility::GetGlfwMouseButton(static_cast<EMouseButton>(i)));
+		const i32 glfwKeyState = glfw->GetMouseButton(GetCurrentWindow(), InputUtility::GetGlfwMouseButton(static_cast<EMouseButton>(i)));
 
 		const bool bIsPressed = glfwKeyState == GLFW_PRESS;
 
@@ -71,7 +71,7 @@ void InputSystem::UpdateGamepad() noexcept
 
 SVector2f InputSystem::GetMousePositionInWorld() const noexcept
 {
-	return SystemPtr<CameraManager>()->GetMainCamera().ConvertToWorldPosition(GetMousePositionOnWindow());
+	return SystemPtr<CameraManager>()->ConvertToWorldPosition(GetMousePositionOnWindow());
 }
 
 SVector2f InputSystem::GetMousePositionOnWindow() const noexcept
@@ -95,6 +95,22 @@ bool InputSystem::IsMouseButtonPressed(const EMouseButton aMouseButton) const no
 		return false;
 
 	return myMouseButtonStates[static_cast<u32>(aMouseButton)] == EInputItemState::Pressed;
+}
+
+GLFWwindow* InputSystem::GetCurrentWindow() const
+{
+	if constexpr (Constants::IsDebugging)
+	{
+		for (auto viewport : ImGui::GetPlatformIO().Viewports)
+		{
+			if (ImGui::GetPlatformIO().Platform_GetWindowFocus(viewport))
+			{
+				return reinterpret_cast<GLFWwindow*>(viewport->PlatformHandle);
+			}
+		}
+	}
+
+	return myWindowSystemPtr->myGlfwWindow;
 }
 
 constexpr EInputItemState InputSystem::GetNewInputState(const EInputItemState aOldState, const bool aIsPressed) const noexcept
@@ -202,5 +218,5 @@ bool InputSystem::ShouldCaptureMouseInput() const noexcept
 	if constexpr (!Constants::IsDebugging)
 		return true;
 
-	return SystemPtr<Renderer>()->DebugWindowHasFocus();
+	return SystemPtr<CameraManager>()->AnyDisplayIsFocused();
 }

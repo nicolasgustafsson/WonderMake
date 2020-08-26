@@ -11,8 +11,10 @@ public:
 	DebugLineDrawer() noexcept;
 
 	void Render();
+	void Update();
 
 private:
+
 	void OnGotDebugLineMessage(const SDebugLineMessage& aDebugLineMessage);
 
 	MessageSubscriber mySubscriber;

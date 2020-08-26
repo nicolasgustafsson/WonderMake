@@ -24,6 +24,8 @@ public:
 	bool IsMouseButtonPressed(const EMouseButton aKey) const noexcept;
 
 private:
+	GLFWwindow* GetCurrentWindow() const;
+
 	[[nodiscard]] constexpr EInputItemState GetNewInputState(const EInputItemState aOldState, const bool aIsPressed) const noexcept;
 
 	[[nodiscard]] inline constexpr bool IsStateDown(const EInputItemState aState) const noexcept

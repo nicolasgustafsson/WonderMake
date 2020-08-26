@@ -22,6 +22,8 @@ class NodeGraph : public NonCopyable, public NonMovable
 public:
 	NodeGraph(std::filesystem::path aFilePath);
 
+	void SetNewPath(std::filesystem::path aNewFilePath);
+
 	//[Nicos]: This differs from compile in that it will save after compilation if the flag is set
 	void CompileExternal();
 

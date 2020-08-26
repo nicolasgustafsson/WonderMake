@@ -27,7 +27,18 @@ namespace NodeTypes
 
 		virtual void PrepareNode(SNode& aNode) override;
 
-		void ExecuteNodeRightToLeft(struct SNode&) override;
+		virtual void ExecuteNodeRightToLeft(struct SNode&) override;
+	};
+
+	struct SRenderDebugLines : public SNodeType<SRenderDebugLines>
+	{
+		SRenderDebugLines() : SNodeType("Render Debug Lines")
+		{
+			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Input, "In rendertarget");
+			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Output, "Out rendertarget");
+		}
+
+		virtual void ExecuteNodeLeftToRight(struct SNode&) override;
 	};
 
 	struct SProcessRenderLayer : public SNodeType<SProcessRenderLayer>
@@ -39,7 +50,20 @@ namespace NodeTypes
 			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Output, "Out rendertarget");
 		}
 
-		void ExecuteNodeLeftToRight(struct SNode&) override;
+		virtual void ExecuteNodeLeftToRight(struct SNode&) override;
+	};
+
+	struct SPostProcess : public SNodeType<SPostProcess>
+	{
+		SPostProcess() : SNodeType("Run post process effect")
+		{
+			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Input, "In rendertarget");
+			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Input, "In texture");
+			AddSlot<std::filesystem::path>(ESlotIo::Input, "In Post process shader path");
+			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Output, "Out rendertarget");
+		}
+
+		virtual void ExecuteNodeLeftToRight(struct SNode&) override;
 	};
 }
 

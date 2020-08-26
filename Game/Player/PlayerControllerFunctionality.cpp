@@ -77,6 +77,8 @@ void PlayerControllerFunctionality::UpdateMovement()
 	if (movementInput != SVector2f::Zero())
 		Get<TransformFunctionality>().FaceDirection(movementInput);
 
+	WmDrawDebugLine(Get<TransformFunctionality>().GetPosition(), SystemPtr<InputSystem>()->GetMousePositionInWorld(), SColor::White);
+
 	Get<MovementInputFunctionality>().SetMovementInput(movementInput);
 }
 

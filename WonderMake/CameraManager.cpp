@@ -12,14 +12,6 @@ Camera& CameraManager::GetMainCamera()
 	return *myCameras.begin();
 }
 
-void CameraManager::Update()
-{
-	for (auto&& camera : myCameras)
-	{
-		camera.Update();
-	}
-}
-
 void CameraManager::FinishDebugFrame()
 {
 	for (auto&& camera : myCameras)
@@ -36,9 +28,16 @@ void CameraManager::FinishFrame()
 	}
 }
 
-SVector2f CameraManager::ConvertToWorldPosition(const SVector2f aScreenPosition)
+SVector2f CameraManager::ConvertToWorldPosition(const SVector2f aScreenPosition) const
 {
-	return GetMainCamera().ConvertToWorldPosition(aScreenPosition);
+	const Display* display = GetFocusedDisplay();
+
+	return display ? display->ConvertToWorldPosition(aScreenPosition) : SVector2f::Zero();
+}
+
+bool CameraManager::AnyDisplayIsFocused() const
+{
+	return GetFocusedDisplay() != nullptr;
 }
 
 void CameraManager::Debug()
@@ -58,4 +57,16 @@ void CameraManager::Debug()
 	}
 
 	ImGui::End();
+}
+
+const Display* CameraManager::GetFocusedDisplay() const
+{
+	for (auto& camera : myCameras)
+	{
+		const Display* display = camera.GetFocusedDisplay();
+		if (display)
+			return display;
+	}
+
+	return nullptr;
 }

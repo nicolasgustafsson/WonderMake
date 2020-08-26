@@ -64,7 +64,7 @@ void Renderer::FinishFrame()
 {
 	myCameraManagerPtr->FinishFrame();
 
-	myLineDrawer->Render();
+	myLineDrawer->Update();
 
 	myOpenGLInterface->BindFramebuffer(GL_FRAMEBUFFER, 0);
 

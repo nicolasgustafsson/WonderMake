@@ -15,6 +15,7 @@ void main()
 	
 	vec2 offset = CameraPosition / Resolution;
 	offset.x *= -1.0;
+	offset.y *= -1.0;
 	
 	uv -= offset;
 	uv.x *= aspectRatio;

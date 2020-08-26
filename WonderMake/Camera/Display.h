@@ -14,7 +14,9 @@ public:
 
 	void FinishDebugFrame();
 	void FinishFrame(); 
-	SVector2f ConvertToWorldPosition(const SVector2f aWindowPosition) const noexcept;
+	[[nodiscard]] SVector2f ConvertToWorldPosition(const SVector2f aWindowPosition) const noexcept;
+
+	[[nodiscard]] bool HasFocus() const { return myHasFocus; }
 	
 	void Inspect();
 private:
@@ -23,6 +25,7 @@ private:
 	void SetImguiWindowOffset(const SVector2f aImguiOffset) noexcept;
 
 	std::string myName;
+	std::filesystem::path myPath;
 
 	SMatrix33f myProjectionMatrix;
 	SMatrix33f myProjectionMatrixInverse;
@@ -39,5 +42,7 @@ private:
 	Camera& myCamera;
 
 	const SColor ClearColor = SColor::Grey;
+
+	bool myHasFocus = false;
 };
 

@@ -9,7 +9,7 @@
 #include "Camera/Camera.h"
 
 Display::Display(const std::string& aName, Camera& aCamera)
-	: myRenderGraph(std::filesystem::path("NodeGraphs") / "Render" / std::string(aName + ".json")), myName(aName), myCamera(aCamera)
+	: myPath(std::filesystem::path("NodeGraphs") / "Render" / std::string(aName + ".json")), myRenderGraph(myPath), myName(aName), myCamera(aCamera)
 {
 	myRenderGraph.Load();
 }
@@ -54,10 +54,12 @@ void Display::FinishDebugFrame()
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 
-	ImGui::Begin(myName.c_str());
+	ImGui::Begin(myName.c_str(), nullptr);
+
+	ImGui::BeginChild(15, ImVec2(0, 0), false, ImGuiWindowFlags_NoMove);
 	SystemPtr<GlfwFacade> glfw;
 
-	//myDebugWindowHasFocus = ImGui::IsWindowFocused();
+	myHasFocus = ImGui::IsWindowFocused();
 
 	i32 windowX, windowY;
 	glfw->GetWindowPos(SystemPtr<Window>()->myGlfwWindow, &windowX, &windowY);
@@ -70,16 +72,18 @@ void Display::FinishDebugFrame()
 
 	const SVector2i ViewportSize = { static_cast<i32>(ImGui::GetContentRegionAvail().x), static_cast<i32>(ImGui::GetContentRegionAvail().y) };
 
-	RenderTarget* finalRenderTarget = myRenderGraph.GetFinalRenderTarget();
+	RenderTarget* const finalRenderTarget = myRenderGraph.GetFinalRenderTarget();
 
 	if (finalRenderTarget)
 	{
 #pragma warning(disable: 4312 26493)
-		ImGui::Image((ImTextureID)finalRenderTarget->GetTexture(), ImVec2(static_cast<float>(ViewportSize.X), static_cast<float>(ViewportSize.Y)));
+		ImGui::Image((ImTextureID)finalRenderTarget->GetTexture(), ImVec2(static_cast<f32>(ViewportSize.X), static_cast<f32>(ViewportSize.Y)));
 #pragma warning(default: 4312 26493)
 	}
 
 	SetViewportSize(ViewportSize);
+
+	ImGui::EndChild();
 
 	ImGui::End();
 }
@@ -87,9 +91,6 @@ void Display::FinishDebugFrame()
 void Display::FinishFrame()
 {
 	Update();
-	auto openGlInterface = SystemPtr<OpenGLFacade>();
-	openGlInterface->SetClearColor(ClearColor);
-	openGlInterface->Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	myRenderGraph.Execute();
 }
 
@@ -119,6 +120,12 @@ void Display::Inspect()
 {
 	ImGui::PushID(this);
 	ImGui::Text(myName.c_str());
+
+	if (ImGui::FileSelector::SelectFile(myPath))
+		myRenderGraph.SetNewPath(myPath);
+
+	ImGui::SameLine();
+
 	if (ImGui::Button("Edit render node graph"))
 		myRenderGraph.ShouldBeVisible = true;
 

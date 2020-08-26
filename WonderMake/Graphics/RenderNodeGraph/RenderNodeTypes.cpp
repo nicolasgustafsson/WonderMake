@@ -3,6 +3,8 @@
 #include "Graphics/RenderTarget.h"
 #include <any>
 #include "Graphics/RenderCommandProcessor.h"
+#include "Debugging/DebugLineDrawer.h"
+#include "Graphics/ScreenPassRenderObject.h"
 
 namespace NodeTypes
 {
@@ -39,6 +41,7 @@ namespace NodeTypes
 		aNode.SetOutput<std::shared_ptr<RenderTarget>>(0, renderTarget);
 	}
 
+
 	void SProcessRenderLayer::ExecuteNodeLeftToRight(struct SNode& aNode)
 	{
 		auto renderTarget = aNode.GetInput<std::shared_ptr<RenderTarget>>(0);
@@ -53,4 +56,49 @@ namespace NodeTypes
 		aNode.SetOutput(0, renderTarget);
 	}
 
+	void SRenderDebugLines::ExecuteNodeLeftToRight(struct SNode& aNode)
+	{
+		auto renderTarget = aNode.GetInput<std::shared_ptr<RenderTarget>>(0);
+
+		if (!renderTarget)
+			return;
+
+		renderTarget->BindAsTarget();
+
+		SystemPtr<DebugLineDrawer>()->Render();
+
+		aNode.SetOutput(0, renderTarget);
+	}
+
+	void SPostProcess::ExecuteNodeLeftToRight(struct SNode& aNode)
+	{
+		auto renderTarget = aNode.GetInput<std::shared_ptr<RenderTarget>>(0);
+		aNode.SetOutput(0, renderTarget);
+
+		auto filePath = aNode.GetInput<std::filesystem::path>(2);
+
+		if (!std::filesystem::exists(filePath))
+			return;
+
+		if (!renderTarget)
+			return;
+
+		renderTarget->BindAsTarget();
+
+		auto texture = aNode.GetInput<std::shared_ptr<RenderTarget>>(1);
+
+		if (!texture)
+			return;
+
+		texture->BindAsTexture();
+
+		std::any& screenPassAny = aNode.NodeData["RenderTarget"];
+
+		if (!screenPassAny.has_value())
+			screenPassAny = std::move(std::make_any<std::shared_ptr<ScreenPassRenderObject>>(std::make_shared<ScreenPassRenderObject>(aNode.GetInput<std::filesystem::path>(2))));
+
+		std::shared_ptr<ScreenPassRenderObject> screenPass = std::any_cast<std::shared_ptr<ScreenPassRenderObject>>(screenPassAny);
+
+		screenPass->RenderImmediate();
+	}
 }

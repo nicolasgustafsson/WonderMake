@@ -69,11 +69,25 @@ void Camera::FinishFrame()
 void Camera::Inspect()
 {
 	ImGui::PushID(this);
+	
+	ImGui::Text(myName.c_str());
 
+	ImGui::Indent();
 	for (auto& display : myDisplays)
 	{
 		display.second.Inspect();
+		ImGui::Separator();
 	}
+
+	if (ImGui::Button("Add new display"))
+	{
+		const std::string displayName = myName + " " + std::to_string(myDisplays.size());
+		myDisplays.emplace(std::piecewise_construct,
+			std::forward_as_tuple(displayName),
+			std::forward_as_tuple(displayName, *this));
+	}
+	ImGui::Unindent();
+
 	ImGui::PopID();
 }
 
@@ -85,4 +99,22 @@ SVector2f Camera::ConvertToWorldPosition(const SVector2f aScreenPosition) const
 	}
 
 	return SVector2f::Zero();
+}
+
+Display* Camera::GetFocusedDisplay()
+{
+	for (auto& display : myDisplays)
+	{
+		if (display.second.HasFocus())
+			return &display.second;
+	}
+}
+
+const Display* Camera::GetFocusedDisplay() const
+{
+	for (auto& display : myDisplays)
+	{
+		if (display.second.HasFocus())
+			return &display.second;
+	}
 }

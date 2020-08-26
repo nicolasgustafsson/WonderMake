@@ -10,6 +10,13 @@ NodeGraph::NodeGraph(std::filesystem::path aFilePath)
 	uniqueIdCounter++;
 }
 
+void NodeGraph::SetNewPath(std::filesystem::path aNewFilePath)
+{
+	myPath = aNewFilePath;
+
+	Load();
+}
+
 void NodeGraph::CompileExternal()
 {
 	Compile();
@@ -101,7 +108,7 @@ void NodeGraph::Execute()
 		compiledNode.Node.NodeType.ExecuteNodeRightToLeft(compiledNode.Node);
 	}
 
-	for (size_t i = 0; i < myCompiledNodeStack.size(); i++)
+	for (size_t i = myCompiledNodeStack.size() - 1; i < myCompiledNodeStack.size(); i--)
 	{
 		auto&& compiledNode = myCompiledNodeStack[i];
 

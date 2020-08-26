@@ -29,6 +29,10 @@ public:
 	[[nodiscard]] f32 GetScale() const noexcept { return myScale; }
 
 	void Inspect();
+
+	[[nodiscard]] Display* GetFocusedDisplay();
+	[[nodiscard]] const Display* GetFocusedDisplay() const;
+
 private:
 	SVector2f myPosition;
 	

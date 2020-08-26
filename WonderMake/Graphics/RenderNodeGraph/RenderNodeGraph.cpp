@@ -25,6 +25,8 @@ void RenderNodeGraph::RegisterNodes()
 	RegisterRootNode<NodeTypes::SRenderResultNode>();
 	RegisterNode<NodeTypes::SRenderTextureNode>();
 	RegisterNode<NodeTypes::SProcessRenderLayer>();
+	RegisterNode<NodeTypes::SRenderDebugLines>();
+	RegisterNode<NodeTypes::SPostProcess>();
 }
 
 void RenderNodeGraph::PostLoad()

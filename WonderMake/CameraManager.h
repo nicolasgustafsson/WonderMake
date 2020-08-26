@@ -7,16 +7,17 @@ public:
 
 	Camera& GetMainCamera();
 
-	void Update();
-
 	void FinishDebugFrame();
 
 	void FinishFrame();
 
-	[[nodiscard]] SVector2f ConvertToWorldPosition(const SVector2f aScreenPosition);
+	[[nodiscard]] SVector2f ConvertToWorldPosition(const SVector2f aScreenPosition) const;
 
+	[[nodiscard]] bool AnyDisplayIsFocused() const;
 protected:
 	void Debug() override;
+
+	[[nodiscard]] const Display* GetFocusedDisplay() const; 
 
 private:
 	plf::colony<Camera> myCameras;

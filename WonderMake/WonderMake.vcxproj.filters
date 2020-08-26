@@ -13,7 +13,6 @@
     <ClCompile Include="Input\InputSystem.cpp" />
     <ClCompile Include="Functionalities\ImpulseFunctionality.cpp" />
     <ClCompile Include="Object\ObjectImpulseRouter.cpp" />
-    <ClCompile Include="Serialization\SerializationSystem.cpp" />
     <ClCompile Include="Utilities\Debugging\Debugged.cpp" />
     <ClCompile Include="FileSystem\ReadFileAsStringJob.cpp" />
     <ClCompile Include="Graphics\EngineUniformBuffer.cpp" />
@@ -72,6 +71,7 @@
     <ClCompile Include="Utilities\Math.cpp" />
     <ClCompile Include="FileSystem\FileWatcher.cpp" />
     <ClCompile Include="Graphics\ShaderParser.cpp" />
+    <ClCompile Include="Utilities\Serialization.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -92,7 +92,6 @@
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="Functionalities\ImpulseFunctionality.h" />
     <ClInclude Include="Object\ObjectImpulseRouter.h" />
-    <ClInclude Include="Serialization\SerializationSystem.h" />
     <ClInclude Include="Utilities\MathUtility.h" />
     <ClInclude Include="Utilities\Stopwatch.h" />
     <ClInclude Include="Utilities\Debugging\Debugged.h" />
@@ -160,7 +159,6 @@
     <ClInclude Include="Graphics\UniformBuffer.h" />
     <ClInclude Include="Graphics\EngineUniformBuffer.h" />
     <ClInclude Include="Camera\Camera.h" />
-    <ClInclude Include="Utilities\Matrix33.h" />
     <ClInclude Include="System\System.h" />
     <ClInclude Include="System\SystemContainer.h" />
     <ClInclude Include="System\SystemPtr.h" />
@@ -246,6 +244,7 @@
     <ClInclude Include="Graphics\ShaderParser.h" />
     <ClInclude Include="Utilities\Rotation.h" />
     <ClInclude Include="Utilities\Matrix.h" />
+    <ClInclude Include="Utilities\Serialization.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

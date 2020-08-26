@@ -6,8 +6,6 @@
 
 #include "Object/Object.h"
 
-#include "System/System.h"
-
 #include <MetaStuff/Meta.h>
 
 #include <functional>
@@ -17,8 +15,8 @@
 
 struct SComponent;
 
-class SerializationSystem final
-	: public System
+class Serialization final
+	: public Singleton<Serialization>
 {
 public:
 
@@ -35,7 +33,7 @@ private:
 };
 
 template<class TType>
-inline void SerializationSystem::Register() noexcept
+inline void Serialization::Register() noexcept
 {
 	std::string name = typeid(TType).name();
 	size_t spaceIndex = name.find(' ');

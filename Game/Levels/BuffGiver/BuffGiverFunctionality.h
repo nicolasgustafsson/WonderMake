@@ -31,4 +31,5 @@ public:
 	void Tick();
 };
 
+REGISTER_COMPONENT(SBuffGiverComponent);
 REGISTER_FUNCTIONALITY(BuffGiverFunctionality);

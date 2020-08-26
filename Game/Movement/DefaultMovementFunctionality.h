@@ -40,4 +40,5 @@ private:
 	void TestCollision();
 };
 
+REGISTER_COMPONENT(SDefaultMovementComponent);
 REGISTER_FUNCTIONALITY(DefaultMovementFunctionality);

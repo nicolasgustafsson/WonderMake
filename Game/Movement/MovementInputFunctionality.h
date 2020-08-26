@@ -23,4 +23,5 @@ public:
 	void SetMovementInput(const SVector2f aDirection);
 };
 
+REGISTER_COMPONENT(SMovementInputComponent);
 REGISTER_FUNCTIONALITY(MovementInputFunctionality);

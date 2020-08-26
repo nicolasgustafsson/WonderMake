@@ -50,4 +50,5 @@ private:
 	[[nodiscard]] f32 GetHitProgressFromTime(const f32 aTime) const noexcept;
 };
 
+REGISTER_COMPONENT(SHitShapeComponent);
 REGISTER_FUNCTIONALITY(HitShapeFunctionality);

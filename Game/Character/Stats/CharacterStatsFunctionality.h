@@ -61,3 +61,4 @@ private:
 	const SStat& GetStat(const ECharacterStat aStat) const noexcept;
 };
 
+REGISTER_COMPONENT(SCharacterStatsComponent);

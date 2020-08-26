@@ -36,4 +36,5 @@ public:
 	void SetWeapon(MeleeWeapon&& aWeapon);
 };
 
+REGISTER_COMPONENT(SMeleeWeaponUserComponent);
 REGISTER_FUNCTIONALITY(MeleeWeaponUserFunctionality);

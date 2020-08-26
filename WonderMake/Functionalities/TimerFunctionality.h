@@ -28,4 +28,5 @@ public:
 	void Tick();
 };
 
+REGISTER_COMPONENT(STimerComponent);
 REGISTER_FUNCTIONALITY(TimerFunctionality);

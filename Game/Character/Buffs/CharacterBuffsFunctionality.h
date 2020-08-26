@@ -28,3 +28,4 @@ public:
 	void Inspect();
 };
 
+REGISTER_COMPONENT(SCharacterBuffComponent);

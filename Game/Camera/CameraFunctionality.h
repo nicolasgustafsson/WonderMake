@@ -22,3 +22,5 @@ public:
 private:
 };
 
+REGISTER_COMPONENT(SCameraComponent);
+REGISTER_FUNCTIONALITY(CameraFunctionality);

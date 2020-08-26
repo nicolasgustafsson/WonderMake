@@ -19,3 +19,5 @@ public:
 	LevelDenizenFunctionality(Object& aOwner);
 };
 
+REGISTER_COMPONENT(SLevelDenizenComponent);
+REGISTER_FUNCTIONALITY(LevelDenizenFunctionality);

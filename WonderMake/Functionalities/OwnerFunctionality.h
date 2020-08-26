@@ -16,3 +16,4 @@ private:
 	Object* myOwner = nullptr;
 };
 
+REGISTER_FUNCTIONALITY(OwnerFunctionality);

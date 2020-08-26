@@ -52,3 +52,5 @@ public:
 	void Inspect();
 };
 
+REGISTER_COMPONENT(SHealthComponent);
+REGISTER_FUNCTIONALITY(CharacterFunctionality);

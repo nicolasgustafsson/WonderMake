@@ -17,3 +17,5 @@ public:
 private:
 	bool myDoOnce = false;
 };
+
+REGISTER_FUNCTIONALITY(LevelPortalFunctionality);

@@ -1,7 +1,7 @@
 #include "pch.h"
-#include "SerializationSystem.h"
+#include "Serialization.h"
 
-json SerializationSystem::Serialize(Object& aObject) const
+json Serialization::Serialize(Object& aObject) const
 {
 	json memberJson;
 
@@ -20,7 +20,7 @@ json SerializationSystem::Serialize(Object& aObject) const
 	return memberJson;
 }
 
-bool SerializationSystem::Deserialize(const json& aJson, Object& aObject) const
+bool Serialization::Deserialize(const json& aJson, Object& aObject) const
 {
 	if (!aJson.is_array())
 	{

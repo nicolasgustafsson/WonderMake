@@ -14,3 +14,4 @@ public:
 	void SetLine(const SVector2f aStart, const SVector2f aEnd);
 };
 
+REGISTER_FUNCTIONALITY(StaticGeometryFunctionality);

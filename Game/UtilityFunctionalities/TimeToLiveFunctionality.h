@@ -17,3 +17,4 @@ public:
 	void SetTimeToLive(const f32 aTimeToLive);
 };
 
+REGISTER_FUNCTIONALITY(TimeToLiveFunctionality);

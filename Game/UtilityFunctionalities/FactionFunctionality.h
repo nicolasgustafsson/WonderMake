@@ -24,4 +24,5 @@ public:
 	[[nodiscard]] EFaction GetFaction() const noexcept;
 };
 
-
+REGISTER_COMPONENT(SFactionComponent);
+REGISTER_FUNCTIONALITY(FactionFunctionality);

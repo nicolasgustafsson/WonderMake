@@ -14,8 +14,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Imgui", "Imgui\Imgui.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WonderMakeLauncher", "WonderMakeLauncher\WonderMakeLauncher.vcxproj", "{588CDA10-6764-4CA5-BB88-E2FD2F7561DE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PreBuild", "PreBuild\PreBuild.vcxproj", "{C58D4616-EE2E-4A2D-BF72-86DF9FD33D90}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WonderMakeTests", "WonderMakeTests\WonderMakeTests.vcxproj", "{C10C0693-7158-4D39-892B-574A1377E242}"
 EndProject
 Global
@@ -54,14 +52,6 @@ Global
 		{588CDA10-6764-4CA5-BB88-E2FD2F7561DE}.Release|x64.Build.0 = Release|x64
 		{588CDA10-6764-4CA5-BB88-E2FD2F7561DE}.Release|x86.ActiveCfg = Release|Win32
 		{588CDA10-6764-4CA5-BB88-E2FD2F7561DE}.Release|x86.Build.0 = Release|Win32
-		{C58D4616-EE2E-4A2D-BF72-86DF9FD33D90}.Debug|x64.ActiveCfg = Debug|x64
-		{C58D4616-EE2E-4A2D-BF72-86DF9FD33D90}.Debug|x64.Build.0 = Debug|x64
-		{C58D4616-EE2E-4A2D-BF72-86DF9FD33D90}.Debug|x86.ActiveCfg = Debug|Win32
-		{C58D4616-EE2E-4A2D-BF72-86DF9FD33D90}.Debug|x86.Build.0 = Debug|Win32
-		{C58D4616-EE2E-4A2D-BF72-86DF9FD33D90}.Release|x64.ActiveCfg = Release|x64
-		{C58D4616-EE2E-4A2D-BF72-86DF9FD33D90}.Release|x64.Build.0 = Release|x64
-		{C58D4616-EE2E-4A2D-BF72-86DF9FD33D90}.Release|x86.ActiveCfg = Release|Win32
-		{C58D4616-EE2E-4A2D-BF72-86DF9FD33D90}.Release|x86.Build.0 = Release|Win32
 		{C10C0693-7158-4D39-892B-574A1377E242}.Debug|x64.ActiveCfg = Debug|x64
 		{C10C0693-7158-4D39-892B-574A1377E242}.Debug|x64.Build.0 = Debug|x64
 		{C10C0693-7158-4D39-892B-574A1377E242}.Debug|x86.ActiveCfg = Debug|Win32

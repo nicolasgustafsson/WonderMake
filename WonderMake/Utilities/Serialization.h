@@ -19,6 +19,11 @@ class Serialization final
 	: public Singleton<Serialization>
 {
 public:
+	template<typename TType>
+	struct AutoRegister final
+	{
+		inline AutoRegister();
+	};
 
 	json Serialize(Object& aObject) const;
 	bool Deserialize(const json& aJson, Object& aObject) const;
@@ -31,6 +36,12 @@ private:
 	std::unordered_map<std::string, std::function<void(const json&, Object&)>> myDeserializeFunctions;
 
 };
+
+template<typename TType>
+inline Serialization::AutoRegister<TType>::AutoRegister()
+{
+	Serialization::Get().Register<TType>();
+}
 
 template<class TType>
 inline void Serialization::Register() noexcept
@@ -101,3 +112,11 @@ inline void Serialization::Register() noexcept
 		}
 	};
 }
+
+#define REGISTER_SERIALIZABLE(aClass)									\
+	__pragma(warning(push))												\
+	namespace															\
+	{																	\
+		Serialization::AutoRegister<aClass> AutoRegister_##aClass##;	\
+	}																	\
+	__pragma(warning(pop))

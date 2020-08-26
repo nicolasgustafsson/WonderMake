@@ -8,5 +8,6 @@
     <ClCompile Include="RotationTests.cpp" />
     <ClCompile Include="VectorTests.cpp" />
     <ClCompile Include="MatrixTests.cpp" />
+    <ClCompile Include="DependencyInjectionTests.cpp" />
   </ItemGroup>
 </Project>

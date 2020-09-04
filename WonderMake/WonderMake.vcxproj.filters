@@ -78,6 +78,7 @@
     <ClCompile Include="Graphics\RenderNodeGraph\RenderNodeGraph.cpp" />
     <ClCompile Include="Graphics\RenderNodeGraph\RenderNodeTypes.cpp" />
     <ClCompile Include="Camera\Display.cpp" />
+    <ClCompile Include="Graphics\RenderHandle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -257,6 +258,7 @@
     <ClInclude Include="Graphics\RenderNodeGraph\RenderNodeGraph.h" />
     <ClInclude Include="Graphics\RenderNodeGraph\RenderNodeTypes.h" />
     <ClInclude Include="Camera\Display.h" />
+    <ClInclude Include="Graphics\RenderHandle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

@@ -9,6 +9,7 @@
 
 #include "System/SystemPtr.h"
 #include "OpenGLFacade.h"
+#include "Graphics/RenderHandle.h"
 
 //everything needed to create a renderobject
 struct SRenderObjectInfo
@@ -24,13 +25,14 @@ struct SRenderObjectInfo
 class BaseRenderObject
 {
 public:
+	virtual ~BaseRenderObject();
 	void Render();
 	void RenderImmediate();
 
 	friend class RenderCommand;
 
-	void SetRenderLayer(const std::string& aRenderLayer) { myRenderLayer = aRenderLayer; };
-	void SetRenderOrder(i32 aRenderOrder) { myRenderOrder = aRenderOrder; }
+	void SetRenderLayer(const std::string& /*aRenderLayer*/) { /*myRenderLayer = aRenderLayer;*/ };
+	void SetRenderOrder(i32 aRenderOrder) noexcept { myRenderOrder = aRenderOrder; }
 protected:
 
 	virtual void RenderInternal() = 0;
@@ -38,6 +40,8 @@ protected:
 
 	//[Nicos]: Can this be string_view?
 	std::string myRenderLayer = "Default";
+
+	std::optional<RenderHandle> myCurrentRenderHandle;
 };
 
 class RenderCommand : public NonCopyable
@@ -49,6 +53,9 @@ public:
 	RenderCommand(RenderCommand&&) = default;
 
 	void Execute();
+
+	inline void SetRenderId(const u64 aRenderId) noexcept { myRenderId = aRenderId; }
+	inline [[nodiscard]] u64 GetRenderId() const noexcept { return myRenderId; }
 
 	inline [[nodiscard]] bool operator==(const RenderCommand& aRhs) const noexcept
 	{
@@ -63,6 +70,7 @@ public:
 private:
 	std::reference_wrapper<BaseRenderObject> myRenderObject;
 	i32 myRenderOrder;
+	u64 myRenderId;
 };
 
 template<EVertexAttribute... TAttributes>

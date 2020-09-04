@@ -2,9 +2,19 @@
 #include "RenderObject.h"
 #include "Graphics/RenderCommandProcessor.h"
 
+BaseRenderObject::~BaseRenderObject()
+{
+	if (!myCurrentRenderHandle)
+		return;
+
+	myCurrentRenderHandle->Invalidate();
+
+	myCurrentRenderHandle.reset();
+}
+
 void BaseRenderObject::Render()
 {
-	SystemPtr<RenderCommandProcessor>()->GetRenderLayer(myRenderLayer).AddToQueue(RenderCommand(*this, myRenderOrder));
+	myCurrentRenderHandle.emplace(SystemPtr<RenderCommandProcessor>()->GetRenderLayer(myRenderLayer).AddToQueue(RenderCommand(*this, myRenderOrder)));
 }
 
 void BaseRenderObject::RenderImmediate()

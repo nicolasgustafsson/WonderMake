@@ -1,13 +1,21 @@
 #pragma once
+#include "Graphics/RenderObject.h"
 
-class RenderLayer : public NonCopyable
+class RenderLayer : public NonCopyable, NonMovable
 {
 public:
-	void AddToQueue(RenderCommand aCommand);
+	RenderLayer();
+	RenderHandle AddToQueue(RenderCommand aCommand);
 	void ProcessQueue();
 	void ClearQueue();
+	void RemoveObjectFromQueue(const u64 aId);
 private:
+	[[nodiscard]] u64 GetNextRenderId() noexcept;
+
 	std::vector<RenderCommand> myRenderCommands;
+
+	//[Nicos]: With an underscore because you are supposed to use GetNextRenderId and I've already fucked up
+	u64 _myRenderId = 0;
 };
 
 class RenderCommandProcessor : public System

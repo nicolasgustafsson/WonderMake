@@ -42,7 +42,7 @@ plf::colony<Object> LevelDesigner::DesignEnemies(const SSpace& aSpace)
 
 	SystemPtr<Randomizer> randomizer;
 
-	const auto enemyCount = randomizer->GetRandomNumber<size_t>(2, 3);
+	const auto enemyCount = randomizer->GetRandomNumber<size_t>(1, 1);
 
 	for (size_t i = 0; i < enemyCount; ++i)
 	{

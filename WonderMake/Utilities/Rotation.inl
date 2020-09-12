@@ -1,92 +1,92 @@
 
 
-template<class TRepresentation, class TRatio>
-inline constexpr SRotation<TRepresentation, TRatio>::SRotation(const TRepresentation aRotation) noexcept
+template<class TRep, class TRatio>
+inline constexpr SRotation<TRep, TRatio>::SRotation(const TRep aRotation) noexcept
     : myRotation(aRotation)
 {}
 
-template<class TRepresentation, class TRatio>
-inline [[nodiscard]] constexpr bool SRotation<TRepresentation, TRatio>::operator==(const TRepresentation aRhs) const noexcept
+template<class TRep, class TRatio>
+inline [[nodiscard]] constexpr bool SRotation<TRep, TRatio>::operator==(const TRep aRhs) const noexcept
 {
     return myRotation == aRhs;
 }
 
-template<class TRepresentation, class TRatio>
-inline [[nodiscard]] constexpr auto SRotation<TRepresentation, TRatio>::operator<=>(const TRepresentation aRhs) const noexcept
+template<class TRep, class TRatio>
+inline [[nodiscard]] constexpr std::partial_ordering SRotation<TRep, TRatio>::operator<=>(const TRep aRhs) const noexcept
 {
     return myRotation <=> aRhs;
 }
 
-template<class TRepresentation, class TRatio>
+template<class TRep, class TRatio>
 template<class TFromRepresentation, class TFromRatio>
-inline [[nodiscard]] constexpr bool SRotation<TRepresentation, TRatio>::operator==(const SRotation<TFromRepresentation, TFromRatio> aRhs) const noexcept
+inline [[nodiscard]] constexpr bool SRotation<TRep, TRatio>::operator==(const SRotation<TFromRepresentation, TFromRatio> aRhs) const noexcept
 {
-    return *this == RotationCast<SRotation<TRepresentation, TRatio>>(aRhs).myRotation;
+    return *this == RotationCast<SRotation<TRep, TRatio>>(aRhs).myRotation;
 }
 
-template<class TRepresentation, class TRatio>
+template<class TRep, class TRatio>
 template<class TFromRepresentation, class TFromRatio>
-inline [[nodiscard]] constexpr auto SRotation<TRepresentation, TRatio>::operator<=>(const SRotation<TFromRepresentation, TFromRatio> aRhs) const noexcept
+inline [[nodiscard]] constexpr std::partial_ordering SRotation<TRep, TRatio>::operator<=>(const SRotation<TFromRepresentation, TFromRatio> aRhs) const noexcept
 {
-    return *this <=> RotationCast<SRotation<TRepresentation, TRatio>>(aRhs).myRotation;
+    return *this <=> RotationCast<SRotation<TRep, TRatio>>(aRhs).myRotation;
 }
 
-template<class TRepresentation, class TRatio>
-inline constexpr SRotation<TRepresentation, TRatio>& SRotation<TRepresentation, TRatio>::operator=(const TRepresentation aRhs) noexcept
+template<class TRep, class TRatio>
+inline constexpr SRotation<TRep, TRatio>& SRotation<TRep, TRatio>::operator=(const TRep aRhs) noexcept
 {
     myRotation = aRhs;
     return *this;
 }
 
-template<class TRepresentation, class TRatio>
-inline constexpr SRotation<TRepresentation, TRatio>& SRotation<TRepresentation, TRatio>::operator+=(const TRepresentation aRhs) noexcept
+template<class TRep, class TRatio>
+inline constexpr SRotation<TRep, TRatio>& SRotation<TRep, TRatio>::operator+=(const TRep aRhs) noexcept
 {
     myRotation += aRhs;
     return *this;
 }
 
-template<class TRepresentation, class TRatio>
-inline constexpr SRotation<TRepresentation, TRatio>& SRotation<TRepresentation, TRatio>::operator-=(const TRepresentation aRhs) noexcept
+template<class TRep, class TRatio>
+inline constexpr SRotation<TRep, TRatio>& SRotation<TRep, TRatio>::operator-=(const TRep aRhs) noexcept
 {
     myRotation -= aRhs;
     return *this;
 }
 
-template<class TRepresentation, class TRatio>
-inline constexpr SRotation<TRepresentation, TRatio>& SRotation<TRepresentation, TRatio>::operator=(const SRotation aRhs) noexcept
+template<class TRep, class TRatio>
+inline constexpr SRotation<TRep, TRatio>& SRotation<TRep, TRatio>::operator=(const SRotation aRhs) noexcept
 {
     myRotation = aRhs.myRotation;
     return *this;
 }
 
-template<class TRepresentation, class TRatio>
-inline constexpr SRotation<TRepresentation, TRatio>& SRotation<TRepresentation, TRatio>::operator+=(const SRotation aRhs) noexcept
+template<class TRep, class TRatio>
+inline constexpr SRotation<TRep, TRatio>& SRotation<TRep, TRatio>::operator+=(const SRotation aRhs) noexcept
 {
     myRotation += aRhs.myRotation;
     return *this;
 }
 
-template<class TRepresentation, class TRatio>
-inline constexpr SRotation<TRepresentation, TRatio>& SRotation<TRepresentation, TRatio>::operator-=(const SRotation aRhs) noexcept
+template<class TRep, class TRatio>
+inline constexpr SRotation<TRep, TRatio>& SRotation<TRep, TRatio>::operator-=(const SRotation aRhs) noexcept
 {
     myRotation -= aRhs.myRotation;
     return *this;
 }
 
-template<class TRepresentation, class TRatio>
-inline [[nodiscard]] constexpr SRotation<TRepresentation, TRatio> operator+(SRotation<TRepresentation, TRatio> aLhs, const SRotation<TRepresentation, TRatio> aRhs) noexcept
+template<class TRep, class TRatio>
+inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator+(SRotation<TRep, TRatio> aLhs, const SRotation<TRep, TRatio> aRhs) noexcept
 {
     return (aLhs += aRhs);
 }
 
-template<class TRepresentation, class TRatio>
-inline [[nodiscard]] constexpr SRotation<TRepresentation, TRatio> operator-(SRotation<TRepresentation, TRatio> aLhs, const SRotation<TRepresentation, TRatio> aRhs) noexcept
+template<class TRep, class TRatio>
+inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator-(SRotation<TRep, TRatio> aLhs, const SRotation<TRep, TRatio> aRhs) noexcept
 {
     return (aLhs -= aRhs);
 }
 
-template<class TRepresentation, class TRatio>
-inline [[nodiscard]] constexpr TRepresentation SRotation<TRepresentation, TRatio>::Rotation() const noexcept
+template<class TRep, class TRatio>
+inline [[nodiscard]] constexpr TRep SRotation<TRep, TRatio>::Rotation() const noexcept
 {
     return myRotation;
 }

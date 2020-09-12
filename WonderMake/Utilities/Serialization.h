@@ -6,8 +6,6 @@
 
 #include "Object/Object.h"
 
-#include "System/System.h"
-
 #include <MetaStuff/Meta.h>
 
 #include <functional>
@@ -17,10 +15,15 @@
 
 struct SComponent;
 
-class SerializationSystem final
-	: public System
+class Serialization final
+	: public Singleton<Serialization>
 {
 public:
+	template<typename TType>
+	struct AutoRegister final
+	{
+		inline AutoRegister();
+	};
 
 	json Serialize(Object& aObject) const;
 	bool Deserialize(const json& aJson, Object& aObject) const;
@@ -34,8 +37,14 @@ private:
 
 };
 
+template<typename TType>
+inline Serialization::AutoRegister<TType>::AutoRegister()
+{
+	Serialization::Get().Register<TType>();
+}
+
 template<class TType>
-inline void SerializationSystem::Register() noexcept
+inline void Serialization::Register() noexcept
 {
 	std::string name = typeid(TType).name();
 	size_t spaceIndex = name.find(' ');
@@ -103,3 +112,11 @@ inline void SerializationSystem::Register() noexcept
 		}
 	};
 }
+
+#define REGISTER_SERIALIZABLE(aClass)									\
+	__pragma(warning(push))												\
+	namespace															\
+	{																	\
+		Serialization::AutoRegister<aClass> AutoRegister_##aClass##;	\
+	}																	\
+	__pragma(warning(pop))

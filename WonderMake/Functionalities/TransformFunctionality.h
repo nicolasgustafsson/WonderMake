@@ -2,7 +2,7 @@
 #include "Functionalities/Functionality.h"
 #include "Components/TransformComponent.h"
 
-#include "Utilities/Matrix33.h"
+#include "Utilities/Matrix.h"
 
 class TransformFunctionality
 	: public Functionality<
@@ -34,3 +34,5 @@ public:
 
 private:
 };
+
+REGISTER_FUNCTIONALITY(TransformFunctionality);

@@ -244,7 +244,7 @@
     <ClCompile Include="Functionalities\ImpulseFunctionality.cpp" />
     <ClCompile Include="Object\ObjectImpulseRouter.cpp" />
     <ClCompile Include="Randomizer\Randomizer.cpp" />
-    <ClCompile Include="Serialization\SerializationSystem.cpp" />
+    <ClCompile Include="Utilities\Serialization.cpp" />
     <ClCompile Include="Utilities\TimeKeeper.cpp" />
     <ClCompile Include="Utilities\Debugging\Debugged.cpp" />
     <ClCompile Include="Threads\RoutineDebug.cpp" />
@@ -340,7 +340,8 @@
     <ClInclude Include="Functionalities\ImpulseFunctionality.h" />
     <ClInclude Include="Object\ObjectImpulseRouter.h" />
     <ClInclude Include="Randomizer\Randomizer.h" />
-    <ClInclude Include="Serialization\SerializationSystem.h" />
+    <ClInclude Include="Utilities\Serialization.h" />
+    <ClInclude Include="Utilities\Matrix.h" />
     <ClInclude Include="Utilities\Rotation.h" />
     <ClInclude Include="Utilities\TimeKeeper.h" />
     <ClInclude Include="Utilities\MathUtility.h" />
@@ -399,7 +400,6 @@
     <ClInclude Include="Resources\ResourceSystem.h" />
     <ClInclude Include="Graphics\SpriteRenderObject.h" />
     <ClInclude Include="Graphics\UniformBuffer.h" />
-    <ClInclude Include="Utilities\Matrix33.h" />
     <ClInclude Include="Utilities\Platform.h" />
     <ClInclude Include="Utilities\plf_colony.h" />
     <ClInclude Include="Utilities\Singleton.h" />
@@ -420,8 +420,9 @@
     <None Include="imgui.ini" />
     <None Include="NodeGraph\Nodegraph.md" />
     <None Include="NodeGraph\SlotCustomization\SlotCustomization.md" />
-    <None Include="Utilities\Matrix33.inl" />
+    <None Include="Utilities\Matrix.inl" />
     <None Include="Utilities\Rotation.inl" />
+    <None Include="Utilities\Vector.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

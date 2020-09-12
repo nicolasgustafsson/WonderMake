@@ -8,3 +8,5 @@ struct STransformComponent
 	SVector2f	Position = SVector2f::Zero();
 	f32			Rotation = 0.f;
 };
+
+REGISTER_COMPONENT(STransformComponent);

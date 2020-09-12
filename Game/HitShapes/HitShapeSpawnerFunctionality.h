@@ -29,3 +29,4 @@ public:
 private:
 };
 
+REGISTER_FUNCTIONALITY(HitShapeSpawnerFunctionality);

@@ -115,9 +115,6 @@
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>glfw3_$(Platform)_$(Configuration).lib;imgui_$(Platform)_$(Configuration).lib;soloud_$(Platform)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PreBuildEvent>
-      <Command>$(SolutionDir)External\PreBuild\PreBuild.exe $(ProjectDir)RegistryConfig.json</Command>
-    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -137,9 +134,6 @@
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>glfw3_$(Platform)_$(Configuration).lib;imgui_$(Platform)_$(Configuration).lib;soloud_$(Platform)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PreBuildEvent>
-      <Command>$(SolutionDir)External\PreBuild\PreBuild.exe $(ProjectDir)RegistryConfig.json</Command>
-    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -165,9 +159,6 @@
       <AdditionalDependencies>glfw3_$(Platform)_$(Configuration).lib;imgui_$(Platform)_$(Configuration).lib;soloud_$(Platform)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
     </Link>
-    <PreBuildEvent>
-      <Command>$(SolutionDir)External\PreBuild\PreBuild.exe $(ProjectDir)RegistryConfig.json</Command>
-    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -193,9 +184,6 @@
       <AdditionalDependencies>glfw3_$(Platform)_$(Configuration).lib;imgui_$(Platform)_$(Configuration).lib;soloud_$(Platform)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
     </Link>
-    <PreBuildEvent>
-      <Command>$(SolutionDir)External\PreBuild\PreBuild.exe $(ProjectDir)RegistryConfig.json</Command>
-    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
@@ -205,36 +193,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Registry\Register_ActionFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_BuffGiverFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_CameraFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_CharacterBuffsFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_CharacterFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_CharacterStatsFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_CollisionFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_DefaultMovementFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_EnemyControllerFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_FactionFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_HitShapeFunctionality.cpp" />
-	<ClCompile Include="Registry\Register_HitShapeSpawnerFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_ImpulseFunctionality.cpp" />
-	<ClCompile Include="Registry\Register_LevelDenizenFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_LevelFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_LevelPortalFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_MeleeWeaponUserFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_MovementInputFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_NavmeshFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_OwnerFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_PlayerControllerFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_SpinnerFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_SpriteComponent.cpp" />
-    <ClCompile Include="Registry\Register_SpriteRenderingFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_StaticGeometryFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_TargetFunctionality.cpp" />
-	<ClCompile Include="Registry\Register_TimerFunctionality.cpp" />
-	<ClCompile Include="Registry\Register_TimeToLiveFunctionality.cpp" />
-    <ClCompile Include="Registry\Register_TransformFunctionality.cpp" />
-    <ClCompile Include="Registry\Registry.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Game\Game.vcxproj">
@@ -243,41 +201,6 @@
     <ProjectReference Include="..\WonderMake\WonderMake.vcxproj">
       <Project>{bb396f7d-1134-4dae-b855-1ca77a2b0c04}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="registryConfig.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Registry\Register_ActionFunctionality.h" />
-    <ClInclude Include="Registry\Register_BuffGiverFunctionality.h" />
-    <ClInclude Include="Registry\Register_CameraFunctionality.h" />
-    <ClInclude Include="Registry\Register_CharacterBuffsFunctionality.h" />
-    <ClInclude Include="Registry\Register_CharacterFunctionality.h" />
-    <ClInclude Include="Registry\Register_CharacterStatsFunctionality.h" />
-    <ClInclude Include="Registry\Register_CollisionFunctionality.h" />
-    <ClInclude Include="Registry\Register_DefaultMovementFunctionality.h" />
-    <ClInclude Include="Registry\Register_EnemyControllerFunctionality.h" />
-    <ClInclude Include="Registry\Register_FactionFunctionality.h" />
-    <ClInclude Include="Registry\Register_HitShapeFunctionality.h" />
-	<ClInclude Include="Registry\Register_HitShapeSpawnerFunctionality.h" />
-    <ClInclude Include="Registry\Register_ImpulseFunctionality.h" />
-	<ClInclude Include="Registry\Register_LevelDenizenFunctionality.h" />
-    <ClInclude Include="Registry\Register_LevelFunctionality.h" />
-    <ClInclude Include="Registry\Register_LevelPortalFunctionality.h" />
-    <ClInclude Include="Registry\Register_MeleeWeaponUserFunctionality.h" />
-    <ClInclude Include="Registry\Register_MovementInputFunctionality.h" />
-	<ClInclude Include="Registry\Register_NavmeshFunctionality.h" />
-    <ClInclude Include="Registry\Register_OwnerFunctionality.h" />
-    <ClInclude Include="Registry\Register_PlayerControllerFunctionality.h" />
-    <ClInclude Include="Registry\Register_SpinnerFunctionality.h" />
-    <ClInclude Include="Registry\Register_SpriteComponent.h" />
-    <ClInclude Include="Registry\Register_SpriteRenderingFunctionality.h" />
-    <ClInclude Include="Registry\Register_StaticGeometryFunctionality.h" />
-    <ClInclude Include="Registry\Register_TargetFunctionality.h" />
-	<ClInclude Include="Registry\Register_TimerFunctionality.h" />
-	<ClInclude Include="Registry\Register_TimeToLiveFunctionality.h" />
-    <ClInclude Include="Registry\Register_TransformFunctionality.h" />
-    <ClInclude Include="Registry\Registry.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

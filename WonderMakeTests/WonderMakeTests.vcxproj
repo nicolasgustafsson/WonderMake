@@ -188,10 +188,12 @@
   <ItemGroup>
     <ClCompile Include="DependencyTests.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MatrixTests.cpp" />
     <ClCompile Include="ObjectTests.cpp" />
     <ClCompile Include="PolicyTests.cpp" />
     <ClCompile Include="Registry\*.cpp" />
     <ClCompile Include="RotationTests.cpp" />
+    <ClCompile Include="VectorTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WonderMake\WonderMake.vcxproj">

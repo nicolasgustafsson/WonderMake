@@ -42,3 +42,4 @@ private:
 	void OnDeath();
 };
 
+REGISTER_FUNCTIONALITY(EnemyControllerFunctionality);

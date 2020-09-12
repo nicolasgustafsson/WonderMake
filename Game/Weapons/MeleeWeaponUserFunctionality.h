@@ -35,3 +35,6 @@ public:
 	void SwingWeapon();
 	void SetWeapon(MeleeWeapon&& aWeapon);
 };
+
+REGISTER_COMPONENT(SMeleeWeaponUserComponent);
+REGISTER_FUNCTIONALITY(MeleeWeaponUserFunctionality);

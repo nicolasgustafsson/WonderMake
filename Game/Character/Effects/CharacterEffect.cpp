@@ -4,7 +4,7 @@
 
 void CharacterEffectDamage::Apply(CharacterFunctionality& aCharacter)
 {
-	aCharacter.Damage(myDamageAmount);
+	aCharacter.Damage(static_cast<i32>(myDamageAmount));
 }
 
 void CharacterEffectDamage::Inspect()
@@ -29,7 +29,7 @@ void CharacterEffectApplyBuff::Inspect()
 
 void CharacterEffectHeal::Apply(CharacterFunctionality& aCharacter)
 {
-	aCharacter.Heal(myHealAmount);
+	aCharacter.Heal(static_cast<i32>(myHealAmount));
 }
 
 void CharacterEffectHeal::Inspect()

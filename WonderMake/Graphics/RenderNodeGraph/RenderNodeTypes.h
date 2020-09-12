@@ -25,8 +25,6 @@ namespace NodeTypes
 			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Output, "Out rendertarget");
 		}
 
-		virtual void PrepareNode(SNode& aNode) override;
-
 		virtual void ExecuteNodeRightToLeft(struct SNode&) override;
 	};
 
@@ -59,6 +57,7 @@ namespace NodeTypes
 		{
 			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Input, "In rendertarget");
 			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Input, "In texture");
+			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Input, "In texture 2");
 			AddSlot<std::filesystem::path>(ESlotIo::Input, "In Post process shader path");
 			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Output, "Out rendertarget");
 		}

@@ -57,7 +57,7 @@ void HitShapeFunctionality::Tick()
 			if (std::find(hitShapeComponent.HitCharacters.begin(), hitShapeComponent.HitCharacters.end(), &aCharacter) != hitShapeComponent.HitCharacters.end())
 				return;
 
-			aCharacter.Damage(hitShapeComponent.Damage);
+			aCharacter.Damage(static_cast<i32>(hitShapeComponent.Damage));
 
 			hitShapeComponent.HitCharacters.push_back(&aCharacter);
 		});

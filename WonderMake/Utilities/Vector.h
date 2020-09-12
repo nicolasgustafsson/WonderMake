@@ -84,7 +84,7 @@ struct SVector
 	{
 		u32 i = 0;
 
-		(((*this)[i++] = aArgs), ...);
+		(((*this)[i++] = static_cast<T>(aArgs)), ...);
 	}
 
 	//lowers the dimension of the vector by one

@@ -53,10 +53,10 @@ void HitShapeRenderObject::SetVerticesFromCurve(const BezierCurve& aCurve)
 		SetAttribute<EVertexAttribute::Position>(i * 2 + 1, location + perpendicularCcw * (myThickness / 2.f));
 
 		SetAttribute<EVertexAttribute::Progress>(i * 2, progress);
-		SetAttribute<EVertexAttribute::Progress>(i * 2 + 1.f, progress);
+		SetAttribute<EVertexAttribute::Progress>(i * 2 + 1, progress);
 
 		SetAttribute<EVertexAttribute::OneDimensionalUV>(i * 2, 0.f);
-		SetAttribute<EVertexAttribute::OneDimensionalUV>(i * 2 + 1.f, 1.f);
+		SetAttribute<EVertexAttribute::OneDimensionalUV>(i * 2 + 1, 1.f);
 	}
 
 	myShaderProgram.SetProperty("Size", SVector2f(myThickness, aCurve.GetLength()));

@@ -108,6 +108,8 @@ Display* Camera::GetFocusedDisplay()
 		if (display.second.HasFocus())
 			return &display.second;
 	}
+
+	return nullptr;
 }
 
 const Display* Camera::GetFocusedDisplay() const
@@ -117,4 +119,6 @@ const Display* Camera::GetFocusedDisplay() const
 		if (display.second.HasFocus())
 			return &display.second;
 	}
+
+	return nullptr;
 }

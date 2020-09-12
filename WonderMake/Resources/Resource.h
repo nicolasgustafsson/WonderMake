@@ -8,7 +8,7 @@ public:
 	Resource() noexcept = default;
 	inline virtual ~Resource() noexcept
 	{
-		myRoutineChecker.RequireRoutine();
+		//myRoutineChecker.RequireRoutine();
 	};
 	inline ERoutineId GetOwnerRoutineId() const noexcept
 	{

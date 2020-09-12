@@ -11,7 +11,7 @@ PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
 	: Super(aOwner), Debugged("Player Controller")
 {
 	CollisionFunctionality& collision = Get<CollisionFunctionality>();
-	auto& collider = collision.AddSphereCollider(*this, SVector2f::Zero(), 10.f);
+	collision.AddSphereCollider(*this, SVector2f::Zero(), 10.f);
 
 	Get<FactionFunctionality>().SetFaction(EFaction::Player);
 	Get<CharacterFunctionality>().Get<CharacterStatsFunctionality>().SetBaseValue(ECharacterStat::MovementSpeed, 200.f);

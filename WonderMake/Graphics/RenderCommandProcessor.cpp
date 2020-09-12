@@ -42,6 +42,7 @@ void RenderLayer::RemoveObjectFromQueue(const u64 aId)
 
 u64 RenderLayer::GetNextRenderId() noexcept
 {
+	//[Nicos]: This may overflow. That is 100% OK.
 	return _myRenderId++;
 }
 

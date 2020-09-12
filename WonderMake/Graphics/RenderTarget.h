@@ -20,7 +20,7 @@ public:
 	~RenderTarget();
 
 	void BindAsTarget();
-	void BindAsTexture();
+	void BindAsTexture(const u32 aIndex = 0);
 
 	inline u32 GetTexture() const noexcept { return myRenderTexture; }
 

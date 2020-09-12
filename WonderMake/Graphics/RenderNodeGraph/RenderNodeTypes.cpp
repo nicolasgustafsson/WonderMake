@@ -13,12 +13,6 @@ namespace NodeTypes
 		std::any& finalRenderTarget = aNode.NodeData["RenderTarget"];
 
 		finalRenderTarget = std::make_any<std::shared_ptr<RenderTarget>>(aNode.GetInput<std::shared_ptr<RenderTarget>>(0));
-
-	}
-
-	void SRenderTextureNode::PrepareNode(SNode& aNode)
-	{
-
 	}
 
 	void SRenderTextureNode::ExecuteNodeRightToLeft(struct SNode& aNode)
@@ -31,7 +25,6 @@ namespace NodeTypes
 
 		std::shared_ptr<RenderTarget> renderTarget = std::any_cast<std::shared_ptr<RenderTarget>>(renderTargetAny);
 
-
 		renderTarget->BindAsTarget();
 
 		SystemPtr<OpenGLFacade> openGl;
@@ -40,7 +33,6 @@ namespace NodeTypes
 
 		aNode.SetOutput<std::shared_ptr<RenderTarget>>(0, renderTarget);
 	}
-
 
 	void SProcessRenderLayer::ExecuteNodeLeftToRight(struct SNode& aNode)
 	{
@@ -75,7 +67,7 @@ namespace NodeTypes
 		auto renderTarget = aNode.GetInput<std::shared_ptr<RenderTarget>>(0);
 		aNode.SetOutput(0, renderTarget);
 
-		auto filePath = aNode.GetInput<std::filesystem::path>(2);
+		auto filePath = aNode.GetInput<std::filesystem::path>(3);
 
 		if (!std::filesystem::exists(filePath))
 			return;
@@ -87,15 +79,18 @@ namespace NodeTypes
 
 		auto texture = aNode.GetInput<std::shared_ptr<RenderTarget>>(1);
 
-		if (!texture)
-			return;
+		if (texture)
+			texture->BindAsTexture();
 
-		texture->BindAsTexture();
+		auto texture2 = aNode.GetInput<std::shared_ptr<RenderTarget>>(2);
+
+		if (texture2)
+			texture2->BindAsTexture(1);
 
 		std::any& screenPassAny = aNode.NodeData["RenderTarget"];
 
 		if (!screenPassAny.has_value())
-			screenPassAny = std::move(std::make_any<std::shared_ptr<ScreenPassRenderObject>>(std::make_shared<ScreenPassRenderObject>(aNode.GetInput<std::filesystem::path>(2))));
+			screenPassAny = std::move(std::make_any<std::shared_ptr<ScreenPassRenderObject>>(std::make_shared<ScreenPassRenderObject>(aNode.GetInput<std::filesystem::path>(3))));
 
 		std::shared_ptr<ScreenPassRenderObject> screenPass = std::any_cast<std::shared_ptr<ScreenPassRenderObject>>(screenPassAny);
 

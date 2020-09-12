@@ -79,14 +79,14 @@ void RenderTarget::BindAsTarget()
 		WmLog(TagWarning, "Could not bind RenderTarget as Frame buffer object is incomplete!");
 		return;
 	}
-
 	openGL->BindFramebuffer(GL_FRAMEBUFFER, myFrameBufferObject);
+
 }
 
-void RenderTarget::BindAsTexture()
+void RenderTarget::BindAsTexture(const u32 aIndex /*= 0*/)
 {
 	SystemPtr<OpenGLFacade> openGL;
-	openGL->SetActiveTextureSlot(0);
+	openGL->SetActiveTextureSlot(aIndex);
 
 	openGL->BindTexture(GL_TEXTURE_2D, myRenderTexture);
 }

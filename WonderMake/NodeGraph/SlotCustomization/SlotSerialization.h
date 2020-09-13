@@ -42,12 +42,12 @@ namespace InputSlotSerialization
 	//	aJson.push_back(aJson.object({ {"NodeId", aNodeId}, {"SlotId", aSlotId}, {"Value", static_cast<i32>(aSlotValue) } }));
 	//}
 
-	template<typename SRenderSettings>
-	inline void SerializeInput(const i32 aNodeId, const i32 aSlotId, json& aJson, SRenderSettings aSlotValue)
-	{
-		auto& outer = aJson.object({ {"NodeId", aNodeId}, {"SlotId", aSlotId} });
-		aJson.push_back();
-
+	//template<typename SRenderSettings>
+	//inline void SerializeInput(const i32 aNodeId, const i32 aSlotId, json& aJson, SRenderSettings aSlotValue)
+	//{
+	//	auto& outer = aJson.object({ {"NodeId", aNodeId}, {"SlotId", aSlotId} });
+	//	aJson.push_back();
+	//
 	template<typename TSlotType>
 	TSlotType DeserializeInput(const json&)
 	{

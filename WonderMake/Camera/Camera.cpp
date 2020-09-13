@@ -13,16 +13,16 @@ void Camera::Update()
 
 	auto viewInverse = myViewMatrix;
 
-	const SMatrix33f rotationMatrix = SMatrix33f::CreateRotateAroundZ(myRotation);
+	const SMatrix33f rotationMatrix = SMatrix33f::CreateRotationZ(myRotation);
 
 	viewInverse = rotationMatrix * viewInverse;
 
-	viewInverse.m11 *= myScale;
-	viewInverse.m12 *= myScale;
-	viewInverse.m22 *= myScale;
-	viewInverse.m21 *= myScale;
+	viewInverse[1][1] *= myScale;
+	viewInverse[1][2] *= myScale;
+	viewInverse[2][2] *= myScale;
+	viewInverse[2][1] *= myScale;
 
-	viewInverse.Inverse();
+	viewInverse.FastInverse();
 
 	auto& buffer = myCameraBuffer.GetBuffer();
 

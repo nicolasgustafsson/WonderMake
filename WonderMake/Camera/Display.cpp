@@ -20,7 +20,7 @@ void Display::Update()
 
 	auto viewInverse = myCamera.GetViewMatrix();
 
-	viewInverse.Inverse();
+	viewInverse.FastInverse();
 
 	const auto projectionMatrix = myProjectionMatrix;
 	const auto viewMatrix = viewInverse;
@@ -34,11 +34,11 @@ void Display::Update()
 
 void Display::SetViewportSize(const SVector2i aViewportSize) noexcept
 {
-	myProjectionMatrix.m11 = 2.0f / aViewportSize.X;
-	myProjectionMatrix.m22 = 2.0f / aViewportSize.Y;
+	myProjectionMatrix[1][1] = 2.0f / aViewportSize.X;
+	myProjectionMatrix[2][2] = 2.0f / aViewportSize.Y;
 
-	myProjectionMatrixInverse.m11 = aViewportSize.X / 2.0f;
-	myProjectionMatrixInverse.m22 = aViewportSize.Y / 2.0f;
+	myProjectionMatrixInverse[1][1] = aViewportSize.X / 2.0f;
+	myProjectionMatrixInverse[2][2] = aViewportSize.Y / 2.0f;
 	myViewportSize = { aViewportSize.X, aViewportSize.Y };
 }
 
@@ -96,19 +96,19 @@ void Display::FinishFrame()
 
 SVector2f Display::ConvertToWorldPosition(const SVector2f aWindowPosition) const noexcept
 {
-	const SMatrix33f rotationMatrix = SMatrix33f::CreateRotateAroundZ(myCamera.GetRotation());
+	const SMatrix33f rotationMatrix = SMatrix33f::CreateRotationZ(myCamera.GetRotation());
 
 	SMatrix33f view = rotationMatrix * myCamera.GetViewMatrix();
 
 	const f32 cameraScale = myCamera.GetScale();
-	view.m11 /= cameraScale;
-	view.m12 /= cameraScale;
-	view.m22 /= cameraScale;
-	view.m21 /= cameraScale;
+	view[1][1] /= cameraScale;
+	view[1][2] /= cameraScale;
+	view[2][2] /= cameraScale;
+	view[2][1] /= cameraScale;
 
 	SVector2f offsetScreenPosition = aWindowPosition - myImguiWindowOffset;
 	offsetScreenPosition -= myViewportSize / 2.f;
-	SMatrix33f screenPositionMatrix = SMatrix33f::Identity;
+	SMatrix33f screenPositionMatrix = SMatrix33f::Identity();
 	screenPositionMatrix.SetPosition(offsetScreenPosition);
 
 	screenPositionMatrix *= view;

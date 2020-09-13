@@ -5,7 +5,6 @@
 #include "ScreenPassRenderObject.h"
 #include "System/System.h"
 #include "Camera/Camera.h"
-#include "System/SystemPtr.h"
 #include "Program/Window.h"
 #include "Message/MessageSubscriber.h"
 #include "Utilities/Debugging/Debugged.h"
@@ -46,5 +45,3 @@ private:
 
 	const SColor ClearColor = SColor::Grey;
 };
-
-REGISTER_SYSTEM(Renderer);

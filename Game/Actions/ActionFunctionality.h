@@ -4,6 +4,7 @@
 #include "Functionalities/ImpulseFunctionality.h"
 
 class Action;
+class TimeKeeper;
 
 struct SActionComponent
 	: public SComponent
@@ -25,11 +26,12 @@ enum class EActionResult
 class ActionFunctionality
 	: public Functionality<ActionFunctionality,
 		Policy::Set<
+			Policy::Add<TimeKeeper, Policy::EPermission::Read>,
 			Policy::Add<SActionComponent, Policy::EPermission::Write>,
 			Policy::Add<ImpulseFunctionality, Policy::EPermission::Write>>>
 {
 public:
-	ActionFunctionality(Object& aOwner);
+	ActionFunctionality(Object& aOwner, Dependencies&& aDependencies);
 
 	template<typename TAction> requires std::is_base_of_v<Action, TAction>
 	inline EActionResult StartAction(TAction aAction)
@@ -73,6 +75,3 @@ public:
 private:	
 	void EndCurrentAction();
 };
-
-REGISTER_COMPONENT(SActionComponent);
-REGISTER_FUNCTIONALITY(ActionFunctionality);

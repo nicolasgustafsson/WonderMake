@@ -1,8 +1,10 @@
 #include "pch.h"
 #include "TargetFunctionality.h"
 
-TargetFunctionality::TargetFunctionality(Object& aOwner)
-	: Super(aOwner)
+REGISTER_FUNCTIONALITY(TargetFunctionality);
+
+TargetFunctionality::TargetFunctionality(Object& aOwner, Dependencies&& aDependencies)
+	: Super(aOwner, std::move(aDependencies))
 {
 
 }

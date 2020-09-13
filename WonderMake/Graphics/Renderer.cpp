@@ -7,6 +7,8 @@
 #include <GLFW/glfw3.h>
 #include "Program/GlfwFacade.h"
 
+REGISTER_SYSTEM(Renderer);
+
 void GLAPIENTRY
 MessageCallback([[maybe_unused]] GLenum source,
 	GLenum type,

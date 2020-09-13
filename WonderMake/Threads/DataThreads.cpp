@@ -30,6 +30,8 @@ void DataThreads::Start(Program& aProgramReference, Closure&& aCallback)
 	myFileThread.emplace("File Thread").AddRoutine(*myRoutines[static_cast<size_t>(ERoutineId::File)]);
 	myRenderThread.emplace("Render Thread").AddRoutine(*myRoutines[static_cast<size_t>(ERoutineId::Render)]);
 
+	SystemContainer::Get().CreateAllSystems();
+
 	aCallback();
 
 	for (;;)

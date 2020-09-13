@@ -24,12 +24,9 @@ class BuffGiverFunctionality
 			Policy::Add<TransformFunctionality, Policy::EPermission::Write>>>
 {
 public:
-	BuffGiverFunctionality(Object& aOwner) noexcept;
+	BuffGiverFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept;
 
 	void Initialize(BuffBlueprint& aBuffBlueprint, const f32 aRadius);
 
 	void Tick();
 };
-
-REGISTER_COMPONENT(SBuffGiverComponent);
-REGISTER_FUNCTIONALITY(BuffGiverFunctionality);

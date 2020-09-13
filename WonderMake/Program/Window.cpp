@@ -5,6 +5,8 @@
 #include <fstream>
 #include "Program/GlfwFacade.h"
 
+REGISTER_SYSTEM(Window);
+
 Window::Window(Dependencies&& aDependencies)
 	: Super(std::move(aDependencies))
 {

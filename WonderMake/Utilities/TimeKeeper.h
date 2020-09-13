@@ -37,8 +37,6 @@ protected:
 	f32 myTimeDilation = 1.f;
 };
 
-REGISTER_SYSTEM(TimeKeeper);
-
 [[nodiscard]] __forceinline f32 TimeKeeper::GetDeltaSeconds() const noexcept
 {
 	return myPreviousDeltaSeconds;

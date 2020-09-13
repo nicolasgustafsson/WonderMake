@@ -23,5 +23,3 @@ private:
 	i32 myWidth;
 	i32 myHeight;
 };
-
-REGISTER_RESOURCE(Texture);

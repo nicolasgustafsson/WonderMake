@@ -6,7 +6,7 @@ class OwnerFunctionality
 	: public Functionality<OwnerFunctionality>
 {
 public:
-	OwnerFunctionality(Object& aOwner);
+	OwnerFunctionality(Object& aOwner, Dependencies&& aDependencies);
 
 	Object& GetOwner() const;
 
@@ -15,5 +15,3 @@ public:
 private:
 	Object* myOwner = nullptr;
 };
-
-REGISTER_FUNCTIONALITY(OwnerFunctionality);

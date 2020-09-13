@@ -17,5 +17,3 @@ struct SCollisionComponent final
 {
 	plf::colony<SCollider>	Colliders;
 };
-
-REGISTER_COMPONENT(SCollisionComponent);

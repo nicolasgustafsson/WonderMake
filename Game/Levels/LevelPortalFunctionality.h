@@ -11,11 +11,9 @@ class LevelPortalFunctionality
 			Policy::Add<CollisionFunctionality, Policy::EPermission::Write>>>
 {
 public:
-	LevelPortalFunctionality(Object& aOwner);
+	LevelPortalFunctionality(Object& aOwner, Dependencies&& aDependencies);
 	~LevelPortalFunctionality();
 
 private:
 	bool myDoOnce = false;
 };
-
-REGISTER_FUNCTIONALITY(LevelPortalFunctionality);

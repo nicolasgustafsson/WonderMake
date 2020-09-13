@@ -204,11 +204,15 @@
     <ClCompile Include="Audio\AudioFile.cpp" />
     <ClCompile Include="Audio\AudioManager.cpp" />
     <ClCompile Include="Audio\AudioNodeTypes.cpp" />
+    <ClCompile Include="Collision\CollisionComponent.cpp" />
+    <ClCompile Include="Components\Component.cpp" />
     <ClCompile Include="FileSystem\FileWatcher.cpp" />
+    <ClCompile Include="Graphics\Shader.cpp" />
     <ClCompile Include="Imgui\Canvas.cpp" />
     <ClCompile Include="Imgui\FileSelector.cpp" />
     <ClCompile Include="Imgui\NodeGraphGui.cpp" />
     <ClCompile Include="Graphics\ShaderParser.cpp" />
+    <ClCompile Include="Object\DependencyDestructor.cpp" />
     <ClCompile Include="Utilities\DependencyInjector.cpp" />
     <ClCompile Include="Utilities\Math.cpp" />
     <ClCompile Include="NodeGraph\NodeGraph.cpp" />
@@ -286,6 +290,8 @@
     <ClInclude Include="Imgui\FileSelector.h" />
     <ClInclude Include="Imgui\NodeGraphGui.h" />
     <ClInclude Include="Graphics\ShaderParser.h" />
+    <ClInclude Include="Object\DependencyDestructor.h" />
+    <ClInclude Include="Utilities\AutoRegister.h" />
     <ClInclude Include="Utilities\DependencyInjector.h" />
     <ClInclude Include="Utilities\Math.h" />
     <ClInclude Include="NodeGraph\SlotCustomization\SlotInputEdits.h" />
@@ -342,7 +348,6 @@
     <ClInclude Include="Components\ComponentSystem.h" />
     <ClInclude Include="Components\SpriteComponent.h" />
     <ClInclude Include="Components\TransformComponent.h" />
-    <ClInclude Include="Object\Dependency.h" />
     <ClInclude Include="Functionalities\SpriteRenderingFunctionality.h" />
     <ClInclude Include="Functionalities\Functionality.h" />
     <ClInclude Include="Functionalities\FunctionalitySystem.h" />

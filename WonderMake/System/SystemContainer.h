@@ -2,9 +2,11 @@
 
 #include "Message/Messages.h"
 
+#include "Utilities/AutoRegister.h"
 #include "Utilities/Singleton.h"
 #include "Utilities/DependencyInjector.h"
 
+#include <cassert>
 #include <mutex>
 
 class SystemBase;
@@ -13,12 +15,6 @@ class SystemContainer final
 	: public Singleton<SystemContainer>
 {
 public:
-	template<typename TSystem>
-	struct AutoRegister final
-	{
-		inline AutoRegister();
-	};
-
 	template<typename TSystem>
 	void AddSystem();
 
@@ -41,21 +37,15 @@ private:
 	void AddSystemHelper(TupleWrapper<std::tuple<TDependencies...>>&&);
 };
 
-#define _REGISTER_SYSTEM_IMPL(aSystem, aSystemName)									\
-	__pragma(warning(push))															\
-	namespace																		\
-	{																				\
-		SystemContainer::AutoRegister<aSystem> AutoRegister_System_##aSystemName##;	\
-	}																				\
-	__pragma(warning(pop))
-
-#define REGISTER_SYSTEM(aSystem) _REGISTER_SYSTEM_IMPL(aSystem, aSystem)
-
 template<typename TSystem>
-inline SystemContainer::AutoRegister<TSystem>::AutoRegister()
+static void _RegisterSystem()
 {
 	SystemContainer::Get().AddSystem<TSystem>();
 }
+
+#define _REGISTER_SYSTEM_IMPL(aSystem, aSystemName) WM_AUTO_REGISTER(_RegisterSystem<aSystem>, aSystemName)
+
+#define REGISTER_SYSTEM(aSystem) _REGISTER_SYSTEM_IMPL(aSystem, aSystem)
 
 template<typename TSystem>
 void SystemContainer::AddSystem()
@@ -93,7 +83,7 @@ void SystemContainer::CreateSystem()
 {
 	static_assert(std::is_base_of<SystemBase, TSystem>::value, "Tried to create system that does not inherit from System.");
 
-	GetSystem<TSystem>();
+	(void)GetSystem<TSystem>();
 }
 
 template<typename TSystem, typename ...TDependencies>

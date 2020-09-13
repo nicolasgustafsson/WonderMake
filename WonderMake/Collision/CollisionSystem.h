@@ -61,8 +61,6 @@ private:
 	plf::colony<Colliders::Shape*> myCollidersWithReactions;
 };
 
-REGISTER_SYSTEM(CollisionSystem);
-
 template<typename TFunctionalityToReactAgainst>
 void CollisionSystem::AddReaction(Colliders::Shape& aShape, std::function<void(TFunctionalityToReactAgainst&, Colliders::SCollisionInfo)> aCallback)
 {

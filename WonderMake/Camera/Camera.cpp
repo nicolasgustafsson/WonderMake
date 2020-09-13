@@ -4,6 +4,8 @@
 #include "Program/Window.h"
 #include <GLFW/glfw3.h>
 
+REGISTER_SYSTEM(Camera);
+
 void Camera::Update()
 {
 	myViewMatrix.SetPosition(myPosition);

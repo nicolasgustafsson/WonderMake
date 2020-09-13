@@ -5,7 +5,9 @@
 #include "Utilities/TimeKeeper.h"
 
 class DebugLineDrawer
-	: public System<>
+	: public System<
+		Policy::Set<
+			Policy::Add<TimeKeeper, Policy::EPermission::Read>>>
 {
 public:
 	DebugLineDrawer(Dependencies&& aDependencies) noexcept;
@@ -18,7 +20,4 @@ private:
 	MessageSubscriber mySubscriber;
 	DebugLineRenderObject myRenderObject;
 	std::vector<SDebugLine> myDebugLines;
-	SystemPtr<TimeKeeper> myTimeKeeperPtr;
 };
-
-REGISTER_SYSTEM(DebugLineDrawer);

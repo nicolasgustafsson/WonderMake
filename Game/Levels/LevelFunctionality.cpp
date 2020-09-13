@@ -2,8 +2,11 @@
 #include "LevelFunctionality.h"
 #include "Levels/LevelDenizenFunctionality.h"
 
-LevelFunctionality::LevelFunctionality(Object& aOwner)
-	: Super(aOwner)
+REGISTER_COMPONENT(SLevelComponent);
+REGISTER_FUNCTIONALITY(LevelFunctionality);
+
+LevelFunctionality::LevelFunctionality(Object& aOwner, Dependencies&& aDependencies)
+	: Super(aOwner, std::move(aDependencies))
 {
 
 }
@@ -25,7 +28,7 @@ void LevelFunctionality::Tick()
 
 Object& LevelFunctionality::AddDenizen(Object&& aObject)
 {
-	 auto&& denizen = Get<SLevelComponent>().Denizens.emplace(std::move(aObject), aObject.Add<LevelDenizenFunctionality>());
+	 auto&& denizen = Get<SLevelComponent>().Denizens.emplace(std::move(aObject), Get<FunctionalitySystemDelegate<LevelDenizenFunctionality>>().AddFunctionality(aObject));
 
 	 denizen->DenizenFunctionality.Get<SLevelDenizenComponent>().Level = this;
 
@@ -43,7 +46,7 @@ void LevelFunctionality::RemoveDenizen(Object& aObject)
 
 	Object* objectPtr = &aObject;
 
-	auto it = std::find_if(denizens.begin(), denizens.end(), [objectPtr](SLevelComponent::SDenizen& aDenizen) {return &aDenizen.DenizenObject == objectPtr; });
+	auto it = std::find_if(denizens.begin(), denizens.end(), [objectPtr](SLevelComponent::SDenizen& aDenizen) { return &aDenizen.DenizenObject == objectPtr; });
 
 	if (it != denizens.end())
 		denizens.erase(it);

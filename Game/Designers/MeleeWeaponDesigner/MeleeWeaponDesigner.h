@@ -23,5 +23,3 @@ protected:
 
 	SSwing DesignFinisher(const MeleeWeapon& aWeapon, const bool aMirror) const;
 };
-
-REGISTER_SYSTEM(MeleeWeaponDesigner);

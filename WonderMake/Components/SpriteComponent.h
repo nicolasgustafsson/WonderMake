@@ -9,5 +9,3 @@ struct SSpriteComponent
 	std::optional<SpriteRenderObject> RenderObject;
 	bool IsHidden = false;
 };
-
-REGISTER_COMPONENT(SSpriteComponent);

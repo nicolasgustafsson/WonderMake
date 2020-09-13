@@ -1,8 +1,10 @@
 #include "pch.h"
 #include "StaticGeometryFunctionality.h"
 
-StaticGeometryFunctionality::StaticGeometryFunctionality(Object& aObject)
-	: Super(aObject)
+REGISTER_FUNCTIONALITY(StaticGeometryFunctionality);
+
+StaticGeometryFunctionality::StaticGeometryFunctionality(Object& aObject, Dependencies&& aDependencies)
+	: Super(aObject, std::move(aDependencies))
 {
 
 }

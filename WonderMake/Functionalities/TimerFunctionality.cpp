@@ -2,8 +2,11 @@
 #include "TimerFunctionality.h"
 #include "Utilities/TimeKeeper.h"
 
-TimerFunctionality::TimerFunctionality(Object& aOwner) noexcept
-	: Super(aOwner)
+REGISTER_COMPONENT(STimerComponent);
+REGISTER_FUNCTIONALITY(TimerFunctionality);
+
+TimerFunctionality::TimerFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept
+	: Super(aOwner, std::move(aDependencies))
 {
 
 }
@@ -19,7 +22,7 @@ void TimerFunctionality::Tick()
 
 	STimerComponent& timerComponent = Get<STimerComponent>();
 
-	const f32 deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
+	const f32 deltaTime = Get<TimeKeeper>().GetDeltaSeconds();
 
 	for (auto&& timer : timerComponent.Timers)
 	{

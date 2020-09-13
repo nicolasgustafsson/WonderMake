@@ -1,12 +1,12 @@
 #include "pch.h"
 #include "OwnerFunctionality.h"
 
-OwnerFunctionality::OwnerFunctionality(Object& aOwner)
-	: Super(aOwner)
-	, myOwner(&aOwner)
-{
+REGISTER_FUNCTIONALITY(OwnerFunctionality);
 
-}
+OwnerFunctionality::OwnerFunctionality(Object& aOwner, Dependencies&& aDependencies)
+	: Super(aOwner, std::move(aDependencies))
+	, myOwner(&aOwner)
+{}
 
 Object& OwnerFunctionality::GetOwner() const
 {

@@ -65,5 +65,3 @@ protected:
 
 	plf::colony<BuffBlueprint> myBlueprints;
 };
-
-REGISTER_SYSTEM(BuffDesigner);

@@ -41,7 +41,7 @@ class CharacterFunctionality
 			Policy::Add<CharacterBuffsFunctionality, Policy::EPermission::Write>>>
 {
 public:
-	CharacterFunctionality(Object& aOwner) noexcept;
+	CharacterFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept;
 
 	void Heal(const i32 aHealAmount);
 	void Damage(const i32 aDamage);
@@ -51,6 +51,3 @@ public:
 
 	void Inspect();
 };
-
-REGISTER_COMPONENT(SHealthComponent);
-REGISTER_FUNCTIONALITY(CharacterFunctionality);

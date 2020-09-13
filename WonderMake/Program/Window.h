@@ -18,5 +18,3 @@ public:
 
 	GLFWwindow* myGlfwWindow = nullptr;
 };
-
-REGISTER_SYSTEM(Window);

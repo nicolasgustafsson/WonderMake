@@ -2,11 +2,16 @@
 #include "Utilities/Debugging/Debugged.h"
 #include "System/System.h"
 #include "Program/Window.h"
-#include "System/SystemPtr.h"
 #include "InputItems.h"
 
+class GlfwFacade;
+class Window;
+
 class InputSystem
-	: public System<>
+	: public System<
+		Policy::Set<
+			Policy::Add<GlfwFacade, Policy::EPermission::Write>,
+			Policy::Add<Window, Policy::EPermission::Write>>>
 	, public Debugged
 {
 public:
@@ -19,8 +24,8 @@ public:
 	void UpdateMouse() noexcept;
 	void UpdateGamepad() noexcept;
 
-	[[nodiscard]] SVector2f GetMousePositionInWorld() const noexcept;
-	[[nodiscard]] SVector2f GetMousePositionOnWindow() const noexcept;
+	[[nodiscard]] SVector2f GetMousePositionInWorld() noexcept;
+	[[nodiscard]] SVector2f GetMousePositionOnWindow() noexcept;
 
 	bool IsKeyDown(const EKeyboardKey aKey) const noexcept;
 	bool IsMouseButtonPressed(const EMouseButton aKey) const noexcept;
@@ -45,8 +50,4 @@ private:
 	std::array<EInputItemState, KeyboardKeyCount> myKeyboardKeyStates		{ EInputItemState::Up };
 	std::array<EInputItemState, MouseButtonCount> myMouseButtonStates		{ EInputItemState::Up };
 	std::array<EInputItemState, GamepadButtonCount> myGamepadButtonStates	{ EInputItemState::Up };
-
-	SystemPtr<Window> myWindowSystemPtr;
 };
-
-REGISTER_SYSTEM(InputSystem);

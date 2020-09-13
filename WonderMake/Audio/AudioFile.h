@@ -11,5 +11,3 @@ public:
 private:
 	SoLoud::Wav mySource;
 };
-
-REGISTER_RESOURCE(AudioFile);

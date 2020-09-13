@@ -39,8 +39,6 @@ private:
 	MessageSubscriber mySubscriber;
 };
 
-REGISTER_SYSTEM(ObjectImpulseRouter);
-
 template<typename TMessage, typename TFunction>
 void ObjectImpulseRouter::Subscribe(Object& aObject, _BaseFunctionality& aFunctionality, TFunction aCallback)
 {

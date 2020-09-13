@@ -19,11 +19,12 @@ class ImpulseFunctionality
 	: public Functionality<
 		ImpulseFunctionality,
 		Policy::Set<
+			Policy::Add<ObjectImpulseRouter, Policy::EPermission::Write>,
 			Policy::Add<OwnerFunctionality, Policy::EPermission::Read>,
 			Policy::Add<SImpulseListComponent, Policy::EPermission::Write>>>
 {
 public:
-	ImpulseFunctionality(Object& aOwner);
+	ImpulseFunctionality(Object& aOwner, Dependencies&& aDependencies);
 	~ImpulseFunctionality();
 
 	template <typename TMessage, typename TFunction>
@@ -35,15 +36,12 @@ public:
 	void Unsubscribe(_BaseFunctionality& aSubscriber, const size_t aTypeHash);
 
 	void UnsubscribeAll(_BaseFunctionality& aSubscriber);
-
-private:
-	SystemPtr<ObjectImpulseRouter> myRouter;
 };
 
 template <typename TMessage, typename TFunction>
 void ImpulseFunctionality::Subscribe(_BaseFunctionality& aSubscriber, TFunction aCallback)
 {
-	myRouter->Subscribe<TMessage>(Get<OwnerFunctionality>().GetOwner(), aSubscriber, aCallback);
+	Get<ObjectImpulseRouter>().Subscribe<TMessage>(Get<OwnerFunctionality>().GetOwner(), aSubscriber, aCallback);
 
 	auto& impulseList = Get<SImpulseListComponent>();
 
@@ -59,6 +57,3 @@ void ImpulseFunctionality::Unsubscribe(_BaseFunctionality& aSubscriber)
 {
 	Unsubscribe(aSubscriber, TMessage::GetTypeHash());
 }
-
-REGISTER_COMPONENT(SImpulseListComponent);
-REGISTER_FUNCTIONALITY(ImpulseFunctionality);

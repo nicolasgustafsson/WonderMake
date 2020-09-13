@@ -11,7 +11,7 @@ class TransformFunctionality
 			Policy::Add<STransformComponent, Policy::EPermission::Write>>>
 {
 public:
-	TransformFunctionality(Object& aOwner) noexcept;
+	TransformFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept;
 
 	void SetPosition(const SVector2f aPosition) noexcept;
 	[[nodiscard]] SVector2f GetPosition() const noexcept;
@@ -34,5 +34,3 @@ public:
 
 private:
 };
-
-REGISTER_FUNCTIONALITY(TransformFunctionality);

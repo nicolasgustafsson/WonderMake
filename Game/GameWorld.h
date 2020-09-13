@@ -2,13 +2,31 @@
 #include "Object/Object.h"
 #include "System/System.h"
 #include "Message/MessageSubscriber.h"
-#include "Designers/BuffDesigner/BuffDesigner.h"
+
+template<typename TFunctionality>
+class FunctionalitySystem;
 
 struct SPlayerDiedMessage;
-class TransformFunctionality;
-class LevelFunctionality;
 
-class GameWorld : public System<>
+class LevelDesigner;
+
+class LevelFunctionality;
+class TransformFunctionality;
+class PlayerControllerFunctionality;
+class DefaultMovementFunctionality;
+class SpriteRenderingFunctionality;
+class CameraFunctionality;
+
+class GameWorld
+	: public System<
+		Policy::Set<
+			Policy::Add<LevelDesigner, Policy::EPermission::Write>,
+			Policy::Add<FunctionalitySystemDelegate<LevelFunctionality>, Policy::EPermission::Write>,
+			Policy::Add<FunctionalitySystemDelegate<TransformFunctionality>, Policy::EPermission::Write>,
+			Policy::Add<FunctionalitySystemDelegate<PlayerControllerFunctionality>, Policy::EPermission::Write>,
+			Policy::Add<FunctionalitySystemDelegate<DefaultMovementFunctionality>, Policy::EPermission::Write>,
+			Policy::Add<FunctionalitySystemDelegate<SpriteRenderingFunctionality>, Policy::EPermission::Write>,
+			Policy::Add<FunctionalitySystemDelegate<CameraFunctionality>, Policy::EPermission::Write>>>
 {
 public:
 	GameWorld(Dependencies&& aDependencies);
@@ -27,9 +45,5 @@ private:
 	void OnPlayerDeath(const SPlayerDiedMessage&);
 	MessageSubscriber mySubscriber;
 
-	SystemPtr<BuffDesigner> myBuffDesigner;
-
 	std::optional<Object> myDeathScreen;
 };
-
-REGISTER_SYSTEM(GameWorld);

@@ -58,6 +58,9 @@ protected:
 
 private:
 	Dependencies myDependencies;
+
+	template<typename>
+	friend class FunctionalitySystem;
 };
 
 template<typename TPolicySet>

@@ -3,6 +3,16 @@
 #include "Geometry/Polygon.h"
 
 class LevelFunctionality;
+class LevelPortalFunctionality;
+class SpinnerFunctionality;
+class TransformFunctionality;
+class SpriteRenderingFunctionality;
+class BuffGiverFunctionality;
+class EnemyControllerFunctionality;
+class StaticGeometryFunctionality;
+
+class BuffDesigner;
+class Randomizer;
 
 namespace Geometry { class PolygonSideOperator; }
 
@@ -46,7 +56,17 @@ struct SRoom
 };
 
 class LevelDesigner
-	: public System<>
+	: public System<
+		Policy::Set<
+			Policy::Add<Randomizer, Policy::EPermission::Write>,
+			Policy::Add<BuffDesigner, Policy::EPermission::Write>,
+			Policy::Add<FunctionalitySystemDelegate<LevelPortalFunctionality>, Policy::EPermission::Write>,
+			Policy::Add<FunctionalitySystemDelegate<SpinnerFunctionality>, Policy::EPermission::Write>,
+			Policy::Add<FunctionalitySystemDelegate<TransformFunctionality>, Policy::EPermission::Write>,
+			Policy::Add<FunctionalitySystemDelegate<SpriteRenderingFunctionality>, Policy::EPermission::Write>,
+			Policy::Add<FunctionalitySystemDelegate<BuffGiverFunctionality>, Policy::EPermission::Write>,
+			Policy::Add<FunctionalitySystemDelegate<EnemyControllerFunctionality>, Policy::EPermission::Write>,
+			Policy::Add<FunctionalitySystemDelegate<StaticGeometryFunctionality>, Policy::EPermission::Write>>>
 {
 public:
 	using Super::Super;
@@ -54,7 +74,7 @@ public:
 	void DesignLevel(LevelFunctionality& aLevel);
 
 protected:
-	plf::colony<Object> CreateWalls(SLevelGeometry& aGeometry) const;
+	plf::colony<Object> CreateWalls(SLevelGeometry& aGeometry);
 	SLevelGeometry DesignGeometry() const;
 
 	Geometry::PolygonSideOperator DesignStartRoom(SLevelGeometry& aGeometry) const;
@@ -72,5 +92,3 @@ protected:
 
 	LevelFunctionality* myCurrentLevel;
 };
-
-REGISTER_SYSTEM(LevelDesigner);

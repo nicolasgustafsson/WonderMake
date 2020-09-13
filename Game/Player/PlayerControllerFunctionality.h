@@ -15,6 +15,12 @@
 #include "Functionalities/TimerFunctionality.h"
 #include "Levels/LevelDenizenFunctionality.h"
 
+class MeleeWeaponDesigner;
+class InputSystem;
+
+class EnemyControllerFunctionality;
+class TimeToLiveFunctionality;
+
 struct SCoolImpulse
 	: public SObjectImpulse<SCoolImpulse>
 {
@@ -31,6 +37,10 @@ class PlayerControllerFunctionality
 	: public Functionality<
 		PlayerControllerFunctionality,
 		Policy::Set<
+			Policy::Add<MeleeWeaponDesigner, Policy::EPermission::Write>,
+			Policy::Add<InputSystem, Policy::EPermission::Write>,
+			Policy::Add<FunctionalitySystemDelegate<EnemyControllerFunctionality>, Policy::EPermission::Write>,
+			Policy::Add<FunctionalitySystemDelegate<TimeToLiveFunctionality>, Policy::EPermission::Write>,
 			Policy::Add<TransformFunctionality, Policy::EPermission::Write>,
 			Policy::Add<MovementInputFunctionality, Policy::EPermission::Write>,
 			Policy::Add<DefaultMovementFunctionality, Policy::EPermission::Write>,
@@ -47,7 +57,7 @@ class PlayerControllerFunctionality
 	, public Debugged
 {
 public:
-	PlayerControllerFunctionality(Object& aOwner);
+	PlayerControllerFunctionality(Object& aOwner, Dependencies&& aDependencies);
 
 	void Tick() noexcept;
 
@@ -56,8 +66,5 @@ public:
 private:
 	void UpdateMovement();
 
-	SystemPtr<InputSystem> myInputSystem;
 	void OnDeath();
 };
-
-REGISTER_FUNCTIONALITY(PlayerControllerFunctionality);

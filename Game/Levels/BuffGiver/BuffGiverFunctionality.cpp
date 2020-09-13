@@ -2,8 +2,11 @@
 #include "BuffGiverFunctionality.h"
 #include "Character/CharacterFunctionality.h"
 
-BuffGiverFunctionality::BuffGiverFunctionality(Object& aOwner) noexcept
-	: Super(aOwner)
+REGISTER_COMPONENT(SBuffGiverComponent);
+REGISTER_FUNCTIONALITY(BuffGiverFunctionality);
+
+BuffGiverFunctionality::BuffGiverFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept
+	: Super(aOwner, std::move(aDependencies))
 {
 
 }

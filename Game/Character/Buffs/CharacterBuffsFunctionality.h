@@ -3,6 +3,7 @@
 #include "Functionalities/ImpulseFunctionality.h"
 
 class BuffBlueprint;
+class TimeKeeper;
 
 struct SCharacterBuffComponent : public SComponent
 {
@@ -13,11 +14,12 @@ class CharacterBuffsFunctionality
 	: public Functionality<
 		CharacterBuffsFunctionality,
 		Policy::Set<
+			Policy::Add<TimeKeeper, Policy::EPermission::Read>,
 			Policy::Add<SCharacterBuffComponent, Policy::EPermission::Write>,
 			Policy::Add<ImpulseFunctionality, Policy::EPermission::Write>>>
 {
 public:
-	CharacterBuffsFunctionality(Object& aOwner);
+	CharacterBuffsFunctionality(Object& aOwner, Dependencies&& aDependencies);
 
 	void ApplyBuff(class CharacterFunctionality& aCharacter, BuffBlueprint& aBlueprint);
 	void ClearBuffs();
@@ -27,6 +29,3 @@ public:
 
 	void Inspect();
 };
-
-REGISTER_COMPONENT(SCharacterBuffComponent);
-REGISTER_FUNCTIONALITY(CharacterBuffsFunctionality);

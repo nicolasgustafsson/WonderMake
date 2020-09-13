@@ -2,8 +2,11 @@
 #include "CharacterStatsFunctionality.h"
 #include "Character/CharacterFunctionality.h"
 
-CharacterStatsFunctionality::CharacterStatsFunctionality(Object& aOwner)
-	: Super(aOwner)
+REGISTER_COMPONENT(SCharacterStatsComponent);
+REGISTER_FUNCTIONALITY(CharacterStatsFunctionality);
+
+CharacterStatsFunctionality::CharacterStatsFunctionality(Object& aOwner, Dependencies&& aDependencies)
+	: Super(aOwner, std::move(aDependencies))
 {
 
 }

@@ -2,9 +2,10 @@
 #include "SpriteRenderingFunctionality.h"
 #include <iostream>
 
+REGISTER_FUNCTIONALITY(SpriteRenderingFunctionality);
 
-SpriteRenderingFunctionality::SpriteRenderingFunctionality(Object& aOwner)
-	: Super(aOwner)
+SpriteRenderingFunctionality::SpriteRenderingFunctionality(Object& aOwner, Dependencies&& aDependencies)
+	: Super(aOwner, std::move(aDependencies))
 {}
 
 void SpriteRenderingFunctionality::Tick()

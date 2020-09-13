@@ -114,6 +114,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>glfw3_$(Platform)_$(Configuration).lib;imgui_$(Platform)_$(Configuration).lib;soloud_$(Platform)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/WHOLEARCHIVE:WonderMake_$(Platform)_$(Configuration) /WHOLEARCHIVE:Game_$(Platform)_$(Configuration) %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -133,6 +134,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>glfw3_$(Platform)_$(Configuration).lib;imgui_$(Platform)_$(Configuration).lib;soloud_$(Platform)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/WHOLEARCHIVE:WonderMake_$(Platform)_$(Configuration) /WHOLEARCHIVE:Game_$(Platform)_$(Configuration) %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -158,6 +160,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>glfw3_$(Platform)_$(Configuration).lib;imgui_$(Platform)_$(Configuration).lib;soloud_$(Platform)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <AdditionalOptions>/WHOLEARCHIVE:WonderMake_$(Platform)_$(Configuration) /WHOLEARCHIVE:Game_$(Platform)_$(Configuration) %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -183,6 +186,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>glfw3_$(Platform)_$(Configuration).lib;imgui_$(Platform)_$(Configuration).lib;soloud_$(Platform)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <AdditionalOptions>/WHOLEARCHIVE:WonderMake_$(Platform)_$(Configuration) /WHOLEARCHIVE:Game_$(Platform)_$(Configuration) %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

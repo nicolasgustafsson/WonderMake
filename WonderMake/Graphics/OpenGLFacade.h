@@ -82,8 +82,6 @@ public:
 	}
 };
 
-REGISTER_SYSTEM(OpenGLFacade);
-
 template<typename TVariableType>
 void OpenGLFacade::SetUniformVariable(const u32 aLocation, TVariableType aProperty)
 {

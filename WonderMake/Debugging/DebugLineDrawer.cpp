@@ -2,6 +2,8 @@
 #include "DebugLineDrawer.h"
 #include "Utilities/Utility.h"
 
+REGISTER_SYSTEM(DebugLineDrawer);
+
 DebugLineDrawer::DebugLineDrawer(Dependencies&& aDependencies) noexcept
 	: Super(std::move(aDependencies))
 	, myRenderObject(10000)
@@ -12,7 +14,7 @@ DebugLineDrawer::DebugLineDrawer(Dependencies&& aDependencies) noexcept
 
 void DebugLineDrawer::Render()
 {
-	const float deltaTime = myTimeKeeperPtr->GetDeltaSeconds();
+	const float deltaTime = Get<TimeKeeper>().GetDeltaSeconds();
 
 	for (i32 i = static_cast<i32>(myDebugLines.size()) - 1; i >= 0; i--)
 	{

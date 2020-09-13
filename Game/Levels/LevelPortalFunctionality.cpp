@@ -5,8 +5,10 @@
 
 #include "Character/CharacterFunctionality.h"
 
-LevelPortalFunctionality::LevelPortalFunctionality(Object& aOwner)
-	: Super(aOwner)
+REGISTER_FUNCTIONALITY(LevelPortalFunctionality);
+
+LevelPortalFunctionality::LevelPortalFunctionality(Object& aOwner, Dependencies&& aDependencies)
+	: Super(aOwner, std::move(aDependencies))
 {
 	auto& collision = Get<CollisionFunctionality>();
 

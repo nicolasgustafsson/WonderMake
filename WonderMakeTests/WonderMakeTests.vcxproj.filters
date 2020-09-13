@@ -4,7 +4,6 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="PolicyTests.cpp" />
     <ClCompile Include="ObjectTests.cpp" />
-    <ClCompile Include="DependencyTests.cpp" />
     <ClCompile Include="RotationTests.cpp" />
     <ClCompile Include="VectorTests.cpp" />
     <ClCompile Include="MatrixTests.cpp" />

@@ -9,9 +9,7 @@ class StaticGeometryFunctionality
 			Policy::Add<CollisionFunctionality, Policy::EPermission::Write>>>
 {
 public:
-	StaticGeometryFunctionality(Object& aObject);
+	StaticGeometryFunctionality(Object& aObject, Dependencies&& aDependencies);
 
 	void SetLine(const SVector2f aStart, const SVector2f aEnd);
 };
-
-REGISTER_FUNCTIONALITY(StaticGeometryFunctionality);

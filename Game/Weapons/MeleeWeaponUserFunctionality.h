@@ -28,13 +28,10 @@ class MeleeWeaponUserFunctionality
 			Policy::Add<CharacterFunctionality, Policy::EPermission::Write>>>
 {
 public:
-	MeleeWeaponUserFunctionality(Object& aOwner);
+	MeleeWeaponUserFunctionality(Object& aOwner, Dependencies&& aDependencies);
 
 	void Inspect();
 
 	void SwingWeapon();
 	void SetWeapon(MeleeWeapon&& aWeapon);
 };
-
-REGISTER_COMPONENT(SMeleeWeaponUserComponent);
-REGISTER_FUNCTIONALITY(MeleeWeaponUserFunctionality);

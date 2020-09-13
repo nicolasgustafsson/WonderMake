@@ -18,10 +18,7 @@ class MovementInputFunctionality
 			Policy::Add<SMovementInputComponent, Policy::EPermission::Write>>>
 {
 public:
-	MovementInputFunctionality(Object& aOwner);
+	MovementInputFunctionality(Object& aOwner, Dependencies&& aDependencies);
 
 	void SetMovementInput(const SVector2f aDirection);
 };
-
-REGISTER_COMPONENT(SMovementInputComponent);
-REGISTER_FUNCTIONALITY(MovementInputFunctionality);

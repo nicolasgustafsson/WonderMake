@@ -26,5 +26,3 @@ private:
 
 	f32 myThresholdForUpdate = 0.5f;
 };
-
-REGISTER_SYSTEM(FileWatcher);

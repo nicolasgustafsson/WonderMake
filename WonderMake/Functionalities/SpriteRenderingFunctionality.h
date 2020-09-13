@@ -2,7 +2,6 @@
 #include "Functionality.h"
 #include "Components/SpriteComponent.h"
 #include "Components/TransformComponent.h"
-#include "Utilities/TimeKeeper.h"
 
 class SpriteRenderingFunctionality
 	: public Functionality<
@@ -12,7 +11,7 @@ class SpriteRenderingFunctionality
 			Policy::Add<SSpriteComponent, Policy::EPermission::Write>>>
 {
 public:
-	SpriteRenderingFunctionality(Object& aOwner);
+	SpriteRenderingFunctionality(Object& aOwner, Dependencies&& aDependencies);
 
 	void Tick();
 	void SetTexture(const std::filesystem::path& aTexturePath);
@@ -21,9 +20,4 @@ public:
 	void SetOrigin(const SVector2f aOrigin);
 	void Hide() noexcept;
 	void Show() noexcept;
-
-private:
-	SystemPtr<TimeKeeper> myTimeKeeperPtr;
 };
-
-REGISTER_FUNCTIONALITY(SpriteRenderingFunctionality);

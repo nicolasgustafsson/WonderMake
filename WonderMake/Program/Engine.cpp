@@ -10,8 +10,6 @@ namespace Engine
 	{
 		Program program;
 
-		// SystemContainer::Get().CreateAllSystems();
-
 		DataThreads::Get().Start(program, std::forward<Closure>(aCallback));
 	}
 }

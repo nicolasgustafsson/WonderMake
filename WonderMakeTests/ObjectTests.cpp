@@ -21,8 +21,8 @@ class CatFunctionality
 			Policy::Add<SCatComponent, Policy::EPermission::Write>>>
 {
 public:
-	CatFunctionality(Object& aOwner) noexcept
-		: Super(aOwner)
+	CatFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept
+		: Super(aOwner, std::move(aDependencies))
 	{}
 
 	u32 GetLegCount() const
@@ -49,8 +49,8 @@ class BagFunctionality
 			Policy::Add<SBagComponent, Policy::EPermission::Write>>>
 {
 public:
-	BagFunctionality(Object& aOwner) noexcept
-		: Super(aOwner)
+	BagFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept
+		: Super(aOwner, std::move(aDependencies))
 	{}
 
 	u32 GetCatCount() const
@@ -71,12 +71,18 @@ public:
 
 TEST_CASE("Objects can be created and have dependencies added and removed", "[Object]")
 {
+	ComponentSystem<SCatComponent> sysCompCat(std::tie());
+	ComponentSystem<SBagComponent> sysCompBag(std::tie());
+
+	FunctionalitySystem<CatFunctionality> sysFuncCat(std::tie(sysCompCat));
+	FunctionalitySystem<BagFunctionality> sysFuncBag(std::tie(sysCompBag));
+
 	Object object;
 
 	SECTION("Components can be added to and removed from Objects")
 	{
-		object.Add<SCatComponent>();
-		object.Add<SBagComponent>();
+		sysCompCat.AddComponent(object);
+		sysCompBag.AddComponent(object);
 
 		object.Remove<SCatComponent>();
 		object.Remove<SBagComponent>();
@@ -84,8 +90,8 @@ TEST_CASE("Objects can be created and have dependencies added and removed", "[Ob
 	
 	SECTION("Functionalities can be added to and removed from Objects")
 	{
-		object.Add<CatFunctionality>();
-		object.Add<BagFunctionality>();
+		sysFuncCat.AddFunctionality(object);
+		sysFuncBag.AddFunctionality(object);
 
 		object.Remove<CatFunctionality>();
 		object.Remove<BagFunctionality>();
@@ -93,11 +99,11 @@ TEST_CASE("Objects can be created and have dependencies added and removed", "[Ob
 	
 	SECTION("Added functionalities refer to the same instance")
 	{
-		auto& catA = object.Add<CatFunctionality>();
-		auto& catB = object.Add<CatFunctionality>();
+		auto& catA = sysFuncCat.AddFunctionality(object);
+		auto& catB = sysFuncCat.AddFunctionality(object);
 
-		auto& bagA = object.Add<BagFunctionality>();
-		auto& bagB = object.Add<BagFunctionality>();
+		auto& bagA = sysFuncBag.AddFunctionality(object);
+		auto& bagB = sysFuncBag.AddFunctionality(object);
 
 		REQUIRE(&catA == &catB);
 		REQUIRE(&bagA == &bagB);
@@ -106,10 +112,16 @@ TEST_CASE("Objects can be created and have dependencies added and removed", "[Ob
 
 TEST_CASE("Objects keep track of when a dependency no longer have any references", "[Object]")
 {
+	ComponentSystem<SCatComponent> sysCompCat(std::tie());
+	ComponentSystem<SBagComponent> sysCompBag(std::tie());
+
+	FunctionalitySystem<CatFunctionality> sysFuncCat(std::tie(sysCompCat));
+	FunctionalitySystem<BagFunctionality> sysFuncBag(std::tie(sysCompBag));
+
 	Object object;
 
 	{
-		auto& cat = object.Add<CatFunctionality>();
+		auto& cat = sysFuncCat.AddFunctionality(object);;
 
 		REQUIRE(cat.GetLegCount() == 4);
 
@@ -120,15 +132,15 @@ TEST_CASE("Objects keep track of when a dependency no longer have any references
 
 	// (Kevin): Adding an extra functionality so the object isn't completely reset whenever a dependency is removed.
 	// This is to ensure that dependencies are still removed and properly work, even if there's other dependencies left.
-	object.Add<BagFunctionality>();
+	sysFuncBag.AddFunctionality(object);
 
 	SECTION("Dependencies are not reset when there are still references to it")
 	{
-		object.Add<CatFunctionality>();
+		sysFuncCat.AddFunctionality(object, false);
 
-		object.Remove<CatFunctionality>();
+		object.Remove<CatFunctionality>(false);
 
-		auto& cat = object.Add<CatFunctionality>();
+		auto& cat = sysFuncCat.AddFunctionality(object);
 
 		REQUIRE(cat.GetLegCount() == 3);
 	}
@@ -137,14 +149,14 @@ TEST_CASE("Objects keep track of when a dependency no longer have any references
 	{
 		object.Remove<CatFunctionality>();
 
-		auto& cat = object.Add<CatFunctionality>();
+		auto& cat = sysFuncCat.AddFunctionality(object);;
 
 		REQUIRE(cat.GetLegCount() == 4);
 	}
 
 	SECTION("Dependencies are not reset when if a depending dependency is removed")
 	{
-		auto& catComponent = object.Add<SCatComponent>();
+		auto& catComponent = sysCompCat.AddComponent(object);
 
 		object.Remove<CatFunctionality>();
 
@@ -154,6 +166,12 @@ TEST_CASE("Objects keep track of when a dependency no longer have any references
 
 TEST_CASE("Objects can be visited", "[Object]")
 {
+	ComponentSystem<SCatComponent> sysCompCat(std::tie());
+	ComponentSystem<SBagComponent> sysCompBag(std::tie());
+
+	FunctionalitySystem<CatFunctionality> sysFuncCat(std::tie(sysCompCat));
+	FunctionalitySystem<BagFunctionality> sysFuncBag(std::tie(sysCompBag));
+
 	Object object;
 	u32 callCount = 0;
 
@@ -171,8 +189,8 @@ TEST_CASE("Objects can be visited", "[Object]")
 
 	SECTION("Objects with only components should invoke the callable once for every component")
 	{
-		object.Add<SCatComponent>();
-		object.Add<SBagComponent>();
+		sysCompCat.AddComponent(object);
+		sysCompBag.AddComponent(object);
 
 		object.Visit(visitCallable);
 
@@ -181,8 +199,8 @@ TEST_CASE("Objects can be visited", "[Object]")
 
 	SECTION("Objects with functionalities should invoke the callable once for every dependency")
 	{
-		object.Add<CatFunctionality>();
-		object.Add<SBagComponent>();
+		sysFuncCat.AddFunctionality(object);
+		sysCompBag.AddComponent(object);
 
 		object.Visit(visitCallable);
 
@@ -191,9 +209,9 @@ TEST_CASE("Objects can be visited", "[Object]")
 
 	SECTION("Removed dependencies should not invoke the callable")
 	{
-		object.Add<CatFunctionality>();
-		object.Add<BagFunctionality>();
-		object.Add<SBagComponent>();
+		sysFuncCat.AddFunctionality(object);
+		sysFuncBag.AddFunctionality(object);
+		sysCompBag.AddComponent(object);
 
 		object.Visit(visitCallable);
 

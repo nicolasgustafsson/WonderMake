@@ -2,8 +2,11 @@
 #include "MovementInputFunctionality.h"
 #include "Player/PlayerControllerFunctionality.h"
 
-MovementInputFunctionality::MovementInputFunctionality(Object& aOwner)
-	: Super(aOwner) 
+REGISTER_COMPONENT(SMovementInputComponent);
+REGISTER_FUNCTIONALITY(MovementInputFunctionality);
+
+MovementInputFunctionality::MovementInputFunctionality(Object& aOwner, Dependencies&& aDependencies)
+	: Super(aOwner, std::move(aDependencies))
 {
 }
 

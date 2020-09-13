@@ -1,8 +1,11 @@
 #include "pch.h"
 #include "CharacterFunctionality.h"
 
-CharacterFunctionality::CharacterFunctionality(Object& aOwner) noexcept
-	: Super(aOwner)
+REGISTER_COMPONENT(SHealthComponent);
+REGISTER_FUNCTIONALITY(CharacterFunctionality);
+
+CharacterFunctionality::CharacterFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept
+	: Super(aOwner, std::move(aDependencies))
 {
 	auto& collider = Get<CollisionFunctionality>().AddSphereCollider(*this, SVector2f::Zero(), 15.f);
 

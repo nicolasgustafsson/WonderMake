@@ -1,15 +1,18 @@
 #include "pch.h"
 #include "GameWorld.h"
 
-#include "Functionalities/SpriteRenderingFunctionality.h"
-#include "Functionalities/TransformFunctionality.h"
-#include "Movement/DefaultMovementFunctionality.h"
-#include "Player/PlayerControllerFunctionality.h"
 #include "System/System.h"
 
+#include "Functionalities/SpriteRenderingFunctionality.h"
+#include "Functionalities/TransformFunctionality.h"
+
+#include "Movement/DefaultMovementFunctionality.h"
+#include "Player/PlayerControllerFunctionality.h"
 #include "Designers/LevelDesigner/LevelDesigner.h"
-#include "Camera/CameraFunctionality.h"
 #include "Levels/LevelFunctionality.h"
+#include "Camera/CameraFunctionality.h"
+
+REGISTER_SYSTEM(GameWorld);
 
 GameWorld::GameWorld(Dependencies&& aDependencies)
 	: Super(std::move(aDependencies))
@@ -24,12 +27,10 @@ GameWorld::GameWorld(Dependencies&& aDependencies)
 
 LevelFunctionality& GameWorld::RestartLevel()
 {
-	SystemPtr<LevelDesigner> levelDesigner;
-	
 	Object newLevel;
 
-	LevelFunctionality& levelFunctionality = newLevel.Add<LevelFunctionality>();
-	levelDesigner->DesignLevel(levelFunctionality);
+	LevelFunctionality& levelFunctionality = Get<FunctionalitySystemDelegate<LevelFunctionality>>().AddFunctionality(newLevel);
+	Get<LevelDesigner>().DesignLevel(levelFunctionality);
 
 	if (myCurrentLevelFunctionality)
 		myCurrentLevelFunctionality->TransferToNewLevel(levelFunctionality);
@@ -46,14 +47,15 @@ LevelFunctionality& GameWorld::RestartLevel()
 Object GameWorld::SetupPlayer()
 {
 	Object player;
-	myPlayerTransform = &player.Add<TransformFunctionality>();
-	player.Add<PlayerControllerFunctionality>();
-	player.Add<DefaultMovementFunctionality>();
 
-	auto& playerSprite = player.Add<SpriteRenderingFunctionality>();
+	myPlayerTransform = &Get<FunctionalitySystemDelegate<TransformFunctionality>>().AddFunctionality(player);
+	Get<FunctionalitySystemDelegate<PlayerControllerFunctionality>>().AddFunctionality(player);
+	Get<FunctionalitySystemDelegate<DefaultMovementFunctionality>>().AddFunctionality(player);
+
+	auto& playerSprite = Get<FunctionalitySystemDelegate<SpriteRenderingFunctionality>>().AddFunctionality(player);
 	playerSprite.SetTexture(std::filesystem::current_path() / "Textures/player.png");
 
-	auto& camera = myCameraController.Add<CameraFunctionality>();
+	auto& camera = Get<FunctionalitySystemDelegate<CameraFunctionality>>().AddFunctionality(player);
 	camera.SetTarget(myPlayerTransform);
 
 	return player;
@@ -63,7 +65,7 @@ void GameWorld::OnPlayerDeath(const SPlayerDiedMessage&)
 {
 	myDeathScreen.emplace();
 
-	auto& sprite = myDeathScreen->Add<SpriteRenderingFunctionality>();
+	auto& sprite = Get<FunctionalitySystemDelegate<SpriteRenderingFunctionality>>().AddFunctionality(*myDeathScreen);
 	sprite.SetTexture(std::filesystem::current_path() / "Textures/deadScreen.png");
 }
 

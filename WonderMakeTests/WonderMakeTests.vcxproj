@@ -187,7 +187,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DependencyInjectionTests.cpp" />
-    <ClCompile Include="DependencyTests.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MatrixTests.cpp" />
     <ClCompile Include="ObjectTests.cpp" />

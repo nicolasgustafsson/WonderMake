@@ -1,8 +1,10 @@
 #include "pch.h"
 #include "TransformFunctionality.h"
 
-TransformFunctionality::TransformFunctionality(Object& aOwner) noexcept
-	: Super(aOwner)
+REGISTER_FUNCTIONALITY(TransformFunctionality);
+
+TransformFunctionality::TransformFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept
+	: Super(aOwner, std::move(aDependencies))
 {
 
 }

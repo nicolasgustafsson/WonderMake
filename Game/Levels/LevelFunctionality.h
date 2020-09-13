@@ -26,10 +26,12 @@ struct SLevelComponent : public SComponent
 
 class LevelFunctionality : public Functionality<
 	LevelFunctionality,
-	Policy::Set<Policy::Add<SLevelComponent, Policy::EPermission::Write>>>
+		Policy::Set<
+			Policy::Add<FunctionalitySystemDelegate<LevelDenizenFunctionality>, Policy::EPermission::Write>,
+			Policy::Add<SLevelComponent, Policy::EPermission::Write>>>
 {
 public:
-	LevelFunctionality(Object& aOwner);
+	LevelFunctionality(Object& aOwner, Dependencies&& aDependencies);
 
 	void Tick();
 
@@ -45,6 +47,3 @@ public:
 	void SetStartPosition(const SVector2f aPosition);
 	[[nodiscard]] SVector2f GetStartPosition() const noexcept { return Get<SLevelComponent>().StartPosition; }
 };
-
-REGISTER_COMPONENT(SLevelComponent);
-REGISTER_FUNCTIONALITY(LevelFunctionality);

@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "EngineUniformBuffer.h"
 
+REGISTER_SYSTEM(EngineUniformBuffer);
+
 EngineUniformBuffer::EngineUniformBuffer(Dependencies&& aDependencies)
 	: Super(std::move(aDependencies))
 	, UniformBuffer<SEngineUniformBufferData>(0), Debugged("Engine Uniform Buffer")

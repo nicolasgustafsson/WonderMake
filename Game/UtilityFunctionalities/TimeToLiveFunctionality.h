@@ -12,9 +12,7 @@ class TimeToLiveFunctionality : public Functionality<
 	Policy::Add<OwnerFunctionality, Policy::EPermission::Write >> >
 {
 public:
-	TimeToLiveFunctionality(Object& aOwner) : Super(aOwner) {}
+	TimeToLiveFunctionality(Object& aOwner, Dependencies&& aDependencies) : Super(aOwner, std::move(aDependencies)) {}
 
 	void SetTimeToLive(const f32 aTimeToLive);
 };
-
-REGISTER_FUNCTIONALITY(TimeToLiveFunctionality);

@@ -16,8 +16,5 @@ class LevelDenizenFunctionality : public Functionality<
 	Policy::Set<Policy::Add<SLevelDenizenComponent, Policy::EPermission::Write>>>
 {
 public:
-	LevelDenizenFunctionality(Object& aOwner);
+	LevelDenizenFunctionality(Object& aOwner, Dependencies&& aDependencies);
 };
-
-REGISTER_COMPONENT(SLevelDenizenComponent);
-REGISTER_FUNCTIONALITY(LevelDenizenFunctionality);

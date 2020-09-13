@@ -2,11 +2,12 @@
 #include "ImpulseFunctionality.h"
 #include <algorithm>
 
-ImpulseFunctionality::ImpulseFunctionality(Object& aOwner)
-	: Super(aOwner)
-{
+REGISTER_COMPONENT(SImpulseListComponent);
+REGISTER_FUNCTIONALITY(ImpulseFunctionality);
 
-}
+ImpulseFunctionality::ImpulseFunctionality(Object& aOwner, Dependencies&& aDependencies)
+	: Super(aOwner, std::move(aDependencies))
+{}
 
 ImpulseFunctionality::~ImpulseFunctionality()
 {
@@ -15,13 +16,13 @@ ImpulseFunctionality::~ImpulseFunctionality()
 
 	for (SImpulseKey& impulseKey : impulseList.ImpulseKeys)
 	{
-		myRouter->Unsubscribe(impulseKey.TypeHash, Owner, *impulseKey.OwningFunctionality);
+		Get<ObjectImpulseRouter>().Unsubscribe(impulseKey.TypeHash, Owner, *impulseKey.OwningFunctionality);
 	}
 }
 
 void ImpulseFunctionality::Unsubscribe(_BaseFunctionality& aSubscriber, const size_t aTypeHash)
 {
-	myRouter->Unsubscribe(aTypeHash, Get<OwnerFunctionality>().GetOwner(), aSubscriber);
+	Get<ObjectImpulseRouter>().Unsubscribe(aTypeHash, Get<OwnerFunctionality>().GetOwner(), aSubscriber);
 
 	auto& impulseComponent = Get<SImpulseListComponent>();
 
@@ -46,7 +47,7 @@ void ImpulseFunctionality::UnsubscribeAll(_BaseFunctionality& aSubscriber)
 
 	std::for_each(it, impulseList.ImpulseKeys.end(), [&](const auto& aImpulseKey)
 		{
-			myRouter->Unsubscribe(aImpulseKey.TypeHash, owner, aSubscriber);
+			Get<ObjectImpulseRouter>().Unsubscribe(aImpulseKey.TypeHash, owner, aSubscriber);
 		});
 
 	impulseList.ImpulseKeys.erase(it, impulseList.ImpulseKeys.end());

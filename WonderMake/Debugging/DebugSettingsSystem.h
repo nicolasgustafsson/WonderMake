@@ -26,8 +26,6 @@ protected:
 	nlohmann::json mySettings;
 };
 
-REGISTER_SYSTEM(DebugSettingsSystem);
-
 template<typename TSettingType>
 TSettingType DebugSettingsSystem::GetOrCreateDebugValue(const std::string aSettingName, TSettingType aDefault)
 {

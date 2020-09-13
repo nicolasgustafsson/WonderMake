@@ -33,8 +33,6 @@ private:
 	std::mt19937 myRandomGenerator;
 };
 
-REGISTER_SYSTEM(Randomizer);
-
 template <typename T /*= f32*/>
 T Randomizer::GetRandomNumber(T aMin, T aMax)
 {

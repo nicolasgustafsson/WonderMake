@@ -18,11 +18,8 @@ class FactionFunctionality : public Functionality<
 	Policy::Add<SFactionComponent, Policy::EPermission::Write >> >
 {
 public:
-	FactionFunctionality(Object& aOwner);
+	FactionFunctionality(Object& aOwner, Dependencies&& aDependencies);
 	void SetFaction(const EFaction aFaction) noexcept;
 	[[nodiscard]] bool IsFriendlyWith(const EFaction aFaction) const noexcept;
 	[[nodiscard]] EFaction GetFaction() const noexcept;
 };
-
-REGISTER_COMPONENT(SFactionComponent);
-REGISTER_FUNCTIONALITY(FactionFunctionality);

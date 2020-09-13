@@ -1,14 +1,12 @@
 #pragma once
 
 #include "Functionalities/BaseFunctionality.h"
-
-#include "Object/Dependency.h"
+#include "Functionalities/FunctionalitySystem.h"
 
 #define REGISTER_FUNCTIONALITY(aFunctionality) REGISTER_FUNCTIONALITY_SYSTEM(aFunctionality)
 
 class Object;
 
-//[Nicos]: Describes a functionality for an object. Template params are 1. Type that is self type and 2. Dependencies.
 template<
 	typename TSelfType,
 	typename TPolicySet = Policy::Set<>>
@@ -16,48 +14,44 @@ class Functionality
 	: public _BaseFunctionality
 {
 public:
-	inline virtual void Destroy(Object& aObject) override final;
-
 	using Super = Functionality<TSelfType, TPolicySet>;
+	using Dependencies = typename TPolicySet::DependenciesRef;
 	using PolicySet = TPolicySet;
+
+	Functionality(Object& aObject, Dependencies&& aDependencies);
+	inline virtual void Destroy() override final;
 
 	template<typename TDependency> requires
 		TPolicySet::template HasPolicy_v<TDependency, Policy::EPermission::Write>
 		|| TPolicySet::template HasPolicy_v<TDependency, Policy::EPermission::Unrestricted>
-		constexpr __forceinline TDependency& Get()
+		constexpr __forceinline TDependency& Get() noexcept
 	{
-		return myDependencies.Get<TDependency>();
+		return std::get<std::decay_t<TDependency>&>(myDependencies);
 	}
 
 	template<typename TDependency> requires
 		TPolicySet::template HasDependency_v<TDependency>
-		constexpr __forceinline const TDependency& Get() const
+		constexpr __forceinline const TDependency& Get() const noexcept
 	{
-		return myDependencies.Get<TDependency>();
+		return std::get<std::decay_t<TDependency>&>(myDependencies);
 	}
 
-protected:
-	Dependencies<TPolicySet> myDependencies;
-
 private:
-	Functionality(Object& aObject);
 	friend TSelfType;
+
+	Dependencies myDependencies;
 };
 
 template<typename TSelfType, typename TPolicySet>
-void Functionality<TSelfType, TPolicySet>::Destroy(Object& aObject)
+void Functionality<TSelfType, TPolicySet>::Destroy()
 {
 	class ImpulseFunctionality;
 
 	if constexpr (TPolicySet::template HasDependency_v<ImpulseFunctionality>)
 		Get<ImpulseFunctionality>().UnsubscribeAll(*this);
-
-	SystemPtr<FunctionalitySystem<TSelfType>>()->RemoveFunctionality(static_cast<TSelfType&>(*this));
-
-	myDependencies.Destroy(aObject, *this);
 }
 
 template<typename TSelfType, typename TPolicySet>
-Functionality<TSelfType, TPolicySet>::Functionality(Object& aObject)
-	: myDependencies(aObject)
+Functionality<TSelfType, TPolicySet>::Functionality(Object& /*aObject*/, Dependencies&& aDependencies)
+	: myDependencies(std::move(aDependencies))
 {}

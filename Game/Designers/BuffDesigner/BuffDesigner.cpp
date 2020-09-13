@@ -7,6 +7,8 @@
 #include "Designers/EffectDesigner/EffectDesigner.h"
 #include "Character/Effects/CharacterEffect.h"
 
+REGISTER_SYSTEM(BuffDesigner);
+
 BuffDesigner::BuffDesigner(Dependencies&& aDependencies)
 	: Super(std::move(aDependencies))
 	, Debugged("Buff Designer")
@@ -44,22 +46,22 @@ BuffBlueprint& BuffDesigner::DesignBuff(SBuffRequirements aBuffRequirements)
 
 EBuffType BuffDesigner::DecideBuffType()
 {
-	return SystemPtr<Randomizer>()->SelectOne<EBuffType, EBuffType::Debuff, EBuffType::Buff>();
+	return Get<Randomizer>().SelectOne<EBuffType, EBuffType::Debuff, EBuffType::Buff>();
 }
 
 f32 BuffDesigner::DecideBuffStrength()
 {
-	return SystemPtr<Randomizer>()->GetRandomNumber(50.f, 150.f);
+	return Get<Randomizer>().GetRandomNumber(50.f, 150.f);
 }
 
 f32 BuffDesigner::DecideBuffIntensity()
 {
-	return std::powf(SystemPtr<Randomizer>()->GetRandomNumber(1.f, 1000.f) / 1000.f, 2.f) * 10.f;
+	return std::powf(Get<Randomizer>().GetRandomNumber(1.f, 1000.f) / 1000.f, 2.f) * 10.f;
 }
 
 void BuffDesigner::MakeBuffBetter(const f32 aHowMuch, SBuffDesign& aBuffDesign)
 {
-	switch (SystemPtr<Randomizer>()->GetRandomNumber<i32>(0, 1))
+	switch (Get<Randomizer>().GetRandomNumber<i32>(0, 1))
 	{
 	case 0:
 		AddStatProperty(true, aHowMuch, aBuffDesign);
@@ -72,7 +74,7 @@ void BuffDesigner::MakeBuffBetter(const f32 aHowMuch, SBuffDesign& aBuffDesign)
 
 void BuffDesigner::MakeBuffWorse(const f32 aHowMuch, SBuffDesign& aBuffDesign)
 {
-	switch (SystemPtr<Randomizer>()->GetRandomNumber<i32>(0, 1))
+	switch (Get<Randomizer>().GetRandomNumber<i32>(0, 1))
 	{
 	case 0:
 		AddStatProperty(false, aHowMuch, aBuffDesign);
@@ -91,7 +93,7 @@ void BuffDesigner::AddStatProperty(bool aIncrease, const f32 aStrength, SBuffDes
 	if (!aIncrease)
 		strength = 1.0f / strength;
 
-	ECharacterStat statToDecrease = static_cast<ECharacterStat>(SystemPtr<Randomizer>()->GetRandomNumber<i32>(0, static_cast<i32>(ECharacterStat::Count) - 1));
+	ECharacterStat statToDecrease = static_cast<ECharacterStat>(Get<Randomizer>().GetRandomNumber<i32>(0, static_cast<i32>(ECharacterStat::Count) - 1));
 	std::unique_ptr<BuffStatChangeProperty> statChangeProperty = std::make_unique<BuffStatChangeProperty>(SStatChange{ statToDecrease, strength });
 
 	aBuffDesign.Properties.insert(std::move(statChangeProperty));

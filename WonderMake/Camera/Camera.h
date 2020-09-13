@@ -1,6 +1,5 @@
 #pragma once
 #include "System/System.h"
-#include "System/SystemPtr.h"
 #include "Graphics/EngineUniformBuffer.h"
 #include "Message/MessageTypes.h"
 #include "Message/MessageSubscriber.h"
@@ -37,5 +36,3 @@ private:
 	SMatrix33f myViewMatrix;
 	SVector2f myViewportSize;
 };
-
-REGISTER_SYSTEM(Camera);

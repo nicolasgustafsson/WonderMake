@@ -20,8 +20,6 @@ namespace NodeTypes
 	{
 		std::any& audioMix = aNode.NodeData["AudioMix"];
 
-		SoLoud::Bus* busPointer = nullptr;
-
 		auto& bus = audioMix.has_value() ? std::any_cast<SoLoud::Bus&>(audioMix) : audioMix.emplace<SoLoud::Bus>();
 
 		bus.setFilter(0, nullptr);

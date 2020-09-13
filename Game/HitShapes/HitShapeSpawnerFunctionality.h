@@ -4,6 +4,9 @@
 #include "Functionalities/TransformFunctionality.h"
 #include "UtilityFunctionalities/FactionFunctionality.h"
 
+class HitShapeFunctionality;
+class Randomizer;
+
 enum class EDirection
 {
 	Left,
@@ -14,19 +17,19 @@ enum class EDirection
 class HitShapeSpawnerFunctionality
 	: public Functionality<
 	HitShapeSpawnerFunctionality,
-	Policy::Set<
-	Policy::Add<TransformFunctionality, Policy::EPermission::Write>,
-	Policy::Add<FactionFunctionality, Policy::EPermission::Read>,
-	Policy::Add<SFactionComponent, Policy::EPermission::Write>,
-	Policy::Add<SLevelDenizenComponent, Policy::EPermission::Write>>>
+		Policy::Set<
+			Policy::Add<Randomizer, Policy::EPermission::Write>,
+			Policy::Add<FunctionalitySystemDelegate<HitShapeFunctionality>, Policy::EPermission::Write>,
+			Policy::Add<TransformFunctionality, Policy::EPermission::Write>,
+			Policy::Add<FactionFunctionality, Policy::EPermission::Read>,
+			Policy::Add<SFactionComponent, Policy::EPermission::Write>,
+			Policy::Add<SLevelDenizenComponent, Policy::EPermission::Write>>>
 {
 public:
-	HitShapeSpawnerFunctionality(Object& aOwner);
+	HitShapeSpawnerFunctionality(Object& aOwner, Dependencies&& aDependencies);
 	void SpawnPunch(const f32 aLength, const f32 aDelay, const f32 aDuration, const f32 aWidth, const f32 aDamage);
 
 	void SpawnSwordSwing(BezierCurve aSwordPath, const f32 aDelay, const f32 aDuration, const f32 aWidth, const f32 aDamage);
 
 private:
 };
-
-REGISTER_FUNCTIONALITY(HitShapeSpawnerFunctionality);

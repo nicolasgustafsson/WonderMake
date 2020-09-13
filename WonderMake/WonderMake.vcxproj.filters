@@ -72,6 +72,10 @@
     <ClCompile Include="FileSystem\FileWatcher.cpp" />
     <ClCompile Include="Graphics\ShaderParser.cpp" />
     <ClCompile Include="Utilities\DependencyInjector.cpp" />
+    <ClCompile Include="Object\DependencyDestructor.cpp" />
+    <ClCompile Include="Graphics\Shader.cpp" />
+    <ClCompile Include="Components\Component.cpp" />
+    <ClCompile Include="Collision\CollisionComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -108,7 +112,6 @@
     <ClInclude Include="Components\ComponentSystem.h" />
     <ClInclude Include="Components\SpriteComponent.h" />
     <ClInclude Include="Components\TransformComponent.h" />
-    <ClInclude Include="Object\Dependency.h" />
     <ClInclude Include="Functionalities\SpriteRenderingFunctionality.h" />
     <ClInclude Include="Functionalities\Functionality.h" />
     <ClInclude Include="Functionalities\FunctionalitySystem.h" />
@@ -172,7 +175,6 @@
     <ClInclude Include="Logging\FileLogger.h" />
     <ClInclude Include="Utilities\plf_colony.h" />
     <ClInclude Include="Object\Object.h" />
-    <ClInclude Include="Object\Dependency.h" />
     <ClInclude Include="Components\SpriteComponent.h" />
     <ClInclude Include="Components\TransformComponent.h" />
     <ClInclude Include="Functionalities\SpriteRenderingFunctionality.h" />
@@ -244,6 +246,8 @@
     <ClInclude Include="Utilities\Rotation.h" />
     <ClInclude Include="Utilities\Matrix.h" />
     <ClInclude Include="Utilities\DependencyInjector.h" />
+    <ClInclude Include="Object\DependencyDestructor.h" />
+    <ClInclude Include="Utilities\AutoRegister.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

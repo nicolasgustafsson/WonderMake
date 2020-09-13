@@ -1,29 +1,49 @@
 #pragma once
-#include "Utilities/plf_colony.h"
+
+#include "Object/DependencyDestructor.h"
+#include "Object/Object.h"
+
 #include "System/System.h"
+
+#include "Utilities/plf_colony.h"
+
+class Object;
 
 template<typename TData>
 class ComponentSystem
 	: public System<>
 {
 public:
-	using Super::Super;
+	ComponentSystem(Dependencies&& aDependencies);
 
-	TData& AddComponent();
+	TData& AddComponent(Object& aObject, const bool aExplicitlyAdded = true);
 	void RemoveComponent(TData& aComponent);
 
 	bool IsEmpty() const;
 
 private:
-	plf::colony<TData> myData;
+	plf::colony<TData>		myData;
+	DependencyDestructor	myDependencyDestructor;
 };
 
 #define REGISTER_COMPONENT_SYSTEM(aComponent) _REGISTER_SYSTEM_IMPL(ComponentSystem<aComponent>, aComponent)
 
 template<typename TData>
-bool ComponentSystem<TData>::IsEmpty() const
+ComponentSystem<TData>::ComponentSystem(Dependencies&& aDependencies)
+	: Super(std::move(aDependencies))
+	, myDependencyDestructor([this](Object& /*aObject*/, auto* aComponent)
+		{
+			RemoveComponent(*static_cast<TData*>(aComponent));
+		})
+{}
+
+template<typename TData>
+typename TData& ComponentSystem<TData>::AddComponent(Object& aObject, const bool aExplicitlyAdded)
 {
-	return myData.empty();
+	return aObject.Add<TData>([this](auto& /*aObject*/) -> auto&
+		{
+			return *myData.emplace();
+		}, myDependencyDestructor, aExplicitlyAdded);
 }
 
 template<typename TData>
@@ -33,8 +53,7 @@ void ComponentSystem<TData>::RemoveComponent(TData& aComponent)
 }
 
 template<typename TData>
-typename TData& ComponentSystem<TData>::AddComponent()
+bool ComponentSystem<TData>::IsEmpty() const
 {
-	return (*myData.emplace());
+	return myData.empty();
 }
-

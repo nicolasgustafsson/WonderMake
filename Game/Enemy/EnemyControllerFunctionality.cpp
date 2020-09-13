@@ -5,8 +5,11 @@
 #include "Actions/ActionFunctionality.h"
 #include "EnemyActions/PunchAction.h"
 
-EnemyControllerFunctionality::EnemyControllerFunctionality(Object& aOwner)
-	: Super(aOwner), Debugged("Enemy Controller")
+REGISTER_COMPONENT(EnemyControllerComponent)
+REGISTER_FUNCTIONALITY(EnemyControllerFunctionality);
+
+EnemyControllerFunctionality::EnemyControllerFunctionality(Object& aOwner, Dependencies&& aDependencies)
+	: Super(aOwner, std::move(aDependencies)), Debugged("Enemy Controller")
 {
 	Get<FactionFunctionality>().SetFaction(EFaction::Enemy);
 
@@ -33,7 +36,7 @@ void EnemyControllerFunctionality::Tick() noexcept
 	if (Get<ActionFunctionality>().IsInAction())
 		return;
 
-	const auto& targetFunctionality = Get<TargetFunctionality>();
+	auto& targetFunctionality = Get<TargetFunctionality>();
 	auto& enemyControllerComponent = Get<EnemyControllerComponent>();
 
 	const auto target = targetFunctionality.FindTarget([&](CharacterFunctionality& aCharacter)

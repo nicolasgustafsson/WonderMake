@@ -41,7 +41,7 @@ class CharacterStatsFunctionality												//Nicos: having 2 functionalities d
 			Policy::Add<SCharacterStatsComponent, Policy::EPermission::Write>>>/*, CharacterFunctionality*/
 {
 public:
-	CharacterStatsFunctionality(Object& aOwner);
+	CharacterStatsFunctionality(Object& aOwner, Dependencies&& aDependencies);
 	f32 GetStatValue(const ECharacterStat aStat) const noexcept;
 	f32 GetStatMultiplier(const ECharacterStat aStat) const noexcept;
 	 
@@ -60,6 +60,3 @@ private:
 	SStat& GetStat(const ECharacterStat aStat) noexcept;
 	const SStat& GetStat(const ECharacterStat aStat) const noexcept;
 };
-
-REGISTER_COMPONENT(SCharacterStatsComponent);
-REGISTER_FUNCTIONALITY(CharacterStatsFunctionality);

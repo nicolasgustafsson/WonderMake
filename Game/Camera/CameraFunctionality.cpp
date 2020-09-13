@@ -2,8 +2,11 @@
 #include "CameraFunctionality.h"
 #include "Camera/Camera.h"
 
-CameraFunctionality::CameraFunctionality(Object& aObject)
-	: Super(aObject)
+REGISTER_COMPONENT(SCameraComponent);
+REGISTER_FUNCTIONALITY(CameraFunctionality);
+
+CameraFunctionality::CameraFunctionality(Object& aObject, Dependencies&& aDependencies)
+	: Super(aObject, std::move(aDependencies))
 {
 
 }
@@ -16,11 +19,9 @@ void CameraFunctionality::Tick()
 	if (!cameraComponent.Target)
 		return;
 	
-	SystemPtr<Camera> cameraSystem;
-
 	transform.SetPosition(cameraComponent.Target->GetPosition());
 
-	cameraSystem->SetPosition(transform.GetPosition());
+	Get<Camera>().SetPosition(transform.GetPosition());
 }
 
 void CameraFunctionality::SetTarget(TransformFunctionality* aTarget)

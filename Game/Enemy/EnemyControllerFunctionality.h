@@ -31,7 +31,7 @@ class EnemyControllerFunctionality
 	, public Debugged
 {
 public:
-	EnemyControllerFunctionality(Object& aOwner);
+	EnemyControllerFunctionality(Object& aOwner, Dependencies&& aDependencies);
 
 	void Tick() noexcept;
 
@@ -41,5 +41,3 @@ private:
 
 	void OnDeath();
 };
-
-REGISTER_FUNCTIONALITY(EnemyControllerFunctionality);

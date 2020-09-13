@@ -3,8 +3,11 @@
 #include "Actions/Action.h"
 #include "Character/CharacterFunctionality.h"
 
-ActionFunctionality::ActionFunctionality(Object& aOwner)
-	: Super(aOwner) 
+REGISTER_COMPONENT(SActionComponent);
+REGISTER_FUNCTIONALITY(ActionFunctionality);
+
+ActionFunctionality::ActionFunctionality(Object& aOwner, Dependencies&& aDependencies)
+	: Super(aOwner, std::move(aDependencies)) 
 {
 	Get<ImpulseFunctionality>().Subscribe<SDiedImpulse>(*this, [&](auto) 
 		{
@@ -22,7 +25,7 @@ f32 ActionFunctionality::TimeSinceLastAction() const
 	if (IsInAction())
 		return 0.f;
 
-	return SystemPtr<TimeKeeper>()->TimeSince(Get<SActionComponent>().CompletionTime);
+	return Get<TimeKeeper>().TimeSince(Get<SActionComponent>().CompletionTime);
 }
 
 Action* ActionFunctionality::GetCurrentAction() const
@@ -58,5 +61,5 @@ void ActionFunctionality::EndCurrentAction()
 
 	currentAction->EndAction();
 	currentAction = nullptr;
-	Get<SActionComponent>().CompletionTime = SystemPtr<TimeKeeper>()->GetGameTime();
+	Get<SActionComponent>().CompletionTime = Get<TimeKeeper>().GetGameTime();
 }

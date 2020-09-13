@@ -2,6 +2,8 @@
 #include "DebugSettingsSystem.h"
 #include "Imgui/JsonInspector.h"
 
+REGISTER_SYSTEM(DebugSettingsSystem);
+
 DebugSettingsSystem::DebugSettingsSystem(Dependencies&& aDependencies)
 	: Super(std::move(aDependencies))
 	, Debugged("Debug Settings")

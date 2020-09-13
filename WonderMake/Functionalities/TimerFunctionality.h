@@ -2,6 +2,8 @@
 #include "Functionalities/Functionality.h"
 #include "Typedefs.h"
 
+class TimeKeeper;
+
 struct STimerComponent
 	: public SComponent
 {
@@ -18,15 +20,13 @@ class TimerFunctionality
 	: public Functionality<
 		TimerFunctionality,
 		Policy::Set<
+			Policy::Add<TimeKeeper, Policy::EPermission::Read>,
 			Policy::Add<STimerComponent, Policy::EPermission::Write>>>
 {
 public:
-	TimerFunctionality(Object& aOwner) noexcept;
+	TimerFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept;
 
 	void AddTimer(const f32 aDuration, Closure aClosure);
 	
 	void Tick();
 };
-
-REGISTER_COMPONENT(STimerComponent);
-REGISTER_FUNCTIONALITY(TimerFunctionality);

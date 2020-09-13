@@ -2,6 +2,8 @@
 #include "MeleeWeaponDesigner.h"
 #include "Randomizer/Randomizer.h"
 
+REGISTER_SYSTEM(MeleeWeaponDesigner);
+
 MeleeWeapon MeleeWeaponDesigner::DesignWeapon()
 {
 	MeleeWeapon currentWeapon;
@@ -17,7 +19,7 @@ MeleeWeapon MeleeWeaponDesigner::DesignWeapon()
 
 std::vector<SSwing> MeleeWeaponDesigner::CreateMoveset(const MeleeWeapon& aWeapon)
 {
-	const bool isMirrored = SystemPtr<Randomizer>()->GetRandomBool();
+	const bool isMirrored = Get<Randomizer>().GetRandomBool();
 
 	return {
 		DesignSwing(aWeapon, isMirrored),

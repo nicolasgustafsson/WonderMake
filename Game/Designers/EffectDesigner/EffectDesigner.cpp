@@ -8,6 +8,8 @@
 
 #include "Randomizer/Randomizer.h"
 
+REGISTER_SYSTEM(EffectDesigner);
+
 CharacterEffect& EffectDesigner::DesignCharacterEffect(SEffectRequirements aRequirements)
 {
 	SEffectDesign design;
@@ -29,7 +31,7 @@ std::unique_ptr<CharacterEffect> EffectDesigner::DecideEffect(const SEffectDesig
 
 std::unique_ptr<CharacterEffect> EffectDesigner::DecidePositiveEffect(const SEffectDesign& aExistingDesign)
 {
-	if (SystemPtr<Randomizer>()->GetRandomBool())
+	if (Get<Randomizer>().GetRandomBool())
 	{
 		return std::make_unique<CharacterEffectHeal>(aExistingDesign.Strength);
 	}
@@ -45,7 +47,7 @@ std::unique_ptr<CharacterEffect> EffectDesigner::DecidePositiveEffect(const SEff
 
 std::unique_ptr<CharacterEffect> EffectDesigner::DecideNegativeEffect(const SEffectDesign& aExistingDesign)
 {
-	if (SystemPtr<Randomizer>()->GetRandomBool())
+	if (Get<Randomizer>().GetRandomBool())
 	{
 		return std::make_unique<CharacterEffectDamage>(aExistingDesign.Strength);
 	}
@@ -61,10 +63,10 @@ std::unique_ptr<CharacterEffect> EffectDesigner::DecideNegativeEffect(const SEff
 
 EEffectType EffectDesigner::DecideEffectType()
 {
-	return SystemPtr<Randomizer>()->SelectOne<EEffectType, EEffectType::Positive, EEffectType::Negative>();
+	return Get<Randomizer>().SelectOne<EEffectType, EEffectType::Positive, EEffectType::Negative>();
 }
 
 f32 EffectDesigner::DecideEffectStrength()
 {
-	return SystemPtr<Randomizer>()->GetRandomNumber(50.f, 150.f);
+	return Get<Randomizer>().GetRandomNumber(50.f, 150.f);
 }

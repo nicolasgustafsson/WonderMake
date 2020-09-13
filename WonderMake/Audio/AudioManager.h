@@ -5,7 +5,13 @@
 #include "Audio/AudioMixingNodeGraph.h"
 #include "Audio/SoundEffectNodeGraph.h"
 
-class AudioManager : public System<>, Debugged
+class DebugSettingsSystem;
+
+class AudioManager
+	: public System<
+		Policy::Set<
+			Policy::Add<DebugSettingsSystem, Policy::EPermission::Write>>
+	>, Debugged
 {
 public:
 	AudioManager(Dependencies&& aDependencies);
@@ -42,5 +48,3 @@ protected:
 
 	std::unordered_map<std::string, SoLoud::Bus> myBusses;
 };
-
-REGISTER_SYSTEM(AudioManager);

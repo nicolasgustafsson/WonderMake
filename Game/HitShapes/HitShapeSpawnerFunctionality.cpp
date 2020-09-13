@@ -7,8 +7,10 @@
 #include "Utilities/Math.h"
 #include "Utility/Constants.h"
 
-HitShapeSpawnerFunctionality::HitShapeSpawnerFunctionality(Object& aOwner)
-	: Super(aOwner)
+REGISTER_FUNCTIONALITY(HitShapeSpawnerFunctionality);
+
+HitShapeSpawnerFunctionality::HitShapeSpawnerFunctionality(Object& aOwner, Dependencies&& aDependencies)
+	: Super(aOwner, std::move(aDependencies))
 {
 
 }
@@ -19,17 +21,17 @@ void HitShapeSpawnerFunctionality::SpawnPunch(const f32 aLength, const f32 aDela
 
 	TransformFunctionality& transform = Get<TransformFunctionality>();
 
-	HitShapeFunctionality& hitShapeFunctionality = hitShape.Add<HitShapeFunctionality>();
+	HitShapeFunctionality& hitShapeFunctionality = Get<FunctionalitySystemDelegate<HitShapeFunctionality>>().AddFunctionality(hitShape);
 	
 	SVector2f characterPosition = transform.GetPosition();
 	
-	EDirection direction = SystemPtr<Randomizer>()->SelectOne<EDirection, EDirection::Left, EDirection::Right>();
+	EDirection direction = Get<Randomizer>().SelectOne<EDirection, EDirection::Left, EDirection::Right>();
 
 	const f32 directionSign = direction == EDirection::Right ? 1.f : -1.f;
 
-	f32 offset = SystemPtr<Randomizer>()->GetRandomNumber(10.f, 40.f) * directionSign;
-	f32 control1Offset = SystemPtr<Randomizer>()->GetRandomNumber(0.f, 30.f) * directionSign;
-	f32 control2Offset = SystemPtr<Randomizer>()->GetRandomNumber(0.f, 30.f) * directionSign;
+	f32 offset = Get<Randomizer>().GetRandomNumber(10.f, 40.f) * directionSign;
+	f32 control1Offset = Get<Randomizer>().GetRandomNumber(0.f, 30.f) * directionSign;
+	f32 control2Offset = Get<Randomizer>().GetRandomNumber(0.f, 30.f) * directionSign;
 
 	const SVector2f start = characterPosition + transform.GetRightVector() * offset - transform.GetForwardVector() * 20.f;
 	const SVector2f end = transform.GetPosition() + transform.GetForwardVector() * aLength;
@@ -52,7 +54,7 @@ void HitShapeSpawnerFunctionality::SpawnSwordSwing(BezierCurve aSwordPath, const
 {
 	Object hitShape;
 	TransformFunctionality& transform = Get<TransformFunctionality>();
-	HitShapeFunctionality& hitShapeFunctionality = hitShape.Add<HitShapeFunctionality>();
+	HitShapeFunctionality& hitShapeFunctionality = Get<FunctionalitySystemDelegate<HitShapeFunctionality>>().AddFunctionality(hitShape);
 
 	aSwordPath.Rotate(transform.GetRotation());
 	aSwordPath.Offset(transform.GetPosition());

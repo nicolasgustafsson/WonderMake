@@ -1,9 +1,11 @@
 #include "pch.h"
 #include "FactionFunctionality.h"
 
+REGISTER_COMPONENT(SFactionComponent);
+REGISTER_FUNCTIONALITY(FactionFunctionality);
 
-FactionFunctionality::FactionFunctionality(Object& aOwner)
-	: Super(aOwner)
+FactionFunctionality::FactionFunctionality(Object& aOwner, Dependencies&& aDependencies)
+	: Super(aOwner, std::move(aDependencies))
 {
 
 }

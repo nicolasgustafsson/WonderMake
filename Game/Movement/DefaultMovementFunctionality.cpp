@@ -3,9 +3,11 @@
 #include "Collision/CollisionFunctionality.h"
 #include "Physics/StaticGeometryFunctionality.h"
 
+REGISTER_COMPONENT(SDefaultMovementComponent);
+REGISTER_FUNCTIONALITY(DefaultMovementFunctionality);
 
-DefaultMovementFunctionality::DefaultMovementFunctionality(Object& aOwner)
-	: Super(aOwner)
+DefaultMovementFunctionality::DefaultMovementFunctionality(Object& aOwner, Dependencies&& aDependencies)
+	: Super(aOwner, std::move(aDependencies))
 {
 }
 
@@ -13,7 +15,7 @@ void DefaultMovementFunctionality::AddForce(const SVector2f aForce)
 {
 	SDefaultMovementComponent& movementComponent = Get<SDefaultMovementComponent>();
 
-	const f32 deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
+	const f32 deltaTime = Get<TimeKeeper>().GetDeltaSeconds();
 	movementComponent.CurrentVelocity += aForce * deltaTime;
 }
 
@@ -31,7 +33,7 @@ void DefaultMovementFunctionality::Tick() noexcept
 	movementComponent.CollisionIterationsLeft = movementComponent.CollisionIterations;
 
 	const SVector2f movementInput = Get<SMovementInputComponent>().myMovementInput;
-	const f32 deltaTime = myTimeKeeper->GetDeltaSeconds();
+	const f32 deltaTime = Get<TimeKeeper>().GetDeltaSeconds();
 
 	movementComponent.CurrentVelocity += movementInput * movementComponent.AccelerationSpeed * deltaTime;
 
@@ -88,9 +90,7 @@ void DefaultMovementFunctionality::TestCollision()
 
 	movementComponent.CollisionIterationsLeft -= 1;
 
-	SystemPtr<CollisionSystem> collisionSystem;
-
-	collisionSystem->OverlapSphereAgainstFunctionality<StaticGeometryFunctionality>(transform.Position, 15.f, 
+	Get<CollisionSystem>().OverlapSphereAgainstFunctionality<StaticGeometryFunctionality>(transform.Position, 15.f,
 		[&](auto&, Colliders::SCollisionInfo aCollisionInfo)
 		{
 			std::visit([&](auto& aOtherCollider)

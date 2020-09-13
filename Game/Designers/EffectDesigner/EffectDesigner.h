@@ -48,5 +48,3 @@ private:
 
 	plf::colony<std::unique_ptr<CharacterEffect>> myEffects;
 };
-
-REGISTER_SYSTEM(EffectDesigner);

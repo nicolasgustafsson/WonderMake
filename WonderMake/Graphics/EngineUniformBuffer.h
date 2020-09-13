@@ -75,5 +75,3 @@ public:
 private:
 	virtual void Debug() override;
 };
-
-REGISTER_SYSTEM(EngineUniformBuffer);

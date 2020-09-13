@@ -37,5 +37,3 @@ public:
 	[[nodiscard]] const unsigned char* GetJoystickButtons(const i32 aJoystickId, int* aCount);
 	[[nodiscard]] i32 GetMouseButton(GLFWwindow* aWindow, const i32 aButton);
 };
-
-REGISTER_SYSTEM(GlfwFacade);

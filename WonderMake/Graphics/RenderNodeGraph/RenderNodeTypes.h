@@ -13,7 +13,7 @@ namespace NodeTypes
 			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Input, "Final Texture");
 		}
 
-		virtual void ExecuteNodeLeftToRight(SNode& aNode) override;
+		virtual void ExecuteNode(SNode& aNode) override;
 	};
 
 	struct SRenderTextureNode : public SNodeType<SRenderTextureNode>
@@ -25,7 +25,7 @@ namespace NodeTypes
 			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Output, "Out rendertarget");
 		}
 
-		virtual void ExecuteNodeRightToLeft(struct SNode&) override;
+		virtual void ExecuteNode(struct SNode&) override;
 	};
 
 	struct SRenderDebugLines : public SNodeType<SRenderDebugLines>
@@ -36,7 +36,7 @@ namespace NodeTypes
 			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Output, "Out rendertarget");
 		}
 
-		virtual void ExecuteNodeLeftToRight(struct SNode&) override;
+		virtual void ExecuteNode(struct SNode&) override;
 	};
 
 	struct SProcessRenderLayer : public SNodeType<SProcessRenderLayer>
@@ -48,7 +48,7 @@ namespace NodeTypes
 			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Output, "Out rendertarget");
 		}
 
-		virtual void ExecuteNodeLeftToRight(struct SNode&) override;
+		virtual void ExecuteNode(struct SNode&) override;
 	};
 
 	struct SPostProcess : public SNodeType<SPostProcess>
@@ -63,7 +63,7 @@ namespace NodeTypes
 			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Output, "Out rendertarget");
 		}
 
-		virtual void ExecuteNodeLeftToRight(struct SNode&) override;
+		virtual void ExecuteNode(struct SNode&) override;
 	};
 }
 

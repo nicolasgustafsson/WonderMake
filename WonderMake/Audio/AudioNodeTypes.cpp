@@ -5,7 +5,7 @@
 
 namespace NodeTypes
 {
-	void SAudioMixingResultNode::ExecuteNodeLeftToRight(SNode& aNode)
+	void SAudioMixingResultNode::ExecuteNode(SNode& aNode)
 	{
 		SoLoud::Bus* audioSource = aNode.GetInput<SoLoud::Bus*>(0);
 		SoLoud::Soloud& soloudEngine = SystemPtr<AudioManager>()->GetSoloudEngine();
@@ -16,7 +16,8 @@ namespace NodeTypes
 			soloudEngine.play(*audioSource);
 	}
 
-	void SAudioMixNode::PrepareNode(SNode& aNode)
+
+	void SAudioMixNode::ExecuteNode(SNode& aNode)
 	{
 		std::any& audioMix = aNode.NodeData["AudioMix"];
 
@@ -28,11 +29,7 @@ namespace NodeTypes
 		bus.setFilter(3, nullptr);
 
 		aNode.SetOutput<SoLoud::Bus*>(0, &bus);
-	}
 
-	void SAudioMixNode::ExecuteNodeLeftToRight(SNode& aNode)
-	{
-		std::any& audioMix = aNode.NodeData["AudioMix"];
 		SoLoud::Bus& busPointer = std::any_cast<SoLoud::Bus&>(audioMix);
 
 		auto* firstSource = aNode.GetInput<SoLoud::AudioSource*>(0);
@@ -45,7 +42,7 @@ namespace NodeTypes
 			busPointer.play(*secondSource);
 	}
 
-	void SAudioSourceBusNode::PrepareNode(SNode& aNode)
+	void SAudioSourceBusNode::ExecuteNode(SNode& aNode)
 	{
 		SystemPtr<AudioManager> audioManager;
 
@@ -59,16 +56,11 @@ namespace NodeTypes
 		aNode.SetOutput<SoLoud::Bus*>(0, &bus);
 	}
 
-	void SEchoFilter::PrepareNode(SNode& aNode)
+	void SEchoFilter::ExecuteNode(SNode& aNode)
 	{
 		auto* audioSource = aNode.GetInput<SoLoud::AudioSource*>(0);
 
 		aNode.SetOutput(0, audioSource);
-	}
-
-	void SEchoFilter::ExecuteNodeLeftToRight(SNode& aNode)
-	{
-		auto* audioSource = aNode.GetInput<SoLoud::AudioSource*>(0);
 
 		if (audioSource)
 		{
@@ -85,7 +77,7 @@ namespace NodeTypes
 		}
 	}
 
-	void SSoundEffectResultNode::ExecuteNodeLeftToRight(SNode& aNode)
+	void SSoundEffectResultNode::ExecuteNode(SNode& aNode)
 	{
 		auto* audioSource = aNode.GetInput<SoLoud::AudioSource*>(0);
 
@@ -101,7 +93,7 @@ namespace NodeTypes
 		bus.play(*audioSource, volume);
 	}
 
-	void SGetSoundEffect::PrepareNode(SNode& aNode)
+	void SGetSoundEffect::ExecuteNode(SNode& aNode)
 	{
 		const std::filesystem::path audioEffectName = aNode.GetInput<std::filesystem::path>(0);
 

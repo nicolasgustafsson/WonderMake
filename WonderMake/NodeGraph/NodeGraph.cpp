@@ -93,26 +93,11 @@ void NodeGraph::Execute()
 	if (myNeedsRecompile)
 		Compile();
 
-	//this sets up inputs/outputs
 	for (size_t i = myCompiledNodeStack.size() - 1; i < myCompiledNodeStack.size(); i--)
 	{
 		auto&& compiledNode = myCompiledNodeStack[i];
 
-		compiledNode.Node.NodeType.PrepareNode(compiledNode.Node);
-	}
-
-	for (size_t i = 0; i < myCompiledNodeStack.size(); i++)
-	{
-		auto&& compiledNode = myCompiledNodeStack[i];
-
-		compiledNode.Node.NodeType.ExecuteNodeRightToLeft(compiledNode.Node);
-	}
-
-	for (size_t i = myCompiledNodeStack.size() - 1; i < myCompiledNodeStack.size(); i--)
-	{
-		auto&& compiledNode = myCompiledNodeStack[i];
-
-		compiledNode.Node.NodeType.ExecuteNodeLeftToRight(compiledNode.Node);
+		compiledNode.Node.NodeType.ExecuteNode(compiledNode.Node);
 	}
 }
 

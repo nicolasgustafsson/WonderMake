@@ -5,6 +5,7 @@
 #include "UtilityFunctionalities/FactionFunctionality.h"
 #include "Utilities/MathUtility.h"
 #include "Utility/Constants.h"
+#include "Audio/AudioManager.h"
 
 HitShapeFunctionality::HitShapeFunctionality(Object& aOwner)
 	: Super(aOwner)
@@ -116,6 +117,7 @@ void HitShapeFunctionality::SetMainColor(const SColor aColor)
 
 void HitShapeFunctionality::Start()
 {
+	SystemPtr<AudioManager>()->PlayAudio("NodeGraphs/Audio/Swing.json");
 	auto& hitShapeComponent = Get<SHitShapeComponent>();
 	hitShapeComponent.Time += (-hitShapeComponent.Delay);
 }

@@ -9,14 +9,14 @@
 
 namespace NodeTypes
 {
-	void SRenderResultNode::ExecuteNodeLeftToRight(SNode& aNode)
+	void SRenderResultNode::ExecuteNode(SNode& aNode)
 	{
 		std::any& finalRenderTarget = aNode.NodeData["RenderTarget"];
 
 		finalRenderTarget = std::make_any<std::shared_ptr<RenderTarget>>(aNode.GetInput<std::shared_ptr<RenderTarget>>(0));
 	}
 
-	void SRenderTextureNode::ExecuteNodeRightToLeft(struct SNode& aNode)
+	void SRenderTextureNode::ExecuteNode(struct SNode& aNode)
 	{
 		std::any& renderTargetAny = aNode.NodeData["RenderTarget"];
 		SRenderTargetSettings settings{ aNode.GetInput<SVector2u>(0), aNode.GetInput<bool>(1) };
@@ -35,7 +35,7 @@ namespace NodeTypes
 		aNode.SetOutput<std::shared_ptr<RenderTarget>>(0, renderTarget);
 	}
 
-	void SProcessRenderLayer::ExecuteNodeLeftToRight(struct SNode& aNode)
+	void SProcessRenderLayer::ExecuteNode(struct SNode& aNode)
 	{
 		auto renderTarget = aNode.GetInput<std::shared_ptr<RenderTarget>>(0);
 
@@ -49,7 +49,7 @@ namespace NodeTypes
 		aNode.SetOutput(0, renderTarget);
 	}
 
-	void SRenderDebugLines::ExecuteNodeLeftToRight(struct SNode& aNode)
+	void SRenderDebugLines::ExecuteNode(struct SNode& aNode)
 	{
 		auto renderTarget = aNode.GetInput<std::shared_ptr<RenderTarget>>(0);
 
@@ -63,7 +63,7 @@ namespace NodeTypes
 		aNode.SetOutput(0, renderTarget);
 	}
 
-	void SPostProcess::ExecuteNodeLeftToRight(struct SNode& aNode)
+	void SPostProcess::ExecuteNode(struct SNode& aNode)
 	{
 		auto renderTarget = aNode.GetInput<std::shared_ptr<RenderTarget>>(0);
 		aNode.SetOutput(0, renderTarget);

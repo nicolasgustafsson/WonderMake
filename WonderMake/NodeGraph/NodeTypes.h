@@ -201,11 +201,8 @@ struct SNodeTypeBase
 		return slotInstances;
 	}
 
-	//[Nicos]: Setup before executing a node graph
-	virtual void PrepareNode(struct SNode&) {}
-
-	virtual void ExecuteNodeRightToLeft(struct SNode&) {}
-	virtual void ExecuteNodeLeftToRight(struct SNode&) {}
+	//nodes are executed from left to right
+	virtual void ExecuteNode(struct SNode&) {}
 };
 
 template<typename TNodeType>

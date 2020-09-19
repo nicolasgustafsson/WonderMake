@@ -53,8 +53,10 @@ namespace SlotInputEdits
 	template<>
 	inline void EditInputSlot<SRenderSettings>(SRenderSettings& aInput)
 	{
-		if (ImGui::Button("Render Settings"))
-		{
+		ImGui::PushID(&aInput);
+		//if (ImGui::Button("Render Settings"))
+		//{
+		//	ImGui::Begin("Render Settings");
 			i32 blendModeIndex = 0;
 
 			if (aInput.BlendMode)
@@ -68,7 +70,8 @@ namespace SlotInputEdits
 				default: aInput.BlendMode = static_cast<EBlendMode>(blendModeIndex - 1); break;
 				}
 			}
-
-		}
+			//ImGui::End();
+		//}
+		ImGui::PopID();
 	}
 };

@@ -34,11 +34,11 @@ void Display::Update()
 
 void Display::SetViewportSize(const SVector2i aViewportSize) noexcept
 {
-	myProjectionMatrix[1][1] = 2.0f / aViewportSize.X;
-	myProjectionMatrix[2][2] = 2.0f / aViewportSize.Y;
+	myProjectionMatrix[0][0] = 2.0f / aViewportSize.X;
+	myProjectionMatrix[1][1] = 2.0f / aViewportSize.Y;
 
-	myProjectionMatrixInverse[1][1] = aViewportSize.X / 2.0f;
-	myProjectionMatrixInverse[2][2] = aViewportSize.Y / 2.0f;
+	myProjectionMatrixInverse[0][0] = aViewportSize.X / 2.0f;
+	myProjectionMatrixInverse[1][1] = aViewportSize.Y / 2.0f;
 	myViewportSize = { aViewportSize.X, aViewportSize.Y };
 }
 

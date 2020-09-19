@@ -17,10 +17,10 @@ void Camera::Update()
 
 	viewInverse = rotationMatrix * viewInverse;
 
+	viewInverse[0][0] *= myScale;
+	viewInverse[0][1] *= myScale;
 	viewInverse[1][1] *= myScale;
-	viewInverse[1][2] *= myScale;
-	viewInverse[2][2] *= myScale;
-	viewInverse[2][1] *= myScale;
+	viewInverse[1][0] *= myScale;
 
 	viewInverse.FastInverse();
 

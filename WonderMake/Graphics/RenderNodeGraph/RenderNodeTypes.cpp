@@ -5,6 +5,7 @@
 #include "Graphics/RenderCommandProcessor.h"
 #include "Debugging/DebugLineDrawer.h"
 #include "Graphics/ScreenPassRenderObject.h"
+#include "RenderSettingsManager.h"
 
 namespace NodeTypes
 {
@@ -94,6 +95,11 @@ namespace NodeTypes
 
 		std::shared_ptr<ScreenPassRenderObject> screenPass = std::any_cast<std::shared_ptr<ScreenPassRenderObject>>(screenPassAny);
 
+		auto renderSettings = aNode.GetInput<SRenderSettings>(4);
+		SystemPtr<RenderSettingsManager>()->PushSettings(renderSettings);
+
 		screenPass->RenderImmediate();
+
+		SystemPtr<RenderSettingsManager>()->PopSettings();
 	}
 }

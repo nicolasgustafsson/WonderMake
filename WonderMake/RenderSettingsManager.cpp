@@ -12,9 +12,32 @@ SRenderSettings SRenderSettings::GetDiff(const SRenderSettings& aOther) const
 	SRenderSettings diff;
 
 	if (aOther.BlendMode != BlendMode)
-		diff.BlendMode = aOther.BlendMode;
+		diff.BlendMode = BlendMode;
 
 	return diff;
+}
+
+bool SRenderSettings::operator==(const SRenderSettings& aOther) const
+{
+	return GetDiff(aOther).IsEmpty();
+}
+
+bool SRenderSettings::IsEmpty() const
+{
+	if (BlendMode.has_value())
+		return false;
+
+	return true;
+}
+
+bool SRenderSettings::operator!=(const SRenderSettings& aOther) const
+{
+	return !(*this == aOther);
+}
+
+RenderSettingsManager::RenderSettingsManager()
+{
+	myDefaultSettings.BlendMode = EBlendMode::Multiplicative;
 }
 
 void RenderSettingsManager::PushSettings(const SRenderSettings& aSettings)

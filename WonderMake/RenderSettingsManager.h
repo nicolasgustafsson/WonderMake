@@ -8,17 +8,20 @@ enum class EBlendMode
 
 struct SRenderSettings final
 {
+	bool operator==(const SRenderSettings& aOther)const;
+	bool operator!=(const SRenderSettings& aOther)const;
 	std::optional<EBlendMode> BlendMode;
 
 	void Append(const SRenderSettings& aOther);
 
 	[[nodiscard]] SRenderSettings GetDiff(const SRenderSettings& aOther) const;
+
+	bool IsEmpty() const;
 };
-class RenderSettingsManager
+class RenderSettingsManager : public System
 {
 public:
-	friend class SRenderSettingHandle;
-
+	RenderSettingsManager();
 	void PushSettings(const SRenderSettings& aSettings);
 	void PopSettings();
 

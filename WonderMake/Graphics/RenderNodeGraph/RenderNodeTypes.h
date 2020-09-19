@@ -59,6 +59,7 @@ namespace NodeTypes
 			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Input, "In texture");
 			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Input, "In texture 2");
 			AddSlot<std::filesystem::path>(ESlotIo::Input, "In Post process shader path");
+			AddSlot<SRenderSettings>(ESlotIo::Input, "In render settings");
 			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Output, "Out rendertarget");
 		}
 

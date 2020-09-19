@@ -42,21 +42,23 @@ namespace InputSlotSerialization
 	//	aJson.push_back(aJson.object({ {"NodeId", aNodeId}, {"SlotId", aSlotId}, {"Value", static_cast<i32>(aSlotValue) } }));
 	//}
 
-	//template<typename SRenderSettings>
-	//inline void SerializeInput(const i32 aNodeId, const i32 aSlotId, json& aJson, SRenderSettings aSlotValue)
-	//{
-	//	auto& outer = aJson.object({ {"NodeId", aNodeId}, {"SlotId", aSlotId} });
-	//	aJson.push_back();
-	//
-	template<typename TSlotType>
-	TSlotType DeserializeInput(const json&)
+	template<>
+	inline void SerializeInput<SRenderSettings>(const i32 aNodeId, const i32 aSlotId, json& aJson, SRenderSettings aSlotValue)
 	{
-		return TSlotType();
+		i32 blendModeInt = aSlotValue.BlendMode ? static_cast<i32>(*aSlotValue.BlendMode) : -1;
+		json renderSettings{ {"Blendmode", blendModeInt} };
+		aJson.push_back({ {"NodeId", aNodeId}, {"SlotId", aSlotId}, {"Value", renderSettings} });
+	}
+
+	template<typename TSlotType>
+	inline TSlotType DeserializeInput(const json& aJson)
+	{
+		return {};
 	}
 
 	//[Nicos]: if we can serialize it we should be able to deserialize it
 	template<typename TSlotType> requires AutomaticallySerializable<TSlotType> 
-	TSlotType DeserializeInput(const json& aJson)
+	inline TSlotType DeserializeInput(const json& aJson)
 	{
 		return aJson["Value"].get<TSlotType>();
 	}
@@ -73,5 +75,18 @@ namespace InputSlotSerialization
 		std::array<u32, 2> arr = (aJson["Value"].get<std::array<u32, 2>>());
 
 		return SVector2u(arr[0], arr[1]);
+	}
+
+	template<>
+	inline SRenderSettings DeserializeInput<SRenderSettings>(const json& aJson)
+	{
+		i32 blendmode = aJson["Value"]["Blendmode"].get<i32>();
+
+		SRenderSettings settings;
+
+		if (blendmode >= 0)
+			settings.BlendMode = static_cast<EBlendMode>(blendmode);
+
+		return settings;
 	}
 }

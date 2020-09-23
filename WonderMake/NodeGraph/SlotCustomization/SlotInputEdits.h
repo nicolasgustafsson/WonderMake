@@ -54,24 +54,19 @@ namespace SlotInputEdits
 	inline void EditInputSlot<SRenderSettings>(SRenderSettings& aInput)
 	{
 		ImGui::PushID(&aInput);
-		//if (ImGui::Button("Render Settings"))
-		//{
-		//	ImGui::Begin("Render Settings");
-			i32 blendModeIndex = 0;
+		i32 blendModeIndex = 0;
 
-			if (aInput.BlendMode)
-				blendModeIndex = static_cast<i32>(*aInput.BlendMode) + 1;
+		if (aInput.BlendMode)
+			blendModeIndex = static_cast<i32>(*aInput.BlendMode) + 1;
 			
-			if (ImGui::Combo("Blend Mode", &blendModeIndex, "Current\0Multiplicative\0Additive\0"))
+		if (ImGui::Combo("Blend Mode", &blendModeIndex, "Current\0Alpha\0Additive\0"))
+		{
+			switch (blendModeIndex)
 			{
-				switch (blendModeIndex)
-				{
-				case 0: aInput.BlendMode.reset(); break;
-				default: aInput.BlendMode = static_cast<EBlendMode>(blendModeIndex - 1); break;
-				}
+			case 0: aInput.BlendMode.reset(); break;
+			default: aInput.BlendMode = static_cast<EBlendMode>(blendModeIndex - 1); break;
 			}
-			//ImGui::End();
-		//}
+		}
 		ImGui::PopID();
 	}
 };

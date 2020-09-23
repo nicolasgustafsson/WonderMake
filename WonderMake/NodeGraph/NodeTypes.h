@@ -275,6 +275,8 @@ struct SNode final
 
 	std::unordered_map<std::string, std::any> NodeData;
 
+	class NodeGraph* NodeGraph;
+
 	std::vector<std::unique_ptr<SInputSlotInstanceBase>> InputSlotInstances;
 	std::vector<std::unique_ptr<SOutputSlotInstanceBase>> OutputSlotInstances;
 };

@@ -51,7 +51,7 @@ namespace InputSlotSerialization
 	}
 
 	template<typename TSlotType>
-	inline TSlotType DeserializeInput(const json& aJson)
+	inline TSlotType DeserializeInput(const json&)
 	{
 		return {};
 	}

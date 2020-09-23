@@ -51,6 +51,9 @@ public:
 	[[nodiscard]] std::string GetName() const { return myPath.string(); }
 
 	void Load();
+
+	std::unordered_map<std::string, std::any> myGlobalData;
+
 protected:
 	virtual void Compile();
 
@@ -120,6 +123,8 @@ SNode& NodeGraph::AddNode(const ImVec2 InLocation)
 	node.OutputSlotInstances = T::StaticObject.CreateOutputSlotInstances();
 
 	NextNodeId++;
+
+	node.NodeGraph = this;
 
 	return *myNodes.insert(std::move(node));
 }

@@ -51,10 +51,7 @@ struct SEngineUniformBufferData
 {
 	//MAKE SURE THESE ARE PROPERLY ALIGNED
 
-
-	SVector2f Resolution;
 	float Time = 0;
-
 };
 
 struct SCameraUniformBufferData
@@ -68,6 +65,7 @@ struct SDisplayUniformBufferData
 {
 	SPaddedMatrix33 ProjectionMatrix;
 	SPaddedMatrix33 ViewProjectionMatrix;
+	SVector2f Resolution;
 };
 
 class EngineUniformBuffer 

@@ -39,13 +39,19 @@ void Camera::SetPosition(const SVector2f aPosition)
 	myPosition = aPosition;
 }
 
-Camera::Camera(const std::string& aName)
+Camera::Camera(const std::string& aName, [[maybe_unused]] const bool aIsFirst)
 	: myName(aName)
 {
 	std::string displayName = myName + " " + "Main Display";
-	myDisplays.emplace(std::piecewise_construct,
+	auto&& displayIt = myDisplays.emplace(std::piecewise_construct,
 		std::forward_as_tuple(displayName),
 		std::forward_as_tuple(displayName, *this));
+
+	if constexpr (!Constants::IsDebugging)
+	{
+		if (aIsFirst)
+			displayIt.first->second.Focus();
+	}
 }
 
 void Camera::FinishDebugFrame()

@@ -6,6 +6,7 @@
 #include "Debugging/DebugLineDrawer.h"
 #include "Graphics/ScreenPassRenderObject.h"
 #include "RenderSettingsManager.h"
+#include "NodeGraph/NodeGraph.h"
 
 namespace NodeTypes
 {
@@ -19,12 +20,21 @@ namespace NodeTypes
 	void SRenderTextureNode::ExecuteNode(struct SNode& aNode)
 	{
 		std::any& renderTargetAny = aNode.NodeData["RenderTarget"];
-		SRenderTargetSettings settings{ aNode.GetInput<SVector2u>(0), aNode.GetInput<bool>(1) };
+		const f32 renderScale = aNode.GetInput<f32>(0);
+
+		SVector2f viewportSize = std::any_cast<SVector2f>(aNode.NodeGraph->myGlobalData["ViewportSize"]);
+
+		viewportSize *= renderScale;
+
+		SRenderTargetSettings settings{ SVector2u(std::lroundf(viewportSize.X), std::lroundf(viewportSize.Y)), aNode.GetInput<bool>(1) };
 
 		if (!renderTargetAny.has_value())
 			renderTargetAny = std::move(std::make_any<std::shared_ptr<RenderTarget>>(std::make_shared<RenderTarget>(settings)));
 
 		std::shared_ptr<RenderTarget> renderTarget = std::any_cast<std::shared_ptr<RenderTarget>>(renderTargetAny);
+
+		if (renderTarget->GetSettings() != settings)
+			renderTarget->Reinitialize(settings);
 
 		renderTarget->BindAsTarget();
 

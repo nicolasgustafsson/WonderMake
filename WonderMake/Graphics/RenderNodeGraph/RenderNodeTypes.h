@@ -20,7 +20,7 @@ namespace NodeTypes
 	{
 		SRenderTextureNode() : SNodeType("Create Rendertarget")
 		{
-			AddSlot<SVector2u>(ESlotIo::Input, "Resolution");
+			AddSlot<f32>(ESlotIo::Input, "RenderScale", 1.0f);
 			AddSlot<bool>(ESlotIo::Input, "Depth/Stencil buffer");
 			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Output, "Out rendertarget");
 		}

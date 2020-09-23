@@ -17,11 +17,14 @@ public:
 	[[nodiscard]] SVector2f ConvertToWorldPosition(const SVector2f aWindowPosition) const noexcept;
 
 	[[nodiscard]] bool HasFocus() const { return myHasFocus; }
+
+	void Focus();
 	
 	void Inspect();
+	void SetViewportSize(const SVector2i aViewportSize) noexcept;
+
 private:
 	void Update();
-	void SetViewportSize(const SVector2i aViewportSize) noexcept;
 	void SetImguiWindowOffset(const SVector2f aImguiOffset) noexcept;
 
 	std::string myName;

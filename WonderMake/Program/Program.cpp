@@ -32,7 +32,6 @@ void Program::StartNewFrame()
 {
 	myEngineUniformBufferPtr->GetBuffer().Time = myTimeKeeperPtr->GetGameTime();
 
-	myEngineUniformBufferPtr->GetBuffer().Resolution = {1600.f, 900.f};
 	myEngineUniformBufferPtr->Update();
 
 	myWindowPtr->Update();
@@ -62,6 +61,9 @@ void Program::SetupCallbacks()
 
 void Program::OnWindowSizeChanged([[maybe_unused]]GLFWwindow* Window, i32 X, i32 Y)
 {
-	myRendererPtr->SetViewportSize({ X, Y });
+	if constexpr (!Constants::IsDebugging)
+	{
+		SystemPtr<CameraManager>()->SetViewportSize({X, Y});
+	}
 }
 

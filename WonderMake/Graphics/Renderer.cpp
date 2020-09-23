@@ -28,7 +28,7 @@ MessageCallback([[maybe_unused]] GLenum source,
 }
 
 Renderer::Renderer() noexcept
-	: myCopyPass(std::filesystem::current_path() / "Shaders/Fragment/Copy.frag")
+	: myCopyPass(std::filesystem::current_path() / "Shaders/Fragment/BackbufferCopy.frag")
 	, Debugged("Renderer")
 {
 	myOpenGLInterface->Enable(GL_DEBUG_OUTPUT);
@@ -40,7 +40,6 @@ Renderer::Renderer() noexcept
 	glClearDepth(-1000);
 
 	myOpenGLInterface->SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//myOpenGLInterface->SetBlendFunction(GL_SRC_ALPHA, GL_ONE); //additive
 
 	myOpenGLInterface->SetDebugMessageCallback(MessageCallback);
 }

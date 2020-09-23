@@ -11,7 +11,7 @@
 class Camera final : public NonCopyable, public NonMovable
 {
 public:
-	Camera(const std::string& aName);
+	Camera(const std::string& aName, const bool aIsFirst = false);
 
 	Camera(Camera&& aOther) = default;
 	void Update();

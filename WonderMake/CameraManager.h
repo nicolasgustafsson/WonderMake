@@ -14,10 +14,13 @@ public:
 	[[nodiscard]] SVector2f ConvertToWorldPosition(const SVector2f aScreenPosition) const;
 
 	[[nodiscard]] bool AnyDisplayIsFocused() const;
+
+	void SetViewportSize(const SVector2i aViewportSize);
 protected:
 	void Debug() override;
 
-	[[nodiscard]] const Display* GetFocusedDisplay() const; 
+	[[nodiscard]] const Display* GetFocusedDisplay() const;
+	[[nodiscard]] Display* GetFocusedDisplay();
 
 private:
 	plf::colony<Camera> myCameras;

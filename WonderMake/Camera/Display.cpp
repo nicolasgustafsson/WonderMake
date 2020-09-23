@@ -12,6 +12,7 @@ Display::Display(const std::string& aName, Camera& aCamera)
 	: myPath(std::filesystem::path("NodeGraphs") / "Render" / std::string(aName + ".json")), myRenderGraph(myPath), myName(aName), myCamera(aCamera)
 {
 	myRenderGraph.Load();
+	myRenderGraph.myGlobalData["ViewportSize"].emplace<SVector2f>(myViewportSize);
 }
 
 void Display::Update()
@@ -28,6 +29,7 @@ void Display::Update()
 
 	buffer.ProjectionMatrix = projectionMatrix;
 	buffer.ViewProjectionMatrix = viewProjectionMatrix;
+	buffer.Resolution = myViewportSize;
 
 	myUniformBuffer.Update();
 }
@@ -40,6 +42,8 @@ void Display::SetViewportSize(const SVector2i aViewportSize) noexcept
 	myProjectionMatrixInverse[0][0] = aViewportSize.X / 2.0f;
 	myProjectionMatrixInverse[1][1] = aViewportSize.Y / 2.0f;
 	myViewportSize = { aViewportSize.X, aViewportSize.Y };
+
+	myRenderGraph.myGlobalData["ViewportSize"].emplace<SVector2f>(myViewportSize);
 }
 
 void Display::SetImguiWindowOffset(const SVector2f aImguiOffset) noexcept
@@ -91,7 +95,11 @@ void Display::FinishDebugFrame()
 void Display::FinishFrame()
 {
 	Update();
+
 	myRenderGraph.Execute();
+
+	RenderTarget* const finalRenderTarget = myRenderGraph.GetFinalRenderTarget();
+	finalRenderTarget->BindAsTexture();
 }
 
 SVector2f Display::ConvertToWorldPosition(const SVector2f aWindowPosition) const noexcept
@@ -101,10 +109,10 @@ SVector2f Display::ConvertToWorldPosition(const SVector2f aWindowPosition) const
 	SMatrix33f view = rotationMatrix * myCamera.GetViewMatrix();
 
 	const f32 cameraScale = myCamera.GetScale();
+	view[0][0] /= cameraScale;
+	view[0][1] /= cameraScale;
 	view[1][1] /= cameraScale;
-	view[1][2] /= cameraScale;
-	view[2][2] /= cameraScale;
-	view[2][1] /= cameraScale;
+	view[1][0] /= cameraScale;
 
 	SVector2f offsetScreenPosition = aWindowPosition - myImguiWindowOffset;
 	offsetScreenPosition -= myViewportSize / 2.f;
@@ -114,6 +122,11 @@ SVector2f Display::ConvertToWorldPosition(const SVector2f aWindowPosition) const
 	screenPositionMatrix *= view;
 
 	return screenPositionMatrix.GetPosition();
+}
+
+void Display::Focus()
+{
+	myHasFocus = true;
 }
 
 void Display::Inspect()

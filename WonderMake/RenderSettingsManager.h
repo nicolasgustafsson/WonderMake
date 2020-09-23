@@ -2,7 +2,7 @@
 
 enum class EBlendMode
 {
-	Multiplicative,
+	Alpha,
 	Additive
 };
 

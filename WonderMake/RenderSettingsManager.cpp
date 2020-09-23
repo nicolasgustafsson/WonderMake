@@ -37,7 +37,7 @@ bool SRenderSettings::operator!=(const SRenderSettings& aOther) const
 
 RenderSettingsManager::RenderSettingsManager()
 {
-	myDefaultSettings.BlendMode = EBlendMode::Multiplicative;
+	myDefaultSettings.BlendMode = EBlendMode::Alpha;
 }
 
 void RenderSettingsManager::PushSettings(const SRenderSettings& aSettings)
@@ -51,7 +51,7 @@ void RenderSettingsManager::SetBlendMode(const EBlendMode aBlendMode)
 {
 	switch(aBlendMode)
 	{
-	case EBlendMode::Multiplicative:
+	case EBlendMode::Alpha:
 		SystemPtr<OpenGLFacade>()->SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		break;
 	case EBlendMode::Additive:

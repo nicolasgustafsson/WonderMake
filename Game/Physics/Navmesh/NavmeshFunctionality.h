@@ -9,6 +9,9 @@ struct SNavmeshComponent : public SComponent
 
 	std::optional<NavmeshRenderObject> Background;
 	std::optional<NavmeshRenderObject> Walls;
+	std::optional<NavmeshRenderObject> Walls2;
+	std::optional<NavmeshRenderObject> Walls3;
+	std::optional<NavmeshRenderObject> Walls4;
 };
 
 class NavmeshFunctionality : public Functionality<NavmeshFunctionality, 

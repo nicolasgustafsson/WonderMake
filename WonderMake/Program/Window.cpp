@@ -4,7 +4,7 @@
 #include "Json/json.hpp"
 #include <fstream>
 #include "Program/GlfwFacade.h"
-#include "CameraManager.h"
+#include "Camera/CameraManager.h"
 
 Window::Window()
 {

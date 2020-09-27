@@ -99,7 +99,9 @@ void Display::FinishFrame()
 	myRenderGraph.Execute();
 
 	RenderTarget* const finalRenderTarget = myRenderGraph.GetFinalRenderTarget();
-	finalRenderTarget->BindAsTexture();
+
+	if (finalRenderTarget)
+		finalRenderTarget->BindAsTexture();
 }
 
 SVector2f Display::ConvertToWorldPosition(const SVector2f aWindowPosition) const noexcept

@@ -4,7 +4,7 @@
 #include "RenderTarget.h"
 #include "ScreenPassRenderObject.h"
 #include "System/System.h"
-#include "CameraManager.h"
+#include "Camera/CameraManager.h"
 #include "System/SystemPtr.h"
 #include "Program/Window.h"
 #include "Message/MessageSubscriber.h"

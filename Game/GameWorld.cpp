@@ -39,7 +39,8 @@ LevelFunctionality& GameWorld::RestartLevel()
 	if (myCurrentLevelFunctionality)
 		myCurrentLevelFunctionality->TransferToNewLevel(levelFunctionality);
 
-	myPlayerTransform->SetPosition(levelFunctionality.GetStartPosition());
+	myPlayerTransform->SetPosition(SVector2f::Zero());
+	//myPlayerTransform->SetPosition(levelFunctionality.GetStartPosition());
 	
 	myLevel = std::move(newLevel);
 
@@ -61,9 +62,6 @@ Object GameWorld::SetupPlayer()
 	myPlayerTransform = &player.Add<TransformFunctionality>();
 	player.Add<PlayerControllerFunctionality>();
 	player.Add<DefaultMovementFunctionality>();
-
-	auto& playerSprite = player.Add<SpriteRenderingFunctionality>();
-	playerSprite.SetTexture(std::filesystem::current_path() / "Textures/player.png");
 
 	auto& camera = myCameraController.Add<CameraFunctionality>();
 	camera.SetTarget(myPlayerTransform);

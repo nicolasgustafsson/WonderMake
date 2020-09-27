@@ -4,8 +4,8 @@
 #include "Collision/CollisionSystem.h"
 #include "UtilityFunctionalities/FactionFunctionality.h"
 #include "Utilities/MathUtility.h"
-#include "Utility/Constants.h"
 #include "Audio/AudioManager.h"
+#include "Utility/Palette.h"
 
 HitShapeFunctionality::HitShapeFunctionality(Object& aOwner)
 	: Super(aOwner)
@@ -45,6 +45,10 @@ void HitShapeFunctionality::Tick()
 	if (previousHitProgress == currentHitProgress)
 		return;
 
+	if (previousHitProgress == 0.1f)
+	{
+		SystemPtr<AudioManager>()->PlayAudio("NodeGraphs/Audio/Swing.json");
+	}
 
 	const SVector2f previousBezierPosition = hitShapeComponent.Bezier.GetConstantLocationAt(previousHitProgress);
 	const SVector2f currentBezierPosition = hitShapeComponent.Bezier.GetConstantLocationAt(currentHitProgress);
@@ -117,7 +121,6 @@ void HitShapeFunctionality::SetMainColor(const SColor aColor)
 
 void HitShapeFunctionality::Start()
 {
-	SystemPtr<AudioManager>()->PlayAudio("NodeGraphs/Audio/Swing.json");
 	auto& hitShapeComponent = Get<SHitShapeComponent>();
 	hitShapeComponent.Time += (-hitShapeComponent.Delay);
 }

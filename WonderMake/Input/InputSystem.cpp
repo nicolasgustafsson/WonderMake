@@ -5,7 +5,7 @@
 #include <algorithm>
 #include "Graphics/Renderer.h"
 #include "Program/GlfwFacade.h"
-#include "CameraManager.h"
+#include "Camera/CameraManager.h"
 
 void InputSystem::Update() noexcept
 {

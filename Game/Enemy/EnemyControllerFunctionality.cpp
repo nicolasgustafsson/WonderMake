@@ -4,6 +4,7 @@
 #include "Enemy/TargetFunctionality.h"
 #include "Actions/ActionFunctionality.h"
 #include "EnemyActions/PunchAction.h"
+#include "Utility/Palette.h"
 
 EnemyControllerFunctionality::EnemyControllerFunctionality(Object& aOwner)
 	: Super(aOwner), Debugged("Enemy Controller")
@@ -20,6 +21,7 @@ EnemyControllerFunctionality::EnemyControllerFunctionality(Object& aOwner)
 		});
 
 	Get<SpriteRenderingFunctionality>().SetTexture(std::filesystem::current_path() / "Textures/enemy.png");
+	Get<SpriteRenderingFunctionality>().SetColor(Palette::EnemyColor);
 }
 
 void EnemyControllerFunctionality::Tick() noexcept

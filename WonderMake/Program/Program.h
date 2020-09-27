@@ -11,7 +11,7 @@
 #include "Debugging/DebugSettingsSystem.h"
 #include "Audio/AudioManager.h"
 #include "FileSystem/FileWatcher.h"
-#include "CameraManager.h"
+#include "Camera/CameraManager.h"
 #include "Program/ImguiWrapper.h"
 
 

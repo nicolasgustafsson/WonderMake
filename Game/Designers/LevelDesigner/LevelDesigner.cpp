@@ -14,7 +14,6 @@
 #include "Designers/BuffDesigner/BuffDesigner.h"
 #include "Levels/BuffGiver/BuffGiverFunctionality.h"
 #include "Levels/LevelFunctionality.h"
-#include "Utility/Constants.h"
 #include "Debugging/DebugSettingsSystem.h"
 
 void LevelDesigner::DesignLevel(LevelFunctionality& aLevel)

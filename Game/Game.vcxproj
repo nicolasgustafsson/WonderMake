@@ -228,6 +228,7 @@
     <ClInclude Include="Character\Buffs\StatChangeProperty\BuffStatChangeProperty.h" />
     <ClInclude Include="Character\Buffs\TimedTickBuffProperty\BuffTimedTickProperty.h" />
     <ClInclude Include="Designers\EffectDesigner\EffectDesigner.h" />
+    <ClInclude Include="Utility\Palette.h" />
     <ClInclude Include="Physics\Navmesh\NavmeshFunctionality.h" />
     <ClInclude Include="Physics\Navmesh\NavmeshRenderObject.h" />
     <ClInclude Include="Physics\Navmesh\Navmesh.h" />
@@ -261,7 +262,6 @@
     <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonFloatingPointOperator.h" />
     <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonPointOperator.h" />
     <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonSideOperator.h" />
-    <ClInclude Include="Utility\Constants.h" />
     <ClInclude Include="Weapons\WeaponSwingHitShapeAction.h" />
     <ClInclude Include="Weapons\WeaponSwing.h" />
     <ClInclude Include="Weapons\MeleeWeaponUserFunctionality.h" />

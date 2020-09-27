@@ -13,3 +13,8 @@ SpriteRenderObject::SpriteRenderObject(const std::filesystem::path& aTexturePath
 	SetAttribute<EVertexAttribute::Scale>(0, SVector2f{ 1.0f, 1.0f });
 	SetAttribute<EVertexAttribute::Color>(0, { 1.0f, 1.0f, 1.0f, 1.0f });
 }
+
+void SpriteRenderObject::SetColor(const SColor aColor)
+{
+	SetAttribute<EVertexAttribute::Color>(0, aColor);
+}

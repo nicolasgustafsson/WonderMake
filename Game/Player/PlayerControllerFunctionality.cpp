@@ -5,6 +5,7 @@
 #include "Enemy/EnemyControllerFunctionality.h"
 #include "UtilityFunctionalities/TimeToLiveFunctionality.h"
 #include "Levels/LevelFunctionality.h"
+#include "Utility/Palette.h"
 
 
 PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
@@ -24,6 +25,11 @@ PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
 	Get<MeleeWeaponUserFunctionality>().SetWeapon(SystemPtr<MeleeWeaponDesigner>()->DesignWeapon());
 
 	Get<SLevelDenizenComponent>().PersistentOnLevelChange = true;
+
+	Get<SpriteRenderingFunctionality>().SetTexture(std::filesystem::current_path() / "Textures/player.png");
+
+	Get<SpriteRenderingFunctionality>().SetColor(Palette::PlayerColor);
+
 }
 
 void PlayerControllerFunctionality::Tick() noexcept
@@ -74,10 +80,9 @@ void PlayerControllerFunctionality::UpdateMovement()
 		}
 	}
 
-	if (movementInput != SVector2f::Zero())
-		Get<TransformFunctionality>().FaceDirection(movementInput);
+	Get<TransformFunctionality>().FaceDirection(SystemPtr<InputSystem>()->GetMousePositionInWorld() - Get<TransformFunctionality>().GetPosition());
 
-	WmDrawDebugLine(Get<TransformFunctionality>().GetPosition(), SystemPtr<InputSystem>()->GetMousePositionInWorld(), SColor::White);
+//	WmDrawDebugLine(Get<TransformFunctionality>().GetPosition(), SystemPtr<InputSystem>()->GetMousePositionInWorld(), SColor::White);
 
 	Get<MovementInputFunctionality>().SetMovementInput(movementInput);
 }

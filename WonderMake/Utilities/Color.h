@@ -50,5 +50,16 @@ public:
 	const static SColor SpanishGray;
 	const static SColor Jet;
 	const static SColor RaisinBlack;
+	const static SColor AmaranthPurple;
+	const static SColor Zomp;
+	const static SColor MinionYellow;
+	const static SColor DimGray;
+	const static SColor SilverChalice;
+	const static SColor Gainsboro;
+	const static SColor Amaranth;
+	const static SColor SeaGreenCrayola;
+	const static SColor MiddleYellow;
+	const static SColor EerieBlack;
+
 };
 

@@ -208,7 +208,7 @@
     <ClCompile Include="Audio\AudioFile.cpp" />
     <ClCompile Include="Audio\AudioManager.cpp" />
     <ClCompile Include="Audio\AudioNodeTypes.cpp" />
-    <ClCompile Include="CameraManager.cpp" />
+    <ClCompile Include="Camera\CameraManager.cpp" />
     <ClCompile Include="Camera\Display.cpp" />
     <ClCompile Include="FileSystem\FileWatcher.cpp" />
     <ClCompile Include="Graphics\RenderHandle.cpp" />
@@ -292,7 +292,7 @@
     <ClInclude Include="Audio\AudioFile.h" />
     <ClInclude Include="Audio\AudioManager.h" />
     <ClInclude Include="Audio\AudioNodeTypes.h" />
-    <ClInclude Include="CameraManager.h" />
+    <ClInclude Include="Camera\CameraManager.h" />
     <ClInclude Include="Camera\Display.h" />
     <ClInclude Include="FileSystem\FileWatcher.h" />
     <ClInclude Include="Graphics\RenderHandle.h" />

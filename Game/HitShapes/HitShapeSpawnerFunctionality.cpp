@@ -5,7 +5,6 @@
 #include "Levels/LevelFunctionality.h"
 #include <Randomizer/Randomizer.h>
 #include "Utilities/Math.h"
-#include "Utility/Constants.h"
 
 HitShapeSpawnerFunctionality::HitShapeSpawnerFunctionality(Object& aOwner)
 	: Super(aOwner)

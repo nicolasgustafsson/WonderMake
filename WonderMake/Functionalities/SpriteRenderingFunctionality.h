@@ -19,6 +19,7 @@ public:
 	void SetScale(const SVector2f aScale);
 	void SetRotation(const f32 aRotation);
 	void SetOrigin(const SVector2f aOrigin);
+	void SetColor(const SColor aColor);
 	void Hide() noexcept;
 	void Show() noexcept;
 

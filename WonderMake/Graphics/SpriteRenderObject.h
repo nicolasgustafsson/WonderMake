@@ -11,5 +11,7 @@ class SpriteRenderObject
 {
 public:
 	SpriteRenderObject(const std::filesystem::path& aTexturePath);
+
+	void SetColor(const SColor aColor);
 };
 

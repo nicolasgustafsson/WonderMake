@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "CameraFunctionality.h"
 #include "Camera/Camera.h"
-#include "CameraManager.h"
+#include "Camera/CameraManager.h"
 
 CameraFunctionality::CameraFunctionality(Object& aObject)
 	: Super(aObject)

@@ -141,8 +141,9 @@ void main()
 	color = (outline(outerBorder, innerBorder) 
 	+ filling(outerBorder, innerBorder) 
 	+ anticipationThang(outerBorder, innerBorder, anticipation)) * (1.0 - hitProgress)
-	+ hitProgressThang(outerBorder, innerBorder, hitProgress, noise)
-	+ noise * 0.5;
+	+ hitProgressThang(outerBorder, innerBorder, hitProgress, noise * inside)
+	+ noise * 0.5 * inside;
+	//+ outerBorder * vec3(140.0 / 255.0, 140.0 / 255.0, 140.0 / 255.0) ;
 
 	float fadeDuration = 0.2;
 	float fadeIn = smoothstep(0., fadeDuration, lifeTime);

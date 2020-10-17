@@ -37,7 +37,7 @@ private:
 public:
 	void Inspect();
 
-	void Tick();
+	void Tick(const f32 aDeltaTime);
 
 	[[nodiscard]] bool ShouldDie() const;
 

@@ -44,10 +44,10 @@ void BuffInstance::Inspect()
 //	return myTimeLeft / myBlueprint.myDuration;
 //}
 
-void BuffInstance::Tick()
+void BuffInstance::Tick(const f32 aDeltaTime)
 {
 	for (auto& propertyInstance : myPropertyInstances)
-		propertyInstance->Tick();
+		propertyInstance->Tick(aDeltaTime);
 }
 
 bool BuffInstance::ShouldDie() const

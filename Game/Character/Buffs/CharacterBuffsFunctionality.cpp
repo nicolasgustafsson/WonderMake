@@ -49,7 +49,7 @@ void CharacterBuffsFunctionality::Tick()
 	{
 		auto& buff = *it;
 
-		buff.Tick();
+		buff.Tick(deltaTime);
 
 		if (buff.ShouldDie())
 		{

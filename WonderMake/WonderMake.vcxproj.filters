@@ -71,7 +71,6 @@
     <ClCompile Include="Utilities\Math.cpp" />
     <ClCompile Include="FileSystem\FileWatcher.cpp" />
     <ClCompile Include="Graphics\ShaderParser.cpp" />
-    <ClCompile Include="Utilities\Serialization.cpp" />
     <ClCompile Include="Utilities\DependencyInjector.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -244,7 +243,6 @@
     <ClInclude Include="Graphics\ShaderParser.h" />
     <ClInclude Include="Utilities\Rotation.h" />
     <ClInclude Include="Utilities\Matrix.h" />
-    <ClInclude Include="Utilities\Serialization.h" />
     <ClInclude Include="Utilities\DependencyInjector.h" />
   </ItemGroup>
   <ItemGroup>

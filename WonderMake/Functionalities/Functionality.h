@@ -4,9 +4,7 @@
 
 #include "Object/Dependency.h"
 
-#include "Utilities/Serialization.h"
-
-#define REGISTER_FUNCTIONALITY(aFunctionality) REGISTER_SERIALIZABLE(aFunctionality)
+#define REGISTER_FUNCTIONALITY(aFunctionality)
 
 class Object;
 

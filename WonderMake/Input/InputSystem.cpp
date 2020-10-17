@@ -67,7 +67,7 @@ void InputSystem::UpdateGamepad() noexcept
 
 SVector2f InputSystem::GetMousePositionInWorld() noexcept
 {
-	return SystemPtr<Camera>()->ConvertToWorldPosition(GetMousePositionOnWindow());
+	return Get<Camera>().ConvertToWorldPosition(GetMousePositionOnWindow());
 }
 
 SVector2f InputSystem::GetMousePositionOnWindow() noexcept
@@ -197,5 +197,5 @@ bool InputSystem::ShouldCaptureMouseInput() const noexcept
 	if constexpr (!Constants::IsDebugging)
 		return true;
 
-	return SystemPtr<Renderer>()->DebugWindowHasFocus();
+	return Get<Renderer>().DebugWindowHasFocus();
 }

@@ -39,7 +39,7 @@ void ActionFunctionality::Tick()
 	if (!currentAction)
 		return;
 
-	currentAction->Tick();
+	currentAction->Tick(Get<TimeKeeper>().GetDeltaSeconds());
 
 	if (currentAction->IsCompleted())
 		EndCurrentAction();

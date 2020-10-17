@@ -11,6 +11,8 @@
 #include "HitShapes/HitShapeSpawnerFunctionality.h"
 #include "UtilityFunctionalities/FactionFunctionality.h"
 
+class InputSystem;
+
 class CharacterStatsFunctionality;
 
 struct SHealthComponent : public  SComponent
@@ -29,6 +31,7 @@ class CharacterFunctionality
 	: public Functionality<
 		CharacterFunctionality,
 		Policy::Set<
+			Policy::Add<InputSystem, Policy::EPermission::Write>,
 			Policy::Add<OwnerFunctionality, Policy::EPermission::Write>,
 			Policy::Add<CollisionFunctionality, Policy::EPermission::Write>,
 			Policy::Add<SHealthComponent, Policy::EPermission::Write>,

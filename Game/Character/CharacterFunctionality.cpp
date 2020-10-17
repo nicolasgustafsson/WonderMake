@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CharacterFunctionality.h"
+#include "Input/InputSystem.h"
 
 REGISTER_COMPONENT(SHealthComponent);
 REGISTER_FUNCTIONALITY(CharacterFunctionality);

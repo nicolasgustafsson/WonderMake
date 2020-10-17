@@ -11,7 +11,7 @@ public:
 
 	virtual void BeginAction() override;
 
-	virtual void Tick() override;
+	virtual void Tick(const f32 aDeltaTime) override;
 
 	virtual bool IsCompleted() const override;
 

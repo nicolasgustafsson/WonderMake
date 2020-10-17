@@ -5,7 +5,10 @@
 #include "Imgui/ImguiInclude.h"
 #include "Program/GlfwFacade.h"
 
-ImguiWrapper::ImguiWrapper()
+REGISTER_SYSTEM(ImguiWrapper);
+
+ImguiWrapper::ImguiWrapper(Dependencies&& aDependencies)
+	: Super(std::move(aDependencies))
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -28,7 +31,7 @@ ImguiWrapper::ImguiWrapper()
 	io.ConfigDockingWithShift = true;
 
 	// Setup Platform/Renderer bindings
-	ImGui_ImplGlfw_InitForOpenGL(myWindowPtr->myGlfwWindow, true);
+	ImGui_ImplGlfw_InitForOpenGL(Get<Window>().myGlfwWindow, true);
 	const char* glsl_version = "#version 440";
 	ImGui_ImplOpenGL3_Init(glsl_version);
 }
@@ -49,8 +52,6 @@ void ImguiWrapper::EndFrame()
 	ImGui::UpdatePlatformWindows();
 	ImGui::RenderPlatformWindowsDefault();
 
-	SystemPtr<GlfwFacade> glfw;
-
-	glfw->MakeContextCurrent(backup_current_context);
+	Get<GlfwFacade>().MakeContextCurrent(backup_current_context);
 }
 

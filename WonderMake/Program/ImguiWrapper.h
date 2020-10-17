@@ -1,17 +1,21 @@
 #pragma once
-#include "System/SystemPtr.h"
-#include "Window.h"
+
+#include "System/System.h"
+
+class GlfwFacade;
+class Window;
 
 class ImguiWrapper
+	: public System<
+		Policy::Set<
+			Policy::Add<GlfwFacade, Policy::EPermission::Write>,
+			Policy::Add<Window, Policy::EPermission::Read>>>
 {
 public:
-	ImguiWrapper();
+	ImguiWrapper(Dependencies&& aDependencies);
 
 	void StartFrame();
 
 	void EndFrame();
-
-private:
-	SystemPtr<Window> myWindowPtr;
 };
 

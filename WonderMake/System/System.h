@@ -21,7 +21,7 @@ public:
 protected:
 	void EnableTick();
 
-	SystemBase() = default;
+	constexpr SystemBase() noexcept = default;
 };
 
 template<typename TPolicySet = Policy::Set<>>
@@ -32,10 +32,10 @@ public:
 	using Super = System<TPolicySet>;
 	using Dependencies = typename TPolicySet::template DependenciesRef;
 
-	inline System(Dependencies&& aDependencies);
+	inline constexpr System(Dependencies&& aDependencies) noexcept;
 
 protected:
-	System() = default;
+	constexpr System() noexcept = default;
 	
 	template<
 		typename TDependency,
@@ -64,6 +64,6 @@ private:
 };
 
 template<typename TPolicySet>
-inline System<TPolicySet>::System(Dependencies&& aDependencies)
+inline constexpr System<TPolicySet>::System(Dependencies&& aDependencies) noexcept
 	: myDependencies(std::move(aDependencies))
 {}

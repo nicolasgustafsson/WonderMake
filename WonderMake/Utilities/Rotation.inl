@@ -53,6 +53,20 @@ inline constexpr SRotation<TRep, TRatio>& SRotation<TRep, TRatio>::operator-=(co
 }
 
 template<class TRep, class TRatio>
+inline constexpr SRotation<TRep, TRatio>& SRotation<TRep, TRatio>::operator*=(const TRep aRhs) noexcept
+{
+    myRotation *= aRhs;
+    return *this;
+}
+
+template<class TRep, class TRatio>
+inline constexpr SRotation<TRep, TRatio>& SRotation<TRep, TRatio>::operator/=(const TRep aRhs) noexcept
+{
+    myRotation /= aRhs;
+    return *this;
+}
+
+template<class TRep, class TRatio>
 inline constexpr SRotation<TRep, TRatio>& SRotation<TRep, TRatio>::operator=(const SRotation aRhs) noexcept
 {
     myRotation = aRhs.myRotation;
@@ -74,6 +88,44 @@ inline constexpr SRotation<TRep, TRatio>& SRotation<TRep, TRatio>::operator-=(co
 }
 
 template<class TRep, class TRatio>
+inline constexpr SRotation<TRep, TRatio>& SRotation<TRep, TRatio>::operator*=(const SRotation aRhs) noexcept
+{
+    myRotation *= aRhs.myRotation;
+    return *this;
+}
+
+template<class TRep, class TRatio>
+inline constexpr SRotation<TRep, TRatio>& SRotation<TRep, TRatio>::operator/=(const SRotation aRhs) noexcept
+{
+    myRotation /= aRhs.myRotation;
+    return *this;
+}
+
+template<class TRep, class TRatio>
+inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator+(SRotation<TRep, TRatio> aLhs, const TRep aRhs) noexcept
+{
+    return (aLhs += aRhs);
+}
+
+template<class TRep, class TRatio>
+inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator-(SRotation<TRep, TRatio> aLhs, const TRep aRhs) noexcept
+{
+    return (aLhs -= aRhs);
+}
+
+template<class TRep, class TRatio>
+inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator*(SRotation<TRep, TRatio> aLhs, const TRep aRhs) noexcept
+{
+    return (aLhs *= aRhs);
+}
+
+template<class TRep, class TRatio>
+inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator/(SRotation<TRep, TRatio> aLhs, const TRep aRhs) noexcept
+{
+    return (aLhs /= aRhs);
+}
+
+template<class TRep, class TRatio>
 inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator+(SRotation<TRep, TRatio> aLhs, const SRotation<TRep, TRatio> aRhs) noexcept
 {
     return (aLhs += aRhs);
@@ -83,6 +135,18 @@ template<class TRep, class TRatio>
 inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator-(SRotation<TRep, TRatio> aLhs, const SRotation<TRep, TRatio> aRhs) noexcept
 {
     return (aLhs -= aRhs);
+}
+
+template<class TRep, class TRatio>
+inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator*(SRotation<TRep, TRatio> aLhs, const SRotation<TRep, TRatio> aRhs) noexcept
+{
+    return (aLhs *= aRhs);
+}
+
+template<class TRep, class TRatio>
+inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator/(SRotation<TRep, TRatio> aLhs, const SRotation<TRep, TRatio> aRhs) noexcept
+{
+    return (aLhs /= aRhs);
 }
 
 template<class TRep, class TRatio>

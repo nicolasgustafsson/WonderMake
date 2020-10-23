@@ -24,25 +24,28 @@ static constexpr auto deg64_180		= SDegreeF64(180);
 static constexpr auto deg64_270		= SDegreeF64(270);
 static constexpr auto deg64_360		= SDegreeF64(360);
 
-static constexpr auto rad32_n2Pi	= SRadianF32(std::numbers::pi_v<SRadianF32::Representation> * -2.0f);
-static constexpr auto rad32_n1_5Pi	= SRadianF32(std::numbers::pi_v<SRadianF32::Representation> * -1.5f);
-static constexpr auto rad32_n1Pi	= SRadianF32(std::numbers::pi_v<SRadianF32::Representation> * -1.0f);
-static constexpr auto rad32_n0_5Pi	= SRadianF32(std::numbers::pi_v<SRadianF32::Representation> * -0.5f);
-static constexpr auto rad32_0		= SRadianF32(0);
-static constexpr auto rad32_0_5Pi	= SRadianF32(std::numbers::pi_v<SRadianF32::Representation> * 0.5f);
-static constexpr auto rad32_1Pi		= SRadianF32(std::numbers::pi_v<SRadianF32::Representation> * 1.0f);
-static constexpr auto rad32_1_5Pi	= SRadianF32(std::numbers::pi_v<SRadianF32::Representation> * 1.5f);
-static constexpr auto rad32_2Pi		= SRadianF32(std::numbers::pi_v<SRadianF32::Representation> * 2.0f);
+template<typename TRotation>
+static constexpr auto pi_v = std::numbers::pi_v<typename TRotation::Representation>;
 
-static constexpr auto rad64_n2Pi	= SRadianF64(std::numbers::pi_v<SRadianF64::Representation> * -2.0);
-static constexpr auto rad64_n1_5Pi	= SRadianF64(std::numbers::pi_v<SRadianF64::Representation> * -1.5);
-static constexpr auto rad64_n1Pi	= SRadianF64(std::numbers::pi_v<SRadianF64::Representation> * -1.0);
-static constexpr auto rad64_n0_5Pi	= SRadianF64(std::numbers::pi_v<SRadianF64::Representation> * -0.5);
+static constexpr auto rad32_n2Pi	= SRadianF32(pi_v<SRadianF32> * -2.0f);
+static constexpr auto rad32_n1_5Pi	= SRadianF32(pi_v<SRadianF32> * -1.5f);
+static constexpr auto rad32_n1Pi	= SRadianF32(pi_v<SRadianF32> * -1.0f);
+static constexpr auto rad32_n0_5Pi	= SRadianF32(pi_v<SRadianF32> * -0.5f);
+static constexpr auto rad32_0		= SRadianF32(0);
+static constexpr auto rad32_0_5Pi	= SRadianF32(pi_v<SRadianF32> * 0.5f);
+static constexpr auto rad32_1Pi		= SRadianF32(pi_v<SRadianF32> * 1.0f);
+static constexpr auto rad32_1_5Pi	= SRadianF32(pi_v<SRadianF32> * 1.5f);
+static constexpr auto rad32_2Pi		= SRadianF32(pi_v<SRadianF32> * 2.0f);
+
+static constexpr auto rad64_n2Pi	= SRadianF64(pi_v<SRadianF64> * -2.0);
+static constexpr auto rad64_n1_5Pi	= SRadianF64(pi_v<SRadianF64> * -1.5);
+static constexpr auto rad64_n1Pi	= SRadianF64(pi_v<SRadianF64> * -1.0);
+static constexpr auto rad64_n0_5Pi	= SRadianF64(pi_v<SRadianF64> * -0.5);
 static constexpr auto rad64_0		= SRadianF64(0);
-static constexpr auto rad64_0_5Pi	= SRadianF64(std::numbers::pi_v<SRadianF64::Representation> * 0.5);
-static constexpr auto rad64_1Pi		= SRadianF64(std::numbers::pi_v<SRadianF64::Representation> * 1.0);
-static constexpr auto rad64_1_5Pi	= SRadianF64(std::numbers::pi_v<SRadianF64::Representation> * 1.5);
-static constexpr auto rad64_2Pi		= SRadianF64(std::numbers::pi_v<SRadianF64::Representation> * 2.0);
+static constexpr auto rad64_0_5Pi	= SRadianF64(pi_v<SRadianF64> * 0.5);
+static constexpr auto rad64_1Pi		= SRadianF64(pi_v<SRadianF64> * 1.0);
+static constexpr auto rad64_1_5Pi	= SRadianF64(pi_v<SRadianF64> * 1.5);
+static constexpr auto rad64_2Pi		= SRadianF64(pi_v<SRadianF64> * 2.0);
 
 void StaticTest_Rotation()
 {
@@ -134,6 +137,35 @@ void StaticTest_Rotation()
 	static_assert(sub(rad64_2Pi,	rad64_2Pi)	== rad64_0);
 	static_assert(add(rad64_0_5Pi,	rad64_1Pi)	== (rad64_1Pi + rad64_0_5Pi));
 	static_assert(sub(rad64_0_5Pi,	rad64_1Pi)	!= (rad64_1Pi - rad64_0_5Pi));
+
+	constexpr auto mul = [](auto aRhs, const auto aLhs)
+	{
+		return aRhs *= aLhs;
+	};
+	constexpr auto div = [](auto aRhs, const auto aLhs)
+	{
+		return aRhs /= aLhs;
+	};
+	
+	static_assert(mul(deg32_180,	2.f)	== deg32_360);
+	static_assert(div(deg32_360,	2.f)	== deg32_180);
+	static_assert(mul(deg32_180, deg32_180)	== (180.f * 180.f));
+	static_assert(div(mul(deg32_180, deg32_180),	deg32_180) == deg32_180);
+
+	static_assert(mul(deg64_180, 2)			== deg64_360);
+	static_assert(div(deg64_360, 2)			== deg64_180);
+	static_assert(mul(deg64_180, deg64_180)	== (180 * 180));
+	static_assert(div(mul(deg64_180, deg64_180),	deg64_180) == deg64_180);
+
+	static_assert(mul(rad32_1Pi, 2.f)		== rad32_2Pi);
+	static_assert(div(rad32_2Pi, 2.f)		== rad32_1Pi);
+	static_assert(mul(rad32_1Pi, rad32_1Pi)	== (pi_v<SRadianF32> * pi_v<SRadianF32>));
+	static_assert(div(mul(rad32_1Pi, rad32_1Pi), rad32_1Pi) == rad32_1Pi);
+	
+	static_assert(mul(rad64_1Pi, 2)			== rad64_2Pi);
+	static_assert(div(rad64_2Pi, 2)			== rad64_1Pi);
+	static_assert(mul(rad64_1Pi, rad64_1Pi)	== (pi_v<SRadianF64> * pi_v<SRadianF64>));
+	static_assert(div(mul(rad64_1Pi, rad64_1Pi), rad64_1Pi) == rad64_1Pi);
 }
 
 TEST_CASE("MathUtility overloads for Rotation return correct values", "[Rotation]")

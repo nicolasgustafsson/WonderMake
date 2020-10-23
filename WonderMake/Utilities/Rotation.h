@@ -31,16 +31,44 @@ public:
     inline constexpr SRotation& operator=(const TRep aRhs) noexcept;
     inline constexpr SRotation& operator+=(const TRep aRhs) noexcept;
     inline constexpr SRotation& operator-=(const TRep aRhs) noexcept;
+    inline constexpr SRotation& operator*=(const TRep aRhs) noexcept;
+    inline constexpr SRotation& operator/=(const TRep aRhs) noexcept;
 
     inline constexpr SRotation& operator=(const SRotation aRhs) noexcept;
     inline constexpr SRotation& operator+=(const SRotation aRhs) noexcept;
     inline constexpr SRotation& operator-=(const SRotation aRhs) noexcept;
+    inline constexpr SRotation& operator*=(const SRotation aRhs) noexcept;
+    inline constexpr SRotation& operator/=(const SRotation aRhs) noexcept;
 
     inline [[nodiscard]] constexpr TRep Rotation() const noexcept;
 
 private:
     TRep myRotation = {};
 };
+
+template<class TRep, class TRatio>
+inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator+(SRotation<TRep, TRatio> aLhs, const TRep aRhs) noexcept;
+
+template<class TRep, class TRatio>
+inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator-(SRotation<TRep, TRatio> aLhs, const TRep aRhs) noexcept;
+
+template<class TRep, class TRatio>
+inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator*(SRotation<TRep, TRatio> aLhs, const TRep aRhs) noexcept;
+
+template<class TRep, class TRatio>
+inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator/(SRotation<TRep, TRatio> aLhs, const TRep aRhs) noexcept;
+
+template<class TRep, class TRatio>
+inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator+(SRotation<TRep, TRatio> aLhs, const SRotation<TRep, TRatio> aRhs) noexcept;
+
+template<class TRep, class TRatio>
+inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator-(SRotation<TRep, TRatio> aLhs, const SRotation<TRep, TRatio> aRhs) noexcept;
+
+template<class TRep, class TRatio>
+inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator*(SRotation<TRep, TRatio> aLhs, const SRotation<TRep, TRatio> aRhs) noexcept;
+
+template<class TRep, class TRatio>
+inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator/(SRotation<TRep, TRatio> aLhs, const SRotation<TRep, TRatio> aRhs) noexcept;
 
 template <class TToRotation, class FromTRepresentation, class TFromRatio>
 requires std::_Is_specialization_v<TToRotation, SRotation>
@@ -56,7 +84,7 @@ using SDegreeF64 = SDegree<f64>;
 
 constexpr static auto RepresentationPrecision = MathUtility::Pow<intmax_t>(10, std::numeric_limits<intmax_t>::digits10);
 
-template<class TRep>
+template<class TRep> requires std::is_floating_point_v<TRep>
 using RadianRatio = std::ratio<static_cast<intmax_t>(std::numbers::pi_v<TRep> * 2 * RepresentationPrecision), RepresentationPrecision>;
 
 template<class TRep>
@@ -67,25 +95,25 @@ using SRadianF64 = SRadian<f64>;
 
 namespace MathUtility
 {
-	template<typename TRotation>
+	template<typename TRotation> requires std::is_floating_point_v<typename TRotation::Representation>
 	inline [[nodiscard]] typename TRotation::Representation Atan(const TRotation aRotation) noexcept
 	{
 		return MathUtility::Atan(RotationCast<SRadian<typename TRotation::Representation>>(aRotation).Rotation());
 	}
 
-	template<typename TRotation>
+	template<typename TRotation> requires std::is_floating_point_v<typename TRotation::Representation>
 	inline [[nodiscard]] TRotation Atan2(const typename TRotation::Representation aY, const typename TRotation::Representation aX) noexcept
 	{
 		return RotationCast<TRotation>(SRadian<typename TRotation::Representation>(Atan2(aY, aX)));
 	}
 
-	template<typename TRotation>
+	template<typename TRotation> requires std::is_floating_point_v<typename TRotation::Representation>
 	inline [[nodiscard]] typename TRotation::Representation Cos(const TRotation aRotation) noexcept
 	{
 		return MathUtility::Cos(RotationCast<SRadian<typename TRotation::Representation>>(aRotation).Rotation());
 	}
 
-	template<typename TRotation>
+	template<typename TRotation> requires std::is_floating_point_v<typename TRotation::Representation>
 	inline [[nodiscard]] typename TRotation::Representation Sin(const TRotation aRotation) noexcept
 	{
 		return MathUtility::Sin(RotationCast<SRadian<typename TRotation::Representation>>(aRotation).Rotation());

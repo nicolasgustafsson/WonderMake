@@ -17,9 +17,14 @@ struct SMatrix final
 	class ColumnAccessor
 	{
 	public:
-		constexpr ColumnAccessor(std::array<TAccessorRep*, TRows> aMemberArray) noexcept;
+		inline constexpr ColumnAccessor(std::array<TAccessorRep*, TRows> aMemberArray) noexcept
+			: myMemberArray(std::move(aMemberArray))
+		{}
 
-		[[nodiscard]] constexpr TAccessorRep& operator[] (const u32 aY) const noexcept;
+		inline [[nodiscard]] constexpr TAccessorRep& operator[] (const u32 aY) const noexcept
+		{
+			return *myMemberArray[aY];
+		}
 
 	private:
 		std::array<TAccessorRep*, TRows> myMemberArray;
@@ -41,37 +46,91 @@ struct SMatrix final
 
 	std::array<TRep, Size> MemberArray;
 
-	constexpr SMatrix() noexcept requires IsSquare
+	inline constexpr SMatrix() noexcept requires IsSquare
 	{
 		*this = Identity();
 	};
-	template<typename ...TArgs> requires std::conjunction_v<std::is_convertible<TArgs, TRep>...>
-	constexpr SMatrix(TArgs... aArgs) noexcept;
-	constexpr SMatrix(std::array<TRep, Size> aMemberArray) noexcept;
+	template<typename ...TArgs>
+	inline constexpr SMatrix(TArgs... aArgs) noexcept
+		requires std::conjunction_v<std::is_convertible<TArgs, TRep>...>
+	{
+		u32 i = 0;
 
-	[[nodiscard]] constexpr bool operator==(const SMatrix& aRhs) const noexcept;
-	[[nodiscard]] constexpr bool operator!=(const SMatrix& aRhs) const noexcept;
+		((MemberArray[i++] = static_cast<TRep>(aArgs)), ...);
+	}
+	inline constexpr SMatrix(std::array<TRep, Size> aMemberArray) noexcept
+		: MemberArray(std::move(aMemberArray))
+	{}
 
-	[[nodiscard]] constexpr ColumnAccessor<TRep> operator[](const u32 aX) noexcept;
-	[[nodiscard]] constexpr ColumnAccessor<const TRep> operator[](const u32 aX) const noexcept;
+	inline [[nodiscard]] constexpr bool operator==(const SMatrix& aRhs) const noexcept
+	{
+		return std::equal(MemberArray.begin(), MemberArray.end(), aRhs.MemberArray.begin());
+	}
+	inline [[nodiscard]] constexpr bool operator!=(const SMatrix& aRhs) const noexcept
+	{
+		return !(*this == aRhs);
+	}
 
-	constexpr SMatrix& operator+=(const SMatrix& aRhs) noexcept;
-	constexpr SMatrix& operator-=(const SMatrix& aRhs) noexcept;
-	constexpr SMatrix& operator*=(const SMatrix& aRhs) noexcept;
+	inline [[nodiscard]] constexpr ColumnAccessor<TRep> operator[](const u32 aX) noexcept
+	{
+		std::array<TRep*, TRows> members = {};
 
-	constexpr SMatrix& Transpose() noexcept
+		for (auto y = 0; y < TRows; ++y)
+			members[y] = &MemberArray[static_cast<size_t>(y * TColumns + aX)];
+
+		return ColumnAccessor<TRep>(members);
+	}
+	inline [[nodiscard]] constexpr ColumnAccessor<const TRep> operator[](const u32 aX) const noexcept
+	{
+		std::array<const TRep*, TRows> members = {};
+
+		for (auto y = 0; y < TRows; ++y)
+			members[y] = &MemberArray[static_cast<size_t>(y * TColumns + aX)];
+
+		return ColumnAccessor<const TRep>(members);
+	}
+
+	inline constexpr SMatrix& operator+=(const SMatrix& aRhs) noexcept
+	{
+		for (auto i = 0; i < Size; ++i)
+			MemberArray[i] += aRhs.MemberArray[i];
+
+		return *this;
+	}
+	inline constexpr SMatrix& operator-=(const SMatrix& aRhs) noexcept
+	{
+		for (auto i = 0; i < Size; ++i)
+			MemberArray[i] -= aRhs.MemberArray[i];
+
+		return *this;
+	}
+	inline constexpr SMatrix& operator*=(const SMatrix& aRhs) noexcept
+	{
+		return (*this = *this * aRhs);
+	}
+
+	inline constexpr SMatrix& Transpose() noexcept
 		requires IsSquare
 	{
 		return (*this = GetTransposed());
 	}
-	[[nodiscard]] constexpr SMatrix<TRep, TRows, TColumns> GetTransposed() const noexcept;
+	inline [[nodiscard]] constexpr SMatrix<TRep, TRows, TColumns> GetTransposed() const noexcept
+	{
+		auto retMat = SMatrix<TRep, TRows, TColumns>::Zero();
 
-	constexpr SMatrix& FastInverse() noexcept
+		for (auto y = 0; y < TRows; ++y)
+			for (auto x = 0; x < TColumns; ++x)
+				retMat[y][x] = (*this)[x][y];
+
+		return retMat;
+	}
+
+	inline constexpr SMatrix& FastInverse() noexcept
 		requires IsValidTransform
 	{
 		return (*this = GetFastInverse());
 	}
-	[[nodiscard]] constexpr SMatrix GetFastInverse() const noexcept
+	inline [[nodiscard]] constexpr SMatrix GetFastInverse() const noexcept
 		requires IsValidTransform
 	{
 		constexpr auto lastIndex = TRows - 1;
@@ -97,13 +156,13 @@ struct SMatrix final
 		return retMat;
 	}
 	
-	constexpr void SetPosition(const SVector<TRep, TRows - 1>& aPosition) noexcept
+	inline constexpr void SetPosition(const SVector<TRep, TRows - 1>& aPosition) noexcept
 		requires IsValidTransform
 	{
 		for (auto i = 0; i < TRows - 1; ++i)
 			(*this)[TColumns - 1][i] = aPosition[i];
 	}
-	[[nodiscard]] constexpr SVector<TRep, TRows - 1> GetPosition() const noexcept
+	inline [[nodiscard]] constexpr SVector<TRep, TRows - 1> GetPosition() const noexcept
 		requires IsValidTransform
 	{
 		auto retVec = SVector<TRep, TRows - 1>();
@@ -114,7 +173,7 @@ struct SMatrix final
 		return retVec;
 	}
 
-	[[nodiscard]] constexpr SVector<TRep, TRows - 1> GetForwardVector() const noexcept
+	inline [[nodiscard]] constexpr SVector<TRep, TRows - 1> GetForwardVector() const noexcept
 		requires (HasOrientation<2> || HasOrientation<3>)
 	{
 		constexpr auto x = HasOrientation<2> ? 1 : 2;
@@ -125,12 +184,12 @@ struct SMatrix final
 
 		return retVec;
 	}
-	[[nodiscard]] constexpr SVector<TRep, TRows - 1> GetBackwardVector() const noexcept
+	inline [[nodiscard]] constexpr SVector<TRep, TRows - 1> GetBackwardVector() const noexcept
 		requires (HasOrientation<2> || HasOrientation<3>)
 	{
 		return -GetForwardVector();
 	}
-	[[nodiscard]] constexpr SVector<TRep, TRows - 1> GetRightVector() const noexcept
+	inline [[nodiscard]] constexpr SVector<TRep, TRows - 1> GetRightVector() const noexcept
 		requires (HasOrientation<2> || HasOrientation<3>)
 	{
 		SVector<TRep, TRows - 1> retVec;
@@ -140,12 +199,12 @@ struct SMatrix final
 
 		return retVec;
 	}
-	[[nodiscard]] constexpr SVector<TRep, TRows - 1> GetLeftVector() const noexcept
+	inline [[nodiscard]] constexpr SVector<TRep, TRows - 1> GetLeftVector() const noexcept
 		requires (HasOrientation<2> || HasOrientation<3>)
 	{
 		return -GetRightVector();
 	}
-	[[nodiscard]] constexpr SVector<TRep, TRows - 1> GetUpwardVector() const noexcept
+	inline [[nodiscard]] constexpr SVector<TRep, TRows - 1> GetUpwardVector() const noexcept
 		requires HasOrientation<3>
 	{
 		SVector<TRep, TRows - 1> retVec;
@@ -155,22 +214,24 @@ struct SMatrix final
 
 		return retVec;
 	}
-	[[nodiscard]] constexpr SVector<TRep, TRows - 1> GetDownwardVector() const noexcept
+	inline [[nodiscard]] constexpr SVector<TRep, TRows - 1> GetDownwardVector() const noexcept
 		requires HasOrientation<3>
 	{
 		return -GetUpwardVector();
 	}
-	
-	SMatrix& Rotate2D(const SRadianF32 aRotation) noexcept
-		requires HasOrientation<2>
+
+	template<typename TRotation>
+	inline SMatrix& Rotate2D(const TRotation aRotation) noexcept
+		requires (HasOrientation<2> && std::is_floating_point_v<typename TRotation::Representation>)
 	{
 		return Rotate(SMatrix<TRep, 2, 2>::CreateRotation2D(aRotation));
 	}
-	SMatrix& SetRotation2D(const SRadianF32 aRotation) noexcept
-		requires HasOrientation<2>
+	template<typename TRotation>
+	inline SMatrix& SetRotation2D(const TRotation aRotation) noexcept
+		requires (HasOrientation<2>&& std::is_floating_point_v<typename TRotation::Representation>)
 	{
-		const auto cos = static_cast<TRep>(MathUtility::Cos(aRotation.Rotation()));
-		const auto sin = static_cast<TRep>(MathUtility::Sin(aRotation.Rotation()));
+		const auto cos = static_cast<TRep>(MathUtility::Cos(aRotation));
+		const auto sin = static_cast<TRep>(MathUtility::Sin(aRotation));
 
 		(*this)[0][0] = cos;
 		(*this)[0][1] = sin;
@@ -180,7 +241,7 @@ struct SMatrix final
 		return *this;
 	}
 	
-	constexpr SMatrix& Rotate(const SMatrix<TRep, TColumns - 1, TRows - 1>& aRotation) noexcept
+	inline constexpr SMatrix& Rotate(const SMatrix<TRep, TColumns - 1, TRows - 1>& aRotation) noexcept
 		requires IsValidTransform
 	{
 		// TODO(Kevin): Calculate without making copies.
@@ -191,7 +252,7 @@ struct SMatrix final
 
 		return SetOrientation(std::move(orientation));
 	}
-	[[nodiscard]] constexpr SMatrix<TRep, TColumns - 1, TRows - 1> GetOrientation() const noexcept
+	inline [[nodiscard]] constexpr SMatrix<TRep, TColumns - 1, TRows - 1> GetOrientation() const noexcept
 		requires IsValidTransform
 	{
 		SMatrix<TRep, TColumns - 1, TRows - 1> retMat;
@@ -202,7 +263,7 @@ struct SMatrix final
 
 		return retMat;
 	}
-	constexpr SMatrix& SetOrientation(SMatrix<TRep, TColumns - 1, TRows - 1> aOrientation) const noexcept
+	inline constexpr SMatrix& SetOrientation(SMatrix<TRep, TColumns - 1, TRows - 1> aOrientation) const noexcept
 		requires IsValidTransform
 	{
 		for (auto y = 0; y < TRows - 1; ++y)
@@ -212,23 +273,21 @@ struct SMatrix final
 		return *this;
 	}
 
-	[[nodiscard]] static SMatrix CreateRotation2D(const SRadianF32 aRotation) noexcept
-		requires HasOrientation<2>
+	template<typename TRotation>
+	inline [[nodiscard]] static SMatrix CreateRotation2D(const TRotation aRotation) noexcept
+		requires (HasOrientation<2> && std::is_floating_point_v<typename TRotation::Representation>)
 	{
-		SMatrix retMat;
-
-		retMat = SetRotation2D(aRotation);
-
-		return retMat;
+		return SetRotation2D(aRotation);
 	}
 
-	[[nodiscard]] static SMatrix CreateRotationX(const SRadianF32 aRotation) noexcept
-		requires HasOrientation<3>
+	template<typename TRotation>
+	inline [[nodiscard]] static SMatrix CreateRotationX(const TRotation aRotation) noexcept
+		requires (HasOrientation<3> && std::is_floating_point_v<typename TRotation::Representation>)
 	{
 		SMatrix retMat;
 
-		const auto cos = static_cast<TRep>(MathUtility::Cos(aRotation.Rotation()));
-		const auto sin = static_cast<TRep>(MathUtility::Sin(aRotation.Rotation()));
+		const auto cos = static_cast<TRep>(MathUtility::Cos(aRotation));
+		const auto sin = static_cast<TRep>(MathUtility::Sin(aRotation));
 
 		retMat[1][1] = cos;
 		retMat[1][2] = sin;
@@ -237,13 +296,14 @@ struct SMatrix final
 
 		return retMat;
 	}
-	[[nodiscard]] static SMatrix CreateRotationY(const SRadianF32 aRotation) noexcept
-		requires HasOrientation<3>
+	template<typename TRotation>
+	inline [[nodiscard]] static SMatrix CreateRotationY(const TRotation aRotation) noexcept
+		requires (HasOrientation<3> && std::is_floating_point_v<typename TRotation::Representation>)
 	{
 		SMatrix retMat;
 
-		const auto cos = static_cast<TRep>(MathUtility::Cos(aRotation.Rotation()));
-		const auto sin = static_cast<TRep>(MathUtility::Sin(aRotation.Rotation()));
+		const auto cos = static_cast<TRep>(MathUtility::Cos(aRotation));
+		const auto sin = static_cast<TRep>(MathUtility::Sin(aRotation));
 
 		retMat[0][0] = cos;
 		retMat[0][2] = -sin;
@@ -252,13 +312,14 @@ struct SMatrix final
 
 		return retMat;
 	}
-	[[nodiscard]] static SMatrix CreateRotationZ(const SRadianF32 aRotation) noexcept
-		requires HasOrientation<3>
+	template<typename TRotation>
+	inline [[nodiscard]] static SMatrix CreateRotationZ(const TRotation aRotation) noexcept
+		requires (HasOrientation<3> && std::is_floating_point_v<typename TRotation::Representation>)
 	{
 		SMatrix retMat;
 
-		const auto cos = static_cast<TRep>(MathUtility::Cos(aRotation.Rotation()));
-		const auto sin = static_cast<TRep>(MathUtility::Sin(aRotation.Rotation()));
+		const auto cos = static_cast<TRep>(MathUtility::Cos(aRotation));
+		const auto sin = static_cast<TRep>(MathUtility::Sin(aRotation));
 
 		retMat[0][0] = cos;
 		retMat[0][1] = sin;
@@ -268,10 +329,30 @@ struct SMatrix final
 		return retMat;
 	}
 
-	[[nodiscard]] std::string ToString() const noexcept;
+	inline [[nodiscard]] std::string ToString() const
+	{
+		std::string result;
 
-	[[nodiscard]] constexpr static SMatrix Zero() noexcept;
-	[[nodiscard]] constexpr static SMatrix Identity() noexcept
+		for (auto y = 0; y < TRows; ++y)
+		{
+			result += '[';
+
+			for (auto x = 0; x < TColumns; ++x)
+				result += std::to_string((*this)[x][y]) + ',';
+
+			result.pop_back();
+
+			result += "]\n";
+		}
+
+		return result;
+	}
+
+	inline [[nodiscard]] constexpr static SMatrix Zero() noexcept
+	{
+		return SMatrix<TRep, TColumns, TRows>(std::array<TRep, Size>());
+	}
+	inline [[nodiscard]] constexpr static SMatrix Identity() noexcept
 		requires IsSquare
 	{
 		auto retMat = Zero();
@@ -292,18 +373,48 @@ using SMatrix33f = SMatrix33<f32>;
 using SMatrix44f = SMatrix44<f32>;
 
 template<typename TRep, u32 TRows, u32 TColumns>
-SMatrix<TRep, TColumns, TRows> operator+(SMatrix<TRep, TColumns, TRows> aLhs, const SMatrix<TRep, TColumns, TRows>& aRhs);
+inline [[nodiscard]] SMatrix<TRep, TColumns, TRows> operator+(SMatrix<TRep, TColumns, TRows> aLhs, const SMatrix<TRep, TColumns, TRows>& aRhs) noexcept
+{
+	return aLhs += aRhs;
+}
 
 template<typename TRep, u32 TColumns, u32 TRows>
-SMatrix<TRep, TColumns, TRows> operator-(SMatrix<TRep, TColumns, TRows> aLhs, const SMatrix<TRep, TColumns, TRows>& aRhs);
+inline [[nodiscard]] SMatrix<TRep, TColumns, TRows> operator-(SMatrix<TRep, TColumns, TRows> aLhs, const SMatrix<TRep, TColumns, TRows>& aRhs) noexcept
+{
+	return aLhs -= aRhs;
+}
 
 template<typename TRep, u32 TSize, u32 TLhsHeight, u32 TRhsWidth>
-[[nodiscard]] constexpr SMatrix<TRep, TRhsWidth, TLhsHeight> operator*(const SMatrix<TRep, TSize, TLhsHeight>& aLhs, const SMatrix<TRep, TRhsWidth, TSize>& aRhs) noexcept;
+inline [[nodiscard]] constexpr SMatrix<TRep, TRhsWidth, TLhsHeight> operator*(const SMatrix<TRep, TSize, TLhsHeight>& aLhs, const SMatrix<TRep, TRhsWidth, TSize>& aRhs) noexcept
+{
+	auto retMat = SMatrix<TRep, TRhsWidth, TLhsHeight>::Zero();
+
+	for (auto y = 0; y < TLhsHeight; ++y)
+		for (auto x = 0; x < TRhsWidth; ++x)
+			for (auto i = 0; i < TSize; ++i)
+				retMat[x][y] += aLhs[i][y] * aRhs[x][i];
+
+	return retMat;
+}
 
 template<typename TRep, u32 TColumns, u32 TRows>
-[[nodiscard]] constexpr SVector<TRep, TColumns> operator*(SVector<TRep, TColumns> aLhs, const SMatrix<TRep, TColumns, TRows>& aRhs) noexcept;
+inline [[nodiscard]] constexpr SVector<TRep, TColumns> operator*(SVector<TRep, TColumns> aLhs, const SMatrix<TRep, TColumns, TRows>& aRhs) noexcept
+{
+	auto retMat = SMatrix<TRep, 1, TColumns>::Zero();
+
+	for (auto i = 0; i < TColumns; ++i)
+		retMat[0][i] = aLhs[i];
+
+	retMat = aRhs * retMat;
+
+	for (auto i = 0; i < TColumns; ++i)
+		aLhs[i] = retMat[0][i];
+
+	return aLhs;
+}
 
 template<typename TRep, u32 TColumns, u32 TRows>
-[[nodiscard]] constexpr SVector<TRep, TColumns - 1> operator*(SVector<TRep, TColumns - 1> aLhs, const SMatrix<TRep, TColumns, TRows>& aRhs) noexcept;
-
-#include "Matrix.inl"
+inline [[nodiscard]] constexpr SVector<TRep, TColumns - 1> operator*(SVector<TRep, TColumns - 1> aLhs, const SMatrix<TRep, TColumns, TRows>& aRhs) noexcept
+{
+	return (aLhs.Promote(1) * aRhs).Demote();
+}

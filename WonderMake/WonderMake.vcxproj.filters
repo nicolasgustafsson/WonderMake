@@ -253,6 +253,5 @@
     <None Include="imgui.ini" />
     <None Include="NodeGraph\SlotCustomization\SlotCustomization.md" />
     <None Include="NodeGraph\Nodegraph.md" />
-    <None Include="Utilities\Matrix.inl" />
   </ItemGroup>
 </Project>

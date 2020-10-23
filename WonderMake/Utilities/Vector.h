@@ -81,22 +81,26 @@ struct SVector
 	template<typename ...TArgs, typename = TVectorMembers<TArgs...>>
 	constexpr SVector(TArgs... aArgs) noexcept;
 	
-	SVector<TRep, TSize>& Rotate(const SRadianF32 aRotation) noexcept requires (TSize == 2)
+	template<typename TRotation>
+	SVector<TRep, TSize>& Rotate(const TRotation aRotation) noexcept requires (TSize == 2 && std::is_floating_point_v<typename TRotation::Representation>)
 	{
-		const auto rotation = GetRotation() + aRotation;
+		using RotationRep = SRadian<typename TRotation::Representation>;
+
+		const auto rotation = RotationCast<RotationRep>(GetRotation<TRotation>() + aRotation);
 		const auto length = Length();
 
-		SVectorBase<TRep, Size>::X = std::sinf(rotation.Rotation());
-		SVectorBase<TRep, Size>::Y = std::cosf(rotation.Rotation());
+		SVectorBase<TRep, Size>::X = MathUtility::Sin(rotation.Rotation());
+		SVectorBase<TRep, Size>::Y = MathUtility::Cos(rotation.Rotation());
 
 		SVectorBase<TRep, Size>::X *= length;
 		SVectorBase<TRep, Size>::Y *= length;
 
 		return (*this);
 	}
-	[[nodiscard]] SRadianF32 GetRotation() const noexcept requires (TSize == 2)
+	template<typename TRotation = SRadian<TRep>> requires (TSize == 2 && std::is_floating_point_v<typename TRotation::Representation>)
+	[[nodiscard]] TRotation GetRotation() const noexcept
 	{
-		return std::atan2f(SVectorBase<TRep, Size>::X, SVectorBase<TRep, Size>::Y);
+		return MathUtility::Atan2<TRotation>(SVectorBase<TRep, Size>::X, SVectorBase<TRep, Size>::Y);
 	}
 
 	// Lowers or raises the dimension of the vector by one

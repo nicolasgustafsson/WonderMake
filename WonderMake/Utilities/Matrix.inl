@@ -150,23 +150,23 @@ template<typename TRep, u32 TSize, u32 TLhsHeight, u32 TRhsWidth>
 }
 
 template<typename TRep, u32 TColumns, u32 TRows>
-[[nodiscard]] constexpr SVector<TRep, TRows> operator*(SVector<TRep, TRows> aLhs, const SMatrix<TRep, TColumns, TRows>& aRhs) noexcept
+[[nodiscard]] constexpr SVector<TRep, TColumns> operator*(SVector<TRep, TColumns> aLhs, const SMatrix<TRep, TColumns, TRows>& aRhs) noexcept
 {
-	auto mat = SMatrix<TRep, TRows, 1>::Zero();
+	auto mat = SMatrix<TRep, 1, TColumns>::Zero();
 
-	for (auto i = 0; i < TRows; ++i)
-		mat[i][0] = aLhs[i];
+	for (auto i = 0; i < TColumns; ++i)
+		mat[0][i] = aLhs[i];
 
-	mat = mat * aRhs;
+	mat = aRhs * mat;
 
-	for (auto i = 0; i < TRows; ++i)
-		aLhs[i] = mat[i][0];
+	for (auto i = 0; i < TColumns; ++i)
+		aLhs[i] = mat[0][i];
 
 	return aLhs;
 }
 
 template<typename TRep, u32 TColumns, u32 TRows>
-[[nodiscard]] constexpr SVector<TRep, TRows - 1> operator*(SVector<TRep, TRows - 1> aLhs, const SMatrix<TRep, TColumns, TRows>& aRhs) noexcept
+[[nodiscard]] constexpr SVector<TRep, TColumns - 1> operator*(SVector<TRep, TColumns - 1> aLhs, const SMatrix<TRep, TColumns, TRows>& aRhs) noexcept
 {
 	return (aLhs.Promote(1) * aRhs).Demote();
 }

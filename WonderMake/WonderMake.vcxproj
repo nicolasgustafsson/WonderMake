@@ -416,7 +416,6 @@
     <None Include="NodeGraph\Nodegraph.md" />
     <None Include="NodeGraph\SlotCustomization\SlotCustomization.md" />
     <None Include="Utilities\Matrix.inl" />
-    <None Include="Utilities\Rotation.inl" />
     <None Include="Utilities\Vector.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

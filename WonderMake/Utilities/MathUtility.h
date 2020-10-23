@@ -22,42 +22,30 @@ namespace MathUtility
 		return aExponent == 0 ? 1 : aBase * Pow(aBase, aExponent - 1);
 	}
 
-	inline [[nodiscard]] f32 Atan(const f32 aRotation) noexcept
-	{
-		return std::atanf(aRotation);
-	}
-
-	inline [[nodiscard]] f64 Atan(const f64 aRotation) noexcept
+	template<typename T>
+	inline [[nodiscard]] T Atan(const T aRotation) noexcept
+		requires std::is_floating_point_v<T>
 	{
 		return std::atan(aRotation);
 	}
 
-	inline [[nodiscard]] f32 Atan2(const f32 aY, const f32 aX) noexcept
-	{
-		return std::atan2f(aY, aX);
-	}
-
-	inline [[nodiscard]] f64 Atan2(const f64 aY, const f64 aX) noexcept
+	template<typename T>
+	inline [[nodiscard]] T Atan2(const T aY, const T aX) noexcept
+		requires std::is_floating_point_v<T>
 	{
 		return std::atan2(aY, aX);
 	}
 
-	inline [[nodiscard]] f32 Cos(const f32 aRotation) noexcept
-	{
-		return std::cosf(aRotation);
-	}
-
-	inline [[nodiscard]] f64 Cos(const f64 aRotation) noexcept
+	template<typename T>
+	inline [[nodiscard]] T Cos(const T aRotation) noexcept
+		requires std::is_floating_point_v<T>
 	{
 		return std::cos(aRotation);
 	}
 
-	inline [[nodiscard]] f32 Sin(const f32 aRotation) noexcept
-	{
-		return std::sinf(aRotation);
-	}
-
-	inline [[nodiscard]] f64 Sin(const f64 aRotation) noexcept
+	template<typename T>
+	inline [[nodiscard]] T Sin(const T aRotation) noexcept
+		requires std::is_floating_point_v<T>
 	{
 		return std::sin(aRotation);
 	}

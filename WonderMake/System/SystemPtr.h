@@ -1,9 +1,21 @@
 #pragma once
 #include "SystemContainer.h"
+
+#include <mutex>
+
 template<typename TSystem>
 class SystemPtr
 {
 public:
+	SystemPtr()
+	{
+		Mutex.lock();
+	}
+	~SystemPtr()
+	{
+		Mutex.unlock();
+	}
+
 	[[nodiscard]] TSystem& operator*() noexcept
 	{
 		static TSystem& instance = SystemContainer::Get().GetSystem<TSystem>();
@@ -29,5 +41,6 @@ public:
 	}
 
 private:
+	std::recursive_mutex Mutex;
 };
 

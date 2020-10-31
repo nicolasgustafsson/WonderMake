@@ -37,7 +37,7 @@ void DataThreads::Start(Program& aProgramReference, Closure&& aCallback)
 	for (;;)
 	{
 		//update the timekeeper before any threads have run so that delta time can be accessed asynchronously
-		myTimeKeeper->Update();
+		SystemPtr<TimeKeeper>()->Update();
 
 		myFileThread->DoOnce();
 		myRenderThread->DoOnce();

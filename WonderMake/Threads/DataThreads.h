@@ -29,6 +29,4 @@ private:
 
 	std::optional<Thread> myRenderThread;
 	std::optional<Thread> myFileThread;
-
-	SystemPtr<TimeKeeper> myTimeKeeper;
 };

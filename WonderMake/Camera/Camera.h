@@ -25,7 +25,7 @@ public:
 
 	const SMatrix33f& GetViewMatrix() const noexcept { return myViewMatrix; }
 
-	[[nodiscard]] f32 GetRotation() const noexcept { return myRotation; }
+	[[nodiscard]] SRadianF32 GetRotation() const noexcept { return myRotation; }
 	[[nodiscard]] f32 GetScale() const noexcept { return myScale; }
 
 	void Inspect();
@@ -36,8 +36,7 @@ public:
 private:
 	SVector2f myPosition;
 	
-	//[Nicos]: change this to proper rotation
-	f32 myRotation = 0.f;
+	SRadianF32 myRotation = 0.f;
 	f32 myScale = 1.0f;
 	SMatrix33f myViewMatrix;
 

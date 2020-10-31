@@ -11,7 +11,7 @@ void SpriteRenderingFunctionality::Tick()
 		return;
 
 	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Position>(0, Get<STransformComponent>().Position);
-	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Rotation>(0, Get<STransformComponent>().Rotation);
+	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Rotation>(0, Get<STransformComponent>().Rotation.Rotation());
 	spriteComponent.RenderObject->Render();
 }
 

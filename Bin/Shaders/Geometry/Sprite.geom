@@ -21,33 +21,44 @@ void ConstructSpriteRectangle(vec2 position, vec2 origin, vec2 scale, vec4 color
 	float width = TextureSize.x * scale.x * 0.5;
 	float height = TextureSize.y * scale.y * 0.5;
 	
-	mat2 rotationMatrix = mat2(cos(rotation), sin(rotation), -sin(rotation), cos(rotation));
+	mat2 rotationMatrix = mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation));
+	
+	position += origin * vec2(width, height) * rotationMatrix;
+	
+	// 1:bottom-left
+	
 	vec2 rotatedScale = vec2(-width, -height) * rotationMatrix;
 	
-	position += origin * vec2(width, -height) * rotationMatrix;
-	
-    gl_Position.xy = (ViewProjectionMatrix * vec3((position + rotatedScale.xy).xy, 1.0)).xy;    // 1:bottom-left
-	
+    gl_Position.xy = (vec3((position + rotatedScale.xy).xy, 1.0) * ViewProjectionMatrix).xy;
 	TexCoord = vec2(0.0, 0.0);
+	
     EmitVertex(); 
+	
+	// 2:bottom-right
 	
 	rotatedScale = vec2(width, -height) * rotationMatrix;
 	
-    gl_Position.xy = (ViewProjectionMatrix * vec3((position + rotatedScale.xy).xy, 1.0)).xy;    // 2:bottom-right
-
+    gl_Position.xy = (vec3((position + rotatedScale.xy).xy, 1.0) * ViewProjectionMatrix).xy;
 	TexCoord = vec2(1.0, 0.0);
+	
     EmitVertex();
+	
+	// 3:top-left
 	
 	rotatedScale = vec2(-width, height) * rotationMatrix;
-    gl_Position.xy = (ViewProjectionMatrix * vec3((position + rotatedScale.xy).xy, 1.0)).xy;     // 3:top-left
 	
+    gl_Position.xy = (vec3((position + rotatedScale.xy).xy, 1.0) * ViewProjectionMatrix).xy;
 	TexCoord = vec2(0.0, 1.0);
+	
     EmitVertex();
 	
-	rotatedScale = vec2(width, height) * rotationMatrix;
-    gl_Position.xy = (ViewProjectionMatrix * vec3((position + rotatedScale.xy).xy, 1.0)).xy;     // 4:top-right
+	// 4:top-right
 	
+	rotatedScale = vec2(width, height) * rotationMatrix;
+	
+    gl_Position.xy = (vec3((position + rotatedScale.xy).xy, 1.0) * ViewProjectionMatrix).xy;
 	TexCoord = vec2(1.0, 1.0);
+	
     EmitVertex();
 	
     EndPrimitive();

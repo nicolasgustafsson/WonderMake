@@ -55,9 +55,9 @@ void PlayerControllerFunctionality::UpdateMovement()
 	if (Get<InputSystem>().IsKeyDown(EKeyboardKey::A) || Get<InputSystem>().IsKeyDown(EKeyboardKey::Left))
 		movementInput += {-1.f, 0.f};
 	if (Get<InputSystem>().IsKeyDown(EKeyboardKey::W) || Get<InputSystem>().IsKeyDown(EKeyboardKey::Up))
-		movementInput += {0.f, -1.f};
-	if (Get<InputSystem>().IsKeyDown(EKeyboardKey::S) || Get<InputSystem>().IsKeyDown(EKeyboardKey::Down))
 		movementInput += {0.f, 1.f};
+	if (Get<InputSystem>().IsKeyDown(EKeyboardKey::S) || Get<InputSystem>().IsKeyDown(EKeyboardKey::Down))
+		movementInput += {0.f, -1.f};
 	if (Get<InputSystem>().IsKeyDown(EKeyboardKey::D) || Get<InputSystem>().IsKeyDown(EKeyboardKey::Right))
 		movementInput += {1.f, 0.f};
 	if (Get<InputSystem>().IsKeyDown(EKeyboardKey::Backspace))

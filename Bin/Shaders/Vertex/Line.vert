@@ -8,7 +8,7 @@ out vec4 vertexColor;
 
 void main() 
 {
-  vec3 transformedPosition = ViewProjectionMatrix * vec3(aPos.x, aPos.y, 1.0);
+  vec3 transformedPosition = vec3(aPos.x, aPos.y, 1.0) * ViewProjectionMatrix;
   
   gl_Position.xy = transformedPosition.xy;
 

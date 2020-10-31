@@ -94,11 +94,8 @@ struct SVector
 		const auto rotation = RotationCast<RotationRep>(GetRotation<TRotation>() + aRotation);
 		const auto length = Length();
 
-		SVectorBase<TRep, Size>::X = MathUtility::Sin(rotation.Rotation());
-		SVectorBase<TRep, Size>::Y = MathUtility::Cos(rotation.Rotation());
-
-		SVectorBase<TRep, Size>::X *= length;
-		SVectorBase<TRep, Size>::Y *= length;
+		SVectorBase<TRep, Size>::X = MathUtility::Cos(rotation.Rotation()) * length;
+		SVectorBase<TRep, Size>::Y = MathUtility::Sin(rotation.Rotation()) * length;
 
 		return (*this);
 	}
@@ -106,7 +103,7 @@ struct SVector
 	[[nodiscard]] TRotation GetRotation() const noexcept
 		requires (TSize == 2 && std::is_floating_point_v<typename TRotation::Representation>)
 	{
-		return MathUtility::Atan2<TRotation>(SVectorBase<TRep, Size>::X, SVectorBase<TRep, Size>::Y);
+		return MathUtility::Atan2<TRotation>(SVectorBase<TRep, Size>::Y, SVectorBase<TRep, Size>::X);
 	}
 
 	// Lowers or raises the dimension of the vector by one

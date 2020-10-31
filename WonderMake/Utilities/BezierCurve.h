@@ -18,7 +18,7 @@ public:
 	SVector2f GetLocationAt(const f32 aProgress) const noexcept;
 	SVector2f GetConstantLocationAt(f32 aProgress) const;
 
-	void Rotate(const f32 aRotation);
+	void Rotate(const SRadianF32 aRotation);
 	void Offset(const SVector2f aOffset);
 
 	[[nodiscard]] float GetLength() const noexcept;

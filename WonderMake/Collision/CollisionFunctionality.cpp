@@ -84,7 +84,7 @@ void CollisionFunctionality::UpdateCollisionTransforms()
 	const auto& transformFunctionality = Get<TransformFunctionality>();
 
 	const auto transformation = transformFunctionality.GetMatrix();
-	const f32 rotation = transformFunctionality.GetRotation();
+	const auto rotation = transformFunctionality.GetRotation();
 
 	for (auto& collider : collisionComponent.Colliders)
 	{

@@ -54,14 +54,14 @@ namespace Colliders
 		inline [[nodiscard]] SVector2f GetLineEnd() const noexcept;
 
 		SVector2f					EndOffsetFromPosition = SVector2f::Zero();
-		f32							Rotation = 0.f;
+		SRadianF32					Rotation;
 		f32							Width = 0.f;
 	};
 
 	SVector2f SCollisionLine::GetLineEnd() const noexcept
 	{
 		SVector2f temp = EndOffsetFromPosition;
-		return Position + temp.Rotate(Rotation);
+		return Position + temp.Rotate<>(Rotation);
 	}
 
 	typedef std::variant<SSphere, SCollisionLine>	Shape;

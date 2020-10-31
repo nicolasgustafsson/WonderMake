@@ -22,38 +22,31 @@ void TransformFunctionality::FacePosition(const SVector2f aPosition) noexcept
 
 void TransformFunctionality::FaceDirection(const SVector2f aDirection) noexcept
 {
-	const f32 newRotation = -std::atan2f(aDirection.Y, aDirection.X) - Constants::HalfPi;
-	SetRotation(newRotation);
+	SetRotation(aDirection.GetRotation());
 }
 
-void TransformFunctionality::SetRotation(const f32 aRotation) noexcept
+void TransformFunctionality::SetRotation(const SRadianF32 aRotation) noexcept
 {
 	Get<STransformComponent>().Rotation = aRotation;
 }
 
-[[nodiscard]] f32 TransformFunctionality::GetRotation() const noexcept
+[[nodiscard]] SRadianF32 TransformFunctionality::GetRotation() const noexcept
 {
 	return Get<STransformComponent>().Rotation;
 }
 
 SVector2f TransformFunctionality::GetForwardVector() const noexcept
 {
-	const f32 myRotation = Get<STransformComponent>().Rotation;
+	SVector2f retVec(1, 0);
 
-	SVector2f forward;
-	forward.X = -std::sinf(myRotation);
-	forward.Y = -std::cosf(myRotation);
+	retVec.Rotate(GetRotation());
 
-	return forward;
+	return retVec;
 }
 
 SVector2f TransformFunctionality::GetRightVector() const noexcept
 {
-	const f32 myRotation = Get<STransformComponent>().Rotation;
-
-	SVector2f right = GetForwardVector().Rotate(Constants::HalfPi);
-
-	return right;
+	return GetForwardVector().GetPerpendicularClockWise();
 }
 
 void TransformFunctionality::Move(const SVector2f aMovement) noexcept

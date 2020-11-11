@@ -31,7 +31,7 @@ public:
 
 	friend class RenderCommand;
 
-	void SetRenderLayer(const std::string& /*aRenderLayer*/) { /*myRenderLayer = aRenderLayer;*/ };
+	void SetRenderLayer(const std::string& aRenderLayer) { myRenderLayer = aRenderLayer; };
 	void SetRenderOrder(i32 aRenderOrder) noexcept { myRenderOrder = aRenderOrder; }
 protected:
 
@@ -83,7 +83,7 @@ public:
 
 	void BindTextures();
 
-	void SetRenderCount(u32 aRenderCount);
+	void SetRenderCount(const u32 aRenderCount);
 
 	template<EVertexAttribute TAttribute>
 	void SetAttribute(const u32 aIndex, decltype(GetValueFromAttribute<TAttribute>()) aAttribute);
@@ -134,10 +134,16 @@ void RenderObject<TAttributes...>::SetTexture(std::filesystem::path aTexturePath
 }
 
 template<EVertexAttribute... TAttributes>
-void RenderObject<TAttributes...>::SetRenderCount(u32 aRenderCount)
+void RenderObject<TAttributes...>::SetRenderCount(const u32 aRenderCount)
 {
-	//[Nicos]: We might want to resize the vertexbuffer here in the future
-	assert(aRenderCount < myVertexCount && "You can't render more vertices than there are in the vertex buffer!");
+	if (aRenderCount > myVertexCount)
+	{
+		myVertexCount = aRenderCount;
+
+		//[Nicos]: reconstruct vertex buffer
+		myVertexBufferArray.~VertexBufferArray();
+		new (&myVertexBufferArray)VertexBufferArray<TAttributes...>(myVertexCount);
+	}
 	myRenderCount = aRenderCount;
 }
 

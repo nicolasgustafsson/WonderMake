@@ -2,7 +2,7 @@
 namespace Constants
 {
 #ifdef CONFIGURATION_Release
-	constexpr bool IsDebugging = false;
+	constexpr bool IsDebugging = true;
 #else
 	constexpr bool IsDebugging = true;
 #endif

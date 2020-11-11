@@ -18,6 +18,7 @@ GameWorld::GameWorld()
 
 	Object player = SetupPlayer();
 
+	myBackground.SetRenderLayer("Background");
 	myBackground.SetRenderOrder(-9999);
 	myBackground.SetProperty("MainColor", SColor::RaisinBlack);
 	myBackground.SetProperty("DetailColor", SColor::SpanishGray);

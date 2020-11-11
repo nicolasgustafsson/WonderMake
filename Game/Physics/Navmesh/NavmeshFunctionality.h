@@ -23,6 +23,11 @@ public:
 
 	void SetNavmesh(Navmesh aNavmesh);
 
+	const Navmesh& GetNavmesh() const { return Get<SNavmeshComponent>().Navmesh; };
+	Navmesh& GetNavmesh() { return Get<SNavmeshComponent>().Navmesh; };
+
 	void Tick();
 };
 
+REGISTER_COMPONENT(SNavmeshComponent);
+REGISTER_FUNCTIONALITY(NavmeshFunctionality);

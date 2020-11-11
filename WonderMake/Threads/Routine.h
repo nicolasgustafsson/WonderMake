@@ -28,4 +28,5 @@ private:
 	const ERoutineId myRoutineId;
 	MessageSubscriber mySubscriber;
 	plf::colony<Closure> myProcedures;
+	plf::colony<Closure> myProceduresToAdd;
 };

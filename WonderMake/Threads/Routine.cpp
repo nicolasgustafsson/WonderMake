@@ -19,11 +19,18 @@ void Routine::Run()
 
 void Routine::AddProcedure(Closure aClosure)
 {
-	myProcedures.insert(aClosure);
+	myProceduresToAdd.insert(aClosure);
 }
 
 void Routine::Procedure() 
 {
+	if (myProceduresToAdd.size() > 0)
+	{
+		myProcedures.splice(myProceduresToAdd);
+
+		myProceduresToAdd.clear();
+	}
+
 	for(auto&& procedure : myProcedures)
 		procedure();
 }

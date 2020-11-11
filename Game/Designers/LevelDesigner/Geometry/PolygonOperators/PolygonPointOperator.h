@@ -65,6 +65,24 @@ namespace Geometry
 			return *this;
 		}
 
+		PolygonLoopingPointOperator operator++(int)
+		{
+			PolygonLoopingPointOperator temp = *this;
+
+			++(*this);
+
+			return temp;
+		}
+
+		PolygonLoopingPointOperator operator--(int)
+		{
+			PolygonLoopingPointOperator temp = *this;
+
+			--(*this);
+
+			return temp;
+		}
+
 		//returns prepended point
 		PolygonLoopingPointOperator PrependPoint(const SVector2f aRelativeLocation = {0.f, 0.f})
 		{ 

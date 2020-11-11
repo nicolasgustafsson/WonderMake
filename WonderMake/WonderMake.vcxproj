@@ -220,7 +220,7 @@
     <ClCompile Include="Graphics\ShaderParser.cpp" />
     <ClCompile Include="Graphics\RenderCommandProcessor.cpp" />
     <ClCompile Include="Graphics\RenderNodeGraph\RenderNodeGraph.cpp" />
-    <ClCompile Include="RenderSettingsManager.cpp" />
+    <ClCompile Include="Graphics\RenderSettingsManager.cpp" />
     <ClCompile Include="Utilities\Math.cpp" />
     <ClCompile Include="NodeGraph\NodeGraph.cpp" />
     <ClCompile Include="NodeGraph\NodeTypes.cpp" />
@@ -304,7 +304,8 @@
     <ClInclude Include="Graphics\ShaderParser.h" />
     <ClInclude Include="Graphics\RenderCommandProcessor.h" />
     <ClInclude Include="Graphics\RenderNodeGraph\RenderNodeGraph.h" />
-    <ClInclude Include="RenderSettingsManager.h" />
+    <ClInclude Include="Graphics\RenderSettingsManager.h" />
+    <ClInclude Include="Utilities\Line.h" />
     <ClInclude Include="Utilities\Math.h" />
     <ClInclude Include="NodeGraph\SlotCustomization\SlotInputEdits.h" />
     <ClInclude Include="NodeGraph\NodeGraph.h" />

@@ -41,7 +41,7 @@ public:
 
 
 	[[nodiscard]] static bool IsPointWithinSphere(const Colliders::SSphere& aSphere, const SVector2f aPoint) noexcept;
-	[[nodiscard]] static SVector2f GetClosestPointOnLine(const Colliders::SLine& aLine, const SVector2f aPoint) noexcept;
+	[[nodiscard]] static SVector2f GetClosestPointOnLine(const Colliders::SCollisionLine& aLine, const SVector2f aPoint) noexcept;
 
 private:
 
@@ -49,11 +49,11 @@ private:
 
 	[[nodiscard]] static bool TestCollision(const Colliders::Shape& aColliderA, const Colliders::Shape& aColliderB) noexcept;
 	[[nodiscard]] static bool TestSphereCollision(const Colliders::SSphere& aSphere, const Colliders::Shape& aCollider) noexcept;
-	[[nodiscard]] static bool TestLineCollision(const Colliders::SLine& aLine, const Colliders::Shape& aCollider) noexcept;
+	[[nodiscard]] static bool TestLineCollision(const Colliders::SCollisionLine& aLine, const Colliders::Shape& aCollider) noexcept;
 
 	[[nodiscard]] static bool TestSphereVsSphereCollision(const Colliders::SSphere& aSphereA, const Colliders::SSphere& aSphereB) noexcept;
-	[[nodiscard]] static bool TestSphereVsLineCollision(const Colliders::SSphere& aSphereA, const Colliders::SLine& aLineB) noexcept;
-	[[nodiscard]] static bool TestLineVsLineCollision(const Colliders::SLine& aLineA, const Colliders::SLine& aLineB) noexcept;
+	[[nodiscard]] static bool TestSphereVsLineCollision(const Colliders::SSphere& aSphereA, const Colliders::SCollisionLine& aLineB) noexcept;
+	[[nodiscard]] static bool TestLineVsLineCollision(const Colliders::SCollisionLine& aLineA, const Colliders::SCollisionLine& aLineB) noexcept;
 
 	std::unordered_map<size_t, plf::colony<Colliders::Shape>> myCollidersByType;
 
@@ -99,7 +99,7 @@ void CollisionSystem::OverlapLineAgainstFunctionality(const SVector2f aStart, co
 template<typename TFunctionalityToReactAgainst>
 void CollisionSystem::OverlapLineAgainstFunctionality(const SVector2f aStart, const SVector2f aEnd, const f32 aWidth, std::function<void(TFunctionalityToReactAgainst&, Colliders::SCollisionInfo)> aCallback)
 {
-	Colliders::SLine collider;
+	Colliders::SCollisionLine collider;
 	collider.Position = aStart;
 	collider.EndOffsetFromPosition = aEnd - aStart;
 	collider.Width = aWidth;
@@ -123,7 +123,7 @@ Colliders::Shape& CollisionSystem::CreateSphereCollider(TIdentifyingFunctionalit
 template<typename TIdentifyingFunctionality>
 Colliders::Shape& CollisionSystem::CreateLineCollider(TIdentifyingFunctionality& aFunctionality, const SVector2f aPosition, const SVector2f aSecondPosition)
 {
-	Colliders::SLine collider;
+	Colliders::SCollisionLine collider;
 
 	collider.Functionality = &aFunctionality;
 	collider.Position = aPosition;

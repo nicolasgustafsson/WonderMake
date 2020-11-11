@@ -48,6 +48,9 @@
     <ClCompile Include="Physics\Navmesh\Navmesh.cpp" />
     <ClCompile Include="Physics\Navmesh\NavmeshFunctionality.cpp" />
     <ClCompile Include="Physics\Navmesh\NavmeshRenderObject.cpp" />
+    <ClCompile Include="UtilityFunctionalities\LineOfSightFunctionality.cpp" />
+    <ClCompile Include="Rendering\VisionFunctionality.cpp" />
+    <ClCompile Include="Rendering\VisionRenderObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWorld.h" />
@@ -101,6 +104,9 @@
     <ClInclude Include="Physics\Navmesh\Navmesh.h" />
     <ClInclude Include="Physics\Navmesh\NavmeshRenderObject.h" />
     <ClInclude Include="Utility\Palette.h" />
+    <ClInclude Include="UtilityFunctionalities\LineOfSightFunctionality.h" />
+    <ClInclude Include="Rendering\VisionFunctionality.h" />
+    <ClInclude Include="Rendering\VisionRenderObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Character\Buffs\BuffDesign.md" />

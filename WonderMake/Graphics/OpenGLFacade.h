@@ -13,6 +13,7 @@ public:
 	void SetBlendFunction(const GLenum aSourceFactor, const GLenum aDestinationFactor);
 
 	void SetClearColor(const SColor aColor);
+	void SetClearDepth(const f32 aDepth);
 	void Clear(const GLbitfield aMask);
 	
 	[[nodiscard]] u32 GenerateFramebuffer();

@@ -51,6 +51,18 @@ namespace NodeTypes
 		virtual void ExecuteNode(struct SNode&) override;
 	};
 
+	struct SClearDepth : public SNodeType<SClearDepth>
+	{
+		SClearDepth() : SNodeType("Clear Depth Buffer")
+		{
+			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Input, "In rendertarget");
+			AddSlot<float>(ESlotIo::Input, "In Depth to set", 0.f);
+			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Output, "Out rendertarget");
+		}
+
+		virtual void ExecuteNode(struct SNode&) override;
+	};
+
 	struct SPostProcess : public SNodeType<SPostProcess>
 	{
 		SPostProcess() : SNodeType("Run post process effect")

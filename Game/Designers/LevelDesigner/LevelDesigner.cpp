@@ -21,7 +21,10 @@ void LevelDesigner::DesignLevel(LevelFunctionality& aLevel)
 	myCurrentLevel = &aLevel;
 
 	myGeometry = DesignGeometry();
-	myCurrentLevel->Get<NavmeshFunctionality>().SetNavmesh(myGeometry.MainGeometry.GenerateNavmesh());
+
+	Navmesh navmesh;
+	navmesh.GenerateFromPolygon(myGeometry.MainGeometry);
+	myCurrentLevel->Get<NavmeshFunctionality>().SetNavmesh(std::move(navmesh));
 
 	auto walls = CreateWalls(myGeometry);
 	myCurrentLevel->AddDenizens(std::move(walls));

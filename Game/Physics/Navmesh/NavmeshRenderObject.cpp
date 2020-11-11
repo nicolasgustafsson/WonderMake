@@ -35,7 +35,6 @@ NavmeshRenderObject::NavmeshRenderObject(Navmesh& aNavmesh, u32 aTriangleCount, 
 
 void NavmeshRenderObject::RenderInternal()
 {
-	glDepthFunc(GL_LESS);
 	RenderObject::RenderInternal();
 	glDepthFunc(GL_GEQUAL);
 }

@@ -10,11 +10,11 @@ NavmeshFunctionality::NavmeshFunctionality(Object& aOwner)
 
 void NavmeshFunctionality::SetNavmesh(Navmesh aNavmesh)
 {
-	Get<SNavmeshComponent>().Background.emplace(aNavmesh, aNavmesh.GetTriangles().size(), SVector2f(0.f, 0.f), -1003, Palette::MediumBackground);
-	Get<SNavmeshComponent>().Walls.emplace(aNavmesh, aNavmesh.GetTriangles().size(), SVector2f(-10.f, -10.f), -1001, Palette::DarkBackground, -0.5f);
-	Get<SNavmeshComponent>().Walls2.emplace(aNavmesh, aNavmesh.GetTriangles().size(), SVector2f(10.f, -10.f), -1001, Palette::DarkBackground, -0.5f);
-	Get<SNavmeshComponent>().Walls3.emplace(aNavmesh, aNavmesh.GetTriangles().size(), SVector2f(-10.f, 10.f), -1001, Palette::DarkBackground, -0.5f);
-	Get<SNavmeshComponent>().Walls4.emplace(aNavmesh, aNavmesh.GetTriangles().size(), SVector2f(10.f, 10.f), -1001, Palette::DarkBackground, -0.5f);
+	Get<SNavmeshComponent>().Background.emplace(aNavmesh, aNavmesh.GetTriangles().size(), SVector2f(0.f, 0.f), -1003, Palette::MediumBackground, -0.8f);
+	Get<SNavmeshComponent>().Walls.emplace(aNavmesh, aNavmesh.GetTriangles().size(), SVector2f(-10.f, -10.f), -1001, Palette::DarkBackground, -1.f);
+	Get<SNavmeshComponent>().Walls2.emplace(aNavmesh, aNavmesh.GetTriangles().size(), SVector2f(10.f, -10.f), -1001, Palette::DarkBackground, -1.f);
+	Get<SNavmeshComponent>().Walls3.emplace(aNavmesh, aNavmesh.GetTriangles().size(), SVector2f(-10.f, 10.f), -1001, Palette::DarkBackground, -1.f);
+	Get<SNavmeshComponent>().Walls4.emplace(aNavmesh, aNavmesh.GetTriangles().size(), SVector2f(10.f, 10.f), -1001, Palette::DarkBackground, -1.f);
 	Get<SNavmeshComponent>().Navmesh = std::move(aNavmesh);
 }
 

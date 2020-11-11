@@ -53,7 +53,7 @@ bool CollisionSystem::TestCollision(const Colliders::Shape& aColliderA, const Co
 			{
 				return TestSphereCollision(aCollider, aColliderB);
 			}
-			else if constexpr (std::is_same_v<T, Colliders::SLine>)
+			else if constexpr (std::is_same_v<T, Colliders::SCollisionLine>)
 			{
 				return TestLineCollision(aCollider, aColliderB);
 			}
@@ -74,7 +74,7 @@ bool CollisionSystem::TestSphereCollision(const Colliders::SSphere& aSphere, con
 			{
 				return TestSphereVsSphereCollision(aSphere, aCollider);
 			}
-			else if constexpr (std::is_same_v<T, Colliders::SLine>)
+			else if constexpr (std::is_same_v<T, Colliders::SCollisionLine>)
 			{
 				return TestSphereVsLineCollision(aSphere, aCollider);
 			}
@@ -85,13 +85,13 @@ bool CollisionSystem::TestSphereCollision(const Colliders::SSphere& aSphere, con
 		}, aCollider);
 }
 
-bool CollisionSystem::TestLineCollision(const Colliders::SLine& aLine, const Colliders::Shape& aCollider) noexcept
+bool CollisionSystem::TestLineCollision(const Colliders::SCollisionLine& aLine, const Colliders::Shape& aCollider) noexcept
 {
 	return std::visit([aLine](const auto& aCollider)
 		{
 			using T = std::decay_t<decltype(aCollider)>;
 
-			if constexpr (std::is_same_v<T, Colliders::SLine>)
+			if constexpr (std::is_same_v<T, Colliders::SCollisionLine>)
 			{
 				return TestLineVsLineCollision(aCollider, aLine);
 			}
@@ -135,7 +135,7 @@ void CollisionSystem::OverlapAgainstFunctionalityInternal(const Colliders::Shape
 	}
 }
 
-bool CollisionSystem::TestSphereVsLineCollision(const Colliders::SSphere& aSphereA, const Colliders::SLine& aLineB) noexcept
+bool CollisionSystem::TestSphereVsLineCollision(const Colliders::SSphere& aSphereA, const Colliders::SCollisionLine& aLineB) noexcept
 {
 	SVector2f closestPoint = GetClosestPointOnLine(aLineB, aSphereA.Position);
 
@@ -144,7 +144,7 @@ bool CollisionSystem::TestSphereVsLineCollision(const Colliders::SSphere& aSpher
 	const SVector2f lineNormal = lineDelta.GetNormal().GetNormalized();
 	
 	//[Nicos]: create a newline that is perpendicular to the one line we have to simulate width
-	Colliders::SLine newLine;
+	Colliders::SCollisionLine newLine;
 	newLine.Position = closestPoint - lineNormal * aLineB.Width;
 	newLine.EndOffsetFromPosition = lineNormal * aLineB.Width * 2.f;
 
@@ -156,7 +156,7 @@ bool CollisionSystem::TestSphereVsLineCollision(const Colliders::SSphere& aSpher
 	return false;
 }
 
-bool CollisionSystem::TestLineVsLineCollision(const Colliders::SLine& /*aLineA*/, const Colliders::SLine& /*aLineB*/) noexcept
+bool CollisionSystem::TestLineVsLineCollision(const Colliders::SCollisionLine& /*aLineA*/, const Colliders::SCollisionLine& /*aLineB*/) noexcept
 {
 	WmLog(TagError, "Line-line collision not implemented yet!");
 	return false;
@@ -169,7 +169,7 @@ bool CollisionSystem::IsPointWithinSphere(const Colliders::SSphere& aSphereA, co
 	return (delta.LengthSquared() <= std::powf(aSphereA.Radius, 2));
 }
 
-SVector2f CollisionSystem::GetClosestPointOnLine(const Colliders::SLine& aLine, const SVector2f aPoint) noexcept
+SVector2f CollisionSystem::GetClosestPointOnLine(const Colliders::SCollisionLine& aLine, const SVector2f aPoint) noexcept
 {
 	//alghorithm based on one found here: https://stackoverflow.com/questions/3120357/get-closest-point-to-a-line
 	const SVector2f lineStart = aLine.Position;

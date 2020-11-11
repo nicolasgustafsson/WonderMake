@@ -1,6 +1,6 @@
 #pragma once
 #include "Imgui/FileSelector.h"
-#include "RenderSettingsManager.h"
+#include "Graphics/RenderSettingsManager.h"
 
 namespace SlotInputEdits
 {

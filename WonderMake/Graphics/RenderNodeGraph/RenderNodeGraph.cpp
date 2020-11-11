@@ -27,6 +27,7 @@ void RenderNodeGraph::RegisterNodes()
 	RegisterNode<NodeTypes::SProcessRenderLayer>();
 	RegisterNode<NodeTypes::SRenderDebugLines>();
 	RegisterNode<NodeTypes::SPostProcess>();
+	RegisterNode<NodeTypes::SClearDepth>();
 }
 
 void RenderNodeGraph::PostLoad()

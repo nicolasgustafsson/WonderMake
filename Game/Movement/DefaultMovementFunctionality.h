@@ -36,7 +36,7 @@ public:
 	SystemPtr<TimeKeeper> myTimeKeeper;
 
 private:
-	void HandleCollision(const Colliders::SSphere& aThisSphere, const Colliders::SLine& aOtherLine);
+	void HandleCollision(const Colliders::SSphere& aThisSphere, const Colliders::SCollisionLine& aOtherLine);
 	void TestCollision();
 };
 

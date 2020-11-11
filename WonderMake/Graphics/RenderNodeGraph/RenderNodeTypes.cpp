@@ -5,7 +5,7 @@
 #include "Graphics/RenderCommandProcessor.h"
 #include "Debugging/DebugLineDrawer.h"
 #include "Graphics/ScreenPassRenderObject.h"
-#include "RenderSettingsManager.h"
+#include "Graphics/RenderSettingsManager.h"
 #include "NodeGraph/NodeGraph.h"
 
 namespace NodeTypes
@@ -111,5 +111,23 @@ namespace NodeTypes
 		screenPass->RenderImmediate();
 
 		SystemPtr<RenderSettingsManager>()->PopSettings();
+	}
+
+	void SClearDepth::ExecuteNode(struct SNode& aNode)
+	{
+		auto renderTarget = aNode.GetInput<std::shared_ptr<RenderTarget>>(0);
+
+		if (!renderTarget)
+			return;
+
+		renderTarget->BindAsTarget();
+		float depth = aNode.GetInput<float>(1);
+
+		SystemPtr<OpenGLFacade> openGl;
+		openGl->SetClearDepth(depth);
+		openGl->Clear(GL_DEPTH_BUFFER_BIT);
+		openGl->SetClearDepth(0.f);
+
+		aNode.SetOutput(0, renderTarget);
 	}
 }

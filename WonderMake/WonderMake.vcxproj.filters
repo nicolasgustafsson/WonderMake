@@ -78,8 +78,8 @@
     <ClCompile Include="Graphics\RenderNodeGraph\RenderNodeTypes.cpp" />
     <ClCompile Include="Camera\Display.cpp" />
     <ClCompile Include="Graphics\RenderHandle.cpp" />
-    <ClCompile Include="RenderSettingsManager.cpp" />
     <ClCompile Include="Camera\CameraManager.cpp" />
+    <ClCompile Include="Graphics\RenderSettingsManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -257,8 +257,9 @@
     <ClInclude Include="Graphics\RenderNodeGraph\RenderNodeTypes.h" />
     <ClInclude Include="Camera\Display.h" />
     <ClInclude Include="Graphics\RenderHandle.h" />
-    <ClInclude Include="RenderSettingsManager.h" />
     <ClInclude Include="Camera\CameraManager.h" />
+    <ClInclude Include="Graphics\RenderSettingsManager.h" />
+    <ClInclude Include="Utilities\Line.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

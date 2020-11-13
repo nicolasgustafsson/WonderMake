@@ -425,6 +425,12 @@
     <None Include="Utilities\Rotation.inl" />
     <None Include="Utilities\Vector.inl" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Collision\nicostodo collision.txt" />
+    <Text Include="Debugging\nicostodo debug.txt" />
+    <Text Include="NodeGraph\nicostodo nodegraph.txt" />
+    <Text Include="Utilities\nicostodo utilities.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

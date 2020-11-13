@@ -269,4 +269,10 @@
     <None Include="Utilities\Vector.inl" />
     <None Include="Utilities\Matrix.inl" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Collision\nicostodo collision.txt" />
+    <Text Include="Utilities\nicostodo utilities.txt" />
+    <Text Include="NodeGraph\nicostodo nodegraph.txt" />
+    <Text Include="Debugging\nicostodo debug.txt" />
+  </ItemGroup>
 </Project>

@@ -10,7 +10,7 @@ class DebugLineDrawer
 			PAdd<TimeKeeper, PRead>>>
 {
 public:
-	DebugLineDrawer(Dependencies&& aDependencies) noexcept;
+	DebugLineDrawer() noexcept;
 
 	void Render();
 

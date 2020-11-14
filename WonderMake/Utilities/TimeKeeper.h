@@ -8,9 +8,9 @@ class TimeKeeper
 	, public Debugged
 {
 public:
-	TimeKeeper(Dependencies&& aDependencies)
-		: Super(std::move(aDependencies))
-		, Debugged("Time Keeper") {}
+	TimeKeeper()
+		: Debugged("Time Keeper")
+	{}
 	~TimeKeeper() = default;
 
 	f32 Update() noexcept;

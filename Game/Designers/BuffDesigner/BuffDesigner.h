@@ -42,7 +42,7 @@ class BuffDesigner
 	, public Debugged
 {
 public:
-	BuffDesigner(Dependencies&& aDependencies);
+	BuffDesigner();
 	BuffBlueprint& DesignBuff(SBuffRequirements aBuffRequirements = {});
 
 private:

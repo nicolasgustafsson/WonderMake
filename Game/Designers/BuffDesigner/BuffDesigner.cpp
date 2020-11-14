@@ -9,9 +9,8 @@
 
 REGISTER_SYSTEM(BuffDesigner);
 
-BuffDesigner::BuffDesigner(Dependencies&& aDependencies)
-	: Super(std::move(aDependencies))
-	, Debugged("Buff Designer")
+BuffDesigner::BuffDesigner()
+	: Debugged("Buff Designer")
 {}
 
 BuffBlueprint& BuffDesigner::DesignBuff(SBuffRequirements aBuffRequirements)

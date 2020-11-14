@@ -12,7 +12,7 @@ class CollisionSystem final
 	: public System<>
 {
 public:
-	CollisionSystem(Dependencies&& aDependencies) noexcept;
+	CollisionSystem() noexcept;
 
 	virtual void Tick() noexcept override;
 

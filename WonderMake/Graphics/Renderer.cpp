@@ -26,9 +26,8 @@ MessageCallback([[maybe_unused]] GLenum source,
 	WmLog(severityTag, TagOpenGL, " type = ", type, " severity: ", severity, "\n", message);
 }
 
-Renderer::Renderer(Dependencies&& aDependencies) noexcept
-	: Super(std::move(aDependencies))
-	, Debugged("Renderer")
+Renderer::Renderer() noexcept
+	: Debugged("Renderer")
 	, myRenderTarget(SRenderTargetSettings{ {1600, 900}, false })
 	, myCopyPass(std::filesystem::current_path() / "Shaders/Fragment/Copy.frag")
 {

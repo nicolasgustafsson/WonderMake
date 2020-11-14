@@ -12,7 +12,7 @@ class ObjectImpulseRouter
 	: public System<>
 {
 public:
-	ObjectImpulseRouter(Dependencies&& aDependencies);
+	ObjectImpulseRouter();
 
 	template<typename TMessage, typename TFunction>
 	void Subscribe(Object& aObject, _BaseFunctionality& aFunctionality, TFunction aCallback);

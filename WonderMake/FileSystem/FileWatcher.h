@@ -10,7 +10,7 @@ class FileWatcher
 	: public System<>
 {
 public:
-	FileWatcher(Dependencies&& aDependencies);
+	FileWatcher();
 
 	void UpdateFileChanges();
 

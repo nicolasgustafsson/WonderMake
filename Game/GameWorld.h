@@ -29,7 +29,7 @@ class GameWorld
 			PAdd<FunctionalitySystemDelegate<CameraFunctionality>, PWrite>>>
 {
 public:
-	GameWorld(Dependencies&& aDependencies);
+	GameWorld();
 
 	LevelFunctionality& RestartLevel();
 

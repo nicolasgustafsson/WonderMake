@@ -5,8 +5,7 @@
 
 REGISTER_SYSTEM(GlfwFacade);
 
-GlfwFacade::GlfwFacade(Dependencies&& aDependencies)
-	: Super(std::move(aDependencies))
+GlfwFacade::GlfwFacade()
 {
 	glfwInit();
 }

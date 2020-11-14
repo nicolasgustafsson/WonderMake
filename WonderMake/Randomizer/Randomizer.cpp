@@ -4,9 +4,8 @@
 
 REGISTER_SYSTEM(Randomizer);
 
-Randomizer::Randomizer(Dependencies&& aDependencies)
-	: Super(std::move(aDependencies))
-	, myRandomGenerator(myRandomDevice())
+Randomizer::Randomizer()
+	: myRandomGenerator(myRandomDevice())
 {
 
 }

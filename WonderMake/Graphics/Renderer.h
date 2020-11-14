@@ -25,7 +25,7 @@ class Renderer
 	, public Debugged
 {
 public:
-	Renderer(Dependencies&& aDependencies) noexcept;
+	Renderer() noexcept;
 
 	void SetViewportSize(const SVector2<int> WindowSize);
 

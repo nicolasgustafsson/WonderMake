@@ -7,8 +7,7 @@
 
 REGISTER_SYSTEM(ImguiWrapper);
 
-ImguiWrapper::ImguiWrapper(Dependencies&& aDependencies)
-	: Super(std::move(aDependencies))
+ImguiWrapper::ImguiWrapper()
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();

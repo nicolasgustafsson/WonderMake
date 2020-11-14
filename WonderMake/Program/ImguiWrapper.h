@@ -12,7 +12,7 @@ class ImguiWrapper
 			PAdd<Window, PRead>>>
 {
 public:
-	ImguiWrapper(Dependencies&& aDependencies);
+	ImguiWrapper();
 
 	void StartFrame();
 

@@ -14,9 +14,8 @@
 
 REGISTER_SYSTEM(GameWorld);
 
-GameWorld::GameWorld(Dependencies&& aDependencies)
-	: Super(std::move(aDependencies))
-	, mySubscriber(ERoutineId::Logic, BindHelper(&GameWorld::OnPlayerDeath, this))
+GameWorld::GameWorld()
+	: mySubscriber(ERoutineId::Logic, BindHelper(&GameWorld::OnPlayerDeath, this))
 {
 	Object player = SetupPlayer();
 

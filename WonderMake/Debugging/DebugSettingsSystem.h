@@ -9,7 +9,7 @@ class DebugSettingsSystem
 	, public Debugged
 {
 public:
-	DebugSettingsSystem(Dependencies&& aDependencies);
+	DebugSettingsSystem();
 
 	void SaveSettings();
 

@@ -12,9 +12,8 @@ class Camera final
 	, public Debugged
 {
 public:
-	Camera(Dependencies&& aDependencies)
-		: Super(std::move(aDependencies))
-		, Debugged("Camera Settings")
+	Camera()
+		: Debugged("Camera Settings")
 	{}
 	void Update();
 

@@ -15,9 +15,8 @@
 
 REGISTER_SYSTEM(AudioManager);
 
-AudioManager::AudioManager(Dependencies&& aDependencies)
-	: Super(std::move(aDependencies))
-	, Debugged("Audio Manager")
+AudioManager::AudioManager()
+	: Debugged("Audio Manager")
 	, myAudioMixingNodeGraph(std::filesystem::path("NodeGraphs") / "Audio" / "AudioNodeGraph.json")
 {
 	mySoloudEngine.init(mySoloudEngine.FLAGS::CLIP_ROUNDOFF, mySoloudEngine.BACKENDS::WASAPI, SoLoud::Soloud::AUTO, 2048, 2);

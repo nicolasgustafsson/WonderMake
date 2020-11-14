@@ -7,7 +7,7 @@ typedef void (*GLFWframebuffersizefun)(GLFWwindow*, int, int);
 class GlfwFacade : public System<>
 {
 public:
-	GlfwFacade(Dependencies&& aDependencies);
+	GlfwFacade();
 
 	void Terminate();
 	void SetWindowShouldClose(GLFWwindow* aWindow, const bool aShouldClose);

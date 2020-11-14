@@ -70,7 +70,7 @@ class EngineUniformBuffer
 	
 {
 public:
-	EngineUniformBuffer(Dependencies&& aDependencies);
+	EngineUniformBuffer();
 
 private:
 	virtual void Debug() override;

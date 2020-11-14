@@ -4,9 +4,8 @@
 
 REGISTER_SYSTEM(ObjectImpulseRouter);
 
-ObjectImpulseRouter::ObjectImpulseRouter(Dependencies&& aDependencies)
-	: Super(std::move(aDependencies))
-	, mySubscriber(ERoutineId::Logic)
+ObjectImpulseRouter::ObjectImpulseRouter()
+	: mySubscriber(ERoutineId::Logic)
 {
 
 }

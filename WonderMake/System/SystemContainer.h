@@ -91,7 +91,9 @@ void SystemContainer::AddSystemHelper(TupleWrapper<std::tuple<TDependencies...>>
 {
 	auto construct = [](std::decay_t<TDependencies>&... aDependencies) -> TSystem&
 	{
-		static TSystem sys(std::tie(aDependencies...));
+		TSystem::InjectDependencies(std::tie(aDependencies...));
+
+		static TSystem sys;
 
 		return sys;
 	};

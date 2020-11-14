@@ -4,6 +4,8 @@
 
 #include "Utilities/RestrictTypes.h"
 
+#include <optional>
+
 class SystemBase
 	: public NonCopyable
 {
@@ -26,13 +28,18 @@ public:
 	using Super = System<TPolicySet>;
 	using Dependencies = typename TPolicySet::template DependenciesRef;
 
-	inline constexpr System(Dependencies&& aDependencies) noexcept
-		: myDependencies(std::move(aDependencies))
-	{}
+	inline static void InjectDependencies(Dependencies&& aDependencies)
+	{
+		myInjectedDependencies.emplace(std::move(aDependencies));
+	}
 
 protected:
-	constexpr System() noexcept = default;
-	
+	inline System() noexcept
+		: myDependencies(std::move(*myInjectedDependencies))
+	{
+		myInjectedDependencies.reset();
+	}
+
 	template<typename TDependency> requires
 		TPolicySet::template HasPolicy_v<TDependency, PWrite>
 	constexpr __forceinline TDependency& Get()
@@ -48,8 +55,13 @@ protected:
 	}
 
 private:
+	static thread_local std::optional<Dependencies> myInjectedDependencies;
+
 	Dependencies myDependencies;
 
 	template<typename>
 	friend class FunctionalitySystem;
 };
+
+template<typename TPolicySet>
+thread_local std::optional<typename System<TPolicySet>::Dependencies> System<TPolicySet>::myInjectedDependencies;

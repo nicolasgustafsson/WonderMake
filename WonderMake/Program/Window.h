@@ -10,7 +10,7 @@ class Window
 			PAdd<GlfwFacade, PWrite>>>
 {
 public:
-	Window(Dependencies&& aDependencies);
+	Window();
 
 	void Update();
 

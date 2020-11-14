@@ -18,7 +18,7 @@ class ResourceSystem
 	: public System<>
 {
 public:
-	ResourceSystem(Dependencies&& aDependencies);
+	ResourceSystem();
 	ResourceProxy<TResource> GetResource(const std::filesystem::path& aPath);
 
 	template<typename TJob>
@@ -78,9 +78,8 @@ void ResourceSystem<TResource>::OnFileChange(const SFileChangedMessage& aFileCha
 }
 
 template<typename TResource>
-ResourceSystem<TResource>::ResourceSystem(Dependencies&& aDependencies)
-	: Super(std::move(aDependencies))
-	, mySubscriber(ERoutineId::Logic, BindHelper(&ResourceSystem<TResource>::OnFileChange, this))
+ResourceSystem<TResource>::ResourceSystem()
+	: mySubscriber(ERoutineId::Logic, BindHelper(&ResourceSystem<TResource>::OnFileChange, this))
 {}
 
 template<typename TResource>

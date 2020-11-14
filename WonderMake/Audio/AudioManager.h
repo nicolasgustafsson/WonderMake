@@ -14,7 +14,7 @@ class AudioManager
 	>, Debugged
 {
 public:
-	AudioManager(Dependencies&& aDependencies);
+	AudioManager();
 	~AudioManager();
 
 	void Update() noexcept;

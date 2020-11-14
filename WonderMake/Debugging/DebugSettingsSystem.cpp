@@ -4,9 +4,8 @@
 
 REGISTER_SYSTEM(DebugSettingsSystem);
 
-DebugSettingsSystem::DebugSettingsSystem(Dependencies&& aDependencies)
-	: Super(std::move(aDependencies))
-	, Debugged("Debug Settings")
+DebugSettingsSystem::DebugSettingsSystem()
+	: Debugged("Debug Settings")
 {
 	std::ifstream debugSettingsFile("debugSettings.json", std::fstream::app);
 

@@ -61,11 +61,17 @@ public:
 
 TEST_CASE("Objects can be created and have dependencies added and removed", "[Object]")
 {
-	ComponentSystem<SCatComponent> sysCompCat(std::tie());
-	ComponentSystem<SBagComponent> sysCompBag(std::tie());
+	ComponentSystem<SCatComponent>::InjectDependencies(std::tie());
+	ComponentSystem<SBagComponent>::InjectDependencies(std::tie());
 
-	FunctionalitySystem<CatFunctionality> sysFuncCat(std::tie(sysCompCat));
-	FunctionalitySystem<BagFunctionality> sysFuncBag(std::tie(sysCompBag));
+	ComponentSystem<SCatComponent> sysCompCat;
+	ComponentSystem<SBagComponent> sysCompBag;
+
+	FunctionalitySystem<CatFunctionality>::InjectDependencies(std::tie(sysCompCat));
+	FunctionalitySystem<BagFunctionality>::InjectDependencies(std::tie(sysCompBag));
+
+	FunctionalitySystem<CatFunctionality> sysFuncCat;
+	FunctionalitySystem<BagFunctionality> sysFuncBag;
 
 	Object object;
 
@@ -102,11 +108,17 @@ TEST_CASE("Objects can be created and have dependencies added and removed", "[Ob
 
 TEST_CASE("Objects keep track of when a dependency no longer have any references", "[Object]")
 {
-	ComponentSystem<SCatComponent> sysCompCat(std::tie());
-	ComponentSystem<SBagComponent> sysCompBag(std::tie());
+	ComponentSystem<SCatComponent>::InjectDependencies(std::tie());
+	ComponentSystem<SBagComponent>::InjectDependencies(std::tie());
 
-	FunctionalitySystem<CatFunctionality> sysFuncCat(std::tie(sysCompCat));
-	FunctionalitySystem<BagFunctionality> sysFuncBag(std::tie(sysCompBag));
+	ComponentSystem<SCatComponent> sysCompCat;
+	ComponentSystem<SBagComponent> sysCompBag;
+
+	FunctionalitySystem<CatFunctionality>::InjectDependencies(std::tie(sysCompCat));
+	FunctionalitySystem<BagFunctionality>::InjectDependencies(std::tie(sysCompBag));
+
+	FunctionalitySystem<CatFunctionality> sysFuncCat;
+	FunctionalitySystem<BagFunctionality> sysFuncBag;
 
 	Object object;
 
@@ -156,11 +168,17 @@ TEST_CASE("Objects keep track of when a dependency no longer have any references
 
 TEST_CASE("Objects can be visited", "[Object]")
 {
-	ComponentSystem<SCatComponent> sysCompCat(std::tie());
-	ComponentSystem<SBagComponent> sysCompBag(std::tie());
+	ComponentSystem<SCatComponent>::InjectDependencies(std::tie());
+	ComponentSystem<SBagComponent>::InjectDependencies(std::tie());
 
-	FunctionalitySystem<CatFunctionality> sysFuncCat(std::tie(sysCompCat));
-	FunctionalitySystem<BagFunctionality> sysFuncBag(std::tie(sysCompBag));
+	ComponentSystem<SCatComponent> sysCompCat;
+	ComponentSystem<SBagComponent> sysCompBag;
+
+	FunctionalitySystem<CatFunctionality>::InjectDependencies(std::tie(sysCompCat));
+	FunctionalitySystem<BagFunctionality>::InjectDependencies(std::tie(sysCompBag));
+
+	FunctionalitySystem<CatFunctionality> sysFuncCat;
+	FunctionalitySystem<BagFunctionality> sysFuncBag;
 
 	Object object;
 	u32 callCount = 0;

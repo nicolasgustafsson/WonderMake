@@ -7,8 +7,7 @@
 
 REGISTER_SYSTEM(Window);
 
-Window::Window(Dependencies&& aDependencies)
-	: Super(std::move(aDependencies))
+Window::Window()
 {
 	std::ifstream windowSettingsFile("windowSettings.json");
 	json windowSettings;

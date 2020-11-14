@@ -8,7 +8,7 @@ class Randomizer
 	: public System<>
 {
 public:
-	Randomizer(Dependencies&& aDependencies);
+	Randomizer();
 
 	template <typename T = f32>
 	T GetRandomNumber(T aMin = 0, T aMax = 1);

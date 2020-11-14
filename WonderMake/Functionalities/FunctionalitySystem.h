@@ -54,7 +54,7 @@ class FunctionalitySystem final
 	: public CreateSystem<TFunctionality>
 {
 public:
-	FunctionalitySystem(typename CreateSystem<TFunctionality>::Dependencies&& aDependencies);
+	FunctionalitySystem();
 
 	TFunctionality& AddFunctionality(Object& aObject, const bool aExplicitlyAdded = true);
 	void RemoveFunctionality(TFunctionality& aFunctionality);
@@ -89,9 +89,8 @@ class FunctionalitySystemDelegate final
 	: public FunctionalitySystemDelegateSystem<TFunctionality>
 {
 public:
-	FunctionalitySystemDelegate(typename FunctionalitySystemDelegateSystem<TFunctionality>::Dependencies&& aDependencies) noexcept
-		: FunctionalitySystemDelegateSystem<TFunctionality>(std::move(aDependencies))
-		, myFunctionalityConstructor([this](auto& aObject, const bool aExplicitlyAdded) -> auto&
+	FunctionalitySystemDelegate() noexcept
+		: myFunctionalityConstructor([this](auto& aObject, const bool aExplicitlyAdded) -> auto&
 			{
 				return this->Get<FunctionalitySystem<TFunctionality>>().AddFunctionality(aObject, aExplicitlyAdded);
 			})
@@ -109,9 +108,8 @@ private:
 #define REGISTER_FUNCTIONALITY_SYSTEM(aFunctionality) _REGISTER_SYSTEM_IMPL(FunctionalitySystem<aFunctionality>, aFunctionality) _REGISTER_SYSTEM_IMPL(FunctionalitySystemDelegate<aFunctionality>, aFunctionality##_Delegate) 
 
 template<typename TFunctionality>
-FunctionalitySystem<TFunctionality>::FunctionalitySystem(typename CreateSystem<TFunctionality>::Dependencies&& aDependencies)
-	: CreateSystem<TFunctionality>(std::move(aDependencies))
-	, myDependencyDestructor([this](Object& aObject, auto* aFunctionality)
+FunctionalitySystem<TFunctionality>::FunctionalitySystem()
+	: myDependencyDestructor([this](Object& aObject, auto* aFunctionality)
 		{
 			auto& functionality = *static_cast<TFunctionality*>(static_cast<_BaseFunctionality*>(aFunctionality));
 

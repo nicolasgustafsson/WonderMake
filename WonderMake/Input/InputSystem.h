@@ -19,9 +19,8 @@ class InputSystem
 	, public Debugged
 {
 public:
-	InputSystem(Dependencies&& aDependencies)
-		: Super(std::move(aDependencies))
-		, Debugged("Input") {}
+	InputSystem()
+		: Debugged("Input") {}
 	void Update() noexcept;
 
 	void UpdateKeyboard() noexcept;

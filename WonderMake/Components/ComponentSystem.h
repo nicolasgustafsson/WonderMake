@@ -14,7 +14,7 @@ class ComponentSystem
 	: public System<>
 {
 public:
-	ComponentSystem(Dependencies&& aDependencies);
+	ComponentSystem();
 
 	TData& AddComponent(Object& aObject, const bool aExplicitlyAdded = true);
 	void RemoveComponent(TData& aComponent);
@@ -29,9 +29,8 @@ private:
 #define REGISTER_COMPONENT_SYSTEM(aComponent) _REGISTER_SYSTEM_IMPL(ComponentSystem<aComponent>, aComponent)
 
 template<typename TData>
-ComponentSystem<TData>::ComponentSystem(Dependencies&& aDependencies)
-	: Super(std::move(aDependencies))
-	, myDependencyDestructor([this](Object& /*aObject*/, auto* aComponent)
+ComponentSystem<TData>::ComponentSystem()
+	: myDependencyDestructor([this](Object& /*aObject*/, auto* aComponent)
 		{
 			RemoveComponent(*static_cast<TData*>(aComponent));
 		})

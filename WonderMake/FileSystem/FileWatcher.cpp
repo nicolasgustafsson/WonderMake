@@ -5,8 +5,7 @@
 
 REGISTER_SYSTEM(FileWatcher);
 
-FileWatcher::FileWatcher(Dependencies&& aDependencies)
-	: Super(std::move(aDependencies))
+FileWatcher::FileWatcher()
 {
 	myShouldStop.store(false);
 

@@ -6,16 +6,13 @@
 
 class LevelPortalFunctionality
 	: public Functionality<
-		LevelPortalFunctionality,
 		Policy::Set<
-			Policy::Add<CollisionFunctionality, Policy::EPermission::Write>>>
+			PAdd<CollisionFunctionality, PWrite>>>
 {
 public:
-	LevelPortalFunctionality(Object& aOwner);
+	LevelPortalFunctionality();
 	~LevelPortalFunctionality();
 
 private:
 	bool myDoOnce = false;
 };
-
-REGISTER_FUNCTIONALITY(LevelPortalFunctionality);

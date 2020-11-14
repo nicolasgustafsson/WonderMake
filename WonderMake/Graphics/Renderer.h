@@ -5,16 +5,24 @@
 #include "ScreenPassRenderObject.h"
 #include "System/System.h"
 #include "Camera/CameraManager.h"
-#include "System/SystemPtr.h"
 #include "Program/Window.h"
 #include "Message/MessageSubscriber.h"
 #include "Utilities/Debugging/Debugged.h"
 #include "Debugging/DebugLineDrawer.h"
 #include "OpenGLFacade.h"
 
+class GlfwFacade;
 
-class Renderer 
-	: public System
+class Renderer
+	: public System<
+		Policy::Set<
+			PAdd<Camera, PWrite>,
+			PAdd<EngineUniformBuffer, PWrite>,
+			PAdd<Window, PWrite>,
+			PAdd<DebugLineDrawer, PWrite>,
+			PAdd<GlfwFacade, PWrite>,
+			PAdd<RenderCommandProcessor, PWrite>,
+			PAdd<OpenGLFacade, PWrite>>>
 	, public Debugged
 {
 public:
@@ -32,12 +40,6 @@ private:
 	virtual void Debug() override;
 
 	ScreenPassRenderObject myCopyPass;
-	SystemPtr<CameraManager> myCameraManagerPtr;
-	SystemPtr<EngineUniformBuffer> myEngineUniformBufferPtr;
-	SystemPtr<Window> myWindowPtr;
-	SystemPtr<DebugLineDrawer> myLineDrawer;
-	SystemPtr<OpenGLFacade> myOpenGLInterface;
 
 	bool myDebugWindowHasFocus = true;
 };
-

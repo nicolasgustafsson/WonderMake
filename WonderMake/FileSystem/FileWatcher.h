@@ -7,7 +7,7 @@
 //[Nicos]: Also it's windows specific, so we will have to turn it off on linux :(
 
 class FileWatcher 
-	: public System
+	: public System<>
 {
 public:
 	FileWatcher();
@@ -19,11 +19,10 @@ private:
 	std::thread myThread;
 
 	std::atomic<bool> myShouldStop;
-	std::unordered_map<std::string, float> lastTime;
+	std::unordered_map<std::wstring, f64> lastTime;
 
 	std::mutex myMutex;
-	std::queue<std::string> myQueuedChanges;
+	std::queue<std::wstring> myQueuedChanges;
 
 	f32 myThresholdForUpdate = 0.5f;
 };
-

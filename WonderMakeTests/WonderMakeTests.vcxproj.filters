@@ -2,11 +2,12 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="PolicyTests.cpp" />
-    <ClCompile Include="ObjectTests.cpp" />
-    <ClCompile Include="DependencyTests.cpp" />
-    <ClCompile Include="RotationTests.cpp" />
-    <ClCompile Include="VectorTests.cpp" />
-    <ClCompile Include="MatrixTests.cpp" />
+    <ClCompile Include="Utilities\VectorTests.cpp" />
+    <ClCompile Include="Utilities\RotationTests.cpp" />
+    <ClCompile Include="Utilities\MatrixTests.cpp" />
+    <ClCompile Include="Utilities\DependencyInjectionTests.cpp" />
+    <ClCompile Include="ObjectsAndPolicies\PolicyTests.cpp" />
+    <ClCompile Include="ObjectsAndPolicies\ObjectTests.cpp" />
+    <ClCompile Include="Functionalities\TransformFunctionalityTests.cpp" />
   </ItemGroup>
 </Project>

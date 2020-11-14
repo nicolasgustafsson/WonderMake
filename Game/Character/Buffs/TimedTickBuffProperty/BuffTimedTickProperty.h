@@ -9,7 +9,7 @@ public:
 	BuffTimedTickProperty(const f32 aTimeBetweenTicks);
 	virtual void ApplyOnBuff(BuffInstance& aBuff) override;
 
-	virtual void Tick(BuffBlueprintPropertyInstance& aBuffPropertyInstance) override final;
+	virtual void Tick(BuffBlueprintPropertyInstance& aBuffPropertyInstance, const f32 aDeltaTime) override final;
 
 	virtual void TimedTick(BuffBlueprintPropertyInstance& aBuffPropertyInstance) = 0;
 

@@ -1,4 +1,7 @@
 #pragma once
+
+#include "Typedefs.h"
+
 class Action
 {
 public:
@@ -6,7 +9,7 @@ public:
 
 	virtual void BeginAction() {}
 
-	virtual void Tick() {};
+	virtual void Tick(const f32 aDeltaTime) { aDeltaTime; };
 
 	virtual bool IsCompleted() const = 0;
 

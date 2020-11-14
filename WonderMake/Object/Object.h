@@ -1,18 +1,16 @@
 #pragma once
 #include "Typedefs.h"
 
-#include "Components/ComponentSystem.h"
-
-#include "Functionalities/FunctionalitySystem.h"
-
-#include "System/SystemPtr.h"
+#include "Object/DependencyDestructor.h"
 
 #include <typeindex>
 
 struct SComponent;
 class _BaseFunctionality;
 
-class Object final : public NonMovable, public NonCopyable
+class Object final
+	: public NonMovable
+	, public NonCopyable
 {
 public:
 	Object(Object&& aOther);
@@ -21,12 +19,12 @@ public:
 	~Object() noexcept;
 
 	// Will not add the type if it already exists.
-	template<typename TType>
-	inline TType& Add();
+	template<typename TType, typename TCreateFunc>
+	inline TType& Add(TCreateFunc aCreateFunc, DependencyDestructor& aDestructor, const bool aExplicitlyAdded = true);
 
 	// Will not remove the type if existing functionalities depend on it.
 	template<typename TType>
-	inline void Remove();
+	inline void Remove(const bool aExplicitlyRemoved = true);
 
 	template<typename TVisitFunc>
 	inline void Visit(TVisitFunc aVisitFunc);
@@ -35,13 +33,17 @@ private:
 	template<typename TType>
 	struct SRefCounter
 	{
-		constexpr SRefCounter(TType* aReference) noexcept
+		constexpr SRefCounter(TType* const aReference, DependencyDestructor* const aDestructor, const bool aExplicitlyAdded) noexcept
 			: Reference(aReference)
-			, RefCount(1)
+			, Destructor(aDestructor)
+			, RefCount(aExplicitlyAdded ? 0 : 1)
+			, ExplicitlyAdded(aExplicitlyAdded)
 		{}
 
-		TType* Reference = nullptr;
-		i32 RefCount = 0;
+		TType*					Reference = nullptr;
+		DependencyDestructor*	Destructor = nullptr;
+		i32						RefCount = 0;
+		bool					ExplicitlyAdded = false;
 	};
 
 	template<typename TType>
@@ -53,33 +55,27 @@ private:
 	using ComponentList = PairList<SComponent>;
 
 	template<typename TType, typename TBaseType, typename TCreateFunc>
-	inline TType& Add(PairList<TBaseType>& aList, TCreateFunc aCreateFunc);
+	inline TType& Add(PairList<TBaseType>& aList, TCreateFunc aCreateFunc, DependencyDestructor& aDestructor, const bool aExplicitlyAdded);
 
 	template<typename TType, typename TBaseType>
-	inline TType* Remove(PairList<TBaseType>& aList);
+	inline void Remove(PairList<TBaseType>& aList, const bool aExplicitlyRemoved);
 
-	void Destroy() noexcept;
+	void Destroy();
 
 	FunctionalityList myFunctionalities;
 	ComponentList myComponents;
 };
 
-template<typename TType>
-inline TType& Object::Add()
+template<typename TType, typename TCreateFunc>
+inline TType& Object::Add(TCreateFunc aCreateFunc, DependencyDestructor& aDestructor, const bool aExplicitlyAdded)
 {
 	if constexpr (std::is_base_of<SComponent, TType>::value)
 	{
-		return Add<TType>(myComponents, []() -> TType &
-			{
-				return SystemPtr<ComponentSystem<TType>>()->AddComponent();
-			});
+		return Add<TType>(myComponents, aCreateFunc, aDestructor, aExplicitlyAdded);
 	}
 	else if constexpr (std::is_base_of<_BaseFunctionality, TType>::value)
 	{
-		return Add<TType>(myFunctionalities, [&]() -> TType &
-			{
-				return SystemPtr<FunctionalitySystem<TType>>()->AddFunctionality(*this);
-			});
+		return Add<TType>(myFunctionalities, aCreateFunc, aDestructor, aExplicitlyAdded);
 	}
 	else
 	{
@@ -88,25 +84,15 @@ inline TType& Object::Add()
 }
 
 template<typename TType>
-inline void Object::Remove()
+inline void Object::Remove(const bool aExplicitlyRemoved)
 {
 	if constexpr (std::is_base_of<SComponent, TType>::value)
 	{
-		auto component = Remove<TType>(myComponents);
-
-		if (!component)
-			return;
-
-		return SystemPtr<ComponentSystem<TType>>()->RemoveComponent(*component);
+		Remove<TType>(myComponents, aExplicitlyRemoved);
 	}
 	else if constexpr (std::is_base_of<_BaseFunctionality, TType>::value)
 	{
-		auto functionality = Remove<TType>(myFunctionalities);
-
-		if (!functionality)
-			return;
-
-		functionality->Destroy(*this);
+		Remove<TType>(myFunctionalities, aExplicitlyRemoved);
 	}
 	else
 	{
@@ -128,7 +114,7 @@ inline void Object::Visit(TVisitFunc aVisitFunc)
 }
 
 template<typename TType, typename TBaseType, typename TCreateFunc>
-inline TType& Object::Add(PairList<TBaseType>& aList, TCreateFunc aCreateFunc)
+inline TType& Object::Add(PairList<TBaseType>& aList, TCreateFunc aCreateFunc, DependencyDestructor& aDestructor, const bool aExplicitlyAdded)
 {
 	const auto it = std::find_if(aList.begin(), aList.end(), [](const auto& aPair)
 		{
@@ -139,20 +125,23 @@ inline TType& Object::Add(PairList<TBaseType>& aList, TCreateFunc aCreateFunc)
 	{
 		auto& counter = it->second;
 
-		counter.RefCount++;
+		if (aExplicitlyAdded)
+			counter.ExplicitlyAdded = true;
+		else
+			counter.RefCount++;
 
 		return static_cast<TType&>(*counter.Reference);
 	}
 
-	auto& added = aCreateFunc();
+	auto& added = aCreateFunc(*this);
 
-	aList.emplace_back(Pair<TBaseType>(typeid(TType), &added));
+	aList.emplace_back(Pair<TBaseType>(typeid(TType), SRefCounter<TBaseType>(&added, &aDestructor, aExplicitlyAdded)));
 
 	return added;
 }
 
 template<typename TType, typename TBaseType>
-inline TType* Object::Remove(PairList<TBaseType>& aList)
+inline void Object::Remove(PairList<TBaseType>& aList, const bool aExplicitlyRemoved)
 {
 	const auto it = std::find_if(aList.begin(), aList.end(), [](const auto& aPair)
 		{
@@ -160,23 +149,25 @@ inline TType* Object::Remove(PairList<TBaseType>& aList)
 		});
 
 	if (it == aList.cend())
-	{
-		return nullptr;
-	}
+		return;
 
 	auto& counter = it->second;
-	auto reference = static_cast<TType*>(counter.Reference);
 
-	assert(counter.RefCount != 0);
+	assert(counter.RefCount != 0 || counter.ExplicitlyAdded);
 
-	counter.RefCount--;
+	if (counter.RefCount > 0)
+		counter.RefCount--;
 
-	if (counter.RefCount == 0)
-	{
-		aList.erase(it);
+	if (aExplicitlyRemoved)
+		counter.ExplicitlyAdded = false;
 
-		return reference;
-	}
+	if (counter.RefCount > 0 || counter.ExplicitlyAdded)
+		return;
 
-	return nullptr;
+	auto& ref = *counter.Reference;
+	auto& destructor = *counter.Destructor;
+
+	aList.erase(it);
+
+	destructor.Destroy(*this, ref);
 }

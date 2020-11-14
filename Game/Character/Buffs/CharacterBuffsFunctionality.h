@@ -1,8 +1,8 @@
 #pragma once
 #include "Buff.h"
-#include "Functionalities/ImpulseFunctionality.h"
 
 class BuffBlueprint;
+class TimeKeeper;
 
 struct SCharacterBuffComponent : public SComponent
 {
@@ -11,14 +11,11 @@ struct SCharacterBuffComponent : public SComponent
 
 class CharacterBuffsFunctionality
 	: public Functionality<
-		CharacterBuffsFunctionality,
 		Policy::Set<
-			Policy::Add<SCharacterBuffComponent, Policy::EPermission::Write>,
-			Policy::Add<ImpulseFunctionality, Policy::EPermission::Write>>>
+			PAdd<TimeKeeper, PRead>,
+			PAdd<SCharacterBuffComponent, PWrite>>>
 {
 public:
-	CharacterBuffsFunctionality(Object& aOwner);
-
 	void ApplyBuff(class CharacterFunctionality& aCharacter, BuffBlueprint& aBlueprint);
 	void ClearBuffs();
 
@@ -27,5 +24,3 @@ public:
 
 	void Inspect();
 };
-
-REGISTER_COMPONENT(SCharacterBuffComponent);

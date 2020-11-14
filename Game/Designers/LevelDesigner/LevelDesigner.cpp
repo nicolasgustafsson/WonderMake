@@ -16,6 +16,8 @@
 #include "Levels/LevelFunctionality.h"
 #include "Debugging/DebugSettingsSystem.h"
 
+REGISTER_SYSTEM(LevelDesigner);
+
 void LevelDesigner::DesignLevel(LevelFunctionality& aLevel)
 {
 	myCurrentLevel = &aLevel;
@@ -39,16 +41,15 @@ plf::colony<Object> LevelDesigner::DesignEnemies(const SSpace& aSpace)
 {
 	plf::colony<Object> enemies;
 
-	if (!SystemPtr<DebugSettingsSystem>()->GetOrCreateDebugValue("Enable Enemies", true))
+	if (!Get<DebugSettingsSystem>()->GetOrCreateDebugValue("Enable Enemies", true))
 		return enemies;
 
-	SystemPtr<Randomizer> randomizer;
 
-	const auto enemyCount = randomizer->GetRandomNumber<size_t>(1, 1);
+	const auto enemyCount = Get<Randomizer>().GetRandomNumber<size_t>(1, 3);
 
 	for (size_t i = 0; i < enemyCount; ++i)
 	{
-		const SVector2f position{ randomizer->GetRandomNumber<f32>(aSpace.TopLeft.X, aSpace.BottomRight.X), randomizer->GetRandomNumber<f32>(aSpace.BottomRight.Y, aSpace.TopLeft.Y) };
+		const SVector2f position{ Get<Randomizer>().GetRandomNumber<f32>(aSpace.TopLeft.X, aSpace.BottomRight.X), Get<Randomizer>().GetRandomNumber<f32>(aSpace.BottomRight.Y, aSpace.TopLeft.Y) };
 
 		CreateEnemy(position);
 	}
@@ -58,13 +59,12 @@ plf::colony<Object> LevelDesigner::DesignEnemies(const SSpace& aSpace)
 
 void LevelDesigner::DesignPortal(const SSpace& aSpace)
 {
-	SystemPtr<Randomizer> randomizer;
 	Object& portal = myCurrentLevel->AddDenizen();
 
-	portal.Add<LevelPortalFunctionality>();
-	portal.Add<SpinnerFunctionality>();
-	auto& transform = portal.Add<TransformFunctionality>();
-	auto& sprite = portal.Add<SpriteRenderingFunctionality>();
+	Get<FunctionalitySystemDelegate<LevelPortalFunctionality>>().AddFunctionality(portal);
+	Get<FunctionalitySystemDelegate<SpinnerFunctionality>>().AddFunctionality(portal);
+	auto& transform = Get<FunctionalitySystemDelegate<TransformFunctionality>>().AddFunctionality(portal);
+	auto& sprite = Get<FunctionalitySystemDelegate<SpriteRenderingFunctionality>>().AddFunctionality(portal);
 
 	const SVector2f position = ((aSpace.BottomRight - aSpace.TopLeft) / 2.f) + aSpace.TopLeft;
 
@@ -74,8 +74,7 @@ void LevelDesigner::DesignPortal(const SSpace& aSpace)
 
 void LevelDesigner::DesignBuffTotems(const SSpace& aSpace)
 {
-	SystemPtr<Randomizer> randomizer;
-	const auto totemCount = randomizer->GetRandomNumber<size_t>(1, 1);
+	const auto totemCount = Get<Randomizer>().GetRandomNumber<size_t>(1, 1);
 
 	for (size_t i = 0; i < totemCount; ++i)
 		DesignBuffTotem(aSpace);
@@ -83,25 +82,23 @@ void LevelDesigner::DesignBuffTotems(const SSpace& aSpace)
 
 void LevelDesigner::DesignBuffTotem(const SSpace& aSpace)
 {
-	SystemPtr<Randomizer> randomizer;
 	Object& totem = myCurrentLevel->AddDenizen();
 
-	auto& buffGiver = totem.Add<BuffGiverFunctionality>();
+	auto& buffGiver = Get<FunctionalitySystemDelegate<BuffGiverFunctionality>>().AddFunctionality(totem);
+	auto& transform = Get<FunctionalitySystemDelegate<TransformFunctionality>>().AddFunctionality(totem);
+	auto& sprite = Get<FunctionalitySystemDelegate<SpriteRenderingFunctionality>>().AddFunctionality(totem);
 
-	auto& transform = totem.Add<TransformFunctionality>();
-	auto& sprite = totem.Add<SpriteRenderingFunctionality>();
-
-	const f32 scale = randomizer->GetRandomNumber(25.f, 150.f) / 100.f;
+	const f32 scale = Get<Randomizer>().GetRandomNumber(25.f, 150.f) / 100.f;
 
 	//[Nicos]: Should be able to let buff designer handle this and inspect buff afterwards to see if it is a buff or debuff
-	const EBuffType buffType = randomizer->GetRandomBool() ? EBuffType::Debuff : EBuffType::Buff;
+	const EBuffType buffType = Get<Randomizer>().GetRandomBool() ? EBuffType::Debuff : EBuffType::Buff;
 
 	SBuffRequirements requirements;
 	requirements.Type = buffType;
 	requirements.Intensity = 1.f;
-	buffGiver.Initialize(SystemPtr<BuffDesigner>()->DesignBuff(requirements), scale * 100.f);
+	buffGiver.Initialize(Get<BuffDesigner>().DesignBuff(requirements), scale * 100.f);
 
-	const SVector2f position{ randomizer->GetRandomNumber<f32>(aSpace.TopLeft.X, aSpace.BottomRight.X), randomizer->GetRandomNumber<f32>(aSpace.BottomRight.Y, aSpace.TopLeft.Y) };
+	const SVector2f position{ Get<Randomizer>().GetRandomNumber<f32>(aSpace.TopLeft.X, aSpace.BottomRight.X), Get<Randomizer>().GetRandomNumber<f32>(aSpace.BottomRight.Y, aSpace.TopLeft.Y) };
 
 	transform.SetPosition(position);
 	sprite.SetTexture(std::filesystem::current_path() / (buffType == EBuffType::Buff ? "Textures/totemGreen.png" : "Textures/totemRed.png"));
@@ -119,12 +116,12 @@ void LevelDesigner::CreateEnemy(const SVector2f aPosition)
 {
 	Object& enemy = myCurrentLevel->AddDenizen();
 
-	enemy.Add<EnemyControllerFunctionality>();
-	auto& transform = enemy.Add<TransformFunctionality>();
+	Get<FunctionalitySystemDelegate<EnemyControllerFunctionality>>().AddFunctionality(enemy);
+	auto& transform = Get<FunctionalitySystemDelegate<TransformFunctionality>>().AddFunctionality(enemy);
     transform.SetPosition(aPosition);
 }
 
-plf::colony<Object> LevelDesigner::CreateWalls(SLevelGeometry& aGeometry) const
+plf::colony<Object> LevelDesigner::CreateWalls(SLevelGeometry& aGeometry)
 {
 	plf::colony<Object> walls;
 
@@ -136,7 +133,7 @@ plf::colony<Object> LevelDesigner::CreateWalls(SLevelGeometry& aGeometry) const
 	{
 		Object& object = *walls.emplace();
 
-		auto& geometryFunctionality = object.Add<StaticGeometryFunctionality>();
+		auto& geometryFunctionality = Get<FunctionalitySystemDelegate<StaticGeometryFunctionality>>().AddFunctionality(object);
 
 		geometryFunctionality.SetLine(*side.GetStart(), *side.GetEnd());
 		geometryFunctionality.SetLine(*side.GetStart(), *side.GetEnd());
@@ -149,7 +146,6 @@ plf::colony<Object> LevelDesigner::CreateWalls(SLevelGeometry& aGeometry) const
 
 SLevelGeometry LevelDesigner::DesignGeometry() const
 {
-	SystemPtr<Randomizer> randomizer;
 	SLevelGeometry geometry;
 
 	auto side = DesignStartRoom(geometry);

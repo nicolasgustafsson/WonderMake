@@ -30,23 +30,20 @@ private:
 
 	void SetupCallbacks();
 	void OnWindowSizeChanged([[maybe_unused]]GLFWwindow* Window, i32 X, i32 Y);
-	//-------KEEP THIS IN ORDER-------
 	DockSpace myDockSpace;
 	ConsoleLogger myLogger;
 	FileLogger myFileLogger;
 	ImGuiLogger myImGuiLogger;
-	SystemPtr<Window> myWindowPtr;
-	SystemPtr<ImguiWrapper> myImguiWrapper;
-	SystemPtr<Renderer> myRendererPtr;
-	SystemPtr<EngineUniformBuffer> myEngineUniformBufferPtr;
-	//-------KEEP THIS IN ORDER-------
 
-	SystemPtr<CameraManager> myCameraManagerPtr;
-	SystemPtr<TimeKeeper> myTimeKeeperPtr;
 	SystemPtr<InputSystem> myInputSystem;
-	SystemPtr<DebugSettingsSystem> myDebugSettingsPtr;
 	SystemPtr<AudioManager> myAudioManagerPtr;
 	SystemPtr<FileWatcher> myFileWatcher;
+	SystemPtr<TimeKeeper> myTimeKeeperPtr;
+	SystemPtr<EngineUniformBuffer> myEngineUniformBufferPtr;
+	SystemPtr<Window> myWindowPtr;
+	SystemPtr<ImguiWrapper> myImguiWrapper;
+	SystemPtr<CameraManager> myCameraPtr;
+	SystemPtr<Renderer> myRendererPtr;
 
 	static constexpr SVector2<i32> WindowSize = {1600, 900};
 };

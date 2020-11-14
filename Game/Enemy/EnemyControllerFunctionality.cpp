@@ -6,19 +6,17 @@
 #include "EnemyActions/PunchAction.h"
 #include "Utility/Palette.h"
 
-EnemyControllerFunctionality::EnemyControllerFunctionality(Object& aOwner)
-	: Super(aOwner), Debugged("Enemy Controller")
+REGISTER_COMPONENT(EnemyControllerComponent)
+REGISTER_FUNCTIONALITY(EnemyControllerFunctionality);
+
+EnemyControllerFunctionality::EnemyControllerFunctionality()
+	: Debugged("Enemy Controller")
 {
 	Get<FactionFunctionality>().SetFaction(EFaction::Enemy);
 
 	Get<CharacterFunctionality>().Get<CharacterStatsFunctionality>().SetBaseValue(ECharacterStat::MovementSpeed, 250.f);
 	Get<DefaultMovementFunctionality>().Get<SDefaultMovementComponent>().Friction = 15.f;
 	Get<CollisionFunctionality>().AddSphereCollider(*this, SVector2f::Zero(), 10.f);
-
-	Get<ImpulseFunctionality>().Subscribe<SDiedImpulse>(*this, [&] (auto) 
-		{
-			OnDeath();
-		});
 
 	Get<SpriteRenderingFunctionality>().SetTexture(std::filesystem::current_path() / "Textures/enemy.png");
 	Get<SpriteRenderingFunctionality>().SetColor(Palette::EnemyColor);
@@ -35,7 +33,7 @@ void EnemyControllerFunctionality::Tick() noexcept
 	if (Get<ActionFunctionality>().IsInAction())
 		return;
 
-	const auto& targetFunctionality = Get<TargetFunctionality>();
+	auto& targetFunctionality = Get<TargetFunctionality>();
 	auto& enemyControllerComponent = Get<EnemyControllerComponent>();
 
 	const auto target = targetFunctionality.FindTarget([&](CharacterFunctionality& aCharacter)

@@ -7,9 +7,10 @@
 #include "Levels/LevelFunctionality.h"
 #include "Utility/Palette.h"
 
+REGISTER_FUNCTIONALITY(PlayerControllerFunctionality);
 
-PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
-	: Super(aOwner), Debugged("Player Controller")
+PlayerControllerFunctionality::PlayerControllerFunctionality()
+	: Debugged("Player Controller")
 {
 	CollisionFunctionality& collision = Get<CollisionFunctionality>();
 	collision.AddSphereCollider(*this, SVector2f::Zero(), 10.f);
@@ -17,12 +18,7 @@ PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner)
 	Get<FactionFunctionality>().SetFaction(EFaction::Player);
 	Get<CharacterFunctionality>().Get<CharacterStatsFunctionality>().SetBaseValue(ECharacterStat::MovementSpeed, 200.f);
 
-	Get<ImpulseFunctionality>().Subscribe<SDiedImpulse>(*this, [&](auto) 
-		{
-			OnDeath();
-		});
-
-	Get<MeleeWeaponUserFunctionality>().SetWeapon(SystemPtr<MeleeWeaponDesigner>()->DesignWeapon());
+	Get<MeleeWeaponUserFunctionality>().SetWeapon(Get<MeleeWeaponDesigner>().DesignWeapon());
 
 	Get<SLevelDenizenComponent>().PersistentOnLevelChange = true;
 
@@ -46,35 +42,35 @@ void PlayerControllerFunctionality::Tick() noexcept
 	else
 		Get<MovementInputFunctionality>().SetMovementInput({0.f, 0.f});
 
-	if (myInputSystem->IsMouseButtonPressed(EMouseButton::Left))
+	if (Get<InputSystem>().IsMouseButtonPressed(EMouseButton::Left))
 		Get<MeleeWeaponUserFunctionality>().SwingWeapon();
 
-	WmDrawDebugLine(Get<TransformFunctionality>().GetPosition(), myInputSystem->GetMousePositionInWorld(), SColor::White);
+	WmDrawDebugLine(Get<TransformFunctionality>().GetPosition(), Get<InputSystem>().GetMousePositionInWorld(), SColor::White);
 }
 
 void PlayerControllerFunctionality::UpdateMovement()
 {
 	SVector2f movementInput;
 
-	if (myInputSystem->IsKeyDown(EKeyboardKey::A) || myInputSystem->IsKeyDown(EKeyboardKey::Left))
+	if (Get<InputSystem>().IsKeyDown(EKeyboardKey::A) || Get<InputSystem>().IsKeyDown(EKeyboardKey::Left))
 		movementInput += {-1.f, 0.f};
-	if (myInputSystem->IsKeyDown(EKeyboardKey::W) || myInputSystem->IsKeyDown(EKeyboardKey::Up))
+	if (Get<InputSystem>().IsKeyDown(EKeyboardKey::W) || Get<InputSystem>().IsKeyDown(EKeyboardKey::Up))
 		movementInput += {0.f, -1.f};
-	if (myInputSystem->IsKeyDown(EKeyboardKey::S) || myInputSystem->IsKeyDown(EKeyboardKey::Down))
+	if (Get<InputSystem>().IsKeyDown(EKeyboardKey::S) || Get<InputSystem>().IsKeyDown(EKeyboardKey::Down))
 		movementInput += {0.f, 1.f};
-	if (myInputSystem->IsKeyDown(EKeyboardKey::D) || myInputSystem->IsKeyDown(EKeyboardKey::Right))
+	if (Get<InputSystem>().IsKeyDown(EKeyboardKey::D) || Get<InputSystem>().IsKeyDown(EKeyboardKey::Right))
 		movementInput += {1.f, 0.f};
-	if (myInputSystem->IsKeyDown(EKeyboardKey::Backspace))
+	if (Get<InputSystem>().IsKeyDown(EKeyboardKey::Backspace))
 		Get<TransformFunctionality>().SetPosition(SVector2f::Zero());
 
-	if (myInputSystem->IsKeyDown(EKeyboardKey::Enter))
+	if (Get<InputSystem>().IsKeyDown(EKeyboardKey::Enter))
 	{
 		LevelFunctionality* level = Get<SLevelDenizenComponent>().Level;
 		if (level)
 		{
 			Object enemy;
-			enemy.Add<EnemyControllerFunctionality>().Get<TransformFunctionality>().SetPosition(Get<TransformFunctionality>().GetPosition());
-			enemy.Add<TimeToLiveFunctionality>().SetTimeToLive(5.f);
+			Get<FunctionalitySystemDelegate<EnemyControllerFunctionality>>().AddFunctionality(enemy).Get<TransformFunctionality>().SetPosition(Get<TransformFunctionality>().GetPosition());
+			Get<FunctionalitySystemDelegate<TimeToLiveFunctionality>>().AddFunctionality(enemy).SetTimeToLive(5.f);
 			
 			level->AddDenizen(std::move(enemy));
 		}

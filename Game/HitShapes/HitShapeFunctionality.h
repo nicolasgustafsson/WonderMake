@@ -5,6 +5,9 @@
 #include "Character/CharacterFunctionality.h"
 #include "UtilityFunctionalities/FactionFunctionality.h"
 
+class CollisionSystem;
+class TimeKeeper;
+
 struct SHitShapeComponent : public SComponent
 {
 	BezierCurve Bezier;
@@ -26,15 +29,14 @@ struct SHitShapeComponent : public SComponent
 
 class HitShapeFunctionality
 	: public Functionality<
-	HitShapeFunctionality,
-	Policy::Set<
-	Policy::Add<SHitShapeComponent, Policy::EPermission::Write>,
-	Policy::Add<FactionFunctionality, Policy::EPermission::Write>,
-	Policy::Add<TimeToLiveFunctionality, Policy::EPermission::Write>>>
+		Policy::Set<
+			PAdd<CollisionSystem, PWrite>,
+			PAdd<TimeKeeper, PRead>,
+			PAdd<SHitShapeComponent, PWrite>,
+			PAdd<FactionFunctionality, PWrite>,
+			PAdd<TimeToLiveFunctionality, PWrite>>>
 {
 public:
-	HitShapeFunctionality(Object& aOwner);
-
 	void Tick();
 
 	void SetFromBezier(BezierCurve aCurve, const f32 aWidth, const f32 aLifetime, const f32 aDelay, const f32 aDamage, const EFaction aFaction);
@@ -49,6 +51,3 @@ private:
 	[[nodiscard]] f32 GetProgressFromTime(const f32 aTime) const noexcept;
 	[[nodiscard]] f32 GetHitProgressFromTime(const f32 aTime) const noexcept;
 };
-
-REGISTER_COMPONENT(SHitShapeComponent);
-REGISTER_FUNCTIONALITY(HitShapeFunctionality);

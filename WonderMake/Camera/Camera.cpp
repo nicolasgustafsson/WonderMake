@@ -7,6 +7,8 @@
 #include "Graphics/RenderCommandProcessor.h"
 #include <utility>
 
+REGISTER_SYSTEM(Camera);
+
 void Camera::Update()
 {
 	myViewMatrix.SetPosition(myPosition);

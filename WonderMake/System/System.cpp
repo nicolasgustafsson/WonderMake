@@ -4,7 +4,7 @@
 #include "Threads/DataThreads.h"
 #include "Threads/Routine.h"
 
-void System::EnableTick()
+void SystemBase::EnableTick()
 {
 	DataThreads::Get().GetRoutine(ERoutineId::Logic).AddProcedure([this] { Tick(); });
 }

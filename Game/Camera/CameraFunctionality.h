@@ -1,6 +1,8 @@
 #pragma once
 #include "Functionalities/TransformFunctionality.h"
 
+class Camera;
+
 struct SCameraComponent : public SComponent
 {
 	TransformFunctionality* Target;
@@ -8,19 +10,14 @@ struct SCameraComponent : public SComponent
 
 class CameraFunctionality
 	: public Functionality<
-		CameraFunctionality,
 		Policy::Set<
-			Policy::Add<TransformFunctionality, Policy::EPermission::Write>,
-			Policy::Add<SCameraComponent, Policy::EPermission::Write>>>
+			PAdd<Camera, PWrite>,
+			PAdd<TransformFunctionality, PWrite>,
+			PAdd<SCameraComponent, PWrite>>>
 {
 public:
-	CameraFunctionality(Object& aObject);
-
 	void Tick();
 
 	void SetTarget(TransformFunctionality* aTarget);
 private:
 };
-
-REGISTER_COMPONENT(SCameraComponent);
-REGISTER_FUNCTIONALITY(CameraFunctionality);

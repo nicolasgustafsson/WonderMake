@@ -2,7 +2,6 @@
 #include "Functionalities/Functionality.h"
 #include "Collision/CollisionFunctionality.h"
 #include "Functionalities/TransformFunctionality.h"
-#include "Functionalities/OwnerFunctionality.h"
 #include "Functionalities/SpriteRenderingFunctionality.h"
 #include "Movement/DefaultMovementFunctionality.h"
 #include "Character/Stats/CharacterStatsFunctionality.h"
@@ -10,6 +9,8 @@
 #include "Levels/LevelDenizenFunctionality.h"
 #include "HitShapes/HitShapeSpawnerFunctionality.h"
 #include "UtilityFunctionalities/FactionFunctionality.h"
+
+class InputSystem;
 
 class CharacterStatsFunctionality;
 
@@ -19,29 +20,22 @@ struct SHealthComponent : public  SComponent
 	i32 Health = MaxHealth;
 };
 
-struct SDiedImpulse
-	: public SObjectImpulse<SDiedImpulse>
-{
-
-};
-
 class CharacterFunctionality
 	: public Functionality<
-		CharacterFunctionality,
 		Policy::Set<
-			Policy::Add<OwnerFunctionality, Policy::EPermission::Write>,
-			Policy::Add<CollisionFunctionality, Policy::EPermission::Write>,
-			Policy::Add<SHealthComponent, Policy::EPermission::Write>,
-			Policy::Add<FactionFunctionality, Policy::EPermission::Write>,
-			Policy::Add<TransformFunctionality, Policy::EPermission::Write>,
-			Policy::Add<DefaultMovementFunctionality, Policy::EPermission::Write>,
-			Policy::Add<CharacterStatsFunctionality, Policy::EPermission::Write>,
-			Policy::Add<HitShapeSpawnerFunctionality, Policy::EPermission::Write>,
-			Policy::Add<LevelDenizenFunctionality, Policy::EPermission::Write>,
-			Policy::Add<CharacterBuffsFunctionality, Policy::EPermission::Write>>>
+			PAdd<InputSystem, PWrite>,
+			PAdd<CollisionFunctionality, PWrite>,
+			PAdd<SHealthComponent, PWrite>,
+			PAdd<FactionFunctionality, PWrite>,
+			PAdd<TransformFunctionality, PWrite>,
+			PAdd<DefaultMovementFunctionality, PWrite>,
+			PAdd<CharacterStatsFunctionality, PWrite>,
+			PAdd<HitShapeSpawnerFunctionality, PWrite>,
+			PAdd<LevelDenizenFunctionality, PWrite>,
+			PAdd<CharacterBuffsFunctionality, PWrite>>>
 {
 public:
-	CharacterFunctionality(Object& aOwner) noexcept;
+	CharacterFunctionality() noexcept;
 
 	void Heal(const i32 aHealAmount);
 	void Damage(const i32 aDamage);
@@ -51,6 +45,3 @@ public:
 
 	void Inspect();
 };
-
-REGISTER_COMPONENT(SHealthComponent);
-REGISTER_FUNCTIONALITY(CharacterFunctionality);

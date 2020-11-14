@@ -3,6 +3,16 @@
 #include "Geometry/Polygon.h"
 
 class LevelFunctionality;
+class LevelPortalFunctionality;
+class SpinnerFunctionality;
+class TransformFunctionality;
+class SpriteRenderingFunctionality;
+class BuffGiverFunctionality;
+class EnemyControllerFunctionality;
+class StaticGeometryFunctionality;
+
+class BuffDesigner;
+class Randomizer;
 
 namespace Geometry { class PolygonSideOperator; }
 
@@ -46,13 +56,25 @@ struct SRoom
 };
 
 class LevelDesigner
-	: public System
+	: public System<
+		Policy::Set<
+			PAdd<Randomizer, PWrite>,
+			PAdd<BuffDesigner, PWrite>,
+			PAdd<FunctionalitySystemDelegate<LevelPortalFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<SpinnerFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<TransformFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<SpriteRenderingFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<BuffGiverFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<EnemyControllerFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<StaticGeometryFunctionality>, PWrite>>>
 {
 public:
+	using Super::Super;
+
 	void DesignLevel(LevelFunctionality& aLevel);
 
 protected:
-	plf::colony<Object> CreateWalls(SLevelGeometry& aGeometry) const;
+	plf::colony<Object> CreateWalls(SLevelGeometry& aGeometry);
 	SLevelGeometry DesignGeometry() const;
 
 	Geometry::PolygonSideOperator DesignStartRoom(SLevelGeometry& aGeometry) const;

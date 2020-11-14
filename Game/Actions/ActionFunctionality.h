@@ -1,9 +1,9 @@
 #pragma once
 #include <any>
 #include "Actions/Action.h"
-#include "Functionalities/ImpulseFunctionality.h"
 
 class Action;
+class TimeKeeper;
 
 struct SActionComponent
 	: public SComponent
@@ -23,14 +23,12 @@ enum class EActionResult
 
 //Nicos: This currently is not thread safe, have an extra look when adding policies/threading
 class ActionFunctionality
-	: public Functionality<ActionFunctionality,
+	: public Functionality<
 		Policy::Set<
-			Policy::Add<SActionComponent, Policy::EPermission::Write>,
-			Policy::Add<ImpulseFunctionality, Policy::EPermission::Write>>>
+			PAdd<TimeKeeper, PRead>,
+			PAdd<SActionComponent, PWrite>>>
 {
 public:
-	ActionFunctionality(Object& aOwner);
-
 	template<typename TAction> requires std::is_base_of_v<Action, TAction>
 	inline EActionResult StartAction(TAction aAction)
 	{
@@ -73,6 +71,3 @@ public:
 private:	
 	void EndCurrentAction();
 };
-
-REGISTER_COMPONENT(SActionComponent);
-REGISTER_FUNCTIONALITY(ActionFunctionality);

@@ -2,10 +2,8 @@
 #include "MovementInputFunctionality.h"
 #include "Player/PlayerControllerFunctionality.h"
 
-MovementInputFunctionality::MovementInputFunctionality(Object& aOwner)
-	: Super(aOwner) 
-{
-}
+REGISTER_COMPONENT(SMovementInputComponent);
+REGISTER_FUNCTIONALITY(MovementInputFunctionality);
 
 void MovementInputFunctionality::SetMovementInput(const SVector2f aDirection)
 {

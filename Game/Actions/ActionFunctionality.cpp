@@ -3,14 +3,8 @@
 #include "Actions/Action.h"
 #include "Character/CharacterFunctionality.h"
 
-ActionFunctionality::ActionFunctionality(Object& aOwner)
-	: Super(aOwner) 
-{
-	Get<ImpulseFunctionality>().Subscribe<SDiedImpulse>(*this, [&](auto) 
-		{
-			EndCurrentAction();
-		});
-}
+REGISTER_COMPONENT(SActionComponent);
+REGISTER_FUNCTIONALITY(ActionFunctionality);
 
 bool ActionFunctionality::IsInAction() const
 {
@@ -22,7 +16,7 @@ f32 ActionFunctionality::TimeSinceLastAction() const
 	if (IsInAction())
 		return 0.f;
 
-	return SystemPtr<TimeKeeper>()->TimeSince(Get<SActionComponent>().CompletionTime);
+	return Get<TimeKeeper>().TimeSince(Get<SActionComponent>().CompletionTime);
 }
 
 Action* ActionFunctionality::GetCurrentAction() const
@@ -36,7 +30,7 @@ void ActionFunctionality::Tick()
 	if (!currentAction)
 		return;
 
-	currentAction->Tick();
+	currentAction->Tick(Get<TimeKeeper>().GetDeltaSeconds());
 
 	if (currentAction->IsCompleted())
 		EndCurrentAction();
@@ -58,5 +52,5 @@ void ActionFunctionality::EndCurrentAction()
 
 	currentAction->EndAction();
 	currentAction = nullptr;
-	Get<SActionComponent>().CompletionTime = SystemPtr<TimeKeeper>()->GetGameTime();
+	Get<SActionComponent>().CompletionTime = Get<TimeKeeper>().GetGameTime();
 }

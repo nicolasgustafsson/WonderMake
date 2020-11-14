@@ -16,12 +16,11 @@ void BuffTimedTickProperty::ApplyOnBuff(BuffInstance& aBuff)
 	instance.myTimeUntilTick = myTimeBetweenTicks;
 }
 
-void BuffTimedTickProperty::Tick(BuffBlueprintPropertyInstance& aBuffPropertyInstance)
+void BuffTimedTickProperty::Tick(BuffBlueprintPropertyInstance& aBuffPropertyInstance, const f32 aDeltaTime)
 {
-	const f32 deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
 	BuffTimedTickPropertyInstance& instance = *static_cast<BuffTimedTickPropertyInstance*>(&aBuffPropertyInstance);
 
-	instance.myTimeUntilTick -= deltaTime;
+	instance.myTimeUntilTick -= aDeltaTime;
 
 	if (instance.myTimeUntilTick < 0.f)
 	{

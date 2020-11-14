@@ -1,8 +1,14 @@
 #include "pch.h"
+
 #include "EffectDesigner.h"
-#include "Randomizer/Randomizer.h"
+
 #include "Character/Effects/CharacterEffect.h"
+
 #include "Designers/BuffDesigner/BuffDesigner.h"
+
+#include "Randomizer/Randomizer.h"
+
+REGISTER_SYSTEM(EffectDesigner);
 
 CharacterEffect& EffectDesigner::DesignCharacterEffect(SEffectRequirements aRequirements)
 {
@@ -15,7 +21,7 @@ CharacterEffect& EffectDesigner::DesignCharacterEffect(SEffectRequirements aRequ
 	return **(myEffects.insert(std::move(design.Effect)));
 }
 
-std::unique_ptr<CharacterEffect> EffectDesigner::DecideEffect(const SEffectDesign& aExistingDesign) const
+std::unique_ptr<CharacterEffect> EffectDesigner::DecideEffect(const SEffectDesign& aExistingDesign)
 {
 	if (aExistingDesign.Type == EEffectType::Positive)
 		return DecidePositiveEffect(aExistingDesign);
@@ -23,9 +29,9 @@ std::unique_ptr<CharacterEffect> EffectDesigner::DecideEffect(const SEffectDesig
 		return DecideNegativeEffect(aExistingDesign);
 }
 
-std::unique_ptr<CharacterEffect> EffectDesigner::DecidePositiveEffect(const SEffectDesign& aExistingDesign) const
+std::unique_ptr<CharacterEffect> EffectDesigner::DecidePositiveEffect(const SEffectDesign& aExistingDesign)
 {
-	if (SystemPtr<Randomizer>()->GetRandomBool())
+	if (Get<Randomizer>().GetRandomBool())
 	{
 		return std::make_unique<CharacterEffectHeal>(aExistingDesign.Strength);
 	}
@@ -39,9 +45,9 @@ std::unique_ptr<CharacterEffect> EffectDesigner::DecidePositiveEffect(const SEff
 	}
 }
 
-std::unique_ptr<CharacterEffect> EffectDesigner::DecideNegativeEffect(const SEffectDesign& aExistingDesign) const
+std::unique_ptr<CharacterEffect> EffectDesigner::DecideNegativeEffect(const SEffectDesign& aExistingDesign)
 {
-	if (SystemPtr<Randomizer>()->GetRandomBool())
+	if (Get<Randomizer>().GetRandomBool())
 	{
 		return std::make_unique<CharacterEffectDamage>(aExistingDesign.Strength);
 	}
@@ -55,12 +61,12 @@ std::unique_ptr<CharacterEffect> EffectDesigner::DecideNegativeEffect(const SEff
 	}
 }
 
-EEffectType EffectDesigner::DecideEffectType() const
+EEffectType EffectDesigner::DecideEffectType()
 {
-	return SystemPtr<Randomizer>()->SelectOne<EEffectType, EEffectType::Positive, EEffectType::Negative>();
+	return Get<Randomizer>().SelectOne<EEffectType, EEffectType::Positive, EEffectType::Negative>();
 }
 
-f32 EffectDesigner::DecideEffectStrength() const
+f32 EffectDesigner::DecideEffectStrength()
 {
-	return SystemPtr<Randomizer>()->GetRandomNumber(50.f, 150.f);
+	return Get<Randomizer>().GetRandomNumber(50.f, 150.f);
 }

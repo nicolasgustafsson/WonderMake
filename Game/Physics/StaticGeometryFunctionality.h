@@ -4,14 +4,9 @@
  //basically just acts as an identifier for static geometry
 class StaticGeometryFunctionality
 	: public Functionality<
-		StaticGeometryFunctionality,
 		Policy::Set<
-			Policy::Add<CollisionFunctionality, Policy::EPermission::Write>>>
+			PAdd<CollisionFunctionality, PWrite>>>
 {
 public:
-	StaticGeometryFunctionality(Object& aObject);
-
 	void SetLine(const SVector2f aStart, const SVector2f aEnd);
 };
-
-REGISTER_FUNCTIONALITY(StaticGeometryFunctionality);

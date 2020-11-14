@@ -9,7 +9,7 @@
 class CollisionFunctionality;
 
 class CollisionSystem final
-	: public System
+	: public System<>
 {
 public:
 	CollisionSystem() noexcept;

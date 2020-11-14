@@ -18,10 +18,9 @@ void PunchAction::BeginAction()
 	hitShapeSpawner.SpawnPunch(60.f, 0.5f, 0.1f, 30.f, 20.f);
 }
 
-void PunchAction::Tick()
+void PunchAction::Tick(const f32 aDeltaTime)
 {
-	const f32 deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
-	myCooldown -= deltaTime;
+	myCooldown -= aDeltaTime;
 }
 
 bool PunchAction::IsCompleted() const

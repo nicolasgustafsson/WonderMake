@@ -2,9 +2,9 @@
 #include "BuffProperties.h"
 #include "Character/CharacterFunctionality.h"
 
-void BuffBlueprintPropertyInstance::Tick()
+void BuffBlueprintPropertyInstance::Tick(const f32 aDeltaTime)
 {
-	myBlueprintProperty.Tick(*this);
+	myBlueprintProperty.Tick(*this, aDeltaTime);
 }
 
 void BuffBlueprintPropertyInstance::Inspect()

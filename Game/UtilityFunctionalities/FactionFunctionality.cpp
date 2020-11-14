@@ -1,12 +1,8 @@
 #include "pch.h"
 #include "FactionFunctionality.h"
 
-
-FactionFunctionality::FactionFunctionality(Object& aOwner)
-	: Super(aOwner)
-{
-
-}
+REGISTER_COMPONENT(SFactionComponent);
+REGISTER_FUNCTIONALITY(FactionFunctionality);
 
 void FactionFunctionality::SetFaction(const EFaction aFaction) noexcept
 {

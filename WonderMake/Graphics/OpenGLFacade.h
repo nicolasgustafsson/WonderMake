@@ -3,9 +3,12 @@
 
 
 //[Nicos]: Note that this is not a complete facade for openGL; you may need to create your own wrapped functions.
-class OpenGLFacade : public System
+class OpenGLFacade
+	: public System<>
 {
 public:
+	using Super::Super;
+
 	void Enable(const GLenum aSetting);
 
 	void SetViewportSize(const SVector2i aWindowSize);

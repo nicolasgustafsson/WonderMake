@@ -68,9 +68,14 @@ struct SDisplayUniformBufferData
 	SVector2f Resolution;
 };
 
+class Window;
+
 class EngineUniformBuffer 
 	: public UniformBuffer<SEngineUniformBufferData>
-	, public System
+	, public System<
+		Policy::Set<
+			PAdd<Window, PWrite>,
+			PAdd<OpenGLFacade, PWrite>>>
 	
 {
 public:
@@ -98,4 +103,3 @@ public:
 
 private:
 };
-

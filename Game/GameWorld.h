@@ -5,11 +5,30 @@
 #include "Designers/BuffDesigner/BuffDesigner.h"
 #include "Graphics/ScreenPassRenderObject.h"
 
-struct SPlayerDiedMessage;
-class TransformFunctionality;
-class LevelFunctionality;
+template<typename TFunctionality>
+class FunctionalitySystem;
 
-class GameWorld : public System
+struct SPlayerDiedMessage;
+
+class LevelDesigner;
+
+class LevelFunctionality;
+class TransformFunctionality;
+class PlayerControllerFunctionality;
+class DefaultMovementFunctionality;
+class SpriteRenderingFunctionality;
+class CameraFunctionality;
+
+class GameWorld
+	: public System<
+		Policy::Set<
+			PAdd<LevelDesigner, PWrite>,
+			PAdd<FunctionalitySystemDelegate<LevelFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<TransformFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<PlayerControllerFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<DefaultMovementFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<SpriteRenderingFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<CameraFunctionality>, PWrite>>>
 {
 public:
 	GameWorld();
@@ -32,8 +51,5 @@ private:
 	void OnPlayerDeath(const SPlayerDiedMessage&);
 	MessageSubscriber mySubscriber;
 
-	SystemPtr<BuffDesigner> myBuffDesigner;
-
 	std::optional<Object> myDeathScreen;
 };
-

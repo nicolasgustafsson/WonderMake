@@ -5,6 +5,8 @@
 
 #include "Constants.h"
 
+class TimeKeeper;
+
 struct SSpinnerComponent
 	: public SComponent
 {
@@ -13,18 +15,11 @@ struct SSpinnerComponent
 
 class SpinnerFunctionality
 	: public Functionality<
-		SpinnerFunctionality,
 		Policy::Set<
-			Policy::Add<SSpinnerComponent, Policy::EPermission::Write>,
-			Policy::Add<TransformFunctionality, Policy::EPermission::Write>>>
+			PAdd<TimeKeeper, PRead>,
+			PAdd<SSpinnerComponent, PWrite>,
+			PAdd<TransformFunctionality, PWrite>>>
 {
 public:
-	SpinnerFunctionality(Object& aOwner) noexcept;
-
 	void Tick() noexcept;
-
-	SystemPtr<TimeKeeper> myTimeKeeper;
 };
-
-REGISTER_COMPONENT(SSpinnerComponent);
-REGISTER_FUNCTIONALITY(SpinnerFunctionality);

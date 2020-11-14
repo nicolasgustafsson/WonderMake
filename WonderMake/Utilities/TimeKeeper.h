@@ -4,11 +4,13 @@
 #include "Utilities/Stopwatch.h"
 
 class TimeKeeper
-	: public System
+	: public System<>
 	, public Debugged
 {
 public:
-	TimeKeeper() : Debugged("Time Keeper") {}
+	TimeKeeper()
+		: Debugged("Time Keeper")
+	{}
 	~TimeKeeper() = default;
 
 	f32 Update() noexcept;

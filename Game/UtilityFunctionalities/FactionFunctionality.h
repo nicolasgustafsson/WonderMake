@@ -13,16 +13,11 @@ struct SFactionComponent : public SComponent
 };
 
 class FactionFunctionality : public Functionality<
-	FactionFunctionality,
 	Policy::Set<
-	Policy::Add<SFactionComponent, Policy::EPermission::Write >> >
+		PAdd<SFactionComponent, PWrite>>>
 {
 public:
-	FactionFunctionality(Object& aOwner);
 	void SetFaction(const EFaction aFaction) noexcept;
 	[[nodiscard]] bool IsFriendlyWith(const EFaction aFaction) const noexcept;
 	[[nodiscard]] EFaction GetFaction() const noexcept;
 };
-
-REGISTER_COMPONENT(SFactionComponent);
-REGISTER_FUNCTIONALITY(FactionFunctionality);

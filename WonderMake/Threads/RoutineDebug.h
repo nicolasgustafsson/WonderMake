@@ -16,7 +16,6 @@ protected:
 	virtual void Procedure() override;
 private:
 	SystemPtr<ImguiWrapper> myImguiWrapper;
-
 	SystemPtr<Renderer> myRendererPtr;
 };
 

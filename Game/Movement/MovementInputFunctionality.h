@@ -1,9 +1,6 @@
 #pragma once
 #include "Components/Component.h"
 #include "Functionalities/Functionality.h"
-#include "Functionalities/ImpulseFunctionality.h"
-
-struct SCoolImpulse;
 
 struct SMovementInputComponent 
 	: public SComponent
@@ -13,15 +10,9 @@ struct SMovementInputComponent
 
 class MovementInputFunctionality
 	: public Functionality<
-		MovementInputFunctionality,
 		Policy::Set<
-			Policy::Add<SMovementInputComponent, Policy::EPermission::Write>>>
+			PAdd<SMovementInputComponent, PWrite>>>
 {
 public:
-	MovementInputFunctionality(Object& aOwner);
-
 	void SetMovementInput(const SVector2f aDirection);
 };
-
-REGISTER_COMPONENT(SMovementInputComponent);
-REGISTER_FUNCTIONALITY(MovementInputFunctionality);

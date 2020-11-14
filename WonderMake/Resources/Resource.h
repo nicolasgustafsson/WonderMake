@@ -2,6 +2,8 @@
 
 #include "Threads/RoutineIds.h"
 
+#define REGISTER_RESOURCE(aResource) REGISTER_RESOURCE_SYSTEM(aResource)
+
 class Resource
 {
 public:

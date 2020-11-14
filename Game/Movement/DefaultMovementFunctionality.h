@@ -2,6 +2,9 @@
 #include "MovementInputFunctionality.h"
 #include "Collision/CollisionFunctionality.h"
 
+class CollisionSystem;
+class TimeKeeper;
+
 struct SDefaultMovementComponent
 	: public SComponent
 {
@@ -17,15 +20,14 @@ struct SDefaultMovementComponent
 
 class DefaultMovementFunctionality
 	: public Functionality<
-		DefaultMovementFunctionality,
 		Policy::Set<
-			Policy::Add<SMovementInputComponent, Policy::EPermission::Write>,
-			Policy::Add<STransformComponent, Policy::EPermission::Write>,
-			Policy::Add<SDefaultMovementComponent, Policy::EPermission::Write>>>
+			PAdd<CollisionSystem, PWrite>,
+			PAdd<TimeKeeper, PRead>,
+			PAdd<SMovementInputComponent, PWrite>,
+			PAdd<STransformComponent, PWrite>,
+			PAdd<SDefaultMovementComponent, PWrite>>>
 {
 public:
-	DefaultMovementFunctionality(Object& aOwner);
-
 	void AddForce(const SVector2f aForce);
 	void AddImpulse(const SVector2f aImpulse);
 
@@ -33,12 +35,7 @@ public:
 
 	void Inspect();
 
-	SystemPtr<TimeKeeper> myTimeKeeper;
-
 private:
 	void HandleCollision(const Colliders::SSphere& aThisSphere, const Colliders::SCollisionLine& aOtherLine);
 	void TestCollision();
 };
-
-REGISTER_COMPONENT(SDefaultMovementComponent);
-REGISTER_FUNCTIONALITY(DefaultMovementFunctionality);

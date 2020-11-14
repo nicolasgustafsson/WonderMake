@@ -36,12 +36,10 @@ struct SCharacterStatsComponent : public SComponent
 
 class CharacterStatsFunctionality												//Nicos: having 2 functionalities depending on eachother is currently not supported :/
 	: public Functionality<
-		CharacterStatsFunctionality,
 		Policy::Set<
-			Policy::Add<SCharacterStatsComponent, Policy::EPermission::Write>>>/*, CharacterFunctionality*/
+			PAdd<SCharacterStatsComponent, PWrite>>>/*, CharacterFunctionality*/
 {
 public:
-	CharacterStatsFunctionality(Object& aOwner);
 	f32 GetStatValue(const ECharacterStat aStat) const noexcept;
 	f32 GetStatMultiplier(const ECharacterStat aStat) const noexcept;
 	 
@@ -60,5 +58,3 @@ private:
 	SStat& GetStat(const ECharacterStat aStat) noexcept;
 	const SStat& GetStat(const ECharacterStat aStat) const noexcept;
 };
-
-REGISTER_COMPONENT(SCharacterStatsComponent);

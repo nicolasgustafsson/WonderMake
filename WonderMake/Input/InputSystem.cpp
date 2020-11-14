@@ -7,6 +7,8 @@
 #include "Program/GlfwFacade.h"
 #include "Camera/CameraManager.h"
 
+REGISTER_SYSTEM(InputSystem);
+
 void InputSystem::Update() noexcept
 {
 	UpdateKeyboard();
@@ -16,11 +18,9 @@ void InputSystem::Update() noexcept
 
 void InputSystem::UpdateKeyboard() noexcept
 {
-	SystemPtr<GlfwFacade> glfw;
-
 	for (u32 i = 0; i < KeyboardKeyCount; i++)
 	{
-		const i32 glfwKeyState = glfw->GetKey(GetCurrentWindow(), InputUtility::GetGlfwKey(static_cast<EKeyboardKey>(i)));
+		const i32 glfwKeyState = Get<GlfwFacade>().GetKey(GetCurrentWindow(), InputUtility::GetGlfwKey(static_cast<EKeyboardKey>(i)));
 
 		const bool bIsPressed = glfwKeyState == GLFW_PRESS;
 
@@ -32,11 +32,9 @@ void InputSystem::UpdateKeyboard() noexcept
 
 void InputSystem::UpdateMouse() noexcept
 {
-	SystemPtr<GlfwFacade> glfw;
-
 	for (u32 i = 0; i < MouseButtonCount; i++)
 	{
-		const i32 glfwKeyState = glfw->GetMouseButton(GetCurrentWindow(), InputUtility::GetGlfwMouseButton(static_cast<EMouseButton>(i)));
+		const i32 glfwKeyState = Get<GlfwFacade>().GetMouseButton(GetCurrentWindow(), InputUtility::GetGlfwMouseButton(static_cast<EMouseButton>(i)));
 
 		const bool bIsPressed = glfwKeyState == GLFW_PRESS;
 
@@ -49,9 +47,8 @@ void InputSystem::UpdateMouse() noexcept
 void InputSystem::UpdateGamepad() noexcept
 {
 	i32 gamepadButtonCount;
-	SystemPtr<GlfwFacade> glfw;
 
-	const u8* inputArray = glfw->GetJoystickButtons(0, &gamepadButtonCount);
+	const u8* inputArray = Get<GlfwFacade>().GetJoystickButtons(0, &gamepadButtonCount);
 
 	//no gamepad present
 	if (gamepadButtonCount == 0)
@@ -69,17 +66,16 @@ void InputSystem::UpdateGamepad() noexcept
 	}
 }
 
-SVector2f InputSystem::GetMousePositionInWorld() const noexcept
+SVector2f InputSystem::GetMousePositionInWorld() noexcept
 {
-	return SystemPtr<CameraManager>()->ConvertToWorldPosition(GetMousePositionOnWindow());
+	return Get<CameraManager>().ConvertToWorldPosition(GetMousePositionOnWindow());
 }
 
-SVector2f InputSystem::GetMousePositionOnWindow() const noexcept
+SVector2f InputSystem::GetMousePositionOnWindow() noexcept
 {
 	f64 x, y;
-	SystemPtr<GlfwFacade> glfw;
 
-	glfw->GetCursorPos(myWindowSystemPtr->myGlfwWindow, &x, &y);
+	Get<GlfwFacade>().GetCursorPos(Get<Window>().myGlfwWindow, &x, &y);
 
 	return { static_cast<f32>(x), static_cast<f32>(y) };
 }
@@ -218,5 +214,5 @@ bool InputSystem::ShouldCaptureMouseInput() const noexcept
 	if constexpr (!Constants::IsDebugging)
 		return true;
 
-	return SystemPtr<CameraManager>()->AnyDisplayIsFocused();
+	return Get<CameraManager>().AnyDisplayIsFocused();
 }

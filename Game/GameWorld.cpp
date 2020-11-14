@@ -1,21 +1,22 @@
 #include "pch.h"
 #include "GameWorld.h"
 
-#include "Functionalities/SpriteRenderingFunctionality.h"
-#include "Functionalities/TransformFunctionality.h"
-#include "Movement/DefaultMovementFunctionality.h"
-#include "Player/PlayerControllerFunctionality.h"
 #include "System/System.h"
 
+#include "Functionalities/SpriteRenderingFunctionality.h"
+#include "Functionalities/TransformFunctionality.h"
+
+#include "Movement/DefaultMovementFunctionality.h"
+#include "Player/PlayerControllerFunctionality.h"
 #include "Designers/LevelDesigner/LevelDesigner.h"
-#include "Camera/CameraFunctionality.h"
 #include "Levels/LevelFunctionality.h"
+#include "Camera/CameraFunctionality.h"
+
+REGISTER_SYSTEM(GameWorld);
 
 GameWorld::GameWorld()
-	:mySubscriber(ERoutineId::Logic, BindHelper(&GameWorld::OnPlayerDeath, this)), myBackground(std::filesystem::current_path() / "Shaders/Fragment/Background.frag")
+	: mySubscriber(ERoutineId::Logic, BindHelper(&GameWorld::OnPlayerDeath, this)), myBackground(std::filesystem::current_path() / "Shaders/Fragment/Background.frag")
 {
-	EnableTick();
-
 	Object player = SetupPlayer();
 
 	myBackground.SetRenderLayer("Background");
@@ -30,12 +31,10 @@ GameWorld::GameWorld()
 
 LevelFunctionality& GameWorld::RestartLevel()
 {
-	SystemPtr<LevelDesigner> levelDesigner;
-	
 	Object newLevel;
 
-	LevelFunctionality& levelFunctionality = newLevel.Add<LevelFunctionality>();
-	levelDesigner->DesignLevel(levelFunctionality);
+	LevelFunctionality& levelFunctionality = Get<FunctionalitySystemDelegate<LevelFunctionality>>().AddFunctionality(newLevel);
+	Get<LevelDesigner>().DesignLevel(levelFunctionality);
 
 	if (myCurrentLevelFunctionality)
 		myCurrentLevelFunctionality->TransferToNewLevel(levelFunctionality);
@@ -64,7 +63,6 @@ Object GameWorld::SetupPlayer()
 	player.Add<PlayerControllerFunctionality>();
 	player.Add<DefaultMovementFunctionality>();
 
-	auto& camera = myCameraController.Add<CameraFunctionality>();
 	camera.SetTarget(myPlayerTransform);
 
 	return player;
@@ -74,7 +72,7 @@ void GameWorld::OnPlayerDeath(const SPlayerDiedMessage&)
 {
 	myDeathScreen.emplace();
 
-	auto& sprite = myDeathScreen->Add<SpriteRenderingFunctionality>();
+	auto& sprite = Get<FunctionalitySystemDelegate<SpriteRenderingFunctionality>>().AddFunctionality(*myDeathScreen);
 	sprite.SetTexture(std::filesystem::current_path() / "Textures/deadScreen.png");
 }
 

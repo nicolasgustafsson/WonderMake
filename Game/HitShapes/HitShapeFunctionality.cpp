@@ -7,11 +7,8 @@
 #include "Audio/AudioManager.h"
 #include "Utility/Palette.h"
 
-HitShapeFunctionality::HitShapeFunctionality(Object& aOwner)
-	: Super(aOwner)
-{
-
-}
+REGISTER_COMPONENT(SHitShapeComponent);
+REGISTER_FUNCTIONALITY(HitShapeFunctionality);
 
 void HitShapeFunctionality::Tick()
 {
@@ -19,7 +16,7 @@ void HitShapeFunctionality::Tick()
 	if (!hitShapeComponent.RenderObject)
 		return;
 
-	const f32 aDeltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
+	const f32 aDeltaTime = Get<TimeKeeper>().GetDeltaSeconds();
 	if (hitShapeComponent.Delay > 0.f)
 	{
 		hitShapeComponent.Delay -= aDeltaTime;
@@ -54,7 +51,7 @@ void HitShapeFunctionality::Tick()
 	const SVector2f currentBezierPosition = hitShapeComponent.Bezier.GetConstantLocationAt(currentHitProgress);
 
 	
-	SystemPtr<CollisionSystem>()->OverlapLineAgainstFunctionality<CharacterFunctionality>(previousBezierPosition, currentBezierPosition, hitShapeComponent.Width * 0.5f, [&](CharacterFunctionality& aCharacter, const auto&&)
+	Get<CollisionSystem>().OverlapLineAgainstFunctionality<CharacterFunctionality>(previousBezierPosition, currentBezierPosition, hitShapeComponent.Width * 0.5f, [&](CharacterFunctionality& aCharacter, const auto&&)
 		{
 			if (aCharacter.Get<FactionFunctionality>().GetFaction() == Get<FactionFunctionality>().GetFaction())
 				return;

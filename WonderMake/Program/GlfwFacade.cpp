@@ -3,7 +3,9 @@
 #include "GLFW/glfw3.h"
 #include <glad/glad.h>
 
-void GlfwFacade::Init()
+REGISTER_SYSTEM(GlfwFacade);
+
+GlfwFacade::GlfwFacade()
 {
 	glfwInit();
 }

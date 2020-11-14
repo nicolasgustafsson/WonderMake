@@ -1,8 +1,15 @@
 #pragma once
-#include "System/SystemPtr.h"
-#include "Window.h"
 
-class ImguiWrapper : public System
+#include "System/System.h"
+
+class GlfwFacade;
+class Window;
+
+class ImguiWrapper
+	: public System<
+		Policy::Set<
+			PAdd<GlfwFacade, PWrite>,
+			PAdd<Window, PRead>>>
 {
 public:
 	ImguiWrapper();
@@ -10,8 +17,5 @@ public:
 	void StartFrame();
 
 	void EndFrame();
-
-private:
-	SystemPtr<Window> myWindowPtr;
 };
 

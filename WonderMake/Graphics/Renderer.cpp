@@ -31,22 +31,22 @@ Renderer::Renderer() noexcept
 	: myCopyPass(std::filesystem::current_path() / "Shaders/Fragment/BackbufferCopy.frag")
 	, Debugged("Renderer")
 {
-	myOpenGLInterface->Enable(GL_DEBUG_OUTPUT);
-	myOpenGLInterface->Enable(GL_BLEND);
+	Get<OpenGLFacade>().Enable(GL_DEBUG_OUTPUT);
+	Get<OpenGLFacade>().Enable(GL_BLEND);
 
-	myOpenGLInterface->Enable(GL_DEPTH_TEST);
+	Get<OpenGLFacade>().Enable(GL_DEPTH_TEST);
 
 	glDepthFunc(GL_GEQUAL);
 	glClearDepth(-1000);
 
-	myOpenGLInterface->SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	Get<OpenGLFacade>().SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	myOpenGLInterface->SetDebugMessageCallback(MessageCallback);
+	Get<OpenGLFacade>().SetDebugMessageCallback(MessageCallback);
 }
 
 void Renderer::SetViewportSize(const SVector2<int> WindowSize)
 {
-	myOpenGLInterface->SetViewportSize(WindowSize);
+	Get<OpenGLFacade>().SetViewportSize(WindowSize);
 	//myCameraManagerPtr->GetMainCamera().SetViewportSize(WindowSize);
 }
 
@@ -55,7 +55,7 @@ void Renderer::StartFrame()
 	if constexpr (Constants::IsDebugging)
 	{
 		SystemPtr<GlfwFacade> glfw;
-		glfw->SwapBuffers(myWindowPtr->myGlfwWindow);
+		Get<GlfwFacade>().SwapBuffers(myWindowPtr->myGlfwWindow);
 	}
 }
 
@@ -65,10 +65,10 @@ void Renderer::FinishFrame()
 
 	myLineDrawer->Update();
 
-	myOpenGLInterface->BindFramebuffer(GL_FRAMEBUFFER, 0);
+	Get<OpenGLFacade>().BindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	myOpenGLInterface->SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
-	myOpenGLInterface->Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	Get<OpenGLFacade>().SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+	Get<OpenGLFacade>().Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	if constexpr (!Constants::IsDebugging)
 	{
@@ -77,14 +77,13 @@ void Renderer::FinishFrame()
 
 		myCopyPass.RenderImmediate();
 
-		SystemPtr<GlfwFacade> glfw;
-		glfw->SwapBuffers(myWindowPtr->myGlfwWindow);
+		Get<GlfwFacade>().SwapBuffers(myWindowPtr->myGlfwWindow);
 	}
 
-	SystemPtr<RenderCommandProcessor>()->Clear();
+	Get<RenderCommandProcessor>().Clear();
 }
 
 void Renderer::Debug()
 {
-	SystemPtr<CameraManager>()->FinishDebugFrame();
+	Get<CameraManager>().FinishDebugFrame();
 }

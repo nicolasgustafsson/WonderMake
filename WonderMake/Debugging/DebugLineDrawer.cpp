@@ -2,6 +2,8 @@
 #include "DebugLineDrawer.h"
 #include "Utilities/Utility.h"
 
+REGISTER_SYSTEM(DebugLineDrawer);
+
 DebugLineDrawer::DebugLineDrawer() noexcept
 	: myRenderObject(10000)
 	, mySubscriber(ERoutineId::Logic, BindHelper(&DebugLineDrawer::OnGotDebugLineMessage, this))
@@ -23,7 +25,7 @@ void DebugLineDrawer::Render()
 
 void DebugLineDrawer::Update()
 {
-	const float deltaTime = myTimeKeeperPtr->GetDeltaSeconds();
+	const float deltaTime = Get<TimeKeeper>().GetDeltaSeconds());
 
 	for (i32 i = static_cast<i32>(myDebugLines.size()) - 1; i >= 0; i--)
 	{

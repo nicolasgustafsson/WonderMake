@@ -1,65 +1,55 @@
 #pragma once
 
 #include "Functionalities/BaseFunctionality.h"
+#include "Functionalities/FunctionalitySystem.h"
 
-#include "Object/Dependency.h"
+#include <optional>
 
-#include "Utilities/Serialization.h"
-
-#define REGISTER_FUNCTIONALITY(aFunctionality) REGISTER_SERIALIZABLE(aFunctionality)
+#define REGISTER_FUNCTIONALITY(aFunctionality) REGISTER_FUNCTIONALITY_SYSTEM(aFunctionality)
 
 class Object;
 
-//[Nicos]: Describes a functionality for an object. Template params are 1. Type that is self type and 2. Dependencies.
 template<
-	typename TSelfType,
 	typename TPolicySet = Policy::Set<>>
 class Functionality
 	: public _BaseFunctionality
 {
 public:
-	inline virtual void Destroy(Object& aObject) override final;
-
-	using Super = Functionality<TSelfType, TPolicySet>;
+	using Super = Functionality<TPolicySet>;
+	using Dependencies = typename TPolicySet::DependenciesRef;
 	using PolicySet = TPolicySet;
 
-	template<typename TDependency> requires
-		TPolicySet::template HasPolicy_v<TDependency, Policy::EPermission::Write>
-		|| TPolicySet::template HasPolicy_v<TDependency, Policy::EPermission::Unrestricted>
-		constexpr __forceinline TDependency & Get()
+	inline static void InjectDependencies(Dependencies&& aDependencies)
 	{
-		return myDependencies.Get<TDependency>();
+		myInjectedDependencies.emplace(std::move(aDependencies));
+	}
+
+	template<typename TDependency> requires
+		TPolicySet::template HasPolicy_v<TDependency, PWrite>
+		constexpr __forceinline TDependency& Get() noexcept
+	{
+		return std::get<std::decay_t<TDependency>&>(myDependencies);
 	}
 
 	template<typename TDependency> requires
 		TPolicySet::template HasDependency_v<TDependency>
-		constexpr __forceinline const TDependency& Get() const
+		constexpr __forceinline const TDependency& Get() const noexcept
 	{
-		return myDependencies.Get<TDependency>();
+		return std::get<std::decay_t<TDependency>&>(myDependencies);
 	}
 
 protected:
-	Dependencies<TPolicySet> myDependencies;
+	Functionality()
+		: myDependencies(std::move(*myInjectedDependencies))
+	{
+		myInjectedDependencies.reset();
+	}
 
 private:
-	Functionality(Object& aObject);
-	friend TSelfType;
+	static thread_local std::optional<Dependencies> myInjectedDependencies;
+
+	Dependencies myDependencies;
 };
 
-template<typename TSelfType, typename TPolicySet>
-void Functionality<TSelfType, TPolicySet>::Destroy(Object& aObject)
-{
-	class ImpulseFunctionality;
-
-	if constexpr (TPolicySet::template HasDependency_v<ImpulseFunctionality>)
-		Get<ImpulseFunctionality>().UnsubscribeAll(*this);
-
-	SystemPtr<FunctionalitySystem<TSelfType>>()->RemoveFunctionality(static_cast<TSelfType&>(*this));
-
-	myDependencies.Destroy(aObject, *this);
-}
-
-template<typename TSelfType, typename TPolicySet>
-Functionality<TSelfType, TPolicySet>::Functionality(Object& aObject)
-	: myDependencies(aObject)
-{}
+template<typename TPolicySet>
+thread_local std::optional<typename Functionality<TPolicySet>::Dependencies> Functionality<TPolicySet>::myInjectedDependencies;

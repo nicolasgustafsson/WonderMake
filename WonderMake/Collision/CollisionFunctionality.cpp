@@ -3,23 +3,20 @@
 #include "CollisionFunctionality.h"
 #include "CollisionSystem.h"
 #include "ColliderDebug.h"
-
-#include "System/SystemPtr.h"
 #include "Debugging/DebugSettingsSystem.h"
 
-CollisionFunctionality::CollisionFunctionality(Object& aOwner) noexcept
-	: Super(aOwner), Debugged("Collision")
-{
+REGISTER_FUNCTIONALITY(CollisionFunctionality);
 
-}
+CollisionFunctionality::CollisionFunctionality()
+	: Debugged("Collision")
+{}
 
 CollisionFunctionality::~CollisionFunctionality()
 {
 	auto& collisionComponent = Get<SCollisionComponent>();
-	SystemPtr<CollisionSystem> collisionSystem;
 
 	for (auto& collider : collisionComponent.Colliders)
-		collisionSystem->DestroyCollider(*collider.Collider);
+		Get<CollisionSystem>().DestroyCollider(*collider.Collider);
 
 	collisionComponent.Colliders.clear();
 }
@@ -28,7 +25,7 @@ void CollisionFunctionality::Tick()
 {
 	UpdateCollisionTransforms();
 
-	if (!SystemPtr<DebugSettingsSystem>()->GetOrCreateDebugValue("Should draw colliders", true))
+	if (!Get<DebugSettingsSystem>().GetOrCreateDebugValue("Should draw colliders", true))
 		return;
 
 	auto& collisionComponent = Get<SCollisionComponent>();

@@ -3,11 +3,8 @@
 #include "Camera/Camera.h"
 #include "Camera/CameraManager.h"
 
-CameraFunctionality::CameraFunctionality(Object& aObject)
-	: Super(aObject)
-{
-
-}
+REGISTER_COMPONENT(SCameraComponent);
+REGISTER_FUNCTIONALITY(CameraFunctionality);
 
 void CameraFunctionality::Tick()
 {
@@ -17,11 +14,9 @@ void CameraFunctionality::Tick()
 	if (!cameraComponent.Target)
 		return;
 	
-	SystemPtr<CameraManager> cameraSystem;
-
 	transform.SetPosition(cameraComponent.Target->GetPosition());
 
-	cameraSystem->GetMainCamera().SetPosition(transform.GetPosition());
+	Get<CameraManager>().SetPosition(transform.GetPosition());
 }
 
 void CameraFunctionality::SetTarget(TransformFunctionality* aTarget)

@@ -12,13 +12,11 @@ struct SNavmeshComponent : public SComponent
 	std::optional<LineListRenderObject> WallLines;
 };
 
-class NavmeshFunctionality : public Functionality<NavmeshFunctionality, 
+class NavmeshFunctionality : public Functionality< 
 	Policy::Set<
-	Policy::Add<SNavmeshComponent, Policy::EPermission::Write>>>
+	PAdd<SNavmeshComponent, PWrite>>>
 {
 public:
-	NavmeshFunctionality(Object& aOwner);
-
 	void SetNavmesh(Navmesh aNavmesh);
 
 	const Navmesh& GetNavmesh() const { return Get<SNavmeshComponent>().Navmesh; };
@@ -26,6 +24,3 @@ public:
 
 	void Tick();
 };
-
-REGISTER_COMPONENT(SNavmeshComponent);
-REGISTER_FUNCTIONALITY(NavmeshFunctionality);

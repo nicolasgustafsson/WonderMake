@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "VisionFunctionality.h"
 
+REGISTER_COMPONENT(SVisionComponent);
+REGISTER_FUNCTIONALITY(VisionFunctionality);
+
 void VisionFunctionality::Tick()
 {
 	const LineOfSightFunctionality& los = Get<LineOfSightFunctionality>();

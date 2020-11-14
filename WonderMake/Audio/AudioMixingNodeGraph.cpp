@@ -2,6 +2,8 @@
 #include "AudioMixingNodeGraph.h"
 #include "Audio/AudioNodeTypes.h"
 
+_REGISTER_SYSTEM_IMPL(ResourceSystem<AudioMixingNodeGraph>, AudioMixingResource);
+
 AudioMixingNodeGraph::AudioMixingNodeGraph(std::filesystem::path aPath)
 	:  NodeGraph(std::move(aPath))
 {

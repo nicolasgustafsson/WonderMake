@@ -77,9 +77,11 @@ SCollider& CollisionFunctionality::AddSphereCollider(TIdentifyingFunctionality& 
 
 	const auto transformation = transformFunctionality.GetMatrix();
 
+	SVector2f position = aOffset * transformation;
+
 	SCollider collider;
 
-	collider.Collider = &collisionSystem.CreateSphereCollider(aFunctionalityIdentifier, aOffset * transformation, aRadius);
+	collider.Collider = &collisionSystem.CreateSphereCollider(aFunctionalityIdentifier, position, aRadius);
 	collider.Offset = aOffset;
 
 	return *collisionComponent.Colliders.emplace(collider);

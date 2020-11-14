@@ -2,11 +2,8 @@
 #include "NavmeshFunctionality.h"
 #include "Utility/Palette.h"
 
-NavmeshFunctionality::NavmeshFunctionality(Object& aOwner)
-	: Super(aOwner)
-{
-
-}
+REGISTER_COMPONENT(SNavmeshComponent);
+REGISTER_FUNCTIONALITY(NavmeshFunctionality);
 
 void NavmeshFunctionality::SetNavmesh(Navmesh aNavmesh)
 {

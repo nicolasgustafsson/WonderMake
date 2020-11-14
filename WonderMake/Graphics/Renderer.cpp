@@ -10,6 +10,8 @@
 #include <any>
 #include "Graphics/RenderTarget.h"
 
+REGISTER_SYSTEM(Renderer);
+
 void GLAPIENTRY
 MessageCallback([[maybe_unused]] GLenum source,
 	GLenum type,
@@ -54,16 +56,15 @@ void Renderer::StartFrame()
 {
 	if constexpr (Constants::IsDebugging)
 	{
-		SystemPtr<GlfwFacade> glfw;
-		Get<GlfwFacade>().SwapBuffers(myWindowPtr->myGlfwWindow);
+		Get<GlfwFacade>().SwapBuffers(Get<Window>().myGlfwWindow);
 	}
 }
 
 void Renderer::FinishFrame()
 {
-	myCameraManagerPtr->FinishFrame();
+	Get<CameraManager>().FinishFrame();
 
-	myLineDrawer->Update();
+	Get<DebugLineDrawer>().Update();
 
 	Get<OpenGLFacade>().BindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -77,7 +78,7 @@ void Renderer::FinishFrame()
 
 		myCopyPass.RenderImmediate();
 
-		Get<GlfwFacade>().SwapBuffers(myWindowPtr->myGlfwWindow);
+		Get<GlfwFacade>().SwapBuffers(Get<Window>().myGlfwWindow);
 	}
 
 	Get<RenderCommandProcessor>().Clear();

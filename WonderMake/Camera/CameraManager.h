@@ -1,6 +1,6 @@
 #pragma once
 #include "Camera/Camera.h"
-class CameraManager : public System, public Debugged
+class CameraManager : public System<>, public Debugged
 {
 public:
 	CameraManager();

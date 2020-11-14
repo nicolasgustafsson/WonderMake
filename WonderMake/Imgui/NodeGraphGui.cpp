@@ -681,7 +681,7 @@ void WmGui::NodeGraphEditor::Connections(plf::colony<SConnection>& aConnections)
 	{
 		auto& connection = *it;
 
-		if (!WmGui::NodeGraphEditor::Connection(connection.InputNodePointer, connection.InputSlot, connection.OutputNodePointer, connection.OutputSlot, connection.Color))
+		if (!WmGui::NodeGraphEditor::Connection(connection.InputNodePointer, connection.InputSlot, connection.OutputNodePointer, connection.OutputSlot, connection.InputSlot->SlotType.GetColor()))
 			it = aConnections.erase(it);
 		else
 			it++;

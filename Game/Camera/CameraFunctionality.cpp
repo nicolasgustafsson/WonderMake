@@ -16,7 +16,7 @@ void CameraFunctionality::Tick()
 	
 	transform.SetPosition(cameraComponent.Target->GetPosition());
 
-	Get<CameraManager>().SetPosition(transform.GetPosition());
+	Get<CameraManager>().GetMainCamera().SetPosition(transform.GetPosition());
 }
 
 void CameraFunctionality::SetTarget(TransformFunctionality* aTarget)

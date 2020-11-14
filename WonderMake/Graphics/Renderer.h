@@ -10,17 +10,18 @@
 #include "Utilities/Debugging/Debugged.h"
 #include "Debugging/DebugLineDrawer.h"
 #include "OpenGLFacade.h"
+#include "Graphics/RenderCommandProcessor.h"
 
 class GlfwFacade;
 
 class Renderer
 	: public System<
 		Policy::Set<
-			PAdd<Camera, PWrite>,
 			PAdd<EngineUniformBuffer, PWrite>,
 			PAdd<Window, PWrite>,
 			PAdd<DebugLineDrawer, PWrite>,
 			PAdd<GlfwFacade, PWrite>,
+			PAdd<CameraManager, PWrite>,
 			PAdd<RenderCommandProcessor, PWrite>,
 			PAdd<OpenGLFacade, PWrite>>>
 	, public Debugged

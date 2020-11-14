@@ -5,6 +5,7 @@
 #include "InputItems.h"
 
 class Camera;
+class CameraManager;
 class GlfwFacade;
 class Renderer;
 class Window;
@@ -12,9 +13,9 @@ class Window;
 class InputSystem
 	: public System<
 		Policy::Set<
-			PAdd<Camera, PWrite>,
 			PAdd<GlfwFacade, PWrite>,
 			PAdd<Renderer, PWrite>,
+			PAdd<CameraManager, PWrite>,
 			PAdd<Window, PWrite>>>
 	, public Debugged
 {

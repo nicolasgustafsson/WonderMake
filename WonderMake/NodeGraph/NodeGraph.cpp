@@ -288,7 +288,6 @@ void NodeGraph::DeserializeConnection(const nlohmann::json& aJson)
 	connection.OutputSlot = connection.OutputNodePointer->OutputSlotInstances[slotFromId].get();
 	connection.InputSlot = connection.InputNodePointer->InputSlotInstances[slotToId].get();
 
-	connection.Color = connection.InputSlot->SlotType.GetColor();
 
 	SConnection& connectionRef = *myConnections.insert(std::move(connection));
 

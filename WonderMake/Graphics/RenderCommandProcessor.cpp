@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "RenderCommandProcessor.h"
 
+REGISTER_SYSTEM(RenderCommandProcessor);
+
 RenderLayer::RenderLayer()
 {
 	myRenderCommands.reserve(10000);

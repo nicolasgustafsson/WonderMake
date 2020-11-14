@@ -27,6 +27,8 @@ GameWorld::GameWorld()
 	LevelFunctionality& level = RestartLevel();
 
 	level.AddDenizen(std::move(player));
+
+	EnableTick();
 }
 
 LevelFunctionality& GameWorld::RestartLevel()
@@ -59,11 +61,9 @@ void GameWorld::Tick() noexcept
 Object GameWorld::SetupPlayer()
 {
 	Object player;
-	myPlayerTransform = &player.Add<TransformFunctionality>();
-	player.Add<PlayerControllerFunctionality>();
-	player.Add<DefaultMovementFunctionality>();
-
-	camera.SetTarget(myPlayerTransform);
+	myPlayerTransform = &Get<FunctionalitySystemDelegate<TransformFunctionality>>().AddFunctionality(player);
+	Get<FunctionalitySystemDelegate<PlayerControllerFunctionality>>().AddFunctionality(player);
+	Get<FunctionalitySystemDelegate<CameraFunctionality>>().AddFunctionality(player).SetTarget(myPlayerTransform);
 
 	return player;
 }

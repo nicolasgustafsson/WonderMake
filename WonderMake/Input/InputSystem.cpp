@@ -106,7 +106,7 @@ GLFWwindow* InputSystem::GetCurrentWindow() const
 		}
 	}
 
-	return myWindowSystemPtr->myGlfwWindow;
+	return Get<Window>().myGlfwWindow;
 }
 
 constexpr EInputItemState InputSystem::GetNewInputState(const EInputItemState aOldState, const bool aIsPressed) const noexcept

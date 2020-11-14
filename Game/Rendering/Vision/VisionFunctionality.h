@@ -8,19 +8,14 @@ struct SVisionComponent
 	VisionRenderObject VisionRenderObject;
 };
 
-REGISTER_COMPONENT(SVisionComponent);
 
 class VisionFunctionality : public Functionality<
-	VisionFunctionality,
 	Policy::Set<
-	Policy::Add<LineOfSightFunctionality, Policy::EPermission::Read>,
-	Policy::Add<TransformFunctionality, Policy::EPermission::Read>,
-	Policy::Add<SVisionComponent, Policy::EPermission::Write>
-	>>
+	PAdd<LineOfSightFunctionality, PRead>,
+	PAdd<TransformFunctionality, PRead>,
+	PAdd<SVisionComponent, PWrite>>>
 {
 public:
-	VisionFunctionality(Object& aOwner) : Super(aOwner) {}
 	void Tick();
 };
 
-REGISTER_FUNCTIONALITY(VisionFunctionality);

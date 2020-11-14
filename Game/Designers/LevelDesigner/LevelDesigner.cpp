@@ -41,7 +41,7 @@ plf::colony<Object> LevelDesigner::DesignEnemies(const SSpace& aSpace)
 {
 	plf::colony<Object> enemies;
 
-	if (!Get<DebugSettingsSystem>()->GetOrCreateDebugValue("Enable Enemies", true))
+	if (!Get<DebugSettingsSystem>().GetOrCreateDebugValue("Enable Enemies", true))
 		return enemies;
 
 
@@ -70,6 +70,9 @@ void LevelDesigner::DesignPortal(const SSpace& aSpace)
 
 	transform.SetPosition(position);
 	sprite.SetTexture(std::filesystem::current_path() / "Textures/portal.png");
+
+	//[Nicos]: TODO REMOVE - After we have chains and stuff
+	Get<FunctionalitySystemDelegate<CollisionFunctionality>>().AddFunctionality(portal).Tick();
 }
 
 void LevelDesigner::DesignBuffTotems(const SSpace& aSpace)
@@ -103,6 +106,7 @@ void LevelDesigner::DesignBuffTotem(const SSpace& aSpace)
 	transform.SetPosition(position);
 	sprite.SetTexture(std::filesystem::current_path() / (buffType == EBuffType::Buff ? "Textures/totemGreen.png" : "Textures/totemRed.png"));
 	sprite.SetScale({ scale, scale });
+	Get<FunctionalitySystemDelegate<CollisionFunctionality>>().AddFunctionality(totem).Tick();
 }
 
 void LevelDesigner::DesignStartPoint(const SSpace& aSpace) 

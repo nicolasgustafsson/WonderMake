@@ -5,6 +5,9 @@
 #include "Physics/Navmesh/Navmesh.h"
 #include "Physics/Navmesh/NavmeshFunctionality.h"
 
+REGISTER_COMPONENT(SLineOfSightComponent);
+REGISTER_FUNCTIONALITY(LineOfSightFunctionality);
+
 void LineOfSightFunctionality::Tick()
 {
 	Navmesh& navmesh = Get<LevelDenizenFunctionality>().Get<SLevelDenizenComponent>().Level->Get<NavmeshFunctionality>().GetNavmesh();

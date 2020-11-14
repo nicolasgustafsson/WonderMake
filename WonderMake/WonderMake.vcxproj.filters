@@ -274,5 +274,6 @@
     <Text Include="Utilities\nicostodo utilities.txt" />
     <Text Include="NodeGraph\nicostodo nodegraph.txt" />
     <Text Include="Debugging\nicostodo debug.txt" />
+    <Text Include="nicostodo wondermake.txt" />
   </ItemGroup>
 </Project>

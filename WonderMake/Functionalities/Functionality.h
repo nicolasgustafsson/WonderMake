@@ -8,19 +8,14 @@
 class Object;
 
 template<
-	typename TSelfType,
 	typename TPolicySet = Policy::Set<>>
 class Functionality
 	: public _BaseFunctionality
 {
 public:
-	using Super = Functionality<TSelfType, TPolicySet>;
+	using Super = Functionality<TPolicySet>;
 	using Dependencies = typename TPolicySet::DependenciesRef;
 	using PolicySet = TPolicySet;
-
-	Functionality(Object& /*aObject*/, Dependencies&& aDependencies)
-		: myDependencies(std::move(aDependencies))
-	{}
 
 	inline virtual void Destroy() override final
 	{
@@ -44,8 +39,11 @@ public:
 		return std::get<std::decay_t<TDependency>&>(myDependencies);
 	}
 
-private:
-	friend TSelfType;
+protected:
+	Functionality(Object& /*aObject*/, Dependencies&& aDependencies)
+		: myDependencies(std::move(aDependencies))
+	{}
 
+private:
 	Dependencies myDependencies;
 };

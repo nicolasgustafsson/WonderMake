@@ -24,7 +24,7 @@ enum class EActionResult
 
 //Nicos: This currently is not thread safe, have an extra look when adding policies/threading
 class ActionFunctionality
-	: public Functionality<ActionFunctionality,
+	: public Functionality<
 		Policy::Set<
 			PAdd<TimeKeeper, PRead>,
 			PAdd<SActionComponent, PWrite>,

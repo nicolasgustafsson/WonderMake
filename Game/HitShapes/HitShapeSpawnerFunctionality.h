@@ -16,7 +16,6 @@ enum class EDirection
 //[Nicos]: Basically just a bunch of helper functions for spawning hitshapes
 class HitShapeSpawnerFunctionality
 	: public Functionality<
-	HitShapeSpawnerFunctionality,
 		Policy::Set<
 			PAdd<Randomizer, PWrite>,
 			PAdd<FunctionalitySystemDelegate<HitShapeFunctionality>, PWrite>,

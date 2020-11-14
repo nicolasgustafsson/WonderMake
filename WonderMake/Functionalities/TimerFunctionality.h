@@ -18,7 +18,6 @@ struct STimerComponent
 
 class TimerFunctionality
 	: public Functionality<
-		TimerFunctionality,
 		Policy::Set<
 			PAdd<TimeKeeper, PRead>,
 			PAdd<STimerComponent, PWrite>>>

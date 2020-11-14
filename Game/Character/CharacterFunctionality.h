@@ -29,7 +29,6 @@ struct SDiedImpulse
 
 class CharacterFunctionality
 	: public Functionality<
-		CharacterFunctionality,
 		Policy::Set<
 			PAdd<InputSystem, PWrite>,
 			PAdd<OwnerFunctionality, PWrite>,

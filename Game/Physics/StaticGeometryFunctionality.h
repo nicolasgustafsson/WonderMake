@@ -4,7 +4,6 @@
  //basically just acts as an identifier for static geometry
 class StaticGeometryFunctionality
 	: public Functionality<
-		StaticGeometryFunctionality,
 		Policy::Set<
 			PAdd<CollisionFunctionality, PWrite>>>
 {

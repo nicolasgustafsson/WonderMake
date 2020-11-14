@@ -5,11 +5,10 @@
 #include "Functionalities/OwnerFunctionality.h"
 
 class TimeToLiveFunctionality : public Functionality<
-	TimeToLiveFunctionality,
 	Policy::Set<
-	PAdd<SLevelDenizenComponent, PWrite>, 
-	PAdd<TimerFunctionality, PWrite>,
-	PAdd<OwnerFunctionality, PWrite >> >
+		PAdd<SLevelDenizenComponent, PWrite>, 
+		PAdd<TimerFunctionality, PWrite>,
+		PAdd<OwnerFunctionality, PWrite>>>
 {
 public:
 	TimeToLiveFunctionality(Object& aOwner, Dependencies&& aDependencies) : Super(aOwner, std::move(aDependencies)) {}

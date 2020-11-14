@@ -20,7 +20,6 @@ struct SMeleeWeaponUserComponent
 
 class MeleeWeaponUserFunctionality
 	: public Functionality<
-		MeleeWeaponUserFunctionality,
 		Policy::Set<
 			PAdd<SMeleeWeaponUserComponent, PWrite>,
 			PAdd<TransformFunctionality, PWrite>,

@@ -12,8 +12,8 @@ struct SLevelDenizenComponent : public SComponent
 };
 
 class LevelDenizenFunctionality : public Functionality<
-	LevelDenizenFunctionality,
-	Policy::Set<PAdd<SLevelDenizenComponent, PWrite>>>
+	Policy::Set<
+		PAdd<SLevelDenizenComponent, PWrite>>>
 {
 public:
 	LevelDenizenFunctionality(Object& aOwner, Dependencies&& aDependencies);

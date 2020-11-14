@@ -3,7 +3,7 @@
 #include "Functionality.h"
 
 class OwnerFunctionality
-	: public Functionality<OwnerFunctionality>
+	: public Functionality<>
 {
 public:
 	OwnerFunctionality(Object& aOwner, Dependencies&& aDependencies);

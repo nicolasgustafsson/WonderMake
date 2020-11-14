@@ -13,9 +13,8 @@ struct SFactionComponent : public SComponent
 };
 
 class FactionFunctionality : public Functionality<
-	FactionFunctionality,
 	Policy::Set<
-	PAdd<SFactionComponent, PWrite >> >
+		PAdd<SFactionComponent, PWrite>>>
 {
 public:
 	FactionFunctionality(Object& aOwner, Dependencies&& aDependencies);

@@ -17,7 +17,6 @@ namespace Colliders
 
 class CollisionFunctionality final
 	: public Functionality<
-		CollisionFunctionality,
 		Policy::Set<
 			PAdd<CollisionSystem, PWrite>,
 			PAdd<DebugSettingsSystem, PWrite>,

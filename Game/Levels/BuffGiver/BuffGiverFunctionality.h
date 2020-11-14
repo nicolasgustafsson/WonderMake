@@ -17,7 +17,6 @@ struct SBuffGiverComponent : public SComponent
 
 class BuffGiverFunctionality
 	: public Functionality<
-		BuffGiverFunctionality,
 		Policy::Set<
 			PAdd<SBuffGiverComponent, PWrite>,
 			PAdd<CollisionFunctionality, PWrite>,

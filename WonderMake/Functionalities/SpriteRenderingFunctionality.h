@@ -5,7 +5,6 @@
 
 class SpriteRenderingFunctionality
 	: public Functionality<
-		SpriteRenderingFunctionality,
 		Policy::Set<
 			PAdd<STransformComponent, PRead>,
 			PAdd<SSpriteComponent, PWrite>>>

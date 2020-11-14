@@ -5,7 +5,6 @@
 
 class TargetFunctionality
 	: public Functionality<
-		TargetFunctionality,
 		Policy::Set<
 			PAdd<CollisionSystem, PWrite>,
 			PAdd<TransformFunctionality, PWrite>>>

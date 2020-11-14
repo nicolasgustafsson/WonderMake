@@ -10,7 +10,6 @@ struct SCameraComponent : public SComponent
 
 class CameraFunctionality
 	: public Functionality<
-		CameraFunctionality,
 		Policy::Set<
 			PAdd<Camera, PWrite>,
 			PAdd<TransformFunctionality, PWrite>,

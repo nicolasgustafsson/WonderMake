@@ -16,7 +16,6 @@ struct SCatComponent
 
 class CatFunctionality
 	: public Functionality<
-		CatFunctionality,
 		Policy::Set<
 			PAdd<SCatComponent, PWrite>>>
 {
@@ -44,7 +43,6 @@ struct SBagComponent
 
 class BagFunctionality
 	: public Functionality<
-		BagFunctionality,
 		Policy::Set<
 			PAdd<SBagComponent, PWrite>>>
 {

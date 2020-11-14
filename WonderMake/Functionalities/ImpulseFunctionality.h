@@ -17,7 +17,6 @@ struct SImpulseListComponent
 
 class ImpulseFunctionality
 	: public Functionality<
-		ImpulseFunctionality,
 		Policy::Set<
 			PAdd<ObjectImpulseRouter, PWrite>,
 			PAdd<OwnerFunctionality, PRead>,

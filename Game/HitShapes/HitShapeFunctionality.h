@@ -29,7 +29,6 @@ struct SHitShapeComponent : public SComponent
 
 class HitShapeFunctionality
 	: public Functionality<
-		HitShapeFunctionality,
 		Policy::Set<
 			PAdd<CollisionSystem, PWrite>,
 			PAdd<TimeKeeper, PRead>,

@@ -6,7 +6,6 @@
 
 class LevelPortalFunctionality
 	: public Functionality<
-		LevelPortalFunctionality,
 		Policy::Set<
 			PAdd<CollisionFunctionality, PWrite>>>
 {

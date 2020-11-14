@@ -13,7 +13,6 @@ struct SMovementInputComponent
 
 class MovementInputFunctionality
 	: public Functionality<
-		MovementInputFunctionality,
 		Policy::Set<
 			PAdd<SMovementInputComponent, PWrite>>>
 {

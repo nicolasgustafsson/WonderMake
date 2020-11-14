@@ -6,7 +6,6 @@
 
 class TransformFunctionality
 	: public Functionality<
-		TransformFunctionality, 
 		Policy::Set<
 			PAdd<STransformComponent, PWrite>>>
 {

@@ -35,7 +35,6 @@ struct SPlayerDiedMessage
 
 class PlayerControllerFunctionality
 	: public Functionality<
-		PlayerControllerFunctionality,
 		Policy::Set<
 			PAdd<MeleeWeaponDesigner, PWrite>,
 			PAdd<InputSystem, PWrite>,

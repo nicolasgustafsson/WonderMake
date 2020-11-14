@@ -15,7 +15,6 @@ struct SSpinnerComponent
 
 class SpinnerFunctionality
 	: public Functionality<
-		SpinnerFunctionality,
 		Policy::Set<
 			PAdd<TimeKeeper, PRead>,
 			PAdd<SSpinnerComponent, PWrite>,

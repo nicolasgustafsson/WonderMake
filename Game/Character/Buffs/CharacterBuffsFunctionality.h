@@ -12,7 +12,6 @@ struct SCharacterBuffComponent : public SComponent
 
 class CharacterBuffsFunctionality
 	: public Functionality<
-		CharacterBuffsFunctionality,
 		Policy::Set<
 			PAdd<TimeKeeper, PRead>,
 			PAdd<SCharacterBuffComponent, PWrite>,

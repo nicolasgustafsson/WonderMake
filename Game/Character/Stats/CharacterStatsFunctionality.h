@@ -36,7 +36,6 @@ struct SCharacterStatsComponent : public SComponent
 
 class CharacterStatsFunctionality												//Nicos: having 2 functionalities depending on eachother is currently not supported :/
 	: public Functionality<
-		CharacterStatsFunctionality,
 		Policy::Set<
 			PAdd<SCharacterStatsComponent, PWrite>>>/*, CharacterFunctionality*/
 {

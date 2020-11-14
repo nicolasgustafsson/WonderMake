@@ -20,7 +20,6 @@ struct SDefaultMovementComponent
 
 class DefaultMovementFunctionality
 	: public Functionality<
-		DefaultMovementFunctionality,
 		Policy::Set<
 			PAdd<CollisionSystem, PWrite>,
 			PAdd<TimeKeeper, PRead>,

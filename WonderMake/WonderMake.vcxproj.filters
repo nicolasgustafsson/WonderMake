@@ -8,11 +8,8 @@
     <ClCompile Include="Collision\CollisionSystem.cpp" />
     <ClCompile Include="Debugging\DebugLineDrawer.cpp" />
     <ClCompile Include="Debugging\DebugLineRenderObject.cpp" />
-    <ClCompile Include="Functionalities\OwnerFunctionality.cpp" />
     <ClCompile Include="Functionalities\TransformFunctionality.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />
-    <ClCompile Include="Functionalities\ImpulseFunctionality.cpp" />
-    <ClCompile Include="Object\ObjectImpulseRouter.cpp" />
     <ClCompile Include="Utilities\Debugging\Debugged.cpp" />
     <ClCompile Include="FileSystem\ReadFileAsStringJob.cpp" />
     <ClCompile Include="Graphics\EngineUniformBuffer.cpp" />
@@ -71,7 +68,11 @@
     <ClCompile Include="Utilities\Math.cpp" />
     <ClCompile Include="FileSystem\FileWatcher.cpp" />
     <ClCompile Include="Graphics\ShaderParser.cpp" />
-    <ClCompile Include="Utilities\Serialization.cpp" />
+    <ClCompile Include="Utilities\DependencyInjector.cpp" />
+    <ClCompile Include="Object\DependencyDestructor.cpp" />
+    <ClCompile Include="Graphics\Shader.cpp" />
+    <ClCompile Include="Components\Component.cpp" />
+    <ClCompile Include="Collision\CollisionComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -85,13 +86,10 @@
     <ClInclude Include="Debugging\DebugLineDrawer.h" />
     <ClInclude Include="Debugging\DebugLineRenderObject.h" />
     <ClInclude Include="Debugging\DebugLine.h" />
-    <ClInclude Include="Functionalities\OwnerFunctionality.h" />
     <ClInclude Include="Functionalities\TransformFunctionality.h" />
     <ClInclude Include="Imgui\ImguiInclude.h" />
     <ClInclude Include="Input\InputItems.h" />
     <ClInclude Include="Input\InputSystem.h" />
-    <ClInclude Include="Functionalities\ImpulseFunctionality.h" />
-    <ClInclude Include="Object\ObjectImpulseRouter.h" />
     <ClInclude Include="Utilities\MathUtility.h" />
     <ClInclude Include="Utilities\Stopwatch.h" />
     <ClInclude Include="Utilities\Debugging\Debugged.h" />
@@ -108,7 +106,6 @@
     <ClInclude Include="Components\ComponentSystem.h" />
     <ClInclude Include="Components\SpriteComponent.h" />
     <ClInclude Include="Components\TransformComponent.h" />
-    <ClInclude Include="Object\Dependency.h" />
     <ClInclude Include="Functionalities\SpriteRenderingFunctionality.h" />
     <ClInclude Include="Functionalities\Functionality.h" />
     <ClInclude Include="Functionalities\FunctionalitySystem.h" />
@@ -172,7 +169,6 @@
     <ClInclude Include="Logging\FileLogger.h" />
     <ClInclude Include="Utilities\plf_colony.h" />
     <ClInclude Include="Object\Object.h" />
-    <ClInclude Include="Object\Dependency.h" />
     <ClInclude Include="Components\SpriteComponent.h" />
     <ClInclude Include="Components\TransformComponent.h" />
     <ClInclude Include="Functionalities\SpriteRenderingFunctionality.h" />
@@ -201,7 +197,6 @@
     <ClInclude Include="Functionalities\ImpulseFunctionality.h" />
     <ClInclude Include="Object\ObjectImpulseRouter.h" />
     <ClInclude Include="Functionalities\OwnerFunctionality.h" />
-    <ClInclude Include="Serialization\SerializationSystem.h" />
     <ClInclude Include="Randomizer\Randomizer.h" />
     <ClInclude Include="Functionalities\BaseFunctionality.h" />
     <ClInclude Include="Program\GlfwFacade.h" />
@@ -244,7 +239,9 @@
     <ClInclude Include="Graphics\ShaderParser.h" />
     <ClInclude Include="Utilities\Rotation.h" />
     <ClInclude Include="Utilities\Matrix.h" />
-    <ClInclude Include="Utilities\Serialization.h" />
+    <ClInclude Include="Utilities\DependencyInjector.h" />
+    <ClInclude Include="Object\DependencyDestructor.h" />
+    <ClInclude Include="Utilities\AutoRegister.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

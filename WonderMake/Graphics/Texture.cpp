@@ -4,6 +4,8 @@
 #include <std\stb_image.h>
 #include "OpenGLFacade.h"
 
+REGISTER_RESOURCE(Texture);
+
 Texture::Texture(const std::filesystem::path& aPath)
 {
 	myPath = aPath;

@@ -7,12 +7,11 @@ void BuffLifetimeProperty::ApplyOnBuff(BuffInstance& aBuff)
 	aBuff.myPropertyInstances.emplace(std::make_unique<BuffLifetimePropertyInstance>(*this, aBuff.myCharacter, myTimeToLive));
 }
 
-void BuffLifetimeProperty::Tick(BuffBlueprintPropertyInstance& aBuffPropertyInstance)
+void BuffLifetimeProperty::Tick(BuffBlueprintPropertyInstance& aBuffPropertyInstance, const f32 aDeltaTime)
 {
-	const f32 deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
 	BuffLifetimePropertyInstance& instance = *static_cast<BuffLifetimePropertyInstance*>(&aBuffPropertyInstance);
 
-	instance.myLifeLeft -= deltaTime;
+	instance.myLifeLeft -= aDeltaTime;
 }
 
 bool BuffLifetimeProperty::BuffShouldDie(const BuffBlueprintPropertyInstance& aBuffPropertyInstance) const

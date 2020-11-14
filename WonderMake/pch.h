@@ -5,6 +5,7 @@
 #include <optional>
 #include <array>
 #include <functional>
+#include "System/SystemPtr.h"
 #include "Utilities/Result.h"
 #include "Utilities/Color.h"
 #include "Utilities/RestrictTypes.h"

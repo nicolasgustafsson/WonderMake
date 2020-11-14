@@ -8,6 +8,8 @@
 #include "Functionalities/TransformFunctionality.h"
 #include "Collision/CollisionSystem.h"
 
+class DebugSettingsSystem;
+
 namespace Colliders
 {
 	struct SSphere;
@@ -15,15 +17,16 @@ namespace Colliders
 
 class CollisionFunctionality final
 	: public Functionality<
-		CollisionFunctionality,
 		Policy::Set<
-			Policy::Add<SCollisionComponent, Policy::EPermission::Write>,
-			Policy::Add<TransformFunctionality, Policy::EPermission::Read>>>
+			PAdd<CollisionSystem, PWrite>,
+			PAdd<DebugSettingsSystem, PWrite>,
+			PAdd<SCollisionComponent, PWrite>,
+			PAdd<TransformFunctionality, PRead>>>
 	, public Debugged
 {
 public:
 
-	CollisionFunctionality(Object& aOwner) noexcept;
+	CollisionFunctionality();
 	~CollisionFunctionality();
 
 	void Tick();
@@ -47,13 +50,13 @@ SCollider& CollisionFunctionality::AddLineCollider(TIdentifyingFunctionality& aF
 {
 	auto& collisionComponent = Get<SCollisionComponent>();
 	const auto& transformFunctionality = Get<TransformFunctionality>();
-	SystemPtr<CollisionSystem> collisionSystem;
+	auto& collisionSystem = Get<CollisionSystem>();
 
 	const auto transformation = transformFunctionality.GetMatrix();
 
 	SCollider collider;
 
-	collider.Collider = &collisionSystem->CreateLineCollider(aFunctionalityIdentifier, aOffset * transformation, aSecondOffset * transformation);
+	collider.Collider = &collisionSystem.CreateLineCollider(aFunctionalityIdentifier, aOffset * transformation, aSecondOffset * transformation);
 	collider.Offset = aOffset;
 
 	return *collisionComponent.Colliders.emplace(collider);
@@ -62,9 +65,7 @@ SCollider& CollisionFunctionality::AddLineCollider(TIdentifyingFunctionality& aF
 template<typename TFunctionalityToReactAgainst>
 void CollisionFunctionality::AddReaction(SCollider& aCollider, std::function<void(TFunctionalityToReactAgainst&, Colliders::SCollisionInfo)> aCallback)
 {
-	SystemPtr<CollisionSystem> collisionSystem;
-
-	collisionSystem->AddReaction<TFunctionalityToReactAgainst>(*aCollider.Collider, aCallback);
+	Get<CollisionSystem>().AddReaction<TFunctionalityToReactAgainst>(*aCollider.Collider, aCallback);
 }
 
 template<typename TIdentifyingFunctionality>
@@ -72,16 +73,14 @@ SCollider& CollisionFunctionality::AddSphereCollider(TIdentifyingFunctionality& 
 {
 	SCollisionComponent& collisionComponent = Get<SCollisionComponent>();
 	const auto& transformFunctionality = Get<TransformFunctionality>();
-	SystemPtr<CollisionSystem> collisionSystem;
+	auto& collisionSystem = Get<CollisionSystem>();
 
 	const auto transformation = transformFunctionality.GetMatrix();
 
 	SCollider collider;
 
-	collider.Collider = &collisionSystem->CreateSphereCollider(aFunctionalityIdentifier, aOffset * transformation, aRadius);
+	collider.Collider = &collisionSystem.CreateSphereCollider(aFunctionalityIdentifier, aOffset * transformation, aRadius);
 	collider.Offset = aOffset;
 
 	return *collisionComponent.Colliders.emplace(collider);
 }
-
-REGISTER_FUNCTIONALITY(CollisionFunctionality);

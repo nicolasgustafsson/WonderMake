@@ -1,17 +1,20 @@
 #pragma once
 #include "System/System.h"
-#include "System/SystemPtr.h"
 #include "Graphics/EngineUniformBuffer.h"
 #include "Message/MessageTypes.h"
 #include "Message/MessageSubscriber.h"
 #include <Utilities/Debugging/Debugged.h>
 
 class Camera final
-	: public System
+	: public System<
+		Policy::Set<
+			PAdd<EngineUniformBuffer, PWrite>>>
 	, public Debugged
 {
 public:
-	Camera() : Debugged("Camera Settings") {}
+	Camera()
+		: Debugged("Camera Settings")
+	{}
 	void Update();
 
 	void SetViewportSize(const SVector2i aViewportSize) noexcept;
@@ -23,7 +26,6 @@ public:
 private:
 	virtual void Debug() override;
 
-	SystemPtr<EngineUniformBuffer> myEngineBufferPtr;
 	SVector2f myPosition;
 	SVector2f myImguiWindowOffset;
 	float myRotation = 0.f;
@@ -33,4 +35,3 @@ private:
 	SMatrix33f myViewMatrix;
 	SVector2f myViewportSize;
 };
-

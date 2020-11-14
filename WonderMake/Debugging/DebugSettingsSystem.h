@@ -4,7 +4,9 @@
 #include <json/json.hpp>
 #include <string>
 
-class DebugSettingsSystem : public System, public Debugged
+class DebugSettingsSystem 
+	: public System<>
+	, public Debugged
 {
 public:
 	DebugSettingsSystem();
@@ -47,4 +49,3 @@ void DebugSettingsSystem::SetDebugValue(const std::string aSettingName, TSetting
 	std::pair<nlohmann::json&, std::string> leaf = GetLeaf(aSettingName);
 	leaf.first[leaf.second] = aSettingValue;
 }
-

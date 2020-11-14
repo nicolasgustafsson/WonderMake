@@ -4,6 +4,8 @@
 #include "CollisionFunctionality.h"
 #include "Collision/Colliders.h"
 
+REGISTER_SYSTEM(CollisionSystem);
+
 CollisionSystem::CollisionSystem() noexcept
 {
 	EnableTick();

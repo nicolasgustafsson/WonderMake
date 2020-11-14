@@ -4,6 +4,8 @@
 #include "Program/Window.h"
 #include <GLFW/glfw3.h>
 
+REGISTER_SYSTEM(Camera);
+
 void Camera::Update()
 {
 	myViewMatrix.SetPosition(myPosition);
@@ -21,7 +23,7 @@ void Camera::Update()
 
 	viewInverse.FastInverse();
 
-	auto& buffer = myEngineBufferPtr->GetBuffer();
+	auto& buffer = Get<EngineUniformBuffer>().GetBuffer();
 
 	const auto projectionMatrix = myProjectionMatrix;
 	const auto viewMatrix = viewInverse;

@@ -10,16 +10,14 @@
 #include "Collision/CollisionFunctionality.h"
 
 #include "Functionalities/TransformFunctionality.h"
-#include "Functionalities/OwnerFunctionality.h"
-#include "Functionalities/ImpulseFunctionality.h"
 #include "Functionalities/TimerFunctionality.h"
 #include "Levels/LevelDenizenFunctionality.h"
 
-struct SCoolImpulse
-	: public SObjectImpulse<SCoolImpulse>
-{
+class MeleeWeaponDesigner;
+class InputSystem;
 
-};
+class EnemyControllerFunctionality;
+class TimeToLiveFunctionality;
 
 struct SPlayerDiedMessage
 	: public Message<SPlayerDiedMessage>
@@ -29,25 +27,26 @@ struct SPlayerDiedMessage
 
 class PlayerControllerFunctionality
 	: public Functionality<
-		PlayerControllerFunctionality,
 		Policy::Set<
-			Policy::Add<TransformFunctionality, Policy::EPermission::Write>,
-			Policy::Add<MovementInputFunctionality, Policy::EPermission::Write>,
-			Policy::Add<DefaultMovementFunctionality, Policy::EPermission::Write>,
-			Policy::Add<OwnerFunctionality, Policy::EPermission::Write>,
-			Policy::Add<MeleeWeaponUserFunctionality, Policy::EPermission::Write>,
-			Policy::Add<ActionFunctionality, Policy::EPermission::Write>,
-			Policy::Add<CollisionFunctionality, Policy::EPermission::Write>,
-			Policy::Add<CharacterFunctionality, Policy::EPermission::Write>,
-			Policy::Add<ImpulseFunctionality, Policy::EPermission::Write>,
-			Policy::Add<FactionFunctionality, Policy::EPermission::Write>,
-			Policy::Add<TimerFunctionality, Policy::EPermission::Write>,
-			Policy::Add<SLevelDenizenComponent, Policy::EPermission::Write>,
-			Policy::Add<SpriteRenderingFunctionality, Policy::EPermission::Write>>>
+			PAdd<MeleeWeaponDesigner, PWrite>,
+			PAdd<InputSystem, PWrite>,
+			PAdd<FunctionalitySystemDelegate<EnemyControllerFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<TimeToLiveFunctionality>, PWrite>,
+			PAdd<TransformFunctionality, PWrite>,
+			PAdd<MovementInputFunctionality, PWrite>,
+			PAdd<DefaultMovementFunctionality, PWrite>,
+			PAdd<MeleeWeaponUserFunctionality, PWrite>,
+			PAdd<ActionFunctionality, PWrite>,
+			PAdd<CollisionFunctionality, PWrite>,
+			PAdd<CharacterFunctionality, PWrite>,
+			PAdd<FactionFunctionality, PWrite>,
+			PAdd<TimerFunctionality, PWrite>,
+			PAdd<SLevelDenizenComponent, PWrite>,
+			PAdd<SpriteRenderingFunctionality, PWrite>>>
 	, public Debugged
 {
 public:
-	PlayerControllerFunctionality(Object& aOwner);
+	PlayerControllerFunctionality();
 
 	void Tick() noexcept;
 
@@ -56,8 +55,5 @@ public:
 private:
 	void UpdateMovement();
 
-	SystemPtr<InputSystem> myInputSystem;
 	void OnDeath();
 };
-
-REGISTER_FUNCTIONALITY(PlayerControllerFunctionality);

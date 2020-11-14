@@ -10,7 +10,7 @@ WeaponSwingHitShapeAction::WeaponSwingHitShapeAction(CharacterFunctionality& aUs
 
 void WeaponSwingHitShapeAction::BeginAction()
 {
-	myUser.Get<TransformFunctionality>().FacePosition(SystemPtr<InputSystem>()->GetMousePositionInWorld());
+	myUser.Get<TransformFunctionality>().FacePosition(myUser.Get<InputSystem>().GetMousePositionInWorld());
 
 	HitShapeSpawnerFunctionality& hitShapeSpawner = myUser.Get<HitShapeSpawnerFunctionality>();
 
@@ -19,10 +19,9 @@ void WeaponSwingHitShapeAction::BeginAction()
 	myCooldown = mySwing.ChargeTime + mySwing.SwingTime;
 }
 
-void WeaponSwingHitShapeAction::Tick()
+void WeaponSwingHitShapeAction::Tick(const f32 aDeltaTime)
 {
-	const f32 deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
-	myCooldown -= deltaTime;
+	myCooldown -= aDeltaTime;
 }
 
 bool WeaponSwingHitShapeAction::IsCompleted() const

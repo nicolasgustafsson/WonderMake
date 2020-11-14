@@ -5,7 +5,13 @@
 #include "Audio/AudioMixingNodeGraph.h"
 #include "Audio/SoundEffectNodeGraph.h"
 
-class AudioManager : public System, Debugged
+class DebugSettingsSystem;
+
+class AudioManager
+	: public System<
+		Policy::Set<
+			PAdd<DebugSettingsSystem, PWrite>>
+	>, Debugged
 {
 public:
 	AudioManager();

@@ -14,7 +14,7 @@ public:
 
 	virtual void ApplyOnBuff(BuffInstance& aBuff) { aBuff; };
 
-	virtual void Tick(BuffBlueprintPropertyInstance& aBuffPropertyInstance) { aBuffPropertyInstance; };
+	virtual void Tick(BuffBlueprintPropertyInstance& aBuffPropertyInstance, const f32 aDeltaTime) { aBuffPropertyInstance; aDeltaTime; };
 
 	virtual bool BuffShouldDie(const BuffBlueprintPropertyInstance& aBuffPropertyInstance) const { aBuffPropertyInstance; return false; }
 
@@ -29,7 +29,7 @@ public:
 	BuffBlueprintPropertyInstance(BuffBlueprintProperty& aOwningBlueprintProperty, CharacterFunctionality& aCharacter)
 		: myBlueprintProperty(aOwningBlueprintProperty), myCharacter(aCharacter) {}
 
-	void Tick();
+	void Tick(const f32 aDeltaTime);
 	void Inspect();
 	bool BuffShouldDie() const;
 

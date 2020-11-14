@@ -1,6 +1,11 @@
 #pragma once
+
 #include "Character/Buffs/Buff.h"
 
+#include "System/System.h"
+
+class EffectDesigner;
+class Randomizer;
 
 enum class EBuffIntensity
 {
@@ -29,7 +34,12 @@ struct SBuffDesign
 	plf::colony<std::unique_ptr<BuffBlueprintProperty>> Properties;
 };
 
-class BuffDesigner : public System, public Debugged
+class BuffDesigner
+	: public System<
+		Policy::Set<
+			PAdd<Randomizer, PWrite>,
+			PAdd<EffectDesigner, PWrite>>>
+	, public Debugged
 {
 public:
 	BuffDesigner();
@@ -37,16 +47,16 @@ public:
 
 private:
 
-	EBuffType DecideBuffType() const;
-	f32 DecideBuffStrength() const;
-	f32 DecideBuffIntensity() const;
+	EBuffType DecideBuffType();
+	f32 DecideBuffStrength();
+	f32 DecideBuffIntensity();
 
-	void MakeBuffBetter(const f32 aHowMuch, SBuffDesign& aBuffDesign) const;
-	void MakeBuffWorse(const f32 aHowMuch, SBuffDesign& aBuffDesign) const;
+	void MakeBuffBetter(const f32 aHowMuch, SBuffDesign& aBuffDesign);
+	void MakeBuffWorse(const f32 aHowMuch, SBuffDesign& aBuffDesign);
 	
-	void AddStatProperty(bool aIncrease, const f32 aStrength, SBuffDesign& aBuffDesign) const;
+	void AddStatProperty(bool aIncrease, const f32 aStrength, SBuffDesign& aBuffDesign);
 
-	void AddEffectOverTimeProperty(const f32 aEffectStrength, SBuffDesign& aBuffDesign) const;
+	void AddEffectOverTimeProperty(const f32 aEffectStrength, SBuffDesign& aBuffDesign);
 
 	//[Nicos]: let the designer have ownership of the blueprints for now so we don't get a bunch of lifetime problems
 	BuffBlueprint ConstructBlueprintFromDesign(SBuffDesign& aBuffDesign) const;
@@ -55,4 +65,3 @@ protected:
 
 	plf::colony<BuffBlueprint> myBlueprints;
 };
-

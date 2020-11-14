@@ -25,12 +25,11 @@ struct SLevelComponent : public SComponent
 };
 
 class LevelFunctionality : public Functionality<
-	LevelFunctionality,
-	Policy::Set<Policy::Add<SLevelComponent, Policy::EPermission::Write>>>
+	Policy::Set<
+		PAdd<FunctionalitySystemDelegate<LevelDenizenFunctionality>, PWrite>,
+		PAdd<SLevelComponent, PWrite>>>
 {
 public:
-	LevelFunctionality(Object& aOwner);
-
 	void Tick();
 
 	Object& AddDenizen();
@@ -45,6 +44,3 @@ public:
 	void SetStartPosition(const SVector2f aPosition);
 	[[nodiscard]] SVector2f GetStartPosition() const noexcept { return Get<SLevelComponent>().StartPosition; }
 };
-
-REGISTER_COMPONENT(SLevelComponent);
-REGISTER_FUNCTIONALITY(LevelFunctionality);

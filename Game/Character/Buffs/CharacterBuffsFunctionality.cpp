@@ -2,14 +2,8 @@
 #include "CharacterBuffsFunctionality.h"
 #include "Character/CharacterFunctionality.h"
 
-CharacterBuffsFunctionality::CharacterBuffsFunctionality(Object& aOwner)
-	: Super(aOwner)
-{
-	Get<ImpulseFunctionality>().Subscribe<SDiedImpulse>(*this, [&](auto) 
-		{
-			ClearBuffs();
-		});
-}
+REGISTER_COMPONENT(SCharacterBuffComponent);
+REGISTER_FUNCTIONALITY(CharacterBuffsFunctionality);
 
 void CharacterBuffsFunctionality::ApplyBuff(class CharacterFunctionality& aCharacter, BuffBlueprint& aBlueprint)
 {
@@ -38,7 +32,7 @@ bool CharacterBuffsFunctionality::HasBuff(BuffBlueprint& aBuffBlueprint) const
 
 void CharacterBuffsFunctionality::Tick()
 {
-	const f32 deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
+	const f32 deltaTime = Get<TimeKeeper>().GetDeltaSeconds();
 	SCharacterBuffComponent& buffComponent = Get<SCharacterBuffComponent>();
 
 	auto it = buffComponent.Buffs.begin();
@@ -46,7 +40,7 @@ void CharacterBuffsFunctionality::Tick()
 	{
 		auto& buff = *it;
 
-		buff.Tick();
+		buff.Tick(deltaTime);
 
 		if (buff.ShouldDie())
 		{

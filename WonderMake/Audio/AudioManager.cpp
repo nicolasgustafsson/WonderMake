@@ -8,14 +8,16 @@
 #include "Debugging/DebugSettingsSystem.h"
 #include "Audio/AudioFile.h"
 #include "Resources/ResourceSystem.h"
-#include <System/SystemPtr.h>
 #include "Audio/AudioStructs.h"
 #include <soloud_speech.h>
 #include "Imgui/NodeGraphGui.h"
 #include "Audio/AudioMixingNodeGraph.h"
 
+REGISTER_SYSTEM(AudioManager);
+
 AudioManager::AudioManager()
-	: Debugged("Audio Manager"), myAudioMixingNodeGraph(std::filesystem::path("NodeGraphs") / "Audio" / "AudioNodeGraph.json")
+	: Debugged("Audio Manager")
+	, myAudioMixingNodeGraph(std::filesystem::path("NodeGraphs") / "Audio" / "AudioNodeGraph.json")
 {
 	mySoloudEngine.init(mySoloudEngine.FLAGS::CLIP_ROUNDOFF, mySoloudEngine.BACKENDS::WASAPI, SoLoud::Soloud::AUTO, 2048, 2);
 	myBusHandle = mySoloudEngine.play(myBus);
@@ -104,9 +106,7 @@ void AudioManager::Debug()
 {
 	ImGui::Begin("Audio Manager");
 
-	SystemPtr<DebugSettingsSystem> debugSettings;
-
-	f32 volume = debugSettings->GetOrCreateDebugValue("Audio/GlobalVolume", 0.1f);
+	f32 volume = Get<DebugSettingsSystem>().GetOrCreateDebugValue("Audio/GlobalVolume", 0.1f);
 
 	if (volume < 0.f)
 		volume = 0.f;

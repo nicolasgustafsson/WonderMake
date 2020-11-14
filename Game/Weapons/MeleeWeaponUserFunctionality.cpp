@@ -6,9 +6,8 @@
 #include "Weapons/WeaponSwingHitShapeAction.h"
 #include "Weapons/MeleeWeapon.h"
 
-MeleeWeaponUserFunctionality::MeleeWeaponUserFunctionality(Object& aOwner)
-	: Super(aOwner)
-{}
+REGISTER_COMPONENT(SMeleeWeaponUserComponent);
+REGISTER_FUNCTIONALITY(MeleeWeaponUserFunctionality);
 
 void MeleeWeaponUserFunctionality::Inspect()
 {

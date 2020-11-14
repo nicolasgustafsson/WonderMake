@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Resources/Resource.h"
+#include "Resources/ResourceSystem.h"
 
 class Texture
 	: public Resource
@@ -22,4 +23,3 @@ private:
 	i32 myWidth;
 	i32 myHeight;
 };
-

@@ -1,8 +1,11 @@
 #include "pch.h"
 #include "CharacterFunctionality.h"
+#include "Input/InputSystem.h"
 
-CharacterFunctionality::CharacterFunctionality(Object& aOwner) noexcept
-	: Super(aOwner)
+REGISTER_COMPONENT(SHealthComponent);
+REGISTER_FUNCTIONALITY(CharacterFunctionality);
+
+CharacterFunctionality::CharacterFunctionality() noexcept
 {
 	auto& collider = Get<CollisionFunctionality>().AddSphereCollider(*this, SVector2f::Zero(), 15.f);
 
@@ -35,7 +38,7 @@ void CharacterFunctionality::Damage(const i32 aDamage)
 	Get<SHealthComponent>().Health -= aDamage;
 
 	if (IsDead())
-		WmSendObjectImpulse(Get<OwnerFunctionality>().GetOwner(), SDiedImpulse());
+		{} // TODO: Kill character
 }
 
 bool CharacterFunctionality::IsDead() const noexcept

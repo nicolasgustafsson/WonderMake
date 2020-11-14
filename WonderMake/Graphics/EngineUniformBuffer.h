@@ -58,9 +58,14 @@ struct SEngineUniformBufferData
 	float Time = 0;
 };
 
+class Window;
+
 class EngineUniformBuffer 
 	: public UniformBuffer<SEngineUniformBufferData>
-	, public System
+	, public System<
+		Policy::Set<
+			PAdd<Window, PWrite>,
+			PAdd<OpenGLFacade, PWrite>>>
 	, public Debugged
 	
 {
@@ -70,4 +75,3 @@ public:
 private:
 	virtual void Debug() override;
 };
-

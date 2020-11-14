@@ -24,8 +24,10 @@ void Routine::AddProcedure(Closure aClosure)
 
 void Routine::Procedure() 
 {
-	for(auto&& procedure : myProcedures)
+	for (auto&& procedure : myProcedures)
+	{
 		procedure();
+	}
 }
 
 void Routine::RouteMessages()

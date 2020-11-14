@@ -1,8 +1,11 @@
 #pragma once
+
+#include "System/System.h"
+
 #include <random>
 
 class Randomizer
-	: public System
+	: public System<>
 {
 public:
 	Randomizer();

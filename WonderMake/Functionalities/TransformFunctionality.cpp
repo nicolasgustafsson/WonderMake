@@ -1,11 +1,7 @@
 #include "pch.h"
 #include "TransformFunctionality.h"
 
-TransformFunctionality::TransformFunctionality(Object& aOwner) noexcept
-	: Super(aOwner)
-{
-
-}
+REGISTER_FUNCTIONALITY(TransformFunctionality);
 
 void TransformFunctionality::SetPosition(const SVector2f aPosition) noexcept
 {

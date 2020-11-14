@@ -2,6 +2,8 @@
 #include "TimeKeeper.h"
 #include "Debugging/DebugSettingsSystem.h"
 
+REGISTER_SYSTEM(TimeKeeper);
+
 float TimeKeeper::Update() noexcept
 {
 	myPreviousDeltaSecondsPrecise = myStopwatch.Restart() * myTimeDilation;

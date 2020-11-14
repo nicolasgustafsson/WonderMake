@@ -5,8 +5,9 @@
 
 #include "Character/CharacterFunctionality.h"
 
-LevelPortalFunctionality::LevelPortalFunctionality(Object& aOwner)
-	: Super(aOwner)
+REGISTER_FUNCTIONALITY(LevelPortalFunctionality);
+
+LevelPortalFunctionality::LevelPortalFunctionality()
 {
 	auto& collision = Get<CollisionFunctionality>();
 

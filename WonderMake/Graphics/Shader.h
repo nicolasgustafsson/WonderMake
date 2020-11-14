@@ -2,6 +2,7 @@
 #include <fstream>
 
 #include "Resources/Resource.h"
+#include "Resources/ResourceSystem.h"
 
 #include "Utilities/RestrictTypes.h"
 

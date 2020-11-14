@@ -8,7 +8,7 @@ public:
 		: BuffBlueprintProperty(), myTimeToLive(aLifeTime) {}
 
 	virtual void ApplyOnBuff(BuffInstance& aBuff) override;
-	virtual void Tick(BuffBlueprintPropertyInstance& aBuffPropertyInstance) override;
+	virtual void Tick(BuffBlueprintPropertyInstance& aBuffPropertyInstance, const f32 aDeltaTime) override;
 	virtual bool BuffShouldDie(const BuffBlueprintPropertyInstance& aBuffPropertyInstance) const;
 
 	virtual void Inspect() const override;

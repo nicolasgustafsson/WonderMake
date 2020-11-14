@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Constants.h"
+
 #include <cassert>
 #include <memory>
 #include <mutex>

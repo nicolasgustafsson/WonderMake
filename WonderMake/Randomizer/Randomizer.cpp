@@ -1,6 +1,8 @@
 #include "pch.h"
+
 #include "Randomizer.h"
-#include <random>
+
+REGISTER_SYSTEM(Randomizer);
 
 Randomizer::Randomizer()
 	: myRandomGenerator(myRandomDevice())

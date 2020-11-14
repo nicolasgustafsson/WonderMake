@@ -3,6 +3,8 @@
 
 #include <Windows.h>
 
+REGISTER_SYSTEM(FileWatcher);
+
 FileWatcher::FileWatcher()
 {
 	myShouldStop.store(false);
@@ -15,7 +17,7 @@ void FileWatcher::UpdateFileChanges()
 	std::lock_guard<std::mutex> lock(myMutex);
 	while (!myQueuedChanges.empty())
 	{
-		std::string changedFile = myQueuedChanges.front();
+		std::wstring changedFile = std::move(myQueuedChanges.front());
 		myQueuedChanges.pop();
 
 		SFileChangedMessage fileChangedMessage;
@@ -49,11 +51,11 @@ void FileWatcher::Watch()
 			for (;;)
 			{
 				std::vector<wchar_t> data;
-				data.resize(current->FileNameLength + sizeof(wchar_t));
-				memcpy(&data[0], current->FileName, current->FileNameLength);
-				data[data.size() - sizeof(wchar_t)] = L'\0';
+				data.resize(current->FileNameLength + 1);
+				memcpy((void*)&data[0], (void*)current->FileName, current->FileNameLength);
+				data.back() = L'\0';
 
-				std::string fileName = std::string(data.begin(), data.end());
+				std::wstring fileName = std::wstring(data.begin(), data.end());
 
 				std::filesystem::path filePath = fileName;
 

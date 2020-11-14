@@ -2,11 +2,8 @@
 #include "CharacterStatsFunctionality.h"
 #include "Character/CharacterFunctionality.h"
 
-CharacterStatsFunctionality::CharacterStatsFunctionality(Object& aOwner)
-	: Super(aOwner)
-{
-
-}
+REGISTER_COMPONENT(SCharacterStatsComponent);
+REGISTER_FUNCTIONALITY(CharacterStatsFunctionality);
 
 f32 CharacterStatsFunctionality::GetStatValue(const ECharacterStat aStat) const noexcept
 {

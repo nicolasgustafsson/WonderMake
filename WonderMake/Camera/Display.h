@@ -38,7 +38,7 @@ private:
 	SVector2f myImguiWindowOffset;
 	SVector2f myViewportSize;
 
-	RenderNodeGraph myRenderGraph;
+	ResourceProxy<RenderNodeGraph> myRenderGraph;
 
 	DisplayUniformBuffer myUniformBuffer;
 

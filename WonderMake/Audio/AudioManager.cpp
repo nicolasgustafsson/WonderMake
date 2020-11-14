@@ -15,8 +15,9 @@
 #include "Audio/AudioMixingNodeGraph.h"
 
 AudioManager::AudioManager()
-	: Debugged("Audio Manager"), myAudioMixingNodeGraph(std::filesystem::path("NodeGraphs") / "Audio" / "AudioNodeGraph.json")
+	: Debugged("Audio Manager")
 {
+	myAudioMixingNodeGraph = SystemPtr<ResourceSystem<AudioMixingNodeGraph>>()->GetResource(std::filesystem::path("NodeGraphs") / "Audio" / "AudioNodeGraph.json");
 	mySoloudEngine.init(mySoloudEngine.FLAGS::CLIP_ROUNDOFF, mySoloudEngine.BACKENDS::WASAPI, SoLoud::Soloud::AUTO, 2048, 2);
 	myBusHandle = mySoloudEngine.play(myBus);
 
@@ -32,7 +33,7 @@ void AudioManager::Update() noexcept
 {
 	if (!myHasInitializedAudio)
 	{
-		myAudioMixingNodeGraph.ExecuteExternal();
+		myAudioMixingNodeGraph->ExecuteExternal();
 		myHasInitializedAudio = true;
 	}
 
@@ -41,12 +42,12 @@ void AudioManager::Update() noexcept
 
 void AudioManager::PlayAudio(const std::filesystem::path& aAudioPath)
 {
-	auto it = std::find_if(mySoundEffects.begin(), mySoundEffects.end(), [aAudioPath](const SoundEffectNodeGraph& aSoundEffect) { return aSoundEffect.GetName() == aAudioPath.string(); });
+	auto it = std::find_if(mySoundEffects.begin(), mySoundEffects.end(), [aAudioPath](const ResourceProxy<SoundEffectNodeGraph>& aSoundEffect) { return aSoundEffect->GetName() == aAudioPath.string(); });
 
 	if (it == mySoundEffects.end())
-		it = mySoundEffects.emplace(aAudioPath);
+		it = mySoundEffects.insert(SystemPtr<ResourceSystem<SoundEffectNodeGraph>>()->GetResource(aAudioPath));
 
-	it->Execute();
+	(*it)->Execute();
 }
 
 void AudioManager::PlayAudio(ResourceProxy<AudioFile> aAudioFileToPlay)
@@ -158,10 +159,10 @@ I will shit fury all over you and you will drown in it. You're fucking dead, kid
 	}
 
 	if (ImGui::Button("Edit audio mixing node graph"))
-		myAudioMixingNodeGraph.ShouldBeVisible = true;
+		myAudioMixingNodeGraph->ShouldBeVisible = true;
 
-	if (myAudioMixingNodeGraph.ShouldBeVisible)
-		WmGui::NodeGraphEditor::NodeGraphEdit(myAudioMixingNodeGraph);
+	if (myAudioMixingNodeGraph->ShouldBeVisible)
+		WmGui::NodeGraphEditor::NodeGraphEdit(*myAudioMixingNodeGraph);
 
 	ImGui::Separator();
 
@@ -169,11 +170,11 @@ I will shit fury all over you and you will drown in it. You're fucking dead, kid
 
 	for (auto& soundEffectNodeGraph : mySoundEffects)
 	{
-		if (ImGui::Button(soundEffectNodeGraph.GetName().c_str()))
-			soundEffectNodeGraph.ShouldBeVisible = true;
+		if (ImGui::Button(soundEffectNodeGraph->GetName().c_str()))
+			soundEffectNodeGraph->ShouldBeVisible = true;
 
 		ImGui::PushID("Hejsan");
-		WmGui::NodeGraphEditor::NodeGraphEdit(soundEffectNodeGraph);
+		WmGui::NodeGraphEditor::NodeGraphEdit(*soundEffectNodeGraph);
 		ImGui::PopID();
 	}
 

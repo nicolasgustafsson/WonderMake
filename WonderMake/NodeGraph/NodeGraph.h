@@ -17,7 +17,7 @@ struct SCompiledNode
 	SNode& Node;
 };
 
-class NodeGraph : public NonCopyable, public NonMovable
+class NodeGraph : public NonCopyable, public NonMovable, public Resource
 {
 public:
 	NodeGraph(std::filesystem::path aFilePath);

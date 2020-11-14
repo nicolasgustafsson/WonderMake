@@ -9,10 +9,11 @@
 #include "Camera/Camera.h"
 
 Display::Display(const std::string& aName, Camera& aCamera)
-	: myPath(std::filesystem::path("NodeGraphs") / "Render" / std::string(aName + ".json")), myRenderGraph(myPath), myName(aName), myCamera(aCamera)
+	: myPath(std::filesystem::path("NodeGraphs") / "Render" / std::string(aName + ".json")), myName(aName), myCamera(aCamera)
 {
-	myRenderGraph.Load();
-	myRenderGraph.myGlobalData["ViewportSize"].emplace<SVector2f>(myViewportSize);
+	myRenderGraph = SystemPtr<ResourceSystem<RenderNodeGraph>>()->GetResource(myPath);
+	myRenderGraph->Load();
+	myRenderGraph->myGlobalData["ViewportSize"].emplace<SVector2f>(myViewportSize);
 }
 
 void Display::Update()
@@ -43,7 +44,7 @@ void Display::SetViewportSize(const SVector2i aViewportSize) noexcept
 	myProjectionMatrixInverse[1][1] = aViewportSize.Y / 2.0f;
 	myViewportSize = { aViewportSize.X, aViewportSize.Y };
 
-	myRenderGraph.myGlobalData["ViewportSize"].emplace<SVector2f>(myViewportSize);
+	myRenderGraph->myGlobalData["ViewportSize"].emplace<SVector2f>(myViewportSize);
 }
 
 void Display::SetImguiWindowOffset(const SVector2f aImguiOffset) noexcept
@@ -76,7 +77,7 @@ void Display::FinishDebugFrame()
 
 	const SVector2i ViewportSize = { static_cast<i32>(ImGui::GetContentRegionAvail().x), static_cast<i32>(ImGui::GetContentRegionAvail().y) };
 
-	RenderTarget* const finalRenderTarget = myRenderGraph.GetFinalRenderTarget();
+	RenderTarget* const finalRenderTarget = myRenderGraph->GetFinalRenderTarget();
 
 	if (finalRenderTarget)
 	{
@@ -96,9 +97,9 @@ void Display::FinishFrame()
 {
 	Update();
 
-	myRenderGraph.Execute();
+	myRenderGraph->Execute();
 
-	RenderTarget* const finalRenderTarget = myRenderGraph.GetFinalRenderTarget();
+	RenderTarget* const finalRenderTarget = myRenderGraph->GetFinalRenderTarget();
 
 	if (finalRenderTarget)
 		finalRenderTarget->BindAsTexture();
@@ -137,14 +138,14 @@ void Display::Inspect()
 	ImGui::Text(myName.c_str());
 
 	if (ImGui::FileSelector::SelectFile(myPath))
-		myRenderGraph.SetNewPath(myPath);
+		myRenderGraph->SetNewPath(myPath);
 
 	ImGui::SameLine();
 
 	if (ImGui::Button("Edit render node graph"))
-		myRenderGraph.ShouldBeVisible = true;
+		myRenderGraph->ShouldBeVisible = true;
 
-	if (myRenderGraph.ShouldBeVisible)
-		WmGui::NodeGraphEditor::NodeGraphEdit(myRenderGraph);
+	if (myRenderGraph->ShouldBeVisible)
+		WmGui::NodeGraphEditor::NodeGraphEdit(*myRenderGraph);
 	ImGui::PopID();
 }

@@ -10,8 +10,6 @@
 #include <limits>
 #include <typeinfo>
 
-class Object;
-
 class Dispatchable
 {
 public:
@@ -125,19 +123,6 @@ public:
 	{
 		return LogText.find(aTag) != std::string::npos;
 	}
-};
-
-template <typename TImpulse>
-struct SObjectImpulse
-	: public Message<SObjectImpulse<TImpulse>>
-{
-public:
-	SObjectImpulse() = default;
-
-	inline SObjectImpulse(Object& aObject) noexcept
-		: SelfObject(&aObject) {}
-
-	Object* SelfObject;
 };
 
 struct SDebugMessage

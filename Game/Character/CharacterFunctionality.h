@@ -20,12 +20,6 @@ struct SHealthComponent : public  SComponent
 	i32 Health = MaxHealth;
 };
 
-struct SDiedImpulse
-	: public SObjectImpulse<SDiedImpulse>
-{
-
-};
-
 class CharacterFunctionality
 	: public Functionality<
 		Policy::Set<

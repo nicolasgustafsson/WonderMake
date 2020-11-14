@@ -19,12 +19,6 @@ class InputSystem;
 class EnemyControllerFunctionality;
 class TimeToLiveFunctionality;
 
-struct SCoolImpulse
-	: public SObjectImpulse<SCoolImpulse>
-{
-
-};
-
 struct SPlayerDiedMessage
 	: public Message<SPlayerDiedMessage>
 {

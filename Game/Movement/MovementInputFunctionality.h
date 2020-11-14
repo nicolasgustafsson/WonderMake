@@ -2,8 +2,6 @@
 #include "Components/Component.h"
 #include "Functionalities/Functionality.h"
 
-struct SCoolImpulse;
-
 struct SMovementInputComponent 
 	: public SComponent
 {

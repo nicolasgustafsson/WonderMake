@@ -22,7 +22,6 @@ std::vector<Geometry::STriangle> Navmesh::GetLineOfSightFrom(const SVector2f aPo
 	Geometry::PolygonLoopingPointOperator point = myPolygon.FirstPoint();
 	std::optional<SVector2f> previousPoint;
 	std::optional<SVector2f> firstPoint;
-	bool longTriangle = false;
 	std::optional<Geometry::PolygonLoopingPointOperator> previousPointOp;
 	do
 	{

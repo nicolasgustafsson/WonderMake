@@ -55,6 +55,8 @@ public:
 
 	std::unordered_map<std::string, std::any> myGlobalData;
 
+	inline virtual bool ShouldHotReload() const override { return false; }
+
 protected:
 	virtual void Compile();
 

@@ -13,7 +13,7 @@ VisionRenderObject::VisionRenderObject()
 	SetRenderLayer("Vision");
 }
 
-void VisionRenderObject::SetVision(const SVector2f aCenter, const std::vector<Geometry::STriangle>& aPolygon)
+void VisionRenderObject::SetVision(const std::vector<Geometry::STriangle>& aPolygon)
 {
 	if (aPolygon.empty())
 		return;

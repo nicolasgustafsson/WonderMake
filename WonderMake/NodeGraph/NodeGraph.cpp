@@ -79,7 +79,6 @@ void NodeGraph::Load()
 	PostLoad();
 }
 
-
 void NodeGraph::Compile()
 {
 	myCompiledNodeStack.clear();

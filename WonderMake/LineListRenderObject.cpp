@@ -34,14 +34,9 @@ LineListRenderObject::LineListRenderObject(const std::vector<SVector2f>& aPoints
 	}
 }
 
-void LineListRenderObject::SetThickness(const f32 aThickness)
-{
-	myShaderProgram.SetProperty("Thickness", 1.f);
-}
-
 void LineListRenderObject::SetColor(const SColor aColor)
 {
-	myShaderProgram.SetProperty("Color", 1.f);
+	myShaderProgram.SetProperty("Color", aColor);
 }
 
 void LineListRenderObject::RenderInternal()

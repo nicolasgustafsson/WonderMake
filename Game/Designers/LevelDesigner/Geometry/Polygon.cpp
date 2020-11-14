@@ -228,7 +228,7 @@ namespace Geometry
 
 	std::optional<SVector2f> Polygon::Intersects(const SVector2f aFirstPoint, const SVector2f aSecondPoint, PolygonSideOperator aOperator, const f32 aTolerance /*= 0.f*/) const
 	{
-		return Intersects(aFirstPoint, aSecondPoint, *aOperator.GetStart(), *aOperator.GetEnd());
+		return Intersects(aFirstPoint, aSecondPoint, *aOperator.GetStart(), *aOperator.GetEnd(), aTolerance);
 	}
 
 }

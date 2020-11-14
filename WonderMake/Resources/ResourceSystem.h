@@ -64,6 +64,9 @@ void ResourceSystem<TResource>::OnFileChange(const SFileChangedMessage& aFileCha
 
 		if (std::filesystem::equivalent(strPath, aFileChangedMessage.FilePath))
 		{
+			if (!GetResource(strPath)->ShouldHotReload())
+				return;
+
 			std::weak_ptr<SResource<TResource>> weakResource = myResources[str.first];
 
 			if (std::shared_ptr<SResource<TResource>> strongResource = weakResource.lock())

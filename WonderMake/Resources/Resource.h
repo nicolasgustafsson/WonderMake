@@ -14,6 +14,8 @@ public:
 	{
 		return myRoutineChecker.GetRoutineId();
 	}
+
+	inline virtual bool ShouldHotReload() const { return true; }
 private:
 	RoutineChecker myRoutineChecker;
 };

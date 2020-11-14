@@ -346,11 +346,6 @@
     <None Include="Designers\EffectDesigner\EffectDesignerPhilosophy.md" />
     <None Include="HitShapes\Hitshapes.md" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="Designers\LevelDesigner\nicostodo levels.txt" />
-    <Text Include="Physics\Navmesh\nicostodo navmesh.txt" />
-    <Text Include="Rendering\Vision\nicostodo vision.txt" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

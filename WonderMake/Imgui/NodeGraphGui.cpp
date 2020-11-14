@@ -77,7 +77,10 @@ void WmGui::NodeGraphEditor::NodeGraphEdit(NodeGraph& aNodeGraph)
 		NodeGraphStack.erase(NodeGraphStack.end() - 1);
 		if (NodeGraphStack.size() > 0)
 			CurrentNodeGraph = NodeGraphStack[NodeGraphStack.size() - 1];
+
+		CurrentNodeGraph->CurrentGraphInfo.WasMiddleMouseDragging = ImGui::IsMouseDragging(2);
 	}
+
 
 	ImGui::End();
 }
@@ -187,7 +190,7 @@ bool WmGui::NodeGraphEditor::Connection(SNode* aInputNode, SInputSlotInstanceBas
 	{
 		ImGuiIO& io = ImGui::GetIO();
 
-		if ((ImGui::IsMouseReleased(0) && io.KeyAlt) || ImGui::IsMouseReleased(2))
+		if ((ImGui::IsMouseReleased(0) && io.KeyAlt) || ImGui::IsMouseReleased(2) && !CurrentNodeGraph->CurrentGraphInfo.WasMiddleMouseDragging)
 			isConnected = false;
 	}
 

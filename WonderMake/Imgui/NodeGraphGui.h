@@ -65,6 +65,8 @@ namespace WmGui::NodeGraphEditor
 			SNode* SingleSelectedNodePointer = nullptr;
 			//if this matches the current frame, we should try to select things
 			i32 DoSelectionsFrame = 0;
+
+			bool WasMiddleMouseDragging = false;
 		};
 
 		u64 Id = {};

@@ -27,8 +27,6 @@ class MeleeWeaponUserFunctionality
 			PAdd<CharacterFunctionality, PWrite>>>
 {
 public:
-	MeleeWeaponUserFunctionality(Object& aOwner, Dependencies&& aDependencies);
-
 	void Inspect();
 
 	void SwingWeapon();

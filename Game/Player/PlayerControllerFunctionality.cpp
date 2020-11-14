@@ -8,19 +8,14 @@
 
 REGISTER_FUNCTIONALITY(PlayerControllerFunctionality);
 
-PlayerControllerFunctionality::PlayerControllerFunctionality(Object& aOwner, Dependencies&& aDependencies)
-	: Super(aOwner, std::move(aDependencies)), Debugged("Player Controller")
+PlayerControllerFunctionality::PlayerControllerFunctionality()
+	: Debugged("Player Controller")
 {
 	CollisionFunctionality& collision = Get<CollisionFunctionality>();
 	auto& collider = collision.AddSphereCollider(*this, SVector2f::Zero(), 10.f);
 
 	Get<FactionFunctionality>().SetFaction(EFaction::Player);
 	Get<CharacterFunctionality>().Get<CharacterStatsFunctionality>().SetBaseValue(ECharacterStat::MovementSpeed, 200.f);
-
-	Get<ImpulseFunctionality>().Subscribe<SDiedImpulse>(*this, [&](auto) 
-		{
-			OnDeath();
-		});
 
 	Get<MeleeWeaponUserFunctionality>().SetWeapon(Get<MeleeWeaponDesigner>().DesignWeapon());
 

@@ -9,10 +9,6 @@
 REGISTER_COMPONENT(SMeleeWeaponUserComponent);
 REGISTER_FUNCTIONALITY(MeleeWeaponUserFunctionality);
 
-MeleeWeaponUserFunctionality::MeleeWeaponUserFunctionality(Object& aOwner, Dependencies&& aDependencies)
-	: Super(aOwner, std::move(aDependencies))
-{}
-
 void MeleeWeaponUserFunctionality::Inspect()
 {
 	Get<SMeleeWeaponUserComponent>().Weapon->Inspect();

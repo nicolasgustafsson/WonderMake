@@ -9,12 +9,6 @@
 
 REGISTER_FUNCTIONALITY(HitShapeSpawnerFunctionality);
 
-HitShapeSpawnerFunctionality::HitShapeSpawnerFunctionality(Object& aOwner, Dependencies&& aDependencies)
-	: Super(aOwner, std::move(aDependencies))
-{
-
-}
-
 void HitShapeSpawnerFunctionality::SpawnPunch(const f32 aLength, const f32 aDelay, const f32 aDuration, const f32 aWidth, const f32 aDamage)
 {
 	Object hitShape;

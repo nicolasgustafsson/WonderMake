@@ -4,10 +4,6 @@
 REGISTER_COMPONENT(SSpinnerComponent);
 REGISTER_FUNCTIONALITY(SpinnerFunctionality);
 
-SpinnerFunctionality::SpinnerFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept
-	: Super(aOwner, std::move(aDependencies))
-{}
-
 void SpinnerFunctionality::Tick() noexcept
 {
 	auto& transform = Get<TransformFunctionality>();

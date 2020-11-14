@@ -30,8 +30,6 @@ class LevelFunctionality : public Functionality<
 		PAdd<SLevelComponent, PWrite>>>
 {
 public:
-	LevelFunctionality(Object& aOwner, Dependencies&& aDependencies);
-
 	void Tick();
 
 	Object& AddDenizen();

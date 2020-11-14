@@ -5,15 +5,6 @@
 REGISTER_COMPONENT(SCharacterBuffComponent);
 REGISTER_FUNCTIONALITY(CharacterBuffsFunctionality);
 
-CharacterBuffsFunctionality::CharacterBuffsFunctionality(Object& aOwner, Dependencies&& aDependencies)
-	: Super(aOwner, std::move(aDependencies))
-{
-	Get<ImpulseFunctionality>().Subscribe<SDiedImpulse>(*this, [&](auto) 
-		{
-			ClearBuffs();
-		});
-}
-
 void CharacterBuffsFunctionality::ApplyBuff(class CharacterFunctionality& aCharacter, BuffBlueprint& aBlueprint)
 {
 	SCharacterBuffComponent& buffComponent = Get<SCharacterBuffComponent>();

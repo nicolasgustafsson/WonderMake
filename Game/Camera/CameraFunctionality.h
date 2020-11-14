@@ -16,8 +16,6 @@ class CameraFunctionality
 			PAdd<SCameraComponent, PWrite>>>
 {
 public:
-	CameraFunctionality(Object& aObject, Dependencies&& aDependencies);
-
 	void Tick();
 
 	void SetTarget(TransformFunctionality* aTarget);

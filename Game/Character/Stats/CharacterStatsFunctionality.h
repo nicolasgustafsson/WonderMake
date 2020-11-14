@@ -40,7 +40,6 @@ class CharacterStatsFunctionality												//Nicos: having 2 functionalities d
 			PAdd<SCharacterStatsComponent, PWrite>>>/*, CharacterFunctionality*/
 {
 public:
-	CharacterStatsFunctionality(Object& aOwner, Dependencies&& aDependencies);
 	f32 GetStatValue(const ECharacterStat aStat) const noexcept;
 	f32 GetStatMultiplier(const ECharacterStat aStat) const noexcept;
 	 

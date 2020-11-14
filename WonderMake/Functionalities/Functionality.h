@@ -3,6 +3,8 @@
 #include "Functionalities/BaseFunctionality.h"
 #include "Functionalities/FunctionalitySystem.h"
 
+#include <optional>
+
 #define REGISTER_FUNCTIONALITY(aFunctionality) REGISTER_FUNCTIONALITY_SYSTEM(aFunctionality)
 
 class Object;
@@ -17,12 +19,9 @@ public:
 	using Dependencies = typename TPolicySet::DependenciesRef;
 	using PolicySet = TPolicySet;
 
-	inline virtual void Destroy() override final
+	inline static void InjectDependencies(Dependencies&& aDependencies)
 	{
-		class ImpulseFunctionality;
-
-		if constexpr (TPolicySet::template HasDependency_v<ImpulseFunctionality>)
-			Get<ImpulseFunctionality>().UnsubscribeAll(*this);
+		myInjectedDependencies.emplace(std::move(aDependencies));
 	}
 
 	template<typename TDependency> requires
@@ -40,10 +39,17 @@ public:
 	}
 
 protected:
-	Functionality(Object& /*aObject*/, Dependencies&& aDependencies)
-		: myDependencies(std::move(aDependencies))
-	{}
+	Functionality()
+		: myDependencies(std::move(*myInjectedDependencies))
+	{
+		myInjectedDependencies.reset();
+	}
 
 private:
+	static thread_local std::optional<Dependencies> myInjectedDependencies;
+
 	Dependencies myDependencies;
 };
+
+template<typename TPolicySet>
+thread_local std::optional<typename Functionality<TPolicySet>::Dependencies> Functionality<TPolicySet>::myInjectedDependencies;

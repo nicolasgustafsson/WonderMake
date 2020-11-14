@@ -5,12 +5,6 @@
 REGISTER_COMPONENT(SLevelComponent);
 REGISTER_FUNCTIONALITY(LevelFunctionality);
 
-LevelFunctionality::LevelFunctionality(Object& aOwner, Dependencies&& aDependencies)
-	: Super(aOwner, std::move(aDependencies))
-{
-
-}
-
 void LevelFunctionality::Tick()
 {
 	auto&& denizens = Get<SLevelComponent>().Denizens;

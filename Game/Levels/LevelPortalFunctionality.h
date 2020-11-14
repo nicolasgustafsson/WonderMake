@@ -10,7 +10,7 @@ class LevelPortalFunctionality
 			PAdd<CollisionFunctionality, PWrite>>>
 {
 public:
-	LevelPortalFunctionality(Object& aOwner, Dependencies&& aDependencies);
+	LevelPortalFunctionality();
 	~LevelPortalFunctionality();
 
 private:

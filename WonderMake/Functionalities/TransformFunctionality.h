@@ -10,8 +10,6 @@ class TransformFunctionality
 			PAdd<STransformComponent, PWrite>>>
 {
 public:
-	TransformFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept;
-
 	void SetPosition(const SVector2f aPosition) noexcept;
 	[[nodiscard]] SVector2f GetPosition() const noexcept;
 

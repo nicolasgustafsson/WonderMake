@@ -10,8 +10,6 @@ class SpriteRenderingFunctionality
 			PAdd<SSpriteComponent, PWrite>>>
 {
 public:
-	SpriteRenderingFunctionality(Object& aOwner, Dependencies&& aDependencies);
-
 	void Tick();
 	void SetTexture(const std::filesystem::path& aTexturePath);
 	void SetScale(const SVector2f aScale);

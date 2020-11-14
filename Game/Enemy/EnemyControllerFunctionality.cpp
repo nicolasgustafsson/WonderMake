@@ -8,19 +8,14 @@
 REGISTER_COMPONENT(EnemyControllerComponent)
 REGISTER_FUNCTIONALITY(EnemyControllerFunctionality);
 
-EnemyControllerFunctionality::EnemyControllerFunctionality(Object& aOwner, Dependencies&& aDependencies)
-	: Super(aOwner, std::move(aDependencies)), Debugged("Enemy Controller")
+EnemyControllerFunctionality::EnemyControllerFunctionality()
+	: Debugged("Enemy Controller")
 {
 	Get<FactionFunctionality>().SetFaction(EFaction::Enemy);
 
 	Get<CharacterFunctionality>().Get<CharacterStatsFunctionality>().SetBaseValue(ECharacterStat::MovementSpeed, 250.f);
 	Get<DefaultMovementFunctionality>().Get<SDefaultMovementComponent>().Friction = 15.f;
 	Get<CollisionFunctionality>().AddSphereCollider(*this, SVector2f::Zero(), 10.f);
-
-	Get<ImpulseFunctionality>().Subscribe<SDiedImpulse>(*this, [&] (auto) 
-		{
-			OnDeath();
-		});
 
 	Get<SpriteRenderingFunctionality>().SetTexture(std::filesystem::current_path() / "Textures/enemy.png");
 }

@@ -26,7 +26,7 @@ class CollisionFunctionality final
 {
 public:
 
-	CollisionFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept;
+	CollisionFunctionality();
 	~CollisionFunctionality();
 
 	void Tick();

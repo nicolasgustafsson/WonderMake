@@ -9,12 +9,6 @@
 REGISTER_COMPONENT(SHitShapeComponent);
 REGISTER_FUNCTIONALITY(HitShapeFunctionality);
 
-HitShapeFunctionality::HitShapeFunctionality(Object& aOwner, Dependencies&& aDependencies)
-	: Super(aOwner, std::move(aDependencies))
-{
-
-}
-
 void HitShapeFunctionality::Tick()
 {
 	auto& hitShapeComponent = Get<SHitShapeComponent>();

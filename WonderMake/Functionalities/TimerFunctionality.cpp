@@ -5,12 +5,6 @@
 REGISTER_COMPONENT(STimerComponent);
 REGISTER_FUNCTIONALITY(TimerFunctionality);
 
-TimerFunctionality::TimerFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept
-	: Super(aOwner, std::move(aDependencies))
-{
-
-}
-
 void TimerFunctionality::AddTimer(const f32 aDuration, Closure aClosure)
 {
 	Get<STimerComponent>().Timers.insert({ aDuration, std::move(aClosure)});

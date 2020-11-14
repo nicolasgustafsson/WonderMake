@@ -5,12 +5,6 @@
 REGISTER_COMPONENT(SBuffGiverComponent);
 REGISTER_FUNCTIONALITY(BuffGiverFunctionality);
 
-BuffGiverFunctionality::BuffGiverFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept
-	: Super(aOwner, std::move(aDependencies))
-{
-
-}
-
 void BuffGiverFunctionality::Initialize(BuffBlueprint& aBuffBlueprint, const f32 aRadius)
 {
 	SBuffGiverComponent& buffGiverComponent = Get<SBuffGiverComponent>();

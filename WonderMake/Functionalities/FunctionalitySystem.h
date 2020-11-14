@@ -115,8 +115,6 @@ FunctionalitySystem<TFunctionality>::FunctionalitySystem(typename CreateSystem<T
 		{
 			auto& functionality = *static_cast<TFunctionality*>(static_cast<_BaseFunctionality*>(aFunctionality));
 
-			functionality.Destroy();
-
 			RemoveFunctionality(functionality);
 
 			RemoveDependencies(aObject);
@@ -131,7 +129,9 @@ typename TFunctionality& FunctionalitySystem<TFunctionality>::AddFunctionality(O
 {
 	return aObject.Add<TFunctionality>([this](auto& aObject) -> auto&
 	{
-		return *myFunctionalities.emplace(aObject, PopulateDependencies(aObject));
+		TFunctionality::InjectDependencies(PopulateDependencies(aObject));
+
+		return *myFunctionalities.emplace();
 	}, myDependencyDestructor, aExplicitlyAdded);
 }
 

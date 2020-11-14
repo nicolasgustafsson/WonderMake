@@ -10,8 +10,6 @@ class TargetFunctionality
 			PAdd<TransformFunctionality, PWrite>>>
 {
 public:
-	TargetFunctionality(Object& aOwner, Dependencies&& aDependencies);
-
 	template<typename TPredicate>
 	[[nodiscard]] inline TransformFunctionality* FindTarget(const TPredicate& aPredicate) noexcept;
 };

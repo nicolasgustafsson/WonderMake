@@ -23,8 +23,6 @@ class BuffGiverFunctionality
 			PAdd<TransformFunctionality, PWrite>>>
 {
 public:
-	BuffGiverFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept;
-
 	void Initialize(BuffBlueprint& aBuffBlueprint, const f32 aRadius);
 
 	void Tick();

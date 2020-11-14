@@ -231,10 +231,8 @@
     <ClCompile Include="Collision\CollisionSystem.cpp" />
     <ClCompile Include="Debugging\DebugLineDrawer.cpp" />
     <ClCompile Include="Debugging\DebugLineRenderObject.cpp" />
-    <ClCompile Include="Functionalities\OwnerFunctionality.cpp" />
     <ClCompile Include="Functionalities\TransformFunctionality.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />
-    <ClCompile Include="Functionalities\ImpulseFunctionality.cpp" />
     <ClCompile Include="Object\ObjectImpulseRouter.cpp" />
     <ClCompile Include="Randomizer\Randomizer.cpp" />
     <ClCompile Include="Utilities\TimeKeeper.cpp" />
@@ -320,12 +318,10 @@
     <ClInclude Include="Debugging\DebugLineDrawer.h" />
     <ClInclude Include="Debugging\DebugLineRenderObject.h" />
     <ClInclude Include="Debugging\DebugLine.h" />
-    <ClInclude Include="Functionalities\OwnerFunctionality.h" />
     <ClInclude Include="Functionalities\TransformFunctionality.h" />
     <ClInclude Include="Imgui\ImguiInclude.h" />
     <ClInclude Include="Input\InputItems.h" />
     <ClInclude Include="Input\InputSystem.h" />
-    <ClInclude Include="Functionalities\ImpulseFunctionality.h" />
     <ClInclude Include="Object\ObjectImpulseRouter.h" />
     <ClInclude Include="Randomizer\Randomizer.h" />
     <ClInclude Include="Utilities\Matrix.h" />

@@ -7,11 +7,9 @@
 
 REGISTER_FUNCTIONALITY(CollisionFunctionality);
 
-CollisionFunctionality::CollisionFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept
-	: Super(aOwner, std::move(aDependencies)), Debugged("Collision")
-{
-
-}
+CollisionFunctionality::CollisionFunctionality()
+	: Debugged("Collision")
+{}
 
 CollisionFunctionality::~CollisionFunctionality()
 {

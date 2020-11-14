@@ -7,8 +7,7 @@
 
 REGISTER_FUNCTIONALITY(LevelPortalFunctionality);
 
-LevelPortalFunctionality::LevelPortalFunctionality(Object& aOwner, Dependencies&& aDependencies)
-	: Super(aOwner, std::move(aDependencies))
+LevelPortalFunctionality::LevelPortalFunctionality()
 {
 	auto& collision = Get<CollisionFunctionality>();
 

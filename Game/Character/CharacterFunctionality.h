@@ -2,7 +2,6 @@
 #include "Functionalities/Functionality.h"
 #include "Collision/CollisionFunctionality.h"
 #include "Functionalities/TransformFunctionality.h"
-#include "Functionalities/OwnerFunctionality.h"
 #include "Functionalities/SpriteRenderingFunctionality.h"
 #include "Movement/DefaultMovementFunctionality.h"
 #include "Character/Stats/CharacterStatsFunctionality.h"
@@ -31,7 +30,6 @@ class CharacterFunctionality
 	: public Functionality<
 		Policy::Set<
 			PAdd<InputSystem, PWrite>,
-			PAdd<OwnerFunctionality, PWrite>,
 			PAdd<CollisionFunctionality, PWrite>,
 			PAdd<SHealthComponent, PWrite>,
 			PAdd<FactionFunctionality, PWrite>,
@@ -43,7 +41,7 @@ class CharacterFunctionality
 			PAdd<CharacterBuffsFunctionality, PWrite>>>
 {
 public:
-	CharacterFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept;
+	CharacterFunctionality() noexcept;
 
 	void Heal(const i32 aHealAmount);
 	void Damage(const i32 aDamage);

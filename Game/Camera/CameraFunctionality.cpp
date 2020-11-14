@@ -5,12 +5,6 @@
 REGISTER_COMPONENT(SCameraComponent);
 REGISTER_FUNCTIONALITY(CameraFunctionality);
 
-CameraFunctionality::CameraFunctionality(Object& aObject, Dependencies&& aDependencies)
-	: Super(aObject, std::move(aDependencies))
-{
-
-}
-
 void CameraFunctionality::Tick()
 {
 	SCameraComponent& cameraComponent = Get<SCameraComponent>();

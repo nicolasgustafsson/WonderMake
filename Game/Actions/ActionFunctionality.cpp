@@ -6,15 +6,6 @@
 REGISTER_COMPONENT(SActionComponent);
 REGISTER_FUNCTIONALITY(ActionFunctionality);
 
-ActionFunctionality::ActionFunctionality(Object& aOwner, Dependencies&& aDependencies)
-	: Super(aOwner, std::move(aDependencies)) 
-{
-	Get<ImpulseFunctionality>().Subscribe<SDiedImpulse>(*this, [&](auto) 
-		{
-			EndCurrentAction();
-		});
-}
-
 bool ActionFunctionality::IsInAction() const
 {
 	return Get<SActionComponent>().CurrentAction != nullptr;

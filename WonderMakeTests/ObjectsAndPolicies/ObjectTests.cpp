@@ -20,10 +20,6 @@ class CatFunctionality
 			PAdd<SCatComponent, PWrite>>>
 {
 public:
-	CatFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept
-		: Super(aOwner, std::move(aDependencies))
-	{}
-
 	u32 GetLegCount() const
 	{
 		return Get<SCatComponent>().LegCount;
@@ -47,10 +43,6 @@ class BagFunctionality
 			PAdd<SBagComponent, PWrite>>>
 {
 public:
-	BagFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept
-		: Super(aOwner, std::move(aDependencies))
-	{}
-
 	u32 GetCatCount() const
 	{
 		return Get<SBagComponent>().CatCount;

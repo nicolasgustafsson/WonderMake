@@ -3,12 +3,6 @@
 
 REGISTER_FUNCTIONALITY(TransformFunctionality);
 
-TransformFunctionality::TransformFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept
-	: Super(aOwner, std::move(aDependencies))
-{
-
-}
-
 void TransformFunctionality::SetPosition(const SVector2f aPosition) noexcept
 {
 	Get<STransformComponent>().Position = aPosition;

@@ -10,8 +10,6 @@
 #include "Collision/CollisionFunctionality.h"
 
 #include "Functionalities/TransformFunctionality.h"
-#include "Functionalities/OwnerFunctionality.h"
-#include "Functionalities/ImpulseFunctionality.h"
 #include "Functionalities/TimerFunctionality.h"
 #include "Levels/LevelDenizenFunctionality.h"
 
@@ -43,12 +41,10 @@ class PlayerControllerFunctionality
 			PAdd<TransformFunctionality, PWrite>,
 			PAdd<MovementInputFunctionality, PWrite>,
 			PAdd<DefaultMovementFunctionality, PWrite>,
-			PAdd<OwnerFunctionality, PWrite>,
 			PAdd<MeleeWeaponUserFunctionality, PWrite>,
 			PAdd<ActionFunctionality, PWrite>,
 			PAdd<CollisionFunctionality, PWrite>,
 			PAdd<CharacterFunctionality, PWrite>,
-			PAdd<ImpulseFunctionality, PWrite>,
 			PAdd<FactionFunctionality, PWrite>,
 			PAdd<TimerFunctionality, PWrite>,
 			PAdd<SLevelDenizenComponent, PWrite>,
@@ -56,7 +52,7 @@ class PlayerControllerFunctionality
 	, public Debugged
 {
 public:
-	PlayerControllerFunctionality(Object& aOwner, Dependencies&& aDependencies);
+	PlayerControllerFunctionality();
 
 	void Tick() noexcept;
 

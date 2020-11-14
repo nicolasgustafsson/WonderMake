@@ -1,6 +1,5 @@
 #pragma once
 #include "Buff.h"
-#include "Functionalities/ImpulseFunctionality.h"
 
 class BuffBlueprint;
 class TimeKeeper;
@@ -14,12 +13,9 @@ class CharacterBuffsFunctionality
 	: public Functionality<
 		Policy::Set<
 			PAdd<TimeKeeper, PRead>,
-			PAdd<SCharacterBuffComponent, PWrite>,
-			PAdd<ImpulseFunctionality, PWrite>>>
+			PAdd<SCharacterBuffComponent, PWrite>>>
 {
 public:
-	CharacterBuffsFunctionality(Object& aOwner, Dependencies&& aDependencies);
-
 	void ApplyBuff(class CharacterFunctionality& aCharacter, BuffBlueprint& aBlueprint);
 	void ClearBuffs();
 

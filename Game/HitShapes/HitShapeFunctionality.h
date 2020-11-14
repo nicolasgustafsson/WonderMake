@@ -37,8 +37,6 @@ class HitShapeFunctionality
 			PAdd<TimeToLiveFunctionality, PWrite>>>
 {
 public:
-	HitShapeFunctionality(Object& aOwner, Dependencies&& aDependencies);
-
 	void Tick();
 
 	void SetFromBezier(BezierCurve aCurve, const f32 aWidth, const f32 aLifetime, const f32 aDelay, const f32 aDamage, const EFaction aFaction);

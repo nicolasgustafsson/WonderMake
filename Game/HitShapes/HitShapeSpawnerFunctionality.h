@@ -25,7 +25,6 @@ class HitShapeSpawnerFunctionality
 			PAdd<SLevelDenizenComponent, PWrite>>>
 {
 public:
-	HitShapeSpawnerFunctionality(Object& aOwner, Dependencies&& aDependencies);
 	void SpawnPunch(const f32 aLength, const f32 aDelay, const f32 aDuration, const f32 aWidth, const f32 aDamage);
 
 	void SpawnSwordSwing(BezierCurve aSwordPath, const f32 aDelay, const f32 aDuration, const f32 aWidth, const f32 aDamage);

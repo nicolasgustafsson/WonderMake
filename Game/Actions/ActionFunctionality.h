@@ -1,7 +1,6 @@
 #pragma once
 #include <any>
 #include "Actions/Action.h"
-#include "Functionalities/ImpulseFunctionality.h"
 
 class Action;
 class TimeKeeper;
@@ -27,12 +26,9 @@ class ActionFunctionality
 	: public Functionality<
 		Policy::Set<
 			PAdd<TimeKeeper, PRead>,
-			PAdd<SActionComponent, PWrite>,
-			PAdd<ImpulseFunctionality, PWrite>>>
+			PAdd<SActionComponent, PWrite>>>
 {
 public:
-	ActionFunctionality(Object& aOwner, Dependencies&& aDependencies);
-
 	template<typename TAction> requires std::is_base_of_v<Action, TAction>
 	inline EActionResult StartAction(TAction aAction)
 	{

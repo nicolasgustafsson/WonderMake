@@ -16,5 +16,4 @@ class LevelDenizenFunctionality : public Functionality<
 		PAdd<SLevelDenizenComponent, PWrite>>>
 {
 public:
-	LevelDenizenFunctionality(Object& aOwner, Dependencies&& aDependencies);
 };

@@ -4,12 +4,6 @@
 REGISTER_COMPONENT(SFactionComponent);
 REGISTER_FUNCTIONALITY(FactionFunctionality);
 
-FactionFunctionality::FactionFunctionality(Object& aOwner, Dependencies&& aDependencies)
-	: Super(aOwner, std::move(aDependencies))
-{
-
-}
-
 void FactionFunctionality::SetFaction(const EFaction aFaction) noexcept
 {
 	Get<SFactionComponent>().Faction = aFaction;

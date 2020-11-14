@@ -9,9 +9,9 @@ TEST_CASE("TransformFunctionality basic functionality", "[TransformFunctionality
 	Object object;
 	STransformComponent transformComp;
 
-	// NOTE: Object is not used, so I'm using a shorthand by never add the functionality to the object.
-	// It's possible to add it, but adds more complexity than I want in the unit test for now. However, we might need to add it in future.
-	TransformFunctionality transformFunc(object, std::tie(transformComp));
+	TransformFunctionality::InjectDependencies(std::tie(transformComp));
+
+	TransformFunctionality transformFunc;
 
 	constexpr auto closeEnough = [](const auto aValue, const auto aCompare)
 	{

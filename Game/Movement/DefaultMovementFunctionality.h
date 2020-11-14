@@ -28,8 +28,6 @@ class DefaultMovementFunctionality
 			PAdd<SDefaultMovementComponent, PWrite>>>
 {
 public:
-	DefaultMovementFunctionality(Object& aOwner, Dependencies&& aDependencies);
-
 	void AddForce(const SVector2f aForce);
 	void AddImpulse(const SVector2f aImpulse);
 

@@ -6,11 +6,6 @@
 REGISTER_COMPONENT(SDefaultMovementComponent);
 REGISTER_FUNCTIONALITY(DefaultMovementFunctionality);
 
-DefaultMovementFunctionality::DefaultMovementFunctionality(Object& aOwner, Dependencies&& aDependencies)
-	: Super(aOwner, std::move(aDependencies))
-{
-}
-
 void DefaultMovementFunctionality::AddForce(const SVector2f aForce)
 {
 	SDefaultMovementComponent& movementComponent = Get<SDefaultMovementComponent>();

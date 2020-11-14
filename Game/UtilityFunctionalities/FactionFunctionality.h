@@ -17,7 +17,6 @@ class FactionFunctionality : public Functionality<
 		PAdd<SFactionComponent, PWrite>>>
 {
 public:
-	FactionFunctionality(Object& aOwner, Dependencies&& aDependencies);
 	void SetFaction(const EFaction aFaction) noexcept;
 	[[nodiscard]] bool IsFriendlyWith(const EFaction aFaction) const noexcept;
 	[[nodiscard]] EFaction GetFaction() const noexcept;

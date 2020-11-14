@@ -23,8 +23,6 @@ class TimerFunctionality
 			PAdd<STimerComponent, PWrite>>>
 {
 public:
-	TimerFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept;
-
 	void AddTimer(const f32 aDuration, Closure aClosure);
 	
 	void Tick();

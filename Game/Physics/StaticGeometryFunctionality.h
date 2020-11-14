@@ -8,7 +8,5 @@ class StaticGeometryFunctionality
 			PAdd<CollisionFunctionality, PWrite>>>
 {
 public:
-	StaticGeometryFunctionality(Object& aObject, Dependencies&& aDependencies);
-
 	void SetLine(const SVector2f aStart, const SVector2f aEnd);
 };

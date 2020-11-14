@@ -4,10 +4,6 @@
 
 REGISTER_FUNCTIONALITY(SpriteRenderingFunctionality);
 
-SpriteRenderingFunctionality::SpriteRenderingFunctionality(Object& aOwner, Dependencies&& aDependencies)
-	: Super(aOwner, std::move(aDependencies))
-{}
-
 void SpriteRenderingFunctionality::Tick()
 {
 	auto& spriteComponent = Get<SSpriteComponent>();

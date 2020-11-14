@@ -5,12 +5,6 @@
 REGISTER_COMPONENT(SCharacterStatsComponent);
 REGISTER_FUNCTIONALITY(CharacterStatsFunctionality);
 
-CharacterStatsFunctionality::CharacterStatsFunctionality(Object& aOwner, Dependencies&& aDependencies)
-	: Super(aOwner, std::move(aDependencies))
-{
-
-}
-
 f32 CharacterStatsFunctionality::GetStatValue(const ECharacterStat aStat) const noexcept
 {
 	auto stat = Get<SCharacterStatsComponent>().Stats[static_cast<u32>(aStat)];

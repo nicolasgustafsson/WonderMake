@@ -21,7 +21,5 @@ class SpinnerFunctionality
 			PAdd<TransformFunctionality, PWrite>>>
 {
 public:
-	SpinnerFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept;
-
 	void Tick() noexcept;
 };

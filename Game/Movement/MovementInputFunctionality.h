@@ -1,7 +1,6 @@
 #pragma once
 #include "Components/Component.h"
 #include "Functionalities/Functionality.h"
-#include "Functionalities/ImpulseFunctionality.h"
 
 struct SCoolImpulse;
 
@@ -17,7 +16,5 @@ class MovementInputFunctionality
 			PAdd<SMovementInputComponent, PWrite>>>
 {
 public:
-	MovementInputFunctionality(Object& aOwner, Dependencies&& aDependencies);
-
 	void SetMovementInput(const SVector2f aDirection);
 };

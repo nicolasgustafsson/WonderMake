@@ -10,9 +10,5 @@ class _BaseFunctionality
 public:
 	virtual ~_BaseFunctionality() = default;
 
-	virtual void OnOwnerMoved([[maybe_unused]] Object& aObject) noexcept {};
-
-	virtual void Destroy() = 0;
-
 	void Tick() noexcept {}
 };

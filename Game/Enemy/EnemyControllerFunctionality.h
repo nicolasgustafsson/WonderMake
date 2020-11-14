@@ -24,13 +24,12 @@ class EnemyControllerFunctionality
 			PAdd<CharacterFunctionality, PWrite>,
 			PAdd<CollisionFunctionality, PWrite>,
 			PAdd<FactionFunctionality, PWrite>,
-			PAdd<ImpulseFunctionality, PWrite>,
 			PAdd<SpriteRenderingFunctionality, PWrite>,
 			PAdd<ActionFunctionality, PWrite>>>
 	, public Debugged
 {
 public:
-	EnemyControllerFunctionality(Object& aOwner, Dependencies&& aDependencies);
+	EnemyControllerFunctionality();
 
 	void Tick() noexcept;
 

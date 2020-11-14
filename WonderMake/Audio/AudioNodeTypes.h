@@ -20,8 +20,8 @@ namespace NodeTypes
 		SSoundEffectResultNode() : SNodeType("Play sound effect on bus")
 		{
 			AddSlot<SoLoud::AudioSource*>(ESlotIo::Input, "Sound effect");
-			AddSlot<std::string>(ESlotIo::Input, "Bus name");
-			AddSlot<f32>(ESlotIo::Input, "Volume");
+			AddSlot<std::string>(ESlotIo::Input, "Bus name", "Gameplay");
+			AddSlot<f32>(ESlotIo::Input, "Volume", 1.0f);
 		}
 
 		virtual void ExecuteNode(SNode& aNode) override;

@@ -42,7 +42,10 @@ void AudioManager::Update() noexcept
 
 void AudioManager::PlayAudio(const std::filesystem::path& aAudioPath)
 {
-	auto it = std::find_if(mySoundEffects.begin(), mySoundEffects.end(), [aAudioPath](const ResourceProxy<SoundEffectNodeGraph>& aSoundEffect) { return aSoundEffect->GetName() == aAudioPath.string(); });
+	auto it = std::find_if(mySoundEffects.begin(), mySoundEffects.end(), [aAudioPath](const ResourceProxy<SoundEffectNodeGraph>& aSoundEffect) 
+		{ 
+			return std::filesystem::equivalent(aAudioPath, aSoundEffect->GetPath());
+		});
 
 	if (it == mySoundEffects.end())
 		it = mySoundEffects.insert(SystemPtr<ResourceSystem<SoundEffectNodeGraph>>()->GetResource(aAudioPath));

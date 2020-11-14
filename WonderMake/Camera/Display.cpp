@@ -138,7 +138,7 @@ void Display::Inspect()
 	ImGui::Text(myName.c_str());
 
 	if (ImGui::FileSelector::SelectFile(myPath))
-		myRenderGraph->SetNewPath(myPath);
+		myRenderGraph = SystemPtr<ResourceSystem<RenderNodeGraph>>()->GetResource(myPath);
 
 	ImGui::SameLine();
 
@@ -147,5 +147,6 @@ void Display::Inspect()
 
 	if (myRenderGraph->ShouldBeVisible)
 		WmGui::NodeGraphEditor::NodeGraphEdit(*myRenderGraph);
+
 	ImGui::PopID();
 }

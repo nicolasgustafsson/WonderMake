@@ -1,6 +1,6 @@
 #pragma once
 #include "UtilityFunctionalities/LineOfSightFunctionality.h"
-#include "Rendering/VisionRenderObject.h"
+#include "Rendering/Vision/VisionRenderObject.h"
 
 struct SVisionComponent
 	: public SComponent

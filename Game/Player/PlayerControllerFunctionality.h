@@ -15,7 +15,7 @@
 #include "Functionalities/TimerFunctionality.h"
 #include "Levels/LevelDenizenFunctionality.h"
 #include "UtilityFunctionalities/LineOfSightFunctionality.h"
-#include <Rendering/VisionFunctionality.h>
+#include "Rendering/Vision/VisionFunctionality.h"
 
 struct SCoolImpulse
 	: public SObjectImpulse<SCoolImpulse>

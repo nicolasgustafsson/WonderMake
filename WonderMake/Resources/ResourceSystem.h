@@ -19,6 +19,7 @@ class ResourceSystem
 public:
 	ResourceSystem();
 	ResourceProxy<TResource> GetResource(const std::filesystem::path& aPath);
+	plf::colony<ResourceProxy<TResource>> GetAllResources() const;
 
 	template<typename TJob>
 	inline void SetCreateResourceJob();
@@ -37,6 +38,17 @@ protected:
 	std::unordered_map<std::string, std::weak_ptr<SResource<TResource>>> myResources;
 	std::unordered_map<std::string, std::shared_ptr<CreateResource<TResource>>> myCreateResourceJobs;
 };
+
+template<typename TResource>
+plf::colony<ResourceProxy<TResource>> ResourceSystem<TResource>::GetAllResources() const
+{
+	plf::colony<ResourceProxy<TResource>> returnVal;
+	for (auto&& resource : myResources)
+	{
+		returnVal.emplace(resource.second.lock());
+	}
+	return returnVal;
+}
 
 template<typename TResource>
 void ResourceSystem<TResource>::OnFileChange(const SFileChangedMessage& aFileChangedMessage)

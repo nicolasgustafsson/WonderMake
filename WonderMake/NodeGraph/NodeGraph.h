@@ -49,6 +49,7 @@ public:
 	bool ShouldBeVisible = false;
 
 	[[nodiscard]] std::string GetName() const { return myPath.string(); }
+	[[nodiscard]] std::filesystem::path GetPath() const { return myPath; }
 
 	void Load();
 

@@ -30,6 +30,8 @@ public:
 	std::vector<Geometry::STriangle> GetLineOfSightFrom(const SVector2f aPosition); //[Nicos]: todo make const
 
 	const plf::colony<SNavmeshTriangle>& GetTriangles() const;
+	const Geometry::Polygon& GetPolygon() const { return myPolygon; }
+
 private:
 	void AddTriangle(const Geometry::STriangle& aTriangle);
 	void AddPoint(const SVector2f aPoint);

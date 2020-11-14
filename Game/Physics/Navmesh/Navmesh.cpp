@@ -13,16 +13,6 @@ void Navmesh::GenerateFromPolygon(const Geometry::Polygon& aPolygon)
 		AddTriangle(aPolygon.TriangulateStep(copy, firstPoint));
 	
 	GenerateEdges();
-
-	for (auto&& line : myLines)
-	{
-		WmDrawDebugLine(line.Line.First, line.Line.Second, SColor::Red, 1000.f);
-	}
-
-	for (auto&& line : myBounds)
-	{
-		WmDrawDebugLine(line->Line.First, line->Line.Second, SColor::CornflowerBlue, 1000.f);
-	}
 }
 
 std::vector<Geometry::STriangle> Navmesh::GetLineOfSightFrom(const SVector2f aPosition)

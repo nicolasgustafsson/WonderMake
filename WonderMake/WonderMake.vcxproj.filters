@@ -80,6 +80,7 @@
     <ClCompile Include="Graphics\RenderHandle.cpp" />
     <ClCompile Include="Camera\CameraManager.cpp" />
     <ClCompile Include="Graphics\RenderSettingsManager.cpp" />
+    <ClCompile Include="LineListRenderObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -260,6 +261,7 @@
     <ClInclude Include="Camera\CameraManager.h" />
     <ClInclude Include="Graphics\RenderSettingsManager.h" />
     <ClInclude Include="Utilities\Line.h" />
+    <ClInclude Include="LineListRenderObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

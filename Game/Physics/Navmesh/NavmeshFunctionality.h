@@ -2,16 +2,14 @@
 
 #include "Physics/Navmesh/Navmesh.h"
 #include "Physics/Navmesh/NavmeshRenderObject.h"
+#include "LineListRenderObject.h"
 
 struct SNavmeshComponent : public SComponent
 {
 	Navmesh Navmesh;
 
 	std::optional<NavmeshRenderObject> Background;
-	std::optional<NavmeshRenderObject> Walls;
-	std::optional<NavmeshRenderObject> Walls2;
-	std::optional<NavmeshRenderObject> Walls3;
-	std::optional<NavmeshRenderObject> Walls4;
+	std::optional<LineListRenderObject> WallLines;
 };
 
 class NavmeshFunctionality : public Functionality<NavmeshFunctionality, 

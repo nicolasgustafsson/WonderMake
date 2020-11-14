@@ -10,22 +10,27 @@ NavmeshFunctionality::NavmeshFunctionality(Object& aOwner)
 
 void NavmeshFunctionality::SetNavmesh(Navmesh aNavmesh)
 {
+	auto polygon = aNavmesh.GetPolygon();
+	std::vector<SVector2f> boundsVec;
+	auto&& point = polygon.FirstPoint();
+
+	do 
+	{
+		boundsVec.push_back(*point);
+		point++;
+	} while (point != polygon.FirstPoint());
+
 	Get<SNavmeshComponent>().Background.emplace(aNavmesh, aNavmesh.GetTriangles().size(), SVector2f(0.f, 0.f), -1003, Palette::MediumBackground, -0.8f);
-	Get<SNavmeshComponent>().Walls.emplace(aNavmesh, aNavmesh.GetTriangles().size(), SVector2f(-10.f, -10.f), -1001, Palette::DarkBackground, -1.f);
-	Get<SNavmeshComponent>().Walls2.emplace(aNavmesh, aNavmesh.GetTriangles().size(), SVector2f(10.f, -10.f), -1001, Palette::DarkBackground, -1.f);
-	Get<SNavmeshComponent>().Walls3.emplace(aNavmesh, aNavmesh.GetTriangles().size(), SVector2f(-10.f, 10.f), -1001, Palette::DarkBackground, -1.f);
-	Get<SNavmeshComponent>().Walls4.emplace(aNavmesh, aNavmesh.GetTriangles().size(), SVector2f(10.f, 10.f), -1001, Palette::DarkBackground, -1.f);
+	Get<SNavmeshComponent>().WallLines.emplace(boundsVec, 20.f, Palette::DarkBackground);
+	Get<SNavmeshComponent>().WallLines->SetRenderLayer("Walls");
 	Get<SNavmeshComponent>().Navmesh = std::move(aNavmesh);
 }
 
 void NavmeshFunctionality::Tick()
 {
-	if (!Get<SNavmeshComponent>().Background || !Get<SNavmeshComponent>().Walls)
+	if (!Get<SNavmeshComponent>().Background || !Get<SNavmeshComponent>().WallLines)
 		return;
 
-	Get<SNavmeshComponent>().Walls->Render();
-	Get<SNavmeshComponent>().Walls2->Render();
-	Get<SNavmeshComponent>().Walls3->Render();
-	Get<SNavmeshComponent>().Walls4->Render();
 	Get<SNavmeshComponent>().Background->Render();
+	Get<SNavmeshComponent>().WallLines->Render();
 }

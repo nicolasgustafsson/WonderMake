@@ -20,13 +20,13 @@ class CameraFunctionality;
 class GameWorld
 	: public System<
 		Policy::Set<
-			Policy::Add<LevelDesigner, Policy::EPermission::Write>,
-			Policy::Add<FunctionalitySystemDelegate<LevelFunctionality>, Policy::EPermission::Write>,
-			Policy::Add<FunctionalitySystemDelegate<TransformFunctionality>, Policy::EPermission::Write>,
-			Policy::Add<FunctionalitySystemDelegate<PlayerControllerFunctionality>, Policy::EPermission::Write>,
-			Policy::Add<FunctionalitySystemDelegate<DefaultMovementFunctionality>, Policy::EPermission::Write>,
-			Policy::Add<FunctionalitySystemDelegate<SpriteRenderingFunctionality>, Policy::EPermission::Write>,
-			Policy::Add<FunctionalitySystemDelegate<CameraFunctionality>, Policy::EPermission::Write>>>
+			PAdd<LevelDesigner, PWrite>,
+			PAdd<FunctionalitySystemDelegate<LevelFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<TransformFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<PlayerControllerFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<DefaultMovementFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<SpriteRenderingFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<CameraFunctionality>, PWrite>>>
 {
 public:
 	GameWorld(Dependencies&& aDependencies);

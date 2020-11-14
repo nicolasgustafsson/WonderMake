@@ -19,9 +19,9 @@ class ImpulseFunctionality
 	: public Functionality<
 		ImpulseFunctionality,
 		Policy::Set<
-			Policy::Add<ObjectImpulseRouter, Policy::EPermission::Write>,
-			Policy::Add<OwnerFunctionality, Policy::EPermission::Read>,
-			Policy::Add<SImpulseListComponent, Policy::EPermission::Write>>>
+			PAdd<ObjectImpulseRouter, PWrite>,
+			PAdd<OwnerFunctionality, PRead>,
+			PAdd<SImpulseListComponent, PWrite>>>
 {
 public:
 	ImpulseFunctionality(Object& aOwner, Dependencies&& aDependencies);

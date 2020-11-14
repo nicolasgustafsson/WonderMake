@@ -22,11 +22,11 @@ class DefaultMovementFunctionality
 	: public Functionality<
 		DefaultMovementFunctionality,
 		Policy::Set<
-			Policy::Add<CollisionSystem, Policy::EPermission::Write>,
-			Policy::Add<TimeKeeper, Policy::EPermission::Read>,
-			Policy::Add<SMovementInputComponent, Policy::EPermission::Write>,
-			Policy::Add<STransformComponent, Policy::EPermission::Write>,
-			Policy::Add<SDefaultMovementComponent, Policy::EPermission::Write>>>
+			PAdd<CollisionSystem, PWrite>,
+			PAdd<TimeKeeper, PRead>,
+			PAdd<SMovementInputComponent, PWrite>,
+			PAdd<STransformComponent, PWrite>,
+			PAdd<SDefaultMovementComponent, PWrite>>>
 {
 public:
 	DefaultMovementFunctionality(Object& aOwner, Dependencies&& aDependencies);

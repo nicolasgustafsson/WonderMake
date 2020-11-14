@@ -64,8 +64,8 @@ class EngineUniformBuffer
 	: public UniformBuffer<SEngineUniformBufferData>
 	, public System<
 		Policy::Set<
-			Policy::Add<Window, Policy::EPermission::Write>,
-			Policy::Add<OpenGLFacade, Policy::EPermission::Write>>>
+			PAdd<Window, PWrite>,
+			PAdd<OpenGLFacade, PWrite>>>
 	, public Debugged
 	
 {

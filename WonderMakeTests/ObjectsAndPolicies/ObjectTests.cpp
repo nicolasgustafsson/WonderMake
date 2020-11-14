@@ -18,7 +18,7 @@ class CatFunctionality
 	: public Functionality<
 		CatFunctionality,
 		Policy::Set<
-			Policy::Add<SCatComponent, Policy::EPermission::Write>>>
+			PAdd<SCatComponent, PWrite>>>
 {
 public:
 	CatFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept
@@ -46,7 +46,7 @@ class BagFunctionality
 	: public Functionality<
 		BagFunctionality,
 		Policy::Set<
-			Policy::Add<SBagComponent, Policy::EPermission::Write>>>
+			PAdd<SBagComponent, PWrite>>>
 {
 public:
 	BagFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept

@@ -8,7 +8,7 @@
 class Camera final
 	: public System<
 		Policy::Set<
-			Policy::Add<EngineUniformBuffer, Policy::EPermission::Write>>>
+			PAdd<EngineUniformBuffer, PWrite>>>
 	, public Debugged
 {
 public:

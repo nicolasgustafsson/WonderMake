@@ -6,7 +6,7 @@ class StaticGeometryFunctionality
 	: public Functionality<
 		StaticGeometryFunctionality,
 		Policy::Set<
-			Policy::Add<CollisionFunctionality, Policy::EPermission::Write>>>
+			PAdd<CollisionFunctionality, PWrite>>>
 {
 public:
 	StaticGeometryFunctionality(Object& aObject, Dependencies&& aDependencies);

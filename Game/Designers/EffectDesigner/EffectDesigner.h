@@ -32,7 +32,7 @@ class CharacterEffect;
 class EffectDesigner
 	: public System<
 		Policy::Set<
-			Policy::Add<Randomizer, Policy::EPermission::Write>>>
+			PAdd<Randomizer, PWrite>>>
 {
 public:
 	using Super::Super;

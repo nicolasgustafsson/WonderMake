@@ -7,7 +7,7 @@ struct GLFWwindow;
 class Window
 	: public System<
 		Policy::Set<
-			Policy::Add<GlfwFacade, Policy::EPermission::Write>>>
+			PAdd<GlfwFacade, PWrite>>>
 {
 public:
 	Window(Dependencies&& aDependencies);

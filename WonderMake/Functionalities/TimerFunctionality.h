@@ -20,8 +20,8 @@ class TimerFunctionality
 	: public Functionality<
 		TimerFunctionality,
 		Policy::Set<
-			Policy::Add<TimeKeeper, Policy::EPermission::Read>,
-			Policy::Add<STimerComponent, Policy::EPermission::Write>>>
+			PAdd<TimeKeeper, PRead>,
+			PAdd<STimerComponent, PWrite>>>
 {
 public:
 	TimerFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept;

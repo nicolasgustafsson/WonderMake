@@ -22,10 +22,10 @@ class MeleeWeaponUserFunctionality
 	: public Functionality<
 		MeleeWeaponUserFunctionality,
 		Policy::Set<
-			Policy::Add<SMeleeWeaponUserComponent, Policy::EPermission::Write>,
-			Policy::Add<TransformFunctionality, Policy::EPermission::Write>,
-			Policy::Add<ActionFunctionality, Policy::EPermission::Write>,
-			Policy::Add<CharacterFunctionality, Policy::EPermission::Write>>>
+			PAdd<SMeleeWeaponUserComponent, PWrite>,
+			PAdd<TransformFunctionality, PWrite>,
+			PAdd<ActionFunctionality, PWrite>,
+			PAdd<CharacterFunctionality, PWrite>>>
 {
 public:
 	MeleeWeaponUserFunctionality(Object& aOwner, Dependencies&& aDependencies);

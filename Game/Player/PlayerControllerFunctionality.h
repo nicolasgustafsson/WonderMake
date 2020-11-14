@@ -37,23 +37,23 @@ class PlayerControllerFunctionality
 	: public Functionality<
 		PlayerControllerFunctionality,
 		Policy::Set<
-			Policy::Add<MeleeWeaponDesigner, Policy::EPermission::Write>,
-			Policy::Add<InputSystem, Policy::EPermission::Write>,
-			Policy::Add<FunctionalitySystemDelegate<EnemyControllerFunctionality>, Policy::EPermission::Write>,
-			Policy::Add<FunctionalitySystemDelegate<TimeToLiveFunctionality>, Policy::EPermission::Write>,
-			Policy::Add<TransformFunctionality, Policy::EPermission::Write>,
-			Policy::Add<MovementInputFunctionality, Policy::EPermission::Write>,
-			Policy::Add<DefaultMovementFunctionality, Policy::EPermission::Write>,
-			Policy::Add<OwnerFunctionality, Policy::EPermission::Write>,
-			Policy::Add<MeleeWeaponUserFunctionality, Policy::EPermission::Write>,
-			Policy::Add<ActionFunctionality, Policy::EPermission::Write>,
-			Policy::Add<CollisionFunctionality, Policy::EPermission::Write>,
-			Policy::Add<CharacterFunctionality, Policy::EPermission::Write>,
-			Policy::Add<ImpulseFunctionality, Policy::EPermission::Write>,
-			Policy::Add<FactionFunctionality, Policy::EPermission::Write>,
-			Policy::Add<TimerFunctionality, Policy::EPermission::Write>,
-			Policy::Add<SLevelDenizenComponent, Policy::EPermission::Write>,
-			Policy::Add<SpriteRenderingFunctionality, Policy::EPermission::Write>>>
+			PAdd<MeleeWeaponDesigner, PWrite>,
+			PAdd<InputSystem, PWrite>,
+			PAdd<FunctionalitySystemDelegate<EnemyControllerFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<TimeToLiveFunctionality>, PWrite>,
+			PAdd<TransformFunctionality, PWrite>,
+			PAdd<MovementInputFunctionality, PWrite>,
+			PAdd<DefaultMovementFunctionality, PWrite>,
+			PAdd<OwnerFunctionality, PWrite>,
+			PAdd<MeleeWeaponUserFunctionality, PWrite>,
+			PAdd<ActionFunctionality, PWrite>,
+			PAdd<CollisionFunctionality, PWrite>,
+			PAdd<CharacterFunctionality, PWrite>,
+			PAdd<ImpulseFunctionality, PWrite>,
+			PAdd<FactionFunctionality, PWrite>,
+			PAdd<TimerFunctionality, PWrite>,
+			PAdd<SLevelDenizenComponent, PWrite>,
+			PAdd<SpriteRenderingFunctionality, PWrite>>>
 	, public Debugged
 {
 public:

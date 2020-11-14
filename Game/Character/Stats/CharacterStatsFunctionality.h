@@ -38,7 +38,7 @@ class CharacterStatsFunctionality												//Nicos: having 2 functionalities d
 	: public Functionality<
 		CharacterStatsFunctionality,
 		Policy::Set<
-			Policy::Add<SCharacterStatsComponent, Policy::EPermission::Write>>>/*, CharacterFunctionality*/
+			PAdd<SCharacterStatsComponent, PWrite>>>/*, CharacterFunctionality*/
 {
 public:
 	CharacterStatsFunctionality(Object& aOwner, Dependencies&& aDependencies);

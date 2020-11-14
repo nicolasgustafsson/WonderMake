@@ -16,12 +16,12 @@ class GlfwFacade;
 class Renderer
 	: public System<
 		Policy::Set<
-			Policy::Add<Camera, Policy::EPermission::Write>,
-			Policy::Add<EngineUniformBuffer, Policy::EPermission::Write>,
-			Policy::Add<Window, Policy::EPermission::Write>,
-			Policy::Add<DebugLineDrawer, Policy::EPermission::Write>,
-			Policy::Add<GlfwFacade, Policy::EPermission::Write>,
-			Policy::Add<OpenGLFacade, Policy::EPermission::Write>>>
+			PAdd<Camera, PWrite>,
+			PAdd<EngineUniformBuffer, PWrite>,
+			PAdd<Window, PWrite>,
+			PAdd<DebugLineDrawer, PWrite>,
+			PAdd<GlfwFacade, PWrite>,
+			PAdd<OpenGLFacade, PWrite>>>
 	, public Debugged
 {
 public:

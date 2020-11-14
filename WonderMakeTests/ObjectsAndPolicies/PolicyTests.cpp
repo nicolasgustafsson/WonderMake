@@ -51,23 +51,23 @@ TEST_CASE("Policies can be created and can be tested for conflicts", "[Policy]")
 	SECTION("Policy can be created")
 	{
 		const SystemId idSystemA = SystemId::Create<SystemA>();
-		const Policy policy = Policy::Create<SystemA>(Policy::EPermission::Read);
+		const Policy policy = Policy::Create<SystemA>(PRead);
 
 		REQUIRE(policy.myDependencyId == idSystemA);
-		REQUIRE(policy.myPermission == Policy::EPermission::Read);
+		REQUIRE(policy.myPermission == PRead);
 	}
 
 	SECTION("Policy::Set can converted to a list")
 	{
 		using setA = Policy::Set<>;
 		using setB = Policy::Set<
-			Policy::Add<SystemA, Policy::EPermission::Read>>;
+			PAdd<SystemA, PRead>>;
 		using setC = Policy::Set<
-			Policy::Add<SystemA, Policy::EPermission::Write>>;
+			PAdd<SystemA, PWrite>>;
 		using setD = Policy::Set<
-			Policy::Add<SystemA, Policy::EPermission::Unrestricted>,
-			Policy::Add<SystemB, Policy::EPermission::Read>,
-			Policy::Add<SystemC, Policy::EPermission::Write>>;
+			PAdd<SystemA, PWrite>,
+			PAdd<SystemB, PRead>,
+			PAdd<SystemC, PWrite>>;
 
 		static_assert(!setA::HasDependency_v<SystemA>,	"setA should not depend on SystemA.");
 		static_assert(!setA::HasDependency_v<SystemB>,	"setA should not depend on SystemB.");
@@ -89,78 +89,75 @@ TEST_CASE("Policies can be created and can be tested for conflicts", "[Policy]")
 		static_assert(setD::HasDependency_v<SystemC>,	"setD should depend on SystemC.");
 		static_assert(!setD::HasDependency_v<SystemD>,	"setD should not depend on SystemD.");
 
-		static_assert(!setA::HasPolicy_v<SystemA, Policy::EPermission::Read>,			"setA should not have read permisson for SystemA.");
-		static_assert(!setA::HasPolicy_v<SystemA, Policy::EPermission::Write>,			"setA should not have write permisson for SystemA.");
-		static_assert(!setA::HasPolicy_v<SystemA, Policy::EPermission::Unrestricted>,	"setA should not have unrestricted permisson for SystemA.");
+		static_assert(!setA::HasPolicy_v<SystemA, PRead>,	"setA should not have read permisson for SystemA.");
+		static_assert(!setA::HasPolicy_v<SystemA, PWrite>,	"setA should not have write permisson for SystemA.");
 
-		static_assert(setB::HasPolicy_v<SystemA, Policy::EPermission::Read>,			"setB should have read permisson for SystemA.");
-		static_assert(!setB::HasPolicy_v<SystemA, Policy::EPermission::Write>,			"setB should not have write permisson for SystemA.");
-		static_assert(!setB::HasPolicy_v<SystemA, Policy::EPermission::Unrestricted>,	"setB should not have unrestricted permisson for SystemA.");
+		static_assert(setB::HasPolicy_v<SystemA, PRead>,	"setB should have read permisson for SystemA.");
+		static_assert(!setB::HasPolicy_v<SystemA, PWrite>,	"setB should not have write permisson for SystemA.");
 
-		static_assert(!setC::HasPolicy_v<SystemA, Policy::EPermission::Read>,			"setC should not have read permisson for SystemA."); 
-		static_assert(setC::HasPolicy_v<SystemA, Policy::EPermission::Write>,			"setC should have write permisson for SystemA.");
-		static_assert(!setC::HasPolicy_v<SystemA, Policy::EPermission::Unrestricted>,	"setC should not have unrestricted permisson for SystemA.");
+		static_assert(!setC::HasPolicy_v<SystemA, PRead>,	"setC should not have read permisson for SystemA."); 
+		static_assert(setC::HasPolicy_v<SystemA, PWrite>,	"setC should have write permisson for SystemA.");
 
-		static_assert(setD::HasPolicy_v<SystemA, Policy::EPermission::Unrestricted>,	"setD should have unrestricted permisson for SystemA.");
-		static_assert(setD::HasPolicy_v<SystemB, Policy::EPermission::Read>,			"setD should have read permisson for SystemB.");
-		static_assert(setD::HasPolicy_v<SystemC, Policy::EPermission::Write>,			"setD should have write permisson for SystemC.");
+		static_assert(setD::HasPolicy_v<SystemA, PWrite>,	"setD should have write permisson for SystemA.");
+		static_assert(setD::HasPolicy_v<SystemB, PRead>,	"setD should have read permisson for SystemB.");
+		static_assert(setD::HasPolicy_v<SystemC, PWrite>,	"setD should have write permisson for SystemC.");
 
 		const auto listA = setA::GetPolicies();
 		const auto listB = setB::GetPolicies();
 		const auto listC = setC::GetPolicies();
 		const auto listD = setD::GetPolicies();
 
-		REQUIRE(listA.size() == 0);
+		CHECK(listA.size() == 0);
 
 		REQUIRE(listB.size() == 1);
-		REQUIRE(listB[0].myDependencyId == SystemId::Create<SystemA>());
-		REQUIRE(listB[0].myPermission == Policy::EPermission::Read);
+		CHECK(listB[0].myDependencyId == SystemId::Create<SystemA>());
+		CHECK(listB[0].myPermission == PRead);
 
 		REQUIRE(listC.size() == 1);
-		REQUIRE(listC[0].myDependencyId == SystemId::Create<SystemA>());
-		REQUIRE(listC[0].myPermission == Policy::EPermission::Write);
+		CHECK(listC[0].myDependencyId == SystemId::Create<SystemA>());
+		CHECK(listC[0].myPermission == PWrite);
 
 		REQUIRE(listD.size() == 3);
-		REQUIRE(listD[0].myDependencyId == SystemId::Create<SystemA>());
-		REQUIRE(listD[0].myPermission == Policy::EPermission::Unrestricted);
-		REQUIRE(listD[1].myDependencyId == SystemId::Create<SystemB>());
-		REQUIRE(listD[1].myPermission == Policy::EPermission::Read);
-		REQUIRE(listD[2].myDependencyId == SystemId::Create<SystemC>());
-		REQUIRE(listD[2].myPermission == Policy::EPermission::Write);
+		CHECK(listD[0].myDependencyId == SystemId::Create<SystemA>());
+		CHECK(listD[0].myPermission == PWrite);
+		CHECK(listD[1].myDependencyId == SystemId::Create<SystemB>());
+		CHECK(listD[1].myPermission == PRead);
+		CHECK(listD[2].myDependencyId == SystemId::Create<SystemC>());
+		CHECK(listD[2].myPermission == PWrite);
 	}
 
 	SECTION("Policy can be copied")
 	{
 		const SystemId idSystemA = SystemId::Create<SystemA>();
-		const Policy policy1 = Policy::Create<SystemA>(Policy::EPermission::Read);
+		const Policy policy1 = Policy::Create<SystemA>(PRead);
 		const Policy policy2 = policy1;
 
-		REQUIRE(policy2.myDependencyId == idSystemA);
-		REQUIRE(policy2.myPermission == Policy::EPermission::Read);
+		CHECK(policy2.myDependencyId == idSystemA);
+		CHECK(policy2.myPermission == PRead);
 	}
 
 	SECTION("Policy conflicts correctly")
 	{
-		const Policy policy1 = Policy::Create<SystemA>(Policy::EPermission::Read);
-		const Policy policy2 = Policy::Create<SystemA>(Policy::EPermission::Read);
-		const Policy policy3 = Policy::Create<SystemB>(Policy::EPermission::Read);
-		const Policy policy4 = Policy::Create<SystemA>(Policy::EPermission::Write);
-		const Policy policy5 = Policy::Create<SystemA>(Policy::EPermission::Unrestricted);
-		const Policy policy6 = Policy::Create<SystemA>(Policy::EPermission::Unrestricted);
+		const Policy policy1 = Policy::Create<SystemA>(PRead);
+		const Policy policy2 = Policy::Create<SystemA>(PRead);
+		const Policy policy3 = Policy::Create<SystemB>(PRead);
+		const Policy policy4 = Policy::Create<SystemA>(PWrite);
+		const Policy policy5 = Policy::Create<SystemA>(PWrite);
+		const Policy policy6 = Policy::Create<SystemA>(PWrite);
 
-		REQUIRE_FALSE(policy1.Conflicts(policy2));
-		REQUIRE_FALSE(policy2.Conflicts(policy1));
-		REQUIRE_FALSE(policy1.Conflicts(policy3));
-		REQUIRE_FALSE(policy3.Conflicts(policy1));
+		CHECK_FALSE(policy1.Conflicts(policy2));
+		CHECK_FALSE(policy2.Conflicts(policy1));
+		CHECK_FALSE(policy1.Conflicts(policy3));
+		CHECK_FALSE(policy3.Conflicts(policy1));
 
-		REQUIRE(policy1.Conflicts(policy4));
-		REQUIRE(policy4.Conflicts(policy1));
+		CHECK(policy1.Conflicts(policy4));
+		CHECK(policy4.Conflicts(policy1));
 
-		REQUIRE(policy1.Conflicts(policy6));
-		REQUIRE(policy2.Conflicts(policy6));
-		REQUIRE(policy3.Conflicts(policy6));
-		REQUIRE(policy4.Conflicts(policy6));
-		REQUIRE_FALSE(policy5.Conflicts(policy6));
+		CHECK(policy1.Conflicts(policy6));
+		CHECK(policy2.Conflicts(policy6));
+		CHECK_FALSE(policy3.Conflicts(policy6));
+		CHECK(policy4.Conflicts(policy6));
+		CHECK(policy5.Conflicts(policy6));
 	}
 }
 
@@ -172,11 +169,11 @@ TEST_CASE("Scheduler detects circular dependencies", "[Scheduler]")
 	class SystemD;
 	class SystemE;
 
-	const std::vector<Policy> policyListA = { Policy::Create<SystemB>(Policy::EPermission::Read), Policy::Create<SystemC>(Policy::EPermission::Read) };
+	const std::vector<Policy> policyListA = { Policy::Create<SystemB>(PRead), Policy::Create<SystemC>(PRead) };
 	const std::vector<Policy> policyListB = {};
-	const std::vector<Policy> policyListC = { Policy::Create<SystemD>(Policy::EPermission::Read) };
-	const std::vector<Policy> policyListD = { Policy::Create<SystemA>(Policy::EPermission::Read) };
-	const std::vector<Policy> policyListE = { Policy::Create<SystemA>(Policy::EPermission::Unrestricted) };
+	const std::vector<Policy> policyListC = { Policy::Create<SystemD>(PRead) };
+	const std::vector<Policy> policyListD = { Policy::Create<SystemA>(PRead) };
+	const std::vector<Policy> policyListE = { Policy::Create<SystemA>(PWrite) };
 
 	Scheduler schedule;
 

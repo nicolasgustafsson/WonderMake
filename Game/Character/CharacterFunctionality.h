@@ -31,17 +31,17 @@ class CharacterFunctionality
 	: public Functionality<
 		CharacterFunctionality,
 		Policy::Set<
-			Policy::Add<InputSystem, Policy::EPermission::Write>,
-			Policy::Add<OwnerFunctionality, Policy::EPermission::Write>,
-			Policy::Add<CollisionFunctionality, Policy::EPermission::Write>,
-			Policy::Add<SHealthComponent, Policy::EPermission::Write>,
-			Policy::Add<FactionFunctionality, Policy::EPermission::Write>,
-			Policy::Add<TransformFunctionality, Policy::EPermission::Write>,
-			Policy::Add<DefaultMovementFunctionality, Policy::EPermission::Write>,
-			Policy::Add<CharacterStatsFunctionality, Policy::EPermission::Write>,
-			Policy::Add<HitShapeSpawnerFunctionality, Policy::EPermission::Write>,
-			Policy::Add<LevelDenizenFunctionality, Policy::EPermission::Write>,
-			Policy::Add<CharacterBuffsFunctionality, Policy::EPermission::Write>>>
+			PAdd<InputSystem, PWrite>,
+			PAdd<OwnerFunctionality, PWrite>,
+			PAdd<CollisionFunctionality, PWrite>,
+			PAdd<SHealthComponent, PWrite>,
+			PAdd<FactionFunctionality, PWrite>,
+			PAdd<TransformFunctionality, PWrite>,
+			PAdd<DefaultMovementFunctionality, PWrite>,
+			PAdd<CharacterStatsFunctionality, PWrite>,
+			PAdd<HitShapeSpawnerFunctionality, PWrite>,
+			PAdd<LevelDenizenFunctionality, PWrite>,
+			PAdd<CharacterBuffsFunctionality, PWrite>>>
 {
 public:
 	CharacterFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept;

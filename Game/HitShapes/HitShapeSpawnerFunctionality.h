@@ -18,12 +18,12 @@ class HitShapeSpawnerFunctionality
 	: public Functionality<
 	HitShapeSpawnerFunctionality,
 		Policy::Set<
-			Policy::Add<Randomizer, Policy::EPermission::Write>,
-			Policy::Add<FunctionalitySystemDelegate<HitShapeFunctionality>, Policy::EPermission::Write>,
-			Policy::Add<TransformFunctionality, Policy::EPermission::Write>,
-			Policy::Add<FactionFunctionality, Policy::EPermission::Read>,
-			Policy::Add<SFactionComponent, Policy::EPermission::Write>,
-			Policy::Add<SLevelDenizenComponent, Policy::EPermission::Write>>>
+			PAdd<Randomizer, PWrite>,
+			PAdd<FunctionalitySystemDelegate<HitShapeFunctionality>, PWrite>,
+			PAdd<TransformFunctionality, PWrite>,
+			PAdd<FactionFunctionality, PRead>,
+			PAdd<SFactionComponent, PWrite>,
+			PAdd<SLevelDenizenComponent, PWrite>>>
 {
 public:
 	HitShapeSpawnerFunctionality(Object& aOwner, Dependencies&& aDependencies);

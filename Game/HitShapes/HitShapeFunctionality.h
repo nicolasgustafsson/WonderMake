@@ -31,11 +31,11 @@ class HitShapeFunctionality
 	: public Functionality<
 		HitShapeFunctionality,
 		Policy::Set<
-			Policy::Add<CollisionSystem, Policy::EPermission::Write>,
-			Policy::Add<TimeKeeper, Policy::EPermission::Read>,
-			Policy::Add<SHitShapeComponent, Policy::EPermission::Write>,
-			Policy::Add<FactionFunctionality, Policy::EPermission::Write>,
-			Policy::Add<TimeToLiveFunctionality, Policy::EPermission::Write>>>
+			PAdd<CollisionSystem, PWrite>,
+			PAdd<TimeKeeper, PRead>,
+			PAdd<SHitShapeComponent, PWrite>,
+			PAdd<FactionFunctionality, PWrite>,
+			PAdd<TimeToLiveFunctionality, PWrite>>>
 {
 public:
 	HitShapeFunctionality(Object& aOwner, Dependencies&& aDependencies);

@@ -8,7 +8,7 @@ class TransformFunctionality
 	: public Functionality<
 		TransformFunctionality, 
 		Policy::Set<
-			Policy::Add<STransformComponent, Policy::EPermission::Write>>>
+			PAdd<STransformComponent, PWrite>>>
 {
 public:
 	TransformFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept;

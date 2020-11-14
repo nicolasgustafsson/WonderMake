@@ -12,9 +12,9 @@ class CameraFunctionality
 	: public Functionality<
 		CameraFunctionality,
 		Policy::Set<
-			Policy::Add<Camera, Policy::EPermission::Write>,
-			Policy::Add<TransformFunctionality, Policy::EPermission::Write>,
-			Policy::Add<SCameraComponent, Policy::EPermission::Write>>>
+			PAdd<Camera, PWrite>,
+			PAdd<TransformFunctionality, PWrite>,
+			PAdd<SCameraComponent, PWrite>>>
 {
 public:
 	CameraFunctionality(Object& aObject, Dependencies&& aDependencies);

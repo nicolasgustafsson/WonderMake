@@ -19,9 +19,9 @@ class BuffGiverFunctionality
 	: public Functionality<
 		BuffGiverFunctionality,
 		Policy::Set<
-			Policy::Add<SBuffGiverComponent, Policy::EPermission::Write>,
-			Policy::Add<CollisionFunctionality, Policy::EPermission::Write>,
-			Policy::Add<TransformFunctionality, Policy::EPermission::Write>>>
+			PAdd<SBuffGiverComponent, PWrite>,
+			PAdd<CollisionFunctionality, PWrite>,
+			PAdd<TransformFunctionality, PWrite>>>
 {
 public:
 	BuffGiverFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept;

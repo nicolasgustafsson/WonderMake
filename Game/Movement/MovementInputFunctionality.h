@@ -15,7 +15,7 @@ class MovementInputFunctionality
 	: public Functionality<
 		MovementInputFunctionality,
 		Policy::Set<
-			Policy::Add<SMovementInputComponent, Policy::EPermission::Write>>>
+			PAdd<SMovementInputComponent, PWrite>>>
 {
 public:
 	MovementInputFunctionality(Object& aOwner, Dependencies&& aDependencies);

@@ -58,15 +58,15 @@ struct SRoom
 class LevelDesigner
 	: public System<
 		Policy::Set<
-			Policy::Add<Randomizer, Policy::EPermission::Write>,
-			Policy::Add<BuffDesigner, Policy::EPermission::Write>,
-			Policy::Add<FunctionalitySystemDelegate<LevelPortalFunctionality>, Policy::EPermission::Write>,
-			Policy::Add<FunctionalitySystemDelegate<SpinnerFunctionality>, Policy::EPermission::Write>,
-			Policy::Add<FunctionalitySystemDelegate<TransformFunctionality>, Policy::EPermission::Write>,
-			Policy::Add<FunctionalitySystemDelegate<SpriteRenderingFunctionality>, Policy::EPermission::Write>,
-			Policy::Add<FunctionalitySystemDelegate<BuffGiverFunctionality>, Policy::EPermission::Write>,
-			Policy::Add<FunctionalitySystemDelegate<EnemyControllerFunctionality>, Policy::EPermission::Write>,
-			Policy::Add<FunctionalitySystemDelegate<StaticGeometryFunctionality>, Policy::EPermission::Write>>>
+			PAdd<Randomizer, PWrite>,
+			PAdd<BuffDesigner, PWrite>,
+			PAdd<FunctionalitySystemDelegate<LevelPortalFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<SpinnerFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<TransformFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<SpriteRenderingFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<BuffGiverFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<EnemyControllerFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<StaticGeometryFunctionality>, PWrite>>>
 {
 public:
 	using Super::Super;

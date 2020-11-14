@@ -26,9 +26,9 @@ enum class EActionResult
 class ActionFunctionality
 	: public Functionality<ActionFunctionality,
 		Policy::Set<
-			Policy::Add<TimeKeeper, Policy::EPermission::Read>,
-			Policy::Add<SActionComponent, Policy::EPermission::Write>,
-			Policy::Add<ImpulseFunctionality, Policy::EPermission::Write>>>
+			PAdd<TimeKeeper, PRead>,
+			PAdd<SActionComponent, PWrite>,
+			PAdd<ImpulseFunctionality, PWrite>>>
 {
 public:
 	ActionFunctionality(Object& aOwner, Dependencies&& aDependencies);

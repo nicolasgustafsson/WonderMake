@@ -7,7 +7,7 @@
 class DebugLineDrawer
 	: public System<
 		Policy::Set<
-			Policy::Add<TimeKeeper, Policy::EPermission::Read>>>
+			PAdd<TimeKeeper, PRead>>>
 {
 public:
 	DebugLineDrawer(Dependencies&& aDependencies) noexcept;

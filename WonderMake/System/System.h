@@ -2,13 +2,7 @@
 
 #include "Policies/Policy.h"
 
-#include "System/SystemContainer.h"
-
 #include "Utilities/RestrictTypes.h"
-
-#include <optional>
-
-class SystemContainer;
 
 class SystemBase
 	: public NonCopyable
@@ -32,26 +26,23 @@ public:
 	using Super = System<TPolicySet>;
 	using Dependencies = typename TPolicySet::template DependenciesRef;
 
-	inline constexpr System(Dependencies&& aDependencies) noexcept;
+	inline constexpr System(Dependencies&& aDependencies) noexcept
+		: myDependencies(std::move(aDependencies))
+	{}
 
 protected:
 	constexpr System() noexcept = default;
 	
-	template<
-		typename TDependency,
-		typename = std::enable_if_t<
-			TPolicySet::template HasPolicy_v<TDependency, Policy::EPermission::Write>
-			|| TPolicySet::template HasPolicy_v<TDependency, Policy::EPermission::Unrestricted>>>
+	template<typename TDependency> requires
+		TPolicySet::template HasPolicy_v<TDependency, PWrite>
 	constexpr __forceinline TDependency& Get()
 	{
 		return std::get<std::decay_t<TDependency>&>(myDependencies);
 	}
 
-	template<
-		typename TDependency,
-		typename = std::enable_if_t<
-			TPolicySet::template HasDependency_v<TDependency>>>
-		constexpr __forceinline const TDependency& Get() const
+	template<typename TDependency> requires
+		TPolicySet::template HasDependency_v<TDependency>
+	constexpr __forceinline const TDependency& Get() const
 	{
 		return std::get<std::decay_t<TDependency>&>(myDependencies);
 	}
@@ -62,8 +53,3 @@ private:
 	template<typename>
 	friend class FunctionalitySystem;
 };
-
-template<typename TPolicySet>
-inline constexpr System<TPolicySet>::System(Dependencies&& aDependencies) noexcept
-	: myDependencies(std::move(aDependencies))
-{}

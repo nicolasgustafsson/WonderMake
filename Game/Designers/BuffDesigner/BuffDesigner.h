@@ -37,8 +37,8 @@ struct SBuffDesign
 class BuffDesigner
 	: public System<
 		Policy::Set<
-			Policy::Add<Randomizer, Policy::EPermission::Write>,
-			Policy::Add<EffectDesigner, Policy::EPermission::Write>>>
+			PAdd<Randomizer, PWrite>,
+			PAdd<EffectDesigner, PWrite>>>
 	, public Debugged
 {
 public:

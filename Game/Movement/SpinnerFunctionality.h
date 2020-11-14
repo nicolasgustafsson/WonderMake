@@ -17,9 +17,9 @@ class SpinnerFunctionality
 	: public Functionality<
 		SpinnerFunctionality,
 		Policy::Set<
-			Policy::Add<TimeKeeper, Policy::EPermission::Read>,
-			Policy::Add<SSpinnerComponent, Policy::EPermission::Write>,
-			Policy::Add<TransformFunctionality, Policy::EPermission::Write>>>
+			PAdd<TimeKeeper, PRead>,
+			PAdd<SSpinnerComponent, PWrite>,
+			PAdd<TransformFunctionality, PWrite>>>
 {
 public:
 	SpinnerFunctionality(Object& aOwner, Dependencies&& aDependencies) noexcept;

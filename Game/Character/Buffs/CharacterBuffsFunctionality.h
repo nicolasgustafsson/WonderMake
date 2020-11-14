@@ -14,9 +14,9 @@ class CharacterBuffsFunctionality
 	: public Functionality<
 		CharacterBuffsFunctionality,
 		Policy::Set<
-			Policy::Add<TimeKeeper, Policy::EPermission::Read>,
-			Policy::Add<SCharacterBuffComponent, Policy::EPermission::Write>,
-			Policy::Add<ImpulseFunctionality, Policy::EPermission::Write>>>
+			PAdd<TimeKeeper, PRead>,
+			PAdd<SCharacterBuffComponent, PWrite>,
+			PAdd<ImpulseFunctionality, PWrite>>>
 {
 public:
 	CharacterBuffsFunctionality(Object& aOwner, Dependencies&& aDependencies);

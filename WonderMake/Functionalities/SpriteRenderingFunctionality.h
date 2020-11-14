@@ -7,8 +7,8 @@ class SpriteRenderingFunctionality
 	: public Functionality<
 		SpriteRenderingFunctionality,
 		Policy::Set<
-			Policy::Add<STransformComponent, Policy::EPermission::Read>,
-			Policy::Add<SSpriteComponent, Policy::EPermission::Write>>>
+			PAdd<STransformComponent, PRead>,
+			PAdd<SSpriteComponent, PWrite>>>
 {
 public:
 	SpriteRenderingFunctionality(Object& aOwner, Dependencies&& aDependencies);

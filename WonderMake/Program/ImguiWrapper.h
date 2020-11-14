@@ -8,8 +8,8 @@ class Window;
 class ImguiWrapper
 	: public System<
 		Policy::Set<
-			Policy::Add<GlfwFacade, Policy::EPermission::Write>,
-			Policy::Add<Window, Policy::EPermission::Read>>>
+			PAdd<GlfwFacade, PWrite>,
+			PAdd<Window, PRead>>>
 {
 public:
 	ImguiWrapper(Dependencies&& aDependencies);

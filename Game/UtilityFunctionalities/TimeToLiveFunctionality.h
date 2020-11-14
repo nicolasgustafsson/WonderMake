@@ -7,9 +7,9 @@
 class TimeToLiveFunctionality : public Functionality<
 	TimeToLiveFunctionality,
 	Policy::Set<
-	Policy::Add<SLevelDenizenComponent, Policy::EPermission::Write>, 
-	Policy::Add<TimerFunctionality, Policy::EPermission::Write>,
-	Policy::Add<OwnerFunctionality, Policy::EPermission::Write >> >
+	PAdd<SLevelDenizenComponent, PWrite>, 
+	PAdd<TimerFunctionality, PWrite>,
+	PAdd<OwnerFunctionality, PWrite >> >
 {
 public:
 	TimeToLiveFunctionality(Object& aOwner, Dependencies&& aDependencies) : Super(aOwner, std::move(aDependencies)) {}

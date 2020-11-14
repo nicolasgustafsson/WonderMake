@@ -19,10 +19,10 @@ class CollisionFunctionality final
 	: public Functionality<
 		CollisionFunctionality,
 		Policy::Set<
-			Policy::Add<CollisionSystem, Policy::EPermission::Write>,
-			Policy::Add<DebugSettingsSystem, Policy::EPermission::Write>,
-			Policy::Add<SCollisionComponent, Policy::EPermission::Write>,
-			Policy::Add<TransformFunctionality, Policy::EPermission::Read>>>
+			PAdd<CollisionSystem, PWrite>,
+			PAdd<DebugSettingsSystem, PWrite>,
+			PAdd<SCollisionComponent, PWrite>,
+			PAdd<TransformFunctionality, PRead>>>
 	, public Debugged
 {
 public:

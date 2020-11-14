@@ -27,8 +27,8 @@ struct SLevelComponent : public SComponent
 class LevelFunctionality : public Functionality<
 	LevelFunctionality,
 		Policy::Set<
-			Policy::Add<FunctionalitySystemDelegate<LevelDenizenFunctionality>, Policy::EPermission::Write>,
-			Policy::Add<SLevelComponent, Policy::EPermission::Write>>>
+			PAdd<FunctionalitySystemDelegate<LevelDenizenFunctionality>, PWrite>,
+			PAdd<SLevelComponent, PWrite>>>
 {
 public:
 	LevelFunctionality(Object& aOwner, Dependencies&& aDependencies);

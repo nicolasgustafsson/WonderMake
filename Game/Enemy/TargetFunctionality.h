@@ -7,8 +7,8 @@ class TargetFunctionality
 	: public Functionality<
 		TargetFunctionality,
 		Policy::Set<
-			Policy::Add<CollisionSystem, Policy::EPermission::Write>,
-			Policy::Add<TransformFunctionality, Policy::EPermission::Write>>>
+			PAdd<CollisionSystem, PWrite>,
+			PAdd<TransformFunctionality, PWrite>>>
 {
 public:
 	TargetFunctionality(Object& aOwner, Dependencies&& aDependencies);

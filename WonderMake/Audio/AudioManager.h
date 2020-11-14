@@ -10,7 +10,7 @@ class DebugSettingsSystem;
 class AudioManager
 	: public System<
 		Policy::Set<
-			Policy::Add<DebugSettingsSystem, Policy::EPermission::Write>>
+			PAdd<DebugSettingsSystem, PWrite>>
 	>, Debugged
 {
 public:

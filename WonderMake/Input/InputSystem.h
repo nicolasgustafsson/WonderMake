@@ -12,10 +12,10 @@ class Window;
 class InputSystem
 	: public System<
 		Policy::Set<
-			Policy::Add<Camera, Policy::EPermission::Write>,
-			Policy::Add<GlfwFacade, Policy::EPermission::Write>,
-			Policy::Add<Renderer, Policy::EPermission::Write>,
-			Policy::Add<Window, Policy::EPermission::Write>>>
+			PAdd<Camera, PWrite>,
+			PAdd<GlfwFacade, PWrite>,
+			PAdd<Renderer, PWrite>,
+			PAdd<Window, PWrite>>>
 	, public Debugged
 {
 public:

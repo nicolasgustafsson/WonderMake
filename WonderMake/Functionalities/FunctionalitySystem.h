@@ -33,7 +33,7 @@ using ExtractSystemType =
 
 template<typename TPolicy>
 using ConvertPolicy =
-Policy::Add<
+PAdd<
 	ExtractSystemType<typename TPolicy::Dependency>,
 	TPolicy::Permission>;
 
@@ -82,7 +82,7 @@ private:
 };
 
 template<typename TFunctionality>
-using FunctionalitySystemDelegateSystem = System < Policy::Set<Policy::Add<FunctionalitySystem<TFunctionality>, Policy::EPermission::Write>>>;
+using FunctionalitySystemDelegateSystem = System < Policy::Set<PAdd<FunctionalitySystem<TFunctionality>, PWrite>>>;
 
 template<typename TFunctionality>
 class FunctionalitySystemDelegate final

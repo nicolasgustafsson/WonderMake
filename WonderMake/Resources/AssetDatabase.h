@@ -17,6 +17,11 @@ public:
 	AssetDatabase() 
 		: Debugged("Asset Databases/" + GetAssetTypeName()) 
 	{
+		Load();
+	}
+
+	void Load()
+	{
 		std::ifstream file("AssetDatabases\\" + GetAssetTypeName() + ".json", std::fstream::app);
 
 		std::string fileContents((std::istreambuf_iterator<char>(file)),
@@ -31,11 +36,6 @@ public:
 		}
 	}
 
-	~AssetDatabase()
-	{
-		Serialize();
-	}
-
 	void Deserialize(const nlohmann::json& aJson)
 	{
 		myRootPath = aJson["rootPath"].get<std::filesystem::path>();
@@ -43,15 +43,27 @@ public:
 		SweepAssetDirectories();
 	}
 
-	void Serialize()
+	~AssetDatabase()
+	{
+		Save();
+	}
+
+	void Save()
+	{
+		nlohmann::json serialized = Serialize();
+
+		std::ofstream file("AssetDatabases\\" + GetAssetTypeName() + ".json");
+
+		file << std::setw(4) << serialized.dump();
+	}
+
+	nlohmann::json Serialize()
 	{
 		nlohmann::json json;
 
 		json["rootPath"] = myRootPath;
 
-		std::ofstream file("AssetDatabases\\" + GetAssetTypeName() + ".json");
-
-		file << std::setw(4) << json.dump();
+		return json;
 	}
 
 	void SweepAssetDirectories()
@@ -61,7 +73,7 @@ public:
 		for (auto& file : std::filesystem::recursive_directory_iterator(myRootPath))
 			myAssets.insert(file.path());
 
-		Serialize();
+		Save();
 	}
 
 	virtual void Debug() override

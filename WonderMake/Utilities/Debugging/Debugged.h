@@ -10,10 +10,10 @@ public:
 protected:
 	virtual void Debug() = 0;
 
-	std::string myDebugName;
 private:
 	void OnDebugMessage(const SDebugMessage&);
 
 	MessageSubscriber myDebugSubscriber;
+	std::string myDebugName;
 };
 

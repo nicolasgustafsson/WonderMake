@@ -12,7 +12,7 @@ class Asset
 public:
 	Asset(std::filesystem::path aPath)
 	{
-		myMetadata.Filepath = aPath;
+		myMetadata.Filepath = std::move(aPath);
 	}
 
 	void Inspect()

@@ -94,7 +94,7 @@ void ResourceSystem<TResource>::OnFileChange(const SFileChangedMessage& aFileCha
 
 template<typename TResource>
 ResourceSystem<TResource>::ResourceSystem()
-	: mySubscriber(ERoutineId::Logic, BindHelper(&ResourceSystem<TResource>::OnFileChange, this))
+	: mySubscriber(BindHelper(&ResourceSystem<TResource>::OnFileChange, this))
 {}
 
 template<typename TResource>
@@ -163,7 +163,10 @@ inline void ResourceSystem<TResource>::ResourceDeleter(std::filesystem::path aPa
 		myCreateResourceJobs.erase(jobIt);
 	}
 
-	WmDispatchTask([aResource] { delete aResource; }, aResource->myPointer->GetOwnerRoutineId());
+	WmDispatchTask([aResource]
+	{
+		delete aResource;
+	});
 }
 
 template<typename TResource>

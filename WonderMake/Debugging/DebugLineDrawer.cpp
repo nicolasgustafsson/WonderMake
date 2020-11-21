@@ -6,7 +6,7 @@ REGISTER_SYSTEM(DebugLineDrawer);
 
 DebugLineDrawer::DebugLineDrawer() noexcept
 	: myRenderObject(10000)
-	, mySubscriber(ERoutineId::Logic, BindHelper(&DebugLineDrawer::OnGotDebugLineMessage, this))
+	, mySubscriber(BindHelper(&DebugLineDrawer::OnGotDebugLineMessage, this))
 {
 
 }

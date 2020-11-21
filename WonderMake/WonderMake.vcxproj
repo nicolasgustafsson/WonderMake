@@ -251,7 +251,6 @@
     <ClCompile Include="Randomizer\Randomizer.cpp" />
     <ClCompile Include="Utilities\TimeKeeper.cpp" />
     <ClCompile Include="Utilities\Debugging\Debugged.cpp" />
-    <ClCompile Include="Threads\RoutineDebug.cpp" />
     <ClCompile Include="FileSystem\ReadFileAsStringJob.cpp" />
     <ClCompile Include="Graphics\EngineUniformBuffer.cpp" />
     <ClCompile Include="Imgui\DockSpace.cpp" />
@@ -267,10 +266,7 @@
     <ClCompile Include="Graphics\ScreenPassRenderObject.cpp" />
     <ClCompile Include="System\SystemContainer.cpp" />
     <ClCompile Include="System\System.cpp" />
-    <ClCompile Include="Threads\Thread.cpp" />
     <ClCompile Include="Threads\Routine.cpp" />
-    <ClCompile Include="Threads\RoutineIds.cpp" />
-    <ClCompile Include="Threads\RoutineMain.cpp" />
     <ClCompile Include="Threads\DataThreads.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
     <ClCompile Include="Message\DispatchRouter.cpp" />
@@ -355,7 +351,6 @@
     <ClInclude Include="Utilities\MathUtility.h" />
     <ClInclude Include="Utilities\Stopwatch.h" />
     <ClInclude Include="Utilities\Debugging\Debugged.h" />
-    <ClInclude Include="Threads\RoutineDebug.h" />
     <ClInclude Include="FileSystem\FileSystem.h" />
     <ClInclude Include="FileSystem\ReadFileAsStringJob.h" />
     <ClInclude Include="Graphics\EngineUniformBuffer.h" />
@@ -387,19 +382,14 @@
     <ClInclude Include="Resources\CreateResource.h" />
     <ClInclude Include="Resources\Resource.h" />
     <ClInclude Include="Resources\ResourceProxy.h" />
-    <ClInclude Include="Threads\Thread.h" />
     <ClInclude Include="Threads\Routine.h" />
-    <ClInclude Include="Threads\RoutineMain.h" />
     <ClInclude Include="Threads\DataThreads.h" />
     <ClInclude Include="Graphics\VertexBuffer.h" />
     <ClInclude Include="Graphics\Shader.h" />
     <ClInclude Include="Graphics\Renderer.h" />
-    <ClInclude Include="Message\DataRouters.h" />
     <ClInclude Include="Message\DispatchRouter.h" />
     <ClInclude Include="Message\MessageTypes.h" />
     <ClInclude Include="Message\MessageSubscriber.h" />
-    <ClInclude Include="Threads\DoubleBuffer.h" />
-    <ClInclude Include="Threads\RoutineIds.h" />
     <ClInclude Include="Program\ImguiWrapper.h" />
     <ClInclude Include="Program\Program.h" />
     <ClInclude Include="Graphics\ShaderProgram.h" />

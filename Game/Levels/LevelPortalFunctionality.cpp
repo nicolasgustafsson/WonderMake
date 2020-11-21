@@ -28,7 +28,7 @@ LevelPortalFunctionality::LevelPortalFunctionality()
 			WmDispatchTask([]() 
 				{
 					SystemPtr<GameWorld>()->RestartLevel();
-				}, ERoutineId::Logic);
+				});
 			myDoOnce = true;
 		});
 }

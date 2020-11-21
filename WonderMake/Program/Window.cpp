@@ -51,7 +51,7 @@ void Window::Update()
 
 	if (glfw.ShouldWindowClose(myGlfwWindow))
 	{
-		WmDispatchTask([]() {quick_exit(0);}, ERoutineId::Logic);
+		WmDispatchTask([]() {quick_exit(0);});
 	}
 }
 

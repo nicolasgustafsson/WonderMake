@@ -7,8 +7,10 @@ namespace NodeTypes
 {
 	void SAudioMixingResultNode::ExecuteNode(SNode& aNode)
 	{
+		SystemPtr<AudioManager> audioManager;
+
 		SoLoud::Bus* audioSource = aNode.GetInput<SoLoud::Bus*>(0);
-		SoLoud::Soloud& soloudEngine = SystemPtr<AudioManager>()->GetSoloudEngine();
+		SoLoud::Soloud& soloudEngine = audioManager->GetSoloudEngine();
 		
 		soloudEngine.stopAll();
 
@@ -97,7 +99,9 @@ namespace NodeTypes
 	{
 		const std::filesystem::path audioEffectName = aNode.GetInput<std::filesystem::path>(0);
 
-		ResourceProxy<AudioFile> audioFile = SystemPtr<ResourceSystem<AudioFile>>()->GetResource(audioEffectName);
+		SystemPtr<ResourceSystem<AudioFile>> audioFileResource;
+
+		ResourceProxy<AudioFile> audioFile = audioFileResource->GetResource(audioEffectName);
 
 		std::any& resourceSave = aNode.NodeData["resource"];
 

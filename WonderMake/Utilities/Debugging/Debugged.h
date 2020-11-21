@@ -5,7 +5,7 @@ class Debugged
 {
 public:
 	Debugged(const std::string aName) noexcept;
-	virtual ~Debugged() = default;
+	virtual ~Debugged() noexcept = default;
 
 protected:
 	virtual void Debug() = 0;

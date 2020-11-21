@@ -4,8 +4,7 @@
 
 
 Debugged::Debugged(const std::string aName) noexcept
-	: myDebugSubscriber(ERoutineId::Debug, 
-		BindHelper(&Debugged::OnDebugMessage, this))
+	: myDebugSubscriber(BindHelper(&Debugged::OnDebugMessage, this))
 {
 	myDebugName = "Debug Windows/" + aName;
 }

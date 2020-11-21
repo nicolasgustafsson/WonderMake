@@ -3,7 +3,7 @@
 #include <iostream>
 
 ConsoleLogger::ConsoleLogger() noexcept
-	:mySubscriber(ERoutineId::Logic, BindHelper(&ConsoleLogger::OnLogMessage, this))
+	:mySubscriber(BindHelper(&ConsoleLogger::OnLogMessage, this))
 {
 
 }

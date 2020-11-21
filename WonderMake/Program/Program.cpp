@@ -19,39 +19,41 @@ void Program::Update()
 {
 	FinishPreviousFrame();
 
-	myInputSystem->Update();
-	myAudioManagerPtr->Update();
+	SystemPtr<InputSystem>()->Update();
+	SystemPtr<AudioManager>()->Update();
 
 	if constexpr (Constants::EnableAssetHotReload)
-		myFileWatcher->UpdateFileChanges();
+	{
+		SystemPtr<FileWatcher>()->UpdateFileChanges();
+	}
 
 	StartNewFrame();
 }
 
 void Program::StartNewFrame()
 {
-	myEngineUniformBufferPtr->GetBuffer().Time = myTimeKeeperPtr->GetGameTime();
+	SystemPtr<EngineUniformBuffer>()->GetBuffer().Time = SystemPtr<TimeKeeper>()->GetGameTime();
 
-	myEngineUniformBufferPtr->Update();
+	SystemPtr<EngineUniformBuffer>()->Update();
 
-	myWindowPtr->Update();
+	SystemPtr<Window>()->Update();
 
-	myRendererPtr->StartFrame();
+	SystemPtr<Renderer>()->StartFrame();
 }
 
 void Program::FinishPreviousFrame()
 {
 	if constexpr (!Constants::IsDebugging)
-		myRendererPtr->FinishFrame();
+		SystemPtr<Renderer>()->FinishFrame();
 }
 
 void Program::SetupCallbacks()
 {
 	SystemPtr<GlfwFacade> glfw;
 	//sets the user pointer so we can access ourself from the lambda
-	glfw->SetWindowUserPointer(myWindowPtr->myGlfwWindow, this);
+	glfw->SetWindowUserPointer(SystemPtr<Window>()->myGlfwWindow, this);
 
-	glfw->SetFramebufferSizeCallback(myWindowPtr->myGlfwWindow, [](GLFWwindow* Window, int X, int Y) -> void
+	glfw->SetFramebufferSizeCallback(SystemPtr<Window>()->myGlfwWindow, [](GLFWwindow* Window, int X, int Y) -> void
 	{
 			SystemPtr<GlfwFacade> glfw;
 			Program* SelfPointer = static_cast<Program*>(glfw->GetWindowUserPointer(Window));

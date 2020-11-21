@@ -11,8 +11,7 @@ constexpr auto LogFileDirectory = "Logs";
 constexpr auto LogFileSuffix = ".txt";
 
 FileLogger::FileLogger() noexcept
-	: mySubscriber(ERoutineId::File,
-		BindHelper(&FileLogger::OnLogMessage, this))
+	: mySubscriber(BindHelper(&FileLogger::OnLogMessage, this))
 {
 	const std::filesystem::path logDir = std::filesystem::current_path() / LogFileDirectory;
 	if (!std::filesystem::is_directory(logDir))

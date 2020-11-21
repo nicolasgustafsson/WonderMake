@@ -14,45 +14,33 @@
 template<typename TMessage>
 inline static void WmDispatchMessage(const TMessage& aMessage)
 {
-	DispatchableBuffer<TMessage>::Dispatch(aMessage);
+	DispatchableBuffer::Get().Dispatch(aMessage);
 }
 
 template<typename TMessage, typename = std::enable_if_t<!std::is_lvalue_reference_v<TMessage>>>
 inline static void WmDispatchMessage(TMessage&& aMessage) noexcept
 {
-	DispatchableBuffer<TMessage>::Dispatch(std::move(aMessage));
+	DispatchableBuffer::Get().Dispatch(std::move(aMessage));
 }
 
-template<typename TMessage>
-inline static void WmDispatchMessage(TMessage&& aMessage, const ERoutineId aRoutineId)
+inline static void WmDispatchTask(Task&& aTask) noexcept
 {
-	DispatchableBuffer<std::decay<TMessage>::type>::Dispatch(std::move(aMessage), aRoutineId);
+	DispatchableBuffer::Get().Dispatch(std::move(aTask));
 }
 
-template<typename TMessage, typename = std::enable_if_t<!std::is_lvalue_reference_v<TMessage>>>
-inline static void WmDispatchMessage(const TMessage& aMessage, const ERoutineId aRoutineId)
+inline static void WmDispatchTask(const Task& aTask) noexcept
 {
-	DispatchableBuffer<std::decay<TMessage>::type>::Dispatch(aMessage, aRoutineId);
+	DispatchableBuffer::Get().Dispatch(aTask);
 }
 
-inline static void WmDispatchTask(Task&& aTask, const ERoutineId aRoutineId) noexcept
+inline static void WmDispatchTask(Closure&& aTask) noexcept
 {
-	DispatchableBuffer<Task>::Dispatch(std::move(aTask), aRoutineId);
+	DispatchableBuffer::Get().Dispatch(Task(aTask));
 }
 
-inline static void WmDispatchTask(const Task& aTask, const ERoutineId aRoutineId) noexcept
+inline static void WmDispatchTask(const Closure& aTask)
 {
-	DispatchableBuffer<Task>::Dispatch(aTask, aRoutineId);
-}
-
-inline static void WmDispatchTask(Closure&& aTask, const ERoutineId aRoutineId) noexcept
-{
-	DispatchableBuffer<Task>::Dispatch(Task(aTask), aRoutineId);
-}
-
-inline static void WmDispatchTask(const Closure& aTask, const ERoutineId aRoutineId)
-{
-	DispatchableBuffer<Task>::Dispatch(std::move(Task(aTask)), aRoutineId);
+	DispatchableBuffer::Get().Dispatch(std::move(Task(aTask)));
 }
 
 template<typename ... TMessageArgs>

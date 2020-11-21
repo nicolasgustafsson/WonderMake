@@ -57,10 +57,6 @@
     <ClCompile Include="NodeGraph\NodeTypes.cpp" />
     <ClCompile Include="Threads\DataThreads.cpp" />
     <ClCompile Include="Threads\Routine.cpp" />
-    <ClCompile Include="Threads\RoutineDebug.cpp" />
-    <ClCompile Include="Threads\RoutineIds.cpp" />
-    <ClCompile Include="Threads\RoutineMain.cpp" />
-    <ClCompile Include="Threads\Thread.cpp" />
     <ClCompile Include="Audio\SoundEffectNodeGraph.cpp" />
     <ClCompile Include="Policies\TaskManager.cpp" />
     <ClCompile Include="Utilities\Platform.cpp" />
@@ -73,7 +69,6 @@
     <ClCompile Include="Graphics\Shader.cpp" />
     <ClCompile Include="Components\Component.cpp" />
     <ClCompile Include="Collision\CollisionComponent.cpp" />
-    <ClCompile Include="Utilities\Serialization.cpp" />
     <ClCompile Include="Graphics\RenderCommandProcessor.cpp" />
     <ClCompile Include="Graphics\RenderObject.cpp" />
     <ClCompile Include="Graphics\RenderNodeGraph\RenderNodeGraph.cpp" />
@@ -135,7 +130,6 @@
     <ClInclude Include="Graphics\VertexBuffer.h" />
     <ClInclude Include="Graphics\Shader.h" />
     <ClInclude Include="Graphics\Renderer.h" />
-    <ClInclude Include="Message\DataRouters.h" />
     <ClInclude Include="Message\DispatchRouter.h" />
     <ClInclude Include="Message\MessageTypes.h" />
     <ClInclude Include="Message\MessageSubscriber.h" />
@@ -186,8 +180,6 @@
     <ClInclude Include="Functionalities\FunctionalitySystem.h" />
     <ClInclude Include="Components\ComponentSystem.h" />
     <ClInclude Include="Components\Component.h" />
-    <ClInclude Include="Threads\Thread.h" />
-    <ClInclude Include="Threads\RoutineDebug.h" />
     <ClInclude Include="Utilities\Debugging\Debugged.h" />
     <ClInclude Include="Utilities\Stopwatch.h" />
     <ClInclude Include="Debugging\DebugLineDrawer.h" />
@@ -204,9 +196,6 @@
     <ClInclude Include="Collision\CollisionComponent.h" />
     <ClInclude Include="Collision\Colliders.h" />
     <ClInclude Include="Collision\ColliderDebug.h" />
-    <ClInclude Include="Functionalities\ImpulseFunctionality.h" />
-    <ClInclude Include="Object\ObjectImpulseRouter.h" />
-    <ClInclude Include="Functionalities\OwnerFunctionality.h" />
     <ClInclude Include="Randomizer\Randomizer.h" />
     <ClInclude Include="Functionalities\BaseFunctionality.h" />
     <ClInclude Include="Program\GlfwFacade.h" />
@@ -232,11 +221,8 @@
     <ClInclude Include="NodeGraph\SlotCustomization\SlotColors.h" />
     <ClInclude Include="NodeGraph\SlotCustomization\SlotSerialization.h" />
     <ClInclude Include="Threads\DataThreads.h" />
-    <ClInclude Include="Threads\DoubleBuffer.h" />
     <ClInclude Include="Threads\Routine.h" />
     <ClInclude Include="Threads\RoutineDebug.h" />
-    <ClInclude Include="Threads\RoutineIds.h" />
-    <ClInclude Include="Threads\RoutineMain.h" />
     <ClInclude Include="Threads\Thread.h" />
     <ClInclude Include="NodeGraph\SlotCustomization\SlotInputEdits.h" />
     <ClInclude Include="Audio\SoundEffectNodeGraph.h" />
@@ -252,7 +238,6 @@
     <ClInclude Include="Utilities\DependencyInjector.h" />
     <ClInclude Include="Object\DependencyDestructor.h" />
     <ClInclude Include="Utilities\AutoRegister.h" />
-    <ClInclude Include="Utilities\Serialization.h" />
     <ClInclude Include="Graphics\RenderCommandProcessor.h" />
     <ClInclude Include="Graphics\RenderNodeGraph\RenderNodeGraph.h" />
     <ClInclude Include="Graphics\RenderNodeGraph\RenderNodeTypes.h" />

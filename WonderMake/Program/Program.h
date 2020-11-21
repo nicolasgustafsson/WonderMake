@@ -35,16 +35,6 @@ private:
 	FileLogger myFileLogger;
 	ImGuiLogger myImGuiLogger;
 
-	SystemPtr<InputSystem> myInputSystem;
-	SystemPtr<AudioManager> myAudioManagerPtr;
-	SystemPtr<FileWatcher> myFileWatcher;
-	SystemPtr<TimeKeeper> myTimeKeeperPtr;
-	SystemPtr<EngineUniformBuffer> myEngineUniformBufferPtr;
-	SystemPtr<Window> myWindowPtr;
-	SystemPtr<ImguiWrapper> myImguiWrapper;
-	SystemPtr<CameraManager> myCameraPtr;
-	SystemPtr<Renderer> myRendererPtr;
-
 	static constexpr SVector2<i32> WindowSize = {1600, 900};
 };
 

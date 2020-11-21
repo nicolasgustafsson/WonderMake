@@ -15,7 +15,7 @@
 REGISTER_SYSTEM(GameWorld);
 
 GameWorld::GameWorld()
-	: mySubscriber(ERoutineId::Logic, BindHelper(&GameWorld::OnPlayerDeath, this)), myBackground(std::filesystem::current_path() / "Shaders/Fragment/Background.frag")
+	: mySubscriber(BindHelper(&GameWorld::OnPlayerDeath, this)), myBackground(std::filesystem::current_path() / "Shaders/Fragment/Background.frag")
 {
 	Object player = SetupPlayer();
 

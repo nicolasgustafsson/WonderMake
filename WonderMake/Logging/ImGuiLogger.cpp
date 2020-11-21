@@ -5,7 +5,7 @@
 #include <iostream>
 
 ImGuiLogger::ImGuiLogger()
-	: mySubscriber(ERoutineId::Logic, BindHelper(&ImGuiLogger::OnLogMessage, this))
+	: mySubscriber(BindHelper(&ImGuiLogger::OnLogMessage, this))
 	, Debugged("Output Log")
 {
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Utilities/RestrictTypes.h"
+#include "Utilities/Singleton.h"
 
 #include <functional>
 #include <mutex>
@@ -12,10 +13,9 @@ class MessageSubscriber;
 
 class DispatchRouter final
 	: private NonCopyable
+	, public Singleton<DispatchRouter>
 {
 public:
-	DispatchRouter() = default;
-
 	void RouteDispatchable(const Dispatchable& aDispatchedMessage);
 	void CommitChanges();
 

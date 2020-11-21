@@ -3,8 +3,7 @@
 
 
 DockSpace::DockSpace()
-	: mySubscriber(ERoutineId::Debug,
-		BindHelper(&DockSpace::OnDebugMessage, this))
+	: mySubscriber(BindHelper(&DockSpace::OnDebugMessage, this))
 {
 }
 

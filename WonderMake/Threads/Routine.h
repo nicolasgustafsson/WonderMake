@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Threads/RoutineIds.h"
-
 #include "Message/MessageSubscriber.h"
 
 class Task;
@@ -9,7 +7,7 @@ class Task;
 class Routine
 {
 public:
-	Routine(const ERoutineId aRoutineId);
+	Routine();
 	virtual ~Routine() = default;
 
 	void Run();
@@ -25,7 +23,6 @@ private:
 
 	void OnTask(const Task& aTask) const;
 
-	const ERoutineId myRoutineId;
 	MessageSubscriber mySubscriber;
 	plf::colony<Closure> myProcedures;
 	plf::colony<Closure> myProceduresToAdd;

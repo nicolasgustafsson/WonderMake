@@ -5,9 +5,9 @@
 
 DebugLineRenderObject::DebugLineRenderObject(const u32 aLineCount)
 	: RenderObject(SRenderObjectInfo
-		{	std::filesystem::current_path() / "Shaders/Vertex/LineVertex.vert"
+		{	std::filesystem::current_path() / "Shaders/Vertex/Line.vert"
 		,	"" //geometry shader
-		,	std::filesystem::current_path() / "Shaders/Fragment/LineFragment.frag"
+		,	std::filesystem::current_path() / "Shaders/Fragment/Line.frag"
 		,	"" //texture
 		,	aLineCount * 2
 		,	GL_LINES })

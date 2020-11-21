@@ -4,24 +4,23 @@
 #include <Utilities/Rotation.h>
 #include "Physics/Navmesh/Navmesh.h"
 
-float sign(SVector2f p1, SVector2f p2, SVector2f p3)
+//[Nicos]: TODO move to separate library; Point In triangle should be part of a general function set
+float Sign(const SVector2f aFirstPoint, const SVector2f aSecondPoint, const SVector2f aThirdPoint)
 {
-	return (p1.X - p3.X) * (p2.Y - p3.Y) - (p2.X - p3.X) * (p1.Y - p3.Y);
+	return (aFirstPoint.X - aThirdPoint.X) * (aSecondPoint.Y - aThirdPoint.Y) - (aSecondPoint.X - aThirdPoint.X) * (aFirstPoint.Y - aThirdPoint.Y);
 }
 
-bool PointInTriangle(SVector2f pt, SVector2f v1, SVector2f v2, SVector2f v3)
+//[Nicos]: TODO move to separate library; Point In triangle should be part of a general function set
+bool PointInTriangle(const SVector2f aPoint, const SVector2f aFirstTrianglePoint, const SVector2f aSecondTrianglePoint, const SVector2f aThirdTrianglePoint)
 {
-	float d1, d2, d3;
-	bool has_neg, has_pos;
+	const f32 demoninator1 = Sign(aPoint, aFirstTrianglePoint, aSecondTrianglePoint);
+	const f32 demoninator2 = Sign(aPoint, aSecondTrianglePoint, aThirdTrianglePoint);
+	const f32 demoninator3 = Sign(aPoint, aThirdTrianglePoint, aFirstTrianglePoint);
 
-	d1 = sign(pt, v1, v2);
-	d2 = sign(pt, v2, v3);
-	d3 = sign(pt, v3, v1);
+	const bool hasNegative = (demoninator1 < 0) || (demoninator2 < 0) || (demoninator3 < 0);
+	const bool hasPositive = (demoninator1 > 0) || (demoninator2 > 0) || (demoninator3 > 0);
 
-	has_neg = (d1 < 0) || (d2 < 0) || (d3 < 0);
-	has_pos = (d1 > 0) || (d2 > 0) || (d3 > 0);
-
-	return !(has_neg && has_pos);
+	return !(hasNegative && hasPositive);
 }
 
 namespace Geometry
@@ -100,17 +99,17 @@ namespace Geometry
 		++nextSide;
 		--previousSide;
 
-		SVector2f tangentFirst = triangle.First;
-		SVector2f tangentSecond = triangle.Third;
+		const SVector2f tangentFirst = triangle.First;
+		const SVector2f tangentSecond = triangle.Third;
 
 		auto sideLooper = nextSide;
 		++sideLooper;
 
-		SVector2f firstRelative = triangle.First - triangle.Second;
-		SVector2f thirdRelative = triangle.Third - triangle.Second;
+		const SVector2f firstRelative = triangle.First - triangle.Second;
+		const SVector2f thirdRelative = triangle.Third - triangle.Second;
 
-		f32 dot = firstRelative.Dot(thirdRelative);
-		f32 det = firstRelative.X * thirdRelative.Y - firstRelative.Y * thirdRelative.X;
+		const f32 dot = firstRelative.Dot(thirdRelative);
+		const f32 det = firstRelative.X * thirdRelative.Y - firstRelative.Y * thirdRelative.X;
 
 		SRadianF32 angle(std::atan2f(det, dot));
 

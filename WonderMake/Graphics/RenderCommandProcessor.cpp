@@ -48,10 +48,11 @@ u64 RenderLayer::GetNextRenderId() noexcept
 	return _myRenderId++;
 }
 
-RenderLayer& RenderCommandProcessor::GetRenderLayer(std::string& aRenderLayerName)
+RenderLayer& RenderCommandProcessor::GetRenderLayer(std::string_view aRenderLayerName)
 {
 	//[Nicos]: Change this to find to avoid creating unnecessary layers?
-	return myRenderLayers[aRenderLayerName];
+	//conversion to string here as having a map full of string views is dangerous; Small buffer optimization should handle 99% of cases
+	return myRenderLayers[std::string(aRenderLayerName)];
 }
 
 void RenderCommandProcessor::Clear()

@@ -25,7 +25,7 @@ namespace NodeTypes
 			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Output, "Out rendertarget");
 		}
 
-		virtual void ExecuteNode(struct SNode&) override;
+		virtual void ExecuteNode(SNode&) override;
 	};
 
 	struct SRenderDebugLines : public SNodeType<SRenderDebugLines>
@@ -36,7 +36,7 @@ namespace NodeTypes
 			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Output, "Out rendertarget");
 		}
 
-		virtual void ExecuteNode(struct SNode&) override;
+		virtual void ExecuteNode(SNode&) override;
 	};
 
 	struct SProcessRenderLayer : public SNodeType<SProcessRenderLayer>
@@ -48,7 +48,7 @@ namespace NodeTypes
 			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Output, "Out rendertarget");
 		}
 
-		virtual void ExecuteNode(struct SNode&) override;
+		virtual void ExecuteNode(SNode&) override;
 	};
 
 	struct SClearDepth : public SNodeType<SClearDepth>
@@ -60,7 +60,7 @@ namespace NodeTypes
 			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Output, "Out rendertarget");
 		}
 
-		virtual void ExecuteNode(struct SNode&) override;
+		virtual void ExecuteNode(SNode&) override;
 	};
 
 	struct SPostProcess : public SNodeType<SPostProcess>
@@ -75,10 +75,6 @@ namespace NodeTypes
 			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Output, "Out rendertarget");
 		}
 
-		virtual void ExecuteNode(struct SNode&) override;
+		virtual void ExecuteNode(SNode&) override;
 	};
-}
-
-namespace SlotColors
-{
 }

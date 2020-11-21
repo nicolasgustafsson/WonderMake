@@ -44,7 +44,7 @@ private:
 
 	Camera& myCamera;
 
-	const SColor ClearColor = SColor::Grey;
+	const SColor ClearColor = SColor::Grey();
 
 	bool myHasFocus = false;
 };

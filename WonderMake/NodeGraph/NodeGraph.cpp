@@ -92,11 +92,9 @@ void NodeGraph::Execute()
 	if (myNeedsRecompile)
 		Compile();
 
-	for (size_t i = myCompiledNodeStack.size() - 1; i < myCompiledNodeStack.size(); i--)
+	for (auto it = myCompiledNodeStack.rbegin(); it != myCompiledNodeStack.rend(); it++)
 	{
-		auto&& compiledNode = myCompiledNodeStack[i];
-
-		compiledNode.Node.NodeType.ExecuteNode(compiledNode.Node);
+		it->Node.NodeType.ExecuteNode(it->Node);
 	}
 }
 

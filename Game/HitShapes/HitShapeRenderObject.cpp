@@ -5,9 +5,9 @@
 
 HitShapeRenderObject::HitShapeRenderObject(const BezierCurve& aCurve, const i32 aSegments, const f32 aThickness)
 	:RenderObject(SRenderObjectInfo
-		{ std::filesystem::current_path() / "Shaders/Vertex/HitShapeVertex.vert"
+		{ std::filesystem::current_path() / "Shaders/Vertex/HitShape.vert"
 		, ""
-		,	std::filesystem::current_path() / "Shaders/Fragment/HitShapeFragment.frag"
+		,	std::filesystem::current_path() / "Shaders/Fragment/HitShape.frag"
 		,	""
 		,	static_cast<u32>(aSegments) * 2
 		, GL_TRIANGLE_STRIP }), myNumberOfSegments(aSegments), myThickness(aThickness)

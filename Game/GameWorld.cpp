@@ -21,8 +21,8 @@ GameWorld::GameWorld()
 
 	myBackground.SetRenderLayer("Background");
 	myBackground.SetRenderOrder(-9999);
-	myBackground.SetProperty("MainColor", SColor::RaisinBlack);
-	myBackground.SetProperty("DetailColor", SColor::SpanishGray);
+	myBackground.SetProperty("MainColor", SColor::RaisinBlack());
+	myBackground.SetProperty("DetailColor", SColor::Seashell());
 
 	LevelFunctionality& level = RestartLevel();
 
@@ -53,8 +53,8 @@ LevelFunctionality& GameWorld::RestartLevel()
 
 void GameWorld::Tick() noexcept
 {
-	myBackground.SetProperty("MainColor", SColor::RaisinBlack);
-	myBackground.SetProperty("DetailColor", SColor::Seashell);
+	myBackground.SetProperty("MainColor", SColor::RaisinBlack());
+	myBackground.SetProperty("DetailColor", SColor::Seashell());
 	myBackground.Render();
 }
 

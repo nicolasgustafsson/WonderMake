@@ -2,7 +2,7 @@
 out vec4 FragColor;
   
 in vec2 TexCoord;
-uniform vec4 MainColor = vec4(0.0, 1.0, 1.0, 1.0);
+uniform vec4 MainColor = vec4(1.0, 1.0, 1.0, 1.0);
 uniform vec4 DetailColor = vec4(1.0, 1.0, 1.0, 1.0);
 
 //!#include "Common.glsl"

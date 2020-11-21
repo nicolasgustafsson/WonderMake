@@ -75,13 +75,13 @@ void ImGuiLogger::Debug()
 
 void ImGuiLogger::OnLogMessage(const SLogMessage& aMessage)
 {
-	SColor color = SColor::White;
+	SColor color = SColor::White();
 	if (aMessage.HasTag(TagError))
-		color = SColor::Red;
+		color = SColor::Red();
 	if (aMessage.HasTag(TagWarning))
-		color = SColor::Yellow;
+		color = SColor::Yellow();
 	if (aMessage.HasTag(TagSuccess))
-		color = SColor::Green;
+		color = SColor::Green();
 
 	myLogMessages.push_back({ color, std::move(aMessage.LogText) });
 }

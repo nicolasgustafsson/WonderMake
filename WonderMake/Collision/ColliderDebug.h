@@ -4,4 +4,4 @@
 
 #include "Utilities/Color.h"
 
-void DrawCollider(const Colliders::Shape& aCollider, const SColor& aColor = SColor::Red);
+void DrawCollider(const Colliders::Shape& aCollider, const SColor& aColor = SColor::Red());

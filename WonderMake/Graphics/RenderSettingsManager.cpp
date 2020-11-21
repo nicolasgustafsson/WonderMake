@@ -59,8 +59,6 @@ void RenderSettingsManager::SetBlendMode(const EBlendMode aBlendMode)
 	case EBlendMode::Additive:
 		SystemPtr<OpenGLFacade>()->SetBlendFunction(GL_SRC_ALPHA, GL_ONE);
 		break;
-	default:
-		break;
 	}
 }
 

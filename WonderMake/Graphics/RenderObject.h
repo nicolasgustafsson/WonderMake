@@ -31,15 +31,14 @@ public:
 
 	friend class RenderCommand;
 
-	void SetRenderLayer(const std::string& aRenderLayer) { myRenderLayer = aRenderLayer; };
+	void SetRenderLayer(const std::string_view& aRenderLayer) { myRenderLayer = aRenderLayer; };
 	void SetRenderOrder(i32 aRenderOrder) noexcept { myRenderOrder = aRenderOrder; }
 protected:
 
 	virtual void RenderInternal() = 0;
 	i32 myRenderOrder = 0;
 
-	//[Nicos]: Can this be string_view?
-	std::string myRenderLayer = "Default";
+	std::string_view myRenderLayer = "Default";
 
 	std::optional<RenderHandle> myCurrentRenderHandle;
 };

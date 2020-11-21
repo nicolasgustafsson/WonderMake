@@ -17,7 +17,7 @@ namespace NodeTypes
 		finalRenderTarget = std::make_any<std::shared_ptr<RenderTarget>>(aNode.GetInput<std::shared_ptr<RenderTarget>>(0));
 	}
 
-	void SRenderTextureNode::ExecuteNode(struct SNode& aNode)
+	void SRenderTextureNode::ExecuteNode(SNode& aNode)
 	{
 		std::any& renderTargetAny = aNode.NodeData["RenderTarget"];
 		const f32 renderScale = aNode.GetInput<f32>(0);
@@ -39,13 +39,13 @@ namespace NodeTypes
 		renderTarget->BindAsTarget();
 
 		SystemPtr<OpenGLFacade> openGl;
-		openGl->SetClearColor(SColor::RaisinBlack);
+		openGl->SetClearColor(SColor::RaisinBlack());
 		openGl->Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		aNode.SetOutput<std::shared_ptr<RenderTarget>>(0, renderTarget);
 	}
 
-	void SProcessRenderLayer::ExecuteNode(struct SNode& aNode)
+	void SProcessRenderLayer::ExecuteNode(SNode& aNode)
 	{
 		auto renderTarget = aNode.GetInput<std::shared_ptr<RenderTarget>>(0);
 
@@ -59,7 +59,7 @@ namespace NodeTypes
 		aNode.SetOutput(0, renderTarget);
 	}
 
-	void SRenderDebugLines::ExecuteNode(struct SNode& aNode)
+	void SRenderDebugLines::ExecuteNode(SNode& aNode)
 	{
 		auto renderTarget = aNode.GetInput<std::shared_ptr<RenderTarget>>(0);
 
@@ -73,7 +73,7 @@ namespace NodeTypes
 		aNode.SetOutput(0, renderTarget);
 	}
 
-	void SPostProcess::ExecuteNode(struct SNode& aNode)
+	void SPostProcess::ExecuteNode(SNode& aNode)
 	{
 		auto renderTarget = aNode.GetInput<std::shared_ptr<RenderTarget>>(0);
 		aNode.SetOutput(0, renderTarget);
@@ -113,7 +113,7 @@ namespace NodeTypes
 		SystemPtr<RenderSettingsManager>()->PopSettings();
 	}
 
-	void SClearDepth::ExecuteNode(struct SNode& aNode)
+	void SClearDepth::ExecuteNode(SNode& aNode)
 	{
 		auto renderTarget = aNode.GetInput<std::shared_ptr<RenderTarget>>(0);
 

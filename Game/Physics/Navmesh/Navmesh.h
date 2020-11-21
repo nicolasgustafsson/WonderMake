@@ -1,6 +1,6 @@
 #pragma once
 #include "Designers/LevelDesigner/Geometry/PolygonOperators/PolygonPointOperator.h"
-#include <Designers/LevelDesigner/Geometry/Polygon.h>
+#include "Designers/LevelDesigner/Geometry/Polygon.h"
 #include "Utilities/Line.h"
 
 struct SNavmeshLine;

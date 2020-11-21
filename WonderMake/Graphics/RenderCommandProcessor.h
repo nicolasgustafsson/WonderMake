@@ -21,7 +21,7 @@ private:
 class RenderCommandProcessor : public System<>
 {
 public:
-	RenderLayer& GetRenderLayer(std::string& aRenderLayerName);
+	RenderLayer& GetRenderLayer(std::string_view aRenderLayerName);
 
 	void Clear();
 

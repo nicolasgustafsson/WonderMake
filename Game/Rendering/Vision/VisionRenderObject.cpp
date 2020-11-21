@@ -3,7 +3,7 @@
 
 VisionRenderObject::VisionRenderObject()
 	: RenderObject(SRenderObjectInfo
-		{ std::filesystem::current_path() / "Shaders/Vertex/LineVertex.vert"
+		{ std::filesystem::current_path() / "Shaders/Vertex/Line.vert"
 		,	"" //geometry shader
 		,	std::filesystem::current_path() / "Shaders/Fragment/Red.frag"
 		,	"" //texture

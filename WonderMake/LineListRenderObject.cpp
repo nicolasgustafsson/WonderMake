@@ -3,9 +3,9 @@
 
 LineListRenderObject::LineListRenderObject(const std::vector<SVector2f>& aPoints, const f32 aThickness /*= 1.0f*/, const SColor aColor /*= SColor::RaisinBlack*/)
 	:RenderObject(SRenderObjectInfo
-		{ std::filesystem::current_path() / "Shaders/Vertex/LineList.vert"
-		,	""//std::filesystem::current_path() / "Shaders/Geometry/LineListGeom.geom"
-		,	std::filesystem::current_path() / "Shaders/Fragment/LineListFrag.frag"
+		{   std::filesystem::current_path() / "Shaders/Vertex/LineList.vert"
+		,	""
+		,	std::filesystem::current_path() / "Shaders/Fragment/LineList.frag"
 		,	""
 		,	20
 		,   GL_TRIANGLE_STRIP })
@@ -28,7 +28,7 @@ LineListRenderObject::LineListRenderObject(const std::vector<SVector2f>& aPoints
 		SetAttribute<EVertexAttribute::Position>(i * 2, location + perpendicularCw * (aThickness / 2.f));
 		SetAttribute<EVertexAttribute::Position>(i * 2 + 1, location + perpendicularCcw * (aThickness / 2.f));
 
-		WmDrawDebugLine(location + perpendicularCw * (aThickness / 2.f), location + perpendicularCcw * (aThickness / 2.f), SColor::Blue, 100.f);
+		WmDrawDebugLine(location + perpendicularCw * (aThickness / 2.f), location + perpendicularCcw * (aThickness / 2.f), SColor::Blue(), 100.f);
 
 		previousPoint = location;
 	}

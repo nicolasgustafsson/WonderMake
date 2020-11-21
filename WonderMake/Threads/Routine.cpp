@@ -19,7 +19,7 @@ void Routine::Run()
 
 void Routine::AddProcedure(Closure aClosure)
 {
-	myProceduresToAdd.insert(aClosure);
+	myProceduresToAdd.emplace(std::move(aClosure));
 }
 
 void Routine::Procedure() 

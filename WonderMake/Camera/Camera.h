@@ -47,6 +47,6 @@ private:
 
 	CameraUniformBuffer myCameraBuffer;
 
-	const SColor ClearColor = SColor::Grey;
+	const SColor ClearColor = SColor::Grey();
 };
 

@@ -34,32 +34,29 @@ public:
 	operator ImColor() { return ImColor(R, G, B, A); }
 	operator ImVec4() { return ImVec4(R, G, B, A); }
 
-	const static SColor CornflowerBlue;
-	const static SColor Grey;
-	const static SColor White;
-	const static SColor Yellow;
-	const static SColor Red;
-	const static SColor Green;
-	const static SColor Blue;
-
-	const static SColor ImperialRed;
-	const static SColor BlueBell;
-	const static SColor KombuGreen;
-	const static SColor LightSalmon;
-	const static SColor Seashell; 
-	const static SColor SpanishGray;
-	const static SColor Jet;
-	const static SColor RaisinBlack;
-	const static SColor AmaranthPurple;
-	const static SColor Zomp;
-	const static SColor MinionYellow;
-	const static SColor DimGray;
-	const static SColor SilverChalice;
-	const static SColor Gainsboro;
-	const static SColor Amaranth;
-	const static SColor SeaGreenCrayola;
-	const static SColor MiddleYellow;
-	const static SColor EerieBlack;
-
+	[[nodiscard]] constexpr static SColor CornflowerBlue()	noexcept { return { 100.f / 255.f, 149.f / 255.f, 237.f / 255.f, 1.0f }; }
+	[[nodiscard]] constexpr static SColor Grey()			noexcept { return { 0.85f, 0.85f, 0.85f, 1.0f };}
+	[[nodiscard]] constexpr static SColor White()			noexcept { return SColor(255_u8, 255_u8, 255_u8); }
+	[[nodiscard]] constexpr static SColor Yellow()			noexcept { return { 1.0f, 1.0f, 0.0f, 1.0f }; }
+	[[nodiscard]] constexpr static SColor Red()				noexcept { return { 1.0f, 0.0f, 0.0f, 1.0f }; }
+	[[nodiscard]] constexpr static SColor Green()			noexcept { return { 0.0f, 1.0f, 0.0f, 1.0f }; }
+	[[nodiscard]] constexpr static SColor Blue()			noexcept { return { 0.0f, 0.0f, 1.0f, 1.0f }; }
+	[[nodiscard]] constexpr static SColor ImperialRed()		noexcept { return SColor(0xE54B4B); }
+	[[nodiscard]] constexpr static SColor BlueBell()		noexcept { return SColor(0x8789C0);}
+	[[nodiscard]] constexpr static SColor KombuGreen()		noexcept { return SColor(0x334139); }
+	[[nodiscard]] constexpr static SColor LightSalmon()		noexcept { return SColor(0xFFA987); }
+	[[nodiscard]] constexpr static SColor Seashell()		noexcept { return SColor(0xF7EBE8); }
+	[[nodiscard]] constexpr static SColor SpanishGray()		noexcept { return SColor(0x9E9694); }
+	[[nodiscard]] constexpr static SColor Jet()				noexcept { return SColor(0x333333); }
+	[[nodiscard]] constexpr static SColor RaisinBlack()		noexcept { return SColor(0x1E1E24); }
+	[[nodiscard]] constexpr static SColor AmaranthPurple()	noexcept { return SColor(0xA23652); }
+	[[nodiscard]] constexpr static SColor Zomp()			noexcept { return SColor(0x36A184); }
+	[[nodiscard]] constexpr static SColor MinionYellow()	noexcept { return SColor(0xF1E254); }
+	[[nodiscard]] constexpr static SColor DimGray()			noexcept { return SColor(0x6C6C6B); }
+	[[nodiscard]] constexpr static SColor SilverChalice()	noexcept { return SColor(0xADADAD); }
+	[[nodiscard]] constexpr static SColor Gainsboro()		noexcept { return SColor(0xE0E0E0); }
+	[[nodiscard]] constexpr static SColor Amaranth()		noexcept { return SColor(0xE52B50); }
+	[[nodiscard]] constexpr static SColor SeaGreenCrayola() noexcept { return SColor(0x2AE5BF); }
+	[[nodiscard]] constexpr static SColor MiddleYellow()	noexcept { return SColor(0xFFE921); }
+	[[nodiscard]] constexpr static SColor EerieBlack()		noexcept { return SColor(0x151514); }
 };
-

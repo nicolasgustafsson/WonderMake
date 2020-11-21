@@ -2,8 +2,7 @@
 #include "Camera.h"
 #include "Graphics/EngineUniformBuffer.h"
 #include "Program/Window.h"
-#include <GLFW/glfw3.h>
-#include <Program/GlfwFacade.h>
+#include "Program/GlfwFacade.h"
 #include "Graphics/RenderCommandProcessor.h"
 #include <utility>
 

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Job/Job.h"
-#include "Threads/RoutineIds.h"
 
 #include <filesystem>
 #include <memory>
@@ -20,7 +19,6 @@ public:
 
 private:
 	std::filesystem::path myFilePath;
-	RoutineChecker myRoutineChecker;
 
 	void ReadFile();
 };

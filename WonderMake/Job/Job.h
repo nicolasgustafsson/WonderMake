@@ -4,8 +4,6 @@
 
 #include "Message/Messages.h"
 
-#include "Threads/RoutineIds.h"
-
 #include <functional>
 #include <mutex>
 
@@ -37,7 +35,7 @@ public:
 protected:
 	inline void Reset() noexcept;
 	inline void Complete(const EResult aResult) noexcept;
-	inline void CompleteOnRoutine(const EResult aResult, const ERoutineId aRoutineId) noexcept;
+	inline void CompleteOnRoutine(const EResult aResult) noexcept;
 
 	inline virtual void OnReset() noexcept {};
 	inline virtual void OnCancel() noexcept {};
@@ -104,7 +102,7 @@ inline void Job::Complete(const EResult aResult) noexcept
 	}
 }
 
-inline void Job::CompleteOnRoutine(const EResult aResult, const ERoutineId aRoutineId) noexcept
+inline void Job::CompleteOnRoutine(const EResult aResult) noexcept
 {
 	SetResult(aResult);
 	OnComplete(aResult);
@@ -117,7 +115,7 @@ inline void Job::CompleteOnRoutine(const EResult aResult, const ERoutineId aRout
 					return;
 				}
 				myCallback(aResult);
-			}, aRoutineId);
+			});
 	}
 }
 

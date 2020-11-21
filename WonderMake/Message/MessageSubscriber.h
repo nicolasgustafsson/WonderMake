@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Threads/RoutineIds.h"
-
 #include "Utilities/RestrictTypes.h"
 
 #include <functional>
@@ -31,51 +29,37 @@ class MessageSubscriber final
 	: private NonCopyable
 {
 public:
-	MessageSubscriber(const ERoutineId aRoutineId);
+	MessageSubscriber() = default;
 
 	template<typename ...ROUTES>
-	MessageSubscriber(const ERoutineId aRoutineId, ROUTES... aRoutes);
+	MessageSubscriber(ROUTES... aRoutes)
+	{
+		(AddRoute(std::move(aRoutes)), ...);
+	}
 	~MessageSubscriber();
 
 	template<typename T>
-	void AddRoute(std::function<void(const T&)> aCallback); 
+	void AddRoute(std::function<void(const T&)> aCallback)
+	{
+		Subscribe(T::GetTypeHash(), std::bind(&MessageSubscriber::RouteDelegate<T>, std::move(aCallback), std::placeholders::_1));
+	}
 
 	template<typename T>
-	void RemoveRoute();
+	void RemoveRoute()
+	{
+		RemoveRoute(T::GetTypeHash());
+	}
 
 	void RemoveRoute(const size_t aTypeHash);
 
 private:
 	template<typename T>
-	static void RouteDelegate(const std::function<void(const T&)> aCallback, const Dispatchable& aMessage);
+	static void RouteDelegate(const std::function<void(const T&)> aCallback, const Dispatchable& aMessage)
+	{
+		aCallback(static_cast<const T&>(aMessage));
+	}
 
 	void Subscribe(const size_t aTypeHash, std::function<void(const Dispatchable&)>&& aCallback);
 
 	std::unordered_set<size_t> mySubscribedMessages;
-	ERoutineId myRoutineId;
 };
-
-template<typename T>
-void MessageSubscriber::RemoveRoute()
-{
-	RemoveRoute(T::GetTypeHash());
-}
-
-template<typename ...ROUTES>
-MessageSubscriber::MessageSubscriber(const ERoutineId aRoutineId, ROUTES... aRoutes)
-	: MessageSubscriber(aRoutineId)
-{
-	(AddRoute(std::move(aRoutes)), ...);
-}
-
-template<typename T>
-void MessageSubscriber::RouteDelegate(const std::function<void(const T&)> aCallback, const Dispatchable& aMessage)
-{
-	aCallback(static_cast<const T&>(aMessage));
-}
-
-template<typename T>
-void MessageSubscriber::AddRoute(std::function<void(const T&)> aCallback)
-{
-	Subscribe(T::GetTypeHash(), std::bind(&MessageSubscriber::RouteDelegate<T>, std::move(aCallback), std::placeholders::_1));
-}

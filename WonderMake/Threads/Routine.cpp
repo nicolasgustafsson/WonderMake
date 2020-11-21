@@ -1,20 +1,36 @@
 #include "pch.h"
 #include "Routine.h"
 
-#include "Message/DataRouters.h"
+#include "Message/DispatchRouter.h"
 
-Routine::Routine(const ERoutineId aRoutineId)
-	: myRoutineId(aRoutineId)
-	, mySubscriber(aRoutineId,
-		BindHelper(&Routine::OnTask, this))
+#include "Graphics/Renderer.h"
+
+#include "Program/ImguiWrapper.h"
+
+Routine::Routine()
+	: mySubscriber(BindHelper(&Routine::OnTask, this))
 {}
 
 void Routine::Run()
 {
-	_SetCurrentRoutine(myRoutineId);
 	PreMessageRouting();
 	RouteMessages();
 	Procedure();
+
+	if constexpr (Constants::IsDebugging)
+	{
+		SystemPtr<Renderer>()->FinishFrame();
+		SystemPtr<ImguiWrapper>()->StartFrame();
+
+		auto&& router = DispatchRouter::Get();
+
+		router.RouteDispatchable(SDebugMessage());
+
+		router.CommitChanges();
+
+		SystemPtr<ImguiWrapper>()->EndFrame();
+	}
+
 }
 
 void Routine::AddProcedure(Closure aClosure)
@@ -37,18 +53,15 @@ void Routine::Procedure()
 
 void Routine::RouteMessages()
 {
-	auto& router = DataRouters::Get().GetRouter(myRoutineId);
-	router.CommitChanges();
+	auto&& router = DispatchRouter::Get();
+	
+	const auto messageList = std::move(DispatchableBuffer::Get().myList);
 
-	std::vector<const Dispatchable*> dispatchableList;
-
-	if (DispatchableBufferBase::UpdateBuffers(myRoutineId))
+	for (const auto& message : messageList)
 	{
-		DispatchableBufferBase::GetDispatchableList(myRoutineId, dispatchableList);
-		for (const auto dispatchable : dispatchableList)
-		{
-			router.RouteDispatchable(*dispatchable);
-		}
+		router.RouteDispatchable(*message);
+
+		router.CommitChanges();
 	}
 }
 

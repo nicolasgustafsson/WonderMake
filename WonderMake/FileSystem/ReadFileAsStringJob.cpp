@@ -8,14 +8,14 @@
 
 void ReadFileAsStringJob::Start()
 {
-	WmDispatchTask(BindTask(&ReadFileAsStringJob::ReadFile, weak_from_this()), ERoutineId::File);
+	WmDispatchTask(BindTask(&ReadFileAsStringJob::ReadFile, weak_from_this()));
 }
 
 void ReadFileAsStringJob::ReadFile()
 {
 	if (!std::filesystem::exists(myFilePath))
 	{
-		CompleteOnRoutine(EResult::Failure, myRoutineChecker.GetRoutineId());
+		CompleteOnRoutine(EResult::Failure);
 		return;
 	}
 
@@ -23,12 +23,12 @@ void ReadFileAsStringJob::ReadFile()
 
 	if (!fileStream)
 	{
-		CompleteOnRoutine(EResult::Failure, myRoutineChecker.GetRoutineId());
+		CompleteOnRoutine(EResult::Failure);
 		return;
 	}
 
 	myOutData.reserve(std::filesystem::file_size(myFilePath));
 	myOutData.assign((std::istreambuf_iterator<char>(fileStream)), std::istreambuf_iterator<char>());
 
-	CompleteOnRoutine(EResult::Success, myRoutineChecker.GetRoutineId());
+	CompleteOnRoutine(EResult::Success);
 }

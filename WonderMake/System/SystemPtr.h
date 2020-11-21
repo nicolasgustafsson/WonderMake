@@ -9,11 +9,11 @@ class SystemPtr
 public:
 	SystemPtr()
 	{
-		Mutex.lock();
+		myMutex.lock();
 	}
 	~SystemPtr()
 	{
-		Mutex.unlock();
+		myMutex.unlock();
 	}
 
 	[[nodiscard]] TSystem& operator*() noexcept
@@ -41,6 +41,6 @@ public:
 	}
 
 private:
-	std::recursive_mutex Mutex;
+	std::recursive_mutex myMutex;
 };
 

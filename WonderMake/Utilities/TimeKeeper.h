@@ -35,6 +35,8 @@ protected:
 	f32 myPreviousDeltaSeconds = 0.f;
 	f32 myTotalTimePassed = 0.f;
 	f32 myTimeDilation = 1.f;
+
+	constexpr static f64 myMaxDeltaTime = 1.0 / 10.0;
 };
 
 [[nodiscard]] __forceinline f32 TimeKeeper::GetDeltaSeconds() const noexcept

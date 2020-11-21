@@ -21,3 +21,5 @@
 #include "Components/SpriteComponent.h"
 #include "Components/Component.h"
 #include "Utilities/TimeKeeper.h"
+#include "Resources/AssetDatabase.h"
+#include "Utilities/Json/JsonExtensions.h"

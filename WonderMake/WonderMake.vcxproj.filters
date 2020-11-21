@@ -73,7 +73,6 @@
     <ClCompile Include="Graphics\Shader.cpp" />
     <ClCompile Include="Components\Component.cpp" />
     <ClCompile Include="Collision\CollisionComponent.cpp" />
-    <ClCompile Include="Utilities\Serialization.cpp" />
     <ClCompile Include="Graphics\RenderCommandProcessor.cpp" />
     <ClCompile Include="Graphics\RenderObject.cpp" />
     <ClCompile Include="Graphics\RenderNodeGraph\RenderNodeGraph.cpp" />
@@ -83,6 +82,8 @@
     <ClCompile Include="Camera\CameraManager.cpp" />
     <ClCompile Include="Graphics\RenderSettingsManager.cpp" />
     <ClCompile Include="LineListRenderObject.cpp" />
+    <ClCompile Include="Resources\AssetDatabase.cpp" />
+    <ClCompile Include="Resources\Asset.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -204,9 +205,6 @@
     <ClInclude Include="Collision\CollisionComponent.h" />
     <ClInclude Include="Collision\Colliders.h" />
     <ClInclude Include="Collision\ColliderDebug.h" />
-    <ClInclude Include="Functionalities\ImpulseFunctionality.h" />
-    <ClInclude Include="Object\ObjectImpulseRouter.h" />
-    <ClInclude Include="Functionalities\OwnerFunctionality.h" />
     <ClInclude Include="Randomizer\Randomizer.h" />
     <ClInclude Include="Functionalities\BaseFunctionality.h" />
     <ClInclude Include="Program\GlfwFacade.h" />
@@ -252,7 +250,6 @@
     <ClInclude Include="Utilities\DependencyInjector.h" />
     <ClInclude Include="Object\DependencyDestructor.h" />
     <ClInclude Include="Utilities\AutoRegister.h" />
-    <ClInclude Include="Utilities\Serialization.h" />
     <ClInclude Include="Graphics\RenderCommandProcessor.h" />
     <ClInclude Include="Graphics\RenderNodeGraph\RenderNodeGraph.h" />
     <ClInclude Include="Graphics\RenderNodeGraph\RenderNodeTypes.h" />
@@ -262,6 +259,9 @@
     <ClInclude Include="Graphics\RenderSettingsManager.h" />
     <ClInclude Include="Utilities\Line.h" />
     <ClInclude Include="LineListRenderObject.h" />
+    <ClInclude Include="Resources\AssetDatabase.h" />
+    <ClInclude Include="Resources\Asset.h" />
+    <ClInclude Include="Utilities\Json\JsonExtensions.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

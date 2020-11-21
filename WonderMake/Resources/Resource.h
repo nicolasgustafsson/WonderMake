@@ -2,7 +2,7 @@
 
 #include "Threads/RoutineIds.h"
 
-#define REGISTER_RESOURCE(aResource) REGISTER_RESOURCE_SYSTEM(aResource)
+#define REGISTER_RESOURCE(aResource) REGISTER_RESOURCE_SYSTEM(aResource) REGISTER_ASSET_DATABASE(aResource)
 
 class Resource
 {

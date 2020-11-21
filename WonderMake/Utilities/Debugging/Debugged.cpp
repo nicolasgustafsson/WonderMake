@@ -7,12 +7,12 @@ Debugged::Debugged(const std::string aName) noexcept
 	: myDebugSubscriber(ERoutineId::Debug, 
 		BindHelper(&Debugged::OnDebugMessage, this))
 {
-	DebugName = "Debug Windows/" + aName;
+	myDebugName = "Debug Windows/" + aName;
 }
 
 void Debugged::OnDebugMessage(const SDebugMessage&)
 {
-	if (!SystemPtr<DebugSettingsSystem>()->GetOrCreateDebugValue<bool>(DebugName, false))
+	if (!SystemPtr<DebugSettingsSystem>()->GetOrCreateDebugValue<bool>(myDebugName, false))
 		return;
 
 	Debug();

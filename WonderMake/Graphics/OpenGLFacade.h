@@ -1,6 +1,7 @@
 #pragma once
 #include "System/System.h"
 
+
 //[Nicos]: Note that this is not a complete facade for openGL; you may need to create your own wrapped functions.
 class OpenGLFacade
 	: public System<>
@@ -15,6 +16,7 @@ public:
 	void SetBlendFunction(const GLenum aSourceFactor, const GLenum aDestinationFactor);
 
 	void SetClearColor(const SColor aColor);
+	void SetClearDepth(const f32 aDepth);
 	void Clear(const GLbitfield aMask);
 	
 	[[nodiscard]] u32 GenerateFramebuffer();
@@ -80,6 +82,9 @@ public:
 	{
 		glDebugMessageCallback(aCallback, nullptr);
 	}
+
+private:
+
 };
 
 template<typename TVariableType>
@@ -103,5 +108,7 @@ void OpenGLFacade::SetUniformVariable(const u32 aLocation, TVariableType aProper
 		glUniform4f(aLocation, aProperty.X, aProperty.Y, aProperty.Z, aProperty.W);
 	else if constexpr (std::is_same_v<TVariableType, SColor>)
 		glUniform4f(aLocation, aProperty.R, aProperty.G, aProperty.B, aProperty.A);
+	else
+		static_assert(false, "Uniform variable type is not supported!");
 }
 

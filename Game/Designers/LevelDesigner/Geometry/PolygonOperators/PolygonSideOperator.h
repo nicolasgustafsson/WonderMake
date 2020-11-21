@@ -23,6 +23,24 @@ namespace Geometry
 			return *this;
 		}
 
+		PolygonSideOperator operator++(int)
+		{
+			PolygonSideOperator temp = *this;
+
+			++(*this);
+
+			return temp;
+		}
+
+		PolygonSideOperator operator--(int)
+		{
+			PolygonSideOperator temp = *this;
+
+			--(*this);
+
+			return temp;
+		}
+
 		PolygonLoopingPointOperator GetStart() const;
 		PolygonLoopingPointOperator GetEnd() const;
 

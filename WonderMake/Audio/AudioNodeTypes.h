@@ -12,7 +12,7 @@ namespace NodeTypes
 			AddSlot<SoLoud::AudioSource*>(ESlotIo::Input, "Mix");
 		}
 
-		virtual void ExecuteNodeLeftToRight(SNode& aNode) override;
+		virtual void ExecuteNode(SNode& aNode) override;
 	};
 
 	struct SSoundEffectResultNode : public SNodeType<SSoundEffectResultNode>
@@ -20,11 +20,11 @@ namespace NodeTypes
 		SSoundEffectResultNode() : SNodeType("Play sound effect on bus")
 		{
 			AddSlot<SoLoud::AudioSource*>(ESlotIo::Input, "Sound effect");
-			AddSlot<std::string>(ESlotIo::Input, "Bus name");
-			AddSlot<f32>(ESlotIo::Input, "Volume");
+			AddSlot<std::string>(ESlotIo::Input, "Bus name", "Gameplay");
+			AddSlot<f32>(ESlotIo::Input, "Volume", 1.0f);
 		}
 
-		virtual void ExecuteNodeLeftToRight(SNode& aNode) override;
+		virtual void ExecuteNode(SNode& aNode) override;
 	};
 
 	struct SAudioMixNode : public SNodeType<SAudioMixNode>
@@ -36,8 +36,7 @@ namespace NodeTypes
 			AddSlot<SoLoud::AudioSource*>(ESlotIo::Output, "Mixed");
 		}
 
-		virtual void PrepareNode(SNode& aNode) override;
-		virtual void ExecuteNodeLeftToRight(SNode& aNode) override;
+		virtual void ExecuteNode(SNode& aNode) override;
 	};
 
 	struct SAudioSourceBusNode : public SNodeType<SAudioSourceBusNode>
@@ -48,7 +47,7 @@ namespace NodeTypes
 			AddSlot<SoLoud::AudioSource*>(ESlotIo::Output, "Audio Bus");
 		}
 
-		virtual void PrepareNode(SNode& aNode) override;
+		virtual void ExecuteNode(SNode& aNode) override;
 	};
 
 	struct SEchoFilter : public SNodeType<SEchoFilter>
@@ -61,9 +60,7 @@ namespace NodeTypes
 			AddSlot<SoLoud::AudioSource*>(ESlotIo::Output, "Output");
 		}
 
-		virtual void PrepareNode(SNode& aNode) override;
-
-		virtual void ExecuteNodeLeftToRight(SNode& aNode) override;
+		virtual void ExecuteNode(SNode& aNode) override;
 	};
 
 	struct SGetSoundEffect : public SNodeType<SGetSoundEffect>
@@ -74,7 +71,7 @@ namespace NodeTypes
 			AddSlot<SoLoud::AudioSource*>(ESlotIo::Output, "Output");
 		}
 
-		virtual void PrepareNode(SNode& aNode) override;
+		virtual void ExecuteNode(SNode& aNode) override;
 	};
 }
 

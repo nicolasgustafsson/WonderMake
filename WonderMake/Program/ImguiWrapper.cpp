@@ -4,6 +4,7 @@
 #include "GLFW/glfw3.h"
 #include "Imgui/ImguiInclude.h"
 #include "Program/GlfwFacade.h"
+#include "Debugging/DebugSettingsSystem.h"
 
 REGISTER_SYSTEM(ImguiWrapper);
 
@@ -40,6 +41,9 @@ void ImguiWrapper::StartFrame()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
+
+	if (SystemPtr<DebugSettingsSystem>()->GetOrCreateDebugValue("Show Imgui Demo", false))
+		ImGui::ShowDemoWindow();
 }
 
 void ImguiWrapper::EndFrame()

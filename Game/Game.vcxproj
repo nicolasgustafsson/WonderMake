@@ -228,6 +228,11 @@
     <ClInclude Include="Character\Buffs\StatChangeProperty\BuffStatChangeProperty.h" />
     <ClInclude Include="Character\Buffs\TimedTickBuffProperty\BuffTimedTickProperty.h" />
     <ClInclude Include="Designers\EffectDesigner\EffectDesigner.h" />
+    <ClInclude Include="UtilityFunctionalities\LineOfSightFunctionality.h" />
+    <ClInclude Include="Utility\Palette.h" />
+    <ClInclude Include="Physics\Navmesh\NavmeshFunctionality.h" />
+    <ClInclude Include="Physics\Navmesh\NavmeshRenderObject.h" />
+    <ClInclude Include="Physics\Navmesh\Navmesh.h" />
     <ClInclude Include="UtilityFunctionalities\FactionFunctionality.h" />
     <ClInclude Include="HitShapes\HitShapeRenderObject.h" />
     <ClInclude Include="HitShapes\HitShapeSpawnerFunctionality.h" />
@@ -258,7 +263,8 @@
     <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonFloatingPointOperator.h" />
     <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonPointOperator.h" />
     <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonSideOperator.h" />
-    <ClInclude Include="Utility\Constants.h" />
+    <ClInclude Include="Rendering\Vision\VisionFunctionality.h" />
+    <ClInclude Include="Rendering\Vision\VisionRenderObject.h" />
     <ClInclude Include="Weapons\WeaponSwingHitShapeAction.h" />
     <ClInclude Include="Weapons\WeaponSwing.h" />
     <ClInclude Include="Weapons\MeleeWeaponUserFunctionality.h" />
@@ -277,6 +283,10 @@
     <ClCompile Include="Character\Buffs\StatChangeProperty\BuffStatChangeProperty.cpp" />
     <ClCompile Include="Character\Buffs\TimedTickBuffProperty\BuffTimedTickProperty.cpp" />
     <ClCompile Include="Designers\EffectDesigner\EffectDesigner.cpp" />
+    <ClCompile Include="UtilityFunctionalities\LineOfSightFunctionality.cpp" />
+    <ClCompile Include="Physics\Navmesh\NavmeshFunctionality.cpp" />
+    <ClCompile Include="Physics\Navmesh\NavmeshRenderObject.cpp" />
+    <ClCompile Include="Physics\Navmesh\Navmesh.cpp" />
     <ClCompile Include="UtilityFunctionalities\FactionFunctionality.cpp" />
     <ClCompile Include="HitShapes\HitShapeRenderObject.cpp" />
     <ClCompile Include="HitShapes\HitShapeSpawnerFunctionality.cpp" />
@@ -305,6 +315,8 @@
     <ClCompile Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonSideOperator.cpp" />
     <ClCompile Include="Enemy\EnemyActions\PunchAction.cpp" />
     <ClCompile Include="UtilityFunctionalities\TimeToLiveFunctionality.cpp" />
+    <ClCompile Include="Rendering\Vision\VisionFunctionality.cpp" />
+    <ClCompile Include="Rendering\Vision\VisionRenderObject.cpp" />
     <ClCompile Include="Weapons\WeaponSwingHitShapeAction.cpp" />
     <ClCompile Include="Weapons\MeleeWeaponUserFunctionality.cpp" />
     <ClCompile Include="Movement\DefaultMovementFunctionality.cpp" />

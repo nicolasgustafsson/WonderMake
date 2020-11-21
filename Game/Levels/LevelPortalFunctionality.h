@@ -11,7 +11,6 @@ class LevelPortalFunctionality
 {
 public:
 	LevelPortalFunctionality();
-	~LevelPortalFunctionality();
 
 private:
 	bool myDoOnce = false;

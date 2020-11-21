@@ -5,6 +5,7 @@
 #include "InputItems.h"
 
 class Camera;
+class CameraManager;
 class GlfwFacade;
 class Renderer;
 class Window;
@@ -12,9 +13,9 @@ class Window;
 class InputSystem
 	: public System<
 		Policy::Set<
-			PAdd<Camera, PWrite>,
 			PAdd<GlfwFacade, PWrite>,
 			PAdd<Renderer, PWrite>,
+			PAdd<CameraManager, PWrite>,
 			PAdd<Window, PWrite>>>
 	, public Debugged
 {
@@ -34,6 +35,8 @@ public:
 	bool IsMouseButtonPressed(const EMouseButton aKey) const noexcept;
 
 private:
+	GLFWwindow* GetCurrentWindow() const;
+
 	[[nodiscard]] constexpr EInputItemState GetNewInputState(const EInputItemState aOldState, const bool aIsPressed) const noexcept;
 
 	[[nodiscard]] inline constexpr bool IsStateDown(const EInputItemState aState) const noexcept

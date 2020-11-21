@@ -2,6 +2,13 @@
 
 namespace Geometry
 {
+	struct STriangle 
+	{
+		SVector2f First;
+		SVector2f Second;
+		SVector2f Third;
+	};
+
 	class PolygonPointOperatorBase
 	{
 	public:
@@ -58,6 +65,24 @@ namespace Geometry
 			return *this;
 		}
 
+		PolygonLoopingPointOperator operator++(int)
+		{
+			PolygonLoopingPointOperator temp = *this;
+
+			++(*this);
+
+			return temp;
+		}
+
+		PolygonLoopingPointOperator operator--(int)
+		{
+			PolygonLoopingPointOperator temp = *this;
+
+			--(*this);
+
+			return temp;
+		}
+
 		//returns prepended point
 		PolygonLoopingPointOperator PrependPoint(const SVector2f aRelativeLocation = {0.f, 0.f})
 		{ 
@@ -88,6 +113,8 @@ namespace Geometry
 		}
 
 		PolygonSideOperator TurnIntoSide(PolygonLoopingPointOperator aEnd);
+
+		STriangle GetTriangle();
 
 	private:
 		PolygonLoopingPointOperator(std::list<SVector2f>::iterator aIterator, std::list<SVector2f>& aOriginalList);

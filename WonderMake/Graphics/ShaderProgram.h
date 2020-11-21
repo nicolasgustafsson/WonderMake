@@ -15,7 +15,6 @@ public:
 	ShaderProgram() = delete;
 	ShaderProgram(const std::filesystem::path& aVertexShaderPath, const std::filesystem::path& aFragmentShaderPath, const std::filesystem::path& aGeometryShaderPath = "");
 
-
 	~ShaderProgram();
 
 	bool Activate();

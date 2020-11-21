@@ -51,11 +51,21 @@ struct SEngineUniformBufferData
 {
 	//MAKE SURE THESE ARE PROPERLY ALIGNED
 
-	SPaddedMatrix33 ProjectionMatrix;
-	SPaddedMatrix33 ViewMatrix;
-	SPaddedMatrix33 ViewProjectionMatrix;
-
 	float Time = 0;
+};
+
+struct SCameraUniformBufferData
+{
+	SPaddedMatrix33 ViewMatrix;
+
+	SVector2f CameraPosition;
+};
+
+struct SDisplayUniformBufferData
+{
+	SPaddedMatrix33 ProjectionMatrix;
+	SPaddedMatrix33 ViewProjectionMatrix;
+	SVector2f Resolution;
 };
 
 class Window;
@@ -66,12 +76,30 @@ class EngineUniformBuffer
 		Policy::Set<
 			PAdd<Window, PWrite>,
 			PAdd<OpenGLFacade, PWrite>>>
-	, public Debugged
 	
 {
 public:
 	EngineUniformBuffer();
 
+};
+
+
+class CameraUniformBuffer
+	: public UniformBuffer<SCameraUniformBufferData>
+
+{
+public:
+	CameraUniformBuffer();
+
 private:
-	virtual void Debug() override;
+};
+
+class DisplayUniformBuffer
+	: public UniformBuffer<SDisplayUniformBufferData>
+
+{
+public:
+	DisplayUniformBuffer();
+
+private:
 };

@@ -10,6 +10,13 @@ NodeGraph::NodeGraph(std::filesystem::path aFilePath)
 	uniqueIdCounter++;
 }
 
+void NodeGraph::SetNewPath(std::filesystem::path aNewFilePath)
+{
+	myPath = aNewFilePath;
+
+	Load();
+}
+
 void NodeGraph::CompileExternal()
 {
 	Compile();
@@ -72,36 +79,22 @@ void NodeGraph::Load()
 	PostLoad();
 }
 
-
 void NodeGraph::Compile()
 {
 	myCompiledNodeStack.clear();
 
 	CompileNodeGraph(*myRootNode, myCompiledNodeStack);
+	myNeedsRecompile = false;
 }
 
 void NodeGraph::Execute()
 {
-	//this sets up inputs/outputs
-	for (size_t i = myCompiledNodeStack.size() - 1; i < myCompiledNodeStack.size(); i--)
+	if (myNeedsRecompile)
+		Compile();
+
+	for (auto it = myCompiledNodeStack.rbegin(); it != myCompiledNodeStack.rend(); it++)
 	{
-		auto&& compiledNode = myCompiledNodeStack[i];
-
-		compiledNode.Node.NodeType.PrepareNode(compiledNode.Node);
-	}
-
-	for (size_t i = 0; i < myCompiledNodeStack.size(); i++)
-	{
-		auto&& compiledNode = myCompiledNodeStack[i];
-
-		compiledNode.Node.NodeType.ExecuteNodeRightToLeft(compiledNode.Node);
-	}
-
-	for (size_t i = 0; i < myCompiledNodeStack.size(); i++)
-	{
-		auto&& compiledNode = myCompiledNodeStack[i];
-
-		compiledNode.Node.NodeType.ExecuteNodeLeftToRight(compiledNode.Node);
+		it->Node.NodeType.ExecuteNode(it->Node);
 	}
 }
 
@@ -157,6 +150,7 @@ plf::colony<SNode>::colony_iterator<false> NodeGraph::KillNode(plf::colony<SNode
 		}
 	}
 
+	myNeedsRecompile = true;
 	return myNodes.erase(aIterator);
 }
 
@@ -292,7 +286,6 @@ void NodeGraph::DeserializeConnection(const nlohmann::json& aJson)
 	connection.OutputSlot = connection.OutputNodePointer->OutputSlotInstances[slotFromId].get();
 	connection.InputSlot = connection.InputNodePointer->InputSlotInstances[slotToId].get();
 
-	connection.Color = connection.InputSlot->SlotType.GetColor();
 
 	SConnection& connectionRef = *myConnections.insert(std::move(connection));
 
@@ -334,6 +327,8 @@ void NodeGraph::CompileNodeGraph(SNode& aRoot, std::vector<SCompiledNode>& aNode
 		{
 			auto id = slotInstance->Connection->OutputNodePointer;
 			SNode* node = static_cast<SNode*>(id);
+
+			node->ClearNodeData();
 
 			if (node)
 				CompileNodeGraph(*node, aNodeStack, false);

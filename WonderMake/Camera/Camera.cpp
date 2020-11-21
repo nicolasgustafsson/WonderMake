@@ -2,9 +2,9 @@
 #include "Camera.h"
 #include "Graphics/EngineUniformBuffer.h"
 #include "Program/Window.h"
-#include <GLFW/glfw3.h>
-
-REGISTER_SYSTEM(Camera);
+#include "Program/GlfwFacade.h"
+#include "Graphics/RenderCommandProcessor.h"
+#include <utility>
 
 void Camera::Update()
 {
@@ -17,77 +17,113 @@ void Camera::Update()
 	viewInverse = rotationMatrix * viewInverse;
 
 	viewInverse[0][0] *= myScale;
-	viewInverse[1][0] *= myScale;
-	viewInverse[1][1] *= myScale;
 	viewInverse[0][1] *= myScale;
+	viewInverse[1][1] *= myScale;
+	viewInverse[1][0] *= myScale;
 
 	viewInverse.FastInverse();
 
-	auto& buffer = Get<EngineUniformBuffer>().GetBuffer();
+	auto& buffer = myCameraBuffer.GetBuffer();
 
-	const auto projectionMatrix = myProjectionMatrix;
 	const auto viewMatrix = viewInverse;
-	const auto viewProjectionMatrix = viewMatrix * myProjectionMatrix;
 
-	//projectionMatrix.Transpose();
-	//viewMatrix.Transpose();
-	//viewProjectionMatrix.Transpose();
-
-	buffer.ProjectionMatrix = projectionMatrix;
 	buffer.ViewMatrix = viewMatrix;
-	buffer.ViewProjectionMatrix = viewProjectionMatrix;
-}
 
-void Camera::Debug()
-{
-	ImGui::Begin("Camera Debug Tool");
-
-	ImGui::SliderFloat2("Camera Position", &myPosition.X, -1000.f, 1000.f);
-	ImGui::SliderFloat("Camera Rotation", &myRotation, -3.1415f, 3.1415f);
-	ImGui::SliderFloat("Camera Scale", &myScale, 0.0f, 10.0f, "%.3f", 3.0f);
-
-	ImGui::End();
-}
-
-void Camera::SetViewportSize(const SVector2i aViewportSize) noexcept
-{
-	myProjectionMatrix[0][0] = 2.0f / aViewportSize.X;
-	myProjectionMatrix[1][1] = 2.0f / aViewportSize.Y;
-
-	myProjectionMatrixInverse[0][0] = aViewportSize.X / 2.0f;
-	myProjectionMatrixInverse[1][1] = aViewportSize.Y / 2.0f;
-	myViewportSize = { aViewportSize.X, aViewportSize.Y };
-}
-
-SVector2f Camera::ConvertToWorldPosition(const SVector2f aWindowPosition) const noexcept
-{
-	SMatrix33f view = myViewMatrix;
-
-	const SMatrix33f rotationMatrix = SMatrix33f::CreateRotationZ(myRotation);
-
-	view = rotationMatrix * myViewMatrix;
-
-	view[0][0] /= myScale;
-	view[1][0] /= myScale;
-	view[1][1] /= myScale;
-	view[0][1] /= myScale;
-
-	SVector2f offsetScreenPosition = aWindowPosition - myImguiWindowOffset;
-	offsetScreenPosition -= myViewportSize / 2.f;
-	SMatrix33f screenPositionMatrix;
-	screenPositionMatrix.SetPosition(offsetScreenPosition);
-	
-	screenPositionMatrix *= view;
-
-	return screenPositionMatrix.GetPosition();
-}
-
-void Camera::SetImguiWindowOffset(const SVector2f aImguiOffset) noexcept
-{
-	myImguiWindowOffset = aImguiOffset;
+	buffer.CameraPosition = myPosition;
+	myCameraBuffer.Update();
 }
 
 void Camera::SetPosition(const SVector2f aPosition)
 {
 	myPosition = aPosition;
+}
+
+Camera::Camera(const std::string& aName, [[maybe_unused]] const bool aIsFirst)
+	: myName(aName)
+{
+	std::string displayName = myName + " " + "Main Display";
+	auto&& displayIt = myDisplays.emplace(std::piecewise_construct,
+		std::forward_as_tuple(displayName),
+		std::forward_as_tuple(displayName, *this));
+
+	if constexpr (!Constants::IsDebugging)
+	{
+		if (aIsFirst)
+			displayIt.first->second.Focus();
+	}
+}
+
+void Camera::FinishDebugFrame()
+{
+	for (auto& display : myDisplays)
+	{
+		display.second.FinishDebugFrame();
+	}
+}
+
+void Camera::FinishFrame()
+{
+	Update();	
+
+	for (auto& display : myDisplays)
+	{
+		display.second.FinishFrame();
+	}
+}
+
+void Camera::Inspect()
+{
+	ImGui::PushID(this);
+	
+	ImGui::Text(myName.c_str());
+
+	ImGui::Indent();
+	for (auto& display : myDisplays)
+	{
+		display.second.Inspect();
+		ImGui::Separator();
+	}
+
+	if (ImGui::Button("Add new display"))
+	{
+		const std::string displayName = myName + " " + std::to_string(myDisplays.size());
+		myDisplays.emplace(std::piecewise_construct,
+			std::forward_as_tuple(displayName),
+			std::forward_as_tuple(displayName, *this));
+	}
+	ImGui::Unindent();
+
+	ImGui::PopID();
+}
+
+SVector2f Camera::ConvertToWorldPosition(const SVector2f aScreenPosition) const 
+{
+	for (auto& display : myDisplays)
+	{
+		return display.second.ConvertToWorldPosition(aScreenPosition);
+	}
+
+	return SVector2f::Zero();
+}
+
+Display* Camera::GetFocusedDisplay()
+{
+	for (auto& display : myDisplays)
+	{
+		if (display.second.HasFocus())
+			return &display.second;
+	}
+
+	return nullptr;
+}
+
+const Display* Camera::GetFocusedDisplay() const
+{
+	for (auto& display : myDisplays)
+	{
+		if (display.second.HasFocus())
+			return &display.second;
+	}
+
+	return nullptr;
 }

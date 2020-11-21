@@ -63,3 +63,8 @@ std::optional<i32> SNode::GetIndexOfOutputSlot(SOutputSlotInstanceBase* aSlot) c
 
 	return {};
 }
+
+void SNode::ClearNodeData()
+{
+	NodeData.clear();
+}

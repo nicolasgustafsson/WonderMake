@@ -4,23 +4,25 @@
 #include "RenderTarget.h"
 #include "ScreenPassRenderObject.h"
 #include "System/System.h"
-#include "Camera/Camera.h"
+#include "Camera/CameraManager.h"
 #include "Program/Window.h"
 #include "Message/MessageSubscriber.h"
 #include "Utilities/Debugging/Debugged.h"
 #include "Debugging/DebugLineDrawer.h"
 #include "OpenGLFacade.h"
+#include "Graphics/RenderCommandProcessor.h"
 
 class GlfwFacade;
 
 class Renderer
 	: public System<
 		Policy::Set<
-			PAdd<Camera, PWrite>,
 			PAdd<EngineUniformBuffer, PWrite>,
 			PAdd<Window, PWrite>,
 			PAdd<DebugLineDrawer, PWrite>,
 			PAdd<GlfwFacade, PWrite>,
+			PAdd<CameraManager, PWrite>,
+			PAdd<RenderCommandProcessor, PWrite>,
 			PAdd<OpenGLFacade, PWrite>>>
 	, public Debugged
 {
@@ -38,10 +40,7 @@ public:
 private:
 	virtual void Debug() override;
 
-	RenderTarget myRenderTarget;
 	ScreenPassRenderObject myCopyPass;
 
-	bool myDebugWindowHasFocus = false;
-
-	const SColor ClearColor = SColor::Grey;
+	bool myDebugWindowHasFocus = true;
 };

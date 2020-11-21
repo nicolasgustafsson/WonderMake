@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CameraFunctionality.h"
 #include "Camera/Camera.h"
+#include "Camera/CameraManager.h"
 
 REGISTER_COMPONENT(SCameraComponent);
 REGISTER_FUNCTIONALITY(CameraFunctionality);
@@ -15,7 +16,7 @@ void CameraFunctionality::Tick()
 	
 	transform.SetPosition(cameraComponent.Target->GetPosition());
 
-	Get<Camera>().SetPosition(transform.GetPosition());
+	Get<CameraManager>().GetMainCamera().SetPosition(transform.GetPosition());
 }
 
 void CameraFunctionality::SetTarget(TransformFunctionality* aTarget)

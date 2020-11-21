@@ -38,6 +38,11 @@ void SpriteRenderingFunctionality::SetOrigin(const SVector2f aOrigin)
 	Get<SSpriteComponent>().RenderObject->SetAttribute<EVertexAttribute::Origin>(0, aOrigin);
 }
 
+void SpriteRenderingFunctionality::SetColor(const SColor aColor)
+{
+	Get<SSpriteComponent>().RenderObject->SetColor(aColor);
+}
+
 void SpriteRenderingFunctionality::Hide() noexcept
 {
 	Get<SSpriteComponent>().IsHidden = true;

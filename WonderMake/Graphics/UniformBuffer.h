@@ -16,18 +16,20 @@ public:
 		SystemPtr<OpenGLFacade> openGL;
 		openGL->BindBuffer(GL_UNIFORM_BUFFER, myUniformBufferObject);
 		openGL->UpdateBufferData(GL_UNIFORM_BUFFER, 0, sizeof(TBuffer), &myBuffer);
+		openGL->BindBufferToSlot(GL_UNIFORM_BUFFER, myBufferBindIndex, myUniformBufferObject);
 	}
 
 protected:
 	UniformBuffer(const u32 aBufferBindIndex)
 	{
+		myBufferBindIndex = aBufferBindIndex;
 		SystemPtr<OpenGLFacade> openGL;
 		
 		myUniformBufferObject = openGL->GenerateBuffer();
 		openGL->BindBuffer(GL_UNIFORM_BUFFER, myUniformBufferObject);
 		openGL->AllocateBufferData(GL_UNIFORM_BUFFER, sizeof(TBuffer), &myBuffer, GL_STATIC_DRAW);
 
-		openGL->BindBufferToSlot(GL_UNIFORM_BUFFER, aBufferBindIndex, myUniformBufferObject);
+		openGL->BindBufferToSlot(GL_UNIFORM_BUFFER, myBufferBindIndex, myUniformBufferObject);
 	}
 
 	~UniformBuffer() noexcept
@@ -40,4 +42,6 @@ private:
 	TBuffer myBuffer;
 
 	u32 myUniformBufferObject;
+
+	u32 myBufferBindIndex;
 };

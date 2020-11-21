@@ -1,12 +1,8 @@
 #version 440
 layout (location = 0) in vec2 aPos;
-layout (location = 1) in float aUV;
-layout (location = 2) in float aProgress;
+layout (location = 1) in vec4 aColor;
 
-
-out float uv;
-out float progress;
-out vec2 coord;
+out vec4 vertexColor;
 
 //!#include "Common.glsl"
 
@@ -16,11 +12,8 @@ void main()
   
   gl_Position.xy = transformedPosition.xy;
 
-  gl_Position.z = -1.0;
+  gl_Position.z = 1.0;
   gl_Position.w = 1.0;
   
-  uv = aUV;
-  progress = aProgress;
-  
-  coord = transformedPosition.xy;
+  vertexColor = aColor;
 };

@@ -4,7 +4,8 @@
 #include "Collision/CollisionSystem.h"
 #include "UtilityFunctionalities/FactionFunctionality.h"
 #include "Utilities/MathUtility.h"
-#include "Utility/Constants.h"
+#include "Audio/AudioManager.h"
+#include "Utility/Palette.h"
 
 REGISTER_COMPONENT(SHitShapeComponent);
 REGISTER_FUNCTIONALITY(HitShapeFunctionality);
@@ -41,6 +42,10 @@ void HitShapeFunctionality::Tick()
 	if (previousHitProgress == currentHitProgress)
 		return;
 
+	if (previousHitProgress == 0.1f)
+	{
+		SystemPtr<AudioManager>()->PlayAudio("NodeGraphs/Audio/Swing.json");
+	}
 
 	const SVector2f previousBezierPosition = hitShapeComponent.Bezier.GetConstantLocationAt(previousHitProgress);
 	const SVector2f currentBezierPosition = hitShapeComponent.Bezier.GetConstantLocationAt(currentHitProgress);
@@ -54,7 +59,7 @@ void HitShapeFunctionality::Tick()
 			if (std::find(hitShapeComponent.HitCharacters.begin(), hitShapeComponent.HitCharacters.end(), &aCharacter) != hitShapeComponent.HitCharacters.end())
 				return;
 
-			aCharacter.Damage(hitShapeComponent.Damage);
+			aCharacter.Damage(static_cast<i32>(hitShapeComponent.Damage));
 
 			hitShapeComponent.HitCharacters.push_back(&aCharacter);
 		});
@@ -84,11 +89,11 @@ void HitShapeFunctionality::SetFromBezier(BezierCurve aCurve, const f32 aWidth, 
 	switch (aFaction)
 	{
 	case EFaction::Enemy:
-		SetMainColor(ColorConstants::EnemyColor);
+		SetMainColor(Palette::EnemyColor);
 		break;
 
 	case EFaction::Player:
-		SetMainColor(ColorConstants::PlayerColor);
+		SetMainColor(Palette::PlayerColor);
 		break;
 
 	default:

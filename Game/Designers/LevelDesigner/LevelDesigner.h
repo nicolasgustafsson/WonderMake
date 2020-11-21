@@ -9,7 +9,9 @@ class TransformFunctionality;
 class SpriteRenderingFunctionality;
 class BuffGiverFunctionality;
 class EnemyControllerFunctionality;
+class CollisionFunctionality;
 class StaticGeometryFunctionality;
+class DebugSettingsSystem;
 
 class BuffDesigner;
 class Randomizer;
@@ -63,6 +65,9 @@ class LevelDesigner
 			PAdd<FunctionalitySystemDelegate<LevelPortalFunctionality>, PWrite>,
 			PAdd<FunctionalitySystemDelegate<SpinnerFunctionality>, PWrite>,
 			PAdd<FunctionalitySystemDelegate<TransformFunctionality>, PWrite>,
+			//[Nicos]: TODO REMOVE - After we have chains and stuff
+			PAdd<FunctionalitySystemDelegate<CollisionFunctionality>, PWrite>,
+			PAdd<DebugSettingsSystem, PWrite>,
 			PAdd<FunctionalitySystemDelegate<SpriteRenderingFunctionality>, PWrite>,
 			PAdd<FunctionalitySystemDelegate<BuffGiverFunctionality>, PWrite>,
 			PAdd<FunctionalitySystemDelegate<EnemyControllerFunctionality>, PWrite>,
@@ -91,4 +96,6 @@ protected:
 	void CreateEnemy(const SVector2f aPosition);
 
 	LevelFunctionality* myCurrentLevel;
+
+	SLevelGeometry myGeometry;
 };

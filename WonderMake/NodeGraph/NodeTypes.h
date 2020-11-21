@@ -201,10 +201,8 @@ struct SNodeTypeBase
 		return slotInstances;
 	}
 
-	virtual void PrepareNode(struct SNode&) {}
-
-	virtual void ExecuteNodeRightToLeft(struct SNode&) {}
-	virtual void ExecuteNodeLeftToRight(struct SNode&) {}
+	//nodes are executed from left to right
+	virtual void ExecuteNode(struct SNode&) {}
 };
 
 template<typename TNodeType>
@@ -263,6 +261,8 @@ struct SNode final
 		return SNodeType<TNode>::StaticObject;
 	}
 
+	void ClearNodeData();
+
 	SNodeTypeBase& NodeType;
 
 	size_t Id = {};
@@ -274,6 +274,8 @@ struct SNode final
 	bool IWantToDie = false;
 
 	std::unordered_map<std::string, std::any> NodeData;
+
+	class NodeGraph* NodeGraph;
 
 	std::vector<std::unique_ptr<SInputSlotInstanceBase>> InputSlotInstances;
 	std::vector<std::unique_ptr<SOutputSlotInstanceBase>> OutputSlotInstances;

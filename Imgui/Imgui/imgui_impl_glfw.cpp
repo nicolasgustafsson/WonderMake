@@ -57,7 +57,7 @@ enum GlfwClientApi
     GlfwClientApi_Vulkan
 };
 static GLFWwindow*          g_Window = NULL;    // Main window
-static GlfwClientApi        g_ClientApi = GlfwClientApi_Unknown;
+static GlfwClientApi        g_ClientApi = GlfwClientApi_OpenGL;
 static double               g_Time = 0.0;
 static bool                 g_MouseJustPressed[5] = { false, false, false, false, false };
 static GLFWcursor*          g_MouseCursors[ImGuiMouseCursor_COUNT] = { 0 };

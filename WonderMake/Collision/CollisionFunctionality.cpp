@@ -62,7 +62,7 @@ void CollisionFunctionality::Debug()
 				{
 					ImGui::SliderFloat("Radius", &aCollider.Radius, 0, 500);
 				}
-				else if constexpr (std::is_same_v<T, Colliders::SLine>)
+				else if constexpr (std::is_same_v<T, Colliders::SCollisionLine>)
 				{
 					ImGui::SliderFloat2("End Offset", &aCollider.EndOffsetFromPosition.X, 0, 500);
 				}
@@ -97,7 +97,7 @@ void CollisionFunctionality::UpdateCollisionTransforms()
 
 				aCollider.Position = collider.Offset * transformation;
 
-				if constexpr (std::is_same_v<T, Colliders::SLine>)
+				if constexpr (std::is_same_v<T, Colliders::SCollisionLine>)
 				{
 					aCollider.Rotation = rotation;
 				}

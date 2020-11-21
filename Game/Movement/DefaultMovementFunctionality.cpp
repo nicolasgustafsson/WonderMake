@@ -62,7 +62,7 @@ void DefaultMovementFunctionality::Inspect()
 	ImGui::Text("velocity: %f", movement.CurrentVelocity.Length());
 }
 
-void DefaultMovementFunctionality::HandleCollision(const Colliders::SSphere& aThisSphere, const Colliders::SLine& aOtherLine)
+void DefaultMovementFunctionality::HandleCollision(const Colliders::SSphere& aThisSphere, const Colliders::SCollisionLine& aOtherLine)
 {
 	SDefaultMovementComponent& movementComponent = Get<SDefaultMovementComponent>();
 	STransformComponent& transform = Get<STransformComponent>();
@@ -91,7 +91,7 @@ void DefaultMovementFunctionality::TestCollision()
 			std::visit([&](auto& aOtherCollider)
 				{
 					using TOther = std::decay_t<decltype(aOtherCollider)>;
-					if constexpr (std::is_same_v<TOther, Colliders::SLine>)
+					if constexpr (std::is_same_v<TOther, Colliders::SCollisionLine>)
 					{
 						std::visit([&](auto& aThisCollider)
 							{

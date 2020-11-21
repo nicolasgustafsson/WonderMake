@@ -5,14 +5,15 @@
 
 HitShapeRenderObject::HitShapeRenderObject(const BezierCurve& aCurve, const i32 aSegments, const f32 aThickness)
 	:RenderObject(SRenderObjectInfo
-		{ std::filesystem::current_path() / "Shaders/Vertex/HitShapeVertex.vert"
+		{ std::filesystem::current_path() / "Shaders/Vertex/HitShape.vert"
 		, ""
-		,	std::filesystem::current_path() / "Shaders/Fragment/HitShapeFragment.frag"
+		,	std::filesystem::current_path() / "Shaders/Fragment/HitShape.frag"
 		,	""
 		,	static_cast<u32>(aSegments) * 2
 		, GL_TRIANGLE_STRIP }), myNumberOfSegments(aSegments), myThickness(aThickness)
 {
 	SetVerticesFromCurve(aCurve);
+	myRenderOrder = -10;
 }
 
 void HitShapeRenderObject::SetAnticipationProgress(const f32 aAnticipationProgress)
@@ -52,10 +53,10 @@ void HitShapeRenderObject::SetVerticesFromCurve(const BezierCurve& aCurve)
 		SetAttribute<EVertexAttribute::Position>(i * 2 + 1, location + perpendicularCcw * (myThickness / 2.f));
 
 		SetAttribute<EVertexAttribute::Progress>(i * 2, progress);
-		SetAttribute<EVertexAttribute::Progress>(i * 2 + 1.f, progress);
+		SetAttribute<EVertexAttribute::Progress>(i * 2 + 1, progress);
 
 		SetAttribute<EVertexAttribute::OneDimensionalUV>(i * 2, 0.f);
-		SetAttribute<EVertexAttribute::OneDimensionalUV>(i * 2 + 1.f, 1.f);
+		SetAttribute<EVertexAttribute::OneDimensionalUV>(i * 2 + 1, 1.f);
 	}
 
 	myShaderProgram.SetProperty("Size", SVector2f(myThickness, aCurve.GetLength()));

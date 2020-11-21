@@ -34,7 +34,7 @@ void DrawSphere(const Colliders::SSphere& aCollider, const SColor& aColor)
 	WmDrawDebugLine(line);
 }
 
-void DrawLine(const Colliders::SLine& aCollider, const SColor& aColor)
+void DrawLine(const Colliders::SCollisionLine& aCollider, const SColor& aColor)
 {
 	SDebugLine line;
 	line.Color = aColor;
@@ -54,7 +54,7 @@ void DrawCollider(const Colliders::Shape& aCollider, const SColor& aColor)
 			{
 				DrawSphere(aCollider, aColor);
 			}
-			else if constexpr (std::is_same_v<T, Colliders::SLine>)
+			else if constexpr (std::is_same_v<T, Colliders::SCollisionLine>)
 			{
 				DrawLine(aCollider, aColor);
 			}

@@ -15,13 +15,20 @@
 REGISTER_SYSTEM(GameWorld);
 
 GameWorld::GameWorld()
-	: mySubscriber(ERoutineId::Logic, BindHelper(&GameWorld::OnPlayerDeath, this))
+	: mySubscriber(ERoutineId::Logic, BindHelper(&GameWorld::OnPlayerDeath, this)), myBackground(std::filesystem::current_path() / "Shaders/Fragment/Background.frag")
 {
 	Object player = SetupPlayer();
+
+	myBackground.SetRenderLayer("Background");
+	myBackground.SetRenderOrder(-9999);
+	myBackground.SetProperty("MainColor", SColor::RaisinBlack());
+	myBackground.SetProperty("DetailColor", SColor::Seashell());
 
 	LevelFunctionality& level = RestartLevel();
 
 	level.AddDenizen(std::move(player));
+
+	EnableTick();
 }
 
 LevelFunctionality& GameWorld::RestartLevel()
@@ -34,7 +41,8 @@ LevelFunctionality& GameWorld::RestartLevel()
 	if (myCurrentLevelFunctionality)
 		myCurrentLevelFunctionality->TransferToNewLevel(levelFunctionality);
 
-	myPlayerTransform->SetPosition(levelFunctionality.GetStartPosition());
+	myPlayerTransform->SetPosition(SVector2f::Zero());
+	//myPlayerTransform->SetPosition(levelFunctionality.GetStartPosition());
 	
 	myLevel = std::move(newLevel);
 
@@ -43,19 +51,19 @@ LevelFunctionality& GameWorld::RestartLevel()
 	return levelFunctionality;
 }
 
+void GameWorld::Tick() noexcept
+{
+	myBackground.SetProperty("MainColor", SColor::RaisinBlack());
+	myBackground.SetProperty("DetailColor", SColor::Seashell());
+	myBackground.Render();
+}
+
 Object GameWorld::SetupPlayer()
 {
 	Object player;
-
 	myPlayerTransform = &Get<FunctionalitySystemDelegate<TransformFunctionality>>().AddFunctionality(player);
 	Get<FunctionalitySystemDelegate<PlayerControllerFunctionality>>().AddFunctionality(player);
-	Get<FunctionalitySystemDelegate<DefaultMovementFunctionality>>().AddFunctionality(player);
-
-	auto& playerSprite = Get<FunctionalitySystemDelegate<SpriteRenderingFunctionality>>().AddFunctionality(player);
-	playerSprite.SetTexture(std::filesystem::current_path() / "Textures/player.png");
-
-	auto& camera = Get<FunctionalitySystemDelegate<CameraFunctionality>>().AddFunctionality(player);
-	camera.SetTarget(myPlayerTransform);
+	Get<FunctionalitySystemDelegate<CameraFunctionality>>().AddFunctionality(player).SetTarget(myPlayerTransform);
 
 	return player;
 }

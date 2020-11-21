@@ -17,10 +17,12 @@ struct SCompiledNode
 	SNode& Node;
 };
 
-class NodeGraph
+class NodeGraph : public NonCopyable, public NonMovable, public Resource
 {
 public:
 	NodeGraph(std::filesystem::path aFilePath);
+
+	void SetNewPath(std::filesystem::path aNewFilePath);
 
 	//[Nicos]: This differs from compile in that it will save after compilation if the flag is set
 	void CompileExternal();
@@ -47,11 +49,17 @@ public:
 	bool ShouldBeVisible = false;
 
 	[[nodiscard]] std::string GetName() const { return myPath.string(); }
+	[[nodiscard]] std::filesystem::path GetPath() const { return myPath; }
+
+	void Load();
+
+	std::unordered_map<std::string, std::any> myGlobalData;
+
+	inline virtual bool ShouldHotReload() const override { return false; }
 
 protected:
 	virtual void Compile();
 
-	void Load();
 
 	[[nodiscard]] plf::colony<SNode>::colony_iterator<false> KillNode(plf::colony<SNode>::colony_iterator<false> aIterator);
 
@@ -103,6 +111,7 @@ private:
 	size_t myUniqueId;
 	SNodeTypeBase* myRootNodeType = nullptr;
 	std::filesystem::path myPath;
+	bool myNeedsRecompile = false; 
 };
 
 template<typename T>
@@ -118,6 +127,8 @@ SNode& NodeGraph::AddNode(const ImVec2 InLocation)
 
 	NextNodeId++;
 
+	node.NodeGraph = this;
+
 	return *myNodes.insert(std::move(node));
 }
 
@@ -127,7 +138,7 @@ void NodeGraph::RegisterNode()
 	SRegisteredNode node
 	{
 		T::StaticObject.Title,
-		[this](const ImVec2 InLocation) -> SNode& {return AddNode<T>(InLocation); },
+		[&](const ImVec2 InLocation) -> SNode& {return AddNode<T>(InLocation); },
 		T::StaticObject
 	};
 

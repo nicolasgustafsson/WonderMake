@@ -77,6 +77,7 @@
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
+    <EnableMicrosoftCodeAnalysis>false</EnableMicrosoftCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
@@ -86,6 +87,7 @@
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
+    <EnableMicrosoftCodeAnalysis>false</EnableMicrosoftCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
@@ -95,6 +97,7 @@
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
+    <EnableMicrosoftCodeAnalysis>false</EnableMicrosoftCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
@@ -104,6 +107,7 @@
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
+    <EnableMicrosoftCodeAnalysis>false</EnableMicrosoftCodeAnalysis>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -206,14 +210,23 @@
     <ClCompile Include="Audio\AudioNodeTypes.cpp" />
     <ClCompile Include="Collision\CollisionComponent.cpp" />
     <ClCompile Include="Components\Component.cpp" />
+    <ClCompile Include="Camera\CameraManager.cpp" />
+    <ClCompile Include="Camera\Display.cpp" />
     <ClCompile Include="FileSystem\FileWatcher.cpp" />
     <ClCompile Include="Graphics\Shader.cpp" />
+    <ClCompile Include="Graphics\RenderHandle.cpp" />
+    <ClCompile Include="Graphics\RenderNodeGraph\RenderNodeTypes.cpp" />
+    <ClCompile Include="Graphics\RenderObject.cpp" />
     <ClCompile Include="Imgui\Canvas.cpp" />
     <ClCompile Include="Imgui\FileSelector.cpp" />
     <ClCompile Include="Imgui\NodeGraphGui.cpp" />
     <ClCompile Include="Graphics\ShaderParser.cpp" />
     <ClCompile Include="Object\DependencyDestructor.cpp" />
     <ClCompile Include="Utilities\DependencyInjector.cpp" />
+    <ClCompile Include="Graphics\RenderCommandProcessor.cpp" />
+    <ClCompile Include="Graphics\RenderNodeGraph\RenderNodeGraph.cpp" />
+    <ClCompile Include="Graphics\RenderSettingsManager.cpp" />
+    <ClCompile Include="LineListRenderObject.cpp" />
     <ClCompile Include="Utilities\Math.cpp" />
     <ClCompile Include="NodeGraph\NodeGraph.cpp" />
     <ClCompile Include="NodeGraph\NodeTypes.cpp" />
@@ -281,7 +294,11 @@
     <ClInclude Include="Audio\AudioFile.h" />
     <ClInclude Include="Audio\AudioManager.h" />
     <ClInclude Include="Audio\AudioNodeTypes.h" />
+    <ClInclude Include="Camera\CameraManager.h" />
+    <ClInclude Include="Camera\Display.h" />
     <ClInclude Include="FileSystem\FileWatcher.h" />
+    <ClInclude Include="Graphics\RenderHandle.h" />
+    <ClInclude Include="Graphics\RenderNodeGraph\RenderNodeTypes.h" />
     <ClInclude Include="Imgui\Canvas.h" />
     <ClInclude Include="Functionalities\BaseFunctionality.h" />
     <ClInclude Include="Imgui\FileSelector.h" />
@@ -290,6 +307,11 @@
     <ClInclude Include="Object\DependencyDestructor.h" />
     <ClInclude Include="Utilities\AutoRegister.h" />
     <ClInclude Include="Utilities\DependencyInjector.h" />
+    <ClInclude Include="Graphics\RenderCommandProcessor.h" />
+    <ClInclude Include="Graphics\RenderNodeGraph\RenderNodeGraph.h" />
+    <ClInclude Include="Graphics\RenderSettingsManager.h" />
+    <ClInclude Include="LineListRenderObject.h" />
+    <ClInclude Include="Utilities\Line.h" />
     <ClInclude Include="Utilities\Math.h" />
     <ClInclude Include="NodeGraph\SlotCustomization\SlotInputEdits.h" />
     <ClInclude Include="NodeGraph\NodeGraph.h" />

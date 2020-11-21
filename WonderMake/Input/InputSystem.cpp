@@ -5,6 +5,7 @@
 #include <algorithm>
 #include "Graphics/Renderer.h"
 #include "Program/GlfwFacade.h"
+#include "Camera/CameraManager.h"
 
 REGISTER_SYSTEM(InputSystem);
 
@@ -19,7 +20,7 @@ void InputSystem::UpdateKeyboard() noexcept
 {
 	for (u32 i = 0; i < KeyboardKeyCount; i++)
 	{
-		const i32 glfwKeyState = Get<GlfwFacade>().GetKey(Get<Window>().myGlfwWindow, InputUtility::GetGlfwKey(static_cast<EKeyboardKey>(i)));
+		const i32 glfwKeyState = Get<GlfwFacade>().GetKey(GetCurrentWindow(), InputUtility::GetGlfwKey(static_cast<EKeyboardKey>(i)));
 
 		const bool bIsPressed = glfwKeyState == GLFW_PRESS;
 
@@ -33,7 +34,7 @@ void InputSystem::UpdateMouse() noexcept
 {
 	for (u32 i = 0; i < MouseButtonCount; i++)
 	{
-		const i32 glfwKeyState = Get<GlfwFacade>().GetMouseButton(Get<Window>().myGlfwWindow, InputUtility::GetGlfwMouseButton(static_cast<EMouseButton>(i)));
+		const i32 glfwKeyState = Get<GlfwFacade>().GetMouseButton(GetCurrentWindow(), InputUtility::GetGlfwMouseButton(static_cast<EMouseButton>(i)));
 
 		const bool bIsPressed = glfwKeyState == GLFW_PRESS;
 
@@ -67,7 +68,7 @@ void InputSystem::UpdateGamepad() noexcept
 
 SVector2f InputSystem::GetMousePositionInWorld() noexcept
 {
-	return Get<Camera>().ConvertToWorldPosition(GetMousePositionOnWindow());
+	return Get<CameraManager>().ConvertToWorldPosition(GetMousePositionOnWindow());
 }
 
 SVector2f InputSystem::GetMousePositionOnWindow() noexcept
@@ -90,6 +91,22 @@ bool InputSystem::IsMouseButtonPressed(const EMouseButton aMouseButton) const no
 		return false;
 
 	return myMouseButtonStates[static_cast<u32>(aMouseButton)] == EInputItemState::Pressed;
+}
+
+GLFWwindow* InputSystem::GetCurrentWindow() const
+{
+	if constexpr (Constants::IsDebugging)
+	{
+		for (auto viewport : ImGui::GetPlatformIO().Viewports)
+		{
+			if (ImGui::GetPlatformIO().Platform_GetWindowFocus(viewport))
+			{
+				return reinterpret_cast<GLFWwindow*>(viewport->PlatformHandle);
+			}
+		}
+	}
+
+	return Get<Window>().myGlfwWindow;
 }
 
 constexpr EInputItemState InputSystem::GetNewInputState(const EInputItemState aOldState, const bool aIsPressed) const noexcept
@@ -197,5 +214,5 @@ bool InputSystem::ShouldCaptureMouseInput() const noexcept
 	if constexpr (!Constants::IsDebugging)
 		return true;
 
-	return Get<Renderer>().DebugWindowHasFocus();
+	return Get<CameraManager>().AnyDisplayIsFocused();
 }

@@ -5,6 +5,66 @@
 
 RenderTarget::RenderTarget(const SRenderTargetSettings& aSettings)
 {
+	Initialize(aSettings);
+}
+
+RenderTarget::RenderTarget(RenderTarget&& aOther)
+{
+	myFrameBufferObject = aOther.myFrameBufferObject;
+	myRenderTexture = aOther.myRenderTexture;
+	myDepthStencilRbo = aOther.myDepthStencilRbo;
+
+	aOther.myFrameBufferObject = std::numeric_limits<u32>::max();
+	aOther.myRenderTexture     = std::numeric_limits<u32>::max();
+	aOther.myDepthStencilRbo   = std::numeric_limits<u32>::max();
+}
+
+RenderTarget& RenderTarget::operator=(RenderTarget&& aOther)
+{
+	myFrameBufferObject = aOther.myFrameBufferObject;
+	myRenderTexture = aOther.myRenderTexture;
+	myDepthStencilRbo = aOther.myDepthStencilRbo;
+
+	aOther.myFrameBufferObject = std::numeric_limits<u32>::max();
+	aOther.myRenderTexture = std::numeric_limits<u32>::max();
+	aOther.myDepthStencilRbo = std::numeric_limits<u32>::max();
+
+	return *this;
+}
+
+RenderTarget::~RenderTarget()
+{
+	Destroy();
+}
+
+void RenderTarget::BindAsTarget()
+{
+	SystemPtr<OpenGLFacade> openGL;
+	if (openGL->CheckNamedFramebufferStatus(GL_FRAMEBUFFER, myFrameBufferObject) != GL_FRAMEBUFFER_COMPLETE)
+	{
+		WmLog(TagWarning, "Could not bind RenderTarget as Frame buffer object is incomplete!");
+		return;
+	}
+	openGL->BindFramebuffer(GL_FRAMEBUFFER, myFrameBufferObject);
+	openGL->SetViewportSize(SVector2i(std::lroundf(mySettings.Size.X), std::lroundf(mySettings.Size.Y)));
+}
+
+void RenderTarget::BindAsTexture(const u32 aIndex /*= 0*/)
+{
+	SystemPtr<OpenGLFacade> openGL;
+	openGL->SetActiveTextureSlot(aIndex);
+
+	openGL->BindTexture(GL_TEXTURE_2D, myRenderTexture);
+}
+
+void RenderTarget::Reinitialize(const SRenderTargetSettings& aSettings)
+{
+	Destroy();
+	Initialize(aSettings);
+}
+
+void RenderTarget::Initialize(const SRenderTargetSettings& aSettings)
+{
 	SystemPtr<OpenGLFacade> openGL;
 
 	myFrameBufferObject = openGL->GenerateFramebuffer();
@@ -37,33 +97,14 @@ RenderTarget::RenderTarget(const SRenderTargetSettings& aSettings)
 
 	//reset framebuffer
 	openGL->BindFramebuffer(GL_FRAMEBUFFER, 0);
+	mySettings = aSettings;
 }
 
-RenderTarget::~RenderTarget()
+void RenderTarget::Destroy()
 {
 	SystemPtr<OpenGLFacade> openGL;
 	openGL->DeleteFramebuffer(myFrameBufferObject);
 	openGL->DeleteTexture(myRenderTexture);
 	openGL->DeleteRenderbuffer(myDepthStencilRbo);
-}
-
-void RenderTarget::BindAsTarget()
-{
-	SystemPtr<OpenGLFacade> openGL;
-	if (openGL->CheckNamedFramebufferStatus(GL_FRAMEBUFFER, myFrameBufferObject) != GL_FRAMEBUFFER_COMPLETE)
-	{
-		WmLog(TagWarning, "Could not bind RenderTarget as Frame buffer object is incomplete!");
-		return;
-	}
-
-	openGL->BindFramebuffer(GL_FRAMEBUFFER, myFrameBufferObject);
-}
-
-void RenderTarget::BindAsTexture()
-{
-	SystemPtr<OpenGLFacade> openGL;
-	openGL->SetActiveTextureSlot(0);
-
-	openGL->BindTexture(GL_TEXTURE_2D, myRenderTexture);
 }
 

@@ -1,37 +1,52 @@
 #pragma once
 #include "System/System.h"
+#include "System/SystemPtr.h"
 #include "Graphics/EngineUniformBuffer.h"
 #include "Message/MessageTypes.h"
 #include "Message/MessageSubscriber.h"
-#include <Utilities/Debugging/Debugged.h>
+#include "Graphics/RenderTarget.h"
+#include "Graphics/RenderNodeGraph/RenderNodeGraph.h"
+#include "Camera/Display.h"
 
-class Camera final
-	: public System<
-		Policy::Set<
-			PAdd<EngineUniformBuffer, PWrite>>>
-	, public Debugged
+class Camera final : public NonCopyable, public NonMovable
 {
 public:
-	Camera()
-		: Debugged("Camera Settings")
-	{}
-	void Update();
+	Camera(const std::string& aName, const bool aIsFirst = false);
 
-	void SetViewportSize(const SVector2i aViewportSize) noexcept;
-	void SetImguiWindowOffset(const SVector2f aImguiOffset) noexcept;
+	Camera(Camera&& aOther) = default;
+	void Update();
 
 	void SetPosition(const SVector2f aPosition);
 
-	[[nodiscard]] SVector2f ConvertToWorldPosition(const SVector2f aWindowPosition) const noexcept;
-private:
-	virtual void Debug() override;
+	void FinishFrame();
+	void FinishDebugFrame();
 
+	[[nodiscard]] SVector2f ConvertToWorldPosition(const SVector2f aScreenPosition) const;
+
+	const SMatrix33f& GetViewMatrix() const noexcept { return myViewMatrix; }
+
+	[[nodiscard]] f32 GetRotation() const noexcept { return myRotation; }
+	[[nodiscard]] f32 GetScale() const noexcept { return myScale; }
+
+	void Inspect();
+
+	[[nodiscard]] Display* GetFocusedDisplay();
+	[[nodiscard]] const Display* GetFocusedDisplay() const;
+
+private:
 	SVector2f myPosition;
-	SVector2f myImguiWindowOffset;
-	float myRotation = 0.f;
-	float myScale = 1.0f;
-	SMatrix33f myProjectionMatrix;
-	SMatrix33f myProjectionMatrixInverse;
+	
+	//[Nicos]: change this to proper rotation
+	f32 myRotation = 0.f;
+	f32 myScale = 1.0f;
 	SMatrix33f myViewMatrix;
-	SVector2f myViewportSize;
+
+	std::unordered_map<std::string, Display> myDisplays;
+
+	std::string myName;
+
+	CameraUniformBuffer myCameraBuffer;
+
+	const SColor ClearColor = SColor::Grey();
 };
+

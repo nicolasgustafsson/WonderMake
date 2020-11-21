@@ -14,24 +14,36 @@
 #include "Designers/BuffDesigner/BuffDesigner.h"
 #include "Levels/BuffGiver/BuffGiverFunctionality.h"
 #include "Levels/LevelFunctionality.h"
+#include "Debugging/DebugSettingsSystem.h"
 
 REGISTER_SYSTEM(LevelDesigner);
 
 void LevelDesigner::DesignLevel(LevelFunctionality& aLevel)
 {
-	SLevelGeometry geometry = DesignGeometry();
-
 	myCurrentLevel = &aLevel;
-	auto walls = CreateWalls(geometry);
+
+	myGeometry = DesignGeometry();
+
+	Navmesh navmesh;
+	navmesh.GenerateFromPolygon(myGeometry.MainGeometry);
+	myCurrentLevel->Get<NavmeshFunctionality>().SetNavmesh(std::move(navmesh));
+
+	auto walls = CreateWalls(myGeometry);
 	myCurrentLevel->AddDenizens(std::move(walls));
 
-	auto objects = InstantiateSpaces(geometry);
-	myCurrentLevel->AddDenizens(std::move(objects));
+	auto objects = InstantiateSpaces(myGeometry);
+
+	if(objects.size() > 0)
+		myCurrentLevel->AddDenizens(std::move(objects));
 }
 
 plf::colony<Object> LevelDesigner::DesignEnemies(const SSpace& aSpace)
 {
 	plf::colony<Object> enemies;
+
+	if (!Get<DebugSettingsSystem>().GetOrCreateDebugValue("Enable Enemies", true))
+		return enemies;
+
 
 	const auto enemyCount = Get<Randomizer>().GetRandomNumber<size_t>(1, 3);
 
@@ -58,6 +70,9 @@ void LevelDesigner::DesignPortal(const SSpace& aSpace)
 
 	transform.SetPosition(position);
 	sprite.SetTexture(std::filesystem::current_path() / "Textures/portal.png");
+
+	//[Nicos]: TODO REMOVE - After we have chains and stuff
+	Get<FunctionalitySystemDelegate<CollisionFunctionality>>().AddFunctionality(portal).Tick();
 }
 
 void LevelDesigner::DesignBuffTotems(const SSpace& aSpace)
@@ -91,6 +106,7 @@ void LevelDesigner::DesignBuffTotem(const SSpace& aSpace)
 	transform.SetPosition(position);
 	sprite.SetTexture(std::filesystem::current_path() / (buffType == EBuffType::Buff ? "Textures/totemGreen.png" : "Textures/totemRed.png"));
 	sprite.SetScale({ scale, scale });
+	Get<FunctionalitySystemDelegate<CollisionFunctionality>>().AddFunctionality(totem).Tick();
 }
 
 void LevelDesigner::DesignStartPoint(const SSpace& aSpace) 

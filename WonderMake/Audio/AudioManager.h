@@ -42,9 +42,9 @@ protected:
 	plf::colony<SPlayingAudioFile> myCurrentlyPlayingAudioFiles;
 	plf::colony<SQueuedAudioFile> myQueuedAudioFiles;
 
-	AudioMixingNodeGraph myAudioMixingNodeGraph;
+	ResourceProxy<AudioMixingNodeGraph> myAudioMixingNodeGraph;
 
-	plf::colony<SoundEffectNodeGraph> mySoundEffects;
+	plf::colony<ResourceProxy<SoundEffectNodeGraph>> mySoundEffects;
 
 	std::unordered_map<std::string, SoLoud::Bus> myBusses;
 };

@@ -12,6 +12,8 @@
 #include "Functionalities/TransformFunctionality.h"
 #include "Functionalities/TimerFunctionality.h"
 #include "Levels/LevelDenizenFunctionality.h"
+#include "UtilityFunctionalities/LineOfSightFunctionality.h"
+#include "Rendering/Vision/VisionFunctionality.h"
 
 class MeleeWeaponDesigner;
 class InputSystem;
@@ -42,6 +44,7 @@ class PlayerControllerFunctionality
 			PAdd<FactionFunctionality, PWrite>,
 			PAdd<TimerFunctionality, PWrite>,
 			PAdd<SLevelDenizenComponent, PWrite>,
+			PAdd<VisionFunctionality, PWrite>,
 			PAdd<SpriteRenderingFunctionality, PWrite>>>
 	, public Debugged
 {

@@ -5,6 +5,7 @@
 #include "Enemy/EnemyControllerFunctionality.h"
 #include "UtilityFunctionalities/TimeToLiveFunctionality.h"
 #include "Levels/LevelFunctionality.h"
+#include "Utility/Palette.h"
 
 REGISTER_FUNCTIONALITY(PlayerControllerFunctionality);
 
@@ -12,7 +13,7 @@ PlayerControllerFunctionality::PlayerControllerFunctionality()
 	: Debugged("Player Controller")
 {
 	CollisionFunctionality& collision = Get<CollisionFunctionality>();
-	auto& collider = collision.AddSphereCollider(*this, SVector2f::Zero(), 10.f);
+	collision.AddSphereCollider(*this, SVector2f::Zero(), 10.f);
 
 	Get<FactionFunctionality>().SetFaction(EFaction::Player);
 	Get<CharacterFunctionality>().Get<CharacterStatsFunctionality>().SetBaseValue(ECharacterStat::MovementSpeed, 200.f);
@@ -20,6 +21,11 @@ PlayerControllerFunctionality::PlayerControllerFunctionality()
 	Get<MeleeWeaponUserFunctionality>().SetWeapon(Get<MeleeWeaponDesigner>().DesignWeapon());
 
 	Get<SLevelDenizenComponent>().PersistentOnLevelChange = true;
+
+	Get<SpriteRenderingFunctionality>().SetTexture(std::filesystem::current_path() / "Textures/player.png");
+
+	Get<SpriteRenderingFunctionality>().SetColor(Palette::PlayerColor);
+
 }
 
 void PlayerControllerFunctionality::Tick() noexcept
@@ -30,6 +36,7 @@ void PlayerControllerFunctionality::Tick() noexcept
 	Action* currentAction = Get<ActionFunctionality>().GetCurrentAction();
 
 	const bool canMove = !(currentAction && currentAction->BlocksMovementInput());
+
 	if (canMove)
 		UpdateMovement();
 	else
@@ -38,7 +45,7 @@ void PlayerControllerFunctionality::Tick() noexcept
 	if (Get<InputSystem>().IsMouseButtonPressed(EMouseButton::Left))
 		Get<MeleeWeaponUserFunctionality>().SwingWeapon();
 
-	WmDrawDebugLine(Get<TransformFunctionality>().GetPosition(), Get<InputSystem>().GetMousePositionInWorld(), SColor::White);
+	WmDrawDebugLine(Get<TransformFunctionality>().GetPosition(), Get<InputSystem>().GetMousePositionInWorld(), SColor::White());
 }
 
 void PlayerControllerFunctionality::UpdateMovement()
@@ -69,8 +76,9 @@ void PlayerControllerFunctionality::UpdateMovement()
 		}
 	}
 
-	if (movementInput != SVector2f::Zero())
-		Get<TransformFunctionality>().FaceDirection(movementInput);
+	Get<TransformFunctionality>().FaceDirection(SystemPtr<InputSystem>()->GetMousePositionInWorld() - Get<TransformFunctionality>().GetPosition());
+
+//	WmDrawDebugLine(Get<TransformFunctionality>().GetPosition(), SystemPtr<InputSystem>()->GetMousePositionInWorld(), SColor::White);
 
 	Get<MovementInputFunctionality>().SetMovementInput(movementInput);
 }

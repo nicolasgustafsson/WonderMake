@@ -23,6 +23,11 @@ void OpenGLFacade::SetClearColor(const SColor aColor)
 	glClearColor(aColor.R, aColor.G, aColor.B, aColor.A);
 }
 
+void OpenGLFacade::SetClearDepth(const f32 aDepth)
+{
+	glClearDepthf(aDepth);
+}
+
 void OpenGLFacade::Clear(const GLbitfield aMask)
 {
 	glClear(aMask);

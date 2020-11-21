@@ -20,6 +20,7 @@ class ResourceSystem
 public:
 	ResourceSystem();
 	ResourceProxy<TResource> GetResource(const std::filesystem::path& aPath);
+	plf::colony<ResourceProxy<TResource>> GetAllResources() const;
 
 	template<typename TJob>
 	inline void SetCreateResourceJob();
@@ -42,6 +43,17 @@ protected:
 #define REGISTER_RESOURCE_SYSTEM(aResource) _REGISTER_SYSTEM_IMPL(ResourceSystem<aResource>, aResource)
 
 template<typename TResource>
+plf::colony<ResourceProxy<TResource>> ResourceSystem<TResource>::GetAllResources() const
+{
+	plf::colony<ResourceProxy<TResource>> returnVal;
+	for (auto&& resource : myResources)
+	{
+		returnVal.emplace(resource.second.lock());
+	}
+	return returnVal;
+}
+
+template<typename TResource>
 void ResourceSystem<TResource>::OnFileChange(const SFileChangedMessage& aFileChangedMessage)
 {
 	for (auto&& str : myResources)
@@ -55,6 +67,9 @@ void ResourceSystem<TResource>::OnFileChange(const SFileChangedMessage& aFileCha
 
 		if (std::filesystem::equivalent(strPath, aFileChangedMessage.FilePath))
 		{
+			if (!GetResource(strPath)->ShouldHotReload())
+				return;
+
 			std::weak_ptr<SResource<TResource>> weakResource = myResources[str.first];
 
 			if (std::shared_ptr<SResource<TResource>> strongResource = weakResource.lock())

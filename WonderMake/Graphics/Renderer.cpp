@@ -6,6 +6,9 @@
 #include "Camera/Camera.h"
 #include <GLFW/glfw3.h>
 #include "Program/GlfwFacade.h"
+#include "Graphics/RenderCommandProcessor.h"
+#include <any>
+#include "Graphics/RenderTarget.h"
 
 REGISTER_SYSTEM(Renderer);
 
@@ -27,86 +30,61 @@ MessageCallback([[maybe_unused]] GLenum source,
 }
 
 Renderer::Renderer() noexcept
-	: Debugged("Renderer")
-	, myRenderTarget(SRenderTargetSettings{ {1600, 900}, false })
-	, myCopyPass(std::filesystem::current_path() / "Shaders/Fragment/Copy.frag")
+	: myCopyPass(std::filesystem::current_path() / "Shaders/Fragment/BackbufferCopy.frag")
+	, Debugged("Renderer")
 {
 	Get<OpenGLFacade>().Enable(GL_DEBUG_OUTPUT);
 	Get<OpenGLFacade>().Enable(GL_BLEND);
 
+	Get<OpenGLFacade>().Enable(GL_DEPTH_TEST);
+
+	glDepthFunc(GL_GEQUAL);
+	glClearDepth(-1000);
+
 	Get<OpenGLFacade>().SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//Get<OpenGLFacade>().SetBlendFunction(GL_SRC_ALPHA, GL_ONE); additive
 
 	Get<OpenGLFacade>().SetDebugMessageCallback(MessageCallback);
-	Get<Camera>().SetViewportSize({ 1600, 900 });
 }
 
 void Renderer::SetViewportSize(const SVector2<int> WindowSize)
 {
 	Get<OpenGLFacade>().SetViewportSize(WindowSize);
-	Get<Camera>().SetViewportSize(WindowSize);
+	//myCameraManagerPtr->GetMainCamera().SetViewportSize(WindowSize);
 }
 
 void Renderer::StartFrame()
 {
-	auto& glfw = Get<GlfwFacade>();
-
-	glfw.SwapBuffers(Get<Window>().myGlfwWindow);
-
-	Get<EngineUniformBuffer>().Update();
-
-	//first pass
-	myRenderTarget.BindAsTarget();
-
-	Get<OpenGLFacade>().SetClearColor(ClearColor);
-	Get<OpenGLFacade>().Clear(GL_COLOR_BUFFER_BIT);
+	if constexpr (Constants::IsDebugging)
+	{
+		Get<GlfwFacade>().SwapBuffers(Get<Window>().myGlfwWindow);
+	}
 }
 
 void Renderer::FinishFrame()
 {
-	Get<DebugLineDrawer>().Render();
+	Get<CameraManager>().FinishFrame();
+
+	Get<DebugLineDrawer>().Update();
 
 	Get<OpenGLFacade>().BindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	Get<OpenGLFacade>().SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
-	Get<OpenGLFacade>().Clear(GL_COLOR_BUFFER_BIT);
+	Get<OpenGLFacade>().Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	if constexpr (!Constants::IsDebugging)
 	{
 		//second pass - copy directly to backbuffer if we are not debugging
-		myRenderTarget.BindAsTexture();
+		//myCameraManagerPtr->GetMainCamera().BindAsTexture();
 
-		myCopyPass.Render();
+		myCopyPass.RenderImmediate();
+
+		Get<GlfwFacade>().SwapBuffers(Get<Window>().myGlfwWindow);
 	}
+
+	Get<RenderCommandProcessor>().Clear();
 }
 
 void Renderer::Debug()
 {
-	//if we are debugging, render the game window as an imgui image
-
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-	
-	ImGui::Begin("Game Window");
-	auto& glfw = Get<GlfwFacade>();
-
-	myDebugWindowHasFocus = ImGui::IsWindowFocused();
-
-	i32 windowX, windowY;
-	glfw.GetWindowPos(Get<Window>().myGlfwWindow, &windowX, &windowY);
-	Get<Camera>().SetImguiWindowOffset(
-		{ ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x - windowX
-		, ImGui::GetWindowContentRegionMin().y + ImGui::GetWindowPos().y - windowY });
-
-	ImGui::PopStyleVar();
-	ImGui::PopStyleVar();
-
-	const SVector2i ViewportSize = { static_cast<i32>(ImGui::GetContentRegionAvail().x), static_cast<i32>(ImGui::GetContentRegionAvail().y) };
-#pragma warning(disable: 4312 26493)
-	ImGui::Image((ImTextureID)myRenderTarget.GetTexture(), ImVec2(static_cast<float>(ViewportSize.X), static_cast<float>(ViewportSize.Y)));
-#pragma warning(default: 4312 26493)
-
-	Get<Camera>().SetViewportSize(ViewportSize);
-
-	ImGui::End();
+	Get<CameraManager>().FinishDebugFrame();
 }

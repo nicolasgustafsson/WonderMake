@@ -44,10 +44,10 @@ namespace Colliders
 		f32							Radius = 0.f;
 	};
 
-	struct SLine
+	struct SCollisionLine
 		: public SBase
 	{
-		SLine() noexcept
+		SCollisionLine() noexcept
 			: SBase({ nullptr })
 		{}
 
@@ -58,13 +58,13 @@ namespace Colliders
 		f32							Width = 0.f;
 	};
 
-	SVector2f SLine::GetLineEnd() const noexcept
+	SVector2f SCollisionLine::GetLineEnd() const noexcept
 	{
 		SVector2f temp = EndOffsetFromPosition;
 		return Position + temp.Rotate(Rotation);
 	}
 
-	typedef std::variant<SSphere, SLine>	Shape;
+	typedef std::variant<SSphere, SCollisionLine>	Shape;
 
 	struct SCollisionInfo
 	{

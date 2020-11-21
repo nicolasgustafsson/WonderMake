@@ -1,5 +1,7 @@
 #pragma once
 #include <json/json.hpp>
+#include <array>
+#include "Utilities/Vector.h"
 
 namespace InputSlotSerialization
 {
@@ -27,15 +29,36 @@ namespace InputSlotSerialization
 		aJson.push_back(aJson.object({ {"NodeId", aNodeId}, {"SlotId", aSlotId}, {"Value", aSlotValue.string()} }));
 	}
 
-	template<typename TSlotType>
-	TSlotType DeserializeInput(const json&)
+	template<>
+	inline void SerializeInput<SVector2u>(const i32 aNodeId, const i32 aSlotId, json& aJson, SVector2u aSlotValue)
 	{
-		return TSlotType();
+		std::array<u32, 2> arr{ aSlotValue.X, aSlotValue.Y };
+		aJson.push_back(aJson.object({ {"NodeId", aNodeId}, {"SlotId", aSlotId}, {"Value", arr} }));
+	}
+
+	//template<typename T>
+	//inline void SerializeInput(const i32 aNodeId, const i32 aSlotId, json& aJson, T aSlotValue) requires std::is_enum_v<T>
+	//{
+	//	aJson.push_back(aJson.object({ {"NodeId", aNodeId}, {"SlotId", aSlotId}, {"Value", static_cast<i32>(aSlotValue) } }));
+	//}
+
+	template<>
+	inline void SerializeInput<SRenderSettings>(const i32 aNodeId, const i32 aSlotId, json& aJson, SRenderSettings aSlotValue)
+	{
+		i32 blendModeInt = aSlotValue.BlendMode ? static_cast<i32>(*aSlotValue.BlendMode) : -1;
+		json renderSettings{ {"Blendmode", blendModeInt} };
+		aJson.push_back({ {"NodeId", aNodeId}, {"SlotId", aSlotId}, {"Value", renderSettings} });
+	}
+
+	template<typename TSlotType>
+	inline TSlotType DeserializeInput(const json&)
+	{
+		return {};
 	}
 
 	//[Nicos]: if we can serialize it we should be able to deserialize it
 	template<typename TSlotType> requires AutomaticallySerializable<TSlotType> 
-	TSlotType DeserializeInput(const json& aJson)
+	inline TSlotType DeserializeInput(const json& aJson)
 	{
 		return aJson["Value"].get<TSlotType>();
 	}
@@ -44,5 +67,26 @@ namespace InputSlotSerialization
 	inline std::filesystem::path DeserializeInput<std::filesystem::path>(const json& aJson)
 	{
 		return std::filesystem::path(aJson["Value"].get<std::string>());
+	}
+
+	template<>
+	inline SVector2u DeserializeInput<SVector2u>(const json& aJson)
+	{
+		std::array<u32, 2> arr = (aJson["Value"].get<std::array<u32, 2>>());
+
+		return SVector2u(arr[0], arr[1]);
+	}
+
+	template<>
+	inline SRenderSettings DeserializeInput<SRenderSettings>(const json& aJson)
+	{
+		i32 blendmode = aJson["Value"]["Blendmode"].get<i32>();
+
+		SRenderSettings settings;
+
+		if (blendmode >= 0)
+			settings.BlendMode = static_cast<EBlendMode>(blendmode);
+
+		return settings;
 	}
 }

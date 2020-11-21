@@ -4,6 +4,7 @@
 #include "Enemy/TargetFunctionality.h"
 #include "Actions/ActionFunctionality.h"
 #include "EnemyActions/PunchAction.h"
+#include "Utility/Palette.h"
 
 REGISTER_COMPONENT(EnemyControllerComponent)
 REGISTER_FUNCTIONALITY(EnemyControllerFunctionality);
@@ -18,6 +19,7 @@ EnemyControllerFunctionality::EnemyControllerFunctionality()
 	Get<CollisionFunctionality>().AddSphereCollider(*this, SVector2f::Zero(), 10.f);
 
 	Get<SpriteRenderingFunctionality>().SetTexture(std::filesystem::current_path() / "Textures/enemy.png");
+	Get<SpriteRenderingFunctionality>().SetColor(Palette::EnemyColor);
 }
 
 void EnemyControllerFunctionality::Tick() noexcept

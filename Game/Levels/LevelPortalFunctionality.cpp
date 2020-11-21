@@ -32,8 +32,3 @@ LevelPortalFunctionality::LevelPortalFunctionality()
 			myDoOnce = true;
 		});
 }
-
-LevelPortalFunctionality::~LevelPortalFunctionality()
-{
-
-}

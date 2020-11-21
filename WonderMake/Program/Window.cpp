@@ -4,6 +4,7 @@
 #include "Json/json.hpp"
 #include <fstream>
 #include "Program/GlfwFacade.h"
+#include "Camera/CameraManager.h"
 
 REGISTER_SYSTEM(Window);
 
@@ -19,7 +20,8 @@ Window::Window()
 	glfw.SetWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 	glfw.SetWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	myGlfwWindow = glfw.CreateGlfwWindow(windowSettings["X"].get<i32>(), windowSettings["Y"].get<i32>(), "WonderMake", NULL, NULL);
+	SVector2i windowSize = { windowSettings["X"].get<i32>(), windowSettings["Y"].get<i32>() };
+	myGlfwWindow = glfw.CreateGlfwWindow(windowSize.X, windowSize.Y, "WonderMake", NULL, NULL);
 	if (!myGlfwWindow)
 	{
 		WmLog(TagError, TagOpenGL, "Failed to create GLFW window!");
@@ -33,6 +35,9 @@ Window::Window()
 	{
 		WmLog(TagError, TagOpenGL, "Failed to initialize GLAD");
 	}
+
+	if constexpr (!Constants::IsDebugging)
+		SystemPtr<CameraManager>()->SetViewportSize(windowSize);
 }
 
 void Window::Update()

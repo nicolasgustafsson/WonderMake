@@ -19,15 +19,20 @@ void Routine::Run()
 
 void Routine::AddProcedure(Closure aClosure)
 {
-	myProcedures.push_back(aClosure);
+	myProceduresToAdd.emplace(std::move(aClosure));
 }
 
 void Routine::Procedure() 
 {
-	for (auto&& procedure : myProcedures)
+	if (myProceduresToAdd.size() > 0)
 	{
-		procedure();
+		myProcedures.splice(myProceduresToAdd);
+
+		myProceduresToAdd.clear();
 	}
+
+	for(auto&& procedure : myProcedures)
+		procedure();
 }
 
 void Routine::RouteMessages()

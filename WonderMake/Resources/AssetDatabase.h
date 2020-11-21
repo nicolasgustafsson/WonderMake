@@ -45,7 +45,7 @@ public:
 
 	~AssetDatabase()
 	{
-		Save();
+		Save(); 
 	}
 
 	void Save()

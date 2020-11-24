@@ -29,7 +29,7 @@ void Camera::Update()
 
 	buffer.ViewMatrix = viewMatrix;
 
-	buffer.CameraPosition = myPosition.GetFloored();
+	buffer.CameraPosition = myPosition.GetRounded();
 	myCameraBuffer.Update();
 }
 

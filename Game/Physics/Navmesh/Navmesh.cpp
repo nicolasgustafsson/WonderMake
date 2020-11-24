@@ -72,6 +72,7 @@ std::vector<Geometry::STriangle> Navmesh::GetLineOfSightFrom(const SVector2f aPo
 		
 		SVector2f normal = line.GetNormal();
 
+		//[Nicos]: we get floating point errors when extending the line so we add triangles to those spots that are floatingPointFix wide
 		constexpr f32 floatingPointFix = 3.0f;
 		if (!previousPoint)
 		{

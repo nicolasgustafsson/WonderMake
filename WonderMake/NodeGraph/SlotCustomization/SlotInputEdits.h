@@ -67,6 +67,20 @@ namespace SlotInputEdits
 			default: aInput.BlendMode = static_cast<EBlendMode>(blendModeIndex - 1); break;
 			}
 		}
+
+		i32 depthModeIndex = 0;
+
+		if (aInput.DepthMode)
+			depthModeIndex = static_cast<i32>(*aInput.DepthMode) + 1;
+
+		if (ImGui::Combo("Depth Mode", &depthModeIndex, "Current\0Greater\0GreaterEqual\0Equal\0NotEqual\0LessEqual\0Less\0Never\0Always\0"))
+		{
+			switch (depthModeIndex)
+			{
+			case 0: aInput.DepthMode.reset(); break;
+			default: aInput.DepthMode = static_cast<EDepthMode>(depthModeIndex - 1); break;
+			}
+		}
 		ImGui::PopID();
 	}
 };

@@ -6,11 +6,24 @@ enum class EBlendMode
 	Additive
 };
 
+enum class EDepthMode
+{
+	Greater,
+	GreaterEqual,
+	Equal,
+	NotEqual,
+	LessEqual,
+	Less,
+	Never,
+	Always
+};
+
 struct SRenderSettings final
 {
 	bool operator==(const SRenderSettings& aOther)const;
 	bool operator!=(const SRenderSettings& aOther)const;
 	std::optional<EBlendMode> BlendMode;
+	std::optional<EDepthMode> DepthMode;
 
 	void Append(const SRenderSettings& aOther);
 
@@ -27,6 +40,7 @@ public:
 
 private:
 	void SetBlendMode(const EBlendMode aBlendMode);
+	void SetDepthMode(const EDepthMode aDepthMode);
 	void ApplyRenderSettings(const SRenderSettings& aRenderSettings);
 	void BuildRenderSettings();
 

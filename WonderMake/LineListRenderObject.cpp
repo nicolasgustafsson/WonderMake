@@ -25,10 +25,10 @@ LineListRenderObject::LineListRenderObject(const std::vector<SVector2f>& aPoints
 		SVector2f perpendicularCw = direction.GetPerpendicularClockWise();
 		SVector2f perpendicularCcw = direction.GetPerpendicularCounterClockWise();
 
-		SetAttribute<EVertexAttribute::Position>(i * 2, location + perpendicularCw * (outerThickness / 2.f));
-		SetAttribute<EVertexAttribute::Position>(i * 2 + 1, location + perpendicularCcw * (innerThickness / 2.f));
+		SetAttribute<EVertexAttribute::Position>(i * 2, location + perpendicularCw * (outerThickness));
+		SetAttribute<EVertexAttribute::Position>(i * 2 + 1, location + perpendicularCcw * (innerThickness));
 
-		WmDrawDebugLine(location + perpendicularCw * (outerThickness / 2.f), location + perpendicularCcw * (innerThickness / 2.f), SColor::Blue(), 100.f);
+		WmDrawDebugLine(location + perpendicularCw * (outerThickness), location + perpendicularCcw * (innerThickness), SColor::Blue(), 100.f);
 
 		previousPoint = location;
 	}

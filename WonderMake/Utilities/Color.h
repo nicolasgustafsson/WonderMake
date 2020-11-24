@@ -34,9 +34,13 @@ public:
 	operator ImColor() { return ImColor(R, G, B, A); }
 	operator ImVec4() { return ImVec4(R, G, B, A); }
 
+	constexpr bool operator==(const SColor& aOther) const { return aOther.R == R && aOther.G == G && aOther.B == B && aOther.A == A; }
+	constexpr bool operator!=(const SColor& aOther) const { return !(aOther == *this); }
+
 	[[nodiscard]] constexpr static SColor CornflowerBlue()	noexcept { return { 100.f / 255.f, 149.f / 255.f, 237.f / 255.f, 1.0f }; }
 	[[nodiscard]] constexpr static SColor Grey()			noexcept { return { 0.85f, 0.85f, 0.85f, 1.0f };}
 	[[nodiscard]] constexpr static SColor White()			noexcept { return SColor(255_u8, 255_u8, 255_u8); }
+	[[nodiscard]] constexpr static SColor Black()			noexcept { return SColor(0_u8, 0_u8, 0_u8); }
 	[[nodiscard]] constexpr static SColor Yellow()			noexcept { return { 1.0f, 1.0f, 0.0f, 1.0f }; }
 	[[nodiscard]] constexpr static SColor Red()				noexcept { return { 1.0f, 0.0f, 0.0f, 1.0f }; }
 	[[nodiscard]] constexpr static SColor Green()			noexcept { return { 0.0f, 1.0f, 0.0f, 1.0f }; }

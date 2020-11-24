@@ -9,16 +9,8 @@ uniform vec4 DetailColor = vec4(1.0, 1.0, 1.0, 1.0);
 
 void main()
 {
-	float aspectRatio = Resolution.x / Resolution.y;
-	
-	vec2 uv = TexCoord;
-	
-	vec2 offset = CameraPosition / Resolution;
-	offset.x *= -1.0;
-	offset.y *= -1.0;
-	
-	uv -= offset;
-	uv.x *= aspectRatio;
+	vec2 uv = Resolution * TexCoord + floor(CameraPosition);
+	uv *= 0.0012;
 	
 	float noise1 = pow((simplex3d(vec3(uv * 100.f, Time * 0.1)) + 1.0) / 2.f, 2) * 1.5;
 	

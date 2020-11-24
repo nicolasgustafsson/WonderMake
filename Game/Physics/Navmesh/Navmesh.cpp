@@ -70,19 +70,28 @@ std::vector<Geometry::STriangle> Navmesh::GetLineOfSightFrom(const SVector2f aPo
 			|| (lineTestRotationInverse > minRotation && lineTestRotationInverse < maxRotation)
 			|| (lineTestRotationInverse2 > minRotation && lineTestRotationInverse2 < maxRotation);
 		
+		SVector2f normal = line.GetNormal();
+
+		constexpr f32 floatingPointFix = 3.0f;
 		if (!previousPoint)
 		{
-
 			if (!stopTracing)
 			{
 				const SVector2f previousPointTemp = *previousPoint;
 				previousPoint = line.Second;
-				line.ExtendEnd(10000.f);
+				line.ExtendEnd(3000.f);
 
 				if (auto intersection = myPolygon.IntersectsWithAnySide(line, point, true))
-					line.Second = *intersection;
-				//linesOfSight.push_back({ aPosition, line.Second, previousPointTemp });
+				{
+					line.Second = intersection->second;
+					normal = intersection->first.GetNormal().Rotate(RotationCast<SRadianF32>(SDegreeF32(90.f)));
+				}
+				//linesOfSight.push_back({ aPosition, line.Second, *previousPoint });
 				firstPoint = line.Second;
+				WmDrawDebugLine(line.GetMiddle(), line.GetMiddle() + normal * 20.f, SColor::Yellow());
+				linesOfSight.push_back({ aPosition, line.Second, *previousPoint });
+
+				linesOfSight.push_back({ aPosition, line.Second - normal * floatingPointFix, line.Second + normal * floatingPointFix });
 			}
 			else
 			{
@@ -99,21 +108,38 @@ std::vector<Geometry::STriangle> Navmesh::GetLineOfSightFrom(const SVector2f aPo
 			if (shouldCreateShortTriangle)
 			{
 				linesOfSight.push_back({ aPosition, line.Second, *previousPoint });
-				line.ExtendEnd(10000.f);
+				line.ExtendEnd(3000.f);
 
 				if (auto intersection = myPolygon.IntersectsWithAnySide(line, point, true))
-					line.Second = *intersection;
-				previousPoint = line.Second;
+				{
+					line.Second = intersection->second;
+					normal = intersection->first.GetNormal().Rotate(RotationCast<SRadianF32>(SDegreeF32(90.f)));
+				}
+
+				WmDrawDebugLine(line.GetMiddle(), line.GetMiddle() - normal * 20.f, SColor::Green());
+				previousPoint = line.Second;// +line.GetNormal() * floatingPointFix;
+
+				linesOfSight.push_back({ aPosition, line.Second - normal * floatingPointFix, line.Second + normal * floatingPointFix });
 			}
 			else
 			{
 				const SVector2f previousPointTemp = *previousPoint;
 				previousPoint = line.Second;
-				line.ExtendEnd(10000.f);
+
+				const f32 previousLength = std::sqrtf(line.LengthSquared());
+				line.ExtendEnd(3000.f);
 
 				if (auto intersection = myPolygon.IntersectsWithAnySide(line, point, true))
-					line.Second = *intersection;
+				{
+					line.Second = intersection->second;
+					normal = intersection->first.GetNormal().Rotate(RotationCast<SRadianF32>(SDegreeF32(90.f)));
+				}
+
+				WmDrawDebugLine(line.GetMiddle(), line.GetMiddle() + normal * 20.f, SColor::Gainsboro());
 				linesOfSight.push_back({ aPosition, line.Second, previousPointTemp });
+
+				linesOfSight.push_back({ aPosition, line.Second - normal * floatingPointFix, line.Second + normal * floatingPointFix });
+				//linesOfSight.push_back({ aPosition, line.Second + line.GetNormal() * floatingPointFix, previousPointTemp });
 			}
 		}
 		else

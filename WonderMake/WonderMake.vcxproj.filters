@@ -248,6 +248,8 @@
     <ClInclude Include="Resources\AssetDatabase.h" />
     <ClInclude Include="Resources\Asset.h" />
     <ClInclude Include="Utilities\Json\JsonExtensions.h" />
+    <ClInclude Include="Utilities\Container\Container.h" />
+    <ClInclude Include="Utilities\Container\ContainerTraits.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
@@ -256,5 +258,10 @@
     <None Include="Utilities\Rotation.inl" />
     <None Include="Utilities\Vector.inl" />
     <None Include="Utilities\Matrix.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Utilities\Json\nicostodo json.txt" />
+    <Text Include="Utilities\Container\nicostodo container.txt" />
+    <Text Include="Graphics\nicostodo graphics.txt" />
   </ItemGroup>
 </Project>

@@ -139,6 +139,13 @@ struct SVector
 	[[nodiscard]] constexpr TRep Dot(const SVector<TRep, TSize> aOther) const noexcept;
 
 	constexpr void Normalize() noexcept;
+	constexpr void Floor() noexcept;
+	constexpr SVector<TRep, TSize> GetFloored() const noexcept;
+
+	constexpr void Round() noexcept;
+	constexpr SVector<TRep, TSize> GetRounded() const noexcept;
+
+
 	[[nodiscard]] constexpr SVector<TRep, TSize> GetNormalized() const noexcept;
 	
 	[[nodiscard]] constexpr SVector<TRep, TSize> GetPerpendicularCounterClockWise() const noexcept requires (TSize == 2)

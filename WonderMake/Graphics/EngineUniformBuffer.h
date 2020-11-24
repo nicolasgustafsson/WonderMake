@@ -66,6 +66,7 @@ struct SDisplayUniformBufferData
 	SPaddedMatrix33 ProjectionMatrix;
 	SPaddedMatrix33 ViewProjectionMatrix;
 	SVector2f Resolution;
+	SVector2f InverseResolution;
 };
 
 class Window;

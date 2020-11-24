@@ -5,6 +5,7 @@
 #include <Imgui/FileSelector.h>
 #include "Asset.h"
 #include <json/json.hpp>
+#include "Utilities/Container/Container.h"
 
 template<typename TAssetType>
 class AssetDatabase 
@@ -68,10 +69,8 @@ public:
 
 	void SweepAssetDirectories()
 	{
-		myAssets.clear();
-
-		for (auto& file : std::filesystem::recursive_directory_iterator(myRootPath))
-			myAssets.insert(file.path());
+		for (auto&& file : std::filesystem::recursive_directory_iterator(myRootPath))
+			myAssets.AddUnique(file.path());
 
 		Save();
 	}
@@ -100,6 +99,7 @@ public:
 		}
 
 		ImGui::Separator();
+
 		for (auto&& asset : myAssets)
 		{
 			asset.Inspect();
@@ -131,11 +131,10 @@ private:
 			return assetTypeName;
 		}
 	}
-
-	plf::colony<Asset<TAssetType>> myAssets;
+	
+	Container<Asset<TAssetType>, Iterable> myAssets;
 	
 	std::filesystem::path myRootPath = std::filesystem::current_path();
-	std::vector<std::filesystem::path> myAllowedExtensions;
 };
 
 #define REGISTER_ASSET_DATABASE(aAsset) _REGISTER_SYSTEM_IMPL(AssetDatabase<aAsset>, aAsset##Asset)

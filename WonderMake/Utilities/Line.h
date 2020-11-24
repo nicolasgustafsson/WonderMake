@@ -4,9 +4,14 @@ struct SLine
 	bool operator==(const SLine& aOther) const { return (aOther.First == First && aOther.Second == Second) || (aOther.First == Second && aOther.Second == First); };
 	bool operator!=(const SLine& aOther) const { return !(aOther == *this); };
 
-	f32 LengthSquared() const noexcept
+	constexpr f32 LengthSquared() const noexcept
 	{
 		return (First - Second).LengthSquared();
+	}
+
+	constexpr SVector2f GetNormal() const noexcept
+	{
+		return (Second - First).GetNormal().GetNormalized();
 	}
 
 	void ShortenEnd(const f32 aShortenAmount) noexcept
@@ -22,9 +27,19 @@ struct SLine
 		Second += (Second - First).GetNormalized() * aExtendAmount;
 	}
 
+	void SetLength(const f32 aLength)
+	{
+		Second = First + (Second - First).GetNormalized() * aLength;
+	}
+
 	SDegreeF32 GetRotation() const noexcept
 	{
 		return RotationCast<SDegreeF32>((Second - First).GetRotation());
+	}
+
+	constexpr SVector2f GetMiddle() const noexcept
+	{
+		return First + (Second - First) * 0.5f;
 	}
 
 

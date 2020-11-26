@@ -70,10 +70,11 @@ std::vector<Geometry::STriangle> Navmesh::GetLineOfSightFrom(const SVector2f aPo
 			|| (lineTestRotationInverse > minRotation && lineTestRotationInverse < maxRotation)
 			|| (lineTestRotationInverse2 > minRotation && lineTestRotationInverse2 < maxRotation);
 		
+		//[Nicos]: we get floating point errors when extending the line so we add triangles to those spots that are floatingPointFix wide
+		constexpr f32 floatingPointFix = 1.5f;
+
 		SVector2f normal = line.GetNormal();
 
-		//[Nicos]: we get floating point errors when extending the line so we add triangles to those spots that are floatingPointFix wide
-		constexpr f32 floatingPointFix = 3.0f;
 		if (!previousPoint)
 		{
 			if (!stopTracing)

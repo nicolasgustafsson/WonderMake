@@ -196,3 +196,42 @@ template <typename TRep, u32 TSize>
 [[nodiscard]] constexpr static SVector<TRep, TSize> operator/(const SVector<TRep, TSize>& aLeftVector, const TRep aDivisor) noexcept;
 
 #include "Vector.inl"
+
+
+template <typename TRep, u32 TSize>
+constexpr void SVector<TRep, TSize>::Floor() noexcept
+{
+	for (u32 i = 0; i < TSize; i++)
+	{
+		(*this)[i] = std::floorf((*this)[i]);
+	}
+}
+
+template <typename TRep, u32 TSize>
+constexpr SVector<TRep, TSize> SVector<TRep, TSize>::GetFloored() const noexcept
+{
+	SVector<TRep, TSize> vec = *this;
+
+	vec.Floor();
+
+	return vec;
+}
+
+template <typename TRep, u32 TSize>
+constexpr void SVector<TRep, TSize>::Round() noexcept
+{
+	for (u32 i = 0; i < TSize; i++)
+	{
+		(*this)[i] = std::roundf((*this)[i]);
+	}
+}
+
+template <typename TRep, u32 TSize>
+constexpr SVector<TRep, TSize> SVector<TRep, TSize>::GetRounded() const noexcept
+{
+	SVector<TRep, TSize> vec = *this;
+
+	vec.Round();
+
+	return vec;
+}

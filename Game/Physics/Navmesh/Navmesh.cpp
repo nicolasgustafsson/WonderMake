@@ -88,7 +88,7 @@ std::vector<Geometry::STriangle> Navmesh::GetLineOfSightFrom(const SVector2f aPo
 					line.Second = intersection->second;
 					normal = intersection->first.GetNormal().Rotate(RotationCast<SRadianF32>(SDegreeF32(90.f)));
 				}
-				//linesOfSight.push_back({ aPosition, line.Second, *previousPoint });
+
 				firstPoint = line.Second;
 				WmDrawDebugLine(line.GetMiddle(), line.GetMiddle() + normal * 20.f, SColor::Yellow());
 				linesOfSight.push_back({ aPosition, line.Second, *previousPoint });
@@ -119,7 +119,7 @@ std::vector<Geometry::STriangle> Navmesh::GetLineOfSightFrom(const SVector2f aPo
 				}
 
 				WmDrawDebugLine(line.GetMiddle(), line.GetMiddle() - normal * 20.f, SColor::Green());
-				previousPoint = line.Second;// +line.GetNormal() * floatingPointFix;
+				previousPoint = line.Second;
 
 				linesOfSight.push_back({ aPosition, line.Second - normal * floatingPointFix, line.Second + normal * floatingPointFix });
 			}
@@ -141,7 +141,6 @@ std::vector<Geometry::STriangle> Navmesh::GetLineOfSightFrom(const SVector2f aPo
 				linesOfSight.push_back({ aPosition, line.Second, previousPointTemp });
 
 				linesOfSight.push_back({ aPosition, line.Second - normal * floatingPointFix, line.Second + normal * floatingPointFix });
-				//linesOfSight.push_back({ aPosition, line.Second + line.GetNormal() * floatingPointFix, previousPointTemp });
 			}
 		}
 		else

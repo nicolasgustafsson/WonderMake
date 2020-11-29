@@ -259,9 +259,4 @@
     <None Include="Utilities\Vector.inl" />
     <None Include="Utilities\Matrix.inl" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="Utilities\Json\nicostodo json.txt" />
-    <Text Include="Utilities\Container\nicostodo container.txt" />
-    <Text Include="Graphics\nicostodo graphics.txt" />
-  </ItemGroup>
 </Project>

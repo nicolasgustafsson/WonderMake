@@ -1,12 +1,14 @@
 #pragma once
-#include <vector>
-#include "Utilities/plf_colony.h"
 #include <concepts>
 #include <type_traits>
+
+#include <vector>
 #include <list>
+
+#include "Utilities/plf_colony.h"
+
 #include "ContainerTraits.h"
 
-//TODO: Several data types? can go with tuple for now tho but may want SoA
 template<typename TObjectType, ContainerTrait ... TContainerRequirements>
 class Container
 {
@@ -21,33 +23,17 @@ public:
 	constexpr static bool ConstantDeletion = HasTrait<ConstantDeletion>;
 	constexpr static bool CanEqualityCompare = std::equality_comparable<TObjectType>;
 
-	//TODO: Change how this is handled? Make Storage class? either way this is not optimal
-	static auto StorageType()
-	{
-		if constexpr (!RandomAccess && !ConstantInsertion)
-			return plf::colony<TObjectType>();
-		else if constexpr (!StableElements && !ConstantInsertion && !ConstantDeletion)
-			return std::vector<TObjectType>();
-		else if constexpr (!RandomAccess && !Indexable)
-			return std::list<TObjectType>();
-		else
-			static_assert(false, "No container backend supports these traits!");
-	}
-
-	using Storage = decltype(StorageType());
-
-	template <typename T>
-	constexpr static bool UsesStorage = std::is_same_v<Storage, T>;
-
-	auto Add(TObjectType aObject)
+public:
+	template<typename TObjectTypeFunc> requires std::is_same_v<TObjectType, std::decay_t<TObjectTypeFunc>> || std::is_constructible_v<TObjectType, TObjectTypeFunc>
+	void Add(TObjectTypeFunc aObject)
 	{
 		if constexpr (UsesStorage<plf::colony<TObjectType>>)
 		{
-			return myBackend.insert(aObject);
+			myBackend.insert(std::forward<TObjectTypeFunc>(aObject));
 		}
 		else
 		{
-			return myBackend.push_back(aObject);
+			myBackend.push_back(std::forward<TObjectTypeFunc>(aObject));
 		}
 	}
 
@@ -56,34 +42,25 @@ public:
 	//	return myBackend.erase(aIterator);
 	//}
 
-	template<class TPredicate>
-	void EraseIf(TPredicate&& aPred) requires Iterable
-	{
-		//std::remove_if(begin(), end(), aPred);
-	}
+	//template<class TPredicate>
+	//void EraseIf(const TPredicate& aPred) requires Iterable
+	//{
+	//	  std::remove_if(begin(), end(), aPred);
+	//}
 
-	TObjectType* Find(const TObjectType& aObject) requires Iterable && CanEqualityCompare
+	auto Find(const TObjectType& aObject) requires Iterable && CanEqualityCompare
 	{
 		auto it = std::find(begin(), end(), aObject);
-		if (it == end())
-			return nullptr;
-
-		return &*it;
+		return it;
 	}
 
-	auto AddUnique(TObjectType aObject) requires Iterable && CanEqualityCompare
+	template<typename TObjectTypeFunc> requires std::is_same_v<TObjectType, std::decay_t<TObjectTypeFunc>> || std::is_constructible_v<TObjectType, TObjectTypeFunc>
+	void AddUnique(TObjectTypeFunc aObject) requires Iterable && CanEqualityCompare
 	{
-		if (TObjectType* found = Find(aObject))
-			return *found;
+		if (auto found = Find(aObject) != end())
+			return;
 
-		if constexpr (UsesStorage<plf::colony<TObjectType>>)
-		{
-			return *myBackend.insert(aObject);
-		}
-		else
-		{
-			return *myBackend.push_back(aObject);
-		}
+		Add(std::forward<TObjectTypeFunc>(aObject));
 	}
 
 	void Clear()
@@ -139,6 +116,46 @@ public:
 	{
 		return myBackend.end();
 	}
+
+	auto cbegin() const requires Iterable
+	{
+		return myBackend.cbegin();
+	}
+
+	auto cend() const requires Iterable
+	{
+		return myBackend.cend();
+	}
+
+	auto cbegin() requires Iterable
+	{
+		return myBackend.cbegin();
+	}
+
+	auto cend() requires Iterable
+	{
+		return myBackend.cend();
+	}
+
+
+private:
+	//TODO: Change how this is handled? Make Storage class? either way this is not optimal
+	static auto StorageType()
+	{
+		if constexpr (!RandomAccess && !ConstantInsertion)
+			return plf::colony<TObjectType>();
+		else if constexpr (!StableElements && !ConstantInsertion && !ConstantDeletion)
+			return std::vector<TObjectType>();
+		else if constexpr (!RandomAccess && !Indexable)
+			return std::list<TObjectType>();
+		else
+			static_assert(false, "No container backend supports these traits!");
+	}
+
+	using Storage = decltype(StorageType());
+
+	template <typename T>
+	constexpr static bool UsesStorage = std::is_same_v<Storage, T>;
 
 	Storage myBackend;
 };

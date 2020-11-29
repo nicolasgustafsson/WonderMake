@@ -26,7 +26,7 @@ namespace NodeTypes
 
 		viewportSize *= renderScale;
 
-		SRenderTargetSettings settings{ SVector2u(std::lroundf(viewportSize.X), std::lroundf(viewportSize.Y)), aNode.GetInput<bool>(1) };
+		const SRenderTargetSettings settings{ SVector2u(std::lroundf(viewportSize.X), std::lroundf(viewportSize.Y)), aNode.GetInput<bool>(1) };
 
 		if (!renderTargetAny.has_value())
 			renderTargetAny = std::move(std::make_any<std::shared_ptr<RenderTarget>>(std::make_shared<RenderTarget>(settings)));
@@ -55,7 +55,7 @@ namespace NodeTypes
 		renderTarget->BindAsTarget();
 		std::string renderLayer = aNode.GetInput<std::string>(1);
 
-		auto renderSettings = aNode.GetInput<SRenderSettings>(2);
+		const auto renderSettings = aNode.GetInput<SRenderSettings>(2);
 		SystemPtr<RenderSettingsManager>()->PushSettings(renderSettings);
 
 		SystemPtr<RenderCommandProcessor>()->GetRenderLayer(renderLayer).ProcessQueue();

@@ -421,11 +421,6 @@
     <None Include="Utilities\Rotation.inl" />
     <None Include="Utilities\Vector.inl" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="Graphics\nicostodo graphics.txt" />
-    <Text Include="Utilities\Container\nicostodo container.txt" />
-    <Text Include="Utilities\Json\nicostodo json.txt" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

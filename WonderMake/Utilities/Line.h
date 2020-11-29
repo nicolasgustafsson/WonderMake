@@ -24,7 +24,7 @@ struct SLine
 
 	SDegreeF32 GetRotation() const noexcept
 	{
-		return RotationCast<SDegreeF32>((Second - First).GetRotation());
+		return (Second - First).GetAngle<SDegreeF32>(0);
 	}
 
 

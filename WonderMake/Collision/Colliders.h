@@ -61,7 +61,7 @@ namespace Colliders
 	SVector2f SCollisionLine::GetLineEnd() const noexcept
 	{
 		SVector2f temp = EndOffsetFromPosition;
-		return Position + temp.Rotate<>(Rotation);
+		return Position + temp.RotateCounterClockwise(Rotation);
 	}
 
 	typedef std::variant<SSphere, SCollisionLine>	Shape;

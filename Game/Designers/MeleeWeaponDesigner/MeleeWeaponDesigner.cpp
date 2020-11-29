@@ -43,10 +43,10 @@ SSwing MeleeWeaponDesigner::DesignSwing(const MeleeWeapon& aWeapon, const bool a
 	const f32 sidewayMultiplier = aMirror ? -1.f : 1.f;
 
 	swing.SwingPath = BezierCurve(
-		{ -25.f, -50.f * sidewayMultiplier },
-		{ -25.f, 50.f * sidewayMultiplier },
-		{ 30.f, -50.f * sidewayMultiplier },
-		{ 100.f, 0.f });
+		{ 50.f * sidewayMultiplier, -25.f },
+		{ -50.f * sidewayMultiplier, -25.f },
+		{ 50.f * sidewayMultiplier, 30.f },
+		{ 0.f, 100.f });
 
 	return swing;
 }

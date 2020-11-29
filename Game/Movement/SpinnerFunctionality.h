@@ -10,7 +10,7 @@ class TimeKeeper;
 struct SSpinnerComponent
 	: public SComponent
 {
-	SRadianF32 myRotationSpeed = -Constants::HalfPi;
+	SRadianF32 myRotationSpeed = Constants::HalfPi;
 };
 
 class SpinnerFunctionality

@@ -45,10 +45,10 @@ SVector2f BezierCurve::GetConstantLocationAt(f32 aProgress) const
 
 void BezierCurve::Rotate(const SRadianF32 aRotation)
 {
-	myStart.Rotate(aRotation);
-	myEnd.Rotate(aRotation);
-	myFirstControl.Rotate(aRotation);
-	mySecondControl.Rotate(aRotation);
+	myStart.RotateCounterClockwise(aRotation);
+	myEnd.RotateCounterClockwise(aRotation);
+	myFirstControl.RotateCounterClockwise(aRotation);
+	mySecondControl.RotateCounterClockwise(aRotation);
 
 	myConstantLengthProgressList.reset();
 }

@@ -7,7 +7,6 @@ void TransformFunctionality::SetPosition(const SVector2f aPosition) noexcept
 {
 	Get<STransformComponent>().Position = aPosition;
 }
-
 [[nodiscard]] SVector2f TransformFunctionality::GetPosition() const noexcept
 {
 	return Get<STransformComponent>().Position;
@@ -19,17 +18,15 @@ void TransformFunctionality::FacePosition(const SVector2f aPosition) noexcept
 
 	FaceDirection(deltaPosition);
 }
-
 void TransformFunctionality::FaceDirection(const SVector2f aDirection) noexcept
 {
-	SetRotation(aDirection.GetRotation());
+	SetRotation(aDirection.GetAngle<SRadianF32>(SVector2f(0, 1)));
 }
 
 void TransformFunctionality::SetRotation(const SRadianF32 aRotation) noexcept
 {
 	Get<STransformComponent>().Rotation = aRotation;
 }
-
 [[nodiscard]] SRadianF32 TransformFunctionality::GetRotation() const noexcept
 {
 	return Get<STransformComponent>().Rotation;
@@ -37,13 +34,12 @@ void TransformFunctionality::SetRotation(const SRadianF32 aRotation) noexcept
 
 SVector2f TransformFunctionality::GetForwardVector() const noexcept
 {
-	SVector2f retVec(1, 0);
+	SVector2f retVec(0, 1);
 
-	retVec.Rotate(GetRotation());
+	retVec.RotateCounterClockwise(GetRotation());
 
 	return retVec;
 }
-
 SVector2f TransformFunctionality::GetRightVector() const noexcept
 {
 	return GetForwardVector().GetPerpendicularClockWise();
@@ -70,4 +66,5 @@ void TransformFunctionality::Inspect()
 
 	ImGui::Text("X: %f", transform.Position.X);
 	ImGui::Text("Y: %f", transform.Position.Y);
+	ImGui::Text("R: %f", RotationCast<SDegreeF32>(transform.Rotation).Rotation());
 }

@@ -84,26 +84,68 @@ struct SVector
 
 		(((*this)[i++] = static_cast<TRep>(aArgs)), ...);
 	}
-	
-	template<typename TRotation>
-	SVector<TRep, TSize>& Rotate(const TRotation aRotation) noexcept
-		requires (TSize == 2 && std::is_floating_point_v<typename TRotation::Representation>)
-	{
-		using RotationRep = SRadian<typename TRotation::Representation>;
 
-		const auto rotation = RotationCast<RotationRep>(GetRotation<TRotation>() + aRotation);
+	template<typename TRotationRep,
+		typename TRotation = SDegree<TRotationRep>>
+		requires std::is_floating_point_v<TRotationRep>
+	SVector<TRep, TSize>& RotateCounterClockwise(const TRotationRep aRotation) noexcept
+		requires (TSize == 2)
+	{
+		return RotateCounterClockwise<TRotation>(aRotation);
+	}
+	template<typename TRotation = SDegree<TRep>>
+		requires std::is_floating_point_v<typename TRotation::Representation>
+	SVector<TRep, TSize>& RotateCounterClockwise(const TRotation aRotation) noexcept
+		requires (TSize == 2)
+	{
+		const auto rotation = GetAngle<TRotation>(0) + aRotation;
 		const auto length = Length();
 
-		SVectorBase<TRep, Size>::X = MathUtility::Cos(rotation.Rotation()) * length;
-		SVectorBase<TRep, Size>::Y = MathUtility::Sin(rotation.Rotation()) * length;
+		SVectorBase<TRep, Size>::X = static_cast<TRep>(MathUtility::Cos(rotation) * length);
+		SVectorBase<TRep, Size>::Y = static_cast<TRep>(MathUtility::Sin(rotation) * length);
 
 		return (*this);
 	}
-	template<typename TRotation = SRadian<TRep>>
-	[[nodiscard]] TRotation GetRotation() const noexcept
-		requires (TSize == 2 && std::is_floating_point_v<typename TRotation::Representation>)
+	template<typename TRotationRep,
+		typename TRotation = SDegree<TRotationRep>>
+		requires std::is_floating_point_v<TRotationRep>
+	SVector<TRep, TSize>& RotateClockwise(const TRotationRep aRotation) noexcept
+		requires (TSize == 2)
 	{
-		return MathUtility::Atan2<TRotation>(SVectorBase<TRep, Size>::Y, SVectorBase<TRep, Size>::X);
+		return RotateClockwise<TRotation>(aRotation);
+	}
+	template<typename TRotation = SDegree<TRep>>
+		requires std::is_floating_point_v<typename TRotation::Representation>
+	SVector<TRep, TSize>& RotateClockwise(const TRotation aRotation) noexcept
+		requires (TSize == 2)
+	{
+		return RotateCounterClockwise(-aRotation);
+	}
+	
+	template<typename TRotation,
+		typename TReturnRotation = SDegree<TRotation>>
+		requires std::is_floating_point_v<TRotation>
+			&& std::is_floating_point_v<typename TReturnRotation::Representation>
+	[[nodiscard]] TReturnRotation GetAngle(const TRotation aRotation) const noexcept
+		requires (TSize == 2)
+	{
+		return GetAngle<TReturnRotation>(aRotation);
+	}
+	template<typename TRotation = SDegree<TRep>,
+		typename TReturnRotation = TRotation>
+		requires std::is_floating_point_v<typename TRotation::Representation>
+			&& std::is_floating_point_v<typename TReturnRotation::Representation>
+	[[nodiscard]] TReturnRotation GetAngle(const TRotation aRotation) const noexcept
+		requires (TSize == 2)
+	{
+		return MathUtility::Atan2<TRotation>(SVectorBase<TRep, Size>::Y, SVectorBase<TRep, Size>::X) - aRotation;
+	}
+	template<typename TReturnRotation = SDegree<TRep>>
+		requires std::is_floating_point_v<typename TReturnRotation::Representation>
+	[[nodiscard]] TReturnRotation GetAngle(const SVector<TRep, TSize> aOtherVector) const noexcept
+		requires (TSize == 2)
+	{
+		return GetAngle(MathUtility::Atan2<TReturnRotation>(aOtherVector.Y, aOtherVector.X));
 	}
 
 	// Lowers or raises the dimension of the vector by one
@@ -279,11 +321,6 @@ struct SVector
 		requires (TSize == 2)
 	{
 		return SVector<TRep, TSize>((*this).Y, -(*this).X);
-	}
-	[[nodiscard]] constexpr SVector<TRep, TSize> GetNormal() const noexcept
-		requires (TSize == 2)
-	{
-		return GetPerpendicularClockWise();
 	}
 
 	[[nodiscard]] constexpr static SVector<TRep, TSize> Zero() noexcept

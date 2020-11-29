@@ -78,7 +78,7 @@ TEST_CASE("TransformFunctionality basic functionality", "[TransformFunctionality
 	{
 		constexpr SVector2f originA(0, 0);
 		constexpr SVector2f targetA(0, -1);
-		constexpr f32 expectedRotationA = 0;
+		constexpr f32 expectedRotationA = degreeToRadian(-90.f);
 
 		transformFunc.SetPosition(originA);
 
@@ -88,7 +88,7 @@ TEST_CASE("TransformFunctionality basic functionality", "[TransformFunctionality
 
 		constexpr SVector2f originB(3, 2);
 		constexpr SVector2f targetB(3, 1);
-		constexpr f32 expectedRotationB = 0;
+		constexpr f32 expectedRotationB = degreeToRadian(-90.f);
 
 		transformFunc.SetPosition(originB);
 
@@ -98,7 +98,7 @@ TEST_CASE("TransformFunctionality basic functionality", "[TransformFunctionality
 
 		constexpr SVector2f originC(2, 2);
 		constexpr SVector2f targetC(-1, -1);
-		constexpr f32 expectedRotationC = degreeToRadian(45.f);
+		constexpr f32 expectedRotationC = degreeToRadian(-135.f);
 
 		transformFunc.SetPosition(originC);
 
@@ -109,24 +109,24 @@ TEST_CASE("TransformFunctionality basic functionality", "[TransformFunctionality
 
 	SECTION("Facing direction")
 	{
-		constexpr SVector2f directionA(0, -1);
+		constexpr SVector2f directionA(0, 1);
 		constexpr f32 expectedRotationA = 0;
 
 		transformFunc.FaceDirection(directionA);
 
 		CHECK(closeEnough(expectedRotationA, transformFunc.GetRotation().Rotation()));
 
-		constexpr SVector2f directionB(0, -2.43f);
-		constexpr f32 expectedRotationB = 0;
+		constexpr SVector2f directionB(2.43f, 0);
+		constexpr f32 expectedRotationB = degreeToRadian(-90.f);
 
-		transformFunc.FacePosition(directionB);
+		transformFunc.FaceDirection(directionB);
 
 		CHECK(closeEnough(expectedRotationB, transformFunc.GetRotation().Rotation()));
 
-		constexpr SVector2f directionC(-1, -1);
+		constexpr SVector2f directionC(-1, 1);
 		constexpr f32 expectedRotationC = degreeToRadian(45.f);
 
-		transformFunc.FacePosition(directionC);
+		transformFunc.FaceDirection(directionC);
 
 		CHECK(closeEnough(expectedRotationC, transformFunc.GetRotation().Rotation()));
 	}
@@ -185,8 +185,8 @@ TEST_CASE("TransformFunctionality basic functionality", "[TransformFunctionality
 		const auto resultA = transformFunc.GetMatrix();
 
 		CHECK(closeEnoughMatrix(expectedA, resultA));
-		CHECK(closeEnoughVector(transformFunc.GetForwardVector(), resultA.GetForwardVector()));
-		CHECK(closeEnoughVector(transformFunc.GetRightVector(), resultA.GetRightVector()));
+		CHECK(closeEnoughVector(transformFunc.GetForwardVector(),	resultA.GetForwardVector()));
+		CHECK(closeEnoughVector(transformFunc.GetRightVector(),		resultA.GetRightVector()));
 
 		constexpr auto positionB = SVector2f(5, 10);
 		constexpr auto rotationB = SDegreeF32(0);
@@ -201,8 +201,8 @@ TEST_CASE("TransformFunctionality basic functionality", "[TransformFunctionality
 		const auto resultB = transformFunc.GetMatrix();
 
 		CHECK(closeEnoughMatrix(expectedB, resultB));
-		CHECK(closeEnoughVector(transformFunc.GetForwardVector(), resultB.GetForwardVector()));
-		CHECK(closeEnoughVector(transformFunc.GetRightVector(), resultB.GetRightVector()));
+		CHECK(closeEnoughVector(transformFunc.GetForwardVector(),	resultB.GetForwardVector()));
+		CHECK(closeEnoughVector(transformFunc.GetRightVector(),		resultB.GetRightVector()));
 
 		constexpr auto positionC = SVector2f(0, 0);
 		constexpr auto rotationC = SDegreeF32(90);
@@ -217,8 +217,8 @@ TEST_CASE("TransformFunctionality basic functionality", "[TransformFunctionality
 		const auto resultC = transformFunc.GetMatrix();
 
 		CHECK(closeEnoughMatrix(expectedC, resultC));
-		CHECK(closeEnoughVector(transformFunc.GetForwardVector(), resultC.GetForwardVector()));
-		CHECK(closeEnoughVector(transformFunc.GetRightVector(), resultC.GetRightVector()));
+		CHECK(closeEnoughVector(transformFunc.GetForwardVector(),	resultC.GetForwardVector()));
+		CHECK(closeEnoughVector(transformFunc.GetRightVector(),		resultC.GetRightVector()));
 
 		constexpr auto positionD = SVector2f(-78, 12);
 		constexpr auto rotationD = SDegreeF32(180);
@@ -233,7 +233,7 @@ TEST_CASE("TransformFunctionality basic functionality", "[TransformFunctionality
 		const auto resultD = transformFunc.GetMatrix();
 
 		CHECK(closeEnoughMatrix(expectedD, resultD));
-		CHECK(closeEnoughVector(transformFunc.GetForwardVector(), resultD.GetForwardVector()));
-		CHECK(closeEnoughVector(transformFunc.GetRightVector(), resultD.GetRightVector()));
+		CHECK(closeEnoughVector(transformFunc.GetForwardVector(),	resultD.GetForwardVector()));
+		CHECK(closeEnoughVector(transformFunc.GetRightVector(),		resultD.GetRightVector()));
 	}
 }

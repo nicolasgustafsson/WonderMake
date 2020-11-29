@@ -14,7 +14,6 @@ public:
 	[[nodiscard]] SVector2f GetPosition() const noexcept;
 
 	void FacePosition(const SVector2f aPosition) noexcept;
-
 	void FaceDirection(const SVector2f aDirection) noexcept;
 
 	void SetRotation(const SRadianF32 aRotation) noexcept;

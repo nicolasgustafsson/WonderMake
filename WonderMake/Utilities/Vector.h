@@ -138,14 +138,14 @@ struct SVector
 	[[nodiscard]] TReturnRotation GetAngle(const TRotation aRotation) const noexcept
 		requires (TSize == 2)
 	{
-		return MathUtility::Atan2<TRotation>(SVectorBase<TRep, Size>::Y, SVectorBase<TRep, Size>::X) - aRotation;
+		return MathUtility::Remainder(MathUtility::Atan2<TRotation>(SVectorBase<TRep, Size>::Y, SVectorBase<TRep, Size>::X) - aRotation, TReturnRotation::Full());
 	}
 	template<typename TReturnRotation = SDegree<TRep>>
 		requires std::is_floating_point_v<typename TReturnRotation::Representation>
 	[[nodiscard]] TReturnRotation GetAngle(const SVector<TRep, TSize> aOtherVector) const noexcept
 		requires (TSize == 2)
 	{
-		return GetAngle(MathUtility::Atan2<TReturnRotation>(aOtherVector.Y, aOtherVector.X));
+		return GetAngle(aOtherVector.GetAngle<TReturnRotation>(0));
 	}
 
 	// Lowers or raises the dimension of the vector by one

@@ -5,11 +5,11 @@ REGISTER_FUNCTIONALITY(TransformFunctionality);
 
 void TransformFunctionality::SetPosition(const SVector2f aPosition) noexcept
 {
-	Get<STransformComponent>().Position = aPosition;
+	Get<STransformComponent2D>().Position = aPosition;
 }
 [[nodiscard]] SVector2f TransformFunctionality::GetPosition() const noexcept
 {
-	return Get<STransformComponent>().Position;
+	return Get<STransformComponent2D>().Position;
 }
 
 void TransformFunctionality::FacePosition(const SVector2f aPosition) noexcept
@@ -20,19 +20,10 @@ void TransformFunctionality::FacePosition(const SVector2f aPosition) noexcept
 }
 void TransformFunctionality::FaceDirection(const SVector2f aDirection) noexcept
 {
-	SetRotation(aDirection.GetAngle<SRadianF32>(SVector2f(0, 1)));
+	SetRotation(aDirection.GetAngle(SVector2f(0, 1)));
 }
 
-void TransformFunctionality::SetRotation(const SRadianF32 aRotation) noexcept
-{
-	Get<STransformComponent>().Rotation = aRotation;
-}
-[[nodiscard]] SRadianF32 TransformFunctionality::GetRotation() const noexcept
-{
-	return Get<STransformComponent>().Rotation;
-}
-
-SVector2f TransformFunctionality::GetForwardVector() const noexcept
+[[nodiscard]] SVector2f TransformFunctionality::GetForwardVector() const noexcept
 {
 	SVector2f retVec(0, 1);
 
@@ -40,14 +31,14 @@ SVector2f TransformFunctionality::GetForwardVector() const noexcept
 
 	return retVec;
 }
-SVector2f TransformFunctionality::GetRightVector() const noexcept
+[[nodiscard]] SVector2f TransformFunctionality::GetRightVector() const noexcept
 {
 	return GetForwardVector().GetPerpendicularClockWise();
 }
 
 void TransformFunctionality::Move(const SVector2f aMovement) noexcept
 {
-	Get<STransformComponent>().Position += aMovement;
+	Get<STransformComponent2D>().Position += aMovement;
 }
 
 [[nodiscard]] SMatrix33f TransformFunctionality::GetMatrix() const noexcept
@@ -62,9 +53,9 @@ void TransformFunctionality::Move(const SVector2f aMovement) noexcept
 
 void TransformFunctionality::Inspect()
 {
-	STransformComponent& transform = Get<STransformComponent>();
+	auto& transform = Get<STransformComponent2D>();
 
 	ImGui::Text("X: %f", transform.Position.X);
 	ImGui::Text("Y: %f", transform.Position.Y);
-	ImGui::Text("R: %f", RotationCast<SDegreeF32>(transform.Rotation).Rotation());
+	ImGui::Text("R: %f", transform.Rotation.Rotation());
 }

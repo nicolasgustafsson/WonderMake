@@ -22,7 +22,7 @@ void DefaultMovementFunctionality::AddImpulse(const SVector2f aImpulse)
 
 void DefaultMovementFunctionality::Tick() noexcept
 {
-	STransformComponent& transform = Get<STransformComponent>();
+	auto& transform = Get<STransformComponent2D>();
 	SDefaultMovementComponent& movementComponent = Get<SDefaultMovementComponent>();
 
 	movementComponent.CollisionIterationsLeft = movementComponent.CollisionIterations;
@@ -65,7 +65,7 @@ void DefaultMovementFunctionality::Inspect()
 void DefaultMovementFunctionality::HandleCollision(const Colliders::SSphere& aThisSphere, const Colliders::SCollisionLine& aOtherLine)
 {
 	SDefaultMovementComponent& movementComponent = Get<SDefaultMovementComponent>();
-	STransformComponent& transform = Get<STransformComponent>();
+	auto& transform = Get<STransformComponent2D>();
 	
 	const SVector2f closestPointOnLine = CollisionSystem::GetClosestPointOnLine(aOtherLine, aThisSphere.Position);
 
@@ -78,7 +78,7 @@ void DefaultMovementFunctionality::HandleCollision(const Colliders::SSphere& aTh
 
 void DefaultMovementFunctionality::TestCollision()
 {
-	STransformComponent& transform = Get<STransformComponent>();
+	auto& transform = Get<STransformComponent2D>();
 	SDefaultMovementComponent& movementComponent = Get<SDefaultMovementComponent>();
 
 	movementComponent.Collided = false;

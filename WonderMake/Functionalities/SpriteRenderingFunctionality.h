@@ -1,12 +1,13 @@
 #pragma once
 #include "Functionality.h"
 #include "Components/SpriteComponent.h"
-#include "Components/TransformComponent.h"
+
+class TransformFunctionality;
 
 class SpriteRenderingFunctionality
 	: public Functionality<
 		Policy::Set<
-			PAdd<STransformComponent, PRead>,
+			PAdd<TransformFunctionality, PRead>,
 			PAdd<SSpriteComponent, PWrite>>>
 {
 public:

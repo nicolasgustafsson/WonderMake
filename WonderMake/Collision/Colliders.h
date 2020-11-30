@@ -54,7 +54,7 @@ namespace Colliders
 		inline [[nodiscard]] SVector2f GetLineEnd() const noexcept;
 
 		SVector2f					EndOffsetFromPosition = SVector2f::Zero();
-		SRadianF32					Rotation;
+		SDegreeF32					Rotation;
 		f32							Width = 0.f;
 	};
 

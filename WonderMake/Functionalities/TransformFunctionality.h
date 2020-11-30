@@ -7,7 +7,7 @@
 class TransformFunctionality
 	: public Functionality<
 		Policy::Set<
-			PAdd<STransformComponent, PWrite>>>
+			PAdd<STransformComponent2D, PWrite>>>
 {
 public:
 	void SetPosition(const SVector2f aPosition) noexcept;
@@ -16,11 +16,26 @@ public:
 	void FacePosition(const SVector2f aPosition) noexcept;
 	void FaceDirection(const SVector2f aDirection) noexcept;
 
-	void SetRotation(const SRadianF32 aRotation) noexcept;
-	[[nodiscard]] SRadianF32 GetRotation() const noexcept;
+	template<typename TRotation>
+		requires std::is_floating_point_v<TRotation>
+	void SetRotation(const TRotation aRotation) noexcept
+	{
+		Get<STransformComponent2D>().Rotation = aRotation;
+	}
+	template<typename TRotation>
+		requires !std::is_floating_point_v<TRotation>
+	void SetRotation(const TRotation aRotation) noexcept
+	{
+		Get<STransformComponent2D>().Rotation = RotationCast<STransformComponent2D::RotationType>(aRotation);
+	}
+	template<typename TReturnRotation = SDegreeF32>
+	[[nodiscard]] TReturnRotation GetRotation() const noexcept
+	{
+		return RotationCast<TReturnRotation>(Get<STransformComponent2D>().Rotation);
+	}
 
-	SVector2f GetForwardVector() const noexcept;
-	SVector2f GetRightVector() const noexcept;
+	[[nodiscard]] SVector2f GetForwardVector() const noexcept;
+	[[nodiscard]] SVector2f GetRightVector() const noexcept;
 
 	void Move(const SVector2f aMovement) noexcept;
 

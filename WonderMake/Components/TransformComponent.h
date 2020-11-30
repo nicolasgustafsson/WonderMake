@@ -2,9 +2,15 @@
 #include "Component.h"
 #include "Utilities/Vector.h"
 
-struct STransformComponent 
+template<typename TRepPosition, typename TRepRotation>
+struct _STransformComponent2D
 	: public SComponent
 {
-	SVector2f	Position = SVector2f::Zero();
-	SRadianF32	Rotation = 0.f;
+	using RepPosition = TRepPosition;
+	using RepRotation = TRepRotation;
+
+	RepPosition	Position = {};
+	RepRotation	Rotation = {};
 };
+
+using STransformComponent2D = _STransformComponent2D<SVector2<f32>, SDegree<f32>>;

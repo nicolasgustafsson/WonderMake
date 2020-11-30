@@ -7,7 +7,7 @@
 TEST_CASE("TransformFunctionality basic functionality", "[TransformFunctionality]")
 {
 	Object object;
-	STransformComponent transformComp;
+	STransformComponent2D transformComp;
 
 	TransformFunctionality::InjectDependencies(std::tie(transformComp));
 
@@ -15,14 +15,10 @@ TEST_CASE("TransformFunctionality basic functionality", "[TransformFunctionality
 
 	constexpr auto closeEnough = [](const auto aValue, const auto aCompare)
 	{
-		constexpr auto epsilon = 0.001;
+		constexpr auto epsilon = static_cast<decltype(aValue)>(0.001);
 
 		return aValue > aCompare - epsilon
 			&& aValue < aCompare + epsilon;
-	};
-	constexpr auto degreeToRadian = [](const auto aDegree)
-	{
-		return static_cast<decltype(aDegree)>((std::numbers::pi / 180.0) * aDegree);
 	};
 	constexpr auto closeEnoughVector = [closeEnough](const auto aValue, const auto aCompare)
 	{
@@ -78,33 +74,33 @@ TEST_CASE("TransformFunctionality basic functionality", "[TransformFunctionality
 	{
 		constexpr SVector2f originA(0, 0);
 		constexpr SVector2f targetA(0, -1);
-		constexpr f32 expectedRotationA = degreeToRadian(-90.f);
+		constexpr f32 expectedRotationA = -180.f;
 
 		transformFunc.SetPosition(originA);
 
 		transformFunc.FacePosition(targetA);
 
-		CHECK(closeEnough(expectedRotationA, transformFunc.GetRotation().Rotation()));
+		CHECK(closeEnough(expectedRotationA, transformFunc.GetRotation()));
 
 		constexpr SVector2f originB(3, 2);
 		constexpr SVector2f targetB(3, 1);
-		constexpr f32 expectedRotationB = degreeToRadian(-90.f);
+		constexpr f32 expectedRotationB = -180.f;
 
 		transformFunc.SetPosition(originB);
 
 		transformFunc.FacePosition(targetB);
 
-		CHECK(closeEnough(expectedRotationB, transformFunc.GetRotation().Rotation()));
+		CHECK(closeEnough(expectedRotationB, transformFunc.GetRotation()));
 
 		constexpr SVector2f originC(2, 2);
 		constexpr SVector2f targetC(-1, -1);
-		constexpr f32 expectedRotationC = degreeToRadian(-135.f);
+		constexpr f32 expectedRotationC = 135.f;
 
 		transformFunc.SetPosition(originC);
 
 		transformFunc.FacePosition(targetC);
 
-		CHECK(closeEnough(expectedRotationC, transformFunc.GetRotation().Rotation()));
+		CHECK(closeEnough(expectedRotationC, transformFunc.GetRotation()));
 	}
 
 	SECTION("Facing direction")
@@ -114,21 +110,21 @@ TEST_CASE("TransformFunctionality basic functionality", "[TransformFunctionality
 
 		transformFunc.FaceDirection(directionA);
 
-		CHECK(closeEnough(expectedRotationA, transformFunc.GetRotation().Rotation()));
+		CHECK(closeEnough(expectedRotationA, transformFunc.GetRotation()));
 
 		constexpr SVector2f directionB(2.43f, 0);
-		constexpr f32 expectedRotationB = degreeToRadian(-90.f);
+		constexpr f32 expectedRotationB = -90.f;
 
 		transformFunc.FaceDirection(directionB);
 
-		CHECK(closeEnough(expectedRotationB, transformFunc.GetRotation().Rotation()));
+		CHECK(closeEnough(expectedRotationB, transformFunc.GetRotation()));
 
 		constexpr SVector2f directionC(-1, 1);
-		constexpr f32 expectedRotationC = degreeToRadian(45.f);
+		constexpr f32 expectedRotationC = 45.f;
 
 		transformFunc.FaceDirection(directionC);
 
-		CHECK(closeEnough(expectedRotationC, transformFunc.GetRotation().Rotation()));
+		CHECK(closeEnough(expectedRotationC, transformFunc.GetRotation()));
 	}
 
 	SECTION("Get facing vectors")
@@ -142,7 +138,7 @@ TEST_CASE("TransformFunctionality basic functionality", "[TransformFunctionality
 		CHECK(closeEnoughVector(expectedForwardA,	transformFunc.GetForwardVector()));
 		CHECK(closeEnoughVector(expectedRightA,		transformFunc.GetRightVector()));
 
-		constexpr f32 rotationB = degreeToRadian(90.f);
+		constexpr f32 rotationB = 90.f;
 		constexpr SVector2f expectedForwardB(-1, 0);
 		constexpr SVector2f expectedRightB(0, 1);
 
@@ -151,7 +147,7 @@ TEST_CASE("TransformFunctionality basic functionality", "[TransformFunctionality
 		CHECK(closeEnoughVector(expectedForwardB,	transformFunc.GetForwardVector()));
 		CHECK(closeEnoughVector(expectedRightB,		transformFunc.GetRightVector()));
 
-		constexpr f32 rotationC = degreeToRadian(180.f);
+		constexpr f32 rotationC = 180.f;
 		constexpr SVector2f expectedForwardC(0, -1);
 		constexpr SVector2f expectedRightC(-1, 0);
 
@@ -160,7 +156,7 @@ TEST_CASE("TransformFunctionality basic functionality", "[TransformFunctionality
 		CHECK(closeEnoughVector(expectedForwardC,	transformFunc.GetForwardVector()));
 		CHECK(closeEnoughVector(expectedRightC,		transformFunc.GetRightVector()));
 
-		constexpr f32 rotationD = degreeToRadian(270.f);
+		constexpr f32 rotationD = 270.f;
 		constexpr SVector2f expectedForwardD(1, 0);
 		constexpr SVector2f expectedRightD(0, -1);
 
@@ -180,7 +176,7 @@ TEST_CASE("TransformFunctionality basic functionality", "[TransformFunctionality
 			0, 0, 1);
 
 		transformFunc.SetPosition(positionA);
-		transformFunc.SetRotation(RotationCast<SRadianF32>(rotationA));
+		transformFunc.SetRotation(rotationA);
 
 		const auto resultA = transformFunc.GetMatrix();
 
@@ -196,7 +192,7 @@ TEST_CASE("TransformFunctionality basic functionality", "[TransformFunctionality
 			0, 0, 1);
 
 		transformFunc.SetPosition(positionB);
-		transformFunc.SetRotation(RotationCast<SRadianF32>(rotationB));
+		transformFunc.SetRotation(rotationB);
 
 		const auto resultB = transformFunc.GetMatrix();
 
@@ -212,7 +208,7 @@ TEST_CASE("TransformFunctionality basic functionality", "[TransformFunctionality
 			0, 0, 1);
 
 		transformFunc.SetPosition(positionC);
-		transformFunc.SetRotation(RotationCast<SRadianF32>(rotationC));
+		transformFunc.SetRotation(rotationC);
 
 		const auto resultC = transformFunc.GetMatrix();
 
@@ -228,7 +224,7 @@ TEST_CASE("TransformFunctionality basic functionality", "[TransformFunctionality
 			0, 0, 1);
 
 		transformFunc.SetPosition(positionD);
-		transformFunc.SetRotation(RotationCast<SRadianF32>(rotationD));
+		transformFunc.SetRotation(rotationD);
 
 		const auto resultD = transformFunc.GetMatrix();
 

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "SpriteRenderingFunctionality.h"
+#include "TransformFunctionality.h"
 #include <iostream>
 
 REGISTER_FUNCTIONALITY(SpriteRenderingFunctionality);
@@ -10,8 +11,8 @@ void SpriteRenderingFunctionality::Tick()
 	if (!spriteComponent.RenderObject || spriteComponent.IsHidden)
 		return;
 
-	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Position>(0, Get<STransformComponent>().Position);
-	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Rotation>(0, Get<STransformComponent>().Rotation.Rotation());
+	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Position>(0, Get<TransformFunctionality>().GetPosition());
+	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Rotation>(0, Get<TransformFunctionality>().GetRotation<SRadianF32>());
 	spriteComponent.RenderObject->Render();
 }
 

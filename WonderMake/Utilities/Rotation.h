@@ -17,6 +17,11 @@ public:
     using Representation = TRep;
     using Ratio = TRatio;
 
+    inline [[nodiscard]] constexpr static SRotation Full() noexcept
+    {
+        return static_cast<TRep>(TRatio::num) / static_cast<TRep>(TRatio::den);
+    }
+
     constexpr SRotation() = default;
     inline constexpr SRotation(const TRep aRotation) noexcept
         : myRotation(aRotation)
@@ -239,4 +244,16 @@ namespace MathUtility
 	{
 		return MathUtility::Sin(RotationCast<SRadian<typename TRotation::Representation>>(aRotation).Rotation());
 	}
+
+    template<typename TRotation>
+    inline [[nodiscard]] typename TRotation::Representation Mod(const TRotation aDividend, const TRotation aDivisor) noexcept
+    {
+        return MathUtility::Mod(aDividend.Rotation(), aDivisor.Rotation());
+    }
+
+    template<typename TRotation>
+    inline [[nodiscard]] typename TRotation::Representation Remainder(const TRotation aDividend, const TRotation aDivisor) noexcept
+    {
+        return MathUtility::Remainder(aDividend.Rotation(), aDivisor.Rotation());
+    }
 }

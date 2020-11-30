@@ -49,4 +49,25 @@ namespace MathUtility
 	{
 		return std::sin(aRotation);
 	}
+
+	template<typename T>
+	inline [[nodiscard]] T Mod(const T aDividend, const T aDivisor) noexcept
+		requires std::is_floating_point_v<T>
+	{
+		return std::fmod(aDividend, aDivisor);
+	}
+
+	template<typename T>
+	inline [[nodiscard]] T Mod(const T aDividend, const T aDivisor) noexcept
+		requires std::is_integral_v<T>
+	{
+		return aDividend % aDivisor;
+	}
+
+	template<typename T>
+	inline [[nodiscard]] T Remainder(const T aDividend, const T aDivisor) noexcept
+		requires std::is_floating_point_v<T>
+	{
+		return std::remainder(aDividend, aDivisor);
+	}
 }

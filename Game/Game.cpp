@@ -7,6 +7,8 @@
 #include "GameWorld.h"
 
 #include "System/SystemContainer.h"
+#include "Utilities/Container/BackendImplementations/ColonyBackend.h"
+#include "Utilities/TypeTraits/ContainsType.h"
 
 void Start()
 {

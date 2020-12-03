@@ -286,6 +286,7 @@
     <ClCompile Include="Utilities\Platform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Utilities\Container\BackendImplementations\ColonyBackend.h" />
     <ClInclude Include="Resources\Asset.h" />
     <ClInclude Include="Resources\AssetDatabase.h" />
     <ClInclude Include="Audio\AudioMixingNodeGraph.h" />
@@ -304,7 +305,10 @@
     <ClInclude Include="Graphics\ShaderParser.h" />
     <ClInclude Include="Object\DependencyDestructor.h" />
     <ClInclude Include="Utilities\AutoRegister.h" />
+    <ClInclude Include="Utilities\Container\BackendImplementations\LinkedListBackend.h" />
+    <ClInclude Include="Utilities\Container\BackendImplementations\VectorBackend.h" />
     <ClInclude Include="Utilities\Container\Container.h" />
+    <ClInclude Include="Utilities\Container\ContainerBackend.h" />
     <ClInclude Include="Utilities\Container\ContainerTraits.h" />
     <ClInclude Include="Utilities\DependencyInjector.h" />
     <ClInclude Include="Graphics\RenderCommandProcessor.h" />
@@ -407,6 +411,9 @@
     <ClInclude Include="Utilities\RestrictTypes.h" />
     <ClInclude Include="Utilities\Result.h" />
     <ClInclude Include="Program\Window.h" />
+    <ClInclude Include="Utilities\TypeTraits\ContainsType.h" />
+    <ClInclude Include="Utilities\TypeTraits\ReturnType.h" />
+    <ClInclude Include="Utilities\TypeTraits\StripTuple.h" />
     <ClInclude Include="Utilities\Utility.h" />
     <ClInclude Include="Utilities\Vector.h" />
     <ClInclude Include="Graphics\VertexTypes.h" />

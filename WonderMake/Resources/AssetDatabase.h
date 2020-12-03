@@ -4,8 +4,8 @@
 #include "Utilities/Debugging/Debugged.h"
 #include <Imgui/FileSelector.h>
 #include "Asset.h"
-#include <json/json.hpp>
 #include "Utilities/Container/Container.h"
+#include <json/json.hpp>
 
 template<typename TAssetType>
 class AssetDatabase 
@@ -69,6 +69,11 @@ public:
 
 	void SweepAssetDirectories()
 	{
+		myAssets.EraseIf([](auto& aAsset) 
+			{
+				return !std::filesystem::exists(aAsset.myMetadata.Filepath);
+			});
+
 		for (auto&& file : std::filesystem::recursive_directory_iterator(myRootPath))
 			myAssets.AddUnique(file.path());
 

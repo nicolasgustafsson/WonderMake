@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "AudioFile.h"
+#include "Resources/AssetDatabase.h"
+
 
 AudioFile::AudioFile(const std::filesystem::path& aPath)
 {

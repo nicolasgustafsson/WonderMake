@@ -15,4 +15,5 @@ class RandomAccess : public BaseRequirement {};
 class StableElements : public BaseRequirement {};
 class ConstantInsertion : public BaseRequirement {};
 class ConstantDeletion : public BaseRequirement {};
+class Sortable : public BaseRequirement {};
 //TODO: Keys

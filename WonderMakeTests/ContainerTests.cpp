@@ -18,6 +18,8 @@ TEST_CASE("General Container Tests", "[Container]")
 		REQUIRE(intContainerColony.HasBackend<ColonyBackend<int>>());
 		REQUIRE(intContainerVector.HasBackend<VectorBackend<int>>());
 		REQUIRE(intContainerLinkedList.HasBackend<LinkedListBackend<int>>());
+		REQUIRE(intContainerVector.HasTrait<Sortable>);
+		REQUIRE(!intContainerColony.HasTrait<Sortable>);
 	}
 
 	SECTION("You can add to a container")

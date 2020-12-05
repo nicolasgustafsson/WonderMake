@@ -7,25 +7,30 @@
 
 #include "Utilities/plf_colony.h"
 
-#include "ContainerTraits.h"
+#include "Traits/ContainerTraits.h"
 #include "BackendImplementations/ColonyBackend.h"
 #include "BackendImplementations/LinkedListBackend.h"
 #include "BackendImplementations/VectorBackend.h"
 
-#include "Utilities/TypeTraits/StripTuple.h"
+#include "Utilities/TypeTraits/ParameterPack.h"
+#include "Utilities/Container/Traits/Implications.h"
+#include "Utilities/TypeTraits/ContainsType.h"
+#include <iostream>
 
 template<typename TObjectType, typename TContainerBackends, ContainerTrait ... TContainerTraits>
 class ContainerBase
 {
 	//[Nicos]: These need to be at the top so we can use Storage as a type
 private:
+	using TraitsPack = typename ResolvedImplications<TContainerTraits...>::type;
+
 	template <typename ... TBackends>
-	constexpr static auto StorageType(Dummy<TBackends...>)
+	constexpr static auto StorageType(ParameterPack<TBackends...>)
 	{
-		return FirstSatisfyingBackend<std::tuple<TContainerTraits...>, TBackends...>::type();
+		return FirstSatisfyingBackend<TraitsPack, TBackends...>::type();
 	}
 
-	using Storage = decltype(StorageType(Strip<TContainerBackends>::type()));
+	using Storage = decltype(StorageType(TContainerBackends()));
 
 	template <typename T>
 	constexpr static bool UsesStorage = std::is_same_v<Storage, T>;
@@ -33,14 +38,21 @@ private:
 	Storage myBackend;
 
 public:
+
+	void PrintTraits()
+	{
+		std::cout << typeid(TraitsPack).name() << std::endl;
+	}
+
 	template <typename T>
-	constexpr static bool HasTrait = ContainsTrait<T, TContainerTraits...>;
+	constexpr static bool HasTrait = IsSubsetOf<ParameterPack<T>, TraitsPack>::value;
 	constexpr static bool Iterable = HasTrait<Iterable>;
 	constexpr static bool Indexable = HasTrait<Indexable> || HasTrait<RandomAccess>;
 	constexpr static bool RandomAccess = HasTrait<RandomAccess>;
 	constexpr static bool StableElements = HasTrait<StableElements>;
 	constexpr static bool ConstantInsertion = HasTrait<ConstantInsertion>;
 	constexpr static bool ConstantDeletion = HasTrait<ConstantDeletion>;
+	constexpr static bool Sortable = HasTrait<Sortable>;
 	constexpr static bool CanEqualityCompare = std::equality_comparable<TObjectType>;
 
 	template<typename TBackend>
@@ -90,7 +102,7 @@ public:
 		return myBackend[aIndex];
 	}
 
-	void Sort() requires Iterable && RandomAccess
+	void Sort() requires Sortable
 	{
 		std::sort(begin(), end());
 	}
@@ -144,4 +156,4 @@ public:
 
 
 template<typename TObjectType, typename ... TContainerTraits>
-using Container = ContainerBase<TObjectType, std::tuple<ColonyBackend<TObjectType>, VectorBackend<TObjectType>, LinkedListBackend<TObjectType>>, TContainerTraits...>;
+using Container = ContainerBase<TObjectType, ParameterPack<ColonyBackend<TObjectType>, VectorBackend<TObjectType>, LinkedListBackend<TObjectType>>, TContainerTraits...>;

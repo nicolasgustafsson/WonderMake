@@ -249,14 +249,15 @@
     <ClInclude Include="Resources\Asset.h" />
     <ClInclude Include="Utilities\Json\JsonExtensions.h" />
     <ClInclude Include="Utilities\Container\Container.h" />
-    <ClInclude Include="Utilities\Container\ContainerTraits.h" />
     <ClInclude Include="Utilities\Container\ContainerBackend.h" />
     <ClInclude Include="Utilities\Container\BackendImplementations\ColonyBackend.h" />
     <ClInclude Include="Utilities\TypeTraits\ReturnType.h" />
     <ClInclude Include="Utilities\Container\BackendImplementations\LinkedListBackend.h" />
     <ClInclude Include="Utilities\Container\BackendImplementations\VectorBackend.h" />
     <ClInclude Include="Utilities\TypeTraits\ContainsType.h" />
-    <ClInclude Include="Utilities\TypeTraits\StripTuple.h" />
+    <ClInclude Include="Utilities\Container\Traits\ContainerTraits.h" />
+    <ClInclude Include="Utilities\Container\Traits\Implications.h" />
+    <ClInclude Include="Utilities\TypeTraits\ParameterPack.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

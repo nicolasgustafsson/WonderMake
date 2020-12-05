@@ -1,6 +1,5 @@
 #pragma once
-#include "Utilities/Container/ContainerTraits.h"
-#include "Utilities/TypeTraits/ReturnType.h"
+#include "Utilities/Container/Traits/ContainerTraits.h"
 #include "Utilities/TypeTraits/ContainsType.h"
 #include <type_traits>
 
@@ -67,13 +66,13 @@ public:
 	template<typename ... TOtherTraits>
 	static constexpr bool SatisfiesTraits()
 	{
-		return IsSubsetOf<std::tuple<TOtherTraits...>, std::tuple<TTraits...>>::value;
+		return IsSubsetOf<ParameterPack<TOtherTraits...>, ResolvedImplications<TTraits...>::type>::value;
 	}
 
-	template<typename TOtherTraits>
-	static constexpr bool SatisfiesTraitsTuple()
+	template<typename TOtherTraits> 
+	static constexpr bool SatisfiesTraitsPack()
 	{
-		return IsSubsetOf<TOtherTraits, std::tuple<TTraits...>>::value;
+		return IsSubsetOf<TOtherTraits, ResolvedImplications<TTraits...>::type>::value;
 	}
 };
 
@@ -89,6 +88,6 @@ struct FirstSatisfyingBackend
 template <typename TTraits, typename FirstBackend, typename... TBackends>
 struct FirstSatisfyingBackend<TTraits, FirstBackend, TBackends...>
 {
-	using type = typename std::conditional<FirstBackend::template SatisfiesTraitsTuple<TTraits>() || !FirstSatisfyingBackend<TTraits, TBackends...>::found, FirstBackend, typename FirstSatisfyingBackend<TTraits, TBackends...>::type>::type;
-	static constexpr bool found = FirstBackend::template SatisfiesTraitsTuple<TTraits>() || FirstSatisfyingBackend<TTraits, TBackends...>::found;
+	using type = typename std::conditional<FirstBackend::template SatisfiesTraitsPack<TTraits>() || !FirstSatisfyingBackend<TTraits, TBackends...>::found, FirstBackend, typename FirstSatisfyingBackend<TTraits, TBackends...>::type>::type;
+	static constexpr bool found = FirstBackend::template SatisfiesTraitsPack<TTraits>() || FirstSatisfyingBackend<TTraits, TBackends...>::found;
 };

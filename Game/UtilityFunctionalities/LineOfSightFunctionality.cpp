@@ -12,13 +12,13 @@ void LineOfSightFunctionality::Tick()
 {
 	Navmesh& navmesh = Get<LevelDenizenFunctionality>().Get<SLevelDenizenComponent>().Level->Get<NavmeshFunctionality>().GetNavmesh();
 
-	auto polygon = navmesh.GetLineOfSightFrom(Get<TransformFunctionality>().GetPosition());
+	auto polygon = navmesh.GetLineOfSightFrom(Get<TransformFunctionality2D>().GetPosition());
 
 	Get<SLineOfSightComponent>().myPolygon = polygon;
 
 	//for (auto point : polygon)
 	//{
-	//	WmDrawDebugLine(Get<TransformFunctionality>().GetPosition(), point, SColor::LightSalmon);
+	//	WmDrawDebugLine(Get<TransformFunctionality2D>().GetPosition(), point, SColor::LightSalmon);
 	//}
 }
 

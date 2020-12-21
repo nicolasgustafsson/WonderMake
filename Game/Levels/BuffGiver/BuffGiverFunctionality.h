@@ -20,7 +20,7 @@ class BuffGiverFunctionality
 		Policy::Set<
 			PAdd<SBuffGiverComponent, PWrite>,
 			PAdd<CollisionFunctionality, PWrite>,
-			PAdd<TransformFunctionality, PWrite>>>
+			PAdd<TransformFunctionality2D, PWrite>>>
 {
 public:
 	void Initialize(BuffBlueprint& aBuffBlueprint, const f32 aRadius);

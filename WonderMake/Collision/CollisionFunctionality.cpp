@@ -81,7 +81,7 @@ void CollisionFunctionality::Debug()
 void CollisionFunctionality::UpdateCollisionTransforms()
 {
 	auto& collisionComponent = Get<SCollisionComponent>();
-	const auto& transformFunctionality = Get<TransformFunctionality>();
+	const auto& transformFunctionality = Get<TransformFunctionality2D>();
 
 	const auto transformation = transformFunctionality.GetMatrix();
 	const auto rotation = transformFunctionality.GetRotation();

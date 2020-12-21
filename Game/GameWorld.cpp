@@ -61,7 +61,7 @@ void GameWorld::Tick() noexcept
 Object GameWorld::SetupPlayer()
 {
 	Object player;
-	myPlayerTransform = &Get<FunctionalitySystemDelegate<TransformFunctionality>>().AddFunctionality(player);
+	myPlayerTransform = &Get<FunctionalitySystemDelegate<TransformFunctionality2D>>().AddFunctionality(player);
 	Get<FunctionalitySystemDelegate<PlayerControllerFunctionality>>().AddFunctionality(player);
 	Get<FunctionalitySystemDelegate<CameraFunctionality>>().AddFunctionality(player).SetTarget(myPlayerTransform);
 

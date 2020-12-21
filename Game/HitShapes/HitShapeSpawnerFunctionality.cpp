@@ -12,7 +12,7 @@ void HitShapeSpawnerFunctionality::SpawnPunch(const f32 aLength, const f32 aDela
 {
 	Object hitShape;
 
-	TransformFunctionality& transform = Get<TransformFunctionality>();
+	auto& transform = Get<TransformFunctionality2D>();
 
 	HitShapeFunctionality& hitShapeFunctionality = Get<FunctionalitySystemDelegate<HitShapeFunctionality>>().AddFunctionality(hitShape);
 	
@@ -46,7 +46,7 @@ void HitShapeSpawnerFunctionality::SpawnPunch(const f32 aLength, const f32 aDela
 void HitShapeSpawnerFunctionality::SpawnSwordSwing(BezierCurve aSwordPath, const f32 aDelay, const f32 aDuration, const f32 aWidth, const f32 aDamage)
 {
 	Object hitShape;
-	TransformFunctionality& transform = Get<TransformFunctionality>();
+	const auto& transform = Get<TransformFunctionality2D>();
 	HitShapeFunctionality& hitShapeFunctionality = Get<FunctionalitySystemDelegate<HitShapeFunctionality>>().AddFunctionality(hitShape);
 
 	aSwordPath.Rotate(transform.GetRotation());

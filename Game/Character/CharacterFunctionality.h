@@ -27,7 +27,7 @@ class CharacterFunctionality
 			PAdd<CollisionFunctionality, PWrite>,
 			PAdd<SHealthComponent, PWrite>,
 			PAdd<FactionFunctionality, PWrite>,
-			PAdd<TransformFunctionality, PWrite>,
+			PAdd<TransformFunctionality2D, PWrite>,
 			PAdd<DefaultMovementFunctionality, PWrite>,
 			PAdd<CharacterStatsFunctionality, PWrite>,
 			PAdd<HitShapeSpawnerFunctionality, PWrite>,

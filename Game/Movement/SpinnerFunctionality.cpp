@@ -6,7 +6,7 @@ REGISTER_FUNCTIONALITY(SpinnerFunctionality);
 
 void SpinnerFunctionality::Tick() noexcept
 {
-	auto& transform = Get<TransformFunctionality>();
+	auto& transform = Get<TransformFunctionality2D>();
 	auto& spinner = Get<SSpinnerComponent>();
 
 	const f32 deltaTime = Get<TimeKeeper>().GetDeltaSeconds();

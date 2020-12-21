@@ -11,8 +11,10 @@ void SpriteRenderingFunctionality::Tick()
 	if (!spriteComponent.RenderObject || spriteComponent.IsHidden)
 		return;
 
-	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Position>(0, Get<TransformFunctionality>().GetPosition());
-	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Rotation>(0, Get<TransformFunctionality>().GetRotation<SRadianF32>());
+	const auto& transform = Get<TransformFunctionality2D>();
+
+	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Position>(0, transform.GetPosition());
+	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Rotation>(0, transform.GetRotation());
 	spriteComponent.RenderObject->Render();
 }
 

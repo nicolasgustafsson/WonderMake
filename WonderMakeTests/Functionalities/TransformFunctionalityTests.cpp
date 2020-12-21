@@ -4,14 +4,14 @@
 
 #include "Functionalities/TransformFunctionality.h"
 
-TEST_CASE("TransformFunctionality basic functionality", "[TransformFunctionality]")
+TEST_CASE("TransformFunctionality2D basic functionality", "[TransformFunctionality2D]")
 {
 	Object object;
 	STransformComponent2D transformComp;
 
-	TransformFunctionality::InjectDependencies(std::tie(transformComp));
+	TransformFunctionality2D::InjectDependencies(std::tie(transformComp));
 
-	TransformFunctionality transformFunc;
+	TransformFunctionality2D transformFunc;
 
 	constexpr auto closeEnough = [](const auto aValue, const auto aCompare)
 	{

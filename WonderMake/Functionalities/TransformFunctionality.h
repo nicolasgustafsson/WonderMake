@@ -4,44 +4,84 @@
 
 #include "Utilities/Matrix.h"
 
-class TransformFunctionality
+#include "Imgui/ImguiInclude.h"
+
+template<typename TRepVector, typename TRepRotation>
+class _TransformFunctionality2D
 	: public Functionality<
 		Policy::Set<
 			PAdd<STransformComponent2D, PWrite>>>
 {
 public:
-	void SetPosition(const SVector2f aPosition) noexcept;
-	[[nodiscard]] SVector2f GetPosition() const noexcept;
+	using RepVector		= TRepVector;
+	using RepPosition	= TRepVector;
+	using RepRotation	= TRepRotation;
 
-	void FacePosition(const SVector2f aPosition) noexcept;
-	void FaceDirection(const SVector2f aDirection) noexcept;
+	void SetPosition(const RepPosition aPosition) noexcept
+	{
+		Get<STransformComponent2D>().Position = aPosition;
+	}
+	[[nodiscard]] RepPosition GetPosition() const noexcept
+	{
+		return Get<STransformComponent2D>().Position;
+	}
 
-	template<typename TRotation>
-		requires std::is_floating_point_v<TRotation>
-	void SetRotation(const TRotation aRotation) noexcept
+	void FacePosition(const RepPosition aPosition) noexcept
+	{
+		const auto deltaPosition = aPosition - GetPosition();
+
+		FaceDirection(deltaPosition);
+	}
+	void FaceDirection(const RepVector aDirection) noexcept
+	{
+		SetRotation(aDirection.GetAngle<RepRotation>(RepVector(0, 1)));
+	}
+
+	void SetRotation(const RepRotation aRotation) noexcept
 	{
 		Get<STransformComponent2D>().Rotation = aRotation;
 	}
-	template<typename TRotation>
-		requires !std::is_floating_point_v<TRotation>
-	void SetRotation(const TRotation aRotation) noexcept
+	[[nodiscard]] RepRotation GetRotation() const noexcept
 	{
-		Get<STransformComponent2D>().Rotation = RotationCast<STransformComponent2D::RotationType>(aRotation);
-	}
-	template<typename TReturnRotation = SDegreeF32>
-	[[nodiscard]] TReturnRotation GetRotation() const noexcept
-	{
-		return RotationCast<TReturnRotation>(Get<STransformComponent2D>().Rotation);
+		return Get<STransformComponent2D>().Rotation;
 	}
 
-	[[nodiscard]] SVector2f GetForwardVector() const noexcept;
-	[[nodiscard]] SVector2f GetRightVector() const noexcept;
+	[[nodiscard]] RepVector GetForwardVector() const noexcept
+	{
+		RepVector retVec(0, 1);
 
-	void Move(const SVector2f aMovement) noexcept;
+		retVec.RotateCounterClockwise(GetRotation());
 
-	[[nodiscard]] SMatrix33f GetMatrix() const noexcept;
+		return retVec;
+	}
+	[[nodiscard]] RepVector GetRightVector() const noexcept
+	{
+		return GetForwardVector().GetPerpendicularClockWise();
+	}
 
-	void Inspect();
+	void Move(const RepVector aMovement) noexcept
+	{
+		Get<STransformComponent2D>().Position += aMovement;
+	}
 
-private:
+	[[nodiscard]] SMatrix33f GetMatrix() const noexcept
+	{
+		SMatrix33f matrix;
+
+		matrix.SetPosition(GetPosition());
+		matrix.SetRotation2D(GetRotation());
+
+		return matrix;
+	}
+
+	void Inspect()
+	{
+		auto& transform = Get<STransformComponent2D>();
+
+		ImGui::Text("X: %f", transform.Position.X);
+		ImGui::Text("Y: %f", transform.Position.Y);
+		ImGui::Text("R: %f", transform.Rotation.Rotation);
+	}
 };
+
+using TransformFunctionality2D = _TransformFunctionality2D<STransformComponent2D::RepPosition, STransformComponent2D::RepRotation>;

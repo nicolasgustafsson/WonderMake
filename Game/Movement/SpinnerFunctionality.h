@@ -18,7 +18,7 @@ class SpinnerFunctionality
 		Policy::Set<
 			PAdd<TimeKeeper, PRead>,
 			PAdd<SSpinnerComponent, PWrite>,
-			PAdd<TransformFunctionality, PWrite>>>
+			PAdd<TransformFunctionality2D, PWrite>>>
 {
 public:
 	void Tick() noexcept;

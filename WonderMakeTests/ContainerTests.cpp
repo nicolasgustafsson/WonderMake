@@ -8,6 +8,12 @@
 TEST_CASE("General Container Tests", "[Container]")
 {
 	Container<int, Iterable, Indexable> intContainer;
+	//Container<int, Key<int>, Indexable, RandomAccess> dictionary;
+	std::unordered_set<int> bla;
+
+	auto it = bla.begin();
+
+	std::cout << typeid(it).name();
 
 	SECTION("The containers are of the correct type")
 	{

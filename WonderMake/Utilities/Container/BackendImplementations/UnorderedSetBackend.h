@@ -1,26 +1,25 @@
 #pragma once
+#pragma once
 #include "Utilities/Container/ContainerBackend.h"
+#include <unordered_set>
 
 template <typename TObjectType>
-class VectorBackend
-	: public ContainerBackend<std::vector<TObjectType>>
-	, public ImplementTraits<VectorBackend<TObjectType>, Iterable, Indexable, RandomAccess>
+class UnorderedSetBackend
+	: public ContainerBackend<std::unordered_set<TObjectType>>
+	, public ImplementTraits<UnorderedSetBackend<TObjectType>, Iterable, ConstantInsertion, ConstantDeletion, Associative>
 {
 public:
-	using RawBackend = std::vector<TObjectType>;
-	using Backend = ContainerBackend<std::vector<TObjectType>>;
+	using RawBackend = std::unordered_set<TObjectType>;
+	using Backend = ContainerBackend<std::unordered_set<TObjectType>>;
 	using IteratorType = typename Backend::IteratorType;
 	using ConstIteratorType = typename Backend::ConstIteratorType;
 
-	TObjectType& operator[](const size_t aIndex)
+	template<typename TObjectTypeFunc> requires std::is_same_v<TObjectType, std::decay_t<TObjectTypeFunc>> || std::is_constructible_v<TObjectType, TObjectTypeFunc>
+	void Add(TObjectTypeFunc aObjectType)
 	{
-		return this->myBackend[aIndex];
+		this->myBackend.insert(std::forward<TObjectTypeFunc>(aObjectType));
 	}
-	const TObjectType& operator[](const size_t aIndex) const
-	{
-		return this->myBackend[aIndex];
-	}
-	
+
 	size_t Erase(const TObjectType& aElementType)
 	{
 		auto it = std::remove(this->myBackend.begin(), this->myBackend.end(), aElementType);
@@ -30,9 +29,19 @@ public:
 		return elementsRemoved;
 	}
 
-	IteratorType EraseAt(const size_t aIndex)
+	//const TObjectType& Get(const size_t aHash)
+	//{
+	//	return myBackend.
+	//}
+
+	//TObjectType& Get(const size_t aHash)
+	//{
+	//
+	//}
+
+	IteratorType Erase(IteratorType aIt)
 	{
-		return Erase(this->myBackend.begin() + aIndex);
+		return this->myBackend.erase(aIt);
 	}
 
 	template<typename TPredicate>
@@ -42,23 +51,6 @@ public:
 		auto elementsRemoved = std::distance(it, this->myBackend.end());
 		this->myBackend.erase(it, this->myBackend.end());
 		return elementsRemoved;
-	}
-
-	IteratorType Erase(IteratorType aIt)
-	{
-		return this->myBackend.erase(aIt);
-	}
-
-
-	IteratorType Erase(ConstIteratorType aIt)
-	{
-		return this->myBackend.erase(aIt);
-	}
-
-	template<typename TObjectTypeFunc> requires std::is_same_v<TObjectType, std::decay_t<TObjectTypeFunc>> || std::is_constructible_v<TObjectType, TObjectTypeFunc>
-	void Add(TObjectTypeFunc aObjectType)
-	{
-		this->myBackend.push_back(std::forward<TObjectTypeFunc>(aObjectType));
 	}
 
 	IteratorType begin()

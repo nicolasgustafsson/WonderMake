@@ -258,6 +258,10 @@
     <ClInclude Include="Utilities\Container\Traits\ContainerTraits.h" />
     <ClInclude Include="Utilities\Container\Traits\Implications.h" />
     <ClInclude Include="Utilities\TypeTraits\ParameterPack.h" />
+    <ClInclude Include="Utilities\Container\Traits\TraitList.h" />
+    <ClInclude Include="Utilities\TypeTraits\Concepts.h" />
+    <ClInclude Include="Utilities\TypeTraits\TypeTraits.h" />
+    <ClInclude Include="Utilities\Container\BackendImplementations\UnorderedSetBackend.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

@@ -10,6 +10,7 @@ public:
 	using StorageBackend = typename ContainerBackend<TStorage>;
 	using IteratorType = typename TStorage::iterator;
 	using ConstIteratorType = typename TStorage::const_iterator;
+	using ElementType = typename TStorage::value_type;
 
 	void Clear()
 	{
@@ -22,58 +23,6 @@ public:
 	}
 	
 	TStorage myBackend;
-};
-
-
-template<typename TContainerBackend, typename TTrait>
-class ImplementTrait {};
-
-template<typename TContainerBackend>
-class ImplementTrait<TContainerBackend, Iterable>
-{
-	using IteratorType = typename TContainerBackend::iterator;
-	using ConstIteratorType = typename TContainerBackend::const_iterator;
-	using ElementType = typename TContainerBackend::value_type;
-
-	virtual typename IteratorType Erase(IteratorType aIt) = 0;
-	virtual typename IteratorType Erase(ConstIteratorType aIt) = 0;
-
-	virtual size_t Erase(const ElementType& aElementType) = 0;
-
-	virtual typename ConstIteratorType cbegin() const = 0;
-	virtual typename ConstIteratorType cend() const = 0;
-
-	virtual typename IteratorType begin() = 0;
-	virtual typename IteratorType end() = 0;
-};
-
-template<typename TContainerBackend>
-class ImplementTrait<TContainerBackend, Indexable>
-{
-	using IteratorType = typename TContainerBackend::iterator;
-	using ConstIteratorType = typename TContainerBackend::const_iterator;
-	using ElementType = typename TContainerBackend::value_type;
-	virtual ElementType& operator[](const size_t aIndex) = 0;
-	virtual const ElementType& operator[](const size_t aIndex) const = 0;
-
-	virtual IteratorType EraseAt(const size_t aIndex) = 0;
-};
-
-template<typename TContainerBackend, typename ... TTraits>
-class ImplementTraits : ImplementTrait<TContainerBackend, TTraits>...
-{
-public:
-	template<typename ... TOtherTraits>
-	static constexpr bool SatisfiesTraits()
-	{
-		return IsSubsetOf<ParameterPack<TOtherTraits...>, ResolvedImplications<TTraits...>::type>::value;
-	}
-
-	template<typename TOtherTraits> 
-	static constexpr bool SatisfiesTraitsPack()
-	{
-		return IsSubsetOf<TOtherTraits, ResolvedImplications<TTraits...>::type>::value;
-	}
 };
 
 

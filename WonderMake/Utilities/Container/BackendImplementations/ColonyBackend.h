@@ -5,13 +5,14 @@
 template <typename TObjectType>
 class ColonyBackend
 	: public ContainerBackend<plf::colony<TObjectType>>
-	, public ImplementTraits<plf::colony<TObjectType>, Iterable, Indexable, StableElements>
+	, public ImplementTraits<ColonyBackend<TObjectType>, Iterable, Indexable, StableElements>
 {
-
 public:
+	using RawBackend = plf::colony<TObjectType>;
 	using Backend = ContainerBackend<plf::colony<TObjectType>>;
 	using IteratorType = typename Backend::IteratorType;
 	using ConstIteratorType = typename Backend::ConstIteratorType;
+	using ElementType = typename Backend::ElementType;
 
 	TObjectType& operator[](const size_t aIndex)
 	{

@@ -4,9 +4,10 @@
 template <typename TObjectType>
 class LinkedListBackend
 	: public ContainerBackend<std::list<TObjectType>>
-	, public ImplementTraits<std::list<TObjectType>, Iterable, StableElements, ConstantInsertion, ConstantDeletion>
+	, public ImplementTraits<LinkedListBackend<TObjectType>, Iterable, StableElements, ConstantInsertion, ConstantDeletion>
 {
 public:
+	using RawBackend = std::list<TObjectType>;
 	using Backend = ContainerBackend<std::list<TObjectType>>;
 	using IteratorType = typename Backend::IteratorType;
 	using ConstIteratorType = typename Backend::ConstIteratorType;

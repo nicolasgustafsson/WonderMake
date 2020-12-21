@@ -1,19 +1,41 @@
 #pragma once
 #include <type_traits>
-
-class BaseRequirement {};
+#include "Utilities/Container/Traits/TraitList.h"
 
 template<typename T>
-concept ContainerTrait = std::is_base_of_v<BaseRequirement, T>;
+concept ContainerTrait = std::is_base_of_v<BaseTrait, T>;
 
 template<typename T, typename... Ts>
 concept ContainsTrait = std::disjunction_v<std::is_same<T, Ts>...>;
 
-class Iterable : public BaseRequirement {};
-class Indexable : public BaseRequirement {};
-class RandomAccess : public BaseRequirement {};
-class StableElements : public BaseRequirement {};
-class ConstantInsertion : public BaseRequirement {};
-class ConstantDeletion : public BaseRequirement {};
-class Sortable : public BaseRequirement {};
-//TODO: Keys
+template<typename TContainerBackend, typename TTrait>
+class ImplementTrait {};
+
+template<typename TContainerBackend>
+class ImplementTrait<TContainerBackend, Iterable>
+{
+
+};
+
+template<typename TContainerBackend>
+class ImplementTrait<TContainerBackend, Indexable>
+{
+
+};
+
+template<typename TContainerBackend, typename ... TTraits>
+class ImplementTraits : public ImplementTrait<TContainerBackend, TTraits>...
+{
+public:
+	template<typename ... TOtherTraits>
+	static constexpr bool SatisfiesTraits()
+	{
+		return IsSubsetOf<ParameterPack<TOtherTraits...>, ResolvedImplications<TTraits...>::type>::value;
+	}
+
+	template<typename TOtherTraits>
+	static constexpr bool SatisfiesTraitsPack()
+	{
+		return IsSubsetOf<TOtherTraits, ResolvedImplications<TTraits...>::type>::value;
+	}
+};

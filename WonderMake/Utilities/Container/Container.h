@@ -15,7 +15,33 @@
 #include "Utilities/TypeTraits/ParameterPack.h"
 #include "Utilities/Container/Traits/Implications.h"
 #include "Utilities/TypeTraits/ContainsType.h"
-#include <iostream>
+#include "Utilities/TypeTraits/TypeTraits.h"
+#include "Utilities/Container/BackendImplementations/UnorderedSetBackend.h"
+
+template <typename T>
+using IsBaseOfBackendTrait = std::is_base_of<BackendTrait, T>;
+
+template <typename T>
+using IsTemplateInstanceOfKey = IsTemplateInstanceOf<T, Key>;
+
+struct Empty {};
+
+template<typename TKey, typename TValue>
+class KeyValuePair
+{
+
+};
+
+namespace std {
+	template <Hashable TKey, typename TValue>
+	struct hash<KeyValuePair<TKey, TValue>>
+	{
+		size_t operator()(const KeyValuePair<TKey, TValue>& x) const
+		{
+			return hash(TKey);
+		}
+	};
+}
 
 template<typename TObjectType, typename TContainerBackends, ContainerTrait ... TContainerTraits>
 class ContainerBase
@@ -23,32 +49,64 @@ class ContainerBase
 	//[Nicos]: These need to be at the top so we can use Storage as a type
 private:
 	using TraitsPack = typename ResolvedImplications<TContainerTraits...>::type;
+	using BackendTraitsPack = typename TypeFilter<IsBaseOfBackendTrait, TraitsPack>::type;
+	using KeysPack = typename TypeFilter<IsTemplateInstanceOfKey, TraitsPack>::type;
+
+	static_assert(ParameterPackSize(KeysPack()) < 2, "Container does not support more than 1 key!");
+
+	constexpr static bool HasKey = ParameterPackSize(KeysPack()) > 0;
 
 	template <typename ... TBackends>
 	constexpr static auto StorageType(ParameterPack<TBackends...>)
 	{
-		return FirstSatisfyingBackend<TraitsPack, TBackends...>::type();
+		static_assert(FirstSatisfyingBackend<BackendTraitsPack, TBackends...>::found, "No matching backend!");
+		return FirstSatisfyingBackend<BackendTraitsPack, TBackends...>::type();
+	}
+
+	template <typename ... TKey>
+	constexpr static auto KeyValueLinkContainerType(ParameterPack<TKey...>)
+	{
+		return Empty();
+	}
+
+	template <typename TKey>
+	constexpr static auto KeyValueLinkContainerType(ParameterPack<TKey>)
+	{
+		return Container<KeyValuePair<decltype(TKey::KeyType()), TObjectType&>, Associative>();
+	}
+
+	template <typename ... TKey>
+	constexpr static auto KeyType(ParameterPack<TKey...>)
+	{
+		return Empty();
+	}
+
+	template <typename TKey>
+	constexpr static auto KeyType(ParameterPack<TKey>)
+	{
+		return TKey::KeyType();
 	}
 
 	using Storage = decltype(StorageType(TContainerBackends()));
 
-	template <typename T>
-	constexpr static bool UsesStorage = std::is_same_v<Storage, T>;
+	using KeyValueLinkContainer = decltype(KeyValueLinkContainerType(KeysPack()));
+	using Key = decltype(KeyType(KeysPack()));
 
 	Storage myBackend;
 
-public:
+#pragma warning( push )
+#pragma warning( disable : 4648 ) //[Nicos]: no unique address not currently supported by msvc, so until then our empty class will take up some space here
+	[[no_unique_address]] KeyValueLinkContainer myKeyType;
+#pragma warning( pop )
 
-	void PrintTraits()
-	{
-		std::cout << typeid(TraitsPack).name() << std::endl;
-	}
+public:
 
 	template <typename T>
 	constexpr static bool HasTrait = IsSubsetOf<ParameterPack<T>, TraitsPack>::value;
 	constexpr static bool Iterable = HasTrait<Iterable>;
 	constexpr static bool Indexable = HasTrait<Indexable> || HasTrait<RandomAccess>;
 	constexpr static bool RandomAccess = HasTrait<RandomAccess>;
+	constexpr static bool Associative = HasTrait<Associative>;
 	constexpr static bool StableElements = HasTrait<StableElements>;
 	constexpr static bool ConstantInsertion = HasTrait<ConstantInsertion>;
 	constexpr static bool ConstantDeletion = HasTrait<ConstantDeletion>;
@@ -92,12 +150,12 @@ public:
 		return myBackend.Count();
 	}
 
-	constexpr TObjectType& operator[](const size_t aIndex) requires Indexable
+	constexpr TObjectType& operator[](const size_t aIndex) requires Indexable && !Associative 
 	{
 		return myBackend[aIndex];
 	}
 
-	constexpr const TObjectType& operator[](const size_t aIndex) const requires Indexable
+	constexpr const TObjectType& operator[](const size_t aIndex) const requires Indexable && !Associative
 	{
 		return myBackend[aIndex];
 	}
@@ -154,6 +212,10 @@ public:
 	}
 };
 
-
 template<typename TObjectType, typename ... TContainerTraits>
-using Container = ContainerBase<TObjectType, ParameterPack<ColonyBackend<TObjectType>, VectorBackend<TObjectType>, LinkedListBackend<TObjectType>>, TContainerTraits...>;
+using Container = ContainerBase<TObjectType, ParameterPack<ColonyBackend<TObjectType>
+	, VectorBackend<TObjectType>
+	, LinkedListBackend<TObjectType>
+	, UnorderedSetBackend<TObjectType>
+>, 
+TContainerTraits...>;

@@ -1,8 +1,7 @@
 #pragma once
 
-
 template<typename TExistingTraits, typename TFirst, typename TSecond>
-constexpr auto Implication()
+constexpr auto TwoWayImplication()
 {
 	if constexpr (IsSubsetOf<TFirst, TExistingTraits>::value && IsSubsetOf<TSecond, TExistingTraits>::value)
 		return TExistingTraits();
@@ -17,15 +16,22 @@ constexpr auto Implication()
 template<typename TExistingTraits>
 constexpr auto ResolveImplications()
 {
-	auto SortImplication = Implication<TExistingTraits, ParameterPack<Sortable>, ParameterPack<Iterable, RandomAccess>>();
+	auto base = TExistingTraits();
 
-	return SortImplication;
+	/*Add implications from here*/
+	auto sortImplication = TwoWayImplication<decltype(base), ParameterPack<Sortable>, ParameterPack<Iterable, RandomAccess>>();
+	/*To here*/
+	auto finalTraitCollection = sortImplication;
+
+	constexpr bool needToGoDeeper = !std::is_same_v<decltype(base), decltype(finalTraitCollection)>;
+	if constexpr (needToGoDeeper)
+		return ResolveImplications<decltype(finalTraitCollection)>();
+
+	return finalTraitCollection;
 };
 
 template<typename ... TTraits>
 struct ResolvedImplications
 {
-	//using type = typename Concatenate<ParameterPack<TTraits...>, ParameterPack<Iterable>>::type;
-
 	using type = decltype(ResolveImplications<ParameterPack<TTraits...>>());
 };

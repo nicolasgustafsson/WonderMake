@@ -6,7 +6,6 @@
 #include <ratio>
 #include <type_traits>
 
-#include "Utilities/MathUtility.h"
 #include "Utilities/Math.h"
 
 #include "Typedefs.h"
@@ -195,7 +194,7 @@ using SDegree = SRotation<TRep, DegreeRatio>;
 using SDegreeF32 = SDegree<f32>;
 using SDegreeF64 = SDegree<f64>;
 
-constexpr static auto RepresentationPrecision = MathUtility::Pow<intmax_t>(10, std::numeric_limits<intmax_t>::digits10);
+constexpr static auto RepresentationPrecision = WmMath::Pow<intmax_t>(10, std::numeric_limits<intmax_t>::digits10);
 
 template<typename TRep>
 requires std::is_floating_point_v<TRep>
@@ -207,38 +206,38 @@ using SRadian = SRotation<TRep, RadianRatio<TRep>>;
 using SRadianF32 = SRadian<f32>;
 using SRadianF64 = SRadian<f64>;
 
-namespace MathUtility
+namespace WmMath
 {
-    template<typename TRep, typename TRatio, typename TReturnType = TRep> requires MathUtility::has_floating_representation_v<TReturnType>
+    template<typename TRep, typename TRatio, typename TReturnType = TRep> requires WmMath::has_floating_representation_v<TReturnType>
 	inline [[nodiscard]] typename TRep Atan(const SRotation<TRep, TRatio> aRotation) noexcept
 	{
-		return MathUtility::Atan(RotationCast<SRadian<TReturnType>>(aRotation).Rotation);
+		return WmMath::Atan(RotationCast<SRadian<TReturnType>>(aRotation).Rotation);
 	}
-	template<typename TRotation, typename TFromRep> requires MathUtility::has_floating_representation_v<TFromRep>
+	template<typename TRotation, typename TFromRep> requires WmMath::has_floating_representation_v<TFromRep>
 	inline [[nodiscard]] TRotation Atan2(const TFromRep aY, const TFromRep aX) noexcept
 	{
 		return RotationCast<TRotation>(SRadian<typename TRotation::Representation>(Atan2(aY, aX)));
 	}
 
-	template<typename TRep, typename TRatio, typename TReturnType = TRep> requires MathUtility::has_floating_representation_v<TReturnType>
+	template<typename TRep, typename TRatio, typename TReturnType = TRep> requires WmMath::has_floating_representation_v<TReturnType>
 	inline [[nodiscard]] typename TReturnType Cos(const SRotation<TRep, TRatio> aRotation) noexcept
 	{
-		return MathUtility::Cos(RotationCast<SRadian<TReturnType>>(aRotation).Rotation);
+		return WmMath::Cos(RotationCast<SRadian<TReturnType>>(aRotation).Rotation);
 	}
-    template<typename TRep, typename TRatio, typename TReturnType = TRep> requires MathUtility::has_floating_representation_v<TReturnType>
+    template<typename TRep, typename TRatio, typename TReturnType = TRep> requires WmMath::has_floating_representation_v<TReturnType>
 	inline [[nodiscard]] typename TReturnType Sin(const SRotation<TRep, TRatio> aRotation) noexcept
 	{
-		return MathUtility::Sin(RotationCast<SRadian<TReturnType>>(aRotation).Rotation);
+		return WmMath::Sin(RotationCast<SRadian<TReturnType>>(aRotation).Rotation);
 	}
 
     template<typename TRotation, typename TReturnType = typename TRotation::Representation>
     inline [[nodiscard]] TReturnType Mod(const TRotation aDividend, const TRotation aDivisor) noexcept
     {
-        return MathUtility::Mod(static_cast<TReturnType>(aDividend.Rotation), static_cast<TReturnType>(aDivisor.Rotation));
+        return WmMath::Mod(static_cast<TReturnType>(aDividend.Rotation), static_cast<TReturnType>(aDivisor.Rotation));
     }
     template<typename TRotation, typename TReturnType = typename TRotation::Representation>
     inline [[nodiscard]] TReturnType Remainder(const TRotation aDividend, const TRotation aDivisor) noexcept
     {
-        return MathUtility::Remainder(static_cast<TReturnType>(aDividend.Rotation), static_cast<TReturnType>(aDivisor.Rotation));
+        return WmMath::Remainder(static_cast<TReturnType>(aDividend.Rotation), static_cast<TReturnType>(aDivisor.Rotation));
     }
 }

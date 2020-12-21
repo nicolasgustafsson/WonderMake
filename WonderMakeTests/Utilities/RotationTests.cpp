@@ -148,7 +148,7 @@ void StaticTest_Rotation()
 	static_assert(div(mul(rad64_1Pi, rad64_1Pi), rad64_1Pi) == rad64_1Pi);
 }
 
-TEST_CASE("MathUtility overloads for Rotation return correct values", "[Rotation]")
+TEST_CASE("WmMath overloads for Rotation return correct values", "[Rotation]")
 {
 	const auto closeEnough = [](const auto aValue, const auto aCompare)
 	{
@@ -160,144 +160,144 @@ TEST_CASE("MathUtility overloads for Rotation return correct values", "[Rotation
 		return (std::numbers::pi / 180.0) * aDegree;
 	};
 
-	CHECK(closeEnough(MathUtility::Atan(deg32_n360),	MathUtility::Atan(degreeToRadian(-360.f))));
-	CHECK(closeEnough(MathUtility::Atan(deg32_n270),	MathUtility::Atan(degreeToRadian(-270.f))));
-	CHECK(closeEnough(MathUtility::Atan(deg32_n180),	MathUtility::Atan(degreeToRadian(-180.f))));
-	CHECK(closeEnough(MathUtility::Atan(deg32_n90),		MathUtility::Atan(degreeToRadian(-90.f))));
-	CHECK(closeEnough(MathUtility::Atan(deg32_0),		MathUtility::Atan(degreeToRadian(0.f))));
-	CHECK(closeEnough(MathUtility::Atan(deg32_90),		MathUtility::Atan(degreeToRadian(90.f))));
-	CHECK(closeEnough(MathUtility::Atan(deg32_180),		MathUtility::Atan(degreeToRadian(180.f))));
-	CHECK(closeEnough(MathUtility::Atan(deg32_270),		MathUtility::Atan(degreeToRadian(270.f))));
-	CHECK(closeEnough(MathUtility::Atan(deg32_360),		MathUtility::Atan(degreeToRadian(360.f))));
+	CHECK(closeEnough(WmMath::Atan(deg32_n360),	WmMath::Atan(degreeToRadian(-360.f))));
+	CHECK(closeEnough(WmMath::Atan(deg32_n270),	WmMath::Atan(degreeToRadian(-270.f))));
+	CHECK(closeEnough(WmMath::Atan(deg32_n180),	WmMath::Atan(degreeToRadian(-180.f))));
+	CHECK(closeEnough(WmMath::Atan(deg32_n90),		WmMath::Atan(degreeToRadian(-90.f))));
+	CHECK(closeEnough(WmMath::Atan(deg32_0),		WmMath::Atan(degreeToRadian(0.f))));
+	CHECK(closeEnough(WmMath::Atan(deg32_90),		WmMath::Atan(degreeToRadian(90.f))));
+	CHECK(closeEnough(WmMath::Atan(deg32_180),		WmMath::Atan(degreeToRadian(180.f))));
+	CHECK(closeEnough(WmMath::Atan(deg32_270),		WmMath::Atan(degreeToRadian(270.f))));
+	CHECK(closeEnough(WmMath::Atan(deg32_360),		WmMath::Atan(degreeToRadian(360.f))));
 	
-	CHECK(closeEnough(MathUtility::Atan(deg64_n360),	MathUtility::Atan(degreeToRadian(-360.f))));
-	CHECK(closeEnough(MathUtility::Atan(deg64_n270),	MathUtility::Atan(degreeToRadian(-270.f))));
-	CHECK(closeEnough(MathUtility::Atan(deg64_n180),	MathUtility::Atan(degreeToRadian(-180.f))));
-	CHECK(closeEnough(MathUtility::Atan(deg64_n90),		MathUtility::Atan(degreeToRadian(-90.f))));
-	CHECK(closeEnough(MathUtility::Atan(deg64_0),		MathUtility::Atan(degreeToRadian(0.f))));
-	CHECK(closeEnough(MathUtility::Atan(deg64_90),		MathUtility::Atan(degreeToRadian(90.f))));
-	CHECK(closeEnough(MathUtility::Atan(deg64_180),		MathUtility::Atan(degreeToRadian(180.f))));
-	CHECK(closeEnough(MathUtility::Atan(deg64_270),		MathUtility::Atan(degreeToRadian(270.f))));
-	CHECK(closeEnough(MathUtility::Atan(deg64_360),		MathUtility::Atan(degreeToRadian(360.f))));
+	CHECK(closeEnough(WmMath::Atan(deg64_n360),	WmMath::Atan(degreeToRadian(-360.f))));
+	CHECK(closeEnough(WmMath::Atan(deg64_n270),	WmMath::Atan(degreeToRadian(-270.f))));
+	CHECK(closeEnough(WmMath::Atan(deg64_n180),	WmMath::Atan(degreeToRadian(-180.f))));
+	CHECK(closeEnough(WmMath::Atan(deg64_n90),		WmMath::Atan(degreeToRadian(-90.f))));
+	CHECK(closeEnough(WmMath::Atan(deg64_0),		WmMath::Atan(degreeToRadian(0.f))));
+	CHECK(closeEnough(WmMath::Atan(deg64_90),		WmMath::Atan(degreeToRadian(90.f))));
+	CHECK(closeEnough(WmMath::Atan(deg64_180),		WmMath::Atan(degreeToRadian(180.f))));
+	CHECK(closeEnough(WmMath::Atan(deg64_270),		WmMath::Atan(degreeToRadian(270.f))));
+	CHECK(closeEnough(WmMath::Atan(deg64_360),		WmMath::Atan(degreeToRadian(360.f))));
 	
-	CHECK(closeEnough(MathUtility::Atan(rad32_n2Pi),	MathUtility::Atan(degreeToRadian(-360.f))));
-	CHECK(closeEnough(MathUtility::Atan(rad32_n1_5Pi),	MathUtility::Atan(degreeToRadian(-270.f))));
-	CHECK(closeEnough(MathUtility::Atan(rad32_n1Pi),	MathUtility::Atan(degreeToRadian(-180.f))));
-	CHECK(closeEnough(MathUtility::Atan(rad32_n0_5Pi),	MathUtility::Atan(degreeToRadian(-90.f))));
-	CHECK(closeEnough(MathUtility::Atan(rad32_0),		MathUtility::Atan(degreeToRadian(0.f))));
-	CHECK(closeEnough(MathUtility::Atan(rad32_0_5Pi),	MathUtility::Atan(degreeToRadian(90.f))));
-	CHECK(closeEnough(MathUtility::Atan(rad32_1Pi),		MathUtility::Atan(degreeToRadian(180.f))));
-	CHECK(closeEnough(MathUtility::Atan(rad32_1_5Pi),	MathUtility::Atan(degreeToRadian(270.f))));
-	CHECK(closeEnough(MathUtility::Atan(rad32_2Pi),		MathUtility::Atan(degreeToRadian(360.f))));
+	CHECK(closeEnough(WmMath::Atan(rad32_n2Pi),	WmMath::Atan(degreeToRadian(-360.f))));
+	CHECK(closeEnough(WmMath::Atan(rad32_n1_5Pi),	WmMath::Atan(degreeToRadian(-270.f))));
+	CHECK(closeEnough(WmMath::Atan(rad32_n1Pi),	WmMath::Atan(degreeToRadian(-180.f))));
+	CHECK(closeEnough(WmMath::Atan(rad32_n0_5Pi),	WmMath::Atan(degreeToRadian(-90.f))));
+	CHECK(closeEnough(WmMath::Atan(rad32_0),		WmMath::Atan(degreeToRadian(0.f))));
+	CHECK(closeEnough(WmMath::Atan(rad32_0_5Pi),	WmMath::Atan(degreeToRadian(90.f))));
+	CHECK(closeEnough(WmMath::Atan(rad32_1Pi),		WmMath::Atan(degreeToRadian(180.f))));
+	CHECK(closeEnough(WmMath::Atan(rad32_1_5Pi),	WmMath::Atan(degreeToRadian(270.f))));
+	CHECK(closeEnough(WmMath::Atan(rad32_2Pi),		WmMath::Atan(degreeToRadian(360.f))));
 	
-	CHECK(closeEnough(MathUtility::Atan(rad64_n2Pi),	MathUtility::Atan(degreeToRadian(-360.f))));
-	CHECK(closeEnough(MathUtility::Atan(rad64_n1_5Pi),	MathUtility::Atan(degreeToRadian(-270.f))));
-	CHECK(closeEnough(MathUtility::Atan(rad64_n1Pi),	MathUtility::Atan(degreeToRadian(-180.f))));
-	CHECK(closeEnough(MathUtility::Atan(rad64_n0_5Pi),	MathUtility::Atan(degreeToRadian(-90.f))));
-	CHECK(closeEnough(MathUtility::Atan(rad64_0),		MathUtility::Atan(degreeToRadian(0.f))));
-	CHECK(closeEnough(MathUtility::Atan(rad64_0_5Pi),	MathUtility::Atan(degreeToRadian(90.f))));
-	CHECK(closeEnough(MathUtility::Atan(rad64_1Pi),		MathUtility::Atan(degreeToRadian(180.f))));
-	CHECK(closeEnough(MathUtility::Atan(rad64_1_5Pi),	MathUtility::Atan(degreeToRadian(270.f))));
-	CHECK(closeEnough(MathUtility::Atan(rad64_2Pi),		MathUtility::Atan(degreeToRadian(360.f))));
+	CHECK(closeEnough(WmMath::Atan(rad64_n2Pi),	WmMath::Atan(degreeToRadian(-360.f))));
+	CHECK(closeEnough(WmMath::Atan(rad64_n1_5Pi),	WmMath::Atan(degreeToRadian(-270.f))));
+	CHECK(closeEnough(WmMath::Atan(rad64_n1Pi),	WmMath::Atan(degreeToRadian(-180.f))));
+	CHECK(closeEnough(WmMath::Atan(rad64_n0_5Pi),	WmMath::Atan(degreeToRadian(-90.f))));
+	CHECK(closeEnough(WmMath::Atan(rad64_0),		WmMath::Atan(degreeToRadian(0.f))));
+	CHECK(closeEnough(WmMath::Atan(rad64_0_5Pi),	WmMath::Atan(degreeToRadian(90.f))));
+	CHECK(closeEnough(WmMath::Atan(rad64_1Pi),		WmMath::Atan(degreeToRadian(180.f))));
+	CHECK(closeEnough(WmMath::Atan(rad64_1_5Pi),	WmMath::Atan(degreeToRadian(270.f))));
+	CHECK(closeEnough(WmMath::Atan(rad64_2Pi),		WmMath::Atan(degreeToRadian(360.f))));
 	
-	CHECK(closeEnough(degreeToRadian(MathUtility::Atan2<SDegreeF32>(1, 0).Rotation),	MathUtility::Atan2(1, 0)));
-	CHECK(closeEnough(degreeToRadian(MathUtility::Atan2<SDegreeF32>(0, 1).Rotation),	MathUtility::Atan2(0, 1)));
-	CHECK(closeEnough(degreeToRadian(MathUtility::Atan2<SDegreeF32>(-1, 0).Rotation),	MathUtility::Atan2(-1, 0)));
-	CHECK(closeEnough(degreeToRadian(MathUtility::Atan2<SDegreeF32>(0, -1).Rotation),	MathUtility::Atan2(0, -1)));
+	CHECK(closeEnough(degreeToRadian(WmMath::Atan2<SDegreeF32>(1, 0).Rotation),	WmMath::Atan2(1, 0)));
+	CHECK(closeEnough(degreeToRadian(WmMath::Atan2<SDegreeF32>(0, 1).Rotation),	WmMath::Atan2(0, 1)));
+	CHECK(closeEnough(degreeToRadian(WmMath::Atan2<SDegreeF32>(-1, 0).Rotation),	WmMath::Atan2(-1, 0)));
+	CHECK(closeEnough(degreeToRadian(WmMath::Atan2<SDegreeF32>(0, -1).Rotation),	WmMath::Atan2(0, -1)));
 
-	CHECK(closeEnough(degreeToRadian(MathUtility::Atan2<SDegreeF64>(1, 0).Rotation),	MathUtility::Atan2(1, 0)));
-	CHECK(closeEnough(degreeToRadian(MathUtility::Atan2<SDegreeF64>(0, 1).Rotation),	MathUtility::Atan2(0, 1)));
-	CHECK(closeEnough(degreeToRadian(MathUtility::Atan2<SDegreeF64>(-1, 0).Rotation),	MathUtility::Atan2(-1, 0)));
-	CHECK(closeEnough(degreeToRadian(MathUtility::Atan2<SDegreeF64>(0, -1).Rotation),	MathUtility::Atan2(0, -1)));
+	CHECK(closeEnough(degreeToRadian(WmMath::Atan2<SDegreeF64>(1, 0).Rotation),	WmMath::Atan2(1, 0)));
+	CHECK(closeEnough(degreeToRadian(WmMath::Atan2<SDegreeF64>(0, 1).Rotation),	WmMath::Atan2(0, 1)));
+	CHECK(closeEnough(degreeToRadian(WmMath::Atan2<SDegreeF64>(-1, 0).Rotation),	WmMath::Atan2(-1, 0)));
+	CHECK(closeEnough(degreeToRadian(WmMath::Atan2<SDegreeF64>(0, -1).Rotation),	WmMath::Atan2(0, -1)));
 	
-	CHECK(closeEnough(MathUtility::Atan2<SRadianF32>(1, 0).Rotation,	MathUtility::Atan2(1, 0)));
-	CHECK(closeEnough(MathUtility::Atan2<SRadianF32>(0, 1).Rotation,	MathUtility::Atan2(0, 1)));
-	CHECK(closeEnough(MathUtility::Atan2<SRadianF32>(-1, 0).Rotation,	MathUtility::Atan2(-1, 0)));
-	CHECK(closeEnough(MathUtility::Atan2<SRadianF32>(0, -1).Rotation,	MathUtility::Atan2(0, -1)));
+	CHECK(closeEnough(WmMath::Atan2<SRadianF32>(1, 0).Rotation,	WmMath::Atan2(1, 0)));
+	CHECK(closeEnough(WmMath::Atan2<SRadianF32>(0, 1).Rotation,	WmMath::Atan2(0, 1)));
+	CHECK(closeEnough(WmMath::Atan2<SRadianF32>(-1, 0).Rotation,	WmMath::Atan2(-1, 0)));
+	CHECK(closeEnough(WmMath::Atan2<SRadianF32>(0, -1).Rotation,	WmMath::Atan2(0, -1)));
 	
-	CHECK(closeEnough(MathUtility::Atan2<SRadianF64>(1, 0).Rotation,	MathUtility::Atan2(1, 0)));
-	CHECK(closeEnough(MathUtility::Atan2<SRadianF64>(0, 1).Rotation,	MathUtility::Atan2(0, 1)));
-	CHECK(closeEnough(MathUtility::Atan2<SRadianF64>(-1, 0).Rotation,	MathUtility::Atan2(-1, 0)));
-	CHECK(closeEnough(MathUtility::Atan2<SRadianF64>(0, -1).Rotation,	MathUtility::Atan2(0, -1)));
+	CHECK(closeEnough(WmMath::Atan2<SRadianF64>(1, 0).Rotation,	WmMath::Atan2(1, 0)));
+	CHECK(closeEnough(WmMath::Atan2<SRadianF64>(0, 1).Rotation,	WmMath::Atan2(0, 1)));
+	CHECK(closeEnough(WmMath::Atan2<SRadianF64>(-1, 0).Rotation,	WmMath::Atan2(-1, 0)));
+	CHECK(closeEnough(WmMath::Atan2<SRadianF64>(0, -1).Rotation,	WmMath::Atan2(0, -1)));
 
-	CHECK(closeEnough(MathUtility::Cos(deg32_n360),		MathUtility::Cos(degreeToRadian(-360.f))));
-	CHECK(closeEnough(MathUtility::Cos(deg32_n270),		MathUtility::Cos(degreeToRadian(-270.f))));
-	CHECK(closeEnough(MathUtility::Cos(deg32_n180),		MathUtility::Cos(degreeToRadian(-180.f))));
-	CHECK(closeEnough(MathUtility::Cos(deg32_n90),		MathUtility::Cos(degreeToRadian(-90.f))));
-	CHECK(closeEnough(MathUtility::Cos(deg32_0),		MathUtility::Cos(degreeToRadian(0.f))));
-	CHECK(closeEnough(MathUtility::Cos(deg32_90),		MathUtility::Cos(degreeToRadian(90.f))));
-	CHECK(closeEnough(MathUtility::Cos(deg32_180),		MathUtility::Cos(degreeToRadian(180.f))));
-	CHECK(closeEnough(MathUtility::Cos(deg32_270),		MathUtility::Cos(degreeToRadian(270.f))));
-	CHECK(closeEnough(MathUtility::Cos(deg32_360),		MathUtility::Cos(degreeToRadian(360.f))));
+	CHECK(closeEnough(WmMath::Cos(deg32_n360),		WmMath::Cos(degreeToRadian(-360.f))));
+	CHECK(closeEnough(WmMath::Cos(deg32_n270),		WmMath::Cos(degreeToRadian(-270.f))));
+	CHECK(closeEnough(WmMath::Cos(deg32_n180),		WmMath::Cos(degreeToRadian(-180.f))));
+	CHECK(closeEnough(WmMath::Cos(deg32_n90),		WmMath::Cos(degreeToRadian(-90.f))));
+	CHECK(closeEnough(WmMath::Cos(deg32_0),		WmMath::Cos(degreeToRadian(0.f))));
+	CHECK(closeEnough(WmMath::Cos(deg32_90),		WmMath::Cos(degreeToRadian(90.f))));
+	CHECK(closeEnough(WmMath::Cos(deg32_180),		WmMath::Cos(degreeToRadian(180.f))));
+	CHECK(closeEnough(WmMath::Cos(deg32_270),		WmMath::Cos(degreeToRadian(270.f))));
+	CHECK(closeEnough(WmMath::Cos(deg32_360),		WmMath::Cos(degreeToRadian(360.f))));
 	
-	CHECK(closeEnough(MathUtility::Cos(deg64_n360),		MathUtility::Cos(degreeToRadian(-360.f))));
-	CHECK(closeEnough(MathUtility::Cos(deg64_n270),		MathUtility::Cos(degreeToRadian(-270.f))));
-	CHECK(closeEnough(MathUtility::Cos(deg64_n180),		MathUtility::Cos(degreeToRadian(-180.f))));
-	CHECK(closeEnough(MathUtility::Cos(deg64_n90),		MathUtility::Cos(degreeToRadian(-90.f))));
-	CHECK(closeEnough(MathUtility::Cos(deg64_0),		MathUtility::Cos(degreeToRadian(0.f))));
-	CHECK(closeEnough(MathUtility::Cos(deg64_90),		MathUtility::Cos(degreeToRadian(90.f))));
-	CHECK(closeEnough(MathUtility::Cos(deg64_180),		MathUtility::Cos(degreeToRadian(180.f))));
-	CHECK(closeEnough(MathUtility::Cos(deg64_270),		MathUtility::Cos(degreeToRadian(270.f))));
-	CHECK(closeEnough(MathUtility::Cos(deg64_360),		MathUtility::Cos(degreeToRadian(360.f))));
+	CHECK(closeEnough(WmMath::Cos(deg64_n360),		WmMath::Cos(degreeToRadian(-360.f))));
+	CHECK(closeEnough(WmMath::Cos(deg64_n270),		WmMath::Cos(degreeToRadian(-270.f))));
+	CHECK(closeEnough(WmMath::Cos(deg64_n180),		WmMath::Cos(degreeToRadian(-180.f))));
+	CHECK(closeEnough(WmMath::Cos(deg64_n90),		WmMath::Cos(degreeToRadian(-90.f))));
+	CHECK(closeEnough(WmMath::Cos(deg64_0),		WmMath::Cos(degreeToRadian(0.f))));
+	CHECK(closeEnough(WmMath::Cos(deg64_90),		WmMath::Cos(degreeToRadian(90.f))));
+	CHECK(closeEnough(WmMath::Cos(deg64_180),		WmMath::Cos(degreeToRadian(180.f))));
+	CHECK(closeEnough(WmMath::Cos(deg64_270),		WmMath::Cos(degreeToRadian(270.f))));
+	CHECK(closeEnough(WmMath::Cos(deg64_360),		WmMath::Cos(degreeToRadian(360.f))));
 	
-	CHECK(closeEnough(MathUtility::Cos(rad32_n2Pi),		MathUtility::Cos(degreeToRadian(-360.f))));
-	CHECK(closeEnough(MathUtility::Cos(rad32_n1_5Pi),	MathUtility::Cos(degreeToRadian(-270.f))));
-	CHECK(closeEnough(MathUtility::Cos(rad32_n1Pi),		MathUtility::Cos(degreeToRadian(-180.f))));
-	CHECK(closeEnough(MathUtility::Cos(rad32_n0_5Pi),	MathUtility::Cos(degreeToRadian(-90.f))));
-	CHECK(closeEnough(MathUtility::Cos(rad32_0),		MathUtility::Cos(degreeToRadian(0.f))));
-	CHECK(closeEnough(MathUtility::Cos(rad32_0_5Pi),	MathUtility::Cos(degreeToRadian(90.f))));
-	CHECK(closeEnough(MathUtility::Cos(rad32_1Pi),		MathUtility::Cos(degreeToRadian(180.f))));
-	CHECK(closeEnough(MathUtility::Cos(rad32_1_5Pi),	MathUtility::Cos(degreeToRadian(270.f))));
-	CHECK(closeEnough(MathUtility::Cos(rad32_2Pi),		MathUtility::Cos(degreeToRadian(360.f))));
+	CHECK(closeEnough(WmMath::Cos(rad32_n2Pi),		WmMath::Cos(degreeToRadian(-360.f))));
+	CHECK(closeEnough(WmMath::Cos(rad32_n1_5Pi),	WmMath::Cos(degreeToRadian(-270.f))));
+	CHECK(closeEnough(WmMath::Cos(rad32_n1Pi),		WmMath::Cos(degreeToRadian(-180.f))));
+	CHECK(closeEnough(WmMath::Cos(rad32_n0_5Pi),	WmMath::Cos(degreeToRadian(-90.f))));
+	CHECK(closeEnough(WmMath::Cos(rad32_0),		WmMath::Cos(degreeToRadian(0.f))));
+	CHECK(closeEnough(WmMath::Cos(rad32_0_5Pi),	WmMath::Cos(degreeToRadian(90.f))));
+	CHECK(closeEnough(WmMath::Cos(rad32_1Pi),		WmMath::Cos(degreeToRadian(180.f))));
+	CHECK(closeEnough(WmMath::Cos(rad32_1_5Pi),	WmMath::Cos(degreeToRadian(270.f))));
+	CHECK(closeEnough(WmMath::Cos(rad32_2Pi),		WmMath::Cos(degreeToRadian(360.f))));
 	
-	CHECK(closeEnough(MathUtility::Cos(rad64_n2Pi),		MathUtility::Cos(degreeToRadian(-360.f))));
-	CHECK(closeEnough(MathUtility::Cos(rad64_n1_5Pi),	MathUtility::Cos(degreeToRadian(-270.f))));
-	CHECK(closeEnough(MathUtility::Cos(rad64_n1Pi),		MathUtility::Cos(degreeToRadian(-180.f))));
-	CHECK(closeEnough(MathUtility::Cos(rad64_n0_5Pi),	MathUtility::Cos(degreeToRadian(-90.f))));
-	CHECK(closeEnough(MathUtility::Cos(rad64_0),		MathUtility::Cos(degreeToRadian(0.f))));
-	CHECK(closeEnough(MathUtility::Cos(rad64_0_5Pi),	MathUtility::Cos(degreeToRadian(90.f))));
-	CHECK(closeEnough(MathUtility::Cos(rad64_1Pi),		MathUtility::Cos(degreeToRadian(180.f))));
-	CHECK(closeEnough(MathUtility::Cos(rad64_1_5Pi),	MathUtility::Cos(degreeToRadian(270.f))));
-	CHECK(closeEnough(MathUtility::Cos(rad64_2Pi),		MathUtility::Cos(degreeToRadian(360.f))));
+	CHECK(closeEnough(WmMath::Cos(rad64_n2Pi),		WmMath::Cos(degreeToRadian(-360.f))));
+	CHECK(closeEnough(WmMath::Cos(rad64_n1_5Pi),	WmMath::Cos(degreeToRadian(-270.f))));
+	CHECK(closeEnough(WmMath::Cos(rad64_n1Pi),		WmMath::Cos(degreeToRadian(-180.f))));
+	CHECK(closeEnough(WmMath::Cos(rad64_n0_5Pi),	WmMath::Cos(degreeToRadian(-90.f))));
+	CHECK(closeEnough(WmMath::Cos(rad64_0),		WmMath::Cos(degreeToRadian(0.f))));
+	CHECK(closeEnough(WmMath::Cos(rad64_0_5Pi),	WmMath::Cos(degreeToRadian(90.f))));
+	CHECK(closeEnough(WmMath::Cos(rad64_1Pi),		WmMath::Cos(degreeToRadian(180.f))));
+	CHECK(closeEnough(WmMath::Cos(rad64_1_5Pi),	WmMath::Cos(degreeToRadian(270.f))));
+	CHECK(closeEnough(WmMath::Cos(rad64_2Pi),		WmMath::Cos(degreeToRadian(360.f))));
 	
-	CHECK(closeEnough(MathUtility::Sin(deg32_n360),		MathUtility::Sin(degreeToRadian(-360.f))));
-	CHECK(closeEnough(MathUtility::Sin(deg32_n270),		MathUtility::Sin(degreeToRadian(-270.f))));
-	CHECK(closeEnough(MathUtility::Sin(deg32_n180),		MathUtility::Sin(degreeToRadian(-180.f))));
-	CHECK(closeEnough(MathUtility::Sin(deg32_n90),		MathUtility::Sin(degreeToRadian(-90.f))));
-	CHECK(closeEnough(MathUtility::Sin(deg32_0),		MathUtility::Sin(degreeToRadian(0.f))));
-	CHECK(closeEnough(MathUtility::Sin(deg32_90),		MathUtility::Sin(degreeToRadian(90.f))));
-	CHECK(closeEnough(MathUtility::Sin(deg32_180),		MathUtility::Sin(degreeToRadian(180.f))));
-	CHECK(closeEnough(MathUtility::Sin(deg32_270),		MathUtility::Sin(degreeToRadian(270.f))));
-	CHECK(closeEnough(MathUtility::Sin(deg32_360),		MathUtility::Sin(degreeToRadian(360.f))));
+	CHECK(closeEnough(WmMath::Sin(deg32_n360),		WmMath::Sin(degreeToRadian(-360.f))));
+	CHECK(closeEnough(WmMath::Sin(deg32_n270),		WmMath::Sin(degreeToRadian(-270.f))));
+	CHECK(closeEnough(WmMath::Sin(deg32_n180),		WmMath::Sin(degreeToRadian(-180.f))));
+	CHECK(closeEnough(WmMath::Sin(deg32_n90),		WmMath::Sin(degreeToRadian(-90.f))));
+	CHECK(closeEnough(WmMath::Sin(deg32_0),		WmMath::Sin(degreeToRadian(0.f))));
+	CHECK(closeEnough(WmMath::Sin(deg32_90),		WmMath::Sin(degreeToRadian(90.f))));
+	CHECK(closeEnough(WmMath::Sin(deg32_180),		WmMath::Sin(degreeToRadian(180.f))));
+	CHECK(closeEnough(WmMath::Sin(deg32_270),		WmMath::Sin(degreeToRadian(270.f))));
+	CHECK(closeEnough(WmMath::Sin(deg32_360),		WmMath::Sin(degreeToRadian(360.f))));
 	
-	CHECK(closeEnough(MathUtility::Sin(deg64_n360),		MathUtility::Sin(degreeToRadian(-360.f))));
-	CHECK(closeEnough(MathUtility::Sin(deg64_n270),		MathUtility::Sin(degreeToRadian(-270.f))));
-	CHECK(closeEnough(MathUtility::Sin(deg64_n180),		MathUtility::Sin(degreeToRadian(-180.f))));
-	CHECK(closeEnough(MathUtility::Sin(deg64_n90),		MathUtility::Sin(degreeToRadian(-90.f))));
-	CHECK(closeEnough(MathUtility::Sin(deg64_0),		MathUtility::Sin(degreeToRadian(0.f))));
-	CHECK(closeEnough(MathUtility::Sin(deg64_90),		MathUtility::Sin(degreeToRadian(90.f))));
-	CHECK(closeEnough(MathUtility::Sin(deg64_180),		MathUtility::Sin(degreeToRadian(180.f))));
-	CHECK(closeEnough(MathUtility::Sin(deg64_270),		MathUtility::Sin(degreeToRadian(270.f))));
-	CHECK(closeEnough(MathUtility::Sin(deg64_360),		MathUtility::Sin(degreeToRadian(360.f))));
+	CHECK(closeEnough(WmMath::Sin(deg64_n360),		WmMath::Sin(degreeToRadian(-360.f))));
+	CHECK(closeEnough(WmMath::Sin(deg64_n270),		WmMath::Sin(degreeToRadian(-270.f))));
+	CHECK(closeEnough(WmMath::Sin(deg64_n180),		WmMath::Sin(degreeToRadian(-180.f))));
+	CHECK(closeEnough(WmMath::Sin(deg64_n90),		WmMath::Sin(degreeToRadian(-90.f))));
+	CHECK(closeEnough(WmMath::Sin(deg64_0),		WmMath::Sin(degreeToRadian(0.f))));
+	CHECK(closeEnough(WmMath::Sin(deg64_90),		WmMath::Sin(degreeToRadian(90.f))));
+	CHECK(closeEnough(WmMath::Sin(deg64_180),		WmMath::Sin(degreeToRadian(180.f))));
+	CHECK(closeEnough(WmMath::Sin(deg64_270),		WmMath::Sin(degreeToRadian(270.f))));
+	CHECK(closeEnough(WmMath::Sin(deg64_360),		WmMath::Sin(degreeToRadian(360.f))));
 	
-	CHECK(closeEnough(MathUtility::Sin(rad32_n2Pi),		MathUtility::Sin(degreeToRadian(-360.f))));
-	CHECK(closeEnough(MathUtility::Sin(rad32_n1_5Pi),	MathUtility::Sin(degreeToRadian(-270.f))));
-	CHECK(closeEnough(MathUtility::Sin(rad32_n1Pi),		MathUtility::Sin(degreeToRadian(-180.f))));
-	CHECK(closeEnough(MathUtility::Sin(rad32_n0_5Pi),	MathUtility::Sin(degreeToRadian(-90.f))));
-	CHECK(closeEnough(MathUtility::Sin(rad32_0),		MathUtility::Sin(degreeToRadian(0.f))));
-	CHECK(closeEnough(MathUtility::Sin(rad32_0_5Pi),	MathUtility::Sin(degreeToRadian(90.f))));
-	CHECK(closeEnough(MathUtility::Sin(rad32_1Pi),		MathUtility::Sin(degreeToRadian(180.f))));
-	CHECK(closeEnough(MathUtility::Sin(rad32_1_5Pi),	MathUtility::Sin(degreeToRadian(270.f))));
-	CHECK(closeEnough(MathUtility::Sin(rad32_2Pi),		MathUtility::Sin(degreeToRadian(360.f))));
+	CHECK(closeEnough(WmMath::Sin(rad32_n2Pi),		WmMath::Sin(degreeToRadian(-360.f))));
+	CHECK(closeEnough(WmMath::Sin(rad32_n1_5Pi),	WmMath::Sin(degreeToRadian(-270.f))));
+	CHECK(closeEnough(WmMath::Sin(rad32_n1Pi),		WmMath::Sin(degreeToRadian(-180.f))));
+	CHECK(closeEnough(WmMath::Sin(rad32_n0_5Pi),	WmMath::Sin(degreeToRadian(-90.f))));
+	CHECK(closeEnough(WmMath::Sin(rad32_0),		WmMath::Sin(degreeToRadian(0.f))));
+	CHECK(closeEnough(WmMath::Sin(rad32_0_5Pi),	WmMath::Sin(degreeToRadian(90.f))));
+	CHECK(closeEnough(WmMath::Sin(rad32_1Pi),		WmMath::Sin(degreeToRadian(180.f))));
+	CHECK(closeEnough(WmMath::Sin(rad32_1_5Pi),	WmMath::Sin(degreeToRadian(270.f))));
+	CHECK(closeEnough(WmMath::Sin(rad32_2Pi),		WmMath::Sin(degreeToRadian(360.f))));
 	
-	CHECK(closeEnough(MathUtility::Sin(rad64_n2Pi),		MathUtility::Sin(degreeToRadian(-360.f))));
-	CHECK(closeEnough(MathUtility::Sin(rad64_n1_5Pi),	MathUtility::Sin(degreeToRadian(-270.f))));
-	CHECK(closeEnough(MathUtility::Sin(rad64_n1Pi),		MathUtility::Sin(degreeToRadian(-180.f))));
-	CHECK(closeEnough(MathUtility::Sin(rad64_n0_5Pi),	MathUtility::Sin(degreeToRadian(-90.f))));
-	CHECK(closeEnough(MathUtility::Sin(rad64_0),		MathUtility::Sin(degreeToRadian(0.f))));
-	CHECK(closeEnough(MathUtility::Sin(rad64_0_5Pi),	MathUtility::Sin(degreeToRadian(90.f))));
-	CHECK(closeEnough(MathUtility::Sin(rad64_1Pi),		MathUtility::Sin(degreeToRadian(180.f))));
-	CHECK(closeEnough(MathUtility::Sin(rad64_1_5Pi),	MathUtility::Sin(degreeToRadian(270.f))));
-	CHECK(closeEnough(MathUtility::Sin(rad64_2Pi),		MathUtility::Sin(degreeToRadian(360.f))));
+	CHECK(closeEnough(WmMath::Sin(rad64_n2Pi),		WmMath::Sin(degreeToRadian(-360.f))));
+	CHECK(closeEnough(WmMath::Sin(rad64_n1_5Pi),	WmMath::Sin(degreeToRadian(-270.f))));
+	CHECK(closeEnough(WmMath::Sin(rad64_n1Pi),		WmMath::Sin(degreeToRadian(-180.f))));
+	CHECK(closeEnough(WmMath::Sin(rad64_n0_5Pi),	WmMath::Sin(degreeToRadian(-90.f))));
+	CHECK(closeEnough(WmMath::Sin(rad64_0),		WmMath::Sin(degreeToRadian(0.f))));
+	CHECK(closeEnough(WmMath::Sin(rad64_0_5Pi),	WmMath::Sin(degreeToRadian(90.f))));
+	CHECK(closeEnough(WmMath::Sin(rad64_1Pi),		WmMath::Sin(degreeToRadian(180.f))));
+	CHECK(closeEnough(WmMath::Sin(rad64_1_5Pi),	WmMath::Sin(degreeToRadian(270.f))));
+	CHECK(closeEnough(WmMath::Sin(rad64_2Pi),		WmMath::Sin(degreeToRadian(360.f))));
 	
 }

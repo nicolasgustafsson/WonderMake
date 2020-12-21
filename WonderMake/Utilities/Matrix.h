@@ -2,7 +2,7 @@
 
 #include "Typedefs.h"
 
-#include "Utilities/MathUtility.h"
+#include "Utilities/Math.h"
 #include "Utilities/Rotation.h"
 #include "Utilities/Vector.h"
 
@@ -230,8 +230,8 @@ struct SMatrix final
 	inline SMatrix& SetRotation2D(const TRotation aRotation) noexcept
 		requires (HasOrientation<2>&& std::is_floating_point_v<typename TRotation::Representation>)
 	{
-		const auto cos = static_cast<TRep>(MathUtility::Cos(aRotation));
-		const auto sin = static_cast<TRep>(MathUtility::Sin(aRotation));
+		const auto cos = static_cast<TRep>(WmMath::Cos(aRotation));
+		const auto sin = static_cast<TRep>(WmMath::Sin(aRotation));
 
 		(*this)[0][0] = cos;
 		(*this)[0][1] = sin;
@@ -286,8 +286,8 @@ struct SMatrix final
 	{
 		SMatrix retMat;
 
-		const auto cos = static_cast<TRep>(MathUtility::Cos(aRotation));
-		const auto sin = static_cast<TRep>(MathUtility::Sin(aRotation));
+		const auto cos = static_cast<TRep>(WmMath::Cos(aRotation));
+		const auto sin = static_cast<TRep>(WmMath::Sin(aRotation));
 
 		retMat[1][1] = cos;
 		retMat[1][2] = sin;
@@ -302,8 +302,8 @@ struct SMatrix final
 	{
 		SMatrix retMat;
 
-		const auto cos = static_cast<TRep>(MathUtility::Cos(aRotation));
-		const auto sin = static_cast<TRep>(MathUtility::Sin(aRotation));
+		const auto cos = static_cast<TRep>(WmMath::Cos(aRotation));
+		const auto sin = static_cast<TRep>(WmMath::Sin(aRotation));
 
 		retMat[0][0] = cos;
 		retMat[0][2] = -sin;
@@ -318,8 +318,8 @@ struct SMatrix final
 	{
 		SMatrix retMat;
 
-		const auto cos = static_cast<TRep>(MathUtility::Cos(aRotation));
-		const auto sin = static_cast<TRep>(MathUtility::Sin(aRotation));
+		const auto cos = static_cast<TRep>(WmMath::Cos(aRotation));
+		const auto sin = static_cast<TRep>(WmMath::Sin(aRotation));
 
 		retMat[0][0] = cos;
 		retMat[0][1] = sin;

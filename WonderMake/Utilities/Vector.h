@@ -101,8 +101,8 @@ struct SVector
 		const auto rotation = GetAngle<TRotation>(0) + aRotation;
 		const auto length = Length();
 
-		SVectorBase<TRep, Size>::X = static_cast<TRep>(MathUtility::Cos(rotation) * length);
-		SVectorBase<TRep, Size>::Y = static_cast<TRep>(MathUtility::Sin(rotation) * length);
+		SVectorBase<TRep, Size>::X = static_cast<TRep>(WmMath::Cos(rotation) * length);
+		SVectorBase<TRep, Size>::Y = static_cast<TRep>(WmMath::Sin(rotation) * length);
 
 		return (*this);
 	}
@@ -138,7 +138,7 @@ struct SVector
 	[[nodiscard]] TReturnRotation GetAngle(const TRotation aRotation) const noexcept
 		requires (TSize == 2)
 	{
-		return MathUtility::Remainder(MathUtility::Atan2<TRotation>(SVectorBase<TRep, Size>::Y, SVectorBase<TRep, Size>::X) - aRotation, TReturnRotation::Full());
+		return WmMath::Remainder(WmMath::Atan2<TRotation>(SVectorBase<TRep, Size>::Y, SVectorBase<TRep, Size>::X) - aRotation, TReturnRotation::Full());
 	}
 	template<typename TReturnRotation = SDegree<TRep>>
 		requires std::is_floating_point_v<typename TReturnRotation::Representation>

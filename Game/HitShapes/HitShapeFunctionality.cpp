@@ -3,7 +3,7 @@
 #include "Utilities/TimeKeeper.h"
 #include "Collision/CollisionSystem.h"
 #include "UtilityFunctionalities/FactionFunctionality.h"
-#include "Utilities/MathUtility.h"
+#include "Utilities/Math.h"
 #include "Audio/AudioManager.h"
 #include "Utility/Palette.h"
 
@@ -36,8 +36,8 @@ void HitShapeFunctionality::Tick()
 
 	hitShapeComponent.RenderObject->Render();
 
-	const f32 previousHitProgress = MathUtility::Clamp(0.1f, 0.9f, GetHitProgressFromTime(previousTime));
-	const f32 currentHitProgress = MathUtility::Clamp(0.1f, 0.9f, GetHitProgressFromTime(hitShapeComponent.Time));
+	const f32 previousHitProgress = WmMath::Clamp(0.1f, 0.9f, GetHitProgressFromTime(previousTime));
+	const f32 currentHitProgress = WmMath::Clamp(0.1f, 0.9f, GetHitProgressFromTime(hitShapeComponent.Time));
 
 	if (previousHitProgress == currentHitProgress)
 		return;

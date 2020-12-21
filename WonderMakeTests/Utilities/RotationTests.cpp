@@ -69,46 +69,26 @@ void StaticTest_Rotation()
 	static_assert((rad64_0_5Pi	+ rad64_1Pi)	== (rad64_1Pi + rad64_0_5Pi));
 	static_assert((rad64_0_5Pi	- rad64_1Pi)	!= (rad64_1Pi - rad64_0_5Pi));
 
-	static_assert(deg32_n360	== RotationCast<SDegreeF32>(deg64_n360));
-	static_assert(deg32_n270	== RotationCast<SDegreeF32>(deg64_n270));
-	static_assert(deg32_n180	== RotationCast<SDegreeF32>(deg64_n180));
-	static_assert(deg32_n90		== RotationCast<SDegreeF32>(deg64_n90));
-	static_assert(deg32_0		== RotationCast<SDegreeF32>(deg64_0));
-	static_assert(deg32_90		== RotationCast<SDegreeF32>(deg64_90));
-	static_assert(deg32_180		== RotationCast<SDegreeF32>(deg64_180));
-	static_assert(deg32_270		== RotationCast<SDegreeF32>(deg64_270));
-	static_assert(deg32_360		== RotationCast<SDegreeF32>(deg64_360));
+	static_assert(deg32_n360	== deg64_n360);
+	static_assert(deg32_n270	== deg64_n270);
+	static_assert(deg32_n180	== deg64_n180);
+	static_assert(deg32_n90		== deg64_n90);
+	static_assert(deg32_0		== deg64_0);
+	static_assert(deg32_90		== deg64_90);
+	static_assert(deg32_180		== deg64_180);
+	static_assert(deg32_270		== deg64_270);
+	static_assert(deg32_360		== deg64_360);
 	
-	static_assert(rad32_n2Pi	== RotationCast<SRadianF32>(rad64_n2Pi));
-	static_assert(rad32_n1_5Pi	== RotationCast<SRadianF32>(rad64_n1_5Pi));
-	static_assert(rad32_n1Pi	== RotationCast<SRadianF32>(rad64_n1Pi));
-	static_assert(rad32_n0_5Pi	== RotationCast<SRadianF32>(rad64_n0_5Pi));
-	static_assert(rad32_0		== RotationCast<SRadianF32>(rad64_0));
-	static_assert(rad32_0_5Pi	== RotationCast<SRadianF32>(rad64_0_5Pi));
-	static_assert(rad32_1Pi		== RotationCast<SRadianF32>(rad64_1Pi));
-	static_assert(rad32_1_5Pi	== RotationCast<SRadianF32>(rad64_1_5Pi));
-	static_assert(rad32_2Pi		== RotationCast<SRadianF32>(rad64_2Pi));
-
-	static_assert(deg32_n360	== RotationCast<SDegreeF32>(rad32_n2Pi));
-	static_assert(deg32_n270	== RotationCast<SDegreeF32>(rad32_n1_5Pi));
-	static_assert(deg32_n180	== RotationCast<SDegreeF32>(rad32_n1Pi));
-	static_assert(deg32_n90		== RotationCast<SDegreeF32>(rad32_n0_5Pi));
-	static_assert(deg32_0		== RotationCast<SDegreeF32>(rad32_0));
-	static_assert(deg32_90		== RotationCast<SDegreeF32>(rad32_0_5Pi));
-	static_assert(deg32_180		== RotationCast<SDegreeF32>(rad32_1Pi));
-	static_assert(deg32_270		== RotationCast<SDegreeF32>(rad32_1_5Pi));
-	static_assert(deg32_360		== RotationCast<SDegreeF32>(rad32_2Pi));
+	static_assert(deg32_n360	== rad32_n2Pi);
+	static_assert(deg32_n270	== rad32_n1_5Pi);
+	static_assert(deg32_n180	== rad32_n1Pi);
+	static_assert(deg32_n90		== rad32_n0_5Pi);
+	static_assert(deg32_0		== rad32_0);
+	static_assert(deg32_90		== rad32_0_5Pi);
+	static_assert(deg32_180		== rad32_1Pi);
+	static_assert(deg32_270		== rad32_1_5Pi);
+	static_assert(deg32_360		== rad32_2Pi);
 	
-	static_assert(deg32_n360	== RotationCast<SDegreeF32>(rad64_n2Pi));
-	static_assert(deg32_n270	== RotationCast<SDegreeF32>(rad64_n1_5Pi));
-	static_assert(deg32_n180	== RotationCast<SDegreeF32>(rad64_n1Pi));
-	static_assert(deg32_n90		== RotationCast<SDegreeF32>(rad64_n0_5Pi));
-	static_assert(deg32_0		== RotationCast<SDegreeF32>(rad64_0));
-	static_assert(deg32_90		== RotationCast<SDegreeF32>(rad64_0_5Pi));
-	static_assert(deg32_180		== RotationCast<SDegreeF32>(rad64_1Pi));
-	static_assert(deg32_270		== RotationCast<SDegreeF32>(rad64_1_5Pi));
-	static_assert(deg32_360		== RotationCast<SDegreeF32>(rad64_2Pi));
-
 	constexpr auto add = [](auto aRhs, const auto aLhs)
 	{
 		return aRhs += aLhs;
@@ -220,25 +200,25 @@ TEST_CASE("MathUtility overloads for Rotation return correct values", "[Rotation
 	CHECK(closeEnough(MathUtility::Atan(rad64_1_5Pi),	MathUtility::Atan(degreeToRadian(270.f))));
 	CHECK(closeEnough(MathUtility::Atan(rad64_2Pi),		MathUtility::Atan(degreeToRadian(360.f))));
 	
-	CHECK(closeEnough(degreeToRadian(MathUtility::Atan2<SDegreeF32>(1, 0).Rotation()),	MathUtility::Atan2(1., 0.)));
-	CHECK(closeEnough(degreeToRadian(MathUtility::Atan2<SDegreeF32>(0, 1).Rotation()),	MathUtility::Atan2(0., 1.)));
-	CHECK(closeEnough(degreeToRadian(MathUtility::Atan2<SDegreeF32>(-1, 0).Rotation()),	MathUtility::Atan2(-1., 0.)));
-	CHECK(closeEnough(degreeToRadian(MathUtility::Atan2<SDegreeF32>(0, -1).Rotation()),	MathUtility::Atan2(0., -1.)));
+	CHECK(closeEnough(degreeToRadian(MathUtility::Atan2<SDegreeF32>(1, 0).Rotation),	MathUtility::Atan2(1, 0)));
+	CHECK(closeEnough(degreeToRadian(MathUtility::Atan2<SDegreeF32>(0, 1).Rotation),	MathUtility::Atan2(0, 1)));
+	CHECK(closeEnough(degreeToRadian(MathUtility::Atan2<SDegreeF32>(-1, 0).Rotation),	MathUtility::Atan2(-1, 0)));
+	CHECK(closeEnough(degreeToRadian(MathUtility::Atan2<SDegreeF32>(0, -1).Rotation),	MathUtility::Atan2(0, -1)));
 
-	CHECK(closeEnough(degreeToRadian(MathUtility::Atan2<SDegreeF64>(1, 0).Rotation()),	MathUtility::Atan2(1., 0.)));
-	CHECK(closeEnough(degreeToRadian(MathUtility::Atan2<SDegreeF64>(0, 1).Rotation()),	MathUtility::Atan2(0., 1.)));
-	CHECK(closeEnough(degreeToRadian(MathUtility::Atan2<SDegreeF64>(-1, 0).Rotation()),	MathUtility::Atan2(-1., 0.)));
-	CHECK(closeEnough(degreeToRadian(MathUtility::Atan2<SDegreeF64>(0, -1).Rotation()),	MathUtility::Atan2(0., -1.)));
+	CHECK(closeEnough(degreeToRadian(MathUtility::Atan2<SDegreeF64>(1, 0).Rotation),	MathUtility::Atan2(1, 0)));
+	CHECK(closeEnough(degreeToRadian(MathUtility::Atan2<SDegreeF64>(0, 1).Rotation),	MathUtility::Atan2(0, 1)));
+	CHECK(closeEnough(degreeToRadian(MathUtility::Atan2<SDegreeF64>(-1, 0).Rotation),	MathUtility::Atan2(-1, 0)));
+	CHECK(closeEnough(degreeToRadian(MathUtility::Atan2<SDegreeF64>(0, -1).Rotation),	MathUtility::Atan2(0, -1)));
 	
-	CHECK(closeEnough(MathUtility::Atan2<SRadianF32>(1, 0).Rotation(),	MathUtility::Atan2(1., 0.)));
-	CHECK(closeEnough(MathUtility::Atan2<SRadianF32>(0, 1).Rotation(),	MathUtility::Atan2(0., 1.)));
-	CHECK(closeEnough(MathUtility::Atan2<SRadianF32>(-1, 0).Rotation(),	MathUtility::Atan2(-1., 0.)));
-	CHECK(closeEnough(MathUtility::Atan2<SRadianF32>(0, -1).Rotation(),	MathUtility::Atan2(0., -1.)));
+	CHECK(closeEnough(MathUtility::Atan2<SRadianF32>(1, 0).Rotation,	MathUtility::Atan2(1, 0)));
+	CHECK(closeEnough(MathUtility::Atan2<SRadianF32>(0, 1).Rotation,	MathUtility::Atan2(0, 1)));
+	CHECK(closeEnough(MathUtility::Atan2<SRadianF32>(-1, 0).Rotation,	MathUtility::Atan2(-1, 0)));
+	CHECK(closeEnough(MathUtility::Atan2<SRadianF32>(0, -1).Rotation,	MathUtility::Atan2(0, -1)));
 	
-	CHECK(closeEnough(MathUtility::Atan2<SRadianF64>(1, 0).Rotation(),	MathUtility::Atan2(1., 0.)));
-	CHECK(closeEnough(MathUtility::Atan2<SRadianF64>(0, 1).Rotation(),	MathUtility::Atan2(0., 1.)));
-	CHECK(closeEnough(MathUtility::Atan2<SRadianF64>(-1, 0).Rotation(),	MathUtility::Atan2(-1., 0.)));
-	CHECK(closeEnough(MathUtility::Atan2<SRadianF64>(0, -1).Rotation(),	MathUtility::Atan2(0., -1.)));
+	CHECK(closeEnough(MathUtility::Atan2<SRadianF64>(1, 0).Rotation,	MathUtility::Atan2(1, 0)));
+	CHECK(closeEnough(MathUtility::Atan2<SRadianF64>(0, 1).Rotation,	MathUtility::Atan2(0, 1)));
+	CHECK(closeEnough(MathUtility::Atan2<SRadianF64>(-1, 0).Rotation,	MathUtility::Atan2(-1, 0)));
+	CHECK(closeEnough(MathUtility::Atan2<SRadianF64>(0, -1).Rotation,	MathUtility::Atan2(0, -1)));
 
 	CHECK(closeEnough(MathUtility::Cos(deg32_n360),		MathUtility::Cos(degreeToRadian(-360.f))));
 	CHECK(closeEnough(MathUtility::Cos(deg32_n270),		MathUtility::Cos(degreeToRadian(-270.f))));
@@ -319,5 +299,5 @@ TEST_CASE("MathUtility overloads for Rotation return correct values", "[Rotation
 	CHECK(closeEnough(MathUtility::Sin(rad64_1Pi),		MathUtility::Sin(degreeToRadian(180.f))));
 	CHECK(closeEnough(MathUtility::Sin(rad64_1_5Pi),	MathUtility::Sin(degreeToRadian(270.f))));
 	CHECK(closeEnough(MathUtility::Sin(rad64_2Pi),		MathUtility::Sin(degreeToRadian(360.f))));
-
+	
 }

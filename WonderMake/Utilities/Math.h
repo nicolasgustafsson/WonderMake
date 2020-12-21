@@ -12,6 +12,28 @@ namespace WmMath
 	template <class T>
 	concept Interpolable = Addable<T> && Subtractable<T> && Progressable<T>;
 
+	template <class TLhs, class TRhs>
+	concept ComparableEqual = requires (TLhs aLhs, TRhs aRhs) { aLhs == aRhs; };
+	template <class TLhs, class TRhs>
+	concept ComparableNEqual = requires (TLhs aLhs, TRhs aRhs) { aLhs != aRhs; };
+	template <class TLhs, class TRhs>
+	concept ComparableLess = requires (TLhs aLhs, TRhs aRhs) { aLhs < aRhs; };
+	template <class TLhs, class TRhs>
+	concept ComparableGreater = requires (TLhs aLhs, TRhs aRhs) { aLhs > aRhs; };
+	template <class TLhs, class TRhs>
+	concept ComparableEqualLess = requires (TLhs aLhs, TRhs aRhs) { aLhs <= aRhs; };
+	template <class TLhs, class TRhs>
+	concept ComparableEqualGreater = requires (TLhs aLhs, TRhs aRhs) { aLhs >= aRhs; };
+
+	template <class TLhs, class TRhs>
+	concept ComparableWeak = ComparableLess<TLhs, TRhs> && ComparableGreater<TLhs, TRhs>;
+	template <class TLhs, class TRhs>
+	concept ComparableStrong = ComparableWeak<TLhs, TRhs> && ComparableEqualLess<TLhs, TRhs> && ComparableEqualGreater<TLhs, TRhs>;
+	template <class TLhs, class TRhs>
+	concept ComparableEquality = ComparableEqual<TLhs, TRhs> && ComparableNEqual<TLhs, TRhs>;
+
+	template <class TLhs, class TRhs>
+	concept Comparable = ComparableEquality<TLhs, TRhs> && ComparableStrong<TLhs, TRhs>;
 
 	template <class T> requires Interpolable<T>
 	T Lerp(const T aStart, const T aEnd, const f32 aProgress)

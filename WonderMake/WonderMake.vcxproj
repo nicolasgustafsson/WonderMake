@@ -249,7 +249,6 @@
     <ClCompile Include="Randomizer\Randomizer.cpp" />
     <ClCompile Include="Utilities\TimeKeeper.cpp" />
     <ClCompile Include="Utilities\Debugging\Debugged.cpp" />
-    <ClCompile Include="FileSystem\ReadFileAsStringJob.cpp" />
     <ClCompile Include="Graphics\EngineUniformBuffer.cpp" />
     <ClCompile Include="Imgui\DockSpace.cpp" />
     <ClCompile Include="Logging\FileLogger.cpp" />
@@ -349,8 +348,6 @@
     <ClInclude Include="Utilities\MathUtility.h" />
     <ClInclude Include="Utilities\Stopwatch.h" />
     <ClInclude Include="Utilities\Debugging\Debugged.h" />
-    <ClInclude Include="FileSystem\FileSystem.h" />
-    <ClInclude Include="FileSystem\ReadFileAsStringJob.h" />
     <ClInclude Include="Graphics\EngineUniformBuffer.h" />
     <ClInclude Include="Imgui\DockSpace.h" />
     <ClInclude Include="Job\Job.h" />

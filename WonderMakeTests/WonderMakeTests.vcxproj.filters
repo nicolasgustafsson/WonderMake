@@ -9,5 +9,6 @@
     <ClCompile Include="ObjectsAndPolicies\PolicyTests.cpp" />
     <ClCompile Include="ObjectsAndPolicies\ObjectTests.cpp" />
     <ClCompile Include="Functionalities\TransformFunctionalityTests.cpp" />
+    <ClCompile Include="Job\JobTests.cpp" />
   </ItemGroup>
 </Project>

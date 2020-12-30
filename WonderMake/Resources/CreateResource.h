@@ -7,7 +7,7 @@
 
 template<typename TResource>
 class CreateResource
-	: public Job
+	: public Job<>
 {
 public:
 	inline void Setup(const std::filesystem::path& aFilePath, Callback&& aCallback)

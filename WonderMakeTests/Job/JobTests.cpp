@@ -4,14 +4,19 @@
 
 #include "Job/Job.h"
 
+struct JobData
+{
+	u32 myCallCountOnStarted = 0;
+	u32 myCallCountOnCompleted = 0;
+	EJobResult myLastResult = EJobResult::Failed;
+};
+
 class JobMock
-	: public Job
+	: public Job<>
 {
 public:
-	JobMock(u32& aCallCountOnStarted, u32& aCallCountOnCompleted, EResult& aLastResult)
-		: myCallCountOnStarted(aCallCountOnStarted)
-		, myCallCountOnCompleted(aCallCountOnCompleted)
-		, myLastResult(aLastResult)
+	JobMock(JobData& aData)
+		: myData(aData)
 	{}
 
 	void Success()
@@ -26,85 +31,185 @@ public:
 protected:
 	void OnStarted() override
 	{
-		++myCallCountOnStarted;
+		++myData.myCallCountOnStarted;
 	}
-	void OnCompleted(const EResult aResult) override
+	void OnCompleted(const EJobResult aResult) override
 	{
-		++myCallCountOnCompleted;
-		myLastResult = aResult;
+		++myData.myCallCountOnCompleted;
+		myData.myLastResult = aResult;
 	}
 
-	u32&		myCallCountOnStarted;
-	u32&		myCallCountOnCompleted;
-	EResult&	myLastResult;
+	JobData& myData;
+};
+
+class JobInjectionMock
+	: public Job<
+		Policy::Set<
+			PAdd<JobData, PWrite>>>
+{
+public:
+	void Success()
+	{
+		CompleteSuccess();
+	}
+	void Fail()
+	{
+		CompleteFailure();
+	}
+
+	JobData& GetData()
+	{
+		return Get<JobData>();
+	}
+
+protected:
+	void OnStarted() override
+	{
+		++Get<JobData>().myCallCountOnStarted;
+	}
+	void OnCompleted(const EJobResult aResult) override
+	{
+		++Get<JobData>().myCallCountOnCompleted;
+		Get<JobData>().myLastResult = aResult;
+	}
 };
 
 TEST_CASE("Job status updates properly", "[Job]")
 {
-	u32 callCountOnStarted = 0;
-	u32 callCountOnCompleted = 0;
-	Job::EResult lastResult = Job::EResult::Failed;
-	Job::EResult lastResultBeforeDestruction = Job::EResult::Failed;
+	JobData data;
+	EJobResult lastResultBeforeDestruction = EJobResult::Failed;
 
 	{
-		JobMock jobMock(callCountOnStarted, callCountOnCompleted, lastResult);
+		JobMock jobMock(data);
 
-		CHECK(jobMock.GetStatus() == Job::EStatus::NotStarted);
+		CHECK(jobMock.GetStatus() == EJobStatus::NotStarted);
 		CHECK(!jobMock.IsCompleted());
 		CHECK(!jobMock.IsSuccessful());
 		CHECK(!jobMock.IsCanceled());
-		CHECK(callCountOnStarted == 0);
-		CHECK(callCountOnCompleted == 0);
+		CHECK(data.myCallCountOnStarted == 0);
+		CHECK(data.myCallCountOnCompleted == 0);
 
 		jobMock.Start();
 
-		CHECK(jobMock.GetStatus() == Job::EStatus::InProgress);
+		CHECK(jobMock.GetStatus() == EJobStatus::InProgress);
 		CHECK(!jobMock.IsCompleted());
 		CHECK(!jobMock.IsSuccessful());
 		CHECK(!jobMock.IsCanceled());
-		CHECK(callCountOnStarted == 1);
-		CHECK(callCountOnCompleted == 0);
+		CHECK(data.myCallCountOnStarted == 1);
+		CHECK(data.myCallCountOnCompleted == 0);
 
 		SECTION("Job is canceled")
 		{
 			jobMock.Cancel();
 
-			CHECK(jobMock.GetStatus() == Job::EStatus::Canceled);
+			CHECK(jobMock.GetStatus() == EJobStatus::Canceled);
 			CHECK(jobMock.IsCompleted());
 			CHECK(!jobMock.IsSuccessful());
 			CHECK(jobMock.IsCanceled());
-			CHECK(lastResult == Job::EResult::Canceled);
+			CHECK(data.myLastResult == EJobResult::Canceled);
 		}
 
 		SECTION("Job succeeds")
 		{
 			jobMock.Success();
 
-			CHECK(jobMock.GetStatus() == Job::EStatus::Succeeded);
+			CHECK(jobMock.GetStatus() == EJobStatus::Succeeded);
 			CHECK(jobMock.IsCompleted());
 			CHECK(jobMock.IsSuccessful());
 			CHECK(!jobMock.IsCanceled());
-			CHECK(lastResult == Job::EResult::Succeeded);
+			CHECK(data.myLastResult == EJobResult::Succeeded);
 		}
 
 		SECTION("Job fails")
 		{
 			jobMock.Fail();
 
-			CHECK(jobMock.GetStatus() == Job::EStatus::Failed);
+			CHECK(jobMock.GetStatus() == EJobStatus::Failed);
 			CHECK(jobMock.IsCompleted());
 			CHECK(!jobMock.IsSuccessful());
 			CHECK(!jobMock.IsCanceled());
-			CHECK(lastResult == Job::EResult::Failed);
+			CHECK(data.myLastResult == EJobResult::Failed);
 		}
 
-		CHECK(callCountOnStarted == 1);
-		CHECK(callCountOnCompleted == 1);
+		CHECK(data.myCallCountOnStarted == 1);
+		CHECK(data.myCallCountOnCompleted == 1);
 
-		lastResultBeforeDestruction = lastResult;
+		lastResultBeforeDestruction = data.myLastResult;
 	}
 
-	CHECK(callCountOnStarted == 1);
-	CHECK(callCountOnCompleted == 1);
-	CHECK(lastResultBeforeDestruction == lastResult);
+	CHECK(data.myCallCountOnStarted == 1);
+	CHECK(data.myCallCountOnCompleted == 1);
+	CHECK(lastResultBeforeDestruction == data.myLastResult);
+}
+
+TEST_CASE("Job injection function properly", "[Job]")
+{
+	JobData data;
+	EJobResult lastResultBeforeDestruction = EJobResult::Failed;
+
+	{
+		JobInjectionMock::InjectDependencies(std::tie(data));
+
+		JobInjectionMock jobMock;
+
+		REQUIRE(&jobMock.GetData() == &data);
+
+		CHECK(jobMock.GetStatus() == EJobStatus::NotStarted);
+		CHECK(!jobMock.IsCompleted());
+		CHECK(!jobMock.IsSuccessful());
+		CHECK(!jobMock.IsCanceled());
+		CHECK(data.myCallCountOnStarted == 0);
+		CHECK(data.myCallCountOnCompleted == 0);
+
+		jobMock.Start();
+
+		CHECK(jobMock.GetStatus() == EJobStatus::InProgress);
+		CHECK(!jobMock.IsCompleted());
+		CHECK(!jobMock.IsSuccessful());
+		CHECK(!jobMock.IsCanceled());
+		CHECK(data.myCallCountOnStarted == 1);
+		CHECK(data.myCallCountOnCompleted == 0);
+
+		SECTION("Job is canceled")
+		{
+			jobMock.Cancel();
+
+			CHECK(jobMock.GetStatus() == EJobStatus::Canceled);
+			CHECK(jobMock.IsCompleted());
+			CHECK(!jobMock.IsSuccessful());
+			CHECK(jobMock.IsCanceled());
+			CHECK(data.myLastResult == EJobResult::Canceled);
+		}
+
+		SECTION("Job succeeds")
+		{
+			jobMock.Success();
+
+			CHECK(jobMock.GetStatus() == EJobStatus::Succeeded);
+			CHECK(jobMock.IsCompleted());
+			CHECK(jobMock.IsSuccessful());
+			CHECK(!jobMock.IsCanceled());
+			CHECK(data.myLastResult == EJobResult::Succeeded);
+		}
+
+		SECTION("Job fails")
+		{
+			jobMock.Fail();
+
+			CHECK(jobMock.GetStatus() == EJobStatus::Failed);
+			CHECK(jobMock.IsCompleted());
+			CHECK(!jobMock.IsSuccessful());
+			CHECK(!jobMock.IsCanceled());
+			CHECK(data.myLastResult == EJobResult::Failed);
+		}
+
+		CHECK(data.myCallCountOnStarted == 1);
+		CHECK(data.myCallCountOnCompleted == 1);
+
+		lastResultBeforeDestruction = data.myLastResult;
+	}
+
+	CHECK(data.myCallCountOnStarted == 1);
+	CHECK(data.myCallCountOnCompleted == 1);
+	CHECK(lastResultBeforeDestruction == data.myLastResult);
 }

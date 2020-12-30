@@ -44,7 +44,7 @@ void EnemyControllerFunctionality::Tick() noexcept
 	if (!target)
 		return;
 
-	const SVector2f delta = target->GetPosition() - Get<TransformFunctionality>().GetPosition();
+	const auto delta = target->GetPosition() - Get<TransformFunctionality2D>().GetPosition();
 
 	if (delta.LengthSquared() < std::pow(enemyControllerComponent.FollowRangeMin, 2))
 	{
@@ -58,7 +58,7 @@ void EnemyControllerFunctionality::Tick() noexcept
 
 	movementInputFunctionality.SetMovementInput(delta.GetNormalized());
 
-	Get<TransformFunctionality>().FaceDirection(movementInputFunctionality.Get<SMovementInputComponent>().myMovementInput);
+	Get<TransformFunctionality2D>().FaceDirection(movementInputFunctionality.Get<SMovementInputComponent>().myMovementInput);
 }
 
 void EnemyControllerFunctionality::Debug()

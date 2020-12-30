@@ -4,4 +4,4 @@
 #include "TransformComponent.h"
 
 REGISTER_COMPONENT(SSpriteComponent);
-REGISTER_COMPONENT(STransformComponent);
+REGISTER_COMPONENT(STransformComponent2D);

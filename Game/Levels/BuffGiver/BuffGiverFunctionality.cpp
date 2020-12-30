@@ -37,7 +37,7 @@ void BuffGiverFunctionality::Tick()
 {
 	auto& renderObject = Get<SBuffGiverComponent>().RenderObject;
 
-	renderObject->SetAttribute<EVertexAttribute::Position>(0, Get<TransformFunctionality>().GetPosition());
+	renderObject->SetAttribute<EVertexAttribute::Position>(0, Get<TransformFunctionality2D>().GetPosition());
 	
 	renderObject->Render();
 }

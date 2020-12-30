@@ -63,7 +63,7 @@ void LevelDesigner::DesignPortal(const SSpace& aSpace)
 
 	Get<FunctionalitySystemDelegate<LevelPortalFunctionality>>().AddFunctionality(portal);
 	Get<FunctionalitySystemDelegate<SpinnerFunctionality>>().AddFunctionality(portal);
-	auto& transform = Get<FunctionalitySystemDelegate<TransformFunctionality>>().AddFunctionality(portal);
+	auto& transform = Get<FunctionalitySystemDelegate<TransformFunctionality2D>>().AddFunctionality(portal);
 	auto& sprite = Get<FunctionalitySystemDelegate<SpriteRenderingFunctionality>>().AddFunctionality(portal);
 
 	const SVector2f position = ((aSpace.BottomRight - aSpace.TopLeft) / 2.f) + aSpace.TopLeft;
@@ -88,7 +88,7 @@ void LevelDesigner::DesignBuffTotem(const SSpace& aSpace)
 	Object& totem = myCurrentLevel->AddDenizen();
 
 	auto& buffGiver = Get<FunctionalitySystemDelegate<BuffGiverFunctionality>>().AddFunctionality(totem);
-	auto& transform = Get<FunctionalitySystemDelegate<TransformFunctionality>>().AddFunctionality(totem);
+	auto& transform = Get<FunctionalitySystemDelegate<TransformFunctionality2D>>().AddFunctionality(totem);
 	auto& sprite = Get<FunctionalitySystemDelegate<SpriteRenderingFunctionality>>().AddFunctionality(totem);
 
 	const f32 scale = Get<Randomizer>().GetRandomNumber(25.f, 150.f) / 100.f;
@@ -121,7 +121,7 @@ void LevelDesigner::CreateEnemy(const SVector2f aPosition)
 	Object& enemy = myCurrentLevel->AddDenizen();
 
 	Get<FunctionalitySystemDelegate<EnemyControllerFunctionality>>().AddFunctionality(enemy);
-	auto& transform = Get<FunctionalitySystemDelegate<TransformFunctionality>>().AddFunctionality(enemy);
+	auto& transform = Get<FunctionalitySystemDelegate<TransformFunctionality2D>>().AddFunctionality(enemy);
     transform.SetPosition(aPosition);
 }
 

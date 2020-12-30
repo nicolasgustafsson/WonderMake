@@ -1,4 +1,5 @@
 #pragma once
+#include "Functionalities/TransformFunctionality.h"
 #include "Object/Object.h"
 #include "System/System.h"
 #include "Message/MessageSubscriber.h"
@@ -13,7 +14,6 @@ struct SPlayerDiedMessage;
 class LevelDesigner;
 
 class LevelFunctionality;
-class TransformFunctionality;
 class PlayerControllerFunctionality;
 class DefaultMovementFunctionality;
 class SpriteRenderingFunctionality;
@@ -24,7 +24,7 @@ class GameWorld
 		Policy::Set<
 			PAdd<LevelDesigner, PWrite>,
 			PAdd<FunctionalitySystemDelegate<LevelFunctionality>, PWrite>,
-			PAdd<FunctionalitySystemDelegate<TransformFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<TransformFunctionality2D>, PWrite>,
 			PAdd<FunctionalitySystemDelegate<PlayerControllerFunctionality>, PWrite>,
 			PAdd<FunctionalitySystemDelegate<DefaultMovementFunctionality>, PWrite>,
 			PAdd<FunctionalitySystemDelegate<SpriteRenderingFunctionality>, PWrite>,
@@ -41,7 +41,7 @@ public:
 	void Tick() noexcept override;
 
 private:
-	TransformFunctionality* myPlayerTransform = nullptr;
+	TransformFunctionality2D* myPlayerTransform = nullptr;
 	LevelFunctionality* myCurrentLevelFunctionality = nullptr;
 
 	ScreenPassRenderObject myBackground;

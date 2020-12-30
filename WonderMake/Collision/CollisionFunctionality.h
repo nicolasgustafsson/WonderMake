@@ -21,7 +21,7 @@ class CollisionFunctionality final
 			PAdd<CollisionSystem, PWrite>,
 			PAdd<DebugSettingsSystem, PWrite>,
 			PAdd<SCollisionComponent, PWrite>,
-			PAdd<TransformFunctionality, PRead>>>
+			PAdd<TransformFunctionality2D, PRead>>>
 	, public Debugged
 {
 public:
@@ -49,7 +49,7 @@ template<typename TIdentifyingFunctionality>
 SCollider& CollisionFunctionality::AddLineCollider(TIdentifyingFunctionality& aFunctionalityIdentifier, const SVector2f aOffset, const SVector2f aSecondOffset)
 {
 	auto& collisionComponent = Get<SCollisionComponent>();
-	const auto& transformFunctionality = Get<TransformFunctionality>();
+	const auto& transformFunctionality = Get<TransformFunctionality2D>();
 	auto& collisionSystem = Get<CollisionSystem>();
 
 	const auto transformation = transformFunctionality.GetMatrix();
@@ -72,7 +72,7 @@ template<typename TIdentifyingFunctionality>
 SCollider& CollisionFunctionality::AddSphereCollider(TIdentifyingFunctionality& aFunctionalityIdentifier, const SVector2f aOffset, const f32 aRadius)
 {
 	SCollisionComponent& collisionComponent = Get<SCollisionComponent>();
-	const auto& transformFunctionality = Get<TransformFunctionality>();
+	const auto& transformFunctionality = Get<TransformFunctionality2D>();
 	auto& collisionSystem = Get<CollisionSystem>();
 
 	const auto transformation = transformFunctionality.GetMatrix();

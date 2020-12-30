@@ -10,7 +10,7 @@ class TimeKeeper;
 struct SSpinnerComponent
 	: public SComponent
 {
-	float myRotationSpeed = -Constants::HalfPi;
+	SDegreeF32 myRotationSpeed = -90;
 };
 
 class SpinnerFunctionality
@@ -18,7 +18,7 @@ class SpinnerFunctionality
 		Policy::Set<
 			PAdd<TimeKeeper, PRead>,
 			PAdd<SSpinnerComponent, PWrite>,
-			PAdd<TransformFunctionality, PWrite>>>
+			PAdd<TransformFunctionality2D, PWrite>>>
 {
 public:
 	void Tick() noexcept;

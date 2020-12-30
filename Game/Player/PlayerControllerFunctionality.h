@@ -34,7 +34,7 @@ class PlayerControllerFunctionality
 			PAdd<InputSystem, PWrite>,
 			PAdd<FunctionalitySystemDelegate<EnemyControllerFunctionality>, PWrite>,
 			PAdd<FunctionalitySystemDelegate<TimeToLiveFunctionality>, PWrite>,
-			PAdd<TransformFunctionality, PWrite>,
+			PAdd<TransformFunctionality2D, PWrite>,
 			PAdd<MovementInputFunctionality, PWrite>,
 			PAdd<DefaultMovementFunctionality, PWrite>,
 			PAdd<MeleeWeaponUserFunctionality, PWrite>,

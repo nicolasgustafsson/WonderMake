@@ -12,7 +12,7 @@ void HitShapeSpawnerFunctionality::SpawnPunch(const f32 aLength, const f32 aDela
 {
 	Object hitShape;
 
-	TransformFunctionality& transform = Get<TransformFunctionality>();
+	auto& transform = Get<TransformFunctionality2D>();
 
 	HitShapeFunctionality& hitShapeFunctionality = Get<FunctionalitySystemDelegate<HitShapeFunctionality>>().AddFunctionality(hitShape);
 	
@@ -29,12 +29,12 @@ void HitShapeSpawnerFunctionality::SpawnPunch(const f32 aLength, const f32 aDela
 	const SVector2f start = characterPosition + transform.GetRightVector() * offset - transform.GetForwardVector() * 20.f;
 	const SVector2f end = transform.GetPosition() + transform.GetForwardVector() * aLength;
 
-	SVector2f normal = (end - start).GetNormalized().GetPerpendicularClockWise() * offset;
-	SVector2f control1Normal = (end - start).GetNormalized().GetPerpendicularClockWise() * control1Offset;
-	SVector2f control2Normal = (end - start).GetNormalized().GetPerpendicularClockWise() * control2Offset;
+	const SVector2f control1Normal = (end - start).GetNormalized().GetPerpendicularClockWise() * control1Offset;
+	const SVector2f control2Normal = (end - start).GetNormalized().GetPerpendicularClockWise() * control2Offset;
 
 	const SVector2f control1 = WmMath::Lerp(start, end, 0.33f) + control1Normal;
 	const SVector2f control2 = WmMath::Lerp(start, end, 0.66f) + control2Normal;
+
 	BezierCurve curve(start, end, control1, control2);
 
 	const EFaction faction = Get<FactionFunctionality>().GetFaction();
@@ -46,7 +46,7 @@ void HitShapeSpawnerFunctionality::SpawnPunch(const f32 aLength, const f32 aDela
 void HitShapeSpawnerFunctionality::SpawnSwordSwing(BezierCurve aSwordPath, const f32 aDelay, const f32 aDuration, const f32 aWidth, const f32 aDamage)
 {
 	Object hitShape;
-	TransformFunctionality& transform = Get<TransformFunctionality>();
+	const auto& transform = Get<TransformFunctionality2D>();
 	HitShapeFunctionality& hitShapeFunctionality = Get<FunctionalitySystemDelegate<HitShapeFunctionality>>().AddFunctionality(hitShape);
 
 	aSwordPath.Rotate(transform.GetRotation());

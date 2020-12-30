@@ -9,8 +9,5 @@ uniform sampler2D ourTexture;
 
 void main()
 {
-	vec2 texCoordYFlipped = TexCoord;
-	
-	texCoordYFlipped.y = 1.0 - texCoordYFlipped.y;
-    FragColor = texture(ourTexture, texCoordYFlipped).rgba;  
+    FragColor = texture(ourTexture, TexCoord).rgba;
 }

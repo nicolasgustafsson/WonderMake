@@ -6,19 +6,19 @@ class Camera;
 
 struct SCameraComponent : public SComponent
 {
-	TransformFunctionality* Target;
+	TransformFunctionality2D* Target;
 };
 
 class CameraFunctionality
 	: public Functionality<
 		Policy::Set<
 			PAdd<CameraManager, PWrite>,
-			PAdd<TransformFunctionality, PWrite>,
+			PAdd<TransformFunctionality2D, PWrite>,
 			PAdd<SCameraComponent, PWrite>>>
 {
 public:
 	void Tick();
 
-	void SetTarget(TransformFunctionality* aTarget);
+	void SetTarget(TransformFunctionality2D* aTarget);
 private:
 };

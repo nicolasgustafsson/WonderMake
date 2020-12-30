@@ -143,7 +143,7 @@ bool CollisionSystem::TestSphereVsLineCollision(const Colliders::SSphere& aSpher
 
 	const SVector2f lineDelta = aLineB.GetLineEnd() - aLineB.Position;
 
-	const SVector2f lineNormal = lineDelta.GetNormal().GetNormalized();
+	const SVector2f lineNormal = lineDelta.GetPerpendicularClockWise().GetNormalized();
 	
 	//[Nicos]: create a newline that is perpendicular to the one line we have to simulate width
 	Colliders::SCollisionLine newLine;

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "PunchAction.h"
 
-PunchAction::PunchAction(CharacterFunctionality& aUser, TransformFunctionality& aTarget) noexcept
+PunchAction::PunchAction(CharacterFunctionality& aUser, TransformFunctionality2D& aTarget) noexcept
 	: myUser(aUser), myTarget(aTarget)
 {
 	
@@ -9,7 +9,7 @@ PunchAction::PunchAction(CharacterFunctionality& aUser, TransformFunctionality& 
 
 void PunchAction::BeginAction()
 {	
-	myUser.Get<TransformFunctionality>().FacePosition(myTarget.GetPosition());
+	myUser.Get<TransformFunctionality2D>().FacePosition(myTarget.GetPosition());
 
 	HitShapeSpawnerFunctionality& hitShapeSpawner = myUser.Get<HitShapeSpawnerFunctionality>();
 

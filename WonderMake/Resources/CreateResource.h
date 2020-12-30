@@ -12,14 +12,14 @@ class CreateResource
 public:
 	inline void Setup(const std::filesystem::path& aFilePath, Callback&& aCallback)
 	{
-		myCallback = std::move(aCallback);
+		SetCallback(std::move(aCallback));
 		myFilePath = aFilePath;
 	}
 
-	inline virtual void Start()
+	inline virtual void OnStarted() override
 	{
 		myResource = std::make_shared<TResource>(myFilePath);
-		Complete(EResult::Success);
+		CompleteSuccess();
 	}
 
 	std::shared_ptr<TResource> myResource;

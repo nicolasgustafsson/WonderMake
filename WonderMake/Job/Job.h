@@ -2,125 +2,132 @@
 
 #include "Typedefs.h"
 
-#include "Message/Messages.h"
+#include "Utilities/RestrictTypes.h"
+#include "Utilities/Utility.h"
 
 #include <functional>
 #include <mutex>
 
 class Job
+	: NonCopyable
+	, NonMovable
 {
 public:
+	enum class EStatus
+	{
+		NotStarted,
+		InProgress,
+		Canceled,
+		Succeeded,
+		Failed
+	};
 	enum class EResult
 	{
-		InProgress,
-		Cancelled,
-		Success,
-		Failure
+		Canceled,
+		Succeeded,
+		Failed
 	};
 
 	using Callback = std::function<void(const EResult)>;
 
-	Job() noexcept = default;
-	Job(const Job&) noexcept = default;
-	inline virtual ~Job() noexcept;
+	inline virtual ~Job()
+	{
+		Cancel();
+	}
 
-	Job& operator =(const Job&) noexcept = default;
+	inline void Start()
+	{
+		{
+			std::lock_guard<decltype(myLock)> lock(myLock);
 
-	inline void Cancel() noexcept;
+			if (myStatus != EStatus::NotStarted)
+			{
+				return;
+			}
 
-	inline bool IsComplete() noexcept;
-	inline bool IsSuccessful() noexcept;
-	inline EResult GetResult() noexcept;
+			myStatus = EStatus::InProgress;
+		}
 
-protected:
-	inline void Reset() noexcept;
-	inline void Complete(const EResult aResult) noexcept;
-	inline void CompleteOnRoutine(const EResult aResult) noexcept;
+		OnStarted();
+	}
+	inline void Cancel()
+	{
+		Complete(EStatus::Canceled, EResult::Canceled);
+	}
 
-	inline virtual void OnReset() noexcept {};
-	inline virtual void OnCancel() noexcept {};
-	inline virtual void OnComplete(const EResult /*aResult*/) noexcept {};
+	inline [[nodiscard]] bool IsCompleted() const noexcept
+	{
+		const auto status = GetStatus();
 
-	Callback myCallback;
-
-private:
-	inline void SetResult(const EResult aResult) noexcept;
-
-	std::mutex myLock;
-	EResult myResult = EResult::InProgress;
-};
-
-inline Job::~Job() noexcept
-{
-	Cancel();
-}
-
-inline void Job::Cancel() noexcept
-{
+		return status != EStatus::NotStarted
+			&& status != EStatus::InProgress;
+	}
+	inline [[nodiscard]] bool IsSuccessful() const noexcept
+	{
+		return GetStatus() == EStatus::Succeeded;
+	}
+	inline [[nodiscard]] bool IsCanceled() const noexcept
+	{
+		return GetStatus() == EStatus::Canceled;
+	}
+	inline [[nodiscard]] EStatus GetStatus() const noexcept
 	{
 		std::lock_guard<decltype(myLock)> lock(myLock);
-		if (myResult != EResult::InProgress)
+
+		return myStatus;
+	}
+
+protected:
+	template<typename TCallable>
+	inline void SetCallback(TCallable aCallable) noexcept
+	{
+		myCallback = std::forward<TCallable>(aCallable);
+	}
+	
+	inline void CompleteSuccess()
+	{
+		Complete(EStatus::Succeeded, EResult::Succeeded);
+	}
+	inline void CompleteFailure()
+	{
+		Complete(EStatus::Failed, EResult::Failed);
+	}
+
+	inline virtual void OnStarted() = 0;
+	inline virtual void OnCompleted(const EResult /*aResult*/) {};
+
+private:
+	inline void SetStatus(const EStatus aStatus) noexcept
+	{
+		std::lock_guard<decltype(myLock)> lock(myLock);
+
+		myStatus = aStatus;
+	}
+
+	inline void Complete(const EStatus aStatus, const EResult aResult)
+	{
 		{
-			return;
-		}
-		myResult = EResult::Cancelled;
-	}
-	OnCancel();
-}
+			std::lock_guard<decltype(myLock)> lock(myLock);
 
-inline bool Job::IsComplete() noexcept
-{
-	std::lock_guard<decltype(myLock)> lock(myLock);
-	return myResult != EResult::InProgress;
-}
-
-inline bool Job::IsSuccessful() noexcept
-{
-	std::lock_guard<decltype(myLock)> lock(myLock);
-	return myResult == EResult::Success;
-}
-
-inline Job::EResult Job::GetResult() noexcept
-{
-	std::lock_guard<decltype(myLock)> lock(myLock);
-	return myResult;
-}
-
-inline void Job::Reset() noexcept
-{
-	SetResult(EResult::InProgress);
-	OnReset();
-}
-
-inline void Job::Complete(const EResult aResult) noexcept
-{
-	SetResult(aResult);
-	OnComplete(aResult);
-	if (myCallback)
-	{
-		myCallback(aResult);
-	}
-}
-
-inline void Job::CompleteOnRoutine(const EResult aResult) noexcept
-{
-	SetResult(aResult);
-	OnComplete(aResult);
-	if (myCallback)
-	{
-		WmDispatchTask([&, aResult]
+			if (myStatus != EStatus::InProgress)
 			{
-				if (!myCallback)
-				{
-					return;
-				}
-				myCallback(aResult);
-			});
-	}
-}
+				return;
+			}
 
-inline void Job::SetResult(const EResult aResult) noexcept
-{
-	std::lock_guard<decltype(myLock)> lock(myLock);
-	myResult = aResult;
-}
+			myStatus = aStatus;
+		}
+
+		RunCompletedCallbacks(aResult);
+	}
+	inline void RunCompletedCallbacks(const EResult aResult)
+	{
+		OnCompleted(aResult);
+
+		Utility::Invoke(myCallback, aResult);
+	}
+
+	mutable std::mutex myLock;
+
+	Callback myCallback;
+	EStatus myStatus = EStatus::NotStarted;
+};

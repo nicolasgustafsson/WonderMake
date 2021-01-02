@@ -78,6 +78,7 @@
     <ClCompile Include="Camera\CameraManager.cpp" />
     <ClCompile Include="Graphics\RenderSettingsManager.cpp" />
     <ClCompile Include="LineListRenderObject.cpp" />
+    <ClCompile Include="Utilities\Id.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -261,7 +262,8 @@
     <ClInclude Include="Utilities\Container\Traits\TraitList.h" />
     <ClInclude Include="Utilities\TypeTraits\Concepts.h" />
     <ClInclude Include="Utilities\TypeTraits\TypeTraits.h" />
-    <ClInclude Include="Utilities\Container\BackendImplementations\UnorderedSetBackend.h" />
+    <ClInclude Include="Utilities\Container\BackendImplementations\UnorderedMapBackend.h" />
+    <ClInclude Include="Utilities\Id.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

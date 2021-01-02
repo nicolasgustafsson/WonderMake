@@ -6,6 +6,7 @@
 #include "Asset.h"
 #include "Utilities/Container/Container.h"
 #include <json/json.hpp>
+#include "Utilities/Id.h"
 
 template<typename TAssetType>
 class AssetDatabase 
@@ -44,6 +45,21 @@ public:
 		SweepAssetDirectories();
 	}
 
+	Asset<TAssetType>* GetAsset(std::string_view aAssetLink)
+	{
+		auto assetId = myAssetLinks[std::string(aAssetLink)];
+
+		if (assetId)
+		{
+			if (!myAssets.KeyExists(*assetId))
+				return nullptr;
+			
+			return &myAssets.Get(*assetId);
+		}
+		
+		return nullptr;
+	}
+
 	~AssetDatabase()
 	{
 		Save(); 
@@ -69,13 +85,17 @@ public:
 
 	void SweepAssetDirectories()
 	{
-		myAssets.EraseIf([](auto& aAsset) 
+		myAssets.EraseIf([](auto& aAsset)
 			{
-				return !std::filesystem::exists(aAsset.myMetadata.Filepath);
+				return !std::filesystem::exists(aAsset.second.myMetadata.Filepath);
 			});
 
-		for (auto&& file : std::filesystem::recursive_directory_iterator(myRootPath))
-			myAssets.AddUnique(file.path());
+		for (auto&& file : std::filesystem::recursive_directory_iterator(std::filesystem::current_path() / myRootPath))
+		{
+			auto relativePath = std::filesystem::proximate(file.path(), std::filesystem::current_path());
+			Asset<TAssetType> asset{ relativePath };
+			myAssets.Add(myIdCounter.NextId(), asset);
+		}
 
 		Save();
 	}
@@ -100,14 +120,30 @@ public:
 
 		if (ImGui::InputText("Root folder", buffer, 255))
 		{
-			myRootPath = std::filesystem::current_path() / buffer;
+			myRootPath = buffer;
 		}
 
 		ImGui::Separator();
 
-		for (auto&& asset : myAssets)
+		if (ImGui::TreeNode("Assets"))
 		{
-			asset.Inspect();
+			for (auto&& asset : myAssets)
+			{
+				asset.second.Inspect();
+			}
+
+			ImGui::TreePop();
+		}
+
+		ImGui::Separator();
+
+		if (ImGui::TreeNode("Asset Links"))
+		{
+			for (auto&& assetLink : myAssetLinks)
+			{
+				ImGui::Text(assetLink.first.c_str());
+			}
+			ImGui::TreePop();
 		}
 
 		ImGui::End();
@@ -137,9 +173,13 @@ private:
 		}
 	}
 	
-	Container<Asset<TAssetType>, Iterable> myAssets;
+	Container<Asset<TAssetType>, Key<Id>, Iterable> myAssets;
+
+	Container<std::optional<Id>, Key<std::string>, Iterable> myAssetLinks;
 	
-	std::filesystem::path myRootPath = std::filesystem::current_path();
+	std::filesystem::path myRootPath = {};
+
+	IdCounter myIdCounter;
 };
 
 #define REGISTER_ASSET_DATABASE(aAsset) _REGISTER_SYSTEM_IMPL(AssetDatabase<aAsset>, aAsset##Asset)

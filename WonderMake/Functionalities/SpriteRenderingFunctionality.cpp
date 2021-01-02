@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "SpriteRenderingFunctionality.h"
 #include <iostream>
+#include "Resources/AssetDatabase.h"
+#include "Graphics/Texture.h"
 
 REGISTER_FUNCTIONALITY(SpriteRenderingFunctionality);
 
@@ -13,6 +15,9 @@ void SpriteRenderingFunctionality::Tick()
 	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Position>(0, Get<STransformComponent>().Position);
 	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Rotation>(0, Get<STransformComponent>().Rotation);
 	spriteComponent.RenderObject->Render();
+
+	SystemPtr<AssetDatabase<Texture>> bla;
+	bla->GetAsset("Player");
 }
 
 void SpriteRenderingFunctionality::SetTexture(const std::filesystem::path& aTexturePath)

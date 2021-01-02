@@ -17,9 +17,10 @@ class ConstantInsertion : public BackendTrait {};
 class ConstantDeletion : public BackendTrait {};
 class Associative : public BackendTrait {};
 class Sortable : public BackendTrait {};
+class KeyIndex : public BackendTrait {};
 
 template<Hashable TKeyType>
-class Key : public ContainerTrait 
+class Key : public KeyIndex
 {
 public:
 	using KeyType = TKeyType;

@@ -4,6 +4,7 @@
 struct SAssetMetadata
 {
 	std::filesystem::path Filepath;
+	u64 AssetId;
 };
 
 template <typename TAssetType>
@@ -32,7 +33,12 @@ public:
 
 	void Inspect()
 	{
-		ImGui::Text(myMetadata.Filepath.string().c_str());
+		if (!myResource)
+			ImGui::Text(myMetadata.Filepath.string().c_str());
+		else if (ImGui::TreeNode(myMetadata.Filepath.string().c_str()))
+		{
+			ImGui::TreePop();
+		}
 	}
 
 	ResourceProxy<TAssetType> Get()

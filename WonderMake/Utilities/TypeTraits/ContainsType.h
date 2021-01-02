@@ -3,7 +3,7 @@
 #include "Utilities/TypeTraits/ParameterPack.h"
 
 template <class T, class... U>
-struct Contains : std::disjunction<std::is_same<T, U>...> {};
+struct Contains : std::disjunction<std::is_base_of<U, T>...> {};
 
 template <typename...>
 struct IsSubsetOf : std::false_type {};

@@ -221,6 +221,7 @@
     <ClCompile Include="Graphics\RenderHandle.cpp" />
     <ClCompile Include="Graphics\RenderNodeGraph\RenderNodeTypes.cpp" />
     <ClCompile Include="Graphics\RenderObject.cpp" />
+    <ClCompile Include="Utilities\Id.cpp" />
     <ClCompile Include="Imgui\Canvas.cpp" />
     <ClCompile Include="Imgui\FileSelector.cpp" />
     <ClCompile Include="Imgui\NodeGraphGui.cpp" />
@@ -290,6 +291,7 @@
     <ClCompile Include="Utilities\Platform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Utilities\Id.h" />
     <ClInclude Include="Utilities\Container\BackendImplementations\ColonyBackend.h" />
     <ClInclude Include="Resources\Asset.h" />
     <ClInclude Include="Resources\AssetDatabase.h" />
@@ -310,7 +312,7 @@
     <ClInclude Include="Object\DependencyDestructor.h" />
     <ClInclude Include="Utilities\AutoRegister.h" />
     <ClInclude Include="Utilities\Container\BackendImplementations\LinkedListBackend.h" />
-    <ClInclude Include="Utilities\Container\BackendImplementations\UnorderedSetBackend.h" />
+    <ClInclude Include="Utilities\Container\BackendImplementations\UnorderedMapBackend.h" />
     <ClInclude Include="Utilities\Container\BackendImplementations\VectorBackend.h" />
     <ClInclude Include="Utilities\Container\Container.h" />
     <ClInclude Include="Utilities\Container\ContainerBackend.h" />

@@ -3,6 +3,7 @@
 #include <type_traits>
 
 #include <vector>
+#include <string>
 #include <list>
 
 #include "Utilities/plf_colony.h"
@@ -16,7 +17,7 @@
 #include "Utilities/Container/Traits/Implications.h"
 #include "Utilities/TypeTraits/ContainsType.h"
 #include "Utilities/TypeTraits/TypeTraits.h"
-#include "Utilities/Container/BackendImplementations/UnorderedSetBackend.h"
+#include "BackendImplementations/UnorderedMapBackend.h"
 
 template <typename T>
 using IsBaseOfBackendTrait = std::is_base_of<BackendTrait, T>;
@@ -26,20 +27,30 @@ using IsTemplateInstanceOfKey = IsTemplateInstanceOf<T, Key>;
 
 struct Empty {};
 
-template<typename TKey, typename TValue>
-class KeyValuePair
+namespace _ContainerDetail
 {
-
-};
-
-namespace std {
-	template <Hashable TKey, typename TValue>
-	struct hash<KeyValuePair<TKey, TValue>>
+	template<typename TObjectType, ContainerTrait ... TContainerTraits>
+	struct ResolvedTypes
 	{
-		size_t operator()(const KeyValuePair<TKey, TValue>& x) const
+		using TraitsPack = typename ResolvedImplications<TContainerTraits...>::type;
+		using BackendTraitsPack = typename TypeFilter<IsBaseOfBackendTrait, TraitsPack>::type;
+		using KeysPack = typename TypeFilter<IsTemplateInstanceOfKey, TraitsPack>::type;
+
+		static_assert(ParameterPackSize(KeysPack()) < 2, "Container does not support more than 1 key!");
+
+		template <typename ... TKey>
+		constexpr static auto KeyType(ParameterPack<TKey...>)
 		{
-			return hash(TKey);
+			return Empty();
 		}
+
+		template <typename TKey>
+		constexpr static auto KeyType(ParameterPack<TKey>)
+		{
+			return TKey::KeyType();
+		}
+
+		using Key = decltype(KeyType(KeysPack()));
 	};
 }
 
@@ -48,11 +59,12 @@ class ContainerBase
 {
 	//[Nicos]: These need to be at the top so we can use Storage as a type
 private:
-	using TraitsPack = typename ResolvedImplications<TContainerTraits...>::type;
-	using BackendTraitsPack = typename TypeFilter<IsBaseOfBackendTrait, TraitsPack>::type;
-	using KeysPack = typename TypeFilter<IsTemplateInstanceOfKey, TraitsPack>::type;
 
-	static_assert(ParameterPackSize(KeysPack()) < 2, "Container does not support more than 1 key!");
+	using ResolvedTypes = typename _ContainerDetail::ResolvedTypes<TObjectType, TContainerTraits...>;
+
+	using TraitsPack = typename ResolvedTypes::TraitsPack;
+	using BackendTraitsPack = typename ResolvedTypes::BackendTraitsPack;
+	using KeysPack = typename ResolvedTypes::KeysPack;
 
 	constexpr static bool HasKey = ParameterPackSize(KeysPack()) > 0;
 
@@ -63,41 +75,10 @@ private:
 		return FirstSatisfyingBackend<BackendTraitsPack, TBackends...>::type();
 	}
 
-	template <typename ... TKey>
-	constexpr static auto KeyValueLinkContainerType(ParameterPack<TKey...>)
-	{
-		return Empty();
-	}
-
-	template <typename TKey>
-	constexpr static auto KeyValueLinkContainerType(ParameterPack<TKey>)
-	{
-		return Container<KeyValuePair<decltype(TKey::KeyType()), TObjectType&>, Associative>();
-	}
-
-	template <typename ... TKey>
-	constexpr static auto KeyType(ParameterPack<TKey...>)
-	{
-		return Empty();
-	}
-
-	template <typename TKey>
-	constexpr static auto KeyType(ParameterPack<TKey>)
-	{
-		return TKey::KeyType();
-	}
-
 	using Storage = decltype(StorageType(TContainerBackends()));
-
-	using KeyValueLinkContainer = decltype(KeyValueLinkContainerType(KeysPack()));
-	using Key = decltype(KeyType(KeysPack()));
+	using Key = typename ResolvedTypes::Key;
 
 	Storage myBackend;
-
-#pragma warning( push )
-#pragma warning( disable : 4648 ) //[Nicos]: no unique address not currently supported by msvc, so until then our empty class will take up some space here
-	[[no_unique_address]] KeyValueLinkContainer myKeyType;
-#pragma warning( pop )
 
 public:
 
@@ -120,9 +101,25 @@ public:
 	}
 
 	template<typename TObjectTypeFunc> requires std::is_same_v<TObjectType, std::decay_t<TObjectTypeFunc>> || std::is_constructible_v<TObjectType, TObjectTypeFunc>
-	void Add(TObjectTypeFunc aObject)
+	void Add(TObjectTypeFunc aObject) requires !HasKey
 	{
 		myBackend.Add<TObjectTypeFunc>(std::forward<TObjectTypeFunc>(aObject));
+	}
+
+	template<typename TObjectTypeFunc> requires std::is_same_v<TObjectType, std::decay_t<TObjectTypeFunc>> || std::is_constructible_v<TObjectType, TObjectTypeFunc>
+	void Add(const Key& aKey, TObjectTypeFunc aObject) requires HasKey
+	{
+		myBackend.Add<TObjectTypeFunc>(aKey, std::forward<TObjectTypeFunc>(aObject));
+	}
+
+	[[nodiscard]] bool KeyExists(const Key& aKey) requires HasKey
+	{
+		return myBackend.KeyExists(aKey);
+	}
+
+	[[nodiscard]] TObjectType& Get(const Key& aKey) requires HasKey
+	{
+		return myBackend.Get(aKey);
 	}
 
 	auto Find(const TObjectType& aObject) requires Iterable && CanEqualityCompare
@@ -132,12 +129,21 @@ public:
 	}
 
 	template<typename TObjectTypeFunc> requires std::is_same_v<TObjectType, std::decay_t<TObjectTypeFunc>> || std::is_constructible_v<TObjectType, TObjectTypeFunc>
-	void AddUnique(TObjectTypeFunc aObject) requires Iterable && CanEqualityCompare
+	void AddUnique(TObjectTypeFunc aObject) requires Iterable && CanEqualityCompare && !HasKey
 	{
 		if (auto found = Find(aObject) != end())
 			return;
 
 		Add(std::forward<TObjectTypeFunc>(aObject));
+	}
+
+	template<typename TObjectTypeFunc> requires std::is_same_v<TObjectType, std::decay_t<TObjectTypeFunc>> || std::is_constructible_v<TObjectType, TObjectTypeFunc>
+	void AddUnique(const Key& aKey, TObjectTypeFunc aObject) requires Iterable && CanEqualityCompare && HasKey
+	{
+		if (auto found = Find(aObject) != end())
+			return;
+
+		Add(aKey, std::forward<TObjectTypeFunc>(aObject));
 	}
 
 	void Clear()
@@ -150,14 +156,24 @@ public:
 		return myBackend.Count();
 	}
 
-	constexpr TObjectType& operator[](const size_t aIndex) requires Indexable && !Associative 
+	constexpr TObjectType& operator[](const size_t aIndex) requires Indexable && !HasKey
 	{
 		return myBackend[aIndex];
 	}
 
-	constexpr const TObjectType& operator[](const size_t aIndex) const requires Indexable && !Associative
+	constexpr const TObjectType& operator[](const size_t aIndex) const requires Indexable && !HasKey
 	{
 		return myBackend[aIndex];
+	}
+
+	constexpr TObjectType& operator[](const Key& aKey) requires HasKey && !Indexable
+	{
+		return myBackend[aKey];
+	}
+
+	constexpr const TObjectType& operator[](const Key& aKey) const requires HasKey && !Indexable
+	{
+		return myBackend[aKey];
 	}
 
 	void Sort() requires Sortable
@@ -216,6 +232,6 @@ template<typename TObjectType, typename ... TContainerTraits>
 using Container = ContainerBase<TObjectType, ParameterPack<ColonyBackend<TObjectType>
 	, VectorBackend<TObjectType>
 	, LinkedListBackend<TObjectType>
-	, UnorderedSetBackend<TObjectType>
+	, UnorderedMapBackend<typename _ContainerDetail::ResolvedTypes<TObjectType, TContainerTraits...>::Key, TObjectType>
 >, 
 TContainerTraits...>;

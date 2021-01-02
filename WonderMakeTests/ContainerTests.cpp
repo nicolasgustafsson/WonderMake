@@ -4,16 +4,11 @@
 #include "Utilities/Container/Container.h"
 #include <Typedefs.h>
 #include <iostream>
+#include <filesystem>
 
 TEST_CASE("General Container Tests", "[Container]")
 {
 	Container<int, Iterable, Indexable> intContainer;
-	//Container<int, Key<int>, Indexable, RandomAccess> dictionary;
-	std::unordered_set<int> bla;
-
-	auto it = bla.begin();
-
-	std::cout << typeid(it).name();
 
 	SECTION("The containers are of the correct type")
 	{
@@ -99,5 +94,13 @@ TEST_CASE("General Container Tests", "[Container]")
 		intContainer.Clear();
 	}
 
-	std::cin.get();
+	SECTION("Unordered Map")
+	{
+		Container<int, Iterable, Key<std::string>, Associative> UnorderedMap;
+		REQUIRE(UnorderedMap.Count() == 0);
+
+		UnorderedMap["hello"] = 10;
+		REQUIRE(UnorderedMap["hello"] == 10);
+		REQUIRE(UnorderedMap.Count() == 1);
+	}
 }

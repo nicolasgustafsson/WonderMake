@@ -21,6 +21,7 @@ constexpr auto ResolveImplications()
 	/*Add implications from here*/
 	auto sortImplication = TwoWayImplication<decltype(base), ParameterPack<Sortable>, ParameterPack<Iterable, RandomAccess>>();
 	/*To here*/
+
 	auto finalTraitCollection = sortImplication;
 
 	constexpr bool needToGoDeeper = !std::is_same_v<decltype(base), decltype(finalTraitCollection)>;

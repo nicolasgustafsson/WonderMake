@@ -15,8 +15,6 @@ public:
 	virtual void Tick() {}
 
 protected:
-	void EnableTick();
-
 	constexpr SystemBase() noexcept = default;
 };
 

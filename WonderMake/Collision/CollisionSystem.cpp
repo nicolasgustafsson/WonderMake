@@ -4,11 +4,16 @@
 #include "CollisionFunctionality.h"
 #include "Collision/Colliders.h"
 
+#include "Scheduling/ScheduleSystem.h"
+
 REGISTER_SYSTEM(CollisionSystem);
 
 CollisionSystem::CollisionSystem() noexcept
 {
-	EnableTick();
+	Get<ScheduleSystem>().ScheduleRepeating([this]()
+		{
+			Tick();
+		});
 }
 
 void CollisionSystem::Tick() noexcept

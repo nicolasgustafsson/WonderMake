@@ -6,6 +6,8 @@
 #include "Object/DependencyDestructor.h"
 #include "Object/Object.h"
 
+#include "Scheduling/ScheduleSystem.h"
+
 #include "System/System.h"
 
 #include "Utilities/plf_colony.h"
@@ -37,18 +39,18 @@ namespace _Impl
 	using ConvertPolicy = PAdd<ExtractSystemType<typename TPolicy::Dependency>, TPolicy::Permission>;
 
 	template<typename... TFunctionalityPolicies>
-	using CreatePolicySet = Policy::Set<ConvertPolicy<TFunctionalityPolicies>...>;
+	using CreatePolicySet = Policy::Set<PAdd<ScheduleSystem, PWrite>, ConvertPolicy<TFunctionalityPolicies>...>;
 
 	template<typename TPolicySet>
 	using ConvertPolicySet = typename TPolicySet::template ExtractPolicies<CreatePolicySet>;
 
 	template<typename TFunctionality>
-	using CreateSystem = System<ConvertPolicySet<typename TFunctionality::PolicySet>>;
+	using GetFunctionalitySystem = System<ConvertPolicySet<typename TFunctionality::PolicySet>>;
 }
 
 template<typename TFunctionality>
 class FunctionalitySystem final
-	: public _Impl::CreateSystem<TFunctionality>
+	: public _Impl::GetFunctionalitySystem<TFunctionality>
 {
 public:
 	FunctionalitySystem()
@@ -62,7 +64,10 @@ public:
 			})
 	{
 		if (typeid(&TFunctionality::Tick) != typeid(&_BaseFunctionality::Tick))
-			_Impl::CreateSystem<TFunctionality>::EnableTick();
+			_Impl::GetFunctionalitySystem<TFunctionality>::template Get<ScheduleSystem>().ScheduleRepeating([this]()
+				{
+					Tick();
+				});
 	}
 
 	TFunctionality& AddFunctionality(Object& aObject, const bool aExplicitlyAdded = true)
@@ -102,17 +107,11 @@ private:
 	{
 		// TODO(Kevin): This is currently not thread-safe, to make it threadsafe it needs to be run from a job with the same dependencies, but write permission on them.
 		if constexpr (std::is_base_of_v<_BaseFunctionality, TDependency>)
-		{
 			return std::get<FunctionalitySystemDelegate<std::decay_t<TDependency>>&>(this->myDependencies).AddFunctionality(aObject, false);
-		}
 		else if constexpr (std::is_base_of_v<SComponent, TDependency>)
-		{
 			return std::get<ComponentSystem<std::decay_t<TDependency>>&>(this->myDependencies).AddComponent(aObject, false);
-		}
 		else
-		{
 			return std::get<std::decay_t<TDependency>&>(this->myDependencies);
-		}
 	}
 	template<typename... TDependencies>
 	typename TFunctionality::Dependencies PopulateDependencies(DependencyWrapper<std::tuple<TDependencies...>>, Object& aObject) noexcept

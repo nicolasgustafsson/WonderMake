@@ -7,6 +7,7 @@
 #include "Utilities/DependencyInjector.h"
 
 #include <cassert>
+#include <functional>
 #include <mutex>
 
 class SystemBase;
@@ -15,8 +16,8 @@ class SystemContainer final
 	: public Singleton<SystemContainer>
 {
 public:
-	template<typename TSystem>
-	void AddSystem();
+	template<typename TSystem, typename TCreateFunc>
+	void AddSystem(TCreateFunc aCreateFunc);
 
 	template<typename TSystem>
 	[[nodiscard]] TSystem& GetSystem();
@@ -33,26 +34,31 @@ private:
 	std::recursive_mutex myMutex;
 	DependencyInjector myDependencyInjector;
 
-	template<typename TSystem, typename ...TDependencies>
-	void AddSystemHelper(TupleWrapper<std::tuple<TDependencies...>>&&);
+	template<typename TSystem, typename TCreateFunc, typename ...TDependencies>
+	void AddSystemHelper(TCreateFunc aCreateFunc, TupleWrapper<std::tuple<TDependencies...>>&&);
 };
 
 template<typename TSystem>
 static void _RegisterSystem()
 {
-	SystemContainer::Get().AddSystem<TSystem>();
+	SystemContainer::Get().AddSystem<TSystem>([]() -> TSystem&
+		{
+			static TSystem sys;
+
+			return sys;
+		});
 }
 
 #define _REGISTER_SYSTEM_IMPL(aSystem, aSystemName) WM_AUTO_REGISTER(_RegisterSystem<aSystem>, aSystemName)
 
 #define REGISTER_SYSTEM(aSystem) _REGISTER_SYSTEM_IMPL(aSystem, aSystem)
 
-template<typename TSystem>
-void SystemContainer::AddSystem()
+template<typename TSystem, typename TCreateFunc>
+void SystemContainer::AddSystem(TCreateFunc aCreateFunc)
 {
 	static_assert(std::is_base_of<SystemBase, TSystem>::value, "Tried to add system that does not inherit from System.");
 
-	AddSystemHelper<TSystem>(TupleWrapper<typename TSystem::Dependencies>());
+	AddSystemHelper<TSystem>(std::move(aCreateFunc), TupleWrapper<typename TSystem::Dependencies>());
 }
 
 template<typename TSystem>
@@ -86,16 +92,14 @@ void SystemContainer::CreateSystem()
 	(void)GetSystem<TSystem>();
 }
 
-template<typename TSystem, typename ...TDependencies>
-void SystemContainer::AddSystemHelper(TupleWrapper<std::tuple<TDependencies...>>&&)
+template<typename TSystem, typename TCreateFunc, typename ...TDependencies>
+void SystemContainer::AddSystemHelper(TCreateFunc aCreateFunc, TupleWrapper<std::tuple<TDependencies...>>&&)
 {
-	auto construct = [](std::decay_t<TDependencies>&... aDependencies) -> TSystem&
+	auto construct = [createFunc = std::move(aCreateFunc)](std::decay_t<TDependencies>&... aDependencies) -> TSystem&
 	{
 		TSystem::InjectDependencies(std::tie(aDependencies...));
 
-		static TSystem sys;
-
-		return sys;
+		return createFunc();
 	};
 
 	myDependencyInjector.Add<TSystem, decltype(construct), std::decay_t<TDependencies>...>(std::move(construct));

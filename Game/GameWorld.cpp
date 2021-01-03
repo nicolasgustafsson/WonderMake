@@ -12,6 +12,8 @@
 #include "Levels/LevelFunctionality.h"
 #include "Camera/CameraFunctionality.h"
 
+#include "Scheduling/ScheduleSystem.h"
+
 REGISTER_SYSTEM(GameWorld);
 
 GameWorld::GameWorld()
@@ -28,7 +30,10 @@ GameWorld::GameWorld()
 
 	level.AddDenizen(std::move(player));
 
-	EnableTick();
+	Get<ScheduleSystem>().ScheduleRepeating([this]()
+		{
+			Tick();
+		});
 }
 
 LevelFunctionality& GameWorld::RestartLevel()

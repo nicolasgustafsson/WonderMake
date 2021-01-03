@@ -7,9 +7,12 @@
 #include "Utilities/plf_colony.h"
 
 class CollisionFunctionality;
+class ScheduleSystem;
 
 class CollisionSystem final
-	: public System<>
+	: public System<
+		Policy::Set<
+			PAdd<ScheduleSystem, PWrite>>>
 {
 public:
 	CollisionSystem() noexcept;

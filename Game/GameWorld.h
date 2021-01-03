@@ -18,6 +18,7 @@ class PlayerControllerFunctionality;
 class DefaultMovementFunctionality;
 class SpriteRenderingFunctionality;
 class CameraFunctionality;
+class ScheduleSystem;
 
 class GameWorld
 	: public System<
@@ -28,7 +29,8 @@ class GameWorld
 			PAdd<FunctionalitySystemDelegate<PlayerControllerFunctionality>, PWrite>,
 			PAdd<FunctionalitySystemDelegate<DefaultMovementFunctionality>, PWrite>,
 			PAdd<FunctionalitySystemDelegate<SpriteRenderingFunctionality>, PWrite>,
-			PAdd<FunctionalitySystemDelegate<CameraFunctionality>, PWrite>>>
+			PAdd<FunctionalitySystemDelegate<CameraFunctionality>, PWrite>,
+			PAdd<ScheduleSystem, PWrite>>>
 {
 public:
 	GameWorld();
@@ -38,7 +40,7 @@ public:
 	Object myCameraController;
 	Object myLevel;
 
-	void Tick() noexcept override;
+	void Tick();
 
 private:
 	TransformFunctionality2D* myPlayerTransform = nullptr;

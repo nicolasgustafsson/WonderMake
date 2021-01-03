@@ -5,6 +5,6 @@
 namespace Engine
 {
 	//wroom wroom
-	void Start(Closure&& aCallback);
+	void Start(const Closure& aCallback);
 };
 

@@ -54,14 +54,44 @@ class FunctionalitySystem final
 	: public CreateSystem<TFunctionality>
 {
 public:
-	FunctionalitySystem();
+	FunctionalitySystem()
+		: myDependencyDestructor([this](Object& aObject, auto* aFunctionality)
+			{
+				auto& functionality = *static_cast<TFunctionality*>(static_cast<_BaseFunctionality*>(aFunctionality));
 
-	TFunctionality& AddFunctionality(Object& aObject, const bool aExplicitlyAdded = true);
-	void RemoveFunctionality(TFunctionality& aFunctionality);
+				RemoveFunctionality(functionality);
 
-	bool IsEmpty() const noexcept;
+				RemoveDependencies(aObject);
+			})
+	{
+		if (typeid(&TFunctionality::Tick) != typeid(&_BaseFunctionality::Tick))
+			CreateSystem<TFunctionality>::EnableTick();
+	}
 
-	virtual void Tick() override;
+	TFunctionality& AddFunctionality(Object& aObject, const bool aExplicitlyAdded = true)
+	{
+		return aObject.Add<TFunctionality>([this](auto& aObject) -> auto&
+		{
+			TFunctionality::InjectDependencies(PopulateDependencies(aObject));
+
+			return *myFunctionalities.emplace();
+		}, myDependencyDestructor, aExplicitlyAdded);
+	}
+	void RemoveFunctionality(TFunctionality& aFunctionality)
+	{
+		myFunctionalities.erase(myFunctionalities.get_iterator_from_pointer(&aFunctionality));
+	}
+
+	bool IsEmpty() const noexcept
+	{
+		return myFunctionalities.empty();
+	}
+
+	virtual void Tick() override
+	{
+		for (auto&& functionality : myFunctionalities)
+			functionality.Tick();
+	}
 
 private:
 	plf::colony<TFunctionality>	myFunctionalities;
@@ -71,18 +101,45 @@ private:
 	struct DependencyWrapper {};
 
 	template<typename TDependency>
-	TDependency& PopulateDependency(Object& aObject) noexcept;
+	TDependency& PopulateDependency(Object& aObject) noexcept
+	{
+		// TODO(Kevin): This is currently not thread-safe, to make it threadsafe it needs to be run from a job with the same dependencies, but write permission on them.
+		if constexpr (std::is_base_of_v<_BaseFunctionality, TDependency>)
+		{
+			return std::get<FunctionalitySystemDelegate<std::decay_t<TDependency>>&>(this->myDependencies).AddFunctionality(aObject, false);
+		}
+		else if constexpr (std::is_base_of_v<SComponent, TDependency>)
+		{
+			return std::get<ComponentSystem<std::decay_t<TDependency>>&>(this->myDependencies).AddComponent(aObject, false);
+		}
+		else
+		{
+			return std::get<std::decay_t<TDependency>&>(this->myDependencies);
+		}
+	}
 	template<typename... TDependencies>
-	typename TFunctionality::Dependencies PopulateDependencies(DependencyWrapper<std::tuple<TDependencies...>>, Object& aObject) noexcept;
-	typename TFunctionality::Dependencies PopulateDependencies(Object& aObject) noexcept;
+	typename TFunctionality::Dependencies PopulateDependencies(DependencyWrapper<std::tuple<TDependencies...>>, Object& aObject) noexcept
+	{
+		return std::tie(PopulateDependency<std::decay_t<TDependencies>>(aObject)...);
+	}
+	typename TFunctionality::Dependencies PopulateDependencies(Object& aObject) noexcept
+	{
+		return PopulateDependencies(DependencyWrapper<typename TFunctionality::Dependencies>(), aObject);
+	}
 
 	template<typename... TDependencies>
-	void RemoveDependencies(DependencyWrapper<std::tuple<TDependencies...>>, Object& aObject) noexcept;
-	void RemoveDependencies(Object& aObject) noexcept;
+	void RemoveDependencies(DependencyWrapper<std::tuple<TDependencies...>>, Object& aObject) noexcept
+	{
+		(aObject.Remove<std::decay_t<TDependencies>>(false), ...);
+	}
+	void RemoveDependencies(Object& aObject) noexcept
+	{
+		RemoveDependencies(DependencyWrapper<typename TFunctionality::Dependencies>(), aObject);
+	}
 };
 
 template<typename TFunctionality>
-using FunctionalitySystemDelegateSystem = System < Policy::Set<PAdd<FunctionalitySystem<TFunctionality>, PWrite>>>;
+using FunctionalitySystemDelegateSystem = System<Policy::Set<PAdd<FunctionalitySystem<TFunctionality>, PWrite>>>;
 
 template<typename TFunctionality>
 class FunctionalitySystemDelegate final
@@ -106,93 +163,3 @@ private:
 };
 
 #define REGISTER_FUNCTIONALITY_SYSTEM(aFunctionality) _REGISTER_SYSTEM_IMPL(FunctionalitySystem<aFunctionality>, aFunctionality) _REGISTER_SYSTEM_IMPL(FunctionalitySystemDelegate<aFunctionality>, aFunctionality##_Delegate) 
-
-template<typename TFunctionality>
-FunctionalitySystem<TFunctionality>::FunctionalitySystem()
-	: myDependencyDestructor([this](Object& aObject, auto* aFunctionality)
-		{
-			auto& functionality = *static_cast<TFunctionality*>(static_cast<_BaseFunctionality*>(aFunctionality));
-
-			RemoveFunctionality(functionality);
-
-			RemoveDependencies(aObject);
-		})
-{
-	if (typeid(&TFunctionality::Tick) != typeid(&_BaseFunctionality::Tick))
-		CreateSystem<TFunctionality>::EnableTick();
-}
-
-template<typename TFunctionality>
-typename TFunctionality& FunctionalitySystem<TFunctionality>::AddFunctionality(Object& aObject, const bool aExplicitlyAdded)
-{
-	return aObject.Add<TFunctionality>([this](auto& aObject) -> auto&
-	{
-		TFunctionality::InjectDependencies(PopulateDependencies(aObject));
-
-		return *myFunctionalities.emplace();
-	}, myDependencyDestructor, aExplicitlyAdded);
-}
-
-template<typename TFunctionality>
-void FunctionalitySystem<TFunctionality>::RemoveFunctionality(TFunctionality& aFunctionality)
-{
-	myFunctionalities.erase(myFunctionalities.get_iterator_from_pointer(&aFunctionality));
-}
-
-template<typename TFunctionality>
-bool FunctionalitySystem<TFunctionality>::IsEmpty() const noexcept
-{
-	return myFunctionalities.empty();
-}
-
-template<typename TFunctionality>
-void FunctionalitySystem<TFunctionality>::Tick()
-{
-	for (auto&& functionality : myFunctionalities)
-		functionality.Tick();
-}
-
-template<typename TFunctionality>
-template<typename TDependency>
-TDependency& FunctionalitySystem<TFunctionality>::PopulateDependency(Object& aObject) noexcept
-{
-	// TODO(Kevin): This is currently not thread-safe, to make it threadsafe it needs to be run from a job with the same dependencies, but write permission on them.
-	if constexpr (std::is_base_of_v<_BaseFunctionality, TDependency>)
-	{
-		return std::get<FunctionalitySystemDelegate<std::decay_t<TDependency>>&>(this->myDependencies).AddFunctionality(aObject, false);
-	}
-	else if constexpr (std::is_base_of_v<SComponent, TDependency>)
-	{
-		return std::get<ComponentSystem<std::decay_t<TDependency>>&>(this->myDependencies).AddComponent(aObject, false);
-	}
-	else
-	{
-		return std::get<std::decay_t<TDependency>&>(this->myDependencies);
-	}
-}
-
-template<typename TFunctionality>
-template<typename... TDependencies>
-typename TFunctionality::Dependencies FunctionalitySystem<TFunctionality>::PopulateDependencies(DependencyWrapper<std::tuple<TDependencies...>>, Object& aObject) noexcept
-{
-	return std::tie(PopulateDependency<std::decay_t<TDependencies>>(aObject)...);
-}
-
-template<typename TFunctionality>
-typename TFunctionality::Dependencies FunctionalitySystem<TFunctionality>::PopulateDependencies(Object& aObject) noexcept
-{
-	return PopulateDependencies(DependencyWrapper<typename TFunctionality::Dependencies>(), aObject);
-}
-
-template<typename TFunctionality>
-template<typename... TDependencies>
-void FunctionalitySystem<TFunctionality>::RemoveDependencies(DependencyWrapper<std::tuple<TDependencies...>>, Object& aObject) noexcept
-{
-	(aObject.Remove<std::decay_t<TDependencies>>(false), ...);
-}
-
-template<typename TFunctionality>
-void FunctionalitySystem<TFunctionality>::RemoveDependencies(Object& aObject) noexcept
-{
-	RemoveDependencies(DependencyWrapper<typename TFunctionality::Dependencies>(), aObject);
-}

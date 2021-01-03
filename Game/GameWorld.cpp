@@ -30,10 +30,7 @@ GameWorld::GameWorld()
 
 	level.AddDenizen(std::move(player));
 
-	Get<ScheduleSystem>().ScheduleRepeating([this]()
-		{
-			Tick();
-		});
+	Get<ScheduleSystem>().ScheduleRepeating([this]() { Tick(); });
 }
 
 LevelFunctionality& GameWorld::RestartLevel()
@@ -56,7 +53,7 @@ LevelFunctionality& GameWorld::RestartLevel()
 	return levelFunctionality;
 }
 
-void GameWorld::Tick() noexcept
+void GameWorld::Tick()
 {
 	myBackground.SetProperty("MainColor", SColor::RaisinBlack());
 	myBackground.SetProperty("DetailColor", SColor::Seashell());

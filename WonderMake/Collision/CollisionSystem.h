@@ -17,7 +17,7 @@ class CollisionSystem final
 public:
 	CollisionSystem() noexcept;
 
-	virtual void Tick() noexcept override;
+	void Tick();
 
 	template<typename TIdentifyingFunctionality>
 	Colliders::Shape& CreateSphereCollider(TIdentifyingFunctionality& aFunctionality, const SVector2f aPosition, const f32 aRadius);

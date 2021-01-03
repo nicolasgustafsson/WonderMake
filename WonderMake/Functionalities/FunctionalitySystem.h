@@ -53,7 +53,9 @@ class FunctionalitySystem final
 	: public _Impl::GetFunctionalitySystem<TFunctionality>
 {
 public:
-	FunctionalitySystem()
+	using Super = _Impl::GetFunctionalitySystem<TFunctionality>;
+
+	inline FunctionalitySystem()
 		: myDependencyDestructor([this](Object& aObject, auto* aFunctionality)
 			{
 				auto& functionality = *static_cast<TFunctionality*>(static_cast<_BaseFunctionality*>(aFunctionality));
@@ -64,13 +66,10 @@ public:
 			})
 	{
 		if (typeid(&TFunctionality::Tick) != typeid(&_BaseFunctionality::Tick))
-			_Impl::GetFunctionalitySystem<TFunctionality>::template Get<ScheduleSystem>().ScheduleRepeating([this]()
-				{
-					Tick();
-				});
+			Super::template Get<ScheduleSystem>().ScheduleRepeating([this]() { Tick(); });
 	}
 
-	TFunctionality& AddFunctionality(Object& aObject, const bool aExplicitlyAdded = true)
+	inline [[nodiscard]] TFunctionality& AddFunctionality(Object& aObject, const bool aExplicitlyAdded = true)
 	{
 		return aObject.Add<TFunctionality>([this](auto& aObject) -> auto&
 		{
@@ -79,17 +78,17 @@ public:
 			return *myFunctionalities.emplace();
 		}, myDependencyDestructor, aExplicitlyAdded);
 	}
-	void RemoveFunctionality(TFunctionality& aFunctionality)
+	inline void RemoveFunctionality(TFunctionality& aFunctionality)
 	{
 		myFunctionalities.erase(myFunctionalities.get_iterator_from_pointer(&aFunctionality));
 	}
 
-	bool IsEmpty() const noexcept
+	inline bool IsEmpty() const noexcept
 	{
 		return myFunctionalities.empty();
 	}
 
-	void Tick() override
+	inline [[nodiscard]] void Tick()
 	{
 		for (auto&& functionality : myFunctionalities)
 			functionality.TFunctionality::Tick();
@@ -103,7 +102,7 @@ private:
 	struct DependencyWrapper {};
 
 	template<typename TDependency>
-	TDependency& PopulateDependency(Object& aObject) noexcept
+	inline [[nodiscard]] TDependency& PopulateDependency(Object& aObject) noexcept
 	{
 		// TODO(Kevin): This is currently not thread-safe, to make it threadsafe it needs to be run from a job with the same dependencies, but write permission on them.
 		if constexpr (std::is_base_of_v<_BaseFunctionality, TDependency>)
@@ -114,21 +113,21 @@ private:
 			return std::get<std::decay_t<TDependency>&>(this->myDependencies);
 	}
 	template<typename... TDependencies>
-	typename TFunctionality::Dependencies PopulateDependencies(DependencyWrapper<std::tuple<TDependencies...>>, Object& aObject) noexcept
+	inline [[nodiscard]] typename TFunctionality::Dependencies PopulateDependencies(DependencyWrapper<std::tuple<TDependencies...>>, Object& aObject) noexcept
 	{
 		return std::tie(PopulateDependency<std::decay_t<TDependencies>>(aObject)...);
 	}
-	typename TFunctionality::Dependencies PopulateDependencies(Object& aObject) noexcept
+	inline [[nodiscard]] typename TFunctionality::Dependencies PopulateDependencies(Object& aObject) noexcept
 	{
 		return PopulateDependencies(DependencyWrapper<typename TFunctionality::Dependencies>(), aObject);
 	}
 
 	template<typename... TDependencies>
-	void RemoveDependencies(DependencyWrapper<std::tuple<TDependencies...>>, Object& aObject) noexcept
+	inline void RemoveDependencies(DependencyWrapper<std::tuple<TDependencies...>>, Object& aObject) noexcept
 	{
 		(aObject.Remove<std::decay_t<TDependencies>>(false), ...);
 	}
-	void RemoveDependencies(Object& aObject) noexcept
+	inline void RemoveDependencies(Object& aObject) noexcept
 	{
 		RemoveDependencies(DependencyWrapper<typename TFunctionality::Dependencies>(), aObject);
 	}
@@ -142,14 +141,14 @@ class FunctionalitySystemDelegate final
 	: public FunctionalitySystemDelegateSystem<TFunctionality>
 {
 public:
-	FunctionalitySystemDelegate() noexcept
+	inline FunctionalitySystemDelegate() noexcept
 		: myFunctionalityConstructor([this](auto& aObject, const bool aExplicitlyAdded) -> auto&
 			{
 				return this->Get<FunctionalitySystem<TFunctionality>>().AddFunctionality(aObject, aExplicitlyAdded);
 			})
 	{}
 
-	TFunctionality& AddFunctionality(Object& aObject, const bool aExplicitlyAdded = true)
+	inline [[nodiscard]] TFunctionality& AddFunctionality(Object& aObject, const bool aExplicitlyAdded = true)
 	{
 		return myFunctionalityConstructor(aObject, aExplicitlyAdded);
 	}

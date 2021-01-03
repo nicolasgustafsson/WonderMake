@@ -40,7 +40,7 @@ public:
 	Object myCameraController;
 	Object myLevel;
 
-	void Tick() noexcept override;
+	void Tick();
 
 private:
 	TransformFunctionality2D* myPlayerTransform = nullptr;

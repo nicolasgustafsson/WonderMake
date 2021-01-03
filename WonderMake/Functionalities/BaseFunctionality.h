@@ -10,5 +10,5 @@ class _BaseFunctionality
 public:
 	virtual ~_BaseFunctionality() = default;
 
-	void Tick() noexcept {}
+	virtual void Tick() {}
 };

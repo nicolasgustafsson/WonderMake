@@ -17,41 +17,38 @@ struct SComponent;
 template<typename TFunctionality>
 class FunctionalitySystemDelegate;
 
-template<typename TDependency>
-using ExtractSystemType =
-	// If: Dependency is a functionality
-	std::conditional_t<std::is_base_of_v<_BaseFunctionality, TDependency>,
-		// Return the FunctionalitySystemDelegate
-		FunctionalitySystemDelegate<TDependency>,
-	// ElseIf: Dependency is a component
-	std::conditional_t<std::is_base_of_v<SComponent, TDependency>,
-		// Return the ComponentSystem
-		ComponentSystem<TDependency>,
-	// Else:
-		// Return the Dependency as is
-		TDependency>>;
+namespace _Impl
+{
+	template<typename TDependency>
+	using ExtractSystemType =
+		// If: Dependency is a functionality
+		std::conditional_t<std::is_base_of_v<_BaseFunctionality, TDependency>,
+			// Return the FunctionalitySystemDelegate
+			FunctionalitySystemDelegate<TDependency>,
+		// ElseIf: Dependency is a component
+		std::conditional_t<std::is_base_of_v<SComponent, TDependency>,
+			// Return the ComponentSystem
+			ComponentSystem<TDependency>,
+		// Else:
+			// Return the Dependency as is
+			TDependency>>;
 
-template<typename TPolicy>
-using ConvertPolicy =
-PAdd<
-	ExtractSystemType<typename TPolicy::Dependency>,
-	TPolicy::Permission>;
+	template<typename TPolicy>
+	using ConvertPolicy = PAdd<ExtractSystemType<typename TPolicy::Dependency>, TPolicy::Permission>;
 
-template<typename... TFunctionalityPolicies>
-using CreatePolicySet =
-Policy::Set<
-	ConvertPolicy<TFunctionalityPolicies>...>;
+	template<typename... TFunctionalityPolicies>
+	using CreatePolicySet = Policy::Set<ConvertPolicy<TFunctionalityPolicies>...>;
 
-template<typename TPolicySet>
-using ConvertPolicySet =
-typename TPolicySet::template ExtractPolicies<CreatePolicySet>;
+	template<typename TPolicySet>
+	using ConvertPolicySet = typename TPolicySet::template ExtractPolicies<CreatePolicySet>;
 
-template<typename TFunctionality>
-using CreateSystem = System<ConvertPolicySet<typename TFunctionality::PolicySet>>;
+	template<typename TFunctionality>
+	using CreateSystem = System<ConvertPolicySet<typename TFunctionality::PolicySet>>;
+}
 
 template<typename TFunctionality>
 class FunctionalitySystem final
-	: public CreateSystem<TFunctionality>
+	: public _Impl::CreateSystem<TFunctionality>
 {
 public:
 	FunctionalitySystem()
@@ -65,7 +62,7 @@ public:
 			})
 	{
 		if (typeid(&TFunctionality::Tick) != typeid(&_BaseFunctionality::Tick))
-			CreateSystem<TFunctionality>::EnableTick();
+			_Impl::CreateSystem<TFunctionality>::EnableTick();
 	}
 
 	TFunctionality& AddFunctionality(Object& aObject, const bool aExplicitlyAdded = true)
@@ -87,10 +84,10 @@ public:
 		return myFunctionalities.empty();
 	}
 
-	virtual void Tick() override
+	void Tick() override
 	{
 		for (auto&& functionality : myFunctionalities)
-			functionality.Tick();
+			functionality.TFunctionality::Tick();
 	}
 
 private:

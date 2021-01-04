@@ -66,7 +66,7 @@ public:
 			})
 	{
 		if (typeid(&TFunctionality::Tick) != typeid(&_BaseFunctionality::Tick))
-			Super::template Get<ScheduleSystem>().ScheduleRepeating([this]() { Tick(); });
+			Super::template Get<ScheduleSystem>().ScheduleRepeating<_Impl::ConvertPolicySet<typename Super::PolicySet>>([this]() { Tick(); });
 	}
 
 	inline [[nodiscard]] TFunctionality& AddFunctionality(Object& aObject, const bool aExplicitlyAdded = true)

@@ -30,7 +30,7 @@ GameWorld::GameWorld()
 
 	level.AddDenizen(std::move(player));
 
-	Get<ScheduleSystem>().ScheduleRepeating([this]() { Tick(); });
+	Get<ScheduleSystem>().ScheduleRepeating<>([this]() { Tick(); });
 }
 
 LevelFunctionality& GameWorld::RestartLevel()

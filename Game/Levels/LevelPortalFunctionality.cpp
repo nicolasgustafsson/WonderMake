@@ -5,6 +5,20 @@
 
 #include "Character/CharacterFunctionality.h"
 
+#include "Job/Job.h"
+#include "Job/JobSystem.h"
+
+class RestartLevelJob
+	: public Job<
+		Policy::Set<
+			PAdd<GameWorld, PWrite>>>
+{
+	void OnStarted() override
+	{
+		Get<GameWorld>().RestartLevel();
+	}
+};
+
 REGISTER_FUNCTIONALITY(LevelPortalFunctionality);
 
 LevelPortalFunctionality::LevelPortalFunctionality()
@@ -25,10 +39,8 @@ LevelPortalFunctionality::LevelPortalFunctionality()
 				return;
 			}
 
-			WmDispatchTask([]() 
-				{
-					SystemPtr<GameWorld>()->RestartLevel();
-				});
+			Get<JobSystem>().CreateAndRun<RestartLevelJob>();
+
 			myDoOnce = true;
 		});
 }

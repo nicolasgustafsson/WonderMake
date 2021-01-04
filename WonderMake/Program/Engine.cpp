@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Engine.h"
 
+#include "Job/JobSystem.h"
+
 #include "Program/Program.h"
 
 #include "System/SystemContainer.h"
@@ -34,6 +36,12 @@ namespace Engine
 			taskManager.ScheduleRepeating(std::move(aTask));
 		};
 
+		SystemContainer::Get().AddSystem<JobSystem>([]() -> JobSystem&
+			{
+				static JobSystem system(SystemContainer::Get());
+
+				return system;
+			});
 		SystemContainer::Get().AddSystem<ScheduleSystem>([&scheduleProc, &scheduleRepeatingProc]() -> ScheduleSystem&
 			{
 				static ScheduleSystem system(scheduleProc, scheduleRepeatingProc);

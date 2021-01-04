@@ -23,26 +23,6 @@ inline static void WmDispatchMessage(TMessage&& aMessage) noexcept
 	DispatchableBuffer::Get().Dispatch(std::move(aMessage));
 }
 
-inline static void WmDispatchTask(Task&& aTask) noexcept
-{
-	DispatchableBuffer::Get().Dispatch(std::move(aTask));
-}
-
-inline static void WmDispatchTask(const Task& aTask) noexcept
-{
-	DispatchableBuffer::Get().Dispatch(aTask);
-}
-
-inline static void WmDispatchTask(Closure&& aTask) noexcept
-{
-	DispatchableBuffer::Get().Dispatch(Task(aTask));
-}
-
-inline static void WmDispatchTask(const Closure& aTask)
-{
-	DispatchableBuffer::Get().Dispatch(std::move(Task(aTask)));
-}
-
 template<typename ... TMessageArgs>
 inline static void WmLog(TMessageArgs... aMessageArgs)
 {

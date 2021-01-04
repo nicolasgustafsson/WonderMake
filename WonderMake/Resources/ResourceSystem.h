@@ -163,10 +163,7 @@ inline void ResourceSystem<TResource>::ResourceDeleter(std::filesystem::path aPa
 		myCreateResourceJobs.erase(jobIt);
 	}
 
-	WmDispatchTask([aResource]
-	{
-		delete aResource;
-	});
+	delete aResource;
 }
 
 template<typename TResource>

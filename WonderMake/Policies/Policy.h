@@ -2,6 +2,7 @@
 
 #include <tuple>
 #include <vector>
+#include <type_traits>
 
 #include "Policies/SystemId.h"
 
@@ -36,7 +37,7 @@ struct Policy final
 		static constexpr auto Permission = TPermission;
 	};
 
-	template<typename ... TPolicies>
+	template<typename... TPolicies>
 	struct Set
 	{
 	private:
@@ -80,6 +81,27 @@ struct Policy final
 	};
 
 private:
+	template<typename... TPolicySets>
+	struct ConcatPolicySets
+	{
+		auto operator()()
+		{
+			return std::tuple_cat(typename TPolicySets::template ExtractPolicies<std::tuple>()...);
+		}
+	};
+	template<typename TPolicyTuple>
+	struct ConcatPolicies {};
+	template<typename... TPolicies>
+	struct ConcatPolicies<std::tuple<TPolicies...>>
+	{
+		using Result = Policy::Set<TPolicies...>;
+	};
+
+public:
+	template<typename... TPolicySets>
+	using Concat = typename ConcatPolicies<std::invoke_result_t<ConcatPolicySets<TPolicySets...>>>::Result;
+
+private:
 	template<typename TPolicy, typename TDependency>
 	[[nodiscard]] inline static constexpr bool PolicyHasDependency() noexcept
 	{
@@ -90,6 +112,7 @@ private:
 	{
 		return TPermission == TPolicy::Permission;
 	}
+
 };
 
 template<typename TDependency, Policy::EPermission TPermission>

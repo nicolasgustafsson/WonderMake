@@ -26,38 +26,38 @@ using SetD = Policy::Set<
 
 void StaticTest_Policy_HasDependencyAndPolicy()
 {
-	static_assert(!SetA::HasDependency_v<SystemA>,	"SetA should not depend on SystemA.");
-	static_assert(!SetA::HasDependency_v<SystemB>,	"SetA should not depend on SystemB.");
-	static_assert(!SetA::HasDependency_v<SystemC>,	"SetA should not depend on SystemC.");
-	static_assert(!SetA::HasDependency_v<SystemD>,	"SetA should not depend on SystemD.");
+	static_assert(!SetA::HasDependency_v<SystemA>);
+	static_assert(!SetA::HasDependency_v<SystemB>);
+	static_assert(!SetA::HasDependency_v<SystemC>);
+	static_assert(!SetA::HasDependency_v<SystemD>);
 
-	static_assert(SetB::HasDependency_v<SystemA>,	"SetB should depend on SystemA.");
-	static_assert(!SetB::HasDependency_v<SystemB>,	"SetB should not depend on SystemB.");
-	static_assert(!SetB::HasDependency_v<SystemC>,	"SetB should not depend on SystemC.");
-	static_assert(!SetB::HasDependency_v<SystemD>,	"SetB should not depend on SystemD.");
+	static_assert(SetB::HasDependency_v<SystemA>);
+	static_assert(!SetB::HasDependency_v<SystemB>);
+	static_assert(!SetB::HasDependency_v<SystemC>);
+	static_assert(!SetB::HasDependency_v<SystemD>);
 
-	static_assert(SetC::HasDependency_v<SystemA>,	"SetC should depend on SystemA.");
-	static_assert(!SetC::HasDependency_v<SystemC>,	"SetC should not depend on SystemB.");
-	static_assert(!SetC::HasDependency_v<SystemC>,	"SetC should not depend on SystemC.");
-	static_assert(!SetC::HasDependency_v<SystemD>,	"SetC should not depend on SystemD.");
+	static_assert(SetC::HasDependency_v<SystemA>);
+	static_assert(!SetC::HasDependency_v<SystemC>);
+	static_assert(!SetC::HasDependency_v<SystemC>);
+	static_assert(!SetC::HasDependency_v<SystemD>);
 
-	static_assert(SetD::HasDependency_v<SystemA>,	"SetD should depend on SystemA.");
-	static_assert(SetD::HasDependency_v<SystemB>,	"SetD should depend on SystemB.");
-	static_assert(SetD::HasDependency_v<SystemC>,	"SetD should depend on SystemC.");
-	static_assert(!SetD::HasDependency_v<SystemD>,	"SetD should not depend on SystemD.");
+	static_assert(SetD::HasDependency_v<SystemA>);
+	static_assert(SetD::HasDependency_v<SystemB>);
+	static_assert(SetD::HasDependency_v<SystemC>);
+	static_assert(!SetD::HasDependency_v<SystemD>);
 
-	static_assert(!SetA::HasPolicy_v<SystemA, PRead>,	"SetA should not have read permisson for SystemA.");
-	static_assert(!SetA::HasPolicy_v<SystemA, PWrite>,	"SetA should not have write permisson for SystemA.");
+	static_assert(!SetA::HasPolicy_v<SystemA, PRead>);
+	static_assert(!SetA::HasPolicy_v<SystemA, PWrite>);
 
-	static_assert(SetB::HasPolicy_v<SystemA, PRead>,	"SetB should have read permisson for SystemA.");
-	static_assert(!SetB::HasPolicy_v<SystemA, PWrite>,	"SetB should not have write permisson for SystemA.");
+	static_assert(SetB::HasPolicy_v<SystemA, PRead>);
+	static_assert(!SetB::HasPolicy_v<SystemA, PWrite>);
 
-	static_assert(!SetC::HasPolicy_v<SystemA, PRead>,	"SetC should not have read permisson for SystemA.");
-	static_assert(SetC::HasPolicy_v<SystemA, PWrite>,	"SetC should have write permisson for SystemA.");
+	static_assert(!SetC::HasPolicy_v<SystemA, PRead>);
+	static_assert(SetC::HasPolicy_v<SystemA, PWrite>);
 
-	static_assert(SetD::HasPolicy_v<SystemA, PWrite>,	"SetD should have write permisson for SystemA.");
-	static_assert(SetD::HasPolicy_v<SystemB, PRead>,	"SetD should have read permisson for SystemB.");
-	static_assert(SetD::HasPolicy_v<SystemC, PWrite>,	"SetD should have write permisson for SystemC.");
+	static_assert(SetD::HasPolicy_v<SystemA, PWrite>);
+	static_assert(SetD::HasPolicy_v<SystemB, PRead>);
+	static_assert(SetD::HasPolicy_v<SystemC, PWrite>);
 }
 
 void StaticTest_Policy_Concat()

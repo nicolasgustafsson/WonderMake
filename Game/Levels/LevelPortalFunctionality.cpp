@@ -6,7 +6,6 @@
 #include "Character/CharacterFunctionality.h"
 
 #include "Job/Job.h"
-#include "Job/JobSystem.h"
 
 class RestartLevelJob
 	: public Job<
@@ -40,7 +39,7 @@ LevelPortalFunctionality::LevelPortalFunctionality()
 				return;
 			}
 
-			Get<JobSystem>().Run<RestartLevelJob>();
+			RunJob<RestartLevelJob>();
 
 			myDoOnce = true;
 		});

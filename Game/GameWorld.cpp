@@ -12,8 +12,6 @@
 #include "Levels/LevelFunctionality.h"
 #include "Camera/CameraFunctionality.h"
 
-#include "Job/JobSystem.h"
-
 #include "Object/CreateObjectJob.h"
 
 #include "Scheduling/ScheduleSystem.h"
@@ -35,17 +33,7 @@ GameWorld::GameWorld()
 
 void GameWorld::RestartLevel(const bool aAddPlayer)
 {
-	/* 
-	 *	Get<JobSystem>()
-	 *		.Run<CreateObjectJob<LevelFunctionality>>()
-	 *		.Then(MakeCargo(*this), [](auto&& aCargo, auto&& aObject, auto&& aFunctionalities)
-	 *			{
-	 *				aCargo.Get<GameWorld>().SetLevel(std::move(aObject), aFunctionalities.Get<LevelFunctionality>());
-	 *			});
-	 * 
-	 */
-
-	Get<JobSystem>().Run<CreateObjectJob<LevelFunctionality>>([this, aAddPlayer](auto&& aObject, auto&& aFunctionalities)
+	RunJob<CreateObjectJob<LevelFunctionality>>([this, aAddPlayer](auto&& aObject, auto&& aFunctionalities)
 		{
 			auto&& levelFunctionality = std::get<LevelFunctionality&>(aFunctionalities);
 
@@ -80,7 +68,7 @@ void GameWorld::Tick()
 
 void GameWorld::SetupPlayer(LevelFunctionality& aLevelFunctionality)
 {
-	Get<JobSystem>().Run<CreateObjectJob<TransformFunctionality2D, PlayerControllerFunctionality, CameraFunctionality>>([this, &aLevelFunctionality](auto&& aObject, auto&& aFunctionalities)
+	RunJob<CreateObjectJob<TransformFunctionality2D, PlayerControllerFunctionality, CameraFunctionality>>([this, &aLevelFunctionality](auto&& aObject, auto&& aFunctionalities)
 		{
 			myPlayerTransform = &std::get<TransformFunctionality2D&>(aFunctionalities);
 
@@ -92,7 +80,7 @@ void GameWorld::SetupPlayer(LevelFunctionality& aLevelFunctionality)
 
 void GameWorld::OnPlayerDeath(const SPlayerDiedMessage&)
 {
-	Get<JobSystem>().Run<CreateObjectJob<SpriteRenderingFunctionality>>([this](auto&& aObject, auto&& aFunctionalities)
+	RunJob<CreateObjectJob<SpriteRenderingFunctionality>>([this](auto&& aObject, auto&& aFunctionalities)
 		{
 			auto& sprite = std::get<SpriteRenderingFunctionality&>(aFunctionalities);
 

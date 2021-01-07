@@ -10,14 +10,12 @@ struct SPlayerDiedMessage;
 
 class LevelDesigner;
 class LevelFunctionality;
-class JobSystem;
 class ScheduleSystem;
 
 class GameWorld
 	: public System<
 		Policy::Set<
 			PAdd<LevelDesigner, PWrite>,
-			PAdd<JobSystem, PWrite>,
 			PAdd<ScheduleSystem, PWrite>>>
 {
 public:

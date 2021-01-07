@@ -7,18 +7,8 @@
 #include "Utilities/RestrictTypes.h"
 #include "Utilities/Utility.h"
 
-#include <functional>
-#include <mutex>
 #include <optional>
 
-enum class EJobStatus
-{
-	NotStarted,
-	InProgress,
-	Canceled,
-	Succeeded,
-	Failed
-};
 enum class EJobResult
 {
 	Canceled,
@@ -31,41 +21,18 @@ class JobBase
 	, NonMovable
 {
 public:
-	using Callback = std::function<void(const EJobResult)>;
-
 	virtual ~JobBase();
 
-	void Start();
 	void Cancel();
 
-	[[nodiscard]] bool IsCompleted() const noexcept;
-	[[nodiscard]] bool IsSuccessful() const noexcept;
-	[[nodiscard]] bool IsCanceled() const noexcept;
-	[[nodiscard]] EJobStatus GetStatus() const noexcept;
-
 protected:
-	template<typename TCallable>
-	inline void SetCallback(TCallable aCallable) noexcept
-	{
-		myCallback = std::forward<TCallable>(aCallable);
-	}
-
 	void CompleteSuccess();
 	void CompleteFailure();
 
-	virtual void OnStarted() = 0;
 	virtual void OnCompleted(const EJobResult /*aResult*/) {};
 
 private:
-	void SetStatus(const EJobStatus aStatus) noexcept;
-
-	void Complete(const EJobStatus aStatus, const EJobResult aResult);
-	void RunCompletedCallbacks(const EJobResult aResult);
-
-	mutable std::mutex myLock;
-
-	Callback myCallback;
-	EJobStatus myStatus = EJobStatus::NotStarted;
+	void Complete(const EJobResult aResult);
 
 };
 

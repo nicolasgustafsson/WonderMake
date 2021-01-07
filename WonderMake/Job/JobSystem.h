@@ -5,8 +5,7 @@
 
 #include "Scheduling/ScheduleSystem.h"
 
-#include <functional>
-#include <memory>
+#include <tuple>
 
 class JobBase;
 
@@ -19,23 +18,14 @@ public:
 	JobSystem(SystemContainer& aSystemContainer) noexcept;
 
 	template<typename TJob, typename... TArgs>
-	inline void CreateAndRun(TArgs&&... aArgs)
+	inline void Run(TArgs&&... aArgs)
 	{
-		Run(Create<TJob>(std::forward<TArgs>(aArgs)...));
-	}
-	template<typename TJob, typename... TArgs>
-	inline [[nodiscard]] std::shared_ptr<TJob> Create(TArgs&&... aArgs)
-	{
-		TJob::InjectDependencies(GetDependenciesHelper(TupleWrapper<typename TJob::Dependencies>()));
-
-		return std::make_shared<TJob>(std::forward<TArgs>(aArgs)...);
-	}
-	template<typename TJob>
-	inline void Run(std::shared_ptr<TJob> aJob)
-	{
-		Get<ScheduleSystem>().Schedule<typename TJob::PolicySet>([job = std::move(aJob)]()
+		Get<ScheduleSystem>().Schedule<typename TJob::PolicySet>([this, ...args = std::forward<TArgs>(aArgs)]()
 		{
-			job->Start();
+			TJob::InjectDependencies(GetDependenciesHelper(TupleWrapper<typename TJob::Dependencies>()));
+
+			// TODO(Kevin): Forwarding?
+			TJob job(args...);
 		});
 	}
 
@@ -43,12 +33,12 @@ private:
 	template<typename TDependencyTuple>
 	struct TupleWrapper {};
 
-	SystemContainer& mySystemContainer;
-
 	template<typename... TDependencies>
 	inline std::tuple<TDependencies...> GetDependenciesHelper(TupleWrapper<std::tuple<TDependencies...>>)
 	{
 		return std::tie(mySystemContainer.GetSystem<std::decay_t<TDependencies>>()...);
 	}
+
+	SystemContainer& mySystemContainer;
 
 };

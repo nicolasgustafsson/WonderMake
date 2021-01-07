@@ -13,7 +13,8 @@ class RestartLevelJob
 		Policy::Set<
 			PAdd<GameWorld, PWrite>>>
 {
-	void OnStarted() override
+public:
+	inline RestartLevelJob()
 	{
 		Get<GameWorld>().RestartLevel();
 	}
@@ -39,7 +40,7 @@ LevelPortalFunctionality::LevelPortalFunctionality()
 				return;
 			}
 
-			Get<JobSystem>().CreateAndRun<RestartLevelJob>();
+			Get<JobSystem>().Run<RestartLevelJob>();
 
 			myDoOnce = true;
 		});

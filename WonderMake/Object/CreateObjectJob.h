@@ -6,7 +6,6 @@
 
 #include "Functionalities/FunctionalitySystem.h"
 
-#include <functional>
 #include <tuple>
 
 namespace _Impl
@@ -23,20 +22,21 @@ class CreateObjectJob final
 	: public _Impl::_CreateObjectJobType<TFunctionalities...>
 {
 public:
-	using SetupProc = std::function<void(Object&&, std::tuple<std::decay_t<TFunctionalities>&...>)>;
-
-	inline CreateObjectJob(SetupProc aSetupProc = std::nullptr_t) noexcept
-		: mySetupProc(aSetupProc)
-	{}
-
-private:
-	void OnStarted() override
+	inline CreateObjectJob() noexcept
 	{
-		mySetupProc(std::move(myObject), std::tie(AddFunctionalityHelper<TFunctionalities>()...));
+		(void)std::tie(AddFunctionalityHelper<TFunctionalities>()...);
+
+		_Impl::_CreateObjectJobType<TFunctionalities...>::CompleteSuccess();
+	}
+	template<typename TCallable>
+	inline CreateObjectJob(const TCallable& aSetupProc) noexcept
+	{
+		aSetupProc(std::move(myObject), std::tie(AddFunctionalityHelper<TFunctionalities>()...));
 
 		_Impl::_CreateObjectJobType<TFunctionalities...>::CompleteSuccess();
 	}
 
+private:
 	template<typename TFunctionality>
 	std::decay_t<TFunctionality>& AddFunctionalityHelper()
 	{
@@ -44,5 +44,4 @@ private:
 	}
 
 	Object myObject;
-	SetupProc mySetupProc;
 };

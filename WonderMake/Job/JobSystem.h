@@ -1,10 +1,19 @@
 #pragma once
 
+#include "Job/JobFuture.h"
+#include "Job/JobPromise.h"
+
 #include "System/System.h"
 #include "System/SystemContainer.h"
 
 #include "Scheduling/ScheduleSystem.h"
 
+#include "Utilities/plf_colony.h"
+
+#include <any>
+#include <optional>
+#include <memory>
+#include <mutex>
 #include <tuple>
 
 class JobBase;
@@ -17,19 +26,48 @@ class JobSystem
 public:
 	JobSystem(SystemContainer& aSystemContainer) noexcept;
 
-	template<typename TJob, typename... TArgs>
-	inline void Run(TArgs&&... aArgs)
+	template<typename TJob, typename... TArgs> requires std::is_base_of_v<JobBase, TJob>
+	inline typename TJob::Future Run(TArgs&&... aArgs)
 	{
-		Get<ScheduleSystem>().Schedule<typename TJob::PolicySet>([this, ...args = std::forward<TArgs>(aArgs)]()
+		std::any* jobAnyPtr = nullptr;
+
 		{
-			TJob::InjectDependencies(GetDependenciesHelper(TupleWrapper<typename TJob::Dependencies>()));
+			std::lock_guard<decltype(myMutex)> lock(myMutex);
+
+			jobAnyPtr = &*myJobs.emplace();
+		}
+
+		auto&& jobData = jobAnyPtr->emplace<JobData<TJob>>();
+
+		jobData.Promise.SetCallbackCompleted([this, jobAnyPtr]()
+			{
+				Get<ScheduleSystem>().Schedule<>([this, jobAnyPtr]()
+					{
+						std::lock_guard<decltype(myMutex)> lock(myMutex);
+
+						myJobs.erase(myJobs.get_iterator_from_pointer(jobAnyPtr));
+					});
+			});
+
+		Get<ScheduleSystem>().Schedule<typename TJob::PolicySet>([this, &jobData, ...args = std::forward<TArgs>(aArgs)]()
+		{
+			TJob::InjectDependencies(jobData.Promise, GetDependenciesHelper(TupleWrapper<typename TJob::Dependencies>()));
 
 			// TODO(Kevin): Forwarding?
-			TJob job(args...);
+			jobData.Job = std::make_shared<TJob>(args...);
 		});
+
+		return jobData.Promise;
 	}
 
 private:
+	template<typename TJob>
+	struct JobData
+	{
+		typename TJob::Promise Promise;
+		std::shared_ptr<TJob> Job;
+	};
+
 	template<typename TDependencyTuple>
 	struct TupleWrapper {};
 
@@ -40,5 +78,8 @@ private:
 	}
 
 	SystemContainer& mySystemContainer;
+
+	std::mutex myMutex;
+	plf::colony<std::any> myJobs;
 
 };

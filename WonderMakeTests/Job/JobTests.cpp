@@ -89,9 +89,10 @@ TEST_CASE("Job status updates properly", "[Job]")
 	JobDependencies dependencies;
 	JobData data;
 	EJobResult lastResultBeforeDestruction = EJobResult::Failed;
+	JobMock::Promise promise;
 
 	{
-		JobMock::InjectDependencies(std::tie(dependencies.myJobSystem));
+		JobMock::InjectDependencies(promise, std::tie(dependencies.myJobSystem));
 
 		JobMock jobMock(data);
 
@@ -132,9 +133,10 @@ TEST_CASE("Job injection function properly", "[Job]")
 	JobDependencies dependencies;
 	JobData data;
 	EJobResult lastResultBeforeDestruction = EJobResult::Failed;
+	JobInjectionMock::Promise promise;
 
 	{
-		JobInjectionMock::InjectDependencies(std::tie(dependencies.myJobSystem, data));
+		JobInjectionMock::InjectDependencies(promise, std::tie(dependencies.myJobSystem, data));
 
 		JobInjectionMock jobMock;
 

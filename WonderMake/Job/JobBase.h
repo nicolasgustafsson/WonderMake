@@ -2,12 +2,17 @@
 
 #include "Typedefs.h"
 
+#include "Job/JobFuture.h"
+#include "Job/JobPromise.h"
+
 #include "Policies/Policy.h"
 
 #include "Utilities/RestrictTypes.h"
 #include "Utilities/Utility.h"
 
+#include <functional>
 #include <optional>
+#include <type_traits>
 
 enum class EJobResult
 {
@@ -15,6 +20,8 @@ enum class EJobResult
 	Succeeded,
 	Failed
 };
+
+class JobSystem;
 
 class JobBase
 	: NonCopyable
@@ -26,42 +33,39 @@ public:
 	void Cancel();
 
 protected:
-	void CompleteSuccess();
-	void CompleteFailure();
-
 	virtual void OnCompleted(const EJobResult /*aResult*/) {};
-
-private:
-	void Complete(const EJobResult aResult);
 
 };
 
-class JobSystem;
-
 template<
-	typename TPolicySet = Policy::Set<>>
+	typename TPolicySet = Policy::Set<>,
+	typename... TOutput>
 class Job
 	: public JobBase
-	, public std::enable_shared_from_this<Job<TPolicySet>>
 {
 public:
-	using Super = Job<TPolicySet>;
+	using Super = Job<TPolicySet, TOutput...>;
 	using PolicySet = Policy::Concat<
 		Policy::Set<
 			PAdd<JobSystem, PWrite>>,
 		TPolicySet>;
+	using Future = JobFuture<TOutput...>;
+	using Promise = JobPromise<TOutput...>;
 
 	using Dependencies = typename PolicySet::template DependenciesRef;
 
-	inline static void InjectDependencies(Dependencies&& aDependencies)
+	inline static void InjectDependencies(Promise& aPromise, Dependencies&& aDependencies)
 	{
+		myInjectedPromise = &aPromise;
 		myInjectedDependencies.emplace(std::move(aDependencies));
 	}
 
 protected:
 	inline Job() noexcept
-		: myDependencies(std::move(*myInjectedDependencies))
+		: myPromise(*myInjectedPromise)
+		, myDependencies(std::move(*myInjectedDependencies))
 	{
+		myInjectedPromise = nullptr;
 		myInjectedDependencies.reset();
 	}
 
@@ -77,12 +81,32 @@ protected:
 		return std::get<std::decay_t<TDependency>&>(myDependencies);
 	}
 
-private:
-	static thread_local std::optional<Dependencies> myInjectedDependencies;
+	inline void CompleteSuccess(TOutput&&... aOutput)
+	{
+		OnCompleted(EJobResult::Succeeded);
 
+		myPromise.Fullfill(std::forward<TOutput>(aOutput)...);
+	}
+	inline void CompleteFailure(TOutput&&... aOutput)
+	{
+		OnCompleted(EJobResult::Failed);
+
+		// Complete promise
+	}
+
+private:
+	friend JobSystem;
+
+	static thread_local Promise*					myInjectedPromise;
+	static thread_local std::optional<Dependencies>	myInjectedDependencies;
+
+	Promise& myPromise;
 	Dependencies myDependencies;
 
 };
 
-template<typename TPolicySet>
-thread_local std::optional<typename Job<TPolicySet>::Dependencies> Job<TPolicySet>::myInjectedDependencies;
+template<typename TPolicySet, typename... TOutput>
+thread_local typename Job<TPolicySet, TOutput...>::Promise* Job<TPolicySet, TOutput...>::myInjectedPromise;
+
+template<typename TPolicySet, typename... TOutput>
+thread_local std::optional<typename Job<TPolicySet, TOutput...>::Dependencies> Job<TPolicySet, TOutput...>::myInjectedDependencies;

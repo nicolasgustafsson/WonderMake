@@ -33,30 +33,31 @@ GameWorld::GameWorld()
 
 void GameWorld::RestartLevel(const bool aAddPlayer)
 {
-	RunJob<CreateObjectJob<LevelFunctionality>>([this, aAddPlayer](auto&& aObject, auto&& aFunctionalities)
-		{
-			auto&& levelFunctionality = std::get<LevelFunctionality&>(aFunctionalities);
-
-			Get<LevelDesigner>().DesignLevel(levelFunctionality);
-
-			if (myCurrentLevelFunctionality)
-				myCurrentLevelFunctionality->TransferToNewLevel(levelFunctionality);
-
-			if (myPlayerTransform)
+	RunJob<CreateObjectJob<LevelFunctionality>>()
+		.Then([this, aAddPlayer](auto&& aObject, auto&& aFunctionalities)
 			{
-				myPlayerTransform->SetPosition(SVector2f::Zero());
-				//myPlayerTransform->SetPosition(levelFunctionality.GetStartPosition());
-			}
-	
-			myLevel = std::move(aObject);
+				auto&& levelFunctionality = std::get<LevelFunctionality&>(aFunctionalities);
 
-			myCurrentLevelFunctionality = &levelFunctionality;
+				Get<LevelDesigner>().DesignLevel(levelFunctionality);
 
-			if (!aAddPlayer)
-				return;
+				if (myCurrentLevelFunctionality)
+					myCurrentLevelFunctionality->TransferToNewLevel(levelFunctionality);
 
-			SetupPlayer(levelFunctionality);
-		});
+				if (myPlayerTransform)
+				{
+					myPlayerTransform->SetPosition(SVector2f::Zero());
+					//myPlayerTransform->SetPosition(levelFunctionality.GetStartPosition());
+				}
+
+				myLevel = std::move(aObject);
+
+				myCurrentLevelFunctionality = &levelFunctionality;
+
+				if (!aAddPlayer)
+					return;
+
+				SetupPlayer(levelFunctionality);
+			});
 }
 
 void GameWorld::Tick()
@@ -68,26 +69,28 @@ void GameWorld::Tick()
 
 void GameWorld::SetupPlayer(LevelFunctionality& aLevelFunctionality)
 {
-	RunJob<CreateObjectJob<TransformFunctionality2D, PlayerControllerFunctionality, CameraFunctionality>>([this, &aLevelFunctionality](auto&& aObject, auto&& aFunctionalities)
-		{
-			myPlayerTransform = &std::get<TransformFunctionality2D&>(aFunctionalities);
+	RunJob<CreateObjectJob<TransformFunctionality2D, PlayerControllerFunctionality, CameraFunctionality>>()
+		.Then([this, &aLevelFunctionality](auto&& aObject, auto&& aFunctionalities)
+			{
+				myPlayerTransform = &std::get<TransformFunctionality2D&>(aFunctionalities);
 
-			std::get<CameraFunctionality&>(aFunctionalities).SetTarget(myPlayerTransform);
+				std::get<CameraFunctionality&>(aFunctionalities).SetTarget(myPlayerTransform);
 
-			aLevelFunctionality.AddDenizen(std::move(aObject));
-		});
+				aLevelFunctionality.AddDenizen(std::move(aObject));
+			});
 }
 
 void GameWorld::OnPlayerDeath(const SPlayerDiedMessage&)
 {
-	RunJob<CreateObjectJob<SpriteRenderingFunctionality>>([this](auto&& aObject, auto&& aFunctionalities)
-		{
-			auto& sprite = std::get<SpriteRenderingFunctionality&>(aFunctionalities);
+	RunJob<CreateObjectJob<SpriteRenderingFunctionality>>()
+		.Then([this](auto&& aObject, auto&& aFunctionalities)
+			{
+				auto& sprite = std::get<SpriteRenderingFunctionality&>(aFunctionalities);
 
 			sprite.SetTexture("Death screen");
 
-			myDeathScreen.emplace(std::move(aObject));
-		});
+				myDeathScreen.emplace(std::move(aObject));
+			});
 }
 
 

@@ -6,7 +6,7 @@
 #include "System/SystemContainer.h"
 
 template<typename TJob, typename... TArgs>
-void RunJob(TArgs&&... aArgs)
+auto RunJob(TArgs&&... aArgs)
 {
-	SystemContainer::Get().GetSystem<JobSystem>().Run<TJob>(std::forward<TArgs>(aArgs)...);
+	return SystemContainer::Get().GetSystem<JobSystem>().Run<TJob>(std::forward<TArgs>(aArgs)...);
 }

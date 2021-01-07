@@ -16,6 +16,8 @@ public:
 	inline RestartLevelJob()
 	{
 		Get<GameWorld>().RestartLevel();
+
+		CompleteSuccess();
 	}
 };
 

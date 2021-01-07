@@ -69,6 +69,8 @@ private:
 
 };
 
+class JobSystem;
+
 template<
 	typename TPolicySet = Policy::Set<>>
 class Job
@@ -77,8 +79,12 @@ class Job
 {
 public:
 	using Super = Job<TPolicySet>;
-	using PolicySet = TPolicySet;
-	using Dependencies = typename TPolicySet::template DependenciesRef;
+	using PolicySet = Policy::Concat<
+		Policy::Set<
+			PAdd<JobSystem, PWrite>>,
+		TPolicySet>;
+
+	using Dependencies = typename PolicySet::template DependenciesRef;
 
 	inline static void InjectDependencies(Dependencies&& aDependencies)
 	{
@@ -92,13 +98,13 @@ protected:
 		myInjectedDependencies.reset();
 	}
 
-	template<typename TDependency> requires TPolicySet::template HasPolicy_v<TDependency, PWrite>
+	template<typename TDependency> requires PolicySet::template HasPolicy_v<TDependency, PWrite>
 	__forceinline [[nodiscard]] TDependency& Get()
 	{
 		return std::get<std::decay_t<TDependency>&>(myDependencies);
 	}
 
-	template<typename TDependency> requires TPolicySet::template HasDependency_v<TDependency>
+	template<typename TDependency> requires PolicySet::template HasDependency_v<TDependency>
 	__forceinline [[nodiscard]] const TDependency& Get() const
 	{
 		return std::get<std::decay_t<TDependency>&>(myDependencies);

@@ -3,6 +3,25 @@
 #include <catch2/catch.hpp>
 
 #include "Job/Job.h"
+#include "Job/JobSystem.h"
+
+#include "Scheduling/ScheduleSystem.h"
+
+struct JobDependencies
+{
+	JobDependencies()
+		: myScheduleSystem([](Closure) {}, [](Closure) {})
+		, myJobSystem([this]() { JobSystem::InjectDependencies(std::tie(myScheduleSystem)); return JobSystem(mySystemContainer); }())
+	{
+		mySystemContainer.AddSystem<ScheduleSystem>([this]() -> auto& { return myScheduleSystem; });
+		mySystemContainer.AddSystem<JobSystem>([this]() -> auto& { return myJobSystem; });
+	};
+
+	SystemContainer mySystemContainer;
+	ScheduleSystem myScheduleSystem;
+
+	JobSystem myJobSystem;
+};
 
 struct JobData
 {
@@ -76,10 +95,13 @@ protected:
 
 TEST_CASE("Job status updates properly", "[Job]")
 {
+	JobDependencies dependencies;
 	JobData data;
 	EJobResult lastResultBeforeDestruction = EJobResult::Failed;
 
 	{
+		JobMock::InjectDependencies(std::tie(dependencies.myJobSystem));
+
 		JobMock jobMock(data);
 
 		CHECK(jobMock.GetStatus() == EJobStatus::NotStarted);
@@ -144,11 +166,12 @@ TEST_CASE("Job status updates properly", "[Job]")
 
 TEST_CASE("Job injection function properly", "[Job]")
 {
+	JobDependencies dependencies;
 	JobData data;
 	EJobResult lastResultBeforeDestruction = EJobResult::Failed;
 
 	{
-		JobInjectionMock::InjectDependencies(std::tie(data));
+		JobInjectionMock::InjectDependencies(std::tie(dependencies.myJobSystem, data));
 
 		JobInjectionMock jobMock;
 

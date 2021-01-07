@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "Job/Job.h"
+#include "Job/JobBase.h"
 
 JobBase::~JobBase()
 {

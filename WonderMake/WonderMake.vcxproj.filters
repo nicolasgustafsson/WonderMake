@@ -80,7 +80,7 @@
     <ClCompile Include="EngineTools\EngineTools.cpp" />
     <ClCompile Include="EngineTools\EasingTester.cpp" />
     <ClCompile Include="Job\JobSystem.cpp" />
-    <ClCompile Include="Job\Job.cpp" />
+    <ClCompile Include="Job\JobBase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -103,7 +103,6 @@
     <ClInclude Include="Utilities\Debugging\Debugged.h" />
     <ClInclude Include="Graphics\EngineUniformBuffer.h" />
     <ClInclude Include="Imgui\DockSpace.h" />
-    <ClInclude Include="Job\Job.h" />
     <ClInclude Include="Logging\FileLogger.h" />
     <ClInclude Include="Logging\ImGuiLogger.h" />
     <ClInclude Include="Logging\ConsoleLogger.h" />
@@ -269,6 +268,8 @@
     <ClInclude Include="EngineTools\EasingTester.h" />
     <ClInclude Include="Job\JobSystem.h" />
     <ClInclude Include="Object\CreateObjectJob.h" />
+    <ClInclude Include="Job\JobBase.h" />
+    <ClInclude Include="Job\Job.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

@@ -297,6 +297,8 @@
     <ClInclude Include="EngineTools\EngineTools.h" />
     <ClInclude Include="EngineTools\EasingTester.h" />
     <ClInclude Include="Job\Job.h" />
+    <ClInclude Include="Job\JobFuture.h" />
+    <ClInclude Include="Job\JobPromise.h" />
     <ClInclude Include="Job\JobSystem.h" />
     <ClInclude Include="Object\CreateObjectJob.h" />
     <ClInclude Include="Scheduling\ScheduleSystem.h" />

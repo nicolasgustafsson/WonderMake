@@ -270,6 +270,8 @@
     <ClInclude Include="Object\CreateObjectJob.h" />
     <ClInclude Include="Job\JobBase.h" />
     <ClInclude Include="Job\Job.h" />
+    <ClInclude Include="Job\JobFuture.h" />
+    <ClInclude Include="Job\JobPromise.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

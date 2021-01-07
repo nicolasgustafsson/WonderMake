@@ -60,6 +60,57 @@ void StaticTest_Policy_HasDependencyAndPolicy()
 	static_assert(SetD::HasPolicy_v<SystemC, PWrite>,	"SetD should have write permisson for SystemC.");
 }
 
+void StaticTest_Policy_Concat()
+{
+	using ConcatSetA = Policy::Concat<SetA>;
+	using ConcatSetB = Policy::Concat<SetB, SetC>;
+	using ConcatSetC = Policy::Concat<SetB, SetC, SetD>;
+	using ConcatSetD = Policy::Concat<SetA, SetB, SetC, SetD>;
+	using ConcatSetE = Policy::Concat<SetB, SetA, SetC, SetD>;
+
+	static_assert(!ConcatSetA::HasDependency_v<SystemA>);
+	static_assert(!ConcatSetA::HasDependency_v<SystemB>);
+	static_assert(!ConcatSetA::HasDependency_v<SystemC>);
+	static_assert(!ConcatSetA::HasDependency_v<SystemD>);
+	static_assert(!ConcatSetA::HasPolicy_v<SystemA,	PWrite>);
+	static_assert(!ConcatSetA::HasPolicy_v<SystemA,	PRead>);
+	static_assert(!ConcatSetA::HasPolicy_v<SystemB,	PWrite>);
+	static_assert(!ConcatSetA::HasPolicy_v<SystemB,	PRead>);
+	static_assert(!ConcatSetA::HasPolicy_v<SystemC,	PWrite>);
+	static_assert(!ConcatSetA::HasPolicy_v<SystemC,	PRead>);
+	static_assert(!ConcatSetA::HasPolicy_v<SystemD,	PWrite>);
+	static_assert(!ConcatSetA::HasPolicy_v<SystemD,	PRead>);
+	
+	static_assert(ConcatSetB::HasDependency_v<SystemA>);
+	static_assert(!ConcatSetB::HasDependency_v<SystemB>);
+	static_assert(!ConcatSetB::HasDependency_v<SystemC>);
+	static_assert(!ConcatSetB::HasDependency_v<SystemD>);
+	static_assert(ConcatSetB::HasPolicy_v<SystemA,	PWrite>);
+	static_assert(ConcatSetB::HasPolicy_v<SystemA,	PRead>);
+	static_assert(!ConcatSetB::HasPolicy_v<SystemB,	PWrite>);
+	static_assert(!ConcatSetB::HasPolicy_v<SystemB,	PRead>);
+	static_assert(!ConcatSetB::HasPolicy_v<SystemC,	PWrite>);
+	static_assert(!ConcatSetB::HasPolicy_v<SystemC,	PRead>);
+	static_assert(!ConcatSetB::HasPolicy_v<SystemD,	PWrite>);
+	static_assert(!ConcatSetB::HasPolicy_v<SystemD,	PRead>);
+	
+	static_assert(ConcatSetC::HasDependency_v<SystemA>);
+	static_assert(ConcatSetC::HasDependency_v<SystemB>);
+	static_assert(ConcatSetC::HasDependency_v<SystemC>);
+	static_assert(!ConcatSetC::HasDependency_v<SystemD>);
+	static_assert(ConcatSetC::HasPolicy_v<SystemA,	PWrite>);
+	static_assert(ConcatSetC::HasPolicy_v<SystemA,	PRead>);
+	static_assert(!ConcatSetC::HasPolicy_v<SystemB,	PWrite>);
+	static_assert(ConcatSetC::HasPolicy_v<SystemB,	PRead>);
+	static_assert(ConcatSetC::HasPolicy_v<SystemC,	PWrite>);
+	static_assert(!ConcatSetC::HasPolicy_v<SystemC,	PRead>);
+	static_assert(!ConcatSetC::HasPolicy_v<SystemD,	PWrite>);
+	static_assert(!ConcatSetC::HasPolicy_v<SystemD,	PRead>);
+
+	static_assert(std::is_same_v<ConcatSetC, ConcatSetD>);
+	static_assert(std::is_same_v<ConcatSetC, ConcatSetE>);
+}
+
 TEST_CASE("SystemId can be created and copied", "[SystemId]")
 {
 	SECTION("SystemId can be created and is unique per class")

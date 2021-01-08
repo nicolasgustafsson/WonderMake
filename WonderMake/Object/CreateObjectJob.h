@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Job/Cargo.h"
 #include "Job/Job.h"
 
 #include "Object/Object.h"
@@ -14,7 +15,7 @@ namespace _Impl
 	using _CreateObjectJobType = Job<
 		Policy::Set<
 			PAdd<FunctionalitySystemDelegate<std::decay_t<TFunctionalities>>, PWrite>...>,
-		Object&&, std::tuple<TFunctionalities&...>&&>;
+		Object&&, Cargo<TFunctionalities...>>;
 }
 
 // TODO(Kevin): Make require write access for inherited policies. Do this by spawning smaller jobs.
@@ -25,7 +26,7 @@ class CreateObjectJob final
 public:
 	inline CreateObjectJob() noexcept
 	{
-		_Impl::_CreateObjectJobType<TFunctionalities...>::CompleteSuccess(std::move(myObject), std::tie(AddFunctionalityHelper<TFunctionalities>()...));
+		_Impl::_CreateObjectJobType<TFunctionalities...>::CompleteSuccess(std::move(myObject), WrapCargo(AddFunctionalityHelper<TFunctionalities>()...));
 	}
 
 private:

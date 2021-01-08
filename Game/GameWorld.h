@@ -36,6 +36,8 @@ private:
 
 	void SetupPlayer(LevelFunctionality& aLevelFunctionality);
 
+	void SetLevel(Object aLevel, LevelFunctionality& aLevelFunctionality, const bool aAddPlayer);
+
 	void OnPlayerDeath(const SPlayerDiedMessage&);
 	MessageSubscriber mySubscriber;
 

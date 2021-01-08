@@ -296,6 +296,7 @@
   <ItemGroup>
     <ClInclude Include="EngineTools\EngineTools.h" />
     <ClInclude Include="EngineTools\EasingTester.h" />
+    <ClInclude Include="Job\Cargo.h" />
     <ClInclude Include="Job\Job.h" />
     <ClInclude Include="Job\JobFuture.h" />
     <ClInclude Include="Job\JobPromise.h" />

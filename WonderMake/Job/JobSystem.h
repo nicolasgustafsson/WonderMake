@@ -49,15 +49,14 @@ public:
 					});
 			});
 
-		Get<ScheduleSystem>().Schedule<typename TJob::PolicySet>([this, &jobData, ...args = std::forward<TArgs>(aArgs)]()
+		Get<ScheduleSystem>().Schedule<typename TJob::PolicySet>([this, &jobData, &...args = aArgs]()
 		{
 			TJob::InjectDependencies(jobData.Promise, GetDependenciesHelper(TupleWrapper<typename TJob::Dependencies>()));
 
-			// TODO(Kevin): Forwarding?
-			jobData.Job = std::make_shared<TJob>(args...);
+			jobData.Job = std::make_shared<TJob>(std::forward<TArgs>(args)...);
 		});
 
-		return jobData.Promise;
+		return typename TJob::Future(jobData.Promise, Get<ScheduleSystem>());
 	}
 
 private:

@@ -10,7 +10,12 @@ REGISTER_FUNCTIONALITY(LineOfSightFunctionality);
 
 void LineOfSightFunctionality::Tick()
 {
-	Navmesh& navmesh = Get<LevelDenizenFunctionality>().Get<SLevelDenizenComponent>().Level->Get<NavmeshFunctionality>().GetNavmesh();
+	auto* level = Get<LevelDenizenFunctionality>().Get<SLevelDenizenComponent>().Level;
+
+	if (!level)
+		return;
+
+	Navmesh& navmesh = level->Get<NavmeshFunctionality>().GetNavmesh();
 
 	auto polygon = navmesh.GetLineOfSightFrom(Get<TransformFunctionality2D>().GetPosition());
 

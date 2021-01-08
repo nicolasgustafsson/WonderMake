@@ -1,11 +1,15 @@
 #pragma once
 
+#include <Policies/Policy.h>
+
 #include <tuple>
 #include <type_traits>
 
 template<typename... TContent>
 struct Cargo
 {
+	using PolicySet = Policy::Set<>;
+
 	template<typename TDependency>
 	TDependency& Get() const
 	{

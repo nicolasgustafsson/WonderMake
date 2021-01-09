@@ -28,7 +28,12 @@ void TaskManager::ProcessTasks()
 		std::lock_guard<decltype(myMutex)> lock(myMutex);
 
 		std::swap(myTasksBuffer, myTasksScheduled);
-		myTasksRepeatingBuffer = myTasksRepeatingScheduled;
+		for (auto&& task : myTasksRepeatingScheduled)
+		{
+			myTasksRepeatingBuffer.emplace_back(std::move(task));
+		}
+
+		myTasksRepeatingScheduled.clear();
 	}
 
 	for (auto&& task : myTasksBuffer)

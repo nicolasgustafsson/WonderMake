@@ -24,13 +24,13 @@ public:
 
 		myPromise.SetCallbackSuccess([&schedule = myScheduleSystem, callable = std::forward<TCallable>(aCallable)](TArgs&&... aArgs)
 		{
-			auto args = std::make_shared<std::tuple<TArgs&&...>>(std::forward_as_tuple(std::forward<TArgs>(aArgs)...));
+			auto args = std::forward_as_tuple(std::forward<TArgs>(aArgs)...);
 
 			schedule.Schedule<PolicySet>([callable = std::move(callable), args = std::move(args)]()
 			{
 				std::apply(
 					std::move(callable),
-					std::move(*args));
+					std::move(args));
 			});
 		});
 	}

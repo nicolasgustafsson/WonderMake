@@ -38,10 +38,13 @@ public:
 	}
 	~MessageSubscriber();
 
-	template<typename T>
-	void AddRoute(std::function<void(const T&)> aCallback)
+	template<typename TMessage>
+	void AddRoute(UniqueFunction<void(const TMessage&)> aCallback)
 	{
-		Subscribe(T::GetTypeHash(), std::bind(&MessageSubscriber::RouteDelegate<T>, std::move(aCallback), std::placeholders::_1));
+		Subscribe(TMessage::GetTypeHash(), [callback = std::move(aCallback)](const Dispatchable& aMessage) mutable
+		{
+			MessageSubscriber::RouteDelegate<TMessage>(callback, aMessage);
+		});
 	}
 
 	template<typename T>
@@ -53,8 +56,8 @@ public:
 	void RemoveRoute(const size_t aTypeHash);
 
 private:
-	template<typename T>
-	static void RouteDelegate(const std::function<void(const T&)> aCallback, const Dispatchable& aMessage)
+	template<typename TMessage, typename TCallable> requires std::is_invocable_v<TCallable, const TMessage&>
+	static void RouteDelegate(TCallable& aCallback, const Dispatchable& aMessage)
 	{
 		aCallback(static_cast<const T&>(aMessage));
 	}

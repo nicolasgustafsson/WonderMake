@@ -226,3 +226,5 @@ public:
 	using Super::Super;
 
 };
+
+using Closure = UniqueFunction<void()>;

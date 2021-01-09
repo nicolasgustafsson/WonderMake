@@ -1,5 +1,6 @@
 #pragma once
 #include <concepts>
+#include <cmath>
 
 #include "Typedefs.h"
 

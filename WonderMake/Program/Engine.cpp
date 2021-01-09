@@ -16,7 +16,7 @@
 
 namespace Engine
 {
-	void Start(const Closure& aCallback)
+	void Start(Closure&& aCallback)
 	{
 		Program program;
 		Routine routine;

@@ -4,13 +4,13 @@
 
 #include "System/System.h"
 
-#include <functional>
+#include "Utilities/UniqueFunction.h"
 
 class ScheduleSystem
 	: public System<>
 {
 public:
-	using ScheduleProc = std::function<void(Closure)>;
+	using ScheduleProc = UniqueFunction<void(Closure)>;
 
 	ScheduleSystem(ScheduleProc aScheduleProc, ScheduleProc aScheduleRepeatingProc) noexcept;
 

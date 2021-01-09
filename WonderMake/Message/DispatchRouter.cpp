@@ -11,7 +11,7 @@ void DispatchRouter::RouteDispatchable(const Dispatchable& aDispatchedMessage)
 		return;
 	}
 
-	for (const auto& subscriberIt : it->second)
+	for (auto& subscriberIt : it->second)
 	{
 		subscriberIt.myCallback(aDispatchedMessage);
 	}

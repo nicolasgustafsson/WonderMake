@@ -154,7 +154,7 @@ public:
 	}
 
 private:
-	std::function<TFunctionality& (Object&, const bool)> myFunctionalityConstructor;
+	UniqueFunction<TFunctionality& (Object&, const bool)> myFunctionalityConstructor;
 };
 
 #define REGISTER_FUNCTIONALITY_SYSTEM(aFunctionality) _REGISTER_SYSTEM_IMPL(FunctionalitySystem<aFunctionality>, aFunctionality) _REGISTER_SYSTEM_IMPL(FunctionalitySystemDelegate<aFunctionality>, aFunctionality##_Delegate) 

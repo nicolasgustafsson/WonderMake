@@ -437,6 +437,7 @@
     <ClInclude Include="Utilities\TypeTraits\ReturnType.h" />
     <ClInclude Include="Utilities\TypeTraits\ParameterPack.h" />
     <ClInclude Include="Utilities\TypeTraits\TypeTraits.h" />
+    <ClInclude Include="Utilities\UniqueFunction.h" />
     <ClInclude Include="Utilities\Utility.h" />
     <ClInclude Include="Utilities\Vector.h" />
     <ClInclude Include="Graphics\VertexTypes.h" />

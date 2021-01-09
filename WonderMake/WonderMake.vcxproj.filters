@@ -273,6 +273,7 @@
     <ClInclude Include="Job\JobFuture.h" />
     <ClInclude Include="Job\JobPromise.h" />
     <ClInclude Include="Job\Cargo.h" />
+    <ClInclude Include="Utilities\UniqueFunction.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

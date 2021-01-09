@@ -196,6 +196,7 @@
     <ClCompile Include="ObjectsAndPolicies\PolicyTests.cpp" />
     <ClCompile Include="Registry\*.cpp" />
     <ClCompile Include="Utilities\RotationTests.cpp" />
+    <ClCompile Include="Utilities\UniqueFunctionTests.cpp" />
     <ClCompile Include="Utilities\VectorTests.cpp" />
   </ItemGroup>
   <ItemGroup>

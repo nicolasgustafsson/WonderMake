@@ -11,5 +11,6 @@
     <ClCompile Include="Functionalities\TransformFunctionalityTests.cpp" />
     <ClCompile Include="Job\JobTests.cpp" />
     <ClCompile Include="ContainerTests.cpp" />
+    <ClCompile Include="Utilities\UniqueFunctionTests.cpp" />
   </ItemGroup>
 </Project>

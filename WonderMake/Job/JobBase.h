@@ -2,15 +2,12 @@
 
 #include "Typedefs.h"
 
-#include "Job/JobFuture.h"
 #include "Job/JobPromise.h"
 
 #include "Policies/Policy.h"
 
 #include "Utilities/RestrictTypes.h"
-#include "Utilities/Utility.h"
 
-#include <functional>
 #include <optional>
 #include <type_traits>
 
@@ -49,7 +46,8 @@ public:
 		Policy::Set<
 			PAdd<JobSystem, PWrite>>,
 		TPolicySet>;
-	using Future = JobFuture<TOutput...>;
+	template<template<typename...> typename TFuture>
+	using Future = TFuture<TOutput...>;
 	using Promise = JobPromise<TOutput...>;
 
 	using Dependencies = typename PolicySet::template DependenciesRef;

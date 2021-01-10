@@ -56,7 +56,7 @@ public:
 		});
 	}
 	
-private:
+protected:
 	JobPromise<TArgs...>& myPromise;
 	ScheduleSystem& myScheduleSystem;
 

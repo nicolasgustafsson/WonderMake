@@ -8,6 +8,7 @@
 
 #include "Scheduling/ScheduleSystem.h"
 
+#include "Utilities/Alias.h"
 #include "Utilities/plf_colony.h"
 
 #include <any>
@@ -24,39 +25,48 @@ class JobSystem
 			PAdd<ScheduleSystem, PWrite>>>
 {
 public:
+	template<typename... TArgs>
+	class JobSystemFuture
+		: private JobFuture<TArgs...>
+	{
+	public:
+		inline JobSystemFuture(JobPromise<TArgs...>& aPromise, ScheduleSystem& aScheduleSystem, JobSystem& aJobSystem)
+			: JobFuture<TArgs...>(aPromise, aScheduleSystem)
+			, myJobSystem(aJobSystem)
+		{}
+
+		using JobFuture<TArgs...>::Then;
+
+		template<typename TJob, typename... TArgs> requires std::is_base_of_v<JobBase, TJob>
+		inline auto Then(TArgs&&... aArgs)
+		{
+			return myJobSystem.Run(std::forward<TArgs>(aArgs)...);
+
+			auto&& jobData = myJobSystem.CreateJob<TJob>();
+
+			JobFuture<TArgs...>::myPromise.SetCallbackSuccess([&jobSystem = myJobSystem, &jobData](TArgs&&... aArgs)
+			{
+				jobSystem.RunJob(jobData, std::forward<TArgs>(aArgs));
+			});
+
+			return typename TJob::template Future<JobSystemFuture>(jobData.Promise, JobFuture<TArgs...>::myScheduleSystem, myJobSystem);
+		}
+
+	private:
+		JobSystem& myJobSystem;
+
+	};
+
 	JobSystem(SystemContainer& aSystemContainer) noexcept;
 
 	template<typename TJob, typename... TArgs> requires std::is_base_of_v<JobBase, TJob>
-	inline typename TJob::Future Run(TArgs&&... aArgs)
+	inline auto Run(TArgs&&... aArgs)
 	{
-		std::any* jobAnyPtr = nullptr;
+		auto&& jobData = CreateJob<TJob>();
 
-		{
-			std::lock_guard<decltype(myMutex)> lock(myMutex);
+		RunJob(jobData);
 
-			jobAnyPtr = &*myJobs.emplace();
-		}
-
-		auto&& jobData = jobAnyPtr->emplace<JobData<TJob>>();
-
-		jobData.Promise.SetCallbackCompleted([this, jobAnyPtr]()
-			{
-				Get<ScheduleSystem>().Schedule<>([this, jobAnyPtr]()
-					{
-						std::lock_guard<decltype(myMutex)> lock(myMutex);
-
-						myJobs.erase(myJobs.get_iterator_from_pointer(jobAnyPtr));
-					});
-			});
-
-		Get<ScheduleSystem>().Schedule<typename TJob::PolicySet>([this, &jobData, &...args = aArgs]()
-		{
-			TJob::InjectDependencies(jobData.Promise, GetDependenciesHelper(TupleWrapper<typename TJob::Dependencies>()));
-
-			jobData.Job = std::make_shared<TJob>(std::forward<TArgs>(args)...);
-		});
-
-		return typename TJob::Future(jobData.Promise, Get<ScheduleSystem>());
+		return typename TJob::template Future<JobSystemFuture>(jobData.Promise, Get<ScheduleSystem>(), *this);
 	}
 
 private:
@@ -67,6 +77,12 @@ private:
 		std::shared_ptr<TJob> Job;
 	};
 
+	struct SDummyJob
+		: public Job<>
+	{};
+
+	using JobDataAlias = Alias<JobData<SDummyJob>>;
+
 	template<typename TDependencyTuple>
 	struct TupleWrapper {};
 
@@ -76,9 +92,47 @@ private:
 		return std::tie(mySystemContainer.GetSystem<std::decay_t<TDependencies>>()...);
 	}
 
+	template<typename TJob>
+	inline auto& CreateJob()
+	{
+		const auto EmplaceJob = [this]() -> auto&
+		{
+			std::lock_guard<decltype(myMutex)> lock(myMutex);
+
+			return *myJobs.emplace();
+		};
+
+		auto&& jobAlias = EmplaceJob();
+
+		auto&& jobData = jobAlias.Emplace<JobData<TJob>>();
+
+		jobData.Promise.SetCallbackCompleted([this, &jobAlias]()
+			{
+				Get<ScheduleSystem>().Schedule<>([this, &jobAlias]()
+					{
+						std::lock_guard<decltype(myMutex)> lock(myMutex);
+
+						myJobs.erase(myJobs.get_iterator_from_pointer(&jobAlias));
+					});
+			});
+
+		return jobData;
+	}
+	template<typename TJob, typename... TArgs>
+	inline void RunJob(JobData<TJob>& aJobData, TArgs&&... aArgs)
+	{
+		// TODO(Kevin): Take cargo policies into account.
+		Get<ScheduleSystem>().Schedule<typename TJob::PolicySet>([this, &aJobData, ...args = aArgs]()
+		{
+			TJob::InjectDependencies(aJobData.Promise, GetDependenciesHelper(TupleWrapper<typename TJob::Dependencies>()));
+
+			aJobData.Job = std::make_shared<TJob>(std::forward<TArgs>(args)...);
+		});
+	}
+
 	SystemContainer& mySystemContainer;
 
 	std::mutex myMutex;
-	plf::colony<std::any> myJobs;
+	plf::colony<JobDataAlias> myJobs;
 
 };

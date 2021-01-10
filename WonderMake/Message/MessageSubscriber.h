@@ -1,28 +1,37 @@
 #pragma once
 
 #include "Utilities/RestrictTypes.h"
+#include "Utilities/UniqueFunction.h"
 
-#include <functional>
 #include <unordered_set>
 
 class Dispatchable;
 
-template<typename T, typename U, typename ...ARGS>
-static std::function<void(const T&)> BindHelper(void (U::*aFunctionPtr)(const T&, ARGS...), U* aThis, ARGS... aArgs)
+template<typename TMessage, typename TThis, typename ...TArgs>
+static UniqueFunction<void(const TMessage&)> BindHelper(void (TThis::*aFunctionPtr)(const TMessage&, TArgs&&...), TThis* aThis, TArgs... aArgs)
 {
-	return std::bind(aFunctionPtr, aThis, std::placeholders::_1, aArgs...);
+	return [aFunctionPtr, aThis, ...args = std::forward<TArgs>(aArgs)](const TMessage& aMessage)
+	{
+		(aThis->*aFunctionPtr)(aMessage, std::forward<TArgs>(args)...);
+	};
 };
 
-template<typename T, typename U, typename ...ARGS>
-static std::function<void(const T&)> BindHelper(void (U::*aFunctionPtr)(const T&, ARGS...) const, U* aThis, ARGS... aArgs)
+template<typename TMessage, typename TThis, typename ...TArgs>
+static UniqueFunction<void(const TMessage&)> BindHelper(void (TThis::*aFunctionPtr)(const TMessage&, TArgs&&...) const, TThis* aThis, TArgs... aArgs)
 {
-	return std::bind(aFunctionPtr, aThis, std::placeholders::_1, aArgs...);
+	return [aFunctionPtr, aThis, ...args = std::forward<TArgs>(aArgs)](const TMessage& aMessage)
+	{
+		(aThis->*aFunctionPtr)(aMessage, std::forward<TArgs>(args)...);
+	};
 };
 
-template<typename T, typename ...ARGS>
-static std::function<void(const T&)> BindHelper(void (*aFunctionPtr)(const T&, ARGS...), ARGS... aArgs)
+template<typename TMessage, typename ...TArgs>
+static UniqueFunction<void(const TMessage&)> BindHelper(void (*aFunctionPtr)(const TMessage&, TArgs&&...), TArgs... aArgs)
 {
-	return std::bind(aFunctionPtr, std::placeholders::_1, aArgs...);
+	return[aFunctionPtr, ...args = std::forward<TArgs>(aArgs)](const TMessage& aMessage)
+	{
+		(*aFunctionPtr)(aMessage, std::forward<TArgs>(args)...);
+	};
 };
 
 class MessageSubscriber final
@@ -31,8 +40,8 @@ class MessageSubscriber final
 public:
 	MessageSubscriber() = default;
 
-	template<typename ...ROUTES>
-	MessageSubscriber(ROUTES... aRoutes)
+	template<typename... TRoutes>
+	MessageSubscriber(TRoutes... aRoutes)
 	{
 		(AddRoute(std::move(aRoutes)), ...);
 	}
@@ -47,10 +56,10 @@ public:
 		});
 	}
 
-	template<typename T>
+	template<typename TMessage>
 	void RemoveRoute()
 	{
-		RemoveRoute(T::GetTypeHash());
+		RemoveRoute(TMessage::GetTypeHash());
 	}
 
 	void RemoveRoute(const size_t aTypeHash);
@@ -59,10 +68,10 @@ private:
 	template<typename TMessage, typename TCallable> requires std::is_invocable_v<TCallable, const TMessage&>
 	static void RouteDelegate(TCallable& aCallback, const Dispatchable& aMessage)
 	{
-		aCallback(static_cast<const T&>(aMessage));
+		aCallback(static_cast<const TMessage&>(aMessage));
 	}
 
-	void Subscribe(const size_t aTypeHash, std::function<void(const Dispatchable&)>&& aCallback);
+	void Subscribe(const size_t aTypeHash, UniqueFunction<void(const Dispatchable&)> aCallback);
 
 	std::unordered_set<size_t> mySubscribedMessages;
 };

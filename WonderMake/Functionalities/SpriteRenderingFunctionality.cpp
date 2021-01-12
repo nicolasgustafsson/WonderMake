@@ -15,17 +15,13 @@ void SpriteRenderingFunctionality::Tick()
 	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Position>(0, Get<STransformComponent>().Position);
 	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Rotation>(0, Get<STransformComponent>().Rotation);
 	spriteComponent.RenderObject->Render();
-
-	SystemPtr<AssetDatabase<Texture>> bla;
-	bla->GetAsset("Player");
 }
-
-void SpriteRenderingFunctionality::SetTexture(const std::filesystem::path& aTexturePath)
+void SpriteRenderingFunctionality::SetTexture(const std::string_view aAssetLink)
 {
 	if (Get<SSpriteComponent>().RenderObject)
-		Get<SSpriteComponent>().RenderObject->SetTexture(aTexturePath);
-	else 
-		Get<SSpriteComponent>().RenderObject.emplace(aTexturePath);
+		Get<SSpriteComponent>().RenderObject->SetTexture(SystemPtr<AssetDatabase<Texture>>()->GetResource(aAssetLink));
+	else
+		Get<SSpriteComponent>().RenderObject.emplace(aAssetLink);
 }
 
 void SpriteRenderingFunctionality::SetScale(const SVector2f aScale)

@@ -19,6 +19,10 @@ class Associative : public BackendTrait {};
 class Sortable : public BackendTrait {};
 class KeyIndex : public BackendTrait {};
 
+//Elements are stored contiguously, to allow memcpy and other operations that depends on the elements being beside eachother in memory
+class ContiguousElements : public BackendTrait {};
+class Resizable : public BackendTrait {};
+
 template<Hashable TKeyType>
 class Key : public KeyIndex
 {

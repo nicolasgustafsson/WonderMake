@@ -4,7 +4,7 @@
 template <typename TObjectType>
 class VectorBackend
 	: public ContainerBackend<std::vector<TObjectType>>
-	, public ImplementTraits<VectorBackend<TObjectType>, Iterable, Indexable, RandomAccess>
+	, public ImplementTraits<VectorBackend<TObjectType>, Iterable, Indexable, RandomAccess, Resizable, ContiguousElements>
 {
 public:
 	using RawBackend = std::vector<TObjectType>;
@@ -19,6 +19,11 @@ public:
 	const TObjectType& operator[](const size_t aIndex) const
 	{
 		return this->myBackend[aIndex];
+	}
+
+	void Resize(const u64 aElements)
+	{
+		this->myBackend.resize(aElements);
 	}
 	
 	size_t Erase(const TObjectType& aElementType)

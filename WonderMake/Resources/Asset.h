@@ -1,19 +1,21 @@
 #pragma once
 #include <filesystem>
+#include "Utilities/Id.h"
 
 struct SAssetMetadata
 {
 	std::filesystem::path Filepath;
-	u64 AssetId;
+	Id AssetId;
 };
 
 template <typename TAssetType>
 class Asset
 {
 public:
-	Asset(std::filesystem::path aPath)
+	Asset(std::filesystem::path aPath, Id aAssetId)
 	{
 		myMetadata.Filepath = std::move(aPath);
+		myMetadata.AssetId = aAssetId;
 	}
 
 	bool operator==(const Asset<TAssetType>& aOther) const
@@ -51,9 +53,9 @@ public:
 	
 	ResourceProxy<TAssetType> LoadAsset()
 	{
-		myResource.emplace(ResourceSystem<TAssetType>()->GetResource(myMetadata.Filepath));
+		myResource.emplace(SystemPtr<ResourceSystem<TAssetType>>()->GetResource(myMetadata.Filepath));
 
-		return myResource;
+		return *myResource;
 	}
 
 	std::optional<ResourceProxy<TAssetType>> myResource;

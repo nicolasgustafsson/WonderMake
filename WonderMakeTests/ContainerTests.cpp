@@ -15,14 +15,14 @@ TEST_CASE("General Container Tests", "[Container]")
 		Container<int, Iterable, Indexable> intContainerColony;
 		Container<int, Iterable, Indexable, RandomAccess> intContainerVector;
 		Container<int, Iterable, ConstantInsertion, ConstantDeletion> intContainerLinkedList;
-
+	
 		REQUIRE(intContainerColony.HasBackend<ColonyBackend<int>>());
 		REQUIRE(intContainerVector.HasBackend<VectorBackend<int>>());
 		REQUIRE(intContainerLinkedList.HasBackend<LinkedListBackend<int>>());
 		REQUIRE(intContainerVector.HasTrait<Sortable>);
 		REQUIRE(!intContainerColony.HasTrait<Sortable>);
 	}
-
+	
 	SECTION("You can add to a container")
 	{
 		REQUIRE(intContainer.Count() == 0);
@@ -31,10 +31,10 @@ TEST_CASE("General Container Tests", "[Container]")
 		intContainer.Add(50);
 		intContainer.Add(22);
 		REQUIRE(intContainer.Count() == 4);
-
+	
 		intContainer.Clear();
 	}
-
+	
 	SECTION("You can erase from a container")
 	{
 		REQUIRE(intContainer.Count() == 0);
@@ -46,25 +46,25 @@ TEST_CASE("General Container Tests", "[Container]")
 		intContainer.Clear();
 		REQUIRE(intContainer.Count() == 0);
 	}
-
+	
 	SECTION("You can add to a container 100000 times")
 	{
 		REQUIRE(intContainer.Count() == 0);
-
+	
 		for (i32 i = 0; i < 100000; i++)
 		{
 			intContainer.Add(10);
 		}
-
+	
 		REQUIRE(intContainer.Count() == 100000);
-
+	
 		intContainer.Clear();
 	}
-
+	
 	SECTION("You can erase elements by predicates")
 	{
 		REQUIRE(intContainer.Count() == 0);
-
+	
 		intContainer.Add(15);
 		intContainer.Add(-45);
 		intContainer.Add(-45);
@@ -75,16 +75,16 @@ TEST_CASE("General Container Tests", "[Container]")
 		intContainer.Add(53);
 		intContainer.Add(99998);
 		intContainer.Add(1111);
-
+	
 		REQUIRE(intContainer[1] == -45);
-
+	
 		intContainer.Erase(-45);
-
+	
 		REQUIRE(intContainer[1] == 12);
-
+	
 		//[Nicos]: remove all even numbers
 		intContainer.EraseIf([](int aNum) {return aNum % 2 == 0; });
-
+	
 		REQUIRE(intContainer.Count() == 3);
 		
 		REQUIRE(intContainer[0] == 15);
@@ -93,12 +93,12 @@ TEST_CASE("General Container Tests", "[Container]")
 		
 		intContainer.Clear();
 	}
-
+	
 	SECTION("Unordered Map")
 	{
 		Container<int, Iterable, Key<std::string>, Associative> UnorderedMap;
 		REQUIRE(UnorderedMap.Count() == 0);
-
+	
 		UnorderedMap["hello"] = 10;
 		REQUIRE(UnorderedMap["hello"] == 10);
 		REQUIRE(UnorderedMap.Count() == 1);

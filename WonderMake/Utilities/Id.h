@@ -1,8 +1,9 @@
 #pragma once
+#include <json/json.hpp>
 class Id
 {
 public:
-	Id();
+	Id() {};
 	Id(u64 aId) : myId(aId) {}
 
 	[[nodiscard]] bool operator==(Id aOther) const { return aOther.myId == myId; }
@@ -30,4 +31,14 @@ namespace std {
 			return aId.GetRawId();
 		}
 	};
+}
+
+inline void to_json(json& aJson, const Id& aId)
+{
+	aJson = { {"Id", aId.GetRawId()} };
+}
+
+inline void from_json(const json& aJson, Id& aId)
+{
+	aId = Id(aJson["Id"].get<u64>());
 }

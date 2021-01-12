@@ -6,7 +6,7 @@
 template <typename TKeyType, typename TObjectType>
 class UnorderedMapBackend
 	: public ContainerBackend<std::unordered_map<TKeyType, TObjectType>>
-	, public ImplementTraits<UnorderedMapBackend<TKeyType, TObjectType>, Associative, KeyIndex, Iterable, StableElements>
+	, public ImplementTraits<UnorderedMapBackend<TKeyType, TObjectType>, Associative, KeyIndex, Iterable, RandomAccess, StableElements>
 {
 public:
 	using RawBackend = std::unordered_map<TKeyType, TObjectType>;

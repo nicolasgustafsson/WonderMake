@@ -38,11 +38,12 @@ void DefaultMovementFunctionality::Tick() noexcept
 		movementComponent.CurrentVelocity *= movementComponent.MaxMovementSpeed;
 	}
 
-	const SVector2f friction = -movementComponent.CurrentVelocity * movementComponent.Friction;
+	const f32 friction = 1.f / (1.f + (deltaTime * movementComponent.Friction));
 
-	movementComponent.CurrentVelocity += friction * deltaTime;
 
 	transform.Position += movementComponent.CurrentVelocity * deltaTime;
+
+	movementComponent.CurrentVelocity *= friction;
 
 	do
 	{
@@ -55,9 +56,9 @@ void DefaultMovementFunctionality::Inspect()
 {
 	SDefaultMovementComponent& movement = Get<SDefaultMovementComponent>();
 
-	ImGui::SliderFloat("acceleration", &movement.AccelerationSpeed, 0, 30000, "%.3f", 2.0f);
-	ImGui::SliderFloat("friction", &movement.Friction, 0.f, 20.0f, "%.3f", 2.0f);
-	ImGui::SliderFloat("maxspeed", &movement.MaxMovementSpeed, 300, 3000, "%.3f", 2.0f);
+	ImGui::SliderFloat("acceleration", &movement.AccelerationSpeed, 0, 30000, "%.3f", ImGuiSliderFlags_Logarithmic);
+	ImGui::SliderFloat("friction", &movement.Friction, 0.f, 20.0f, "%.3f", ImGuiSliderFlags_Logarithmic);
+	ImGui::SliderFloat("maxspeed", &movement.MaxMovementSpeed, 300, 3000, "%.3f", ImGuiSliderFlags_Logarithmic);
 
 	ImGui::Text("velocity: %f", movement.CurrentVelocity.Length());
 }

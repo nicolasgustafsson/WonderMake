@@ -79,6 +79,7 @@
     <ClCompile Include="Graphics\RenderSettingsManager.cpp" />
     <ClCompile Include="LineListRenderObject.cpp" />
     <ClCompile Include="Utilities\Id.cpp" />
+    <ClCompile Include="Imgui\AssetBrowser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -264,6 +265,8 @@
     <ClInclude Include="Utilities\TypeTraits\TypeTraits.h" />
     <ClInclude Include="Utilities\Container\BackendImplementations\UnorderedMapBackend.h" />
     <ClInclude Include="Utilities\Id.h" />
+    <ClInclude Include="Imgui\AssetBrowser.h" />
+    <ClInclude Include="Resources\AssetLink.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
@@ -272,5 +275,8 @@
     <None Include="Utilities\Rotation.inl" />
     <None Include="Utilities\Vector.inl" />
     <None Include="Utilities\Matrix.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="nicostodo fx and animations.txt" />
   </ItemGroup>
 </Project>

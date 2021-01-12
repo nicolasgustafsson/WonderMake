@@ -5,7 +5,7 @@
 #include "Graphics/VertexBufferArray.h"
 #include "Graphics/VertexTypes.h"
 
-#include "Resources/ResourceSystem.h"
+#include "Resources/AssetDatabase.h"
 
 #include "System/SystemPtr.h"
 #include "OpenGLFacade.h"
@@ -17,7 +17,7 @@ struct SRenderObjectInfo
 	std::filesystem::path VertexShaderPath;
 	std::filesystem::path GeometryShaderPath = "";
 	std::filesystem::path FragmentShaderPath;
-	std::filesystem::path TexturePath;
+	std::string_view TextureAssetLink;
 	u32 VertexCount = 1;
 	u32 GeometryType = GL_POINTS;
 };
@@ -76,7 +76,8 @@ class RenderObject : public BaseRenderObject
 public:
 	RenderObject(const SRenderObjectInfo& aRenderObjectInfo);
 
-	void SetTexture(std::filesystem::path aTexturePath);
+	void SetTexture(ResourceProxy<Texture> aResource);
+	void SetTexture(const std::string_view aAssetLinkName);
 
 	void BindTextures();
 
@@ -93,7 +94,7 @@ protected:
 
 	ShaderProgram myShaderProgram;
 	VertexBufferArray<TAttributes...> myVertexBufferArray;
-	std::vector<ResourceProxy<Texture>> myTextures;
+	Container<ResourceProxy<Texture>, Indexable> myTextures;
 	std::optional<u32> myRenderCount;
 	u32 myGeometryType;
 	u32 myVertexCount;
@@ -123,12 +124,19 @@ void RenderObject<TAttributes...>::RenderInternal()
 }
 
 template<EVertexAttribute... TAttributes>
-void RenderObject<TAttributes...>::SetTexture(std::filesystem::path aTexturePath)
+void RenderObject<TAttributes...>::SetTexture(ResourceProxy<Texture> aResourceProxy)
 {
-	myTextures.clear();
-	if (!aTexturePath.empty())
-		myTextures.emplace_back(SystemPtr<ResourceSystem<Texture>>()->GetResource(aTexturePath));
+	myTextures.Clear();
+	if (aResourceProxy.IsValid())
+		myTextures.Add(aResourceProxy);
 }
+
+template<EVertexAttribute... TAttributes>
+void RenderObject<TAttributes...>::SetTexture(const std::string_view aAssetLinkName)
+{
+	SetTexture(SystemPtr<AssetDatabase<Texture>>()->GetResource(aAssetLinkName));
+}
+
 
 template<EVertexAttribute... TAttributes>
 void RenderObject<TAttributes...>::SetRenderCount(const u32 aRenderCount)
@@ -168,7 +176,7 @@ RenderObject<TAttributes...>::RenderObject(const SRenderObjectInfo& aRenderObjec
 	, myGeometryType(aRenderObjectInfo.GeometryType)
 {
 	myVertexCount = aRenderObjectInfo.VertexCount;
-	if (!aRenderObjectInfo.TexturePath.empty())
-		myTextures.emplace_back(SystemPtr<ResourceSystem<Texture>>()->GetResource(aRenderObjectInfo.TexturePath));
+	if (!aRenderObjectInfo.TextureAssetLink.empty())
+		myTextures.Add(SystemPtr<AssetDatabase<Texture>>()->GetResource(aRenderObjectInfo.TextureAssetLink));
 }
 

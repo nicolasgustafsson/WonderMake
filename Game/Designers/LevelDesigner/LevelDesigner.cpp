@@ -69,7 +69,7 @@ void LevelDesigner::DesignPortal(const SSpace& aSpace)
 	const SVector2f position = ((aSpace.BottomRight - aSpace.TopLeft) / 2.f) + aSpace.TopLeft;
 
 	transform.SetPosition(position);
-	sprite.SetTexture(std::filesystem::current_path() / "Textures/portal.png");
+	sprite.SetTexture("Portal");
 
 	//[Nicos]: TODO REMOVE - After we have chains and stuff
 	Get<FunctionalitySystemDelegate<CollisionFunctionality>>().AddFunctionality(portal).Tick();
@@ -104,7 +104,7 @@ void LevelDesigner::DesignBuffTotem(const SSpace& aSpace)
 	const SVector2f position{ Get<Randomizer>().GetRandomNumber<f32>(aSpace.TopLeft.X, aSpace.BottomRight.X), Get<Randomizer>().GetRandomNumber<f32>(aSpace.BottomRight.Y, aSpace.TopLeft.Y) };
 
 	transform.SetPosition(position);
-	sprite.SetTexture(std::filesystem::current_path() / (buffType == EBuffType::Buff ? "Textures/totemGreen.png" : "Textures/totemRed.png"));
+	sprite.SetTexture(buffType == EBuffType::Buff ? "Buff totem" : "Debuff totem");
 	sprite.SetScale({ scale, scale });
 	Get<FunctionalitySystemDelegate<CollisionFunctionality>>().AddFunctionality(totem).Tick();
 }

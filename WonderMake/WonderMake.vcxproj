@@ -208,6 +208,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Imgui\AssetBrowser.cpp" />
     <ClCompile Include="Audio\AudioMixingNodeGraph.cpp" />
     <ClCompile Include="Audio\AudioFile.cpp" />
     <ClCompile Include="Audio\AudioManager.cpp" />
@@ -291,6 +292,8 @@
     <ClCompile Include="Utilities\Platform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Imgui\AssetBrowser.h" />
+    <ClInclude Include="Resources\AssetLink.h" />
     <ClInclude Include="Utilities\Id.h" />
     <ClInclude Include="Utilities\Container\BackendImplementations\ColonyBackend.h" />
     <ClInclude Include="Resources\Asset.h" />
@@ -438,6 +441,9 @@
     <None Include="Utilities\Matrix.inl" />
     <None Include="Utilities\Rotation.inl" />
     <None Include="Utilities\Vector.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="nicostodo fx and animations.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

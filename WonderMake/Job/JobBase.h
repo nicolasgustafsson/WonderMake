@@ -2,6 +2,7 @@
 
 #include "Typedefs.h"
 
+#include "Job/JobOutput.h"
 #include "Job/JobPromise.h"
 
 #include "Policies/Policy.h"
@@ -36,20 +37,21 @@ protected:
 
 template<
 	typename TPolicySet = Policy::Set<>,
-	typename... TOutput>
+	typename TOutput = JobOutput<>,
+	typename TOutputError = JobOutputError<>>
 class Job
 	: public JobBase
 {
 public:
-	using Super = Job<TPolicySet, TOutput...>;
+	using Super = Job<TPolicySet, TOutput, TOutputError>;
 	using PolicySet = Policy::Concat<
 		Policy::Set<
 			PAdd<JobSystem, PWrite>>,
 		TPolicySet>;
-	template<template<typename...> typename TFuture>
-	using Future = TFuture<TOutput...>;
-	using Promise = JobPromise<TOutput...>;
+	using Output = TOutput;
+	using OutputError = TOutputError;
 
+	using Promise = JobPromise<Output, OutputError>;
 	using Dependencies = typename PolicySet::template DependenciesRef;
 
 	inline static void InjectDependencies(Promise& aPromise, Dependencies&& aDependencies)
@@ -79,13 +81,15 @@ protected:
 		return std::get<std::decay_t<TDependency>&>(myDependencies);
 	}
 
-	inline void CompleteSuccess(TOutput&&... aOutput)
+	template<typename... TArgs>
+	inline void CompleteSuccess(TArgs... aArgs)
 	{
 		OnCompleted(EJobResult::Succeeded);
 
-		myPromise.Fullfill(std::forward<TOutput>(aOutput)...);
+		myPromise.Fullfill(std::forward<TArgs>(aArgs)...);
 	}
-	inline void CompleteFailure(TOutput&&... aOutput)
+	template<typename... TArgs>
+	inline void CompleteFailure(TArgs... aArgs)
 	{
 		OnCompleted(EJobResult::Failed);
 
@@ -103,8 +107,8 @@ private:
 
 };
 
-template<typename TPolicySet, typename... TOutput>
-thread_local typename Job<TPolicySet, TOutput...>::Promise* Job<TPolicySet, TOutput...>::myInjectedPromise;
+template<typename TPolicySet, typename TOutput, typename TOutputError>
+thread_local typename Job<TPolicySet, TOutput, TOutputError>::Promise* Job<TPolicySet, TOutput, TOutputError>::myInjectedPromise;
 
-template<typename TPolicySet, typename... TOutput>
-thread_local std::optional<typename Job<TPolicySet, TOutput...>::Dependencies> Job<TPolicySet, TOutput...>::myInjectedDependencies;
+template<typename TPolicySet, typename TOutput, typename TOutputError>
+thread_local std::optional<typename Job<TPolicySet, TOutput, TOutputError>::Dependencies> Job<TPolicySet, TOutput, TOutputError>::myInjectedDependencies;

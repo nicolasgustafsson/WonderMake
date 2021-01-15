@@ -299,6 +299,7 @@
     <ClInclude Include="Job\Cargo.h" />
     <ClInclude Include="Job\Job.h" />
     <ClInclude Include="Job\JobFuture.h" />
+    <ClInclude Include="Job\JobOutput.h" />
     <ClInclude Include="Job\JobPromise.h" />
     <ClInclude Include="Job\JobSystem.h" />
     <ClInclude Include="Object\CreateObjectJob.h" />

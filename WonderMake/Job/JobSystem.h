@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Job/JobFuture.h"
+#include "Job/JobOutput.h"
 #include "Job/JobPromise.h"
 
 #include "System/System.h"
@@ -25,34 +26,54 @@ class JobSystem
 			PAdd<ScheduleSystem, PWrite>>>
 {
 public:
-	template<typename... TArgs>
+	template<typename TOutput, typename TOutputError>
 	class JobSystemFuture
-		: private JobFuture<TArgs...>
+		: private JobFuture<TOutput, TOutputError>
 	{
 	public:
-		inline JobSystemFuture(JobPromise<TArgs...>& aPromise, ScheduleSystem& aScheduleSystem, JobSystem& aJobSystem)
-			: JobFuture<TArgs...>(aPromise, aScheduleSystem)
+		using Super = JobFuture<TOutput, TOutputError>;
+		using Promise = JobPromise<TOutput, TOutputError>;
+
+		inline JobSystemFuture(Promise& aPromise, ScheduleSystem& aScheduleSystem, JobSystem& aJobSystem)
+			: JobFuture<TOutput, TOutputError>(aPromise, aScheduleSystem)
 			, myJobSystem(aJobSystem)
 		{}
 
-		using JobFuture<TArgs...>::Then;
+		using Super::Then;
+		using Super::Error;
 
-		template<typename TJob, typename... TArgs> requires std::is_base_of_v<JobBase, TJob>
-		inline auto Then(TArgs&&... aArgs)
+		template<typename TJob> requires std::is_base_of_v<JobBase, TJob>
+		inline auto Then()
 		{
-			return myJobSystem.Run(std::forward<TArgs>(aArgs)...);
-
-			auto&& jobData = myJobSystem.CreateJob<TJob>();
-
-			JobFuture<TArgs...>::myPromise.SetCallbackSuccess([&jobSystem = myJobSystem, &jobData](TArgs&&... aArgs)
-			{
-				jobSystem.RunJob(jobData, std::forward<TArgs>(aArgs));
-			});
-
-			return typename TJob::template Future<JobSystemFuture>(jobData.Promise, JobFuture<TArgs...>::myScheduleSystem, myJobSystem);
+			return JobSystemImpl<TOutput>::template CreateJob<TJob>(Super::myPromise, Super::myScheduleSystem, myJobSystem);
 		}
 
 	private:
+		template<typename TOutput>
+		class JobSystemImpl
+		{
+			static_assert(AlwaysFalse<TOutput>, "Job has invalid input.");
+		};
+		template<typename... TArgs>
+		class JobSystemImpl<JobOutput<TArgs...>>
+		{
+		public:
+			template<typename TJob>
+			inline static auto CreateJob(Promise& aPromise, ScheduleSystem& aScheduleSystem, JobSystem& aJobSystem)
+			{
+				static_assert(std::is_constructible_v<TJob, TArgs...>, "Job input does not match output.");
+
+				auto&& jobData = aJobSystem.CreateJob<TJob>();
+
+				aPromise.SetCallbackSuccess([&aJobSystem, &jobData](TArgs&&... aArgs)
+					{
+						aJobSystem.RunJob(jobData, std::forward<TArgs>(aArgs)...);
+					});
+
+				return JobSystemFuture<typename TJob::Output, typename TJob::OutputError>(jobData.Promise, aScheduleSystem, aJobSystem);
+			}
+		};
+
 		JobSystem& myJobSystem;
 
 	};
@@ -64,9 +85,9 @@ public:
 	{
 		auto&& jobData = CreateJob<TJob>();
 
-		RunJob(jobData);
+		RunJob(jobData, std::forward<TArgs>(aArgs)...);
 
-		return typename TJob::template Future<JobSystemFuture>(jobData.Promise, Get<ScheduleSystem>(), *this);
+		return JobSystemFuture<typename TJob::Output, typename TJob::OutputError>(jobData.Promise, Get<ScheduleSystem>(), *this);
 	}
 
 private:
@@ -122,11 +143,11 @@ private:
 	inline void RunJob(JobData<TJob>& aJobData, TArgs&&... aArgs)
 	{
 		// TODO(Kevin): Take cargo policies into account.
-		Get<ScheduleSystem>().Schedule<typename TJob::PolicySet>([this, &aJobData, ...args = aArgs]()
+		Get<ScheduleSystem>().Schedule<typename TJob::PolicySet>([this, &aJobData, ...args = aArgs]() mutable
 		{
 			TJob::InjectDependencies(aJobData.Promise, GetDependenciesHelper(TupleWrapper<typename TJob::Dependencies>()));
 
-			aJobData.Job = std::make_shared<TJob>(std::forward<TArgs>(args)...);
+			aJobData.Job = std::make_shared<TJob>(std::move(args)...);
 		});
 	}
 

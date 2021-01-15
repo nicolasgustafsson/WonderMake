@@ -1,63 +1,82 @@
 #pragma once
 
+#include "Job/JobOutput.h"
 #include "Job/JobPromise.h"
 
 #include "Scheduling/ScheduleSystem.h"
 
-#include <tuple>
+#include "Typedefs.h"
 
-template<typename... TArgs>
+template<typename TOutput, typename TOutputError>
 class JobFuture
 {
 public:
-	inline JobFuture(JobPromise<TArgs...>& aPromise, ScheduleSystem& aScheduleSystem)
+	using SelfType = JobFuture<TOutput, TOutputError>;
+	using FuturePromise = JobPromise<TOutput, TOutputError>;
+
+	inline JobFuture(FuturePromise& aPromise, ScheduleSystem& aScheduleSystem)
 		: myPromise(aPromise)
 		, myScheduleSystem(aScheduleSystem)
 	{}
 
-	template<typename TCallable>
+	template<typename TCallable> requires FuturePromise::template IsInvocableFulfill<TCallable>
 	inline void Then(TCallable&& aCallable)
 	{
-		static_assert(std::is_invocable_v<TCallable, TArgs...>, "Invalid input.");
-
 		using PolicySet = Policy::Set<>;
 
-		myPromise.SetCallbackSuccess([&schedule = myScheduleSystem, callable = std::forward<TCallable>(aCallable)](TArgs&&... aArgs)
-		{
-			auto args = std::forward_as_tuple(std::forward<TArgs>(aArgs)...);
-
-			schedule.Schedule<PolicySet>([callable = std::move(callable), args = std::move(args)]()
-			{
-				std::apply(
-					std::move(callable),
-					std::move(args));
-			});
-		});
+		myPromise.SetCallbackSuccess(JobCallbackImpl<TOutput>::template CreateCallback<PolicySet, TCallable>(myScheduleSystem, std::forward<TCallable>(aCallable)));
 	}
-	template<typename TCallable, typename TCargo>
+	template<typename TCallable, typename TCargo> requires FuturePromise::template IsInvocableFulfill<TCallable, TCargo>
 	inline void Then(TCargo&& aCargo, TCallable&& aCallable)
 	{
-		static_assert(std::is_invocable_v<TCallable, TCargo, TArgs...>, "Invalid input.");
-
 		using PolicySet = typename TCargo::PolicySet;
 
-		myPromise.SetCallbackSuccess([&schedule = myScheduleSystem, callable = std::forward<TCallable>(aCallable), cargo = std::forward<TCargo>(aCargo)](TArgs&&... aArgs)
-		{
-			auto argsTuple = std::make_tuple(std::move(cargo), std::forward<TArgs>(aArgs)...);
+		myPromise.SetCallbackSuccess(JobCallbackImpl<TOutput>::template CreateCallback<PolicySet, TCallable>(myScheduleSystem, std::forward<TCallable>(aCallable), std::forward<TCargo>(aCargo)));
+	}
+	
+	template<typename TCallable> requires FuturePromise::template IsInvocableFail<TCallable>
+	inline SelfType& Error(TCallable&& aCallable)
+	{
+		using PolicySet = Policy::Set<>;
 
-			auto args = std::make_shared<decltype(argsTuple)>(std::move(argsTuple));
+		myPromise.SetCallbackFailure(JobCallbackImpl<TOutputError>::template CreateCallback<PolicySet, TCallable>(myScheduleSystem, std::forward<TCallable>(aCallable)));
 
-			schedule.Schedule<PolicySet>([callable = std::move(callable), args = std::move(args)]()
-			{
-				std::apply(
-					std::move(callable),
-					std::move(*args));
-			});
-		});
+		return *this;
+	}
+	template<typename TCallable, typename TCargo> requires FuturePromise::template IsInvocableFail<TCallable, TCargo>
+	inline SelfType& Error(TCargo&& aCargo, TCallable&& aCallable)
+	{
+		using PolicySet = typename TCargo::PolicySet;
+
+		myPromise.SetCallbackFailure(JobCallbackImpl<TOutputError>::template CreateCallback<PolicySet, TCallable>(myScheduleSystem, std::forward<TCallable>(aCallable), std::forward<TCargo>(aCargo)));
+
+		return *this;
 	}
 	
 protected:
-	JobPromise<TArgs...>& myPromise;
+	template<typename TOutput>
+	class JobCallbackImpl
+	{
+		static_assert(AlwaysFalse<TOutput>, "Invalid input.");
+	};
+	template<typename... TArgs>
+	class JobCallbackImpl<JobOutput<TArgs...>>
+	{
+	public:
+		template<typename TPolicySet, typename TCallable, typename... TAdditionalArgs> requires std::is_invocable_v<TCallable, TAdditionalArgs..., TArgs...>
+		inline static auto CreateCallback(ScheduleSystem& aScheduleSystem, TCallable&& aCallable, TAdditionalArgs&&... aAdditionalArgs)
+		{
+			return [&aScheduleSystem, callable = std::forward<TCallable>(aCallable), ...additionalArgs = std::forward<TAdditionalArgs>(aAdditionalArgs)](TArgs&&... aArgs) mutable
+			{
+				aScheduleSystem.Schedule<TPolicySet>([callable = std::move(callable), ...additionalArgs = std::move(additionalArgs), ...args = std::forward<TArgs>(aArgs)]() mutable
+				{
+					(void)callable(std::move(additionalArgs)..., std::move(args)...);
+				});
+			};
+		}
+	};
+
+	FuturePromise& myPromise;
 	ScheduleSystem& myScheduleSystem;
 
 };

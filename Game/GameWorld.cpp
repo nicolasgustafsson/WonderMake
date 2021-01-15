@@ -36,7 +36,7 @@ GameWorld::GameWorld()
 void GameWorld::RestartLevel(const bool aAddPlayer)
 {
 	RunJob<CreateObjectJob<LevelFunctionality>>()
-		.Then(WrapCargo(*this), [aAddPlayer](auto&& aCargo, auto&& aObject, auto&& aFunctionalities)
+		.Then(WrapCargo(*this), [aAddPlayer](Cargo<GameWorld>&& aCargo, Object&& aObject, Cargo<LevelFunctionality>&& aFunctionalities)
 			{
 				aCargo.Get<GameWorld>().SetLevel(std::move(aObject), aFunctionalities.Get<LevelFunctionality>(), aAddPlayer);
 			});

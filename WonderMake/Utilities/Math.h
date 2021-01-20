@@ -63,7 +63,7 @@ namespace WmMath
 	template <class TLhs, class TRhs>
 	concept Comparable = ComparableEquality<TLhs, TRhs> && ComparableStrong<TLhs, TRhs>;
 
-	template <class T> requires Interpolable<T>
+	template <Interpolable T>
 	inline [[nodiscard]] constexpr T Lerp(const T aStart, const T aEnd, const f32 aProgress) noexcept
 	{
 		return aStart + ((aEnd - aStart) * aProgress);
@@ -85,6 +85,18 @@ namespace WmMath
 	inline [[nodiscard]] constexpr T Pow(const T aBase, const uintmax_t aExponent) noexcept
 	{
 		return aExponent == 0 ? 1 : aBase * Pow(aBase, aExponent - 1);
+	}
+
+	template<typename T>
+	inline [[nodiscard]] constexpr T Square(const T aBase) noexcept
+	{
+		return Pow(aBase, 2);
+	}
+
+	template<typename T>
+	inline [[nodiscard]] constexpr T Cube(const T aBase) noexcept
+	{
+		return Pow(aBase, 3);
 	}
 
 	template<typename T>

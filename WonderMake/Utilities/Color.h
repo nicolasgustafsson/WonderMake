@@ -8,8 +8,8 @@ struct SColor
 public:
 	constexpr SColor() = default;
 
-	constexpr SColor(const i32 aHexadecimalValue)
-		: SColor(static_cast<u8>((aHexadecimalValue >> 16) & 0xFF), static_cast<u8>((aHexadecimalValue >> 8) & 0xFF), static_cast<u8>((aHexadecimalValue) & 0xFF))
+	constexpr SColor(const i32 aHexadecimalValue, f32 aAlpha = 1.0f)
+		: SColor(static_cast<u8>((aHexadecimalValue >> 16) & 0xFF), static_cast<u8>((aHexadecimalValue >> 8) & 0xFF), static_cast<u8>((aHexadecimalValue) & 0xFF), (u8)(aAlpha * 255.f))
 	{
 
 	}
@@ -34,29 +34,29 @@ public:
 	operator ImColor() { return ImColor(R, G, B, A); }
 	operator ImVec4() { return ImVec4(R, G, B, A); }
 
-	[[nodiscard]] constexpr static SColor CornflowerBlue()	noexcept { return { 100.f / 255.f, 149.f / 255.f, 237.f / 255.f, 1.0f }; }
-	[[nodiscard]] constexpr static SColor Grey()			noexcept { return { 0.85f, 0.85f, 0.85f, 1.0f };}
-	[[nodiscard]] constexpr static SColor White()			noexcept { return SColor(255_u8, 255_u8, 255_u8); }
-	[[nodiscard]] constexpr static SColor Yellow()			noexcept { return { 1.0f, 1.0f, 0.0f, 1.0f }; }
-	[[nodiscard]] constexpr static SColor Red()				noexcept { return { 1.0f, 0.0f, 0.0f, 1.0f }; }
-	[[nodiscard]] constexpr static SColor Green()			noexcept { return { 0.0f, 1.0f, 0.0f, 1.0f }; }
-	[[nodiscard]] constexpr static SColor Blue()			noexcept { return { 0.0f, 0.0f, 1.0f, 1.0f }; }
-	[[nodiscard]] constexpr static SColor ImperialRed()		noexcept { return SColor(0xE54B4B); }
-	[[nodiscard]] constexpr static SColor BlueBell()		noexcept { return SColor(0x8789C0);}
-	[[nodiscard]] constexpr static SColor KombuGreen()		noexcept { return SColor(0x334139); }
-	[[nodiscard]] constexpr static SColor LightSalmon()		noexcept { return SColor(0xFFA987); }
-	[[nodiscard]] constexpr static SColor Seashell()		noexcept { return SColor(0xF7EBE8); }
-	[[nodiscard]] constexpr static SColor SpanishGray()		noexcept { return SColor(0x9E9694); }
-	[[nodiscard]] constexpr static SColor Jet()				noexcept { return SColor(0x333333); }
-	[[nodiscard]] constexpr static SColor RaisinBlack()		noexcept { return SColor(0x1E1E24); }
-	[[nodiscard]] constexpr static SColor AmaranthPurple()	noexcept { return SColor(0xA23652); }
-	[[nodiscard]] constexpr static SColor Zomp()			noexcept { return SColor(0x36A184); }
-	[[nodiscard]] constexpr static SColor MinionYellow()	noexcept { return SColor(0xF1E254); }
-	[[nodiscard]] constexpr static SColor DimGray()			noexcept { return SColor(0x6C6C6B); }
-	[[nodiscard]] constexpr static SColor SilverChalice()	noexcept { return SColor(0xADADAD); }
-	[[nodiscard]] constexpr static SColor Gainsboro()		noexcept { return SColor(0xE0E0E0); }
-	[[nodiscard]] constexpr static SColor Amaranth()		noexcept { return SColor(0xE52B50); }
-	[[nodiscard]] constexpr static SColor SeaGreenCrayola() noexcept { return SColor(0x2AE5BF); }
-	[[nodiscard]] constexpr static SColor MiddleYellow()	noexcept { return SColor(0xFFE921); }
-	[[nodiscard]] constexpr static SColor EerieBlack()		noexcept { return SColor(0x151514); }
+	[[nodiscard]] constexpr static SColor CornflowerBlue(const f32 aAlpha = 1.0f)	noexcept { return { 100.f / 255.f, 149.f / 255.f, 237.f / 255.f, aAlpha }; }
+	[[nodiscard]] constexpr static SColor Grey(const f32 aAlpha = 1.0f)				noexcept { return { 0.85f, 0.85f, 0.85f, aAlpha }; }
+	[[nodiscard]] constexpr static SColor White(const f32 aAlpha = 1.0f)			noexcept { return SColor(255_u8, 255_u8, 255_u8, (u8)(aAlpha * 255.f)); }
+	[[nodiscard]] constexpr static SColor Yellow(const f32 aAlpha = 1.0f)			noexcept { return { 1.0f, 1.0f, 0.0f, aAlpha }; }
+	[[nodiscard]] constexpr static SColor Red(const f32 aAlpha = 1.0f)				noexcept { return { 1.0f, 0.0f, 0.0f, aAlpha }; }
+	[[nodiscard]] constexpr static SColor Green(const f32 aAlpha = 1.0f)			noexcept { return { 0.0f, 1.0f, 0.0f, aAlpha }; }
+	[[nodiscard]] constexpr static SColor Blue(const f32 aAlpha = 1.0f)				noexcept { return { 0.0f, 0.0f, 1.0f, aAlpha }; }
+	[[nodiscard]] constexpr static SColor ImperialRed(const f32 aAlpha = 1.0f)		noexcept { return SColor(0xE54B4B, aAlpha); }
+	[[nodiscard]] constexpr static SColor BlueBell(const f32 aAlpha = 1.0f)			noexcept { return SColor(0x8789C0, aAlpha); }
+	[[nodiscard]] constexpr static SColor KombuGreen(const f32 aAlpha = 1.0f)		noexcept { return SColor(0x334139, aAlpha); }
+	[[nodiscard]] constexpr static SColor LightSalmon(const f32 aAlpha = 1.0f)		noexcept { return SColor(0xFFA987, aAlpha); }
+	[[nodiscard]] constexpr static SColor Seashell(const f32 aAlpha = 1.0f)			noexcept { return SColor(0xF7EBE8, aAlpha); }
+	[[nodiscard]] constexpr static SColor SpanishGray(const f32 aAlpha = 1.0f)		noexcept { return SColor(0x9E9694, aAlpha); }
+	[[nodiscard]] constexpr static SColor Jet(const f32 aAlpha = 1.0f)				noexcept { return SColor(0x333333, aAlpha); }
+	[[nodiscard]] constexpr static SColor RaisinBlack(const f32 aAlpha = 1.0f)		noexcept { return SColor(0x1E1E24, aAlpha); }
+	[[nodiscard]] constexpr static SColor AmaranthPurple(const f32 aAlpha = 1.0f)	noexcept { return SColor(0xA23652, aAlpha); }
+	[[nodiscard]] constexpr static SColor Zomp(const f32 aAlpha = 1.0f)				noexcept { return SColor(0x36A184, aAlpha); }
+	[[nodiscard]] constexpr static SColor MinionYellow(const f32 aAlpha = 1.0f)		noexcept { return SColor(0xF1E254, aAlpha); }
+	[[nodiscard]] constexpr static SColor DimGray(const f32 aAlpha = 1.0f)			noexcept { return SColor(0x6C6C6B, aAlpha); }
+	[[nodiscard]] constexpr static SColor SilverChalice(const f32 aAlpha = 1.0f)	noexcept { return SColor(0xADADAD, aAlpha); }
+	[[nodiscard]] constexpr static SColor Gainsboro(const f32 aAlpha = 1.0f)		noexcept { return SColor(0xE0E0E0, aAlpha); }
+	[[nodiscard]] constexpr static SColor Amaranth(const f32 aAlpha = 1.0f)			noexcept { return SColor(0xE52B50, aAlpha); }
+	[[nodiscard]] constexpr static SColor SeaGreenCrayola(f32 aAlpha = 1.0f)		noexcept { return SColor(0x2AE5BF, aAlpha); }
+	[[nodiscard]] constexpr static SColor MiddleYellow(const f32 aAlpha = 1.0f)		noexcept { return SColor(0xFFE921, aAlpha); }
+	[[nodiscard]] constexpr static SColor EerieBlack(const f32 aAlpha = 1.0f)		noexcept { return SColor(0x151514, aAlpha); }
 };

@@ -76,6 +76,7 @@
     <ClCompile Include="LineListRenderObject.cpp" />
     <ClCompile Include="Threads\TaskManager.cpp" />
     <ClCompile Include="Scheduling\ScheduleSystem.cpp" />
+    <ClCompile Include="Utilities\Easing\EasingTester.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -242,6 +243,8 @@
     <ClInclude Include="Utilities\Json\JsonExtensions.h" />
     <ClInclude Include="Threads\TaskManager.h" />
     <ClInclude Include="Scheduling\ScheduleSystem.h" />
+    <ClInclude Include="Utilities\Easing\EasingFunctions.h" />
+    <ClInclude Include="Utilities\Easing\EasingTester.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

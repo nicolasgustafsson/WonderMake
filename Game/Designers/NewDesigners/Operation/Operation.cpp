@@ -1,0 +1,5 @@
+#include "pch.h"
+#include "Operation.h"
+#include "../Attribute/Attribute.h"
+#include "Randomizer/Randomizer.h"
+#include "../Sketch/Sketch.h"

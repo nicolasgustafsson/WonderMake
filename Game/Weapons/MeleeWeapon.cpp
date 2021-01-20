@@ -7,7 +7,7 @@ MeleeWeapon::MeleeWeapon(MeleeWeapon&& aOther) noexcept
 	myProperties = std::move(aOther.myProperties);
 	myBaseWeaponDamage = aOther.myBaseWeaponDamage;
 	myBaseWeaponSwingRate = aOther.myBaseWeaponSwingRate;
-	mySwings = std::move(aOther.mySwings);
+	myMoveset = std::move(aOther.myMoveset);
 
 	aOther.myBaseWeaponDamage = 0;
 	aOther.myBaseWeaponSwingRate = 1.0f;

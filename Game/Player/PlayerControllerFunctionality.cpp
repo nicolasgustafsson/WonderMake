@@ -6,6 +6,7 @@
 #include "UtilityFunctionalities/TimeToLiveFunctionality.h"
 #include "Levels/LevelFunctionality.h"
 #include "Utility/Palette.h"
+#include "Designers/NewDesigners/MeleeWeaponDesigner2/MeleeWeaponDesigner2.h"
 
 REGISTER_FUNCTIONALITY(PlayerControllerFunctionality);
 
@@ -18,7 +19,10 @@ PlayerControllerFunctionality::PlayerControllerFunctionality()
 	Get<FactionFunctionality>().SetFaction(EFaction::Player);
 	Get<CharacterFunctionality>().Get<CharacterStatsFunctionality>().SetBaseValue(ECharacterStat::MovementSpeed, 200.f);
 
-	Get<MeleeWeaponUserFunctionality>().SetWeapon(Get<MeleeWeaponDesigner>().DesignWeapon());
+	MeleeWeaponDesigner2 meleeWeaponDesigner;
+
+
+	Get<MeleeWeaponUserFunctionality>().SetWeapon(meleeWeaponDesigner.Design(Sketch()));
 
 	Get<SLevelDenizenComponent>().PersistentOnLevelChange = true;
 

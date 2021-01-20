@@ -1,6 +1,8 @@
 #pragma once
 #include "Weapons/WeaponProperty/WeaponProperty.h"
 #include "Weapons/WeaponSwing.h"
+#include "Designers/NewDesigners/MovesetDesigner/MovesetDesigner.h"
+#include "Designers/NewDesigners/MovesetDesigner/Moveset.h"
 
 class MeleeWeapon
 	: public NonCopyable
@@ -11,7 +13,7 @@ public:
 
 	void Inspect();
 
-	std::vector<SSwing> mySwings;
+	SMoveset myMoveset;
 
 	f32 myBaseWeaponDamage = 0.f;
 	f32 myBaseWeaponSwingRate = 1.f;

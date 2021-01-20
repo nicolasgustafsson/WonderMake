@@ -25,13 +25,13 @@ void MeleeWeaponUserFunctionality::SwingWeapon()
 
 	MeleeWeapon& weapon = *meleeWeaponUserComponent.Weapon;
 
-	if (weapon.mySwings.empty())
+	if (weapon.myMoveset.Swings.empty())
 		return;
 
 	if (!actionFunctionality.WasLastActionOfType<WeaponSwingHitShapeAction>() || actionFunctionality.TimeSinceLastAction() > 0.5f)
 		meleeWeaponUserComponent.CurrentSwingIndex = 0;
 
-	meleeWeaponUserComponent.CurrentSwingIndex %= weapon.mySwings.size();
+	meleeWeaponUserComponent.CurrentSwingIndex %= weapon.myMoveset.Swings.size();
 
 	//EActionResult result = actionFunctionality.StartAction(WeaponSwingAction
 	//(Get<CharacterFunctionality>()
@@ -42,7 +42,7 @@ void MeleeWeaponUserFunctionality::SwingWeapon()
 	EActionResult result = actionFunctionality.StartAction(WeaponSwingHitShapeAction
 	(
 		Get<CharacterFunctionality>()
-		, weapon.mySwings[meleeWeaponUserComponent.CurrentSwingIndex]
+		, weapon.myMoveset.Swings[meleeWeaponUserComponent.CurrentSwingIndex]
 	));
 
 	if (result == EActionResult::Succeeded)

@@ -228,6 +228,15 @@
     <ClInclude Include="Character\Buffs\StatChangeProperty\BuffStatChangeProperty.h" />
     <ClInclude Include="Character\Buffs\TimedTickBuffProperty\BuffTimedTickProperty.h" />
     <ClInclude Include="Designers\EffectDesigner\EffectDesigner.h" />
+    <ClInclude Include="Designers\NewDesigners\Attribute\Attribute.h" />
+    <ClInclude Include="Designers\NewDesigners\Designer\Designer.h" />
+    <ClInclude Include="Designers\NewDesigners\MovesetDesigner\MovesetOperations\MovesetOperations.h" />
+    <ClInclude Include="Designers\NewDesigners\MovesetDesigner\MovesetDesigner.h" />
+    <ClInclude Include="Designers\NewDesigners\Operation\Operation.h" />
+    <ClInclude Include="Designers\NewDesigners\Sketch\Sketch.h" />
+    <ClInclude Include="Designers\NewDesigners\MeleeWeaponDesigner2\MeleeWeaponDesigner2.h" />
+    <ClInclude Include="Designers\NewDesigners\MeleeWeaponDesigner2\MeleeWeaponOperations\MeleeWeaponOperations.h" />
+    <ClInclude Include="Designers\NewDesigners\MeleeWeaponDesigner2\MeleeWeaponAttributes\MeleeWeaponAttributes.h" />
     <ClInclude Include="UtilityFunctionalities\LineOfSightFunctionality.h" />
     <ClInclude Include="Utility\Palette.h" />
     <ClInclude Include="Physics\Navmesh\NavmeshFunctionality.h" />
@@ -275,6 +284,7 @@
     <ClInclude Include="Player\PlayerControllerFunctionality.h" />
     <ClInclude Include="Weapons\MeleeWeapon.h" />
     <ClInclude Include="Weapons\WeaponProperty\WeaponProperty.h" />
+    <ClInclude Include="Designers\NewDesigners\MovesetDesigner\Moveset.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actions\ActionFunctionality.cpp" />
@@ -283,6 +293,15 @@
     <ClCompile Include="Character\Buffs\StatChangeProperty\BuffStatChangeProperty.cpp" />
     <ClCompile Include="Character\Buffs\TimedTickBuffProperty\BuffTimedTickProperty.cpp" />
     <ClCompile Include="Designers\EffectDesigner\EffectDesigner.cpp" />
+    <ClCompile Include="Designers\NewDesigners\Attribute\Attribute.cpp" />
+    <ClCompile Include="Designers\NewDesigners\Designer\Designer.cpp" />
+    <ClCompile Include="Designers\NewDesigners\MovesetDesigner\MovesetOperations\MovesetOperations.cpp" />
+    <ClCompile Include="Designers\NewDesigners\MovesetDesigner\MovesetDesigner.cpp" />
+    <ClCompile Include="Designers\NewDesigners\Operation\Operation.cpp" />
+    <ClCompile Include="Designers\NewDesigners\Sketch\Sketch.cpp" />
+    <ClCompile Include="Designers\NewDesigners\MeleeWeaponDesigner2\MeleeWeaponDesigner2.cpp" />
+    <ClCompile Include="Designers\NewDesigners\MeleeWeaponDesigner2\MeleeWeaponOperations\MeleeWeaponOperations.cpp" />
+    <ClCompile Include="Designers\NewDesigners\MeleeWeaponDesigner2\MeleeWeaponAttributes\MeleeWeaponAttributes.cpp" />
     <ClCompile Include="UtilityFunctionalities\LineOfSightFunctionality.cpp" />
     <ClCompile Include="Physics\Navmesh\NavmeshFunctionality.cpp" />
     <ClCompile Include="Physics\Navmesh\NavmeshRenderObject.cpp" />

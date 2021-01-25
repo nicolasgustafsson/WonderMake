@@ -276,6 +276,7 @@
     <ClInclude Include="Utilities\UniqueFunction.h" />
     <ClInclude Include="Utilities\Alias.h" />
     <ClInclude Include="Job\JobOutput.h" />
+    <ClInclude Include="Utilities\UniqueValue.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

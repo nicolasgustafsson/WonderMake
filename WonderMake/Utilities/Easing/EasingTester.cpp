@@ -121,7 +121,7 @@ void EasingTester::Movement()
 		if (ImGui::IsMouseClicked(0))
 		{
 			prevLocation = aLocation;
-			nextLocation = SVector2f{ ImGui::GetMousePos().x, ImGui::GetMousePos().y };
+			nextLocation = SVector2f{ WmGui::GetMousePosOnCanvas(&canvasState).x, WmGui::GetMousePosOnCanvas(&canvasState).y };;
 			progress = 0.f;
 		}
 	}
@@ -183,7 +183,7 @@ void EasingTester::ContinuousMovement()
 	{
 		if (ImGui::IsMouseDown(0))
 		{
-			nextLocation = SVector2f{ ImGui::GetMousePos().x, ImGui::GetMousePos().y };
+			nextLocation = SVector2f{ WmGui::GetMousePosOnCanvas(&canvasState).x, WmGui::GetMousePosOnCanvas(&canvasState).y };
 		}
 	}
 
@@ -203,40 +203,47 @@ void EasingTester::ContinuousMovement()
 
 void EasingTester::CurveEditor()
 {
-	static SVector2f start = SVector2f(200.f, 200.f) + SVector2f(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
-	static SVector2f end = SVector2f(800.f, 600.f) + SVector2f(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
-	static SVector2f controlFirst = SVector2f(400.f, 300.f) + SVector2f(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
-	static SVector2f controlSecond = SVector2f(600.f, 500.f) + SVector2f(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
-	static SVector2f mousePos = SVector2f{ ImGui::GetMousePos().x, ImGui::GetMousePos().y };
-	mousePos = SVector2f{ ImGui::GetMousePos().x, ImGui::GetMousePos().y };
+	static SVector2f start = SVector2f(100.f, 100.f);
+	static SVector2f end = SVector2f(400.f, 400.f);
+	static SVector2f controlFirst = SVector2f(250.f, 250.f);
+	static SVector2f controlSecond = SVector2f(250.f, 250.f);
+	static SVector2f mousePos;
 	static WmGui::SCanvasState canvasState;
-	WmGui::BeginCanvas(&canvasState, false, false);
+	WmGui::BeginCanvas(&canvasState, true, true);
+	mousePos = SVector2f{ WmGui::GetMousePosOnCanvas(&canvasState).x, WmGui::GetMousePosOnCanvas(&canvasState).y };
 
 
-	WmGui::DrawLineOnCanvas(&canvasState, start, controlFirst, SColor::DimGray(0.5f), 1.f, false);
+	WmGui::DrawLineOnCanvas(&canvasState, start, controlFirst, SColor::DimGray(0.5f), 1.f, true);
 	//WmGui::DrawLineOnCanvas(&canvasState, end, controlFirst, SColor::DimGray(0.5f), 1.f, false);
-	WmGui::DrawLineOnCanvas(&canvasState, end, controlSecond, SColor::DimGray(0.5f), 1.f, false);
+	WmGui::DrawLineOnCanvas(&canvasState, end, controlSecond, SColor::DimGray(0.5f), 1.f, true);
 	//WmGui::DrawLineOnCanvas(&canvasState, end, start, SColor::DimGray(0.5f), 1.f, false);
 
 	for (f32 progress = 0.f; progress < 1.0f; progress += 0.02f)
 	{
-		WmGui::DrawLineOnCanvas(&canvasState, WmEasings::CubicBezier({ start, end }, controlFirst, controlSecond, progress), WmEasings::CubicBezier({ start, end }, controlFirst, controlSecond, WmMath::Clamp(0.0f, 1.0f, progress + 0.02f)), SColor::SilverChalice(), 2.f, false);
+		SVector2f lineStart = { WmEasings::Lerp<f32>({start.X, end.X}, progress), WmEasings::CubicBezier({ start.Y, end.Y }, controlFirst.Y, controlSecond.Y, progress) };
+		SVector2f lineEnd = { WmEasings::Lerp<f32>({start.X, end.X}, WmMath::Clamp(0.0f, 1.0f, progress + 0.02f)), WmEasings::CubicBezier({ start.Y, end.Y }, controlFirst.Y, controlSecond.Y, WmMath::Clamp(0.0f, 1.0f, progress + 0.02f)) };
+		WmGui::DrawLineOnCanvas(&canvasState, lineStart, lineEnd, SColor::SilverChalice(), 2.f, true);
 	}
 
-	SVector2f& closest = SVector2f::Closest(mousePos, std::array{ &start, &end, &controlFirst, &controlSecond });
+	static SVector2f* closest = nullptr;
 
 	if (ImGui::IsWindowHovered())
 	{
-		if (ImGui::IsMouseDown(0))
+		if (ImGui::IsMouseClicked(0))
 		{
-			closest = mousePos;
+			closest = &SVector2f::Closest(mousePos, std::array{ &start, &end, &controlFirst, &controlSecond });
+		}
+
+		if (ImGui::IsMouseDown(0) && closest)
+		{
+			*closest = mousePos;
 		}
 	}
 
-	WmGui::DrawCirleOnCanvas(&canvasState, start, SColor::BlueBell(), 8.f, false);
-	WmGui::DrawCirleOnCanvas(&canvasState, end, SColor::BlueBell(), 8.f, false);
-	WmGui::DrawCirleOnCanvas(&canvasState, controlFirst, SColor::ImperialRed(), 8.f, false);
-	WmGui::DrawCirleOnCanvas(&canvasState, controlSecond, SColor::ImperialRed(), 8.f, false);
+	WmGui::DrawCirleOnCanvas(&canvasState, start, SColor::BlueBell(), 8.f, true);
+	WmGui::DrawCirleOnCanvas(&canvasState, end, SColor::BlueBell(), 8.f, true);
+	WmGui::DrawCirleOnCanvas(&canvasState, controlFirst, SColor::ImperialRed(), 8.f, true);
+	WmGui::DrawCirleOnCanvas(&canvasState, controlSecond, SColor::ImperialRed(), 8.f, true);
 
 	WmGui::EndCanvas();
 

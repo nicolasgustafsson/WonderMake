@@ -71,13 +71,19 @@ void WmGui::BeginCanvas(SCanvasState* aCanvasState, bool aAllowMovement /*= true
 	ImGui::SetWindowFontScale(aCanvasState->ZoomLevel);
 }
 
+ImVec2 WmGui::GetMousePosOnCanvas(SCanvasState* aCanvasState)
+{
+	assert(aCanvasState);
+	return ImGui::GetMousePos() - ImGui::GetWindowPos() - aCanvasState->Offset;
+}
+
 void WmGui::DrawCirleOnCanvas(SCanvasState* aCanvasState, const SVector2f aPosition, const SColor aColor, const f32 aRadius, const bool aHandleOffset)
 {
 	assert(aCanvasState);
 	ImDrawList* drawList = ImGui::GetWindowDrawList();
 	const ImVec2 windowPosition = ImGui::GetWindowPos();
 
-	const ImVec2 offset = aHandleOffset ? windowPosition + aCanvasState->Offset : ImVec2{ 0.f, 0.f };
+	const ImVec2 offset = aHandleOffset ? windowPosition + aCanvasState->Offset : windowPosition;
 
 	//drawList->AddLine(ImVec2(x + windowPosition.x, 0 + windowPosition.y), ImVec2(x + windowPosition.x, windowSize.y + windowPosition.y), gridColor);
 	drawList->AddCircleFilled(offset + ImVec2{ aPosition.X, aPosition.Y }, aRadius,
@@ -91,7 +97,7 @@ void WmGui::DrawLineOnCanvas(SCanvasState* aCanvasState, const SVector2f aStart,
 	ImDrawList* drawList = ImGui::GetWindowDrawList();
 	const ImVec2 windowPosition = ImGui::GetWindowPos();
 
-	const ImVec2 offset = aHandleOffset ? windowPosition + aCanvasState->Offset : ImVec2{ 0.f, 0.f };
+	const ImVec2 offset = aHandleOffset ? windowPosition + aCanvasState->Offset : windowPosition;
 
 	drawList->AddLine(offset + ImVec2{ aStart.X, aStart.Y }, offset + ImVec2{ aEnd.X, aEnd.Y }, ImColor(aColor.R, aColor.G, aColor.B, aColor.A), aThickness);
 }

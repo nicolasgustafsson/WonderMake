@@ -37,7 +37,7 @@ SSwing MeleeWeaponDesigner::DesignSwing(const MeleeWeapon& aWeapon, const bool a
 
 	swing.SwingTime = 0.2f;
 
-	swing.IsMirrored = aMirror;
+	//swing.IsMirrored = aMirror;
 	swing.StepLength = 25.f;
 
 	const f32 sidewayMultiplier = aMirror ? -1.f : 1.f;
@@ -55,7 +55,7 @@ SSwing MeleeWeaponDesigner::DesignFinisher(const MeleeWeapon& aWeapon, const boo
 {
 	SSwing finisher = DesignSwing(aWeapon, aMirror);
 
-	finisher.IsFinisher = true;
+	//finisher.IsFinisher = true;
 
 	finisher.ChargeTime = 0.2f;
 	finisher.StepLength = 100.f;

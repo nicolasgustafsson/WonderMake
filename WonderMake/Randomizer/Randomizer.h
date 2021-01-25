@@ -38,12 +38,12 @@ T Randomizer::GetRandomNumber(T aMin, T aMax)
 {
 	if constexpr (std::is_integral_v<T>)
 	{
-		std::uniform_int_distribution<T> distribution(aMin, aMax);
+		std::uniform_int_distribution<T> distribution(std::min(aMin, aMax), std::max(aMin, aMax));
 		return distribution(myRandomGenerator);
 	}
 	else
 	{
-		std::uniform_real_distribution<T> distribution(aMin, aMax);
+		std::uniform_real_distribution<T> distribution(std::min(aMin, aMax), std::max(aMin, aMax));
 		return distribution(myRandomGenerator);
 	}
 }

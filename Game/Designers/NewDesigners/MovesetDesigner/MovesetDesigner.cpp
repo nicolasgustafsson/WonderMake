@@ -4,6 +4,7 @@
 
 MovesetDesigner::MovesetDesigner()
 {	
-	AddOperation<AddMove>();
+	AddOperation<DetermineAmountOfMoves>();
+	AddOperation<AddMoves>();
 	AddOperation<SmashTogetherMoveset>();
 }

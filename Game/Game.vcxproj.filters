@@ -60,6 +60,10 @@
     <ClCompile Include="Designers\NewDesigners\MeleeWeaponDesigner2\MeleeWeaponOperations\MeleeWeaponOperations.cpp" />
     <ClCompile Include="Designers\NewDesigners\MovesetDesigner\MovesetOperations\MovesetOperations.cpp" />
     <ClCompile Include="Designers\NewDesigners\MeleeWeaponDesigner2\MeleeWeaponAttributes\MeleeWeaponAttributes.cpp" />
+    <ClCompile Include="Designers\NewDesigners\MovesetDesigner\SwingDesigner\SwingDesigner.cpp" />
+    <ClCompile Include="Designers\NewDesigners\MovesetDesigner\SwingDesigner\SwingOperations\SwingOperations.cpp" />
+    <ClCompile Include="Designers\NewDesigners\BezierDesigner\BezierDesigner.cpp" />
+    <ClCompile Include="Designers\NewDesigners\BezierDesigner\BezierOperations.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWorld.h" />
@@ -126,6 +130,13 @@
     <ClInclude Include="Designers\NewDesigners\MeleeWeaponDesigner2\MeleeWeaponOperations\MeleeWeaponOperations.h" />
     <ClInclude Include="Designers\NewDesigners\MovesetDesigner\MovesetOperations\MovesetOperations.h" />
     <ClInclude Include="Designers\NewDesigners\MeleeWeaponDesigner2\MeleeWeaponAttributes\MeleeWeaponAttributes.h" />
+    <ClInclude Include="Designers\NewDesigners\MovesetDesigner\SwingDesigner\SwingDesigner.h" />
+    <ClInclude Include="Designers\NewDesigners\MovesetDesigner\SwingDesigner\SwingOperations\SwingOperations.h" />
+    <ClInclude Include="Designers\NewDesigners\MovesetDesigner\SwingDesigner\SwingAttributes\SwingAttributes.h" />
+    <ClInclude Include="Designers\NewDesigners\MovesetDesigner\MovesetAttributes.h" />
+    <ClInclude Include="Designers\NewDesigners\BezierDesigner\BezierDesigner.h" />
+    <ClInclude Include="Designers\NewDesigners\BezierDesigner\BezierAttributes.h" />
+    <ClInclude Include="Designers\NewDesigners\BezierDesigner\BezierOperations.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Character\Buffs\BuffDesign.md" />

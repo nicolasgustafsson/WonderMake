@@ -3,41 +3,61 @@
 #include "../Moveset.h"
 #include "../../Attribute/Attribute.h"
 #include "../../Sketch/Sketch.h"
+#include "../SwingDesigner/SwingDesigner.h"
+#include "../SwingDesigner/SwingAttributes/SwingAttributes.h"
+#include "../MovesetAttributes.h"
+#include <Randomizer/Randomizer.h>
 
-bool AddMove::IsEligible(const Sketch& aSketch) const
+bool AddMoves::IsEligible(const Sketch& aSketch) const
 {
-	return true;
+	return aSketch.ContainsAttribute<SAmountOfMoves>();
 }
 
-void AddMove::Perform(Sketch& aSketch) const
+void AddMoves::Perform(Sketch& aSketch) const
 {
-	SSwing swing;
+	SGenericAttribute<SMoveset> genericSwingAttribute;
+	for (i32 i = 0; i < aSketch.GetAttribute<SAmountOfMoves>()->MovesLeft; i++)
+	{
+		SwingDesigner swingDesigner;
 
-	const f32 sidewayMultiplier = 1.0f;
-	swing.SwingPath = BezierCurve(
-		{ 50.f * sidewayMultiplier, -25.f },
-		{ -50.f * sidewayMultiplier, -25.f },
-		{ 50.f * sidewayMultiplier, 30.f },
-		{ 0.f, 100.f });
+		Sketch newSketch;
+		SSwingTypeAttribute swingTypeAttribute;
+		swingTypeAttribute.Type = static_cast<ESwingType>(SystemPtr<Randomizer>()->GetRandomNumber(0, 1));
 
-	SGenericAttribute<SSwing> waieoteiorat;
-	waieoteiorat.Attribute = swing;
+		newSketch.AddAttribute<SSwingTypeAttribute>(swingTypeAttribute);
+		const SSwing swing = swingDesigner.Design(newSketch); //why are we sending over the same sketch, should we not make a new one for the swing?
 
-	aSketch.AddAttribute(std::move(waieoteiorat));
+		genericSwingAttribute.Attribute.Swings.push_back(swing);
+	}
+
+	aSketch.AddAttribute(std::move(genericSwingAttribute));
 }
 
 bool SmashTogetherMoveset::IsEligible(const Sketch& aSketch) const
 {
-	return aSketch.ContainsAttribute<SGenericAttribute<SSwing>>();
+	return aSketch.ContainsAttribute<SGenericAttribute<SMoveset>>();
 }
 
 void SmashTogetherMoveset::Perform(Sketch& aSketch) const
 {
-	SMoveset moveset;
-	moveset.Swings.push_back(aSketch.GetAttribute<SGenericAttribute<SSwing>>()->Attribute);
+	auto moveset = aSketch.GetAttribute<SGenericAttribute<SMoveset>>()->Attribute;
 
 	SDesignedObjectAttribute<SMoveset> attribute;
 	attribute.FinishedDesign = moveset;
 
-	aSketch.AddAttribute<SDesignedObjectAttribute<SMoveset>>(attribute);
+	aSketch.AddAttribute<SDesignedObjectAttribute<SMoveset>>(std::move(attribute));
+}
+
+bool DetermineAmountOfMoves::IsEligible(const Sketch& aSketch) const
+{
+	return true;
+}
+
+void DetermineAmountOfMoves::Perform(Sketch& aSketch) const
+{
+	SAmountOfMoves attribute;
+	attribute.MovesLeft = SystemPtr<Randomizer>()->GetRandomNumber<u32>(4, 5);
+
+	aSketch.AddAttribute(std::move(attribute));
+
 }

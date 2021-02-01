@@ -5,6 +5,7 @@
 #include "Actions/ActionFunctionality.h"
 #include "Weapons/WeaponSwingHitShapeAction.h"
 #include "Weapons/MeleeWeapon.h"
+#include "Designers/NewDesigners/MeleeWeaponDesigner2/MeleeWeaponDesigner2.h"
 
 REGISTER_COMPONENT(SMeleeWeaponUserComponent);
 REGISTER_FUNCTIONALITY(MeleeWeaponUserFunctionality);
@@ -12,6 +13,12 @@ REGISTER_FUNCTIONALITY(MeleeWeaponUserFunctionality);
 void MeleeWeaponUserFunctionality::Inspect()
 {
 	Get<SMeleeWeaponUserComponent>().Weapon->Inspect();
+
+	if (ImGui::Button("Randomize"))
+	{
+		MeleeWeaponDesigner2 weaponDesigner;
+		SetWeapon(weaponDesigner.Design({}));
+	}
 }
 
 void MeleeWeaponUserFunctionality::SwingWeapon()

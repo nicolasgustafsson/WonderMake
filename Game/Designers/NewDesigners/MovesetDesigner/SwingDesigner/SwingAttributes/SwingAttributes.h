@@ -2,12 +2,33 @@
 #include "../../../Attribute/Attribute.h"
 #include "Typedefs.h"
 #include "Utilities/BezierCurve.h"
+#include "Weapons/WeaponSwing.h"
 
 enum class ESwingType
 {
 	Stab,
 	Slash
 };
+
+enum class ESwingThreat
+{
+	Pathetic,
+	Normal,
+	Stronk
+};
+
+enum class ESwingSpeed
+{
+	Snail,
+	Snake,
+	Cheetah
+};
+
+struct SSwingInProgressAttribute : public SAttribute
+{
+	SSwing SwingInProgress;
+};
+
 
 //Boilerplate = creating new classes for every attribute - can we make some template instead or something?
 
@@ -16,22 +37,12 @@ struct SSwingTypeAttribute : public SAttribute
 	ESwingType Type;
 };
 
-struct SSwingPathAttribute : public SAttribute
+struct SSwingThreatAttribute : public SAttribute
 {
-	BezierCurve Path;
+	ESwingThreat SwingThreat;
 };
 
-struct SStepLengthAttribute : public SAttribute
+struct SSwingSpeedAttribute : public SAttribute
 {
-	f32 Length;
-};
-
-struct SSwingChargeTimeAttribute : public SAttribute
-{
-	f32 Time;
-};
-
-struct SSwingTimeAttribute : public SAttribute
-{
-	f32 Time;
+	ESwingSpeed SwingSpeed;
 };

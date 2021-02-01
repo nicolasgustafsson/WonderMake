@@ -1,6 +1,14 @@
 #pragma once
 #include "../../Operation/Operation.h"
 
+class RandomizeMovesetType : public Operation
+{
+public:
+	virtual bool IsEligible(const Sketch& aSketch) const override;
+
+	virtual void Perform(Sketch& aSketch) const override;
+};
+
 class DetermineAmountOfMoves : public Operation
 {
 public:

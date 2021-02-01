@@ -27,5 +27,12 @@ void MeleeWeapon::Inspect()
 	}
 
 	ImGui::Separator();
+
+	for (auto&& swing : myMoveset.Swings)
+	{
+		ImGui::Text("Damage Multiplier: %f", swing.DamageMultipiler);
+	}
+
+	ImGui::Separator();
 }
 

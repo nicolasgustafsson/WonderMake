@@ -30,3 +30,12 @@ void GenerateMoveset::Perform(Sketch& aSketch) const
 
 	aSketch.AddAttribute(std::move(moveset));
 }
+
+/*
+Attack damage
+Range
+Speed
+
+Front/backswing
+
+*/

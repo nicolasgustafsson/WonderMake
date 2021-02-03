@@ -16,6 +16,7 @@ namespace EasingTester
 	void Movement();
 	void ContinuousMovement();
 	void CurveEditor();
+	void CurveEditor2D();
 
 	void UpdateGhosts( WmGui::SCanvasState& aCanvas, std::vector<SPointGhost>& aGhosts);
 };

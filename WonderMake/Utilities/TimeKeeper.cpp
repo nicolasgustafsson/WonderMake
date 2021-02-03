@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "TimeKeeper.h"
 #include "Debugging/DebugSettingsSystem.h"
-#include "Easing/EasingTester.h"
 
 REGISTER_SYSTEM(TimeKeeper);
 
@@ -43,6 +42,4 @@ void TimeKeeper::Debug()
 	ImGui::SliderFloat("Time dilation", &myTimeDilation, 0.001f, 100.f, "%.3f", 3.0f);
 
 	ImGui::End();
-
-	EasingTester::TestEasings();
 }

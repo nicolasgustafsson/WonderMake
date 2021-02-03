@@ -100,66 +100,11 @@ namespace WmEasings
 	template <WmMath::Interpolable T>
 	inline [[nodiscard]] constexpr T CubicBezier(const SRange<T>& aRange, const T& aControlFirst, const T& aControlSecond, const f32 aProgress) noexcept
 	{
-		SRange<T> newRange = { QuadraticBezier<T>({ aRange.Start, aRange.End }, aControlFirst, aProgress), QuadraticBezier<T>({aRange.Start, aRange.End}, aControlSecond, aProgress) };
+		SRange<T> newRange = { QuadraticBezier<T>({ aRange.Start, aControlSecond }, aControlFirst, aProgress), QuadraticBezier<T>({ aControlFirst, aRange.End}, aControlSecond, aProgress) };
 
 		return Lerp(newRange, aProgress);
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	//******************************************************************************
-// Cached set of motion parameters that can be used to efficiently update
-// multiple springs using the same time step, angular frequency and damping
-// ratio.
-//******************************************************************************
 	template <WmMath::Interpolable TMotionType = f32>
 	struct SDampedSpringMotionParams
 	{
@@ -176,15 +121,6 @@ namespace WmEasings
 		TMotionType Velocity;
 	};
 
-	//******************************************************************************
-	// This function will compute the parameters needed to simulate a damped spring
-	// over a given period of time.
-	// - An angular frequency is given to control how fast the spring oscillates.
-	// - A damping ratio is given to control how fast the motion decays.
-	//     damping ratio > 1: over damped
-	//     damping ratio = 1: critically damped
-	//     damping ratio < 1: under damped
-	//******************************************************************************
 	template <WmMath::Interpolable TMotionType = f32>
 	SDampedSpringMotionParams<TMotionType> CalcDampedSpringMotionParams(
 		       // motion parameters result
@@ -271,17 +207,13 @@ namespace WmEasings
 		return returnParams;
 	}
 
-	//******************************************************************************
-	// This function will update the supplied position and velocity values over
-	// according to the motion parameters.
-	//******************************************************************************
 	template <WmMath::Interpolable TMotionType = f32>
 	SSpringMotionParameters<TMotionType> UpdateDampedSpringMotion(
-		SSpringMotionParameters<TMotionType> aCurrentSpringMotionParams,// velocity value to update
-		const TMotionType                      equilibriumPos, // position to approach
-		float	                   deltaTime,        // time step to advance
-		float	                   angularFrequency, // angular frequency of motion
-		float	                   dampingRatio)       // motion parameters to use
+		SSpringMotionParameters<TMotionType>	aCurrentSpringMotionParams,	// velocity value to update
+		const TMotionType						equilibriumPos,				// position to approach
+		const f32								deltaTime,					// time step to advance
+		const f32								angularFrequency,			// angular frequency of motion
+		const f32								dampingRatio)				// motion parameters to use
 	{
 		auto params = CalcDampedSpringMotionParams(deltaTime, angularFrequency, dampingRatio);
 

@@ -13,6 +13,7 @@
 #include "FileSystem/FileWatcher.h"
 #include "Camera/CameraManager.h"
 #include "Program/ImguiWrapper.h"
+#include "EngineTools/EngineTools.h"
 
 
 class Program

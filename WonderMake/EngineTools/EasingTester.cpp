@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "EasingTester.h"
-#include "EasingFunctions.h"
 #include "Imgui/Canvas.h"
+#include "Utilities/Easing/EasingFunctions.h"
 
 enum class EInterpolationMethod
 {
@@ -51,6 +51,11 @@ void EasingTester::TestEasings()
 	static bool showCurveEditor = true;
 	ImGui::Begin("Curve Editor", &showCurveEditor);
 	CurveEditor();
+	ImGui::End();
+
+	static bool showCurveEditor2D = true;
+	ImGui::Begin("Curve Editor 2d", &showCurveEditor2D);
+	CurveEditor2D();
 	ImGui::End();
 
 }
@@ -247,6 +252,50 @@ void EasingTester::CurveEditor()
 
 	WmGui::EndCanvas();
 
+}
+
+void EasingTester::CurveEditor2D()
+{
+	static SVector2f start = SVector2f(0.f, 0.f);
+	static SVector2f end = SVector2f(100.f, 0.f);
+	static SVector2f controlFirst = SVector2f(0.f, 100.f);
+	static SVector2f controlSecond = SVector2f(100.f, 100.f);
+	static SVector2f mousePos;
+	static WmGui::SCanvasState canvasState;
+	WmGui::BeginCanvas(&canvasState, true, true);
+	mousePos = SVector2f{ WmGui::GetMousePosOnCanvas(&canvasState).x, WmGui::GetMousePosOnCanvas(&canvasState).y };
+
+	WmGui::DrawLineOnCanvas(&canvasState, start, controlFirst, SColor::DimGray(0.5f), 1.f, true);
+	WmGui::DrawLineOnCanvas(&canvasState, end, controlSecond, SColor::DimGray(0.5f), 1.f, true);
+
+	for (f32 progress = 0.f; progress < 1.0f; progress += 0.02f)
+	{
+		SVector2f lineStart = WmEasings::CubicBezier({ start, end }, controlFirst, controlSecond, progress);
+		SVector2f lineEnd = WmEasings::CubicBezier({ start, end }, controlFirst, controlSecond, progress + 0.02f);
+		WmGui::DrawLineOnCanvas(&canvasState, lineStart, lineEnd, SColor::SilverChalice(), 2.f, true);
+	}
+
+	static SVector2f* closest = nullptr;
+
+	if (ImGui::IsWindowHovered())
+	{
+		if (ImGui::IsMouseClicked(0))
+		{
+			closest = &SVector2f::Closest(mousePos, std::array{ &start, &end, &controlFirst, &controlSecond });
+		}
+
+		if (ImGui::IsMouseDown(0) && closest)
+		{
+			*closest = mousePos;
+		}
+	}
+
+	WmGui::DrawCirleOnCanvas(&canvasState, start, SColor::BlueBell(), 8.f, true);
+	WmGui::DrawCirleOnCanvas(&canvasState, end, SColor::BlueBell(), 8.f, true);
+	WmGui::DrawCirleOnCanvas(&canvasState, controlFirst, SColor::ImperialRed(), 8.f, true);
+	WmGui::DrawCirleOnCanvas(&canvasState, controlSecond, SColor::ImperialRed(), 8.f, true);
+
+	WmGui::EndCanvas();
 }
 
 void EasingTester::UpdateGhosts(WmGui::SCanvasState& aCanvas, std::vector<SPointGhost>& aGhosts)

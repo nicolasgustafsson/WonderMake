@@ -156,23 +156,25 @@ namespace Geometry
 		return triangle;
 	}
 
-	std::optional<SVector2f> Polygon::IntersectsWithAnySide(const SLine aLine, std::optional<PolygonLoopingPointOperator> aIgnorePoint, const bool aFindClosest)
+	std::optional<std::pair<PolygonSideOperator, SVector2f>> Polygon::IntersectsWithAnySide(const SLine aLine, std::optional<PolygonLoopingPointOperator> aIgnorePoint, const bool aFindClosest)
 	{
 		auto firstSide = FirstPoint().GetNextSide();
 		auto sideIt = firstSide;
 
 		bool ignoreSide = sideIt.GetStart() == aIgnorePoint || sideIt.GetEnd() == aIgnorePoint;
 
-		std::optional<SVector2f> closestIntersection;
+		std::optional<std::pair<PolygonSideOperator, SVector2f>> closestIntersection;
 
 		if (!ignoreSide)
 		{
 			if (auto intersection = Intersects(aLine.First, aLine.Second, sideIt))
 			{
-				if (!aFindClosest)
-					return intersection;
+				std::pair<PolygonSideOperator, SVector2f> intersectionPair = { sideIt, *intersection };
 
-				closestIntersection = intersection;
+				if (!aFindClosest)
+					return intersectionPair;
+
+				closestIntersection = intersectionPair;
 			}
 		}
 
@@ -186,11 +188,12 @@ namespace Geometry
 			{
 				if (auto intersection = Intersects(aLine.First, aLine.Second, sideIt))
 				{
+					std::pair<PolygonSideOperator, SVector2f> intersectionPair = { sideIt, *intersection };
 					if (!aFindClosest)
-						return intersection;
+						return intersectionPair;
 
-					if (!closestIntersection || intersection->DistanceTo(aLine.First) < closestIntersection->DistanceTo(aLine.First))
-						closestIntersection = intersection;
+					if (!closestIntersection || intersectionPair.second.DistanceTo(aLine.First) < closestIntersection->second.DistanceTo(aLine.First))
+						closestIntersection = intersectionPair;
 				}
 			}
 

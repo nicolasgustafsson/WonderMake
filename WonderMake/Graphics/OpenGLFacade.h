@@ -14,6 +14,7 @@ public:
 	void SetViewportSize(const SVector2i aWindowSize);
 
 	void SetBlendFunction(const GLenum aSourceFactor, const GLenum aDestinationFactor);
+	void SetDepthFunction(const GLenum aDepthMode);
 
 	void SetClearColor(const SColor aColor);
 	void SetClearDepth(const f32 aDepth);

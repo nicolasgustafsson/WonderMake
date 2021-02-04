@@ -31,7 +31,7 @@ void DrawSphere(const Colliders::SSphere& aCollider, const SColor& aColor)
 	line.Start = positions[points - 1];
 	line.End = positions[0];
 
-	WmDrawDebugLine(line);
+	//WmDrawDebugLine(line);
 }
 
 void DrawLine(const Colliders::SCollisionLine& aCollider, const SColor& aColor)
@@ -41,7 +41,7 @@ void DrawLine(const Colliders::SCollisionLine& aCollider, const SColor& aColor)
 
 	line.Start = aCollider.Position;
 	line.End = aCollider.GetLineEnd();
-	WmDrawDebugLine(line);
+	//WmDrawDebugLine(line);
 }
 
 void DrawCollider(const Colliders::Shape& aCollider, const SColor& aColor)

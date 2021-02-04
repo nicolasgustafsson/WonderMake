@@ -8,4 +8,6 @@ public:
 	Resource() noexcept = default;
 	virtual ~Resource() noexcept = default;
 	inline virtual bool ShouldHotReload() const { return true; }
+
+	virtual void Inspect() {};
 };

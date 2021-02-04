@@ -22,6 +22,7 @@ namespace NodeTypes
 		{
 			AddSlot<f32>(ESlotIo::Input, "RenderScale", 1.0f);
 			AddSlot<bool>(ESlotIo::Input, "Depth/Stencil buffer");
+			AddSlot<SColor>(ESlotIo::Input, "Clear Color", SColor::Black());
 			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Output, "Out rendertarget");
 		}
 
@@ -45,6 +46,7 @@ namespace NodeTypes
 		{
 			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Input, "In rendertarget");
 			AddSlot<std::string>(ESlotIo::Input, "In RenderLayer");
+			AddSlot<SRenderSettings>(ESlotIo::Input, "In render settings");
 			AddSlot<std::shared_ptr<RenderTarget>>(ESlotIo::Output, "Out rendertarget");
 		}
 

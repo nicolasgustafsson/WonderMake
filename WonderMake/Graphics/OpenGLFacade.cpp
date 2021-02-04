@@ -18,6 +18,11 @@ void OpenGLFacade::SetBlendFunction(const GLenum aSourceFactor, const GLenum aDe
 	glBlendFunc(aSourceFactor, aDestinationFactor);
 }
 
+void OpenGLFacade::SetDepthFunction(const GLenum aDepthMode)
+{
+	glDepthFunc(aDepthMode);
+}
+
 void OpenGLFacade::SetClearColor(const SColor aColor)
 {
 	glClearColor(aColor.R, aColor.G, aColor.B, aColor.A);

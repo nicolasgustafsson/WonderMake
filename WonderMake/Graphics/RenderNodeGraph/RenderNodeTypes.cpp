@@ -26,7 +26,7 @@ namespace NodeTypes
 
 		viewportSize *= renderScale;
 
-		SRenderTargetSettings settings{ SVector2u(std::lroundf(viewportSize.X), std::lroundf(viewportSize.Y)), aNode.GetInput<bool>(1) };
+		const SRenderTargetSettings settings{ SVector2u(std::lroundf(viewportSize.X), std::lroundf(viewportSize.Y)), aNode.GetInput<bool>(1) };
 
 		if (!renderTargetAny.has_value())
 			renderTargetAny = std::move(std::make_any<std::shared_ptr<RenderTarget>>(std::make_shared<RenderTarget>(settings)));
@@ -39,7 +39,7 @@ namespace NodeTypes
 		renderTarget->BindAsTarget();
 
 		SystemPtr<OpenGLFacade> openGl;
-		openGl->SetClearColor(SColor::RaisinBlack());
+		openGl->SetClearColor(aNode.GetInput<SColor>(2));
 		openGl->Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		aNode.SetOutput<std::shared_ptr<RenderTarget>>(0, renderTarget);
@@ -55,7 +55,13 @@ namespace NodeTypes
 		renderTarget->BindAsTarget();
 		std::string renderLayer = aNode.GetInput<std::string>(1);
 
+		const auto renderSettings = aNode.GetInput<SRenderSettings>(2);
+		SystemPtr<RenderSettingsManager>()->PushSettings(renderSettings);
+
 		SystemPtr<RenderCommandProcessor>()->GetRenderLayer(renderLayer).ProcessQueue();
+
+		SystemPtr<RenderSettingsManager>()->PopSettings();
+
 		aNode.SetOutput(0, renderTarget);
 	}
 

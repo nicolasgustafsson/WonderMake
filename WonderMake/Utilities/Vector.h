@@ -119,7 +119,7 @@ struct SVector
 	SVector<TRep, TSize>& RotateClockwise(const TRotation aRotation) noexcept
 		requires (TSize == 2)
 	{
-		return RotateCounterClockwise(-aRotation);
+		return RotateCounterClockwise(aRotation * -1.f);
 	}
 	
 	template<typename TRotation,
@@ -322,6 +322,40 @@ struct SVector
 		{
 			(*this)[u] /= length;
 		}
+	}
+
+	constexpr void Floor() noexcept
+	{
+		for (u32 i = 0; i < TSize; i++)
+		{
+			(*this)[i] = std::floorf((*this)[i]);
+		}
+	}
+
+	constexpr SVector<TRep, TSize> GetFloored() const noexcept
+	{
+		SVector<TRep, TSize> vec = *this;
+
+		vec.Floor();
+
+		return vec;
+	}
+
+	constexpr void Round() noexcept
+	{
+		for (u32 i = 0; i < TSize; i++)
+		{
+			(*this)[i] = std::roundf((*this)[i]);
+		}
+	}
+
+	constexpr SVector<TRep, TSize> GetRounded() const noexcept
+	{
+		SVector<TRep, TSize> vec = *this;
+
+		vec.Round();
+
+		return vec;
 	}
 
 	[[nodiscard]] constexpr SVector<TRep, TSize> GetNormalized() const noexcept

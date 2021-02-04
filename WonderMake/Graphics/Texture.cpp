@@ -3,6 +3,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <std\stb_image.h>
 #include "OpenGLFacade.h"
+#include "Resources/AssetDatabase.h"
 
 REGISTER_RESOURCE(Texture);
 

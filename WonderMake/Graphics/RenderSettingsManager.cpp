@@ -7,6 +7,9 @@ void SRenderSettings::Append(const SRenderSettings& aOther)
 {
 	if (aOther.BlendMode)
 		BlendMode = aOther.BlendMode;
+
+	if (aOther.DepthMode)
+		DepthMode = aOther.DepthMode;
 }
 
 SRenderSettings SRenderSettings::GetDiff(const SRenderSettings& aOther) const
@@ -15,6 +18,9 @@ SRenderSettings SRenderSettings::GetDiff(const SRenderSettings& aOther) const
 
 	if (aOther.BlendMode != BlendMode)
 		diff.BlendMode = BlendMode;
+
+	if (aOther.DepthMode != DepthMode)
+		diff.DepthMode = DepthMode;
 
 	return diff;
 }
@@ -29,6 +35,9 @@ bool SRenderSettings::IsEmpty() const
 	if (BlendMode.has_value())
 		return false;
 
+	if (DepthMode.has_value())
+		return false;
+
 	return true;
 }
 
@@ -40,6 +49,7 @@ bool SRenderSettings::operator!=(const SRenderSettings& aOther) const
 RenderSettingsManager::RenderSettingsManager()
 {
 	myDefaultSettings.BlendMode = EBlendMode::Alpha;
+	myDefaultSettings.DepthMode = EDepthMode::GreaterEqual;
 }
 
 void RenderSettingsManager::PushSettings(const SRenderSettings& aSettings)
@@ -62,10 +72,44 @@ void RenderSettingsManager::SetBlendMode(const EBlendMode aBlendMode)
 	}
 }
 
+void RenderSettingsManager::SetDepthMode(const EDepthMode aDepthMode)
+{
+	switch (aDepthMode)
+	{
+	case EDepthMode::Greater:
+		SystemPtr<OpenGLFacade>()->SetDepthFunction(GL_GREATER);
+		break;
+	case EDepthMode::GreaterEqual:
+		SystemPtr<OpenGLFacade>()->SetDepthFunction(GL_GEQUAL);
+		break;
+	case EDepthMode::Equal:
+		SystemPtr<OpenGLFacade>()->SetDepthFunction(GL_EQUAL);
+		break;
+	case EDepthMode::NotEqual:
+		SystemPtr<OpenGLFacade>()->SetDepthFunction(GL_NOTEQUAL);
+		break;
+	case EDepthMode::LessEqual:
+		SystemPtr<OpenGLFacade>()->SetDepthFunction(GL_LEQUAL);
+		break;
+	case EDepthMode::Less:
+		SystemPtr<OpenGLFacade>()->SetDepthFunction(GL_LESS);
+		break;
+	case EDepthMode::Never:
+		SystemPtr<OpenGLFacade>()->SetDepthFunction(GL_NEVER);
+		break;
+	case EDepthMode::Always:
+		SystemPtr<OpenGLFacade>()->SetDepthFunction(GL_ALWAYS);
+		break;
+	}
+}
+
 void RenderSettingsManager::ApplyRenderSettings(const SRenderSettings& aRenderSettings)
 {
 	if (aRenderSettings.BlendMode)
 		SetBlendMode(*aRenderSettings.BlendMode);
+
+	if (aRenderSettings.DepthMode)
+		SetDepthMode(*aRenderSettings.DepthMode);
 }
 
 void RenderSettingsManager::BuildRenderSettings()

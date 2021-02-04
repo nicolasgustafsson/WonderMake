@@ -12,7 +12,7 @@ void main()
 {
 	vec3 transformedPosition = vec3(aPos.x, aPos.y, 1.0) * ViewProjectionMatrix;
 
-	gl_Position.xy = transformedPosition.xy;
+	gl_Position.xy = CorrectSubpixelPositioning(transformedPosition.xy);
 
 	gl_Position.z = aDepth;
 	gl_Position.w = 1.0;

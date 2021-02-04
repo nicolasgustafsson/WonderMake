@@ -10,5 +10,6 @@
     <ClCompile Include="ObjectsAndPolicies\ObjectTests.cpp" />
     <ClCompile Include="Functionalities\TransformFunctionalityTests.cpp" />
     <ClCompile Include="Job\JobTests.cpp" />
+    <ClCompile Include="ContainerTests.cpp" />
   </ItemGroup>
 </Project>

@@ -11,7 +11,6 @@
     <ClCompile Include="Functionalities\TransformFunctionality.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />
     <ClCompile Include="Utilities\Debugging\Debugged.cpp" />
-    <ClCompile Include="FileSystem\ReadFileAsStringJob.cpp" />
     <ClCompile Include="Graphics\EngineUniformBuffer.cpp" />
     <ClCompile Include="Imgui\DockSpace.cpp" />
     <ClCompile Include="Logging\FileLogger.cpp" />
@@ -24,7 +23,6 @@
     <ClCompile Include="Graphics\RenderTarget.cpp" />
     <ClCompile Include="Graphics\ScreenPassRenderObject.cpp" />
     <ClCompile Include="System\SystemContainer.cpp" />
-    <ClCompile Include="System\System.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
     <ClCompile Include="Message\DispatchRouter.cpp" />
     <ClCompile Include="Message\MessageSubscriber.cpp" />
@@ -55,10 +53,8 @@
     <ClCompile Include="Imgui\Canvas.cpp" />
     <ClCompile Include="Audio\AudioNodeTypes.cpp" />
     <ClCompile Include="NodeGraph\NodeTypes.cpp" />
-    <ClCompile Include="Threads\DataThreads.cpp" />
     <ClCompile Include="Threads\Routine.cpp" />
     <ClCompile Include="Audio\SoundEffectNodeGraph.cpp" />
-    <ClCompile Include="Policies\TaskManager.cpp" />
     <ClCompile Include="Utilities\Platform.cpp" />
     <ClCompile Include="Functionalities\TimerFunctionality.cpp" />
     <ClCompile Include="Utilities\Math.cpp" />
@@ -79,7 +75,8 @@
     <ClCompile Include="Graphics\RenderSettingsManager.cpp" />
     <ClCompile Include="LineListRenderObject.cpp" />
     <ClCompile Include="Utilities\Id.cpp" />
-    <ClCompile Include="Imgui\AssetBrowser.cpp" />
+    <ClCompile Include="Threads\TaskManager.cpp" />
+    <ClCompile Include="Scheduling\ScheduleSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -100,8 +97,6 @@
     <ClInclude Include="Utilities\MathUtility.h" />
     <ClInclude Include="Utilities\Stopwatch.h" />
     <ClInclude Include="Utilities\Debugging\Debugged.h" />
-    <ClInclude Include="FileSystem\FileSystem.h" />
-    <ClInclude Include="FileSystem\ReadFileAsStringJob.h" />
     <ClInclude Include="Graphics\EngineUniformBuffer.h" />
     <ClInclude Include="Imgui\DockSpace.h" />
     <ClInclude Include="Job\Job.h" />
@@ -169,8 +164,6 @@
     <ClInclude Include="Job\Job.h" />
     <ClInclude Include="Resources\CreateResource.h" />
     <ClInclude Include="Resources\Resource.h" />
-    <ClInclude Include="FileSystem\FileSystem.h" />
-    <ClInclude Include="FileSystem\ReadFileAsStringJob.h" />
     <ClInclude Include="Resources\ResourceSystem.h" />
     <ClInclude Include="Logging\FileLogger.h" />
     <ClInclude Include="Utilities\plf_colony.h" />
@@ -222,11 +215,9 @@
     <ClInclude Include="NodeGraph\NodeTypes.h" />
     <ClInclude Include="NodeGraph\SlotCustomization\SlotColors.h" />
     <ClInclude Include="NodeGraph\SlotCustomization\SlotSerialization.h" />
-    <ClInclude Include="Threads\DataThreads.h" />
     <ClInclude Include="Threads\Routine.h" />
     <ClInclude Include="NodeGraph\SlotCustomization\SlotInputEdits.h" />
     <ClInclude Include="Audio\SoundEffectNodeGraph.h" />
-    <ClInclude Include="Policies\TaskManager.h" />
     <ClInclude Include="Threads\ThreadChecker.h" />
     <ClInclude Include="Utilities\Platform.h" />
     <ClInclude Include="Functionalities\TimerFunctionality.h" />
@@ -267,16 +258,12 @@
     <ClInclude Include="Utilities\Id.h" />
     <ClInclude Include="Imgui\AssetBrowser.h" />
     <ClInclude Include="Resources\AssetLink.h" />
+    <ClInclude Include="Threads\TaskManager.h" />
+    <ClInclude Include="Scheduling\ScheduleSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
     <None Include="NodeGraph\SlotCustomization\SlotCustomization.md" />
     <None Include="NodeGraph\Nodegraph.md" />
-    <None Include="Utilities\Rotation.inl" />
-    <None Include="Utilities\Vector.inl" />
-    <None Include="Utilities\Matrix.inl" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="nicostodo fx and animations.txt" />
   </ItemGroup>
 </Project>

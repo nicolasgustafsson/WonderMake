@@ -11,9 +11,9 @@ struct SLineOfSightComponent
 
 class LineOfSightFunctionality : public Functionality<
 	Policy::Set<
-	PAdd<LevelDenizenFunctionality, PRead >,
-	PAdd<SLineOfSightComponent, PWrite >,
-	PAdd<TransformFunctionality, PRead>> >
+		PAdd<LevelDenizenFunctionality, PRead>,
+		PAdd<SLineOfSightComponent, PWrite>,
+		PAdd<TransformFunctionality2D, PRead>>>
 {
 public:
 	void Tick();

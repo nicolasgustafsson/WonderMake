@@ -4,30 +4,84 @@
 
 #include "Utilities/Matrix.h"
 
-class TransformFunctionality
+#include "Imgui/ImguiInclude.h"
+
+template<typename TRepVector, typename TRepRotation>
+class _TransformFunctionality2D
 	: public Functionality<
 		Policy::Set<
-			PAdd<STransformComponent, PWrite>>>
+			PAdd<STransformComponent2D, PWrite>>>
 {
 public:
-	void SetPosition(const SVector2f aPosition) noexcept;
-	[[nodiscard]] SVector2f GetPosition() const noexcept;
+	using RepVector		= TRepVector;
+	using RepPosition	= TRepVector;
+	using RepRotation	= TRepRotation;
 
-	void FacePosition(const SVector2f aPosition) noexcept;
+	void SetPosition(const RepPosition aPosition) noexcept
+	{
+		Get<STransformComponent2D>().Position = aPosition;
+	}
+	[[nodiscard]] RepPosition GetPosition() const noexcept
+	{
+		return Get<STransformComponent2D>().Position;
+	}
 
-	void FaceDirection(const SVector2f aDirection) noexcept;
+	void FacePosition(const RepPosition aPosition) noexcept
+	{
+		const auto deltaPosition = aPosition - GetPosition();
 
-	void SetRotation(const f32 aRotation) noexcept;
-	[[nodiscard]] f32 GetRotation() const noexcept;
+		FaceDirection(deltaPosition);
+	}
+	void FaceDirection(const RepVector aDirection) noexcept
+	{
+		SetRotation(aDirection.GetAngle<RepRotation>(RepVector(0, 1)));
+	}
 
-	SVector2f GetForwardVector() const noexcept;
-	SVector2f GetRightVector() const noexcept;
+	void SetRotation(const RepRotation aRotation) noexcept
+	{
+		Get<STransformComponent2D>().Rotation = aRotation;
+	}
+	[[nodiscard]] RepRotation GetRotation() const noexcept
+	{
+		return Get<STransformComponent2D>().Rotation;
+	}
 
-	void Move(const SVector2f aMovement) noexcept;
+	[[nodiscard]] RepVector GetForwardVector() const noexcept
+	{
+		RepVector retVec(0, 1);
 
-	[[nodiscard]] SMatrix33f GetMatrix() const noexcept;
+		retVec.RotateCounterClockwise(GetRotation());
 
-	void Inspect();
+		return retVec;
+	}
+	[[nodiscard]] RepVector GetRightVector() const noexcept
+	{
+		return GetForwardVector().GetPerpendicularClockWise();
+	}
 
-private:
+	void Move(const RepVector aMovement) noexcept
+	{
+		Get<STransformComponent2D>().Position += aMovement;
+	}
+
+	[[nodiscard]] SMatrix33f GetMatrix() const noexcept
+	{
+		SMatrix33f matrix;
+
+		matrix.SetPosition(GetPosition());
+		matrix.SetRotation2D(GetRotation());
+
+		return matrix;
+	}
+
+	void Inspect()
+	{
+		auto& transform = Get<STransformComponent2D>();
+
+		ImGui::Text("X: %f", transform.Position.X);
+		ImGui::Text("Y: %f", transform.Position.Y);
+		ImGui::Text("R: %f", transform.Rotation.Rotation);
+	}
 };
+
+using TransformFunctionality2D = _TransformFunctionality2D<STransformComponent2D::RepPosition, STransformComponent2D::RepRotation>;

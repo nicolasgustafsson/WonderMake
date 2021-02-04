@@ -12,6 +12,8 @@
 #include "Levels/LevelFunctionality.h"
 #include "Camera/CameraFunctionality.h"
 
+#include "Scheduling/ScheduleSystem.h"
+
 REGISTER_SYSTEM(GameWorld);
 
 GameWorld::GameWorld()
@@ -28,7 +30,7 @@ GameWorld::GameWorld()
 
 	level.AddDenizen(std::move(player));
 
-	EnableTick();
+	Get<ScheduleSystem>().ScheduleRepeating([this]() { Tick(); });
 }
 
 LevelFunctionality& GameWorld::RestartLevel()
@@ -51,7 +53,7 @@ LevelFunctionality& GameWorld::RestartLevel()
 	return levelFunctionality;
 }
 
-void GameWorld::Tick() noexcept
+void GameWorld::Tick()
 {
 	myBackground.SetProperty("MainColor", SColor::RaisinBlack());
 	myBackground.SetProperty("DetailColor", SColor::Seashell());
@@ -61,7 +63,7 @@ void GameWorld::Tick() noexcept
 Object GameWorld::SetupPlayer()
 {
 	Object player;
-	myPlayerTransform = &Get<FunctionalitySystemDelegate<TransformFunctionality>>().AddFunctionality(player);
+	myPlayerTransform = &Get<FunctionalitySystemDelegate<TransformFunctionality2D>>().AddFunctionality(player);
 	Get<FunctionalitySystemDelegate<PlayerControllerFunctionality>>().AddFunctionality(player);
 	Get<FunctionalitySystemDelegate<CameraFunctionality>>().AddFunctionality(player).SetTarget(myPlayerTransform);
 

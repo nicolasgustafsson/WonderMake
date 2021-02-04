@@ -19,7 +19,7 @@ class HitShapeSpawnerFunctionality
 		Policy::Set<
 			PAdd<Randomizer, PWrite>,
 			PAdd<FunctionalitySystemDelegate<HitShapeFunctionality>, PWrite>,
-			PAdd<TransformFunctionality, PWrite>,
+			PAdd<TransformFunctionality2D, PWrite>,
 			PAdd<FactionFunctionality, PRead>,
 			PAdd<SFactionComponent, PWrite>,
 			PAdd<SLevelDenizenComponent, PWrite>>>

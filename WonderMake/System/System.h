@@ -12,11 +12,7 @@ class SystemBase
 public:
 	virtual ~SystemBase() = default;
 
-	virtual void Tick() {}
-
 protected:
-	void EnableTick();
-
 	constexpr SystemBase() noexcept = default;
 };
 
@@ -40,16 +36,14 @@ protected:
 		myInjectedDependencies.reset();
 	}
 
-	template<typename TDependency> requires
-		TPolicySet::template HasPolicy_v<TDependency, PWrite>
-	constexpr __forceinline TDependency& Get()
+	template<typename TDependency> requires TPolicySet::template HasPolicy_v<TDependency, PWrite>
+	constexpr __forceinline [[nodiscard]] TDependency& Get()
 	{
 		return std::get<std::decay_t<TDependency>&>(myDependencies);
 	}
 
-	template<typename TDependency> requires
-		TPolicySet::template HasDependency_v<TDependency>
-	constexpr __forceinline const TDependency& Get() const
+	template<typename TDependency> requires TPolicySet::template HasDependency_v<TDependency>
+	constexpr __forceinline [[nodiscard]] const TDependency& Get() const
 	{
 		return std::get<std::decay_t<TDependency>&>(myDependencies);
 	}

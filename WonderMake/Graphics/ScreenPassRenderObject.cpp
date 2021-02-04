@@ -18,12 +18,12 @@ ScreenPassRenderObject::ScreenPassRenderObject(const std::filesystem::path& aFra
 	SetAttribute<EVertexAttribute::Position>(4, { 01.0f, -1.0f });
 	SetAttribute<EVertexAttribute::Position>(5, { 01.0f,  1.0f });
 
-	SetAttribute<EVertexAttribute::TexCoord>(0, { 0.0f, 0.0f });
-	SetAttribute<EVertexAttribute::TexCoord>(1, { 0.0f, 1.0f });
-	SetAttribute<EVertexAttribute::TexCoord>(2, { 1.0f, 1.0f });
-	SetAttribute<EVertexAttribute::TexCoord>(3, { 0.0f, 0.0f });
-	SetAttribute<EVertexAttribute::TexCoord>(4, { 1.0f, 1.0f });
-	SetAttribute<EVertexAttribute::TexCoord>(5, { 1.0f, 0.0f });
+	SetAttribute<EVertexAttribute::TexCoord>(0, { 0.0f, 1.0f });
+	SetAttribute<EVertexAttribute::TexCoord>(1, { 0.0f, 0.0f });
+	SetAttribute<EVertexAttribute::TexCoord>(2, { 1.0f, 0.0f });
+	SetAttribute<EVertexAttribute::TexCoord>(3, { 0.0f, 1.0f });
+	SetAttribute<EVertexAttribute::TexCoord>(4, { 1.0f, 0.0f });
+	SetAttribute<EVertexAttribute::TexCoord>(5, { 1.0f, 1.0f });
 }
 
 ScreenPassRenderObject::~ScreenPassRenderObject()

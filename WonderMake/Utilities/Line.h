@@ -11,7 +11,7 @@ struct SLine
 
 	constexpr SVector2f GetNormal() const noexcept
 	{
-		return (Second - First).GetNormal().GetNormalized();
+		return (Second - First).GetPerpendicularClockWise().GetNormalized();
 	}
 
 	void ShortenEnd(const f32 aShortenAmount) noexcept
@@ -34,7 +34,7 @@ struct SLine
 
 	SDegreeF32 GetRotation() const noexcept
 	{
-		return RotationCast<SDegreeF32>((Second - First).GetRotation());
+		return (Second - First).GetAngle<SDegreeF32>(0);
 	}
 
 	constexpr SVector2f GetMiddle() const noexcept

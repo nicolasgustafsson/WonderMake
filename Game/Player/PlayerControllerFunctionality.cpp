@@ -54,13 +54,13 @@ void PlayerControllerFunctionality::UpdateMovement()
 	if (Get<InputSystem>().IsKeyDown(EKeyboardKey::A) || Get<InputSystem>().IsKeyDown(EKeyboardKey::Left))
 		movementInput += {-1.f, 0.f};
 	if (Get<InputSystem>().IsKeyDown(EKeyboardKey::W) || Get<InputSystem>().IsKeyDown(EKeyboardKey::Up))
-		movementInput += {0.f, -1.f};
-	if (Get<InputSystem>().IsKeyDown(EKeyboardKey::S) || Get<InputSystem>().IsKeyDown(EKeyboardKey::Down))
 		movementInput += {0.f, 1.f};
+	if (Get<InputSystem>().IsKeyDown(EKeyboardKey::S) || Get<InputSystem>().IsKeyDown(EKeyboardKey::Down))
+		movementInput += {0.f, -1.f};
 	if (Get<InputSystem>().IsKeyDown(EKeyboardKey::D) || Get<InputSystem>().IsKeyDown(EKeyboardKey::Right))
 		movementInput += {1.f, 0.f};
 	if (Get<InputSystem>().IsKeyDown(EKeyboardKey::Backspace))
-		Get<TransformFunctionality>().SetPosition(SVector2f::Zero());
+		Get<TransformFunctionality2D>().SetPosition(SVector2f::Zero());
 
 	if (Get<InputSystem>().IsKeyDown(EKeyboardKey::Enter))
 	{
@@ -68,16 +68,16 @@ void PlayerControllerFunctionality::UpdateMovement()
 		if (level)
 		{
 			Object enemy;
-			Get<FunctionalitySystemDelegate<EnemyControllerFunctionality>>().AddFunctionality(enemy).Get<TransformFunctionality>().SetPosition(Get<TransformFunctionality>().GetPosition());
+			Get<FunctionalitySystemDelegate<EnemyControllerFunctionality>>().AddFunctionality(enemy).Get<TransformFunctionality2D>().SetPosition(Get<TransformFunctionality2D>().GetPosition());
 			Get<FunctionalitySystemDelegate<TimeToLiveFunctionality>>().AddFunctionality(enemy).SetTimeToLive(5.f);
 			
 			level->AddDenizen(std::move(enemy));
 		}
 	}
 
-	Get<TransformFunctionality>().FaceDirection(SystemPtr<InputSystem>()->GetMousePositionInWorld() - Get<TransformFunctionality>().GetPosition());
+	Get<TransformFunctionality2D>().FaceDirection(SystemPtr<InputSystem>()->GetMousePositionInWorld() - Get<TransformFunctionality2D>().GetPosition());
 
-//	WmDrawDebugLine(Get<TransformFunctionality>().GetPosition(), SystemPtr<InputSystem>()->GetMousePositionInWorld(), SColor::White);
+//	WmDrawDebugLine(Get<TransformFunctionality2D>().GetPosition(), SystemPtr<InputSystem>()->GetMousePositionInWorld(), SColor::White);
 
 	Get<MovementInputFunctionality>().SetMovementInput(movementInput);
 }
@@ -95,7 +95,7 @@ void PlayerControllerFunctionality::Debug()
 
 	Get<DefaultMovementFunctionality>().Inspect();
 
-	Get<TransformFunctionality>().Inspect();
+	Get<TransformFunctionality2D>().Inspect();
 
 	Get<MeleeWeaponUserFunctionality>().Inspect();
 

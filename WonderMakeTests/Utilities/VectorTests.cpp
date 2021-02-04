@@ -606,8 +606,6 @@ TEST_CASE("Vector member access", "[Vector]")
 
 TEST_CASE("Vector rotate", "[Vector]")
 {
-	constexpr auto pi = std::numbers::pi_v<f32>;
-
 	const auto closeEnough = [](const auto aValue, const auto aCompare)
 	{
 		return aValue > aCompare - 0.001
@@ -623,12 +621,12 @@ TEST_CASE("Vector rotate", "[Vector]")
 			auto unitX = VecUnits<rep>::X2 * 10.f;
 			auto unitY = VecUnits<rep>::Y2 * 10.f;
 
-			unitX.Rotate(-pi * .5f);
-			unitY.Rotate(pi * .5f);
+			unitX.RotateCounterClockwise(-90.f);
+			unitY.RotateCounterClockwise(90.f);
 
 			CHECK(closeEnough(unitX[0], 0));
-			CHECK(closeEnough(unitX[1], 10));
-			CHECK(closeEnough(unitY[0], 10));
+			CHECK(closeEnough(unitX[1], -10));
+			CHECK(closeEnough(unitY[0], -10));
 			CHECK(closeEnough(unitY[1], 0));
 		};
 
@@ -639,18 +637,17 @@ TEST_CASE("Vector rotate", "[Vector]")
 			auto unitX = VecUnits<rep>::X2 * 10.f;
 			auto unitY = VecUnits<rep>::Y2 * 10.f;
 
-			unitX.Rotate(pi * .5f);
-			unitY.Rotate(-pi * .5f);
+			unitX.RotateCounterClockwise(90.f);
+			unitY.RotateCounterClockwise(-90.f);
 
 			CHECK(closeEnough(unitX[0], 0));
-			CHECK(closeEnough(unitX[1], -10));
-			CHECK(closeEnough(unitY[0], -10));
+			CHECK(closeEnough(unitX[1], 10));
+			CHECK(closeEnough(unitY[0], 10));
 			CHECK(closeEnough(unitY[1], 0));
 		};
 
-		InvokeVec2(checkAll);
+		InvokeVec2Floating(checkAll);
 		InvokeVec2Floating(checkNegative);
-		InvokeVec2Signed(checkNegative);
 	}
 }
 

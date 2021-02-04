@@ -43,12 +43,12 @@ SVector2f BezierCurve::GetConstantLocationAt(f32 aProgress) const
 	return ((*firstLocation).Location) + progressBetweenLocations * locationDelta;
 }
 
-void BezierCurve::Rotate(const f32 aRotation)
+void BezierCurve::Rotate(const SDegreeF32 aRotation)
 {
-	myStart.Rotate(aRotation);
-	myEnd.Rotate(aRotation);
-	myFirstControl.Rotate(aRotation);
-	mySecondControl.Rotate(aRotation);
+	myStart.RotateCounterClockwise(aRotation);
+	myEnd.RotateCounterClockwise(aRotation);
+	myFirstControl.RotateCounterClockwise(aRotation);
+	mySecondControl.RotateCounterClockwise(aRotation);
 
 	myConstantLengthProgressList.reset();
 }

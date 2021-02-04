@@ -86,7 +86,7 @@ std::vector<Geometry::STriangle> Navmesh::GetLineOfSightFrom(const SVector2f aPo
 				if (auto intersection = myPolygon.IntersectsWithAnySide(line, point, true))
 				{
 					line.Second = intersection->second;
-					normal = intersection->first.GetNormal().Rotate(RotationCast<SRadianF32>(SDegreeF32(90.f)));
+					normal = intersection->first.GetNormal().RotateClockwise(RotationCast<SRadianF32>(SDegreeF32(90.f)));
 				}
 
 				firstPoint = line.Second;
@@ -115,7 +115,7 @@ std::vector<Geometry::STriangle> Navmesh::GetLineOfSightFrom(const SVector2f aPo
 				if (auto intersection = myPolygon.IntersectsWithAnySide(line, point, true))
 				{
 					line.Second = intersection->second;
-					normal = intersection->first.GetNormal().Rotate(RotationCast<SRadianF32>(SDegreeF32(90.f)));
+					normal = intersection->first.GetNormal().RotateClockwise(RotationCast<SRadianF32>(SDegreeF32(90.f)));
 				}
 
 				WmDrawDebugLine(line.GetMiddle(), line.GetMiddle() - normal * 20.f, SColor::Green());
@@ -134,7 +134,7 @@ std::vector<Geometry::STriangle> Navmesh::GetLineOfSightFrom(const SVector2f aPo
 				if (auto intersection = myPolygon.IntersectsWithAnySide(line, point, true))
 				{
 					line.Second = intersection->second;
-					normal = intersection->first.GetNormal().Rotate(RotationCast<SRadianF32>(SDegreeF32(90.f)));
+					normal = intersection->first.GetNormal().RotateClockwise(RotationCast<SRadianF32>(SDegreeF32(90.f)));
 				}
 
 				WmDrawDebugLine(line.GetMiddle(), line.GetMiddle() + normal * 20.f, SColor::Gainsboro());

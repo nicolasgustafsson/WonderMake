@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "SpriteRenderingFunctionality.h"
+#include "TransformFunctionality.h"
 #include <iostream>
 #include "Resources/AssetDatabase.h"
 #include "Graphics/Texture.h"
@@ -12,8 +13,10 @@ void SpriteRenderingFunctionality::Tick()
 	if (!spriteComponent.RenderObject || spriteComponent.IsHidden)
 		return;
 
-	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Position>(0, Get<STransformComponent>().Position);
-	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Rotation>(0, Get<STransformComponent>().Rotation);
+	const auto& transform = Get<TransformFunctionality2D>();
+
+	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Position>(0, transform.GetPosition());
+	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Rotation>(0, transform.GetRotation());
 	spriteComponent.RenderObject->Render();
 }
 void SpriteRenderingFunctionality::SetTexture(const std::string_view aAssetLink)
@@ -23,7 +26,6 @@ void SpriteRenderingFunctionality::SetTexture(const std::string_view aAssetLink)
 		spriteComponent.RenderObject->SetTexture(SystemPtr<AssetDatabase<Texture>>()->GetResource(aAssetLink));
 	else
 		spriteComponent.RenderObject.emplace(aAssetLink);
-	spriteComponent.AssetLink = aAssetLink;
 }
 
 void SpriteRenderingFunctionality::SetScale(const SVector2f aScale)

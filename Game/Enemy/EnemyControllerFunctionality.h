@@ -17,7 +17,7 @@ class EnemyControllerFunctionality
 	: public Functionality<
 		Policy::Set<
 			PAdd<EnemyControllerComponent, PWrite>,
-			PAdd<TransformFunctionality, PWrite>,
+			PAdd<TransformFunctionality2D, PWrite>,
 			PAdd<TargetFunctionality, PWrite>,
 			PAdd<MovementInputFunctionality, PWrite>,
 			PAdd<DefaultMovementFunctionality, PWrite>,

@@ -19,13 +19,10 @@ void Display::Update()
 {
 	auto& buffer = myUniformBuffer.GetBuffer();
 
-	auto viewInverse = myCamera.GetViewMatrix();
-
-	viewInverse.FastInverse();
+	const auto viewInverse = myCamera.GetViewMatrix().GetFastInverse();
 
 	const auto projectionMatrix = myProjectionMatrix;
-	const auto viewMatrix = viewInverse;
-	const auto viewProjectionMatrix = viewMatrix * myProjectionMatrix;
+	const auto viewProjectionMatrix = myProjectionMatrix * viewInverse;
 
 	buffer.ProjectionMatrix = projectionMatrix;
 	buffer.ViewProjectionMatrix = viewProjectionMatrix;
@@ -82,7 +79,10 @@ void Display::FinishDebugFrame()
 	if (finalRenderTarget)
 	{
 #pragma warning(disable: 4312 26493)
-		ImGui::Image((ImTextureID)finalRenderTarget->GetTexture(), ImVec2(static_cast<f32>(ViewportSize.X), static_cast<f32>(ViewportSize.Y)));
+		ImGui::Image((ImTextureID)finalRenderTarget->GetTexture(),
+			ImVec2(static_cast<f32>(ViewportSize.X), static_cast<f32>(ViewportSize.Y)),
+			ImVec2(0.f, 1.f),
+			ImVec2(1.f, 0.f));
 #pragma warning(default: 4312 26493)
 	}
 
@@ -119,6 +119,8 @@ SVector2f Display::ConvertToWorldPosition(const SVector2f aWindowPosition) const
 
 	SVector2f offsetScreenPosition = aWindowPosition - myImguiWindowOffset;
 	offsetScreenPosition -= myViewportSize / 2.f;
+	offsetScreenPosition.Y = -offsetScreenPosition.Y;
+
 	SMatrix33f screenPositionMatrix = SMatrix33f::Identity();
 	screenPositionMatrix.SetPosition(offsetScreenPosition);
 

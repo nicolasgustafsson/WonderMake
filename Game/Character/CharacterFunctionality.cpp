@@ -11,8 +11,8 @@ CharacterFunctionality::CharacterFunctionality() noexcept
 
 	Get<CollisionFunctionality>().AddReaction<CharacterFunctionality>(collider, [this](CharacterFunctionality& aOther, Colliders::SCollisionInfo)
 		{
-			const SVector2f selfPosition = Get<TransformFunctionality>().GetPosition();
-			const SVector2f otherPosition = aOther.Get<TransformFunctionality>().GetPosition();
+			const SVector2f selfPosition = Get<TransformFunctionality2D>().GetPosition();
+			const SVector2f otherPosition = aOther.Get<TransformFunctionality2D>().GetPosition();
 
 			const SVector2f direction = (otherPosition - selfPosition).GetNormalized();
 			const f32 distance = selfPosition.DistanceTo(otherPosition);

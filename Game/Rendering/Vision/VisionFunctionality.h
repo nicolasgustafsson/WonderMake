@@ -12,7 +12,7 @@ struct SVisionComponent
 class VisionFunctionality : public Functionality<
 	Policy::Set<
 	PAdd<LineOfSightFunctionality, PRead>,
-	PAdd<TransformFunctionality, PRead>,
+	PAdd<TransformFunctionality2D, PRead>,
 	PAdd<SVisionComponent, PWrite>>>
 {
 public:

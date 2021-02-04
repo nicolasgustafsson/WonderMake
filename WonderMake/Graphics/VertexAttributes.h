@@ -28,7 +28,7 @@ static auto constexpr GetValueFromAttribute()
 	else if constexpr (TVertexAttribute == EVertexAttribute::Origin)
 		return SVector2f();
 	else if constexpr (TVertexAttribute == EVertexAttribute::Rotation)
-		return 0.f;
+		return SRadianF32();
 	else if constexpr (TVertexAttribute == EVertexAttribute::OneDimensionalUV)
 		return 0.f;
 	else if constexpr (TVertexAttribute == EVertexAttribute::Depth)

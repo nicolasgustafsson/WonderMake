@@ -1,11 +1,11 @@
 #pragma once
-#include "System/System.h" 
+#include "Functionalities/TransformFunctionality.h"
 #include "Geometry/Polygon.h"
+#include "System/System.h" 
 
 class LevelFunctionality;
 class LevelPortalFunctionality;
 class SpinnerFunctionality;
-class TransformFunctionality;
 class SpriteRenderingFunctionality;
 class BuffGiverFunctionality;
 class EnemyControllerFunctionality;
@@ -64,7 +64,7 @@ class LevelDesigner
 			PAdd<BuffDesigner, PWrite>,
 			PAdd<FunctionalitySystemDelegate<LevelPortalFunctionality>, PWrite>,
 			PAdd<FunctionalitySystemDelegate<SpinnerFunctionality>, PWrite>,
-			PAdd<FunctionalitySystemDelegate<TransformFunctionality>, PWrite>,
+			PAdd<FunctionalitySystemDelegate<TransformFunctionality2D>, PWrite>,
 			//[Nicos]: TODO REMOVE - After we have chains and stuff
 			PAdd<FunctionalitySystemDelegate<CollisionFunctionality>, PWrite>,
 			PAdd<DebugSettingsSystem, PWrite>,

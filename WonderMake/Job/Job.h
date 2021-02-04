@@ -2,125 +2,171 @@
 
 #include "Typedefs.h"
 
-#include "Message/Messages.h"
+#include "Policies/Policy.h"
+
+#include "Utilities/RestrictTypes.h"
+#include "Utilities/Utility.h"
 
 #include <functional>
 #include <mutex>
+#include <optional>
 
-class Job
+enum class EJobStatus
 {
-public:
-	enum class EResult
-	{
-		InProgress,
-		Cancelled,
-		Success,
-		Failure
-	};
-
-	using Callback = std::function<void(const EResult)>;
-
-	Job() noexcept = default;
-	Job(const Job&) noexcept = default;
-	inline virtual ~Job() noexcept;
-
-	Job& operator =(const Job&) noexcept = default;
-
-	inline void Cancel() noexcept;
-
-	inline bool IsComplete() noexcept;
-	inline bool IsSuccessful() noexcept;
-	inline EResult GetResult() noexcept;
-
-protected:
-	inline void Reset() noexcept;
-	inline void Complete(const EResult aResult) noexcept;
-	inline void CompleteOnRoutine(const EResult aResult) noexcept;
-
-	inline virtual void OnReset() noexcept {};
-	inline virtual void OnCancel() noexcept {};
-	inline virtual void OnComplete(const EResult /*aResult*/) noexcept {};
-
-	Callback myCallback;
-
-private:
-	inline void SetResult(const EResult aResult) noexcept;
-
-	std::mutex myLock;
-	EResult myResult = EResult::InProgress;
+	NotStarted,
+	InProgress,
+	Canceled,
+	Succeeded,
+	Failed
+};
+enum class EJobResult
+{
+	Canceled,
+	Succeeded,
+	Failed
 };
 
-inline Job::~Job() noexcept
+template<
+	typename TPolicySet = Policy::Set<>>
+class Job
+	: NonCopyable
+	, NonMovable
 {
-	Cancel();
-}
+public:
+	using Super = Job<TPolicySet>;
+	using Dependencies = typename TPolicySet::template DependenciesRef;
 
-inline void Job::Cancel() noexcept
-{
+	using Callback = std::function<void(const EJobResult)>;
+
+	inline static void InjectDependencies(Dependencies&& aDependencies)
+	{
+		myInjectedDependencies.emplace(std::move(aDependencies));
+	}
+
+	inline virtual ~Job()
+	{
+		Cancel();
+	}
+
+	inline void Start()
+	{
+		{
+			std::lock_guard<decltype(myLock)> lock(myLock);
+
+			if (myStatus != EJobStatus::NotStarted)
+			{
+				return;
+			}
+
+			myStatus = EJobStatus::InProgress;
+		}
+
+		OnStarted();
+	}
+	inline void Cancel()
+	{
+		Complete(EJobStatus::Canceled, EJobResult::Canceled);
+	}
+
+	inline [[nodiscard]] bool IsCompleted() const noexcept
+	{
+		const auto status = GetStatus();
+
+		return status != EJobStatus::NotStarted
+			&& status != EJobStatus::InProgress;
+	}
+	inline [[nodiscard]] bool IsSuccessful() const noexcept
+	{
+		return GetStatus() == EJobStatus::Succeeded;
+	}
+	inline [[nodiscard]] bool IsCanceled() const noexcept
+	{
+		return GetStatus() == EJobStatus::Canceled;
+	}
+	inline [[nodiscard]] EJobStatus GetStatus() const noexcept
 	{
 		std::lock_guard<decltype(myLock)> lock(myLock);
-		if (myResult != EResult::InProgress)
+
+		return myStatus;
+	}
+
+protected:
+	inline Job() noexcept
+		: myDependencies(std::move(*myInjectedDependencies))
+	{
+		myInjectedDependencies.reset();
+	}
+
+	template<typename TDependency> requires
+		TPolicySet::template HasPolicy_v<TDependency, PWrite>
+	__forceinline TDependency& Get()
+	{
+		return std::get<std::decay_t<TDependency>&>(myDependencies);
+	}
+
+	template<typename TDependency> requires
+		TPolicySet::template HasDependency_v<TDependency>
+	__forceinline const TDependency& Get() const
+	{
+		return std::get<std::decay_t<TDependency>&>(myDependencies);
+	}
+
+	template<typename TCallable>
+	inline void SetCallback(TCallable aCallable) noexcept
+	{
+		myCallback = std::forward<TCallable>(aCallable);
+	}
+	
+	inline void CompleteSuccess()
+	{
+		Complete(EJobStatus::Succeeded, EJobResult::Succeeded);
+	}
+	inline void CompleteFailure()
+	{
+		Complete(EJobStatus::Failed, EJobResult::Failed);
+	}
+
+	inline virtual void OnStarted() = 0;
+	inline virtual void OnCompleted(const EJobResult /*aResult*/) {};
+
+private:
+	inline void SetStatus(const EJobStatus aStatus) noexcept
+	{
+		std::lock_guard<decltype(myLock)> lock(myLock);
+
+		myStatus = aStatus;
+	}
+
+	inline void Complete(const EJobStatus aStatus, const EJobResult aResult)
+	{
 		{
-			return;
-		}
-		myResult = EResult::Cancelled;
-	}
-	OnCancel();
-}
+			std::lock_guard<decltype(myLock)> lock(myLock);
 
-inline bool Job::IsComplete() noexcept
-{
-	std::lock_guard<decltype(myLock)> lock(myLock);
-	return myResult != EResult::InProgress;
-}
-
-inline bool Job::IsSuccessful() noexcept
-{
-	std::lock_guard<decltype(myLock)> lock(myLock);
-	return myResult == EResult::Success;
-}
-
-inline Job::EResult Job::GetResult() noexcept
-{
-	std::lock_guard<decltype(myLock)> lock(myLock);
-	return myResult;
-}
-
-inline void Job::Reset() noexcept
-{
-	SetResult(EResult::InProgress);
-	OnReset();
-}
-
-inline void Job::Complete(const EResult aResult) noexcept
-{
-	SetResult(aResult);
-	OnComplete(aResult);
-	if (myCallback)
-	{
-		myCallback(aResult);
-	}
-}
-
-inline void Job::CompleteOnRoutine(const EResult aResult) noexcept
-{
-	SetResult(aResult);
-	OnComplete(aResult);
-	if (myCallback)
-	{
-		WmDispatchTask([&, aResult]
+			if (myStatus != EJobStatus::InProgress)
 			{
-				if (!myCallback)
-				{
-					return;
-				}
-				myCallback(aResult);
-			});
-	}
-}
+				return;
+			}
 
-inline void Job::SetResult(const EResult aResult) noexcept
-{
-	std::lock_guard<decltype(myLock)> lock(myLock);
-	myResult = aResult;
-}
+			myStatus = aStatus;
+		}
+
+		RunCompletedCallbacks(aResult);
+	}
+	inline void RunCompletedCallbacks(const EJobResult aResult)
+	{
+		OnCompleted(aResult);
+
+		Utility::Invoke(myCallback, aResult);
+	}
+
+	static thread_local std::optional<Dependencies> myInjectedDependencies;
+
+	mutable std::mutex myLock;
+
+	Dependencies myDependencies;
+	Callback myCallback;
+	EJobStatus myStatus = EJobStatus::NotStarted;
+};
+
+template<typename TPolicySet>
+thread_local std::optional<typename Job<TPolicySet>::Dependencies> Job<TPolicySet>::myInjectedDependencies;

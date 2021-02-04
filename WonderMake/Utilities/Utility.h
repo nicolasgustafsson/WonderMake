@@ -37,4 +37,11 @@ namespace Utility
 	struct TupleIndex<T, std::tuple<U, Types...>> {
 		static const std::size_t Index = 1 + TupleIndex<T, std::tuple<Types...>>::Index;
 	};
+
+	template<typename TCallable, typename... TArgs>
+	static void Invoke(const TCallable& aCallable, TArgs&&... aArgs)
+	{
+		if (aCallable)
+			(void)aCallable(std::forward<TArgs>(aArgs)...);
+	}
 }

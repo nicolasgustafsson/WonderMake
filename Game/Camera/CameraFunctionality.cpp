@@ -9,7 +9,7 @@ REGISTER_FUNCTIONALITY(CameraFunctionality);
 void CameraFunctionality::Tick()
 {
 	SCameraComponent& cameraComponent = Get<SCameraComponent>();
-	TransformFunctionality& transform = Get<TransformFunctionality>();
+	auto& transform = Get<TransformFunctionality2D>();
 
 	if (!cameraComponent.Target)
 		return;
@@ -19,7 +19,7 @@ void CameraFunctionality::Tick()
 	Get<CameraManager>().GetMainCamera().SetPosition(transform.GetPosition());
 }
 
-void CameraFunctionality::SetTarget(TransformFunctionality* aTarget)
+void CameraFunctionality::SetTarget(TransformFunctionality2D* aTarget)
 {
 	Get<SCameraComponent>().Target = aTarget;
 }

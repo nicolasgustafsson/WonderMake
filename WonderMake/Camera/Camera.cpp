@@ -12,7 +12,7 @@ void Camera::Update()
 
 	auto viewInverse = myViewMatrix;
 
-	const SMatrix33f rotationMatrix = SMatrix33f::CreateRotationZ(myRotation);
+	const auto rotationMatrix = SMatrix33f::CreateRotationZ(myRotation);
 
 	viewInverse = rotationMatrix * viewInverse;
 
@@ -25,7 +25,7 @@ void Camera::Update()
 
 	auto& buffer = myCameraBuffer.GetBuffer();
 
-	const auto viewMatrix = viewInverse;
+	const auto viewMatrix = viewInverse.GetTransposed();
 
 	buffer.ViewMatrix = viewMatrix;
 
@@ -98,12 +98,12 @@ void Camera::Inspect()
 
 SVector2f Camera::ConvertToWorldPosition(const SVector2f aScreenPosition) const 
 {
-	for (auto& display : myDisplays)
+	if (myDisplays.empty())
 	{
-		return display.second.ConvertToWorldPosition(aScreenPosition);
+		return SVector2f::Zero();
 	}
 
-	return SVector2f::Zero();
+	return myDisplays.begin()->second.ConvertToWorldPosition(aScreenPosition);
 }
 
 Display* Camera::GetFocusedDisplay()

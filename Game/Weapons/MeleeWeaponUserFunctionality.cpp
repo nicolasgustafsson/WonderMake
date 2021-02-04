@@ -36,7 +36,7 @@ void MeleeWeaponUserFunctionality::SwingWeapon()
 	//EActionResult result = actionFunctionality.StartAction(WeaponSwingAction
 	//(Get<CharacterFunctionality>()
 	//	, *component.Weapon
-	//	, Get<TransformFunctionality>()
+	//	, Get<TransformFunctionality2D>()
 	//	, weapon.mySwings[component.CurrentSwingIndex]));
 
 	EActionResult result = actionFunctionality.StartAction(WeaponSwingHitShapeAction

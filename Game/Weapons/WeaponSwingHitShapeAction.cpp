@@ -10,7 +10,7 @@ WeaponSwingHitShapeAction::WeaponSwingHitShapeAction(CharacterFunctionality& aUs
 
 void WeaponSwingHitShapeAction::BeginAction()
 {
-	myUser.Get<TransformFunctionality>().FacePosition(myUser.Get<InputSystem>().GetMousePositionInWorld());
+	myUser.Get<TransformFunctionality2D>().FacePosition(myUser.Get<InputSystem>().GetMousePositionInWorld());
 
 	HitShapeSpawnerFunctionality& hitShapeSpawner = myUser.Get<HitShapeSpawnerFunctionality>();
 

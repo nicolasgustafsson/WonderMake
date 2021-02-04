@@ -6,13 +6,13 @@ REGISTER_FUNCTIONALITY(SpinnerFunctionality);
 
 void SpinnerFunctionality::Tick() noexcept
 {
-	auto& transform = Get<TransformFunctionality>();
+	auto& transform = Get<TransformFunctionality2D>();
 	auto& spinner = Get<SSpinnerComponent>();
 
 	const f32 deltaTime = Get<TimeKeeper>().GetDeltaSeconds();
-	const f32 oldRotation = transform.GetRotation();
+	const auto oldRotation = transform.GetRotation();
 
-	const f32 newRotation = oldRotation + spinner.myRotationSpeed * deltaTime;
+	const auto newRotation = oldRotation + spinner.myRotationSpeed * deltaTime;
 
 	transform.SetRotation(newRotation);
 }

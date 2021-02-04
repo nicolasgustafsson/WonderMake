@@ -22,7 +22,7 @@ class MeleeWeaponUserFunctionality
 	: public Functionality<
 		Policy::Set<
 			PAdd<SMeleeWeaponUserComponent, PWrite>,
-			PAdd<TransformFunctionality, PWrite>,
+//			PAdd<TransformFunctionality2D, PWrite>,
 			PAdd<ActionFunctionality, PWrite>,
 			PAdd<CharacterFunctionality, PWrite>>>
 {

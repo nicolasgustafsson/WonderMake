@@ -24,7 +24,7 @@ class DefaultMovementFunctionality
 			PAdd<CollisionSystem, PWrite>,
 			PAdd<TimeKeeper, PRead>,
 			PAdd<SMovementInputComponent, PWrite>,
-			PAdd<STransformComponent, PWrite>,
+			PAdd<STransformComponent2D, PWrite>,
 			PAdd<SDefaultMovementComponent, PWrite>>>
 {
 public:

@@ -7,7 +7,7 @@ class PunchAction
 	: public Action
 {
 public:
-	PunchAction(CharacterFunctionality& aUser, TransformFunctionality& aTarget) noexcept;
+	PunchAction(CharacterFunctionality& aUser, TransformFunctionality2D& aTarget) noexcept;
 
 	virtual void BeginAction() override;
 
@@ -17,7 +17,7 @@ public:
 
 private:
 	CharacterFunctionality& myUser;
-	TransformFunctionality& myTarget;
+	TransformFunctionality2D& myTarget;
 	f32 myCooldown = 1.f;
 };
 

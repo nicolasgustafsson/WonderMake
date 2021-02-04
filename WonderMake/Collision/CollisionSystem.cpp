@@ -4,14 +4,16 @@
 #include "CollisionFunctionality.h"
 #include "Collision/Colliders.h"
 
+#include "Scheduling/ScheduleSystem.h"
+
 REGISTER_SYSTEM(CollisionSystem);
 
 CollisionSystem::CollisionSystem() noexcept
 {
-	EnableTick();
+	Get<ScheduleSystem>().ScheduleRepeating([this](){ Tick(); });
 }
 
-void CollisionSystem::Tick() noexcept
+void CollisionSystem::Tick()
 {
 	for (Colliders::Shape* shape : myCollidersWithReactions)
 	{
@@ -143,7 +145,7 @@ bool CollisionSystem::TestSphereVsLineCollision(const Colliders::SSphere& aSpher
 
 	const SVector2f lineDelta = aLineB.GetLineEnd() - aLineB.Position;
 
-	const SVector2f lineNormal = lineDelta.GetNormal().GetNormalized();
+	const SVector2f lineNormal = lineDelta.GetPerpendicularClockWise().GetNormalized();
 	
 	//[Nicos]: create a newline that is perpendicular to the one line we have to simulate width
 	Colliders::SCollisionLine newLine;

@@ -18,10 +18,12 @@ void SpriteRenderingFunctionality::Tick()
 }
 void SpriteRenderingFunctionality::SetTexture(const std::string_view aAssetLink)
 {
-	if (Get<SSpriteComponent>().RenderObject)
-		Get<SSpriteComponent>().RenderObject->SetTexture(SystemPtr<AssetDatabase<Texture>>()->GetResource(aAssetLink));
+	SSpriteComponent& spriteComponent = Get<SSpriteComponent>();
+	if (spriteComponent.RenderObject)
+		spriteComponent.RenderObject->SetTexture(SystemPtr<AssetDatabase<Texture>>()->GetResource(aAssetLink));
 	else
-		Get<SSpriteComponent>().RenderObject.emplace(aAssetLink);
+		spriteComponent.RenderObject.emplace(aAssetLink);
+	spriteComponent.AssetLink = aAssetLink;
 }
 
 void SpriteRenderingFunctionality::SetScale(const SVector2f aScale)

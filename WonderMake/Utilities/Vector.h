@@ -139,11 +139,39 @@ struct SVector
 	[[nodiscard]] constexpr TRep Dot(const SVector<TRep, TSize> aOther) const noexcept;
 
 	constexpr void Normalize() noexcept;
-	constexpr void Floor() noexcept;
-	constexpr SVector<TRep, TSize> GetFloored() const noexcept;
+	constexpr void Floor() noexcept
+	{
+		for (u32 i = 0; i < TSize; i++)
+		{
+			(*this)[i] = std::floorf((*this)[i]);
+		}
+	}
 
-	constexpr void Round() noexcept;
-	constexpr SVector<TRep, TSize> GetRounded() const noexcept;
+	constexpr SVector<TRep, TSize> GetFloored() const noexcept
+	{
+		SVector<TRep, TSize> vec = *this;
+
+		vec.Floor();
+
+		return vec;
+	}
+
+	constexpr void Round() noexcept
+	{
+		for (u32 i = 0; i < TSize; i++)
+		{
+			(*this)[i] = std::roundf((*this)[i]);
+		}
+	}
+
+	constexpr SVector<TRep, TSize> GetRounded() const noexcept
+	{
+		SVector<TRep, TSize> vec = *this;
+
+		vec.Round();
+
+		return vec;
+	}
 
 
 	[[nodiscard]] constexpr SVector<TRep, TSize> GetNormalized() const noexcept;
@@ -196,42 +224,3 @@ template <typename TRep, u32 TSize>
 [[nodiscard]] constexpr static SVector<TRep, TSize> operator/(const SVector<TRep, TSize>& aLeftVector, const TRep aDivisor) noexcept;
 
 #include "Vector.inl"
-
-
-template <typename TRep, u32 TSize>
-constexpr void SVector<TRep, TSize>::Floor() noexcept
-{
-	for (u32 i = 0; i < TSize; i++)
-	{
-		(*this)[i] = std::floorf((*this)[i]);
-	}
-}
-
-template <typename TRep, u32 TSize>
-constexpr SVector<TRep, TSize> SVector<TRep, TSize>::GetFloored() const noexcept
-{
-	SVector<TRep, TSize> vec = *this;
-
-	vec.Floor();
-
-	return vec;
-}
-
-template <typename TRep, u32 TSize>
-constexpr void SVector<TRep, TSize>::Round() noexcept
-{
-	for (u32 i = 0; i < TSize; i++)
-	{
-		(*this)[i] = std::roundf((*this)[i]);
-	}
-}
-
-template <typename TRep, u32 TSize>
-constexpr SVector<TRep, TSize> SVector<TRep, TSize>::GetRounded() const noexcept
-{
-	SVector<TRep, TSize> vec = *this;
-
-	vec.Round();
-
-	return vec;
-}

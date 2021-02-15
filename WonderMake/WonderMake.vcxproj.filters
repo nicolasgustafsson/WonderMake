@@ -274,6 +274,7 @@
     <ClInclude Include="Job\JobPromise.h" />
     <ClInclude Include="Job\Cargo.h" />
     <ClInclude Include="Utilities\UniqueFunction.h" />
+    <ClInclude Include="Utilities\Alias.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

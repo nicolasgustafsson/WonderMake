@@ -189,6 +189,7 @@
     <ClCompile Include="ContainerTests.cpp" />
     <ClCompile Include="Functionalities\TransformFunctionalityTests.cpp" />
     <ClCompile Include="Job\JobTests.cpp" />
+    <ClCompile Include="Utilities\AliasTests.cpp" />
     <ClCompile Include="Utilities\DependencyInjectionTests.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Utilities\MatrixTests.cpp" />

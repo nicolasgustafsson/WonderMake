@@ -324,6 +324,7 @@
     <ClInclude Include="Imgui\NodeGraphGui.h" />
     <ClInclude Include="Graphics\ShaderParser.h" />
     <ClInclude Include="Object\DependencyDestructor.h" />
+    <ClInclude Include="Utilities\Alias.h" />
     <ClInclude Include="Utilities\AutoRegister.h" />
     <ClInclude Include="Utilities\Container\BackendImplementations\LinkedListBackend.h" />
     <ClInclude Include="Utilities\Container\BackendImplementations\UnorderedMapBackend.h" />

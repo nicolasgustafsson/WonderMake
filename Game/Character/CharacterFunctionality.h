@@ -9,6 +9,7 @@
 #include "Levels/LevelDenizenFunctionality.h"
 #include "HitShapes/HitShapeSpawnerFunctionality.h"
 #include "UtilityFunctionalities/FactionFunctionality.h"
+#include "Effects/EffectFunctionality.h"
 
 class InputSystem;
 
@@ -32,6 +33,7 @@ class CharacterFunctionality
 			PAdd<CharacterStatsFunctionality, PWrite>,
 			PAdd<HitShapeSpawnerFunctionality, PWrite>,
 			PAdd<LevelDenizenFunctionality, PWrite>,
+			PAdd<EffectFunctionality, PWrite>,
 			PAdd<CharacterBuffsFunctionality, PWrite>>>
 {
 public:

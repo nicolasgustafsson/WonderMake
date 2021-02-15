@@ -88,7 +88,6 @@ namespace WmEasings
 		return SmoothStart<Power / 2>(aRange, aProgress) * Flip(SmoothStop<Power / 2>(aRange, aProgress));
 	}
 
-
 	template <WmMath::Interpolable T>
 	inline [[nodiscard]] constexpr T QuadraticBezier(const SRange<T>& aRange, const T& aControl, const f32 aProgress) noexcept
 	{

@@ -79,6 +79,10 @@
     <ClCompile Include="Scheduling\ScheduleSystem.cpp" />
     <ClCompile Include="EngineTools\EngineTools.cpp" />
     <ClCompile Include="EngineTools\EasingTester.cpp" />
+    <ClCompile Include="Imgui\AssetBrowser.cpp" />
+    <ClCompile Include="Effects\EffectFunctionality.cpp" />
+    <ClCompile Include="Effects\Effect.cpp" />
+    <ClCompile Include="Effects\EffectData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -265,6 +269,9 @@
     <ClInclude Include="Utilities\Easing\EasingFunctions.h" />
     <ClInclude Include="EngineTools\EngineTools.h" />
     <ClInclude Include="EngineTools\EasingTester.h" />
+    <ClInclude Include="Effects\EffectFunctionality.h" />
+    <ClInclude Include="Effects\Effect.h" />
+    <ClInclude Include="Effects\EffectData.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

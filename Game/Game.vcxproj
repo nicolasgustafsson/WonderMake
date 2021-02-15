@@ -233,6 +233,9 @@
     <ClInclude Include="Designers\EffectDesigner\EffectDesigner.h" />
     <ClInclude Include="Designers\NewDesigners\Attribute\Attribute.h" />
     <ClInclude Include="Designers\NewDesigners\Designer\Designer.h" />
+    <ClInclude Include="Designers\NewDesigners\EnemyDesigner\Attributes\EnemyAttribute.h" />
+    <ClInclude Include="Designers\NewDesigners\EnemyDesigner\EnemyDesigner.h" />
+    <ClInclude Include="Designers\NewDesigners\EnemyDesigner\Operations\EnemyOperations.h" />
     <ClInclude Include="Designers\NewDesigners\MovesetDesigner\MovesetAttributes.h" />
     <ClInclude Include="Designers\NewDesigners\MovesetDesigner\MovesetOperations\MovesetOperations.h" />
     <ClInclude Include="Designers\NewDesigners\MovesetDesigner\MovesetDesigner.h" />
@@ -304,6 +307,8 @@
     <ClCompile Include="Designers\EffectDesigner\EffectDesigner.cpp" />
     <ClCompile Include="Designers\NewDesigners\Attribute\Attribute.cpp" />
     <ClCompile Include="Designers\NewDesigners\Designer\Designer.cpp" />
+    <ClCompile Include="Designers\NewDesigners\EnemyDesigner\EnemyDesigner.cpp" />
+    <ClCompile Include="Designers\NewDesigners\EnemyDesigner\Operations\EnemyOperations.cpp" />
     <ClCompile Include="Designers\NewDesigners\MovesetDesigner\MovesetOperations\MovesetOperations.cpp" />
     <ClCompile Include="Designers\NewDesigners\MovesetDesigner\MovesetDesigner.cpp" />
     <ClCompile Include="Designers\NewDesigners\MovesetDesigner\SwingDesigner\SwingOperations\SwingOperations.cpp" />

@@ -16,6 +16,8 @@
 #include "Levels/LevelFunctionality.h"
 #include "Debugging/DebugSettingsSystem.h"
 
+#include "Designers/NewDesigners/EnemyDesigner/EnemyDesigner.h"
+
 REGISTER_SYSTEM(LevelDesigner);
 
 void LevelDesigner::DesignLevel(LevelFunctionality& aLevel)
@@ -118,11 +120,14 @@ void LevelDesigner::DesignStartPoint(const SSpace& aSpace)
 
 void LevelDesigner::CreateEnemy(const SVector2f aPosition)
 {
-	Object& enemy = myCurrentLevel->AddDenizen();
+	EnemyDesigner designer;
 
-	Get<FunctionalitySystemDelegate<EnemyControllerFunctionality>>().AddFunctionality(enemy);
+	auto enemy = designer.Design(Sketch());
+
 	auto& transform = Get<FunctionalitySystemDelegate<TransformFunctionality2D>>().AddFunctionality(enemy);
     transform.SetPosition(aPosition);
+
+	myCurrentLevel->AddDenizen(std::move(enemy));
 }
 
 plf::colony<Object> LevelDesigner::CreateWalls(SLevelGeometry& aGeometry)

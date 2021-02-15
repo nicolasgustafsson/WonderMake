@@ -13,6 +13,8 @@
 #include "Actions/ActionFunctionality.h"
 #include "UtilityFunctionalities/FactionFunctionality.h"
 
+struct SMoveset;
+
 class EnemyControllerFunctionality
 	: public Functionality<
 		Policy::Set<
@@ -30,6 +32,8 @@ class EnemyControllerFunctionality
 {
 public:
 	EnemyControllerFunctionality();
+
+	void SetMoveset(SMoveset&& aMoveset);
 
 	void Tick() noexcept;
 

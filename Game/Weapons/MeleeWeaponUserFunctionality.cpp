@@ -5,6 +5,7 @@
 #include "Actions/ActionFunctionality.h"
 #include "Weapons/WeaponSwingHitShapeAction.h"
 #include "Weapons/MeleeWeapon.h"
+#include "Input/InputSystem.h"
 #include "Designers/NewDesigners/MeleeWeaponDesigner2/MeleeWeaponDesigner2.h"
 
 REGISTER_COMPONENT(SMeleeWeaponUserComponent);
@@ -49,6 +50,7 @@ void MeleeWeaponUserFunctionality::SwingWeapon()
 	EActionResult result = actionFunctionality.StartAction(WeaponSwingHitShapeAction
 	(
 		Get<CharacterFunctionality>()
+		, Get<InputSystem>().GetMousePositionInWorld() - Get<TransformFunctionality2D>().GetPosition()
 		, weapon.myMoveset.Swings[meleeWeaponUserComponent.CurrentSwingIndex]
 	));
 

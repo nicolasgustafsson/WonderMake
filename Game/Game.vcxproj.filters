@@ -64,6 +64,8 @@
     <ClCompile Include="Designers\NewDesigners\MovesetDesigner\SwingDesigner\SwingOperations\SwingOperations.cpp" />
     <ClCompile Include="Designers\NewDesigners\BezierDesigner\BezierDesigner.cpp" />
     <ClCompile Include="Designers\NewDesigners\BezierDesigner\BezierOperations.cpp" />
+    <ClCompile Include="Designers\NewDesigners\EnemyDesigner\EnemyDesigner.cpp" />
+    <ClCompile Include="Designers\NewDesigners\EnemyDesigner\Operations\EnemyOperations.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWorld.h" />
@@ -137,6 +139,9 @@
     <ClInclude Include="Designers\NewDesigners\BezierDesigner\BezierDesigner.h" />
     <ClInclude Include="Designers\NewDesigners\BezierDesigner\BezierAttributes.h" />
     <ClInclude Include="Designers\NewDesigners\BezierDesigner\BezierOperations.h" />
+    <ClInclude Include="Designers\NewDesigners\EnemyDesigner\EnemyDesigner.h" />
+    <ClInclude Include="Designers\NewDesigners\EnemyDesigner\Operations\EnemyOperations.h" />
+    <ClInclude Include="Designers\NewDesigners\EnemyDesigner\Attributes\EnemyAttribute.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Character\Buffs\BuffDesign.md" />

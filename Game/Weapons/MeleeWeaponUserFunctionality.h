@@ -9,6 +9,7 @@
 
 class MeleeWeaponFunctionality;
 class MeleeWeapon;
+class InputSystem;
 
 struct SMeleeWeaponUserComponent
 	: public SComponent
@@ -22,9 +23,10 @@ class MeleeWeaponUserFunctionality
 	: public Functionality<
 		Policy::Set<
 			PAdd<SMeleeWeaponUserComponent, PWrite>,
-//			PAdd<TransformFunctionality2D, PWrite>,
+			PAdd<TransformFunctionality2D, PWrite>,
 			PAdd<ActionFunctionality, PWrite>,
-			PAdd<CharacterFunctionality, PWrite>>>
+			PAdd<CharacterFunctionality, PWrite>,
+			PAdd<InputSystem, PWrite>>>
 {
 public:
 	void Inspect();

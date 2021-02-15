@@ -4,6 +4,7 @@
 #include "Enemy/TargetFunctionality.h"
 #include "Actions/ActionFunctionality.h"
 #include "EnemyActions/PunchAction.h"
+#include "Weapons/WeaponSwingHitShapeAction.h"
 #include "Utility/Palette.h"
 
 REGISTER_COMPONENT(EnemyControllerComponent)
@@ -20,6 +21,11 @@ EnemyControllerFunctionality::EnemyControllerFunctionality()
 
 	Get<SpriteRenderingFunctionality>().SetTexture(std::filesystem::current_path() / "Textures/enemy.png");
 	Get<SpriteRenderingFunctionality>().SetColor(Palette::EnemyColor);
+}
+
+void EnemyControllerFunctionality::SetMoveset(SMoveset&& aMoveset)
+{
+	Get<EnemyControllerComponent>().Moveset = std::move(aMoveset);
 }
 
 void EnemyControllerFunctionality::Tick() noexcept
@@ -50,7 +56,8 @@ void EnemyControllerFunctionality::Tick() noexcept
 	{
 		movementInputFunctionality.SetMovementInput({ 0.f, 0.f });
 
-		PunchAction action(Get<CharacterFunctionality>(), *target);
+		WeaponSwingHitShapeAction action(Get<CharacterFunctionality>(), delta, Get<EnemyControllerComponent>().Moveset.Swings.front());
+//		PunchAction action(Get<CharacterFunctionality>(), *target);
 
 		Get<ActionFunctionality>().StartAction(action);
 		return;

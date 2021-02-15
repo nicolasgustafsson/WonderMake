@@ -2,15 +2,15 @@
 #include "WeaponSwingHitShapeAction.h"
 #include "Input/InputSystem.h"
 
-WeaponSwingHitShapeAction::WeaponSwingHitShapeAction(CharacterFunctionality& aUser, const SSwing aSwing) noexcept
-	: myUser(aUser), mySwing(aSwing)
+WeaponSwingHitShapeAction::WeaponSwingHitShapeAction(CharacterFunctionality& aUser, SVector2f aDirection, const SSwing aSwing) noexcept
+	: myUser(aUser), myDirection(aDirection), mySwing(aSwing)
 {
 
 }
 
 void WeaponSwingHitShapeAction::BeginAction()
 {
-	myUser.Get<TransformFunctionality2D>().FacePosition(myUser.Get<InputSystem>().GetMousePositionInWorld());
+	myUser.Get<TransformFunctionality2D>().FaceDirection(myDirection);
 
 	HitShapeSpawnerFunctionality& hitShapeSpawner = myUser.Get<HitShapeSpawnerFunctionality>();
 

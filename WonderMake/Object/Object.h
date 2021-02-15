@@ -9,8 +9,7 @@ struct SComponent;
 class _BaseFunctionality;
 
 class Object final
-	: public NonMovable
-	, public NonCopyable
+	: public NonCopyable
 {
 public:
 	Object(Object&& aOther);

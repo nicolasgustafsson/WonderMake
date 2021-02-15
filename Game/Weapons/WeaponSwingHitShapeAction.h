@@ -8,7 +8,7 @@ class WeaponSwingHitShapeAction
 	: public Action
 {
 public:
-	WeaponSwingHitShapeAction(CharacterFunctionality& aUser, const SSwing aSwing) noexcept;
+	WeaponSwingHitShapeAction(CharacterFunctionality& aUser, SVector2f aDirection, const SSwing aSwing) noexcept;
 
 	virtual void BeginAction() override;
 
@@ -18,6 +18,7 @@ public:
 
 private:
 	const SSwing mySwing;
+	SVector2f myDirection;
 	CharacterFunctionality& myUser;
 	f32 myCooldown = 0.0f;
 };

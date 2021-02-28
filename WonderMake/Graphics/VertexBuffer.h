@@ -10,8 +10,10 @@ public:
 	VertexBuffer(const std::vector<TVertexData>& aData);
 
 	void ResizeBuffer(const u32 aCount);
-	void SetData(const std::vector<TVertexData>& aData);
 
+	template<class TContainer>
+	void SetData(const TContainer& aContainer);
+	
 	void Bind(const u32 aIndex);
 
 private:
@@ -43,15 +45,16 @@ void VertexBuffer<TVertexData>::ResizeBuffer(const u32 aCount)
 }
 
 template <typename TVertexData>
-void VertexBuffer<TVertexData>::SetData(const std::vector<TVertexData>& aData)
+template<class TContainer>
+void VertexBuffer<TVertexData>::SetData(const TContainer& aData)
 {
 	SystemPtr<OpenGLFacade> openGL;
 	openGL->BindBuffer(GL_ARRAY_BUFFER, myBufferHandle);
 
-	if (myVertexCount != static_cast<u32>(aData.size()))
-		ResizeBuffer(static_cast<u32>(aData.size()));
+	if (myVertexCount != static_cast<u32>(aData.Count()))
+		ResizeBuffer(static_cast<u32>(aData.Count()));
 
-	openGL->UpdateBufferData(GL_ARRAY_BUFFER, 0, sizeof(TVertexData) * myVertexCount, aData.data());
+	openGL->UpdateBufferData(GL_ARRAY_BUFFER, 0, sizeof(TVertexData) * myVertexCount, &aData[0]);
 }
 
 template <typename TVertexData>

@@ -39,7 +39,7 @@ void TimeKeeper::Debug()
 	ImGui::Text("f64: Current deltatime: %f", myPreviousDeltaSecondsPrecise);
 	ImGui::Text("f64: total time passed: %f", myTotalTimePassedPrecise);
 
-	ImGui::SliderFloat("Time dilation", &myTimeDilation, 0.001f, 100.f, "%.3f", 3.0f);
+	ImGui::SliderFloat("Time dilation", &myTimeDilation, 0.001f, 100.f, "%.3f", ImGuiSliderFlags_Logarithmic);
 
 	ImGui::End();
 }

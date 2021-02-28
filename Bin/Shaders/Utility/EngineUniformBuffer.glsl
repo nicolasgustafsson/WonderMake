@@ -15,4 +15,5 @@ layout (std140, binding = 2) uniform Display
 	mat3 ProjectionMatrix;
 	mat3 ViewProjectionMatrix;
 	vec2 Resolution;
+	vec2 InverseResolution;
 };

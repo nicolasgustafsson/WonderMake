@@ -40,7 +40,7 @@ public:
 	[[nodiscard]] constexpr static SColor CornflowerBlue(const f32 aAlpha = 1.0f)	noexcept { return { 100.f / 255.f, 149.f / 255.f, 237.f / 255.f, aAlpha }; }
 	[[nodiscard]] constexpr static SColor Grey(const f32 aAlpha = 1.0f)				noexcept { return { 0.85f, 0.85f, 0.85f, aAlpha }; }
 	[[nodiscard]] constexpr static SColor White(const f32 aAlpha = 1.0f)			noexcept { return SColor(255_u8, 255_u8, 255_u8, (u8)(aAlpha * 255.f)); }
-	[[nodiscard]] constexpr static SColor Black()			                        noexcept { return SColor(0_u8, 0_u8, 0_u8); }
+	[[nodiscard]] constexpr static SColor Black(const f32 aAlpha = 1.0f)			noexcept { return SColor(0_u8, 0_u8, 0_u8, (u8)(aAlpha * 255.f)); }
 	[[nodiscard]] constexpr static SColor Yellow(const f32 aAlpha = 1.0f)			noexcept { return { 1.0f, 1.0f, 0.0f, aAlpha }; }
 	[[nodiscard]] constexpr static SColor Red(const f32 aAlpha = 1.0f)				noexcept { return { 1.0f, 0.0f, 0.0f, aAlpha }; }
 	[[nodiscard]] constexpr static SColor Green(const f32 aAlpha = 1.0f)			noexcept { return { 0.0f, 1.0f, 0.0f, aAlpha }; }

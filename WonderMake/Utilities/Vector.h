@@ -291,6 +291,26 @@ struct SVector
 		return sum;
 	}
 
+	template<u64 TArraySize, typename TVector> requires std::is_same_v<SVector, std::decay_t<TVector>>
+	[[nodiscard]] static constexpr TVector& Closest(SVector aPoint, std::array<TVector*, TArraySize> aArray) noexcept
+	{
+		u64 index = 0;
+		f32 distance = std::numeric_limits<f32>::max();
+
+		for (u64 i = 0; i < aArray.size(); i++)
+		{
+			auto testVector = *aArray[i];
+			const f32 newDistance = aPoint.DistanceTo(testVector);
+			if (newDistance < distance)
+			{
+				distance = newDistance;
+				index = i;
+			}
+		}
+		
+		return *(aArray[index]);
+	}
+
 	constexpr void Normalize() noexcept
 	{
 		const TRep length = Length();

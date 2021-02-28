@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "LineListRenderObject.h"
 
-LineListRenderObject::LineListRenderObject(const std::vector<SVector2f>& aPoints, const f32 aThickness /*= 1.0f*/, const SColor aColor /*= SColor::RaisinBlack*/)
+LineListRenderObject::LineListRenderObject(const std::vector<SVector2f>& aPoints, const f32 innerThickness/* = 1.0f*/, const f32 outerThickness/* = 1.0f*/, const SColor aColor /*= SColor::RaisinBlack*/)
 	:RenderObject(SRenderObjectInfo
 		{   std::filesystem::current_path() / "Shaders/Vertex/LineList.vert"
 		,	""
@@ -25,10 +25,10 @@ LineListRenderObject::LineListRenderObject(const std::vector<SVector2f>& aPoints
 		SVector2f perpendicularCw = direction.GetPerpendicularClockWise();
 		SVector2f perpendicularCcw = direction.GetPerpendicularCounterClockWise();
 
-		SetAttribute<EVertexAttribute::Position>(i * 2, location + perpendicularCw * (aThickness / 2.f));
-		SetAttribute<EVertexAttribute::Position>(i * 2 + 1, location + perpendicularCcw * (aThickness / 2.f));
+		SetAttribute<EVertexAttribute::Position>(i * 2, location + perpendicularCw * (outerThickness));
+		SetAttribute<EVertexAttribute::Position>(i * 2 + 1, location + perpendicularCcw * (innerThickness));
 
-		WmDrawDebugLine(location + perpendicularCw * (aThickness / 2.f), location + perpendicularCcw * (aThickness / 2.f), SColor::Blue(), 100.f);
+		WmDrawDebugLine(location + perpendicularCw * (outerThickness), location + perpendicularCcw * (innerThickness), SColor::Blue(), 100.f);
 
 		previousPoint = location;
 	}

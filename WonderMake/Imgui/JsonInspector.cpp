@@ -23,7 +23,7 @@ void ImGui::JsonInspector::Inspect(nlohmann::json& aJsonDocumentToInspect, const
 void ImGui::JsonInspector::InspectElement(nlohmann::json::iterator aElementIterator)
 {
 	nlohmann::json& element = *aElementIterator;
-
+	
 	if (element.type() == nlohmann::json::value_t::object)
 	{
 		InspectObject(aElementIterator);
@@ -34,7 +34,7 @@ void ImGui::JsonInspector::InspectElement(nlohmann::json::iterator aElementItera
 	ImGui::NextColumn();
 	ImGui::PushItemWidth(-1);
 	ImGui::PushID(&element);
-
+	
 	switch (element.type())
 	{
 	case nlohmann::json::value_t::number_float:
@@ -53,7 +53,7 @@ void ImGui::JsonInspector::InspectElement(nlohmann::json::iterator aElementItera
 		InspectTheUninspectable(aElementIterator);
 		break;
 	}
-
+	
 	ImGui::PopID();
 	ImGui::PopItemWidth();
 	ImGui::NextColumn();

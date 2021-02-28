@@ -1,10 +1,20 @@
 #pragma once
+
 #include <filesystem>
-#include "ResourceSystem.h"
-#include "Utilities/Debugging/Debugged.h"
-#include <Imgui/FileSelector.h>
-#include "Asset.h"
 #include <json/json.hpp>
+#include <Imgui/imgui_stdlib.h>
+
+#include "Asset.h"
+#include "ResourceSystem.h"
+
+#include "Utilities/Debugging/Debugged.h"
+#include "Utilities/Container/Container.h"
+#include "Utilities/Id.h"
+
+#include "Imgui/AssetBrowser.h"
+#include "Imgui/FileSelector.h"
+
+#include "AssetLink.h"
 
 template<typename TAssetType>
 class AssetDatabase 
@@ -39,13 +49,42 @@ public:
 	void Deserialize(const nlohmann::json& aJson)
 	{
 		myRootPath = aJson["rootPath"].get<std::filesystem::path>();
+		myAssetLinks = aJson["container"].get<decltype(myAssetLinks)>();
 
 		SweepAssetDirectories();
 	}
 
+	Asset<TAssetType>* GetAsset(std::string_view aAssetLink)
+	{
+		auto assetId = myAssetLinks[std::string(aAssetLink)].AssetId;
+
+		if (assetId)
+		{
+			if (!myAssets.KeyExists(*assetId))
+				return nullptr;
+			
+			return &myAssets.Get(*assetId);
+		}
+		
+		return nullptr;
+	}
+
+	ResourceProxy<TAssetType> GetResource(std::string_view aAssetLink)
+	{
+		Asset<TAssetType>* asset = GetAsset(aAssetLink);
+
+		if (!asset)
+			return {};
+
+		if (!asset->myResource)
+			return {};
+
+		return *(asset->myResource);
+	}
+
 	~AssetDatabase()
 	{
-		Save();
+		Save(); 
 	}
 
 	void Save()
@@ -62,16 +101,27 @@ public:
 		nlohmann::json json;
 
 		json["rootPath"] = myRootPath;
+		json["container"] = myAssetLinks;
 
 		return json;
 	}
 
 	void SweepAssetDirectories()
 	{
-		myAssets.clear();
+		myAssets.EraseIf([](auto& aAsset)
+			{
+				return !std::filesystem::exists(aAsset.second.myMetadata.Filepath);
+			});
 
-		for (auto& file : std::filesystem::recursive_directory_iterator(myRootPath))
-			myAssets.insert(file.path());
+		for (auto&& file : std::filesystem::recursive_directory_iterator(std::filesystem::current_path() / myRootPath))
+		{
+			Id assetId = myIdCounter.NextId();
+			auto relativePath = std::filesystem::proximate(file.path(), std::filesystem::current_path());
+			Asset<TAssetType> asset{ relativePath, assetId };
+			asset.LoadAsset();
+			myAssets.Add(assetId, asset);
+
+		}
 
 		Save();
 	}
@@ -86,23 +136,46 @@ public:
 			SweepAssetDirectories();
 			WmLog(TagSuccess, assetDatabaseName + " scanned assets!");
 		}
-		
-		static char buffer[255] = "";
 
-		if (strcmp(buffer, "") == 0)
-		{
-			strcpy_s(buffer, myRootPath.string().c_str());
-		}
+		static std::string buffer = myRootPath.string();
 
-		if (ImGui::InputText("Root folder", buffer, 255))
+		if (ImGui::InputText("Root folder", &buffer))
+			myRootPath = buffer;
+
+		ImGui::Separator();
+
+		if (ImGui::TreeNode("Assets"))
 		{
-			myRootPath = std::filesystem::current_path() / buffer;
+			for (auto&& asset : myAssets)
+			{
+				asset.second.Inspect();
+			}
+
+			ImGui::TreePop();
 		}
 
 		ImGui::Separator();
-		for (auto&& asset : myAssets)
+
+		if (ImGui::TreeNode("Asset Links"))
 		{
-			asset.Inspect();
+			for (auto&& assetLink : myAssetLinks)
+			{
+				ImGui::PushID(assetLink.first.c_str());
+
+				if (ImGui::Button("Show asset browser"))
+					assetLink.second.IsSelectingAsset = true;
+
+				ImGui::SameLine();
+
+				ImGui::Text(assetLink.first.c_str());
+
+				if (assetLink.second.IsSelectingAsset)
+					if (WmGui::AssetPicker(myAssets.begin(), myAssets.end(), assetLink.first, assetLink.second))
+						Save();
+
+				ImGui::PopID();
+			}
+			ImGui::TreePop();
 		}
 
 		ImGui::End();
@@ -131,11 +204,14 @@ private:
 			return assetTypeName;
 		}
 	}
-
-	plf::colony<Asset<TAssetType>> myAssets;
 	
-	std::filesystem::path myRootPath = std::filesystem::current_path();
-	std::vector<std::filesystem::path> myAllowedExtensions;
+	Container<Asset<TAssetType>, Key<Id>, Iterable, StableElements> myAssets;
+
+	Container<SAssetLink<TAssetType>, Key<std::string>, Iterable> myAssetLinks;
+	
+	std::filesystem::path myRootPath = {};
+
+	IdCounter myIdCounter;
 };
 
 #define REGISTER_ASSET_DATABASE(aAsset) _REGISTER_SYSTEM_IMPL(AssetDatabase<aAsset>, aAsset##Asset)

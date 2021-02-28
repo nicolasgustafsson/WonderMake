@@ -28,8 +28,8 @@ void Camera::Update()
 	const auto viewMatrix = viewInverse.GetTransposed();
 
 	buffer.ViewMatrix = viewMatrix;
-	buffer.CameraPosition = myPosition;
 
+	buffer.CameraPosition = myPosition.GetRounded();
 	myCameraBuffer.Update();
 }
 

@@ -46,7 +46,10 @@ namespace InputSlotSerialization
 	inline void SerializeInput<SRenderSettings>(const i32 aNodeId, const i32 aSlotId, json& aJson, SRenderSettings aSlotValue)
 	{
 		i32 blendModeInt = aSlotValue.BlendMode ? static_cast<i32>(*aSlotValue.BlendMode) : -1;
-		json renderSettings{ {"Blendmode", blendModeInt} };
+		i32 depthModeInt = aSlotValue.DepthMode ? static_cast<i32>(*aSlotValue.DepthMode) : -1;
+		
+		json renderSettings{ {"Blendmode", blendModeInt}, {"DepthMode", depthModeInt} };
+		
 		aJson.push_back({ {"NodeId", aNodeId}, {"SlotId", aSlotId}, {"Value", renderSettings} });
 	}
 
@@ -80,12 +83,15 @@ namespace InputSlotSerialization
 	template<>
 	inline SRenderSettings DeserializeInput<SRenderSettings>(const json& aJson)
 	{
-		i32 blendmode = aJson["Value"]["Blendmode"].get<i32>();
-
 		SRenderSettings settings;
 
+		const i32 blendmode = aJson["Value"]["Blendmode"].get<i32>();
 		if (blendmode >= 0)
 			settings.BlendMode = static_cast<EBlendMode>(blendmode);
+
+		const i32 depthMode = aJson["Value"]["DepthMode"].get<i32>();
+		if (depthMode >= 0)
+			settings.DepthMode = static_cast<EDepthMode>(depthMode);
 
 		return settings;
 	}

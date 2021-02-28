@@ -18,7 +18,7 @@ EnemyControllerFunctionality::EnemyControllerFunctionality()
 	Get<DefaultMovementFunctionality>().Get<SDefaultMovementComponent>().Friction = 15.f;
 	Get<CollisionFunctionality>().AddSphereCollider(*this, SVector2f::Zero(), 10.f);
 
-	Get<SpriteRenderingFunctionality>().SetTexture(std::filesystem::current_path() / "Textures/enemy.png");
+	Get<SpriteRenderingFunctionality>().SetTexture("Enemy");
 	Get<SpriteRenderingFunctionality>().SetColor(Palette::EnemyColor);
 }
 
@@ -77,6 +77,6 @@ void EnemyControllerFunctionality::Debug()
 
 void EnemyControllerFunctionality::OnDeath()
 {
-	Get<SpriteRenderingFunctionality>().SetTexture(std::filesystem::current_path() / "Textures/deadEnemy.png");
+	Get<SpriteRenderingFunctionality>().SetTexture("Dead enemy");
 	WmLog("ded");
 }

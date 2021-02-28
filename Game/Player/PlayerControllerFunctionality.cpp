@@ -16,16 +16,15 @@ PlayerControllerFunctionality::PlayerControllerFunctionality()
 	collision.AddSphereCollider(*this, SVector2f::Zero(), 10.f);
 
 	Get<FactionFunctionality>().SetFaction(EFaction::Player);
-	Get<CharacterFunctionality>().Get<CharacterStatsFunctionality>().SetBaseValue(ECharacterStat::MovementSpeed, 200.f);
+	Get<CharacterFunctionality>().Get<CharacterStatsFunctionality>().SetBaseValue(ECharacterStat::MovementSpeed, 250.f);
 
 	Get<MeleeWeaponUserFunctionality>().SetWeapon(Get<MeleeWeaponDesigner>().DesignWeapon());
 
 	Get<SLevelDenizenComponent>().PersistentOnLevelChange = true;
 
-	Get<SpriteRenderingFunctionality>().SetTexture(std::filesystem::current_path() / "Textures/player.png");
-
+	Get<SpriteRenderingFunctionality>().SetTexture("Player");
+	
 	Get<SpriteRenderingFunctionality>().SetColor(Palette::PlayerColor);
-
 }
 
 void PlayerControllerFunctionality::Tick() noexcept
@@ -45,7 +44,7 @@ void PlayerControllerFunctionality::Tick() noexcept
 	if (Get<InputSystem>().IsMouseButtonPressed(EMouseButton::Left))
 		Get<MeleeWeaponUserFunctionality>().SwingWeapon();
 
-	WmDrawDebugLine(Get<TransformFunctionality2D>().GetPosition(), Get<InputSystem>().GetMousePositionInWorld(), SColor::White());
+	//WmDrawDebugLine(Get<TransformFunctionality>().GetPosition(), Get<InputSystem>().GetMousePositionInWorld(), SColor::White());
 }
 
 void PlayerControllerFunctionality::UpdateMovement()

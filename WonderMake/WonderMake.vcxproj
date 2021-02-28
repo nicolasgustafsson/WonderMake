@@ -148,6 +148,8 @@
       <SupportJustMyCode>false</SupportJustMyCode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ExceptionHandling>false</ExceptionHandling>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -196,6 +198,8 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>false</ExceptionHandling>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -204,6 +208,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Imgui\AssetBrowser.cpp" />
     <ClCompile Include="Audio\AudioMixingNodeGraph.cpp" />
     <ClCompile Include="Audio\AudioFile.cpp" />
     <ClCompile Include="Audio\AudioManager.cpp" />
@@ -218,6 +223,7 @@
     <ClCompile Include="Graphics\RenderHandle.cpp" />
     <ClCompile Include="Graphics\RenderNodeGraph\RenderNodeTypes.cpp" />
     <ClCompile Include="Graphics\RenderObject.cpp" />
+    <ClCompile Include="Utilities\Id.cpp" />
     <ClCompile Include="Imgui\Canvas.cpp" />
     <ClCompile Include="Imgui\FileSelector.cpp" />
     <ClCompile Include="Imgui\NodeGraphGui.cpp" />
@@ -289,6 +295,10 @@
     <ClInclude Include="EngineTools\EngineTools.h" />
     <ClInclude Include="EngineTools\EasingTester.h" />
     <ClInclude Include="Scheduling\ScheduleSystem.h" />
+    <ClInclude Include="Imgui\AssetBrowser.h" />
+    <ClInclude Include="Resources\AssetLink.h" />
+    <ClInclude Include="Utilities\Id.h" />
+    <ClInclude Include="Utilities\Container\BackendImplementations\ColonyBackend.h" />
     <ClInclude Include="Resources\Asset.h" />
     <ClInclude Include="Resources\AssetDatabase.h" />
     <ClInclude Include="Audio\AudioMixingNodeGraph.h" />
@@ -307,6 +317,14 @@
     <ClInclude Include="Graphics\ShaderParser.h" />
     <ClInclude Include="Object\DependencyDestructor.h" />
     <ClInclude Include="Utilities\AutoRegister.h" />
+    <ClInclude Include="Utilities\Container\BackendImplementations\LinkedListBackend.h" />
+    <ClInclude Include="Utilities\Container\BackendImplementations\UnorderedMapBackend.h" />
+    <ClInclude Include="Utilities\Container\BackendImplementations\VectorBackend.h" />
+    <ClInclude Include="Utilities\Container\Container.h" />
+    <ClInclude Include="Utilities\Container\ContainerBackend.h" />
+    <ClInclude Include="Utilities\Container\Traits\ContainerTraits.h" />
+    <ClInclude Include="Utilities\Container\Traits\Implications.h" />
+    <ClInclude Include="Utilities\Container\Traits\TraitList.h" />
     <ClInclude Include="Utilities\DependencyInjector.h" />
     <ClInclude Include="Graphics\RenderCommandProcessor.h" />
     <ClInclude Include="Graphics\RenderNodeGraph\RenderNodeGraph.h" />
@@ -406,6 +424,11 @@
     <ClInclude Include="Utilities\RestrictTypes.h" />
     <ClInclude Include="Utilities\Result.h" />
     <ClInclude Include="Program\Window.h" />
+    <ClInclude Include="Utilities\TypeTraits\Concepts.h" />
+    <ClInclude Include="Utilities\TypeTraits\ContainsType.h" />
+    <ClInclude Include="Utilities\TypeTraits\ReturnType.h" />
+    <ClInclude Include="Utilities\TypeTraits\ParameterPack.h" />
+    <ClInclude Include="Utilities\TypeTraits\TypeTraits.h" />
     <ClInclude Include="Utilities\Utility.h" />
     <ClInclude Include="Utilities\Vector.h" />
     <ClInclude Include="Graphics\VertexTypes.h" />

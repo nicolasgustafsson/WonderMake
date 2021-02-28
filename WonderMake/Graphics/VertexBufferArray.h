@@ -4,6 +4,7 @@
 
 #include "Utilities/Utility.h"
 #include "OpenGLFacade.h"
+#include "Utilities/Container/Container.h"
 
 template<EVertexAttribute TAttribute>
 class SVertexAttributeContainer final
@@ -14,7 +15,7 @@ private:
 public:
 	void Resize(const u32 aSize)
 	{
-		myContainer.resize(aSize);
+		myContainer.Resize(aSize);
 		myVertexBuffer.ResizeBuffer(aSize);
 	}
 
@@ -29,7 +30,7 @@ public:
 		myVertexBuffer.Bind(myVertexAttributeIndex);
 		if (!myIsDirty)
 			return;
-
+		
 		myVertexBuffer.SetData(myContainer);
 		myIsDirty = false;
 	}
@@ -46,7 +47,7 @@ public:
 
 private:
 	VertexBuffer<ValueType> myVertexBuffer;
-	std::vector<ValueType> myContainer;
+	Container<ValueType, ContiguousElements, Resizable, Indexable> myContainer;
 	u32 myVertexAttributeIndex;
 	bool myIsDirty = true;
 };

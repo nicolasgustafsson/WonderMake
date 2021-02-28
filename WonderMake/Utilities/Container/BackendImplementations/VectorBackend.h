@@ -1,5 +1,6 @@
 #pragma once
 #include "Utilities/Container/ContainerBackend.h"
+#include "Typedefs.h"
 
 template <typename TObjectType>
 class VectorBackend

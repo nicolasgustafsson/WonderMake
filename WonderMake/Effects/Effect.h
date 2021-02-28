@@ -1,16 +1,18 @@
 #pragma once
-#include "EffectData.h"
+#include "EffectBlackboard.h"
 
 class EffectAsset : public Resource
 {
 
 };
 
-class Effect
+class Effect final
 {
 public:
-	virtual void Tick(const f32 aDeltaTime) {};
-	virtual bool IsAlive() const = 0;
+	void Tick(const f32 aDeltaTime) {};
+	bool IsAlive() const { return true; };
+
+	ResourceProxy<EffectAsset> myEffect;
 };
 
 //class EffectInstance

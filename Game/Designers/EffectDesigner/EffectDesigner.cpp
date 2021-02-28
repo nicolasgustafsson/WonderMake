@@ -63,7 +63,7 @@ std::unique_ptr<CharacterEffect> EffectDesigner::DecideNegativeEffect(const SEff
 
 EEffectType EffectDesigner::DecideEffectType()
 {
-	return Get<Randomizer>().SelectOne<EEffectType, EEffectType::Positive, EEffectType::Negative>();
+	return Get<Randomizer>().SelectOne(EEffectType::Positive, EEffectType::Negative);
 }
 
 f32 EffectDesigner::DecideEffectStrength()

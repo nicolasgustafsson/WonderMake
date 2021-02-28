@@ -45,7 +45,9 @@ BuffBlueprint& BuffDesigner::DesignBuff(SBuffRequirements aBuffRequirements)
 
 EBuffType BuffDesigner::DecideBuffType()
 {
-	return Get<Randomizer>().SelectOne<EBuffType, EBuffType::Debuff, EBuffType::Buff>();
+	return Get<Randomizer>().SelectOne(EBuffType::Debuff, EBuffType::Buff);
+
+	//return Get<Randomizer>().SelectOne<EBuffType, EBuffType::Debuff, EBuffType::Buff>();
 }
 
 f32 BuffDesigner::DecideBuffStrength()

@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "CharacterFunctionality.h"
 #include "Input/InputSystem.h"
-#include "Effects/GetHurtEffect.h"
 
 REGISTER_COMPONENT(SHealthComponent);
 REGISTER_FUNCTIONALITY(CharacterFunctionality);
@@ -38,10 +37,13 @@ void CharacterFunctionality::Damage(const i32 aDamage)
 	
 	Get<SHealthComponent>().Health -= aDamage;
 
-	Get<EffectFunctionality>().ApplyEffect<GetHurtEffect>();
-
 	if (IsDead())
 		{} // TODO: Kill character
+
+	//Play on take damage effect
+
+	//Get<EffectFunctionality>().ApplyEffect("GetHurtEffect");
+	//SpawnEffect("HurtEffect");
 }
 
 bool CharacterFunctionality::IsDead() const noexcept

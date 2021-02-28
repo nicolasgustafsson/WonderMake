@@ -5,7 +5,7 @@
 
 struct SEffectComponent : public SComponent
 {
-	Container<std::unique_ptr<Effect>> Effects;
+	Container<Effect> Effects;
 };
 
 class EffectFunctionality
@@ -15,10 +15,9 @@ class EffectFunctionality
 	>>
 {
 public:
-	template<typename TEffect>
-	void ApplyEffect()
+	void ApplyEffect(std::string_view AssetLink)
 	{
-		Get<SEffectComponent>().Effects.Add(std::make_unique<TEffect>());
+		Get<SEffectComponent>().Effects.Add(Effect());
 	}
 	void Tick();
 };

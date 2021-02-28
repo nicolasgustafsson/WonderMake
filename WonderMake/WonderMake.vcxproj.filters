@@ -82,7 +82,7 @@
     <ClCompile Include="Imgui\AssetBrowser.cpp" />
     <ClCompile Include="Effects\EffectFunctionality.cpp" />
     <ClCompile Include="Effects\Effect.cpp" />
-    <ClCompile Include="Effects\EffectData.cpp" />
+    <ClCompile Include="Effects\EffectBlackboard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -271,7 +271,7 @@
     <ClInclude Include="EngineTools\EasingTester.h" />
     <ClInclude Include="Effects\EffectFunctionality.h" />
     <ClInclude Include="Effects\Effect.h" />
-    <ClInclude Include="Effects\EffectData.h" />
+    <ClInclude Include="Effects\EffectBlackboard.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

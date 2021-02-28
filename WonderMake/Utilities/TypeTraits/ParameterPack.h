@@ -41,7 +41,7 @@ template <typename... Ts>
 using UniqueParameterPack = typename Unique<ParameterPack<>, Ts...>::type;
 
 template <typename ... TPack>
-auto UniqueParameterPackFun(ParameterPack<TPack...>)
+constexpr auto UniqueParameterPackFun(ParameterPack<TPack...>) noexcept
 {
 	return UniqueParameterPack<TPack...>();
 }

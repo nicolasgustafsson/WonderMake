@@ -51,7 +51,6 @@
     <ClCompile Include="UtilityFunctionalities\LineOfSightFunctionality.cpp" />
     <ClCompile Include="Rendering\Vision\VisionFunctionality.cpp" />
     <ClCompile Include="Rendering\Vision\VisionRenderObject.cpp" />
-    <ClCompile Include="Effects\GetHurtEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWorld.h" />
@@ -108,7 +107,6 @@
     <ClInclude Include="UtilityFunctionalities\LineOfSightFunctionality.h" />
     <ClInclude Include="Rendering\Vision\VisionFunctionality.h" />
     <ClInclude Include="Rendering\Vision\VisionRenderObject.h" />
-    <ClInclude Include="Effects\GetHurtEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Character\Buffs\BuffDesign.md" />

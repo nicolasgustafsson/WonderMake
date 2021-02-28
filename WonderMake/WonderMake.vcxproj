@@ -208,7 +208,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Effects\EffectData.cpp" />
+    <ClCompile Include="Effects\EffectBlackboard.cpp" />
     <ClCompile Include="Effects\Effect.cpp" />
     <ClCompile Include="Effects\EffectFunctionality.cpp" />
     <ClCompile Include="Imgui\AssetBrowser.cpp" />
@@ -295,7 +295,7 @@
     <ClCompile Include="Utilities\Platform.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Effects\EffectData.h" />
+    <ClInclude Include="Effects\EffectBlackboard.h" />
     <ClInclude Include="Effects\Effect.h" />
     <ClInclude Include="Effects\EffectFunctionality.h" />
     <ClInclude Include="EngineTools\EngineTools.h" />

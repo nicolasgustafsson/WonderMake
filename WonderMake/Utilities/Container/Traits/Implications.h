@@ -1,7 +1,7 @@
 #pragma once
 
 template<typename TExistingTraits, typename TFirst, typename TSecond>
-constexpr auto TwoWayImplication()
+constexpr auto TwoWayImplication() noexcept
 {
 	if constexpr (IsSubsetOf<TFirst, TExistingTraits>::value && IsSubsetOf<TSecond, TExistingTraits>::value)
 		return TExistingTraits();
@@ -14,7 +14,7 @@ constexpr auto TwoWayImplication()
 };
 
 template<typename TExistingTraits>
-constexpr auto ResolveImplications()
+constexpr auto ResolveImplications() noexcept
 {
 	auto base = TExistingTraits();
 

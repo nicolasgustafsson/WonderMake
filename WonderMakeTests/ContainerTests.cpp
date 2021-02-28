@@ -15,12 +15,12 @@ TEST_CASE("General Container Tests", "[Container]")
 		Container<int, Iterable, Indexable> intContainerColony;
 		Container<int, Iterable, Indexable, RandomAccess> intContainerVector;
 		Container<int, Iterable, ConstantInsertion, ConstantDeletion> intContainerLinkedList;
-	
-		REQUIRE(intContainerColony.HasBackend<ColonyBackend<int>>());
-		REQUIRE(intContainerVector.HasBackend<VectorBackend<int>>());
-		REQUIRE(intContainerLinkedList.HasBackend<LinkedListBackend<int>>());
-		REQUIRE(intContainerVector.HasTrait<Sortable>);
-		REQUIRE(!intContainerColony.HasTrait<Sortable>);
+
+		static_assert(intContainerColony.HasBackend<ColonyBackend<int>>());
+		static_assert(intContainerVector.HasBackend<VectorBackend<int>>());
+		static_assert(intContainerLinkedList.HasBackend<LinkedListBackend<int>>());
+		static_assert(intContainerVector.HasTrait<Sortable>);
+		static_assert(!intContainerColony.HasTrait<Sortable>);
 	}
 	
 	SECTION("You can add to a container")

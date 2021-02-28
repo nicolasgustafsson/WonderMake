@@ -18,7 +18,7 @@ void HitShapeSpawnerFunctionality::SpawnPunch(const f32 aLength, const f32 aDela
 	
 	SVector2f characterPosition = transform.GetPosition();
 	
-	EDirection direction = Get<Randomizer>().SelectOne<EDirection, EDirection::Left, EDirection::Right>();
+	const EDirection direction = Get<Randomizer>().SelectOne(EDirection::Left, EDirection::Right);
 
 	const f32 directionSign = direction == EDirection::Right ? 1.f : -1.f;
 

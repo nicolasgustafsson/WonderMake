@@ -228,7 +228,6 @@
     <ClInclude Include="Character\Buffs\StatChangeProperty\BuffStatChangeProperty.h" />
     <ClInclude Include="Character\Buffs\TimedTickBuffProperty\BuffTimedTickProperty.h" />
     <ClInclude Include="Designers\EffectDesigner\EffectDesigner.h" />
-    <ClInclude Include="Effects\GetHurtEffect.h" />
     <ClInclude Include="UtilityFunctionalities\LineOfSightFunctionality.h" />
     <ClInclude Include="Utility\Palette.h" />
     <ClInclude Include="Physics\Navmesh\NavmeshFunctionality.h" />
@@ -284,7 +283,6 @@
     <ClCompile Include="Character\Buffs\StatChangeProperty\BuffStatChangeProperty.cpp" />
     <ClCompile Include="Character\Buffs\TimedTickBuffProperty\BuffTimedTickProperty.cpp" />
     <ClCompile Include="Designers\EffectDesigner\EffectDesigner.cpp" />
-    <ClCompile Include="Effects\GetHurtEffect.cpp" />
     <ClCompile Include="UtilityFunctionalities\LineOfSightFunctionality.cpp" />
     <ClCompile Include="Physics\Navmesh\NavmeshFunctionality.cpp" />
     <ClCompile Include="Physics\Navmesh\NavmeshRenderObject.cpp" />

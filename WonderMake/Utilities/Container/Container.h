@@ -83,9 +83,9 @@ public:
 	using TraitsPack = typename ResolvedTypes::TraitsPack;
 
 	template<typename TBackend>
-	inline constexpr bool HasBackend() const
+	inline constexpr static bool HasBackend() noexcept
 	{
-		return typeid(TBackend) == typeid(_ContainerDetail::ResolvedBackend<TObjectType, TContainerBackends, TContainerTraits...>::Storage);
+		return std::is_same_v<TBackend, _ContainerDetail::ResolvedBackend<TObjectType, TContainerBackends, TContainerTraits...>::Storage>;
 	}
 
 	template <typename T>

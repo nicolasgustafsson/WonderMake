@@ -20,7 +20,6 @@ EnemyControllerFunctionality::EnemyControllerFunctionality()
 	Get<CollisionFunctionality>().AddSphereCollider(*this, SVector2f::Zero(), 10.f);
 
 	Get<SpriteRenderingFunctionality>().SetTexture(std::filesystem::current_path() / "Textures/enemy.png");
-	Get<SpriteRenderingFunctionality>().SetColor(Palette::EnemyColor);
 }
 
 void EnemyControllerFunctionality::SetMoveset(SMoveset&& aMoveset)

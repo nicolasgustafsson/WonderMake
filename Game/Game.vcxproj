@@ -232,6 +232,8 @@
     <ClInclude Include="Character\Buffs\TimedTickBuffProperty\BuffTimedTickProperty.h" />
     <ClInclude Include="Designers\EffectDesigner\EffectDesigner.h" />
     <ClInclude Include="Designers\NewDesigners\Attribute\Attribute.h" />
+    <ClInclude Include="Designers\NewDesigners\ColorDesigner\ColorDesigner.h" />
+    <ClInclude Include="Designers\NewDesigners\ColorDesigner\ColorOperations.h" />
     <ClInclude Include="Designers\NewDesigners\Designer\Designer.h" />
     <ClInclude Include="Designers\NewDesigners\EnemyDesigner\Attributes\EnemyAttribute.h" />
     <ClInclude Include="Designers\NewDesigners\EnemyDesigner\EnemyDesigner.h" />
@@ -306,6 +308,8 @@
     <ClCompile Include="Character\Buffs\TimedTickBuffProperty\BuffTimedTickProperty.cpp" />
     <ClCompile Include="Designers\EffectDesigner\EffectDesigner.cpp" />
     <ClCompile Include="Designers\NewDesigners\Attribute\Attribute.cpp" />
+    <ClCompile Include="Designers\NewDesigners\ColorDesigner\ColorDesigner.cpp" />
+    <ClCompile Include="Designers\NewDesigners\ColorDesigner\ColorOperations.cpp" />
     <ClCompile Include="Designers\NewDesigners\Designer\Designer.cpp" />
     <ClCompile Include="Designers\NewDesigners\EnemyDesigner\EnemyDesigner.cpp" />
     <ClCompile Include="Designers\NewDesigners\EnemyDesigner\Operations\EnemyOperations.cpp" />

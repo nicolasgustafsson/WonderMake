@@ -5,5 +5,6 @@
 EnemyDesigner::EnemyDesigner()
 {
 	AddOperation<GenerateEnemyMovesetOperation>();
+	AddOperation<GenerateEnemyColorOperation>();
 	AddOperation<CreateEnemyOperation>();
 }

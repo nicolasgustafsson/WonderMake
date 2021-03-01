@@ -11,9 +11,6 @@ public:
 	bool ContainsAttribute() const;
 
 	template<typename TAttribute>
-	void AddAttribute(const TAttribute& aAttribute);
-
-	template<typename TAttribute>
 	void AddAttribute(TAttribute&& aAttribute);
 
 	template<typename TAttribute>
@@ -32,15 +29,9 @@ bool Sketch::ContainsAttribute() const
 }
 
 template<typename TAttribute>
-void Sketch::AddAttribute(const TAttribute& aAttribute)
-{
-	myAttributes.push_back(std::make_shared<TAttribute>(aAttribute));
-}
-
-template<typename TAttribute>
 void Sketch::AddAttribute(TAttribute&& aAttribute)
 {
-	myAttributes.push_back(std::make_shared<TAttribute>(std::move(aAttribute)));
+	myAttributes.emplace_back(std::make_shared<std::decay_t<TAttribute>>(std::forward<TAttribute>(aAttribute)));
 }
 
 template<typename TAttribute>

@@ -6,10 +6,13 @@
 #include "../../Sketch/Sketch.h"
 
 #include "../../MovesetDesigner/MovesetDesigner.h"
+#include "../../ColorDesigner/ColorDesigner.h"
 
 #include "Enemy/EnemyControllerFunctionality.h"
 
 #include "Object/Object.h"
+
+#include "Utility/Palette.h"
 
 bool CreateEnemyOperation::IsEligible(const Sketch& aSketch) const
 {
@@ -21,10 +24,12 @@ void CreateEnemyOperation::Perform(Sketch& aSketch) const
 	SDesignedObjectAttribute<Object> enemy;
 
 	auto&& movesetAttribute = aSketch.GetAttribute<SGenericAttribute<SMoveset>>();
-
 	auto&& enemyController = SystemPtr<FunctionalitySystemDelegate<EnemyControllerFunctionality>>()->AddFunctionality(enemy.FinishedDesign);
+	auto&& colorAttribute = aSketch.GetAttribute<SGenericAttribute<SColor>>();
+	auto&& sprite = SystemPtr<FunctionalitySystemDelegate<SpriteRenderingFunctionality>>()->AddFunctionality(enemy.FinishedDesign);
 
 	enemyController.SetMoveset(std::move(movesetAttribute->Attribute));
+	sprite.SetColor(std::move(colorAttribute->Attribute));
 
 	aSketch.AddAttribute(SDesignedObjectAttribute<Object>(std::move(enemy)));
 }
@@ -45,4 +50,22 @@ void GenerateEnemyMovesetOperation::Perform(Sketch& aSketch) const
 	movesetAttribute.Attribute = std::move(moveset);
 
 	aSketch.AddAttribute(std::move(movesetAttribute));
+}
+
+bool GenerateEnemyColorOperation::IsEligible(const Sketch& /*aSketch*/) const
+{
+	return true;
+}
+
+void GenerateEnemyColorOperation::Perform(Sketch& aSketch) const
+{
+	ColorDesigner colorDesigner;
+	Sketch newSketch = aSketch;
+	SGenericAttribute<SColor> colorAttribute;
+
+	auto moveset = colorDesigner.Design(newSketch);
+
+	colorAttribute.Attribute = std::move(moveset);
+
+	aSketch.AddAttribute(std::move(colorAttribute));
 }

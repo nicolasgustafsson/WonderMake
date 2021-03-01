@@ -28,7 +28,7 @@ void DesignBezier::Perform(Sketch& aSketch) const
 
 	SDesignedObjectAttribute<BezierCurve> designedObject;
 	designedObject.FinishedDesign = curve;
-	aSketch.AddAttribute<SDesignedObjectAttribute<BezierCurve>>(designedObject);
+	aSketch.AddAttribute(designedObject);
 }
 
 bool AddMissingBezierAttributes::IsEligible(const Sketch& aSketch) const
@@ -44,7 +44,7 @@ void AddMissingBezierAttributes::Perform(Sketch& aSketch) const
 		SStartPositionAttribute start;
 		start.Position = SVector2f(rand->GetRandomNumber<f32>(), rand->GetRandomNumber<f32>()).GetNormalized() * 100.f;
 
-		aSketch.AddAttribute<SStartPositionAttribute>(std::move(start));
+		aSketch.AddAttribute(std::move(start));
 	}
 
 	if (!aSketch.ContainsAttribute<SEndPositionAttribute>())

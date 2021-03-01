@@ -17,3 +17,11 @@ public:
 
 	virtual void Perform(Sketch& aSketch) const override;
 };
+
+class GenerateEnemyColorOperation : public Operation
+{
+public:
+	virtual bool IsEligible(const Sketch& aSketch) const override;
+
+	virtual void Perform(Sketch& aSketch) const override;
+};

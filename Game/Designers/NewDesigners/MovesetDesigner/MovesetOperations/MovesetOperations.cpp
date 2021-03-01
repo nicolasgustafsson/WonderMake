@@ -27,7 +27,7 @@ void AddMoves::Perform(Sketch& aSketch) const
 		swingTypeAttribute.Type = static_cast<ESwingType>(SystemPtr<Randomizer>()->GetRandomNumber(0, 1));
 		SSwingSpeedAttribute swingSpeedAttribute;
 
-		newSketch.AddAttribute<SSwingTypeAttribute>(swingTypeAttribute);
+		newSketch.AddAttribute(swingTypeAttribute);
 
 		const bool isLastAttack = i == aSketch.GetAttribute<SAmountOfMoves>()->TotalMoves - 1;
 		SSwingThreatAttribute swingThreatAttribute;

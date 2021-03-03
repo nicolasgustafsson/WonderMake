@@ -10,7 +10,7 @@ REGISTER_SYSTEM(CollisionSystem);
 
 CollisionSystem::CollisionSystem() noexcept
 {
-	Get<ScheduleSystem>().ScheduleRepeating([this](){ Tick(); });
+	Get<ScheduleSystem>().ScheduleRepeating<>([this](){ Tick(); });
 }
 
 void CollisionSystem::Tick()

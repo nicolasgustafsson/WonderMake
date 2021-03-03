@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "GameWorld.h"
 
+#include "Job/Cargo.h"
+
 #include "System/System.h"
 
 #include "Functionalities/SpriteRenderingFunctionality.h"
@@ -12,6 +14,8 @@
 #include "Levels/LevelFunctionality.h"
 #include "Camera/CameraFunctionality.h"
 
+#include "Object/CreateObjectJob.h"
+
 #include "Scheduling/ScheduleSystem.h"
 
 REGISTER_SYSTEM(GameWorld);
@@ -19,38 +23,23 @@ REGISTER_SYSTEM(GameWorld);
 GameWorld::GameWorld()
 	: mySubscriber(BindHelper(&GameWorld::OnPlayerDeath, this)), myBackground(std::filesystem::current_path() / "Shaders/Fragment/Background.frag")
 {
-	Object player = SetupPlayer();
-
 	myBackground.SetRenderLayer("Background");
 	myBackground.SetRenderOrder(-9999);
 	myBackground.SetProperty("MainColor", SColor::RaisinBlack());
 	myBackground.SetProperty("DetailColor", SColor::Seashell());
 
-	LevelFunctionality& level = RestartLevel();
+	RestartLevel(true);
 
-	level.AddDenizen(std::move(player));
-
-	Get<ScheduleSystem>().ScheduleRepeating([this]() { Tick(); });
+	Get<ScheduleSystem>().ScheduleRepeating<>([this]() { Tick(); });
 }
 
-LevelFunctionality& GameWorld::RestartLevel()
+void GameWorld::RestartLevel(const bool aAddPlayer)
 {
-	Object newLevel;
-
-	LevelFunctionality& levelFunctionality = Get<FunctionalitySystemDelegate<LevelFunctionality>>().AddFunctionality(newLevel);
-	Get<LevelDesigner>().DesignLevel(levelFunctionality);
-
-	if (myCurrentLevelFunctionality)
-		myCurrentLevelFunctionality->TransferToNewLevel(levelFunctionality);
-
-	myPlayerTransform->SetPosition(SVector2f::Zero());
-	//myPlayerTransform->SetPosition(levelFunctionality.GetStartPosition());
-	
-	myLevel = std::move(newLevel);
-
-	myCurrentLevelFunctionality = &levelFunctionality;
-
-	return levelFunctionality;
+	RunJob<CreateObjectJob<LevelFunctionality>>()
+		.Then(WrapCargo(*this), [aAddPlayer](Cargo<GameWorld>&& aCargo, Object&& aObject, Cargo<LevelFunctionality>&& aFunctionalities)
+			{
+				aCargo.Get<GameWorld>().SetLevel(std::move(aObject), aFunctionalities.Get<LevelFunctionality>(), aAddPlayer);
+			});
 }
 
 void GameWorld::Tick()
@@ -60,22 +49,56 @@ void GameWorld::Tick()
 	myBackground.Render();
 }
 
-Object GameWorld::SetupPlayer()
+void GameWorld::SetupPlayer(LevelFunctionality& aLevelFunctionality)
 {
-	Object player;
-	myPlayerTransform = &Get<FunctionalitySystemDelegate<TransformFunctionality2D>>().AddFunctionality(player);
-	Get<FunctionalitySystemDelegate<PlayerControllerFunctionality>>().AddFunctionality(player);
-	Get<FunctionalitySystemDelegate<CameraFunctionality>>().AddFunctionality(player).SetTarget(myPlayerTransform);
+	RunJob<CreateObjectJob<TransformFunctionality2D, PlayerControllerFunctionality, CameraFunctionality>>()
+		.Then(WrapCargo(*this, aLevelFunctionality), [](auto&& aCargo, auto&& aObject, auto&& aFunctionalities)
+			{
+				auto&& gameWorld = aCargo.Get<GameWorld>();
+				auto&& levelFunctionality = aCargo.Get<LevelFunctionality>();
 
-	return player;
+				levelFunctionality.AddDenizen(std::move(aObject));
+				gameWorld.myPlayerTransform = &aFunctionalities.Get<TransformFunctionality2D>();
+
+				aFunctionalities.Get<CameraFunctionality>().SetTarget(gameWorld.myPlayerTransform);
+			});
+}
+
+void GameWorld::SetLevel(Object aLevel, LevelFunctionality& aLevelFunctionality, const bool aAddPlayer)
+{
+	Get<LevelDesigner>().DesignLevel(aLevelFunctionality);
+
+	if (myCurrentLevelFunctionality)
+		myCurrentLevelFunctionality->TransferToNewLevel(aLevelFunctionality);
+
+	if (myPlayerTransform)
+	{
+		myPlayerTransform->SetPosition(SVector2f::Zero());
+		//myPlayerTransform->SetPosition(levelFunctionality.GetStartPosition());
+	}
+
+	myLevel = std::move(aLevel);
+
+	myCurrentLevelFunctionality = &aLevelFunctionality;
+
+	if (!aAddPlayer)
+		return;
+
+	SetupPlayer(aLevelFunctionality);
 }
 
 void GameWorld::OnPlayerDeath(const SPlayerDiedMessage&)
 {
-	myDeathScreen.emplace();
+	RunJob<CreateObjectJob<SpriteRenderingFunctionality>>()
+		.Then(WrapCargo(*this), [](auto&& aCargo, auto&& aObject, auto&& aFunctionalities)
+			{
+				auto&& gameWorld = aCargo.Get<GameWorld>();
+				auto&& sprite = aFunctionalities.Get<SpriteRenderingFunctionality>();
 
-	auto& sprite = Get<FunctionalitySystemDelegate<SpriteRenderingFunctionality>>().AddFunctionality(*myDeathScreen);
-	sprite.SetTexture("Death screen");
+				sprite.SetTexture("Death screen");
+
+				gameWorld.myDeathScreen.emplace(std::move(aObject));
+			});
 }
 
 

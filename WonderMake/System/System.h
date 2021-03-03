@@ -22,6 +22,7 @@ class System
 {
 public:
 	using Super = System<TPolicySet>;
+	using PolicySet = TPolicySet;
 	using Dependencies = typename TPolicySet::template DependenciesRef;
 
 	inline static void InjectDependencies(Dependencies&& aDependencies)

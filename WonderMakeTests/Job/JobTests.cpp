@@ -3,10 +3,28 @@
 #include <catch2/catch.hpp>
 
 #include "Job/Job.h"
+#include "Job/JobSystem.h"
+
+#include "Scheduling/ScheduleSystem.h"
+
+struct JobDependencies
+{
+	JobDependencies()
+		: myScheduleSystem([](Closure) {}, [](Closure) {})
+		, myJobSystem([this]() { JobSystem::InjectDependencies(std::tie(myScheduleSystem)); return JobSystem(mySystemContainer); }())
+	{
+		mySystemContainer.AddSystem<ScheduleSystem>([this]() -> auto& { return myScheduleSystem; });
+		mySystemContainer.AddSystem<JobSystem>([this]() -> auto& { return myJobSystem; });
+	};
+
+	SystemContainer mySystemContainer;
+	ScheduleSystem myScheduleSystem;
+
+	JobSystem myJobSystem;
+};
 
 struct JobData
 {
-	u32 myCallCountOnStarted = 0;
 	u32 myCallCountOnCompleted = 0;
 	EJobResult myLastResult = EJobResult::Failed;
 };
@@ -29,10 +47,6 @@ public:
 	}
 
 protected:
-	void OnStarted() override
-	{
-		++myData.myCallCountOnStarted;
-	}
 	void OnCompleted(const EJobResult aResult) override
 	{
 		++myData.myCallCountOnCompleted;
@@ -63,10 +77,6 @@ public:
 	}
 
 protected:
-	void OnStarted() override
-	{
-		++Get<JobData>().myCallCountOnStarted;
-	}
 	void OnCompleted(const EJobResult aResult) override
 	{
 		++Get<JobData>().myCallCountOnCompleted;
@@ -76,36 +86,22 @@ protected:
 
 TEST_CASE("Job status updates properly", "[Job]")
 {
+	JobDependencies dependencies;
 	JobData data;
 	EJobResult lastResultBeforeDestruction = EJobResult::Failed;
+	JobMock::Promise promise;
 
 	{
+		JobMock::InjectDependencies(promise, std::tie(dependencies.myJobSystem));
+
 		JobMock jobMock(data);
 
-		CHECK(jobMock.GetStatus() == EJobStatus::NotStarted);
-		CHECK(!jobMock.IsCompleted());
-		CHECK(!jobMock.IsSuccessful());
-		CHECK(!jobMock.IsCanceled());
-		CHECK(data.myCallCountOnStarted == 0);
-		CHECK(data.myCallCountOnCompleted == 0);
-
-		jobMock.Start();
-
-		CHECK(jobMock.GetStatus() == EJobStatus::InProgress);
-		CHECK(!jobMock.IsCompleted());
-		CHECK(!jobMock.IsSuccessful());
-		CHECK(!jobMock.IsCanceled());
-		CHECK(data.myCallCountOnStarted == 1);
 		CHECK(data.myCallCountOnCompleted == 0);
 
 		SECTION("Job is canceled")
 		{
 			jobMock.Cancel();
 
-			CHECK(jobMock.GetStatus() == EJobStatus::Canceled);
-			CHECK(jobMock.IsCompleted());
-			CHECK(!jobMock.IsSuccessful());
-			CHECK(jobMock.IsCanceled());
 			CHECK(data.myLastResult == EJobResult::Canceled);
 		}
 
@@ -113,10 +109,6 @@ TEST_CASE("Job status updates properly", "[Job]")
 		{
 			jobMock.Success();
 
-			CHECK(jobMock.GetStatus() == EJobStatus::Succeeded);
-			CHECK(jobMock.IsCompleted());
-			CHECK(jobMock.IsSuccessful());
-			CHECK(!jobMock.IsCanceled());
 			CHECK(data.myLastResult == EJobResult::Succeeded);
 		}
 
@@ -124,60 +116,38 @@ TEST_CASE("Job status updates properly", "[Job]")
 		{
 			jobMock.Fail();
 
-			CHECK(jobMock.GetStatus() == EJobStatus::Failed);
-			CHECK(jobMock.IsCompleted());
-			CHECK(!jobMock.IsSuccessful());
-			CHECK(!jobMock.IsCanceled());
 			CHECK(data.myLastResult == EJobResult::Failed);
 		}
 
-		CHECK(data.myCallCountOnStarted == 1);
 		CHECK(data.myCallCountOnCompleted == 1);
 
 		lastResultBeforeDestruction = data.myLastResult;
 	}
 
-	CHECK(data.myCallCountOnStarted == 1);
 	CHECK(data.myCallCountOnCompleted == 1);
 	CHECK(lastResultBeforeDestruction == data.myLastResult);
 }
 
 TEST_CASE("Job injection function properly", "[Job]")
 {
+	JobDependencies dependencies;
 	JobData data;
 	EJobResult lastResultBeforeDestruction = EJobResult::Failed;
+	JobInjectionMock::Promise promise;
 
 	{
-		JobInjectionMock::InjectDependencies(std::tie(data));
+		JobInjectionMock::InjectDependencies(promise, std::tie(dependencies.myJobSystem, data));
 
 		JobInjectionMock jobMock;
 
 		REQUIRE(&jobMock.GetData() == &data);
 
-		CHECK(jobMock.GetStatus() == EJobStatus::NotStarted);
-		CHECK(!jobMock.IsCompleted());
-		CHECK(!jobMock.IsSuccessful());
-		CHECK(!jobMock.IsCanceled());
-		CHECK(data.myCallCountOnStarted == 0);
-		CHECK(data.myCallCountOnCompleted == 0);
-
-		jobMock.Start();
-
-		CHECK(jobMock.GetStatus() == EJobStatus::InProgress);
-		CHECK(!jobMock.IsCompleted());
-		CHECK(!jobMock.IsSuccessful());
-		CHECK(!jobMock.IsCanceled());
-		CHECK(data.myCallCountOnStarted == 1);
 		CHECK(data.myCallCountOnCompleted == 0);
 
 		SECTION("Job is canceled")
 		{
 			jobMock.Cancel();
 
-			CHECK(jobMock.GetStatus() == EJobStatus::Canceled);
-			CHECK(jobMock.IsCompleted());
-			CHECK(!jobMock.IsSuccessful());
-			CHECK(jobMock.IsCanceled());
 			CHECK(data.myLastResult == EJobResult::Canceled);
 		}
 
@@ -185,10 +155,6 @@ TEST_CASE("Job injection function properly", "[Job]")
 		{
 			jobMock.Success();
 
-			CHECK(jobMock.GetStatus() == EJobStatus::Succeeded);
-			CHECK(jobMock.IsCompleted());
-			CHECK(jobMock.IsSuccessful());
-			CHECK(!jobMock.IsCanceled());
 			CHECK(data.myLastResult == EJobResult::Succeeded);
 		}
 
@@ -196,20 +162,14 @@ TEST_CASE("Job injection function properly", "[Job]")
 		{
 			jobMock.Fail();
 
-			CHECK(jobMock.GetStatus() == EJobStatus::Failed);
-			CHECK(jobMock.IsCompleted());
-			CHECK(!jobMock.IsSuccessful());
-			CHECK(!jobMock.IsCanceled());
 			CHECK(data.myLastResult == EJobResult::Failed);
 		}
 
-		CHECK(data.myCallCountOnStarted == 1);
 		CHECK(data.myCallCountOnCompleted == 1);
 
 		lastResultBeforeDestruction = data.myLastResult;
 	}
 
-	CHECK(data.myCallCountOnStarted == 1);
 	CHECK(data.myCallCountOnCompleted == 1);
 	CHECK(lastResultBeforeDestruction == data.myLastResult);
 }

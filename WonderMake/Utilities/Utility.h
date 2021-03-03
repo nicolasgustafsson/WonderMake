@@ -1,4 +1,5 @@
 #pragma once
+#include <optional>
 #include <tuple>
 
 namespace Utility
@@ -38,10 +39,29 @@ namespace Utility
 		static const std::size_t Index = 1 + TupleIndex<T, std::tuple<Types...>>::Index;
 	};
 
-	template<typename TCallable, typename... TArgs>
+	template<typename TCallable, typename... TArgs> requires std::is_invocable_v<TCallable, TArgs...>
 	static void Invoke(const TCallable& aCallable, TArgs&&... aArgs)
 	{
 		if (aCallable)
 			(void)aCallable(std::forward<TArgs>(aArgs)...);
+	}
+	template<typename TCallable, typename... TArgs> requires std::is_invocable_v<TCallable, TArgs...>
+	static void Invoke(TCallable& aCallable, TArgs&&... aArgs)
+	{
+		if (aCallable)
+			(void)aCallable(std::forward<TArgs>(aArgs)...);
+	}
+
+	template<typename TCallable, typename... TArgs> requires std::is_invocable_v<TCallable, TArgs...>
+	static void Invoke(const std::optional<TCallable>& aCallable, TArgs&&... aArgs)
+	{
+		if (aCallable)
+			(void)(*aCallable)(std::forward<TArgs>(aArgs)...);
+	}
+	template<typename TCallable, typename... TArgs> requires std::is_invocable_v<TCallable, TArgs...>
+	static void Invoke(std::optional<TCallable>& aCallable, TArgs&&... aArgs)
+	{
+		if (aCallable)
+			(void)(*aCallable)(std::forward<TArgs>(aArgs)...);
 	}
 }

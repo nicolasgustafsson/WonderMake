@@ -79,6 +79,8 @@
     <ClCompile Include="Scheduling\ScheduleSystem.cpp" />
     <ClCompile Include="EngineTools\EngineTools.cpp" />
     <ClCompile Include="EngineTools\EasingTester.cpp" />
+    <ClCompile Include="Job\JobSystem.cpp" />
+    <ClCompile Include="Job\JobBase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -101,7 +103,6 @@
     <ClInclude Include="Utilities\Debugging\Debugged.h" />
     <ClInclude Include="Graphics\EngineUniformBuffer.h" />
     <ClInclude Include="Imgui\DockSpace.h" />
-    <ClInclude Include="Job\Job.h" />
     <ClInclude Include="Logging\FileLogger.h" />
     <ClInclude Include="Logging\ImGuiLogger.h" />
     <ClInclude Include="Logging\ConsoleLogger.h" />
@@ -265,6 +266,17 @@
     <ClInclude Include="Utilities\Easing\EasingFunctions.h" />
     <ClInclude Include="EngineTools\EngineTools.h" />
     <ClInclude Include="EngineTools\EasingTester.h" />
+    <ClInclude Include="Job\JobSystem.h" />
+    <ClInclude Include="Object\CreateObjectJob.h" />
+    <ClInclude Include="Job\JobBase.h" />
+    <ClInclude Include="Job\Job.h" />
+    <ClInclude Include="Job\JobFuture.h" />
+    <ClInclude Include="Job\JobPromise.h" />
+    <ClInclude Include="Job\Cargo.h" />
+    <ClInclude Include="Utilities\UniqueFunction.h" />
+    <ClInclude Include="Utilities\Alias.h" />
+    <ClInclude Include="Job\JobOutput.h" />
+    <ClInclude Include="Utilities\UniqueValue.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

@@ -7,10 +7,6 @@
 
 #include "Program/ImguiWrapper.h"
 
-Routine::Routine()
-	: mySubscriber(BindHelper(&Routine::OnTask, this))
-{}
-
 void Routine::Run()
 {
 	RouteMessages();
@@ -43,9 +39,4 @@ void Routine::RouteMessages()
 
 		router.CommitChanges();
 	}
-}
-
-void Routine::OnTask(const Task& aTask) const
-{
-	aTask.Run();
 }

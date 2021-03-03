@@ -51,7 +51,7 @@ void Window::Update()
 
 	if (glfw.ShouldWindowClose(myGlfwWindow))
 	{
-		WmDispatchTask([]() {quick_exit(0);});
+		quick_exit(0);
 	}
 }
 

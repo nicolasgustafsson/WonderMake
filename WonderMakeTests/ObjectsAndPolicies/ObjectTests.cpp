@@ -64,8 +64,9 @@ public:
 TEST_CASE("Objects can be created and have dependencies added and removed", "[Object]")
 {
 	ScheduleSystem::InjectDependencies(std::tie());
+	const auto mockScheduleProc = [](auto&&) {};
 
-	ScheduleSystem scheduleSystem(nullptr, nullptr);
+	ScheduleSystem scheduleSystem(mockScheduleProc, mockScheduleProc);
 
 	ComponentSystem<SCatComponent>::InjectDependencies(std::tie());
 	ComponentSystem<SBagComponent>::InjectDependencies(std::tie());
@@ -115,8 +116,9 @@ TEST_CASE("Objects can be created and have dependencies added and removed", "[Ob
 TEST_CASE("Objects keep track of when a dependency no longer have any references", "[Object]")
 {
 	ScheduleSystem::InjectDependencies(std::tie());
+	const auto mockScheduleProc = [](auto&&) {};
 
-	ScheduleSystem scheduleSystem(nullptr, nullptr);
+	ScheduleSystem scheduleSystem(mockScheduleProc, mockScheduleProc);
 
 	ComponentSystem<SCatComponent>::InjectDependencies(std::tie());
 	ComponentSystem<SBagComponent>::InjectDependencies(std::tie());
@@ -179,8 +181,9 @@ TEST_CASE("Objects keep track of when a dependency no longer have any references
 TEST_CASE("Objects can be visited", "[Object]")
 {
 	ScheduleSystem::InjectDependencies(std::tie());
+	const auto mockScheduleProc = [](auto&&) {};
 
-	ScheduleSystem scheduleSystem(nullptr, nullptr);
+	ScheduleSystem scheduleSystem(mockScheduleProc, mockScheduleProc);
 
 	ComponentSystem<SCatComponent>::InjectDependencies(std::tie());
 	ComponentSystem<SBagComponent>::InjectDependencies(std::tie());

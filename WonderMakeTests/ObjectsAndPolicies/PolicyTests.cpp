@@ -8,11 +8,111 @@
 #include "Policies/Scheduler.h"
 #include "Policies/SystemId.h"
 
+class SystemA;
+class SystemB;
+class SystemC;
+class SystemD;
+class SystemE;
+
+using SetA = Policy::Set<>;
+using SetB = Policy::Set<
+	PAdd<SystemA, PRead>>;
+using SetC = Policy::Set<
+	PAdd<SystemA, PWrite>>;
+using SetD = Policy::Set<
+	PAdd<SystemA, PWrite>,
+	PAdd<SystemB, PRead>,
+	PAdd<SystemC, PWrite>>;
+
+void StaticTest_Policy_HasDependencyAndPolicy()
+{
+	static_assert(!SetA::HasDependency_v<SystemA>);
+	static_assert(!SetA::HasDependency_v<SystemB>);
+	static_assert(!SetA::HasDependency_v<SystemC>);
+	static_assert(!SetA::HasDependency_v<SystemD>);
+
+	static_assert(SetB::HasDependency_v<SystemA>);
+	static_assert(!SetB::HasDependency_v<SystemB>);
+	static_assert(!SetB::HasDependency_v<SystemC>);
+	static_assert(!SetB::HasDependency_v<SystemD>);
+
+	static_assert(SetC::HasDependency_v<SystemA>);
+	static_assert(!SetC::HasDependency_v<SystemC>);
+	static_assert(!SetC::HasDependency_v<SystemC>);
+	static_assert(!SetC::HasDependency_v<SystemD>);
+
+	static_assert(SetD::HasDependency_v<SystemA>);
+	static_assert(SetD::HasDependency_v<SystemB>);
+	static_assert(SetD::HasDependency_v<SystemC>);
+	static_assert(!SetD::HasDependency_v<SystemD>);
+
+	static_assert(!SetA::HasPolicy_v<SystemA, PRead>);
+	static_assert(!SetA::HasPolicy_v<SystemA, PWrite>);
+
+	static_assert(SetB::HasPolicy_v<SystemA, PRead>);
+	static_assert(!SetB::HasPolicy_v<SystemA, PWrite>);
+
+	static_assert(!SetC::HasPolicy_v<SystemA, PRead>);
+	static_assert(SetC::HasPolicy_v<SystemA, PWrite>);
+
+	static_assert(SetD::HasPolicy_v<SystemA, PWrite>);
+	static_assert(SetD::HasPolicy_v<SystemB, PRead>);
+	static_assert(SetD::HasPolicy_v<SystemC, PWrite>);
+}
+
+void StaticTest_Policy_Concat()
+{
+	using ConcatSetA = Policy::Concat<SetA>;
+	using ConcatSetB = Policy::Concat<SetB, SetC>;
+	using ConcatSetC = Policy::Concat<SetB, SetC, SetD>;
+	using ConcatSetD = Policy::Concat<SetA, SetB, SetC, SetD>;
+	using ConcatSetE = Policy::Concat<SetB, SetA, SetC, SetD>;
+
+	static_assert(!ConcatSetA::HasDependency_v<SystemA>);
+	static_assert(!ConcatSetA::HasDependency_v<SystemB>);
+	static_assert(!ConcatSetA::HasDependency_v<SystemC>);
+	static_assert(!ConcatSetA::HasDependency_v<SystemD>);
+	static_assert(!ConcatSetA::HasPolicy_v<SystemA,	PWrite>);
+	static_assert(!ConcatSetA::HasPolicy_v<SystemA,	PRead>);
+	static_assert(!ConcatSetA::HasPolicy_v<SystemB,	PWrite>);
+	static_assert(!ConcatSetA::HasPolicy_v<SystemB,	PRead>);
+	static_assert(!ConcatSetA::HasPolicy_v<SystemC,	PWrite>);
+	static_assert(!ConcatSetA::HasPolicy_v<SystemC,	PRead>);
+	static_assert(!ConcatSetA::HasPolicy_v<SystemD,	PWrite>);
+	static_assert(!ConcatSetA::HasPolicy_v<SystemD,	PRead>);
+	
+	static_assert(ConcatSetB::HasDependency_v<SystemA>);
+	static_assert(!ConcatSetB::HasDependency_v<SystemB>);
+	static_assert(!ConcatSetB::HasDependency_v<SystemC>);
+	static_assert(!ConcatSetB::HasDependency_v<SystemD>);
+	static_assert(ConcatSetB::HasPolicy_v<SystemA,	PWrite>);
+	static_assert(ConcatSetB::HasPolicy_v<SystemA,	PRead>);
+	static_assert(!ConcatSetB::HasPolicy_v<SystemB,	PWrite>);
+	static_assert(!ConcatSetB::HasPolicy_v<SystemB,	PRead>);
+	static_assert(!ConcatSetB::HasPolicy_v<SystemC,	PWrite>);
+	static_assert(!ConcatSetB::HasPolicy_v<SystemC,	PRead>);
+	static_assert(!ConcatSetB::HasPolicy_v<SystemD,	PWrite>);
+	static_assert(!ConcatSetB::HasPolicy_v<SystemD,	PRead>);
+	
+	static_assert(ConcatSetC::HasDependency_v<SystemA>);
+	static_assert(ConcatSetC::HasDependency_v<SystemB>);
+	static_assert(ConcatSetC::HasDependency_v<SystemC>);
+	static_assert(!ConcatSetC::HasDependency_v<SystemD>);
+	static_assert(ConcatSetC::HasPolicy_v<SystemA,	PWrite>);
+	static_assert(ConcatSetC::HasPolicy_v<SystemA,	PRead>);
+	static_assert(!ConcatSetC::HasPolicy_v<SystemB,	PWrite>);
+	static_assert(ConcatSetC::HasPolicy_v<SystemB,	PRead>);
+	static_assert(ConcatSetC::HasPolicy_v<SystemC,	PWrite>);
+	static_assert(!ConcatSetC::HasPolicy_v<SystemC,	PRead>);
+	static_assert(!ConcatSetC::HasPolicy_v<SystemD,	PWrite>);
+	static_assert(!ConcatSetC::HasPolicy_v<SystemD,	PRead>);
+
+	static_assert(std::is_same_v<ConcatSetC, ConcatSetD>);
+	static_assert(std::is_same_v<ConcatSetC, ConcatSetE>);
+}
+
 TEST_CASE("SystemId can be created and copied", "[SystemId]")
 {
-	class SystemA;
-	class SystemB;
-
 	SECTION("SystemId can be created and is unique per class")
 	{
 		const SystemId idSystemA1 = SystemId::Create<SystemA>();
@@ -43,11 +143,6 @@ TEST_CASE("SystemId can be created and copied", "[SystemId]")
 
 TEST_CASE("Policies can be created and can be tested for conflicts", "[Policy]")
 {
-	class SystemA;
-	class SystemB;
-	class SystemC;
-	class SystemD;
-
 	SECTION("Policy can be created")
 	{
 		const SystemId idSystemA = SystemId::Create<SystemA>();
@@ -59,53 +154,10 @@ TEST_CASE("Policies can be created and can be tested for conflicts", "[Policy]")
 
 	SECTION("Policy::Set can converted to a list")
 	{
-		using setA = Policy::Set<>;
-		using setB = Policy::Set<
-			PAdd<SystemA, PRead>>;
-		using setC = Policy::Set<
-			PAdd<SystemA, PWrite>>;
-		using setD = Policy::Set<
-			PAdd<SystemA, PWrite>,
-			PAdd<SystemB, PRead>,
-			PAdd<SystemC, PWrite>>;
-
-		static_assert(!setA::HasDependency_v<SystemA>,	"setA should not depend on SystemA.");
-		static_assert(!setA::HasDependency_v<SystemB>,	"setA should not depend on SystemB.");
-		static_assert(!setA::HasDependency_v<SystemC>,	"setA should not depend on SystemC.");
-		static_assert(!setA::HasDependency_v<SystemD>,	"setA should not depend on SystemD.");
-
-		static_assert(setB::HasDependency_v<SystemA>,	"setB should depend on SystemA.");
-		static_assert(!setB::HasDependency_v<SystemB>,	"setB should not depend on SystemB.");
-		static_assert(!setB::HasDependency_v<SystemC>,	"setB should not depend on SystemC.");
-		static_assert(!setB::HasDependency_v<SystemD>,	"setB should not depend on SystemD.");
-		
-		static_assert(setC::HasDependency_v<SystemA>,	"setC should depend on SystemA.");
-		static_assert(!setC::HasDependency_v<SystemC>,	"setC should not depend on SystemB.");
-		static_assert(!setC::HasDependency_v<SystemC>, "setC should not depend on SystemC.");
-		static_assert(!setC::HasDependency_v<SystemD>, "setC should not depend on SystemD.");
-
-		static_assert(setD::HasDependency_v<SystemA>,	"setD should depend on SystemA.");
-		static_assert(setD::HasDependency_v<SystemB>,	"setD should depend on SystemB.");
-		static_assert(setD::HasDependency_v<SystemC>,	"setD should depend on SystemC.");
-		static_assert(!setD::HasDependency_v<SystemD>,	"setD should not depend on SystemD.");
-
-		static_assert(!setA::HasPolicy_v<SystemA, PRead>,	"setA should not have read permisson for SystemA.");
-		static_assert(!setA::HasPolicy_v<SystemA, PWrite>,	"setA should not have write permisson for SystemA.");
-
-		static_assert(setB::HasPolicy_v<SystemA, PRead>,	"setB should have read permisson for SystemA.");
-		static_assert(!setB::HasPolicy_v<SystemA, PWrite>,	"setB should not have write permisson for SystemA.");
-
-		static_assert(!setC::HasPolicy_v<SystemA, PRead>,	"setC should not have read permisson for SystemA."); 
-		static_assert(setC::HasPolicy_v<SystemA, PWrite>,	"setC should have write permisson for SystemA.");
-
-		static_assert(setD::HasPolicy_v<SystemA, PWrite>,	"setD should have write permisson for SystemA.");
-		static_assert(setD::HasPolicy_v<SystemB, PRead>,	"setD should have read permisson for SystemB.");
-		static_assert(setD::HasPolicy_v<SystemC, PWrite>,	"setD should have write permisson for SystemC.");
-
-		const auto listA = setA::GetPolicies();
-		const auto listB = setB::GetPolicies();
-		const auto listC = setC::GetPolicies();
-		const auto listD = setD::GetPolicies();
+		const auto listA = SetA::GetPolicies();
+		const auto listB = SetB::GetPolicies();
+		const auto listC = SetC::GetPolicies();
+		const auto listD = SetD::GetPolicies();
 
 		CHECK(listA.size() == 0);
 
@@ -163,12 +215,6 @@ TEST_CASE("Policies can be created and can be tested for conflicts", "[Policy]")
 
 TEST_CASE("Scheduler detects circular dependencies", "[Scheduler]")
 {
-	class SystemA;
-	class SystemB;
-	class SystemC;
-	class SystemD;
-	class SystemE;
-
 	const std::vector<Policy> policyListA = { Policy::Create<SystemB>(PRead), Policy::Create<SystemC>(PRead) };
 	const std::vector<Policy> policyListB = {};
 	const std::vector<Policy> policyListC = { Policy::Create<SystemD>(PRead) };

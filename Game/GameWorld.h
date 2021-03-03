@@ -6,36 +6,22 @@
 #include "Designers/BuffDesigner/BuffDesigner.h"
 #include "Graphics/ScreenPassRenderObject.h"
 
-template<typename TFunctionality>
-class FunctionalitySystem;
-
 struct SPlayerDiedMessage;
 
 class LevelDesigner;
-
 class LevelFunctionality;
-class PlayerControllerFunctionality;
-class DefaultMovementFunctionality;
-class SpriteRenderingFunctionality;
-class CameraFunctionality;
 class ScheduleSystem;
 
 class GameWorld
 	: public System<
 		Policy::Set<
 			PAdd<LevelDesigner, PWrite>,
-			PAdd<FunctionalitySystemDelegate<LevelFunctionality>, PWrite>,
-			PAdd<FunctionalitySystemDelegate<TransformFunctionality2D>, PWrite>,
-			PAdd<FunctionalitySystemDelegate<PlayerControllerFunctionality>, PWrite>,
-			PAdd<FunctionalitySystemDelegate<DefaultMovementFunctionality>, PWrite>,
-			PAdd<FunctionalitySystemDelegate<SpriteRenderingFunctionality>, PWrite>,
-			PAdd<FunctionalitySystemDelegate<CameraFunctionality>, PWrite>,
 			PAdd<ScheduleSystem, PWrite>>>
 {
 public:
 	GameWorld();
 
-	LevelFunctionality& RestartLevel();
+	void RestartLevel(const bool aAddPlayer = false);
 
 	Object myCameraController;
 	Object myLevel;
@@ -48,7 +34,9 @@ private:
 
 	ScreenPassRenderObject myBackground;
 
-	Object SetupPlayer();
+	void SetupPlayer(LevelFunctionality& aLevelFunctionality);
+
+	void SetLevel(Object aLevel, LevelFunctionality& aLevelFunctionality, const bool aAddPlayer);
 
 	void OnPlayerDeath(const SPlayerDiedMessage&);
 	MessageSubscriber mySubscriber;

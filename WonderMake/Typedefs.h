@@ -1,6 +1,5 @@
 #pragma once
 #include <chrono>
-#include <functional>
 
 using f32 = float;
 using f64 = double;
@@ -20,7 +19,8 @@ inline constexpr u8 operator "" _u8(unsigned long long aNumber) noexcept
 	return static_cast<u8>(aNumber);
 }
 
-using Closure = std::function<void()>;
+template <typename... T>
+constexpr bool AlwaysFalse = false;
 
 namespace WmChrono
 {

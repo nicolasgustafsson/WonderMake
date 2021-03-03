@@ -7,6 +7,7 @@
 
 struct SComponent;
 class _BaseFunctionality;
+class SystemBase;
 
 class Object final
 	: public NonMovable
@@ -87,17 +88,12 @@ template<typename TType>
 inline void Object::Remove(const bool aExplicitlyRemoved)
 {
 	if constexpr (std::is_base_of<SComponent, TType>::value)
-	{
 		Remove<TType>(myComponents, aExplicitlyRemoved);
-	}
 	else if constexpr (std::is_base_of<_BaseFunctionality, TType>::value)
-	{
 		Remove<TType>(myFunctionalities, aExplicitlyRemoved);
-	}
+	else if constexpr (std::is_base_of<SystemBase, TType>::value) {}
 	else
-	{
-		static_assert("Type must inherit from SComponent or _BaseFunctionality!");
-	}
+		static_assert(false, "Type must inherit from SComponent or _BaseFunctionality!");
 }
 
 template<typename TVisitFunc>

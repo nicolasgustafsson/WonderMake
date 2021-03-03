@@ -2,8 +2,8 @@
 
 #include "Utilities/RestrictTypes.h"
 #include "Utilities/Singleton.h"
+#include "Utilities/UniqueFunction.h"
 
-#include <functional>
 #include <mutex>
 #include <unordered_map>
 #include <vector>
@@ -19,7 +19,7 @@ public:
 	void RouteDispatchable(const Dispatchable& aDispatchedMessage);
 	void CommitChanges();
 
-	void SubscribeToType(const size_t aTypeHash, const MessageSubscriber& aSubscriber, std::function<void(const Dispatchable&)>&& aCallback);
+	void SubscribeToType(const size_t aTypeHash, const MessageSubscriber& aSubscriber, UniqueFunction<void(const Dispatchable&)> aCallback);
 	void UnsubscribeToType(const size_t aTypeHash, const MessageSubscriber& aSubscriber);
 
 private:
@@ -31,7 +31,7 @@ private:
 
 	struct SSubscriptionOrder
 	{
-		std::function<void(const Dispatchable&)> myCallback;
+		UniqueFunction<void(const Dispatchable&)> myCallback;
 		SSubscription mySubscription;
 	};
 

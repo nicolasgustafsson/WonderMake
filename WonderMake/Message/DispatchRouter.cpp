@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "DispatchRouter.h"
 
-#include "MessageTypes.h"
+#include "Message/MessageTypes.h"
 
 void DispatchRouter::RouteDispatchable(const Dispatchable& aDispatchedMessage)
 {
@@ -11,7 +11,7 @@ void DispatchRouter::RouteDispatchable(const Dispatchable& aDispatchedMessage)
 		return;
 	}
 
-	for (const auto& subscriberIt : it->second)
+	for (auto& subscriberIt : it->second)
 	{
 		subscriberIt.myCallback(aDispatchedMessage);
 	}
@@ -50,14 +50,14 @@ void DispatchRouter::CommitChanges()
 	myNewUnsubscriptions.clear();
 }
 
-void DispatchRouter::SubscribeToType(const size_t aTypeHash, const MessageSubscriber& aSubscriber, std::function<void(const Dispatchable&)>&& aCallback)
+void DispatchRouter::SubscribeToType(const size_t aTypeHash, const MessageSubscriber& aSubscriber, UniqueFunction<void(const Dispatchable&)> aCallback)
 {
 	std::lock_guard<decltype(myLock)> lock(myLock);
-	myNewSubscriptions.emplace_back(std::move<SSubscriptionOrder>({ aCallback, { &aSubscriber, aTypeHash } }));
+	myNewSubscriptions.emplace_back(SSubscriptionOrder{ std::move(aCallback), { &aSubscriber, aTypeHash } });
 }
 
 void DispatchRouter::UnsubscribeToType(const size_t aTypeHash, const MessageSubscriber& aSubscriber)
 {
 	std::lock_guard<decltype(myLock)> lock(myLock);
-	myNewUnsubscriptions.emplace_back(std::move<SSubscription>({ &aSubscriber, aTypeHash }));
+	myNewUnsubscriptions.emplace_back(SSubscription{ &aSubscriber, aTypeHash });
 }

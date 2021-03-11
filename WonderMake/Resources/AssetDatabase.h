@@ -54,7 +54,7 @@ public:
 		SweepAssetDirectories();
 	}
 
-	Asset<TAssetType>* GetAsset(std::string_view aAssetLink)
+	AssetOld<TAssetType>* GetAsset(std::string_view aAssetLink)
 	{
 		auto assetId = myAssetLinks[std::string(aAssetLink)].AssetId;
 
@@ -71,7 +71,7 @@ public:
 
 	ResourceProxy<TAssetType> GetResource(std::string_view aAssetLink)
 	{
-		Asset<TAssetType>* asset = GetAsset(aAssetLink);
+		AssetOld<TAssetType>* asset = GetAsset(aAssetLink);
 
 		if (!asset)
 			return {};
@@ -113,14 +113,16 @@ public:
 				return !std::filesystem::exists(aAsset.second.myMetadata.Filepath);
 			});
 
-		for (auto&& file : std::filesystem::recursive_directory_iterator(std::filesystem::current_path() / myRootPath))
+		if (std::filesystem::exists(std::filesystem::current_path() / myRootPath))
 		{
-			Id assetId = myIdCounter.NextId();
-			auto relativePath = std::filesystem::proximate(file.path(), std::filesystem::current_path());
-			Asset<TAssetType> asset{ relativePath, assetId };
-			asset.LoadAsset();
-			myAssets.Add(assetId, asset);
-
+			for (auto&& file : std::filesystem::recursive_directory_iterator(std::filesystem::current_path() / myRootPath))
+			{
+				Id assetId = myIdCounter.NextId();
+				auto relativePath = std::filesystem::proximate(file.path(), std::filesystem::current_path());
+				AssetOld<TAssetType> asset{ relativePath, assetId };
+				asset.LoadAsset();
+				myAssets.Add(assetId, asset);
+			}
 		}
 
 		Save();
@@ -205,7 +207,7 @@ private:
 		}
 	}
 	
-	Container<Asset<TAssetType>, Key<Id>, Iterable, StableElements> myAssets;
+	Container<AssetOld<TAssetType>, Key<Id>, Iterable, StableElements> myAssets;
 
 	Container<SAssetLink<TAssetType>, Key<std::string>, Iterable> myAssetLinks;
 	

@@ -5,7 +5,7 @@
 
 struct SEffectComponent : public SComponent
 {
-	Container<Effect> Effects;
+	Container<EffectInstance> Effects;
 };
 
 class EffectFunctionality
@@ -15,10 +15,16 @@ class EffectFunctionality
 	>>
 {
 public:
-	void ApplyEffect(std::string_view AssetLink)
+	void ApplyEffect(EffectBlueprint&& aBlueprint)
 	{
-		Get<SEffectComponent>().Effects.Add(Effect());
+		Get<SEffectComponent>().Effects.Add(EffectInstance(std::move(aBlueprint)));
 	}
+
+	void ApplyEffect(std::string_view aBlueprintName)
+	{
+		SystemPtr<AssetDatabase<EffectBlueprint>>()->GetAsset(aBlueprintName);
+	}
+
 	void Tick();
 };
 

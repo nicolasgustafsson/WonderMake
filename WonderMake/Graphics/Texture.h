@@ -1,9 +1,11 @@
 #pragma once
 
 #include "Resources/Resource.h"
+#include "Assets/Asset.h"
 
 class Texture
 	: public Resource
+	, public Asset
 	, private NonCopyable
 {
 public:
@@ -22,3 +24,85 @@ private:
 	i32 myWidth;
 	i32 myHeight;
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+namespace Test2
+{
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

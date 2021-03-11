@@ -10,6 +10,7 @@
 #include "System/SystemPtr.h"
 #include "OpenGLFacade.h"
 #include "Graphics/RenderHandle.h"
+#include "Assets/AssetRef.h"
 
 //everything needed to create a renderobject
 struct SRenderObjectInfo
@@ -18,6 +19,7 @@ struct SRenderObjectInfo
 	std::filesystem::path GeometryShaderPath = "";
 	std::filesystem::path FragmentShaderPath;
 	std::string_view TextureAssetLink;
+	//std::optional<AssetRef<Texture>> TextureAssetLink;
 	u32 VertexCount = 1;
 	u32 GeometryType = GL_POINTS;
 };

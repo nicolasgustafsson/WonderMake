@@ -2,7 +2,7 @@
 
 #include "Physics/Navmesh/Navmesh.h"
 #include "Physics/Navmesh/NavmeshRenderObject.h"
-#include "LineListRenderObject.h"
+#include "Graphics/LineListRenderObject.h"
 
 struct SNavmeshComponent : public SComponent
 {

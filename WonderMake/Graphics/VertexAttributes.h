@@ -1,5 +1,6 @@
 #pragma once
-#include "../Utilities/Vector.h"
+#include "Utilities/Vector.h"
+#include "Utilities/Color.h"
 
 enum class EVertexAttribute
 {

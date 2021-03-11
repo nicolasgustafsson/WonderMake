@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include "Utilities/Container/ContainerBackend.h"
 #include "Typedefs.h"
+#include <optional>
 
 template <typename TKeyType, typename TObjectType>
 class UnorderedMapBackend
@@ -31,6 +32,16 @@ public:
 	[[nodiscard]] bool KeyExists(const TKeyType& aKey) const
 	{
 		return this->myBackend.find(aKey) != cend();
+	}
+
+	[[nodiscard]] std::optional<TObjectType&> SafeGet(const TKeyType& aKey)
+	{
+		auto&& it = (*(this->myBackend.find(aKey)));
+
+		if (it == this->myBackend.end())
+			return std::nullopt;
+
+		return it;
 	}
 
 	[[nodiscard]] TObjectType& Get(const TKeyType& aKey)

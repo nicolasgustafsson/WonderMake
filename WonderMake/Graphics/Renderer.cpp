@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include "Renderer.h"
 
-#include "VertexAttributes.h"
+import "VertexAttributes.h";
 #include "EngineUniformBuffer.h"
 #include "Camera/Camera.h"
 #include <GLFW/glfw3.h>

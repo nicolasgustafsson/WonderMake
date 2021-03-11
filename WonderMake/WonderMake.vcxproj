@@ -117,7 +117,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>false</EnableModules>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <TreatWarningAsError>false</TreatWarningAsError>
       <EnablePREfast>false</EnablePREfast>
       <CompileAs>CompileAsCpp</CompileAs>
@@ -126,6 +126,7 @@
       <SupportJustMyCode>false</SupportJustMyCode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>5105</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -138,8 +139,8 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <EnableModules>false</EnableModules>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <EnableModules>true</EnableModules>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <TreatWarningAsError>false</TreatWarningAsError>
       <EnablePREfast>false</EnablePREfast>
       <CompileAs>CompileAsCpp</CompileAs>
@@ -150,6 +151,9 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ExceptionHandling>false</ExceptionHandling>
       <MinimalRebuild>false</MinimalRebuild>
+      <AdditionalOptions>/stdIfcDir "$(VC_IFCPath)" %(AdditionalOptions)</AdditionalOptions>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
+      <DisableSpecificWarnings>5105</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -165,7 +169,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>false</EnableModules>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <TreatWarningAsError>false</TreatWarningAsError>
       <EnablePREfast>false</EnablePREfast>
       <CompileAs>CompileAsCpp</CompileAs>
@@ -173,6 +177,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>5105</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -189,8 +194,8 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <EnableModules>false</EnableModules>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <EnableModules>true</EnableModules>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <TreatWarningAsError>false</TreatWarningAsError>
       <EnablePREfast>false</EnablePREfast>
       <CompileAs>CompileAsCpp</CompileAs>
@@ -200,6 +205,8 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
       <ExceptionHandling>false</ExceptionHandling>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
+      <DisableSpecificWarnings>5105</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -208,6 +215,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Assets\AssetRef.cpp" />
+    <ClCompile Include="Assets\Asset.cpp" />
+    <ClCompile Include="Assets\AssetManager.cpp" />
     <ClCompile Include="Effects\EffectBlackboard.cpp" />
     <ClCompile Include="Effects\Effect.cpp" />
     <ClCompile Include="Effects\EffectFunctionality.cpp" />
@@ -237,7 +247,7 @@
     <ClCompile Include="Graphics\RenderCommandProcessor.cpp" />
     <ClCompile Include="Graphics\RenderNodeGraph\RenderNodeGraph.cpp" />
     <ClCompile Include="Graphics\RenderSettingsManager.cpp" />
-    <ClCompile Include="LineListRenderObject.cpp" />
+    <ClCompile Include="Graphics\LineListRenderObject.cpp" />
     <ClCompile Include="EngineTools\EasingTester.cpp" />
     <ClCompile Include="Utilities\Math.cpp" />
     <ClCompile Include="NodeGraph\NodeGraph.cpp" />
@@ -295,6 +305,9 @@
     <ClCompile Include="Utilities\Platform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Assets\AssetRef.h" />
+    <ClInclude Include="Assets\Asset.h" />
+    <ClInclude Include="Assets\AssetManager.h" />
     <ClInclude Include="Effects\EffectBlackboard.h" />
     <ClInclude Include="Effects\Effect.h" />
     <ClInclude Include="Effects\EffectFunctionality.h" />
@@ -335,7 +348,7 @@
     <ClInclude Include="Graphics\RenderCommandProcessor.h" />
     <ClInclude Include="Graphics\RenderNodeGraph\RenderNodeGraph.h" />
     <ClInclude Include="Graphics\RenderSettingsManager.h" />
-    <ClInclude Include="LineListRenderObject.h" />
+    <ClInclude Include="Graphics\LineListRenderObject.h" />
     <ClInclude Include="Utilities\Easing\EasingFunctions.h" />
     <ClInclude Include="Utilities\Json\JsonExtensions.h" />
     <ClInclude Include="Utilities\Line.h" />

@@ -9,21 +9,21 @@ struct SAssetMetadata
 };
 
 template <typename TAssetType>
-class Asset
+class AssetOld
 {
 public:
-	Asset(std::filesystem::path aPath, Id aAssetId)
+	AssetOld(std::filesystem::path aPath, Id aAssetId)
 	{
 		myMetadata.Filepath = std::move(aPath);
 		myMetadata.AssetId = aAssetId;
 	}
 
-	bool operator==(const Asset<TAssetType>& aOther) const
+	bool operator==(const AssetOld<TAssetType>& aOther) const
 	{
 		return aOther.myMetadata.Filepath == myMetadata.Filepath;
 	}
 
-	bool operator!=(const Asset<TAssetType>& aOther) const
+	bool operator!=(const AssetOld<TAssetType>& aOther) const
 	{
 		return !(aOther == *this);
 	}

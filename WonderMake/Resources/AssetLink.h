@@ -8,7 +8,7 @@
 template<class TAssetType>
 struct SAssetLink
 {
-	Asset<TAssetType>* CachedAsset;
+	AssetOld<TAssetType>* CachedAsset;
 	std::optional<Id> AssetId;
 	std::optional<Id> SavedAssetId;
 	bool IsSelectingAsset = false;

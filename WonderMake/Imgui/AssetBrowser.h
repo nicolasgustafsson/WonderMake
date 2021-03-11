@@ -54,6 +54,8 @@ namespace WmGui
 		std::string windowName = "Pick an asset for <" + std::string(aAssetLinkName) + ">";
 		ImGui::Begin(windowName.c_str());
 
+		
+
 		aAssetLink.AssetId = WmGui::InlineAssetBrowser(aBegin, aEnd, aAssetLink.AssetId);
 
 		bool pickedNewAsset = false;

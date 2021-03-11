@@ -36,6 +36,9 @@ void CharacterStatsFunctionality::SetBaseValue(const ECharacterStat aStat, const
 	auto& stat = GetStat(aStat);
 	stat.BaseValue = aBaseValue;
 
+	//template argument deduced from constructing args
+	std::vector bla{ 10, 12 };
+
 	RefreshStats();
 }
 

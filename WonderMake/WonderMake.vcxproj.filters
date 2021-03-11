@@ -73,7 +73,6 @@
     <ClCompile Include="Graphics\RenderHandle.cpp" />
     <ClCompile Include="Camera\CameraManager.cpp" />
     <ClCompile Include="Graphics\RenderSettingsManager.cpp" />
-    <ClCompile Include="LineListRenderObject.cpp" />
     <ClCompile Include="Utilities\Id.cpp" />
     <ClCompile Include="Threads\TaskManager.cpp" />
     <ClCompile Include="Scheduling\ScheduleSystem.cpp" />
@@ -83,6 +82,10 @@
     <ClCompile Include="Effects\EffectFunctionality.cpp" />
     <ClCompile Include="Effects\Effect.cpp" />
     <ClCompile Include="Effects\EffectBlackboard.cpp" />
+    <ClCompile Include="Graphics\LineListRenderObject.cpp" />
+    <ClCompile Include="Assets\AssetManager.cpp" />
+    <ClCompile Include="Assets\Asset.cpp" />
+    <ClCompile Include="Assets\AssetRef.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -119,7 +122,6 @@
     <ClInclude Include="Functionalities\FunctionalitySystem.h" />
     <ClInclude Include="Object\Object.h" />
     <ClInclude Include="Program\Engine.h" />
-    <ClInclude Include="Graphics\VertexAttributes.h" />
     <ClInclude Include="Message\DispatchableBuffer.h" />
     <ClInclude Include="Message\Messages.h" />
     <ClInclude Include="Graphics\RenderTarget.h" />
@@ -243,7 +245,6 @@
     <ClInclude Include="Camera\CameraManager.h" />
     <ClInclude Include="Graphics\RenderSettingsManager.h" />
     <ClInclude Include="Utilities\Line.h" />
-    <ClInclude Include="LineListRenderObject.h" />
     <ClInclude Include="Resources\AssetDatabase.h" />
     <ClInclude Include="Resources\Asset.h" />
     <ClInclude Include="Utilities\Json\JsonExtensions.h" />
@@ -272,6 +273,11 @@
     <ClInclude Include="Effects\EffectFunctionality.h" />
     <ClInclude Include="Effects\Effect.h" />
     <ClInclude Include="Effects\EffectBlackboard.h" />
+    <ClInclude Include="Graphics\LineListRenderObject.h" />
+    <ClInclude Include="Assets\AssetManager.h" />
+    <ClInclude Include="Assets\Asset.h" />
+    <ClInclude Include="Assets\AssetRef.h" />
+    <ClInclude Include="Graphics\VertexAttributes.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

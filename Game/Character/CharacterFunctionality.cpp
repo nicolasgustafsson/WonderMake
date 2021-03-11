@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CharacterFunctionality.h"
 #include "Input/InputSystem.h"
+#include "Effects/Effect.h"
 
 REGISTER_COMPONENT(SHealthComponent);
 REGISTER_FUNCTIONALITY(CharacterFunctionality);
@@ -42,7 +43,12 @@ void CharacterFunctionality::Damage(const i32 aDamage)
 
 	//Play on take damage effect
 
-	//Get<EffectFunctionality>().ApplyEffect("GetHurtEffect");
+	EffectBlueprint blueprint;
+
+	blueprint.AddModule<ScreenShakeModule>();
+	blueprint.myBlackboard.GetAllEntryKeysForType<f32>();
+
+	Get<EffectFunctionality>().ApplyEffect("DamagedEffect");
 	//SpawnEffect("HurtEffect");
 }
 

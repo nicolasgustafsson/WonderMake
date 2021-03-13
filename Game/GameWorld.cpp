@@ -75,7 +75,7 @@ void GameWorld::OnPlayerDeath(const SPlayerDiedMessage&)
 	myDeathScreen.emplace();
 
 	auto& sprite = Get<FunctionalitySystemDelegate<SpriteRenderingFunctionality>>().AddFunctionality(*myDeathScreen);
-	sprite.SetTexture("Death screen");
+	sprite.SetTexture("Textures/deadScreen.png");
 }
 
 

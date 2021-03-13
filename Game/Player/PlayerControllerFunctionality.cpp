@@ -22,7 +22,7 @@ PlayerControllerFunctionality::PlayerControllerFunctionality()
 
 	Get<SLevelDenizenComponent>().PersistentOnLevelChange = true;
 
-	Get<SpriteRenderingFunctionality>().SetTexture("Player");
+	Get<SpriteRenderingFunctionality>().SetTexture(std::filesystem::current_path() / "Textures/player.png");
 	
 	Get<SpriteRenderingFunctionality>().SetColor(Palette::PlayerColor);
 }
@@ -84,7 +84,7 @@ void PlayerControllerFunctionality::UpdateMovement()
 
 void PlayerControllerFunctionality::OnDeath()
 {
-	Get<SpriteRenderingFunctionality>().SetTexture("Textures/deadPlayer.png");
+	Get<SpriteRenderingFunctionality>().SetTexture(std::filesystem::current_path() / "Textures/deadPlayer.png");
 
 	WmDispatchMessage(SPlayerDiedMessage());
 }

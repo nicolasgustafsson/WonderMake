@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Resources/AssetDatabase.h"
 #include "Graphics/Texture.h"
+#include "Assets/AssetManager.h"
 
 REGISTER_FUNCTIONALITY(SpriteRenderingFunctionality);
 
@@ -19,18 +20,36 @@ void SpriteRenderingFunctionality::Tick()
 	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Rotation>(0, transform.GetRotation());
 	spriteComponent.RenderObject->Render();
 }
-void SpriteRenderingFunctionality::SetTexture(const std::string_view aAssetLink)
+
+//void SpriteRenderingFunctionality::SetTexture(const std::string_view aAssetLink)
+//{
+//	SSpriteComponent& spriteComponent = Get<SSpriteComponent>();
+//	if (spriteComponent.RenderObject)
+//		spriteComponent.RenderObject->SetTexture(SystemPtr<AssetDatabase<Texture>>()->GetResource(aAssetLink));
+//	else
+//		spriteComponent.RenderObject.emplace(aAssetLink);
+//}
+
+void SpriteRenderingFunctionality::SetTexture(const std::filesystem::path& aAssetPath)
 {
 	SSpriteComponent& spriteComponent = Get<SSpriteComponent>();
+
+	std::optional<AssetRef<Texture>> texture = SystemPtr<AssetManager<Texture>>()->GetAsset(aAssetPath);
+
+	if (!texture)
+		return;
+
 	if (spriteComponent.RenderObject)
-		spriteComponent.RenderObject->SetTexture(SystemPtr<AssetDatabase<Texture>>()->GetResource(aAssetLink));
+		spriteComponent.RenderObject->SetTexture(*texture);
 	else
-		spriteComponent.RenderObject.emplace(aAssetLink);
+		spriteComponent.RenderObject.emplace(*texture);
 }
 
 void SpriteRenderingFunctionality::SetScale(const SVector2f aScale)
 {
-	Get<SSpriteComponent>().RenderObject->SetAttribute<EVertexAttribute::Scale>(0, aScale);
+	SSpriteComponent& spriteComponent = Get<SSpriteComponent>();
+	if (spriteComponent.RenderObject)
+		spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Scale>(0, aScale);
 }
 
 void SpriteRenderingFunctionality::SetRotation(const f32 aRotation)

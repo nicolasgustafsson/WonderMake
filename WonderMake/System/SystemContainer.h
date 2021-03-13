@@ -49,6 +49,16 @@ static void _RegisterSystem()
 		});
 }
 
+template<typename TSystem>
+class _SystemRegisterer
+{
+public:
+	_SystemRegisterer()
+	{
+		_RegisterSystem<TSystem>();
+	}
+};
+
 #define _REGISTER_SYSTEM_IMPL(aSystem, aSystemName) WM_AUTO_REGISTER(_RegisterSystem<aSystem>, aSystemName)
 
 #define REGISTER_SYSTEM(aSystem) _REGISTER_SYSTEM_IMPL(aSystem, aSystem)

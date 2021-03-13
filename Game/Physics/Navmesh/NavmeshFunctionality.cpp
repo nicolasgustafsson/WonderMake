@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "NavmeshFunctionality.h"
 #include "Utility/Palette.h"
+#include "Utilities/FixedString.h"
 
 REGISTER_COMPONENT(SNavmeshComponent);
 REGISTER_FUNCTIONALITY(NavmeshFunctionality);
@@ -10,6 +11,8 @@ void NavmeshFunctionality::SetNavmesh(Navmesh aNavmesh)
 	auto polygon = aNavmesh.GetPolygon();
 	std::vector<SVector2f> boundsVec;
 	auto&& point = polygon.FirstPoint();
+
+	SFixedString("Hello??");
 
 	do 
 	{

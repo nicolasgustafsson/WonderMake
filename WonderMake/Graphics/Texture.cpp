@@ -4,6 +4,7 @@
 #include <std\stb_image.h>
 #include "OpenGLFacade.h"
 #include "Resources/AssetDatabase.h"
+#include "Assets/AssetManager.h"
 
 REGISTER_RESOURCE(Texture);
 
@@ -17,7 +18,7 @@ Texture::Texture(const std::filesystem::path& aPath)
 
 	myTextureHandle = openGL->GenerateTexture();
 
-	openGL->BindTexture(GL_TEXTURE_2D, myTextureHandle);
+	openGL->BindTexture(GL_TEXTURE_2D, *myTextureHandle);
 
 	openGL->SetTexureParameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	openGL->SetTexureParameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
@@ -32,15 +33,21 @@ Texture::Texture(const std::filesystem::path& aPath)
 
 Texture::~Texture()
 {
-	SystemPtr<OpenGLFacade> openGL;
-	openGL->DeleteTexture(myTextureHandle);
+	if (myTextureHandle)
+	{
+		SystemPtr<OpenGLFacade> openGL;
+		openGL->DeleteTexture(*myTextureHandle);
+	}
 }
 
 void Texture::Bind(const u32 aTextureSlot)
 {
+	if (!myTextureHandle)
+		return;
+
 	SystemPtr<OpenGLFacade> openGL;
 
 	openGL->SetActiveTextureSlot(aTextureSlot);
 
-	openGL->BindTexture(GL_TEXTURE_2D, myTextureHandle);
+	openGL->BindTexture(GL_TEXTURE_2D, *myTextureHandle);
 }

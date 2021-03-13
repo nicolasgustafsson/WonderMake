@@ -69,7 +69,7 @@ void LevelDesigner::DesignPortal(const SSpace& aSpace)
 	const SVector2f position = ((aSpace.BottomRight - aSpace.TopLeft) / 2.f) + aSpace.TopLeft;
 
 	transform.SetPosition(position);
-	sprite.SetTexture("Portal");
+	sprite.SetTexture(std::filesystem::current_path() / "Textures/portal.png");
 
 	//[Nicos]: TODO REMOVE - After we have chains and stuff
 	Get<FunctionalitySystemDelegate<CollisionFunctionality>>().AddFunctionality(portal).Tick();
@@ -87,26 +87,27 @@ void LevelDesigner::DesignBuffTotem(const SSpace& aSpace)
 {
 	Object& totem = myCurrentLevel->AddDenizen();
 
-	auto& buffGiver = Get<FunctionalitySystemDelegate<BuffGiverFunctionality>>().AddFunctionality(totem);
-	auto& transform = Get<FunctionalitySystemDelegate<TransformFunctionality2D>>().AddFunctionality(totem);
-	auto& sprite = Get<FunctionalitySystemDelegate<SpriteRenderingFunctionality>>().AddFunctionality(totem);
-
-	const f32 scale = Get<Randomizer>().GetRandomNumber(25.f, 150.f) / 100.f;
-
-	//[Nicos]: Should be able to let buff designer handle this and inspect buff afterwards to see if it is a buff or debuff
-	const EBuffType buffType = Get<Randomizer>().GetRandomBool() ? EBuffType::Debuff : EBuffType::Buff;
-
-	SBuffRequirements requirements;
-	requirements.Type = buffType;
-	requirements.Intensity = 1.f;
-	buffGiver.Initialize(Get<BuffDesigner>().DesignBuff(requirements), scale * 100.f);
-
-	const SVector2f position{ Get<Randomizer>().GetRandomNumber<f32>(aSpace.TopLeft.X, aSpace.BottomRight.X), Get<Randomizer>().GetRandomNumber<f32>(aSpace.BottomRight.Y, aSpace.TopLeft.Y) };
-
-	transform.SetPosition(position);
-	sprite.SetTexture(buffType == EBuffType::Buff ? "Buff totem" : "Debuff totem");
-	sprite.SetScale({ scale, scale });
-	Get<FunctionalitySystemDelegate<CollisionFunctionality>>().AddFunctionality(totem).Tick();
+	//auto& buffGiver = Get<FunctionalitySystemDelegate<BuffGiverFunctionality>>().AddFunctionality(totem);
+	//auto& transform = Get<FunctionalitySystemDelegate<TransformFunctionality2D>>().AddFunctionality(totem);
+	//auto& sprite = Get<FunctionalitySystemDelegate<SpriteRenderingFunctionality>>().AddFunctionality(totem);
+	//
+	//const f32 scale = Get<Randomizer>().GetRandomNumber(25.f, 150.f) / 100.f;
+	//
+	////[Nicos]: Should be able to let buff designer handle this and inspect buff afterwards to see if it is a buff or debuff
+	//const EBuffType buffType = Get<Randomizer>().GetRandomBool() ? EBuffType::Debuff : EBuffType::Buff;
+	//
+	//SBuffRequirements requirements;
+	//requirements.Type = buffType;
+	//requirements.Intensity = 1.f;
+	//buffGiver.Initialize(Get<BuffDesigner>().DesignBuff(requirements), scale * 100.f);
+	//
+	//const SVector2f position{ Get<Randomizer>().GetRandomNumber<f32>(aSpace.TopLeft.X, aSpace.BottomRight.X), Get<Randomizer>().GetRandomNumber<f32>(aSpace.BottomRight.Y, aSpace.TopLeft.Y) };
+	//
+	//transform.SetPosition(position);
+	//
+	//sprite.SetTexture(std::filesystem::current_path() / "Textures" / (buffType == EBuffType::Buff ? "totemGreen.png" : "totemRed.png"));
+	//sprite.SetScale({ scale, scale });
+	//Get<FunctionalitySystemDelegate<CollisionFunctionality>>().AddFunctionality(totem).Tick();
 }
 
 void LevelDesigner::DesignStartPoint(const SSpace& aSpace) 

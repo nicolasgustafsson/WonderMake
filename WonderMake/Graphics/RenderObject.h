@@ -18,8 +18,7 @@ struct SRenderObjectInfo
 	std::filesystem::path VertexShaderPath;
 	std::filesystem::path GeometryShaderPath = "";
 	std::filesystem::path FragmentShaderPath;
-	std::string_view TextureAssetLink;
-	//std::optional<AssetRef<Texture>> TextureAssetLink;
+	std::optional<AssetRef<Texture>> Texture;
 	u32 VertexCount = 1;
 	u32 GeometryType = GL_POINTS;
 };
@@ -78,8 +77,7 @@ class RenderObject : public BaseRenderObject
 public:
 	RenderObject(const SRenderObjectInfo& aRenderObjectInfo);
 
-	void SetTexture(ResourceProxy<Texture> aResource);
-	void SetTexture(const std::string_view aAssetLinkName);
+	void SetTexture(AssetRef<Texture> aTexture);
 
 	void BindTextures();
 
@@ -96,7 +94,7 @@ protected:
 
 	ShaderProgram myShaderProgram;
 	VertexBufferArray<TAttributes...> myVertexBufferArray;
-	Container<ResourceProxy<Texture>, Indexable> myTextures;
+	Container<AssetRef<Texture>, Indexable> myTextures;
 	std::optional<u32> myRenderCount;
 	u32 myGeometryType;
 	u32 myVertexCount;
@@ -126,17 +124,10 @@ void RenderObject<TAttributes...>::RenderInternal()
 }
 
 template<EVertexAttribute... TAttributes>
-void RenderObject<TAttributes...>::SetTexture(ResourceProxy<Texture> aResourceProxy)
+void RenderObject<TAttributes...>::SetTexture(AssetRef<Texture> aTexture)
 {
 	myTextures.Clear();
-	if (aResourceProxy.IsValid())
-		myTextures.Add(aResourceProxy);
-}
-
-template<EVertexAttribute... TAttributes>
-void RenderObject<TAttributes...>::SetTexture(const std::string_view aAssetLinkName)
-{
-	SetTexture(SystemPtr<AssetDatabase<Texture>>()->GetResource(aAssetLinkName));
+	myTextures.Add(aTexture);
 }
 
 
@@ -166,8 +157,7 @@ void RenderObject<TAttributes...>::BindTextures()
 {
 	for (auto[i, texture] : Utility::Enumerate(myTextures))
 	{
-		if (texture)
-			texture->Bind(static_cast<u32>(i));
+		texture->Bind(static_cast<u32>(i));
 	}
 }
 
@@ -178,7 +168,7 @@ RenderObject<TAttributes...>::RenderObject(const SRenderObjectInfo& aRenderObjec
 	, myGeometryType(aRenderObjectInfo.GeometryType)
 {
 	myVertexCount = aRenderObjectInfo.VertexCount;
-	if (!aRenderObjectInfo.TextureAssetLink.empty())
-		myTextures.Add(SystemPtr<AssetDatabase<Texture>>()->GetResource(aRenderObjectInfo.TextureAssetLink));
+	if (aRenderObjectInfo.Texture)
+		myTextures.Add(*aRenderObjectInfo.Texture);
 }
 

@@ -8,7 +8,7 @@ NavmeshRenderObject::NavmeshRenderObject(Navmesh& aNavmesh, u32 aTriangleCount, 
 	{ std::filesystem::current_path() / "Shaders/Vertex/Navmesh.vert"
 	, ""
 	,	std::filesystem::current_path() / "Shaders/Fragment/Floor.frag"
-	,	""
+	,	{}
 	,	aTriangleCount * 3
 	, GL_TRIANGLES })
 {

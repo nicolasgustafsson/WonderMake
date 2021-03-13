@@ -1,5 +1,6 @@
 #pragma once
 #include "Utilities/Color.h"
+
 namespace Palette
 {
 	constexpr static SColor PrimaryColor = SColor::Amaranth();

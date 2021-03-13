@@ -53,6 +53,7 @@ public:
 
 	void Tick(const f32 aDeltaTime) 
 	{
+		aDeltaTime;
 		myEffect.Tick();
 	};
 

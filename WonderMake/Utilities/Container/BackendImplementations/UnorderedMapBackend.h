@@ -17,9 +17,19 @@ public:
 	using ElementType = typename Backend::ElementType;
 
 	template<typename TObjectTypeFunc> requires std::is_same_v<TObjectType, std::decay_t<TObjectTypeFunc>> || std::is_constructible_v<TObjectType, TObjectTypeFunc>
-	void Add(const TKeyType aKey, TObjectTypeFunc aObjectType)
+	TObjectType& Add(const TKeyType aKey, TObjectTypeFunc aObjectType)
 	{
-		this->myBackend.insert(std::make_pair(aKey, std::forward<TObjectTypeFunc>(aObjectType)));
+		auto iterator = (this->myBackend.insert(std::move(std::make_pair(aKey, std::forward<TObjectTypeFunc>(aObjectType))))).first;
+
+		return (*iterator).second;
+	}
+
+	template<typename ... TArgs> 
+	TObjectType& Emplace(const TKeyType aKey, TArgs... aArgs)
+	{
+		auto iterator = (this->myBackend.emplace(aKey, aArgs...)).first;
+
+		return (*iterator).second;
 	}
 
 	template<typename TPredicate>
@@ -34,14 +44,14 @@ public:
 		return this->myBackend.find(aKey) != cend();
 	}
 
-	[[nodiscard]] std::optional<TObjectType&> SafeGet(const TKeyType& aKey)
+	[[nodiscard]] TObjectType* SafeGet(const TKeyType& aKey)
 	{
-		auto&& it = (*(this->myBackend.find(aKey)));
+		auto&& it = (this->myBackend.find(aKey));
 
-		if (it == this->myBackend.end())
-			return std::nullopt;
+		if (it == this->myBackend.cend())
+			return nullptr;
 
-		return it;
+		return &((*it).second);
 	}
 
 	[[nodiscard]] TObjectType& Get(const TKeyType& aKey)

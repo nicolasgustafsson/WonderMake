@@ -1,4 +1,4 @@
-#define _ITERATOR_DEBUG_LEVEL 0
+//#define _ITERATOR_DEBUG_LEVEL 0
 
 #include <catch2/catch.hpp>
 #include "Utilities/Container/Container.h"

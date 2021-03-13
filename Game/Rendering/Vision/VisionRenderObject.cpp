@@ -6,7 +6,7 @@ VisionRenderObject::VisionRenderObject()
 		{ std::filesystem::current_path() / "Shaders/Vertex/Line.vert"
 		,	"" //geometry shader
 		,	std::filesystem::current_path() / "Shaders/Fragment/Vision.frag"
-		,	"" //texture
+		,	{} //texture
 		,	100
 		,	GL_TRIANGLES })
 {

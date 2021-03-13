@@ -86,6 +86,7 @@
     <ClCompile Include="Assets\AssetManager.cpp" />
     <ClCompile Include="Assets\Asset.cpp" />
     <ClCompile Include="Assets\AssetRef.cpp" />
+    <ClCompile Include="Utilities\StaticRegistry.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -155,7 +156,6 @@
     <ClInclude Include="Utilities\Result.h" />
     <ClInclude Include="Program\Window.h" />
     <ClInclude Include="Utilities\Utility.h" />
-    <ClInclude Include="Utilities\Vector.h" />
     <ClInclude Include="Graphics\VertexTypes.h" />
     <ClInclude Include="Graphics\VertexBufferArray.h" />
     <ClInclude Include="Graphics\RenderTarget.h" />
@@ -278,6 +278,9 @@
     <ClInclude Include="Assets\Asset.h" />
     <ClInclude Include="Assets\AssetRef.h" />
     <ClInclude Include="Graphics\VertexAttributes.h" />
+    <ClInclude Include="Utilities\Vector.h" />
+    <ClInclude Include="Utilities\FixedString.h" />
+    <ClInclude Include="Utilities\StaticRegistry.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

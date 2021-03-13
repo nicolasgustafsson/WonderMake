@@ -5,21 +5,21 @@ class AssetRef
 {
 public:
 	AssetRef(TAsset& aAsset)
-		: myAsset(aAsset)
+		: myAsset(&aAsset)
 	{
 	}
 
 	TAsset* operator->() const
 	{
-		return &myAsset;
+		return myAsset;
 	}
 
 	TAsset& operator*() const
 	{
-		return myAsset;
+		return *myAsset;
 	}
 private:
 
-	TAsset& myAsset;
+	TAsset* myAsset;
 };
 

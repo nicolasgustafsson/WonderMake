@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "BuffGiverFunctionality.h"
 #include "Character/CharacterFunctionality.h"
+#include "Test.h"
 
 REGISTER_COMPONENT(SBuffGiverComponent);
 REGISTER_FUNCTIONALITY(BuffGiverFunctionality);
@@ -31,6 +32,8 @@ void BuffGiverFunctionality::Initialize(BuffBlueprint& aBuffBlueprint, const f32
 	renderObject.emplace();
 	renderObject->SetAttribute<EVertexAttribute::Scale>(0, { aRadius + 10.f, aRadius + 10.f });
 	renderObject->SetAttribute<EVertexAttribute::Color>(0, aBuffBlueprint.myBuffType == EBuffType::Buff ? SColor::Green() : SColor::Red());
+
+	Test::DoTheThing();
 }
 
 void BuffGiverFunctionality::Tick()

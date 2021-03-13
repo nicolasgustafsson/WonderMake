@@ -4,6 +4,7 @@
 #include "Utilities/Rotation.h"
 
 #include <array>
+#include <assert.h>
 
 template<typename TRep, u32 TSize>
 struct SVectorBase;

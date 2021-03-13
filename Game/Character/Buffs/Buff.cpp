@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Buff.h"
 
+
 BuffInstance BuffBlueprint::Instantiate(CharacterFunctionality& aCharacter) const
 {
 	BuffInstance buff(*this, aCharacter);

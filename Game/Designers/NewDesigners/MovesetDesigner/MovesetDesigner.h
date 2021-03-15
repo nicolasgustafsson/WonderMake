@@ -1,6 +1,6 @@
 #pragma once
 #include "../Designer/Designer.h"
-#include "Moveset.h"
+#include "Movesets/Moveset.h"
 
 class MovesetDesigner : public Designer<SMoveset>
 {

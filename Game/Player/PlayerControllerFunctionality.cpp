@@ -47,7 +47,7 @@ void PlayerControllerFunctionality::Tick() noexcept
 		Get<MovementInputFunctionality>().SetMovementInput({0.f, 0.f});
 
 	if (Get<InputSystem>().IsMouseButtonPressed(EMouseButton::Left))
-		Get<MeleeWeaponUserFunctionality>().SwingWeapon();
+		Get<MeleeWeaponUserFunctionality>().SwingWeapon(Get<InputSystem>().GetMousePositionInWorld() - Get<TransformFunctionality2D>().GetPosition());
 
 	WmDrawDebugLine(Get<TransformFunctionality2D>().GetPosition(), Get<InputSystem>().GetMousePositionInWorld(), SColor::White());
 }

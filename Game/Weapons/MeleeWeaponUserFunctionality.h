@@ -9,7 +9,6 @@
 
 class MeleeWeaponFunctionality;
 class MeleeWeapon;
-class InputSystem;
 
 struct SMeleeWeaponUserComponent
 	: public SComponent
@@ -25,12 +24,11 @@ class MeleeWeaponUserFunctionality
 			PAdd<SMeleeWeaponUserComponent, PWrite>,
 			PAdd<TransformFunctionality2D, PWrite>,
 			PAdd<ActionFunctionality, PWrite>,
-			PAdd<CharacterFunctionality, PWrite>,
-			PAdd<InputSystem, PWrite>>>
+			PAdd<CharacterFunctionality, PWrite>>>
 {
 public:
 	void Inspect();
 
-	void SwingWeapon();
+	void SwingWeapon(SVector2f aDirection);
 	void SetWeapon(MeleeWeapon&& aWeapon);
 };

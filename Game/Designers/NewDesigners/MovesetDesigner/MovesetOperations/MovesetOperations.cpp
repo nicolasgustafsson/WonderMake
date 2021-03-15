@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "MovesetOperations.h"
-#include "../Moveset.h"
+#include "Movesets/Moveset.h"
 #include "../../Attribute/Attribute.h"
 #include "../../Sketch/Sketch.h"
 #include "../SwingDesigner/SwingDesigner.h"
@@ -57,7 +57,7 @@ void AddMoves::Perform(Sketch& aSketch) const
 
 		const SSwing swing = swingDesigner.Design(newSketch); //why are we sending over the same sketch, should we not make a new one for the swing?
 
-		genericSwingAttribute.Attribute.Swings.push_back(swing);
+		genericSwingAttribute.Attribute.Moves.push_back(swing);
 	}
 
 	aSketch.AddAttribute(std::move(genericSwingAttribute));

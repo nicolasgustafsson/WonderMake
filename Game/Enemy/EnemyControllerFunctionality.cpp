@@ -4,6 +4,7 @@
 #include "Enemy/TargetFunctionality.h"
 #include "Actions/ActionFunctionality.h"
 #include "EnemyActions/PunchAction.h"
+#include "Movesets/MovesetFunctionality.h"
 #include "Weapons/WeaponSwingHitShapeAction.h"
 #include "Utility/Palette.h"
 
@@ -55,10 +56,8 @@ void EnemyControllerFunctionality::Tick() noexcept
 	{
 		movementInputFunctionality.SetMovementInput({ 0.f, 0.f });
 
-		WeaponSwingHitShapeAction action(Get<CharacterFunctionality>(), delta, Get<EnemyControllerComponent>().Moveset.Swings.front());
-//		PunchAction action(Get<CharacterFunctionality>(), *target);
+		Get<MovesetFunctionality>().Perform(delta);
 
-		Get<ActionFunctionality>().StartAction(action);
 		return;
 	}
 

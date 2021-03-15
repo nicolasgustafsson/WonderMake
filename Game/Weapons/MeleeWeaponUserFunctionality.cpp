@@ -22,7 +22,7 @@ void MeleeWeaponUserFunctionality::Inspect()
 	}
 }
 
-void MeleeWeaponUserFunctionality::SwingWeapon()
+void MeleeWeaponUserFunctionality::SwingWeapon(SVector2f aDirection)
 {
 	auto& meleeWeaponUserComponent = Get<SMeleeWeaponUserComponent>();
 
@@ -33,13 +33,13 @@ void MeleeWeaponUserFunctionality::SwingWeapon()
 
 	MeleeWeapon& weapon = *meleeWeaponUserComponent.Weapon;
 
-	if (weapon.myMoveset.Swings.empty())
+	if (weapon.myMoveset.Moves.empty())
 		return;
 
 	if (!actionFunctionality.WasLastActionOfType<WeaponSwingHitShapeAction>() || actionFunctionality.TimeSinceLastAction() > 0.5f)
 		meleeWeaponUserComponent.CurrentSwingIndex = 0;
 
-	meleeWeaponUserComponent.CurrentSwingIndex %= weapon.myMoveset.Swings.size();
+	meleeWeaponUserComponent.CurrentSwingIndex %= weapon.myMoveset.Moves.size();
 
 	//EActionResult result = actionFunctionality.StartAction(WeaponSwingAction
 	//(Get<CharacterFunctionality>()
@@ -50,8 +50,8 @@ void MeleeWeaponUserFunctionality::SwingWeapon()
 	EActionResult result = actionFunctionality.StartAction(WeaponSwingHitShapeAction
 	(
 		Get<CharacterFunctionality>()
-		, Get<InputSystem>().GetMousePositionInWorld() - Get<TransformFunctionality2D>().GetPosition()
-		, weapon.myMoveset.Swings[meleeWeaponUserComponent.CurrentSwingIndex]
+		, aDirection
+		, weapon.myMoveset.Moves[meleeWeaponUserComponent.CurrentSwingIndex]
 	));
 
 	if (result == EActionResult::Succeeded)

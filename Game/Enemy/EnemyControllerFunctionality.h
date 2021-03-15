@@ -14,6 +14,7 @@
 #include "UtilityFunctionalities/FactionFunctionality.h"
 
 struct SMoveset;
+class MovesetFunctionality;
 
 class EnemyControllerFunctionality
 	: public Functionality<
@@ -27,7 +28,8 @@ class EnemyControllerFunctionality
 			PAdd<CollisionFunctionality, PWrite>,
 			PAdd<FactionFunctionality, PWrite>,
 			PAdd<SpriteRenderingFunctionality, PWrite>,
-			PAdd<ActionFunctionality, PWrite>>>
+			PAdd<ActionFunctionality, PWrite>,
+			PAdd<MovesetFunctionality, PWrite>>>
 	, public Debugged
 {
 public:

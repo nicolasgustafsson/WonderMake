@@ -68,6 +68,7 @@
     <ClCompile Include="Designers\NewDesigners\EnemyDesigner\Operations\EnemyOperations.cpp" />
     <ClCompile Include="Designers\NewDesigners\ColorDesigner\ColorDesigner.cpp" />
     <ClCompile Include="Designers\NewDesigners\ColorDesigner\ColorOperations.cpp" />
+    <ClCompile Include="Movesets\MovesetFunctionality.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWorld.h" />
@@ -130,7 +131,6 @@
     <ClInclude Include="Designers\NewDesigners\Sketch\Sketch.h" />
     <ClInclude Include="Designers\NewDesigners\MeleeWeaponDesigner2\MeleeWeaponDesigner2.h" />
     <ClInclude Include="Designers\NewDesigners\MovesetDesigner\MovesetDesigner.h" />
-    <ClInclude Include="Designers\NewDesigners\MovesetDesigner\Moveset.h" />
     <ClInclude Include="Designers\NewDesigners\MeleeWeaponDesigner2\MeleeWeaponOperations\MeleeWeaponOperations.h" />
     <ClInclude Include="Designers\NewDesigners\MovesetDesigner\MovesetOperations\MovesetOperations.h" />
     <ClInclude Include="Designers\NewDesigners\MeleeWeaponDesigner2\MeleeWeaponAttributes\MeleeWeaponAttributes.h" />
@@ -146,6 +146,8 @@
     <ClInclude Include="Designers\NewDesigners\EnemyDesigner\Attributes\EnemyAttribute.h" />
     <ClInclude Include="Designers\NewDesigners\ColorDesigner\ColorDesigner.h" />
     <ClInclude Include="Designers\NewDesigners\ColorDesigner\ColorOperations.h" />
+    <ClInclude Include="Movesets\MovesetFunctionality.h" />
+    <ClInclude Include="Movesets\Moveset.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Character\Buffs\BuffDesign.md" />
@@ -154,5 +156,6 @@
     <None Include="Character\Effects\CharacterEffectPhilosophy.md" />
     <None Include="Designers\EffectDesigner\EffectDesignerPhilosophy.md" />
     <None Include="HitShapes\Hitshapes.md" />
+    <None Include="Designers\NewDesigners\EnemyDesigner\Enemy Design.md" />
   </ItemGroup>
 </Project>

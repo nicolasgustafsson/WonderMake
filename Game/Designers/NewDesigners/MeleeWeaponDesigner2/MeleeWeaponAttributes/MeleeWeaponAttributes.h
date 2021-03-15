@@ -1,5 +1,5 @@
 #pragma once
-#include "../../MovesetDesigner/Moveset.h"
+#include "Movesets/Moveset.h"
 #include "../../Attribute/Attribute.h"
 
 struct SMovesetAttribute : public SAttribute

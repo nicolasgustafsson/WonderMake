@@ -1,6 +1,6 @@
 #pragma once
 #include "Components/Component.h"
-#include "Designers/NewDesigners/MovesetDesigner/Moveset.h"
+#include "Movesets/Moveset.h"
 #include "Typedefs.h"
 
 struct EnemyControllerComponent

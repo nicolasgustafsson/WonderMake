@@ -5,7 +5,7 @@
 #include "../Attribute/Attribute.h"
 #include "../Sketch/Sketch.h"
 
-#include "../MovesetDesigner/Moveset.h"
+#include "Movesets/Moveset.h"
 
 #include "Randomizer/Randomizer.h"
 
@@ -36,7 +36,6 @@ void MovesetToColorOperation::Perform(Sketch& aSketch) const
 
 	auto&& moveset = movesetAttibute->Attribute;
 
-	auto&& move = moveset.Swings.front();
 	SDesignedObjectAttribute<SColor> color;
 
 	constexpr f32 strengthMax = 3.f;
@@ -44,9 +43,16 @@ void MovesetToColorOperation::Perform(Sketch& aSketch) const
 	constexpr f32 speedMax = .2f * 2.f;
 	constexpr f32 speedMin = .2f * .33f;
 
-	color.FinishedDesign.R = (move.DamageMultipiler - strengthMin) / (strengthMax - strengthMin);
-	color.FinishedDesign.G = 0;
-	color.FinishedDesign.B = 1.f - ((move.SwingTime - speedMin) / (speedMax - speedMin));
+	for (auto&& move : moveset.Moves)
+	{
+		color.FinishedDesign.R = (move.DamageMultipiler - strengthMin) / (strengthMax - strengthMin);
+		color.FinishedDesign.G = 0;
+		color.FinishedDesign.B = 1.f - ((move.SwingTime - speedMin) / (speedMax - speedMin));
+	}
+
+	color.FinishedDesign.R /= moveset.Moves.size();
+	color.FinishedDesign.G /= moveset.Moves.size();
+	color.FinishedDesign.B /= moveset.Moves.size();
 
 	aSketch.AddAttribute(std::move(color));
 }

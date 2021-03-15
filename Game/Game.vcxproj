@@ -249,6 +249,7 @@
     <ClInclude Include="Designers\NewDesigners\MeleeWeaponDesigner2\MeleeWeaponOperations\MeleeWeaponOperations.h" />
     <ClInclude Include="Designers\NewDesigners\MeleeWeaponDesigner2\MeleeWeaponAttributes\MeleeWeaponAttributes.h" />
     <ClInclude Include="Designers\NewDesigners\MovesetDesigner\SwingDesigner\SwingDesigner.h" />
+    <ClInclude Include="Movesets\MovesetFunctionality.h" />
     <ClInclude Include="UtilityFunctionalities\LineOfSightFunctionality.h" />
     <ClInclude Include="Utility\Palette.h" />
     <ClInclude Include="Physics\Navmesh\NavmeshFunctionality.h" />
@@ -296,7 +297,7 @@
     <ClInclude Include="Player\PlayerControllerFunctionality.h" />
     <ClInclude Include="Weapons\MeleeWeapon.h" />
     <ClInclude Include="Weapons\WeaponProperty\WeaponProperty.h" />
-    <ClInclude Include="Designers\NewDesigners\MovesetDesigner\Moveset.h" />
+    <ClInclude Include="Movesets\Moveset.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actions\ActionFunctionality.cpp" />
@@ -322,6 +323,7 @@
     <ClCompile Include="Designers\NewDesigners\MeleeWeaponDesigner2\MeleeWeaponOperations\MeleeWeaponOperations.cpp" />
     <ClCompile Include="Designers\NewDesigners\MeleeWeaponDesigner2\MeleeWeaponAttributes\MeleeWeaponAttributes.cpp" />
     <ClCompile Include="Designers\NewDesigners\MovesetDesigner\SwingDesigner\SwingDesigner.cpp" />
+    <ClCompile Include="Movesets\MovesetFunctionality.cpp" />
     <ClCompile Include="UtilityFunctionalities\LineOfSightFunctionality.cpp" />
     <ClCompile Include="Physics\Navmesh\NavmeshFunctionality.cpp" />
     <ClCompile Include="Physics\Navmesh\NavmeshRenderObject.cpp" />
@@ -383,6 +385,7 @@
     <None Include="Designers\BuffDesigner\BuffDesignerPhilosophy.md" />
     <None Include="Designers\DesignerPhilosophy.md" />
     <None Include="Designers\EffectDesigner\EffectDesignerPhilosophy.md" />
+    <None Include="Designers\NewDesigners\EnemyDesigner\Enemy Design.md" />
     <None Include="HitShapes\Hitshapes.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

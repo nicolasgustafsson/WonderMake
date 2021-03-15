@@ -10,6 +10,8 @@
 
 #include "Enemy/EnemyControllerFunctionality.h"
 
+#include "Movesets/MovesetFunctionality.h"
+
 #include "Object/Object.h"
 
 #include "Utility/Palette.h"
@@ -24,10 +26,12 @@ void CreateEnemyOperation::Perform(Sketch& aSketch) const
 	SDesignedObjectAttribute<Object> enemy;
 
 	auto&& movesetAttribute = aSketch.GetAttribute<SGenericAttribute<SMoveset>>();
+	auto&& moveset = SystemPtr<FunctionalitySystemDelegate<MovesetFunctionality>>()->AddFunctionality(enemy.FinishedDesign);
 	auto&& enemyController = SystemPtr<FunctionalitySystemDelegate<EnemyControllerFunctionality>>()->AddFunctionality(enemy.FinishedDesign);
 	auto&& colorAttribute = aSketch.GetAttribute<SGenericAttribute<SColor>>();
 	auto&& sprite = SystemPtr<FunctionalitySystemDelegate<SpriteRenderingFunctionality>>()->AddFunctionality(enemy.FinishedDesign);
 
+	moveset.SetMoveset(movesetAttribute->Attribute);
 	enemyController.SetMoveset(std::move(movesetAttribute->Attribute));
 	sprite.SetColor(std::move(colorAttribute->Attribute));
 

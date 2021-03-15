@@ -2,7 +2,7 @@
 #include "Weapons/WeaponProperty/WeaponProperty.h"
 #include "Weapons/WeaponSwing.h"
 #include "Designers/NewDesigners/MovesetDesigner/MovesetDesigner.h"
-#include "Designers/NewDesigners/MovesetDesigner/Moveset.h"
+#include "Movesets/Moveset.h"
 
 class MeleeWeapon
 	: public NonCopyable

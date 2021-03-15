@@ -12,7 +12,7 @@ MeleeWeapon MeleeWeaponDesigner::DesignWeapon()
 
 	currentWeapon.myBaseWeaponSwingRate = 1.5f;
 
-	currentWeapon.myMoveset.Swings = CreateMoveset(currentWeapon);
+	currentWeapon.myMoveset.Moves = CreateMoveset(currentWeapon);
 
 	return currentWeapon;
 }
@@ -32,7 +32,7 @@ SSwing MeleeWeaponDesigner::DesignSwing(const MeleeWeapon& aWeapon, const bool a
 {
 	SSwing swing;
 
-	const bool isFirstSwing = aWeapon.myMoveset.Swings.empty();
+	const bool isFirstSwing = aWeapon.myMoveset.Moves.empty();
 	swing.ChargeTime = isFirstSwing ? 0.1f : 0.f;
 
 	swing.SwingTime = 0.2f;

@@ -46,7 +46,7 @@ Camera::Camera(const std::string& aName, [[maybe_unused]] const bool aIsFirst)
 		std::forward_as_tuple(displayName),
 		std::forward_as_tuple(displayName, *this));
 
-	if constexpr (!Constants::IsDebugging)
+	if constexpr (!Constants::EnableImGui)
 	{
 		if (aIsFirst)
 			displayIt.first->second.Focus();

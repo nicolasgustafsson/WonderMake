@@ -7,6 +7,9 @@ namespace Constants
 	constexpr bool IsDebugging = true;
 #endif
 
+	constexpr bool ValidateVulkan = IsDebugging;
+	constexpr bool DebugVulkan = ValidateVulkan && true;
+	constexpr bool EnableImGui = false; //IsDebugging;
 	constexpr bool EnableAssetHotReload = IsDebugging;
 
 	constexpr f32 Pi = 3.141592f;

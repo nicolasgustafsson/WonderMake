@@ -11,7 +11,7 @@ void Routine::Run()
 {
 	RouteMessages();
 
-	if constexpr (Constants::IsDebugging)
+	if constexpr (Constants::EnableImGui)
 	{
 		SystemPtr<Renderer>()->FinishFrame();
 		SystemPtr<ImguiWrapper>()->StartFrame();

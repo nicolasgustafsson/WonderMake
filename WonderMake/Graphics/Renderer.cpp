@@ -38,8 +38,8 @@ Renderer::Renderer() noexcept
 
 	Get<OpenGLFacade>().Enable(GL_DEPTH_TEST);
 
-	glDepthFunc(GL_GEQUAL);
-	glClearDepth(-1000);
+	//glDepthFunc(GL_GEQUAL);
+	//glClearDepth(-1000);
 
 	Get<OpenGLFacade>().SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -71,9 +71,9 @@ void Renderer::FinishFrame()
 	Get<OpenGLFacade>().SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 	Get<OpenGLFacade>().Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	if constexpr (!Constants::IsDebugging)
+	if constexpr (!Constants::EnableImGui)
 	{
-		//second pass - copy directly to backbuffer if we are not debugging
+		//second pass - copy directly to backbuffer if we are not using imgui
 		//myCameraManagerPtr->GetMainCamera().BindAsTexture();
 
 		myCopyPass.RenderImmediate();

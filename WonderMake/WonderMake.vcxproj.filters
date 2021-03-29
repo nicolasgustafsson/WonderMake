@@ -81,6 +81,9 @@
     <ClCompile Include="EngineTools\EasingTester.cpp" />
     <ClCompile Include="Job\JobSystem.cpp" />
     <ClCompile Include="Job\JobBase.cpp" />
+    <ClCompile Include="Imgui\AssetBrowser.cpp" />
+    <ClCompile Include="Input\InputItems.cpp" />
+    <ClCompile Include="Vulkan\VulkanWrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -277,6 +280,8 @@
     <ClInclude Include="Utilities\Alias.h" />
     <ClInclude Include="Job\JobOutput.h" />
     <ClInclude Include="Utilities\UniqueValue.h" />
+    <ClInclude Include="Vulkan\VulkanWrapper.h" />
+    <ClInclude Include="Vulkan\VulkanResource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

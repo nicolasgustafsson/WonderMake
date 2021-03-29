@@ -12,37 +12,46 @@
 Program::Program()
 {
 	SetupCallbacks();
+	
+	myVulkanWrapper.Init();
+}
+
+Program::~Program()
+{
+	myVulkanWrapper.Cleanup();
 }
 
 void Program::Update()
 {
-	FinishPreviousFrame();
+	//FinishPreviousFrame();
 
 	SystemPtr<InputSystem>()->Update();
 	SystemPtr<AudioManager>()->Update();
 
-	if constexpr (Constants::EnableAssetHotReload)
-	{
-		SystemPtr<FileWatcher>()->UpdateFileChanges();
-	}
-
+	//if constexpr (Constants::EnableAssetHotReload)
+	//{
+	//	SystemPtr<FileWatcher>()->UpdateFileChanges();
+	//}
+	//
 	StartNewFrame();
 }
 
 void Program::StartNewFrame()
 {
-	SystemPtr<EngineUniformBuffer>()->GetBuffer().Time = SystemPtr<TimeKeeper>()->GetGameTime();
-
-	SystemPtr<EngineUniformBuffer>()->Update();
+	//SystemPtr<EngineUniformBuffer>()->GetBuffer().Time = SystemPtr<TimeKeeper>()->GetGameTime();
+	//
+	//SystemPtr<EngineUniformBuffer>()->Update();
 
 	SystemPtr<Window>()->Update();
 
-	SystemPtr<Renderer>()->StartFrame();
+	myVulkanWrapper.Update();
+
+	//SystemPtr<Renderer>()->StartFrame();
 }
 
 void Program::FinishPreviousFrame()
 {
-	if constexpr (!Constants::IsDebugging)
+	if constexpr (!Constants::EnableImGui)
 		SystemPtr<Renderer>()->FinishFrame();
 }
 
@@ -62,7 +71,7 @@ void Program::SetupCallbacks()
 
 void Program::OnWindowSizeChanged([[maybe_unused]]GLFWwindow* Window, i32 X, i32 Y)
 {
-	if constexpr (!Constants::IsDebugging)
+	if constexpr (!Constants::EnableImGui)
 	{
 		SystemPtr<CameraManager>()->SetViewportSize({X, Y});
 	}

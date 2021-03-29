@@ -1,13 +1,18 @@
+
 #include "pch.h"
 #include "GlfwFacade.h"
 #include "GLFW/glfw3.h"
 #include <glad/glad.h>
+#include <vulkan/vulkan.hpp>
+#include "Window.h"
 
 REGISTER_SYSTEM(GlfwFacade);
 
 GlfwFacade::GlfwFacade()
 {
 	glfwInit();
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 }
 
 void GlfwFacade::Terminate()
@@ -33,6 +38,14 @@ void GlfwFacade::GetWindowPos(GLFWwindow* aWindow, int* aXPosition, int* aYPosit
 void GlfwFacade::GetCursorPos(GLFWwindow* aWindow, double* aXPosition, double* aYPosition)
 {
 	glfwGetCursorPos(aWindow, aXPosition, aYPosition);
+}
+
+vk::SurfaceKHR GlfwFacade::CreateVulkanSurface(vk::Instance instance)
+{
+	VkSurfaceKHR surface;
+	glfwCreateWindowSurface(instance, SystemPtr<Window>()->myGlfwWindow, nullptr, &surface);
+
+	return vk::SurfaceKHR(surface);
 }
 
 void GlfwFacade::SetFramebufferSizeCallback(GLFWwindow* aWindow, GLFWframebuffersizefun aCallback)

@@ -35,6 +35,21 @@ inline static void WmLog(TMessageArgs... aMessageArgs)
 	WmDispatchMessage(SLogMessage(MessageStream.str()));
 }
 
+template<typename ... TMessageArgs>
+inline static void WmConditionalLog(const bool bShouldLog, TMessageArgs... aMessageArgs)
+{
+	if (!bShouldLog)
+		return;
+
+	std::stringstream MessageStream;
+
+	MessageStream << '[' << Platform::GetDateTime() << ']';
+
+	(MessageStream << ... << aMessageArgs);
+
+	WmDispatchMessage(SLogMessage(MessageStream.str()));
+}
+
 inline static void WmDrawDebugLine(const SDebugLine& aDebugLine)
 {
 	WmDispatchMessage(SDebugLineMessage(aDebugLine));

@@ -5,6 +5,7 @@
 #include "Program/Engine.h"
 
 #include "Message/Messages.h"
+#include <iostream>
 
 int main()
 {

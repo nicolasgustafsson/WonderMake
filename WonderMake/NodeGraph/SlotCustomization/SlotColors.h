@@ -4,7 +4,7 @@ namespace SlotColors
 	template<typename TSlotType>
 	ImColor GetColor()
 	{
-		if constexpr (!Constants::IsDebugging)
+		if constexpr (!Constants::EnableImGui)
 			return ImColor();
 		auto& imguiStyle = ImGui::GetStyle();
 		return imguiStyle.Colors[ImGuiCol_PlotLines];

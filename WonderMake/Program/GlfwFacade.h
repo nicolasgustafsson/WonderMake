@@ -4,6 +4,12 @@ struct GLFWwindow;
 
 typedef void (*GLFWframebuffersizefun)(GLFWwindow*, int, int);
 
+namespace vk
+{
+	class Instance;
+	class SurfaceKHR;
+}
+
 class GlfwFacade : public System<>
 {
 public:
@@ -15,6 +21,9 @@ public:
 
 	void GetWindowPos(GLFWwindow* aWindow, int* aXPosition, int* aYPosition);
 	void GetCursorPos(GLFWwindow* aWindow, double* aXPosition, double* aYPosition);
+
+	vk::SurfaceKHR CreateVulkanSurface(vk::Instance instance);
+
 
 	void SetFramebufferSizeCallback(GLFWwindow* aWindow, GLFWframebuffersizefun aCallback);
 

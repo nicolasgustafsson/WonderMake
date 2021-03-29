@@ -31,9 +31,9 @@ ImguiWrapper::ImguiWrapper()
 	io.ConfigDockingWithShift = true;
 
 	// Setup Platform/Renderer bindings
-	ImGui_ImplGlfw_InitForOpenGL(Get<Window>().myGlfwWindow, true);
-	const char* glsl_version = "#version 440";
-	ImGui_ImplOpenGL3_Init(glsl_version);
+	ImGui_ImplGlfw_InitForVulkan(Get<Window>().myGlfwWindow, true);
+	//const char* glsl_version = "#version 440";
+	//ImGui_ImplVulkan_Init(glsl_version);
 }
 
 void ImguiWrapper::StartFrame()

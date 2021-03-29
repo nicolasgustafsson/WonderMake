@@ -81,7 +81,7 @@ public:
 	template<typename TCallback>
 	void SetDebugMessageCallback(TCallback aCallback)
 	{
-		glDebugMessageCallback(aCallback, nullptr);
+		//glDebugMessageCallback(aCallback, nullptr);
 	}
 
 private:

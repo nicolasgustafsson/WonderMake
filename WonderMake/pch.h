@@ -1,5 +1,8 @@
 #pragma once
+#define GLFW_EXPOSE_NATIVE_WIN32
 #define _ITERATOR_DEBUG_LEVEL 0
+#define VULKAN_HPP_NO_EXCEPTIONS //[Nicos]: this gives us fun result types instead of thrown exceptions :)
+#define GLFW_INCLUDE_VULKAN
 #include <string>
 #include <filesystem>
 #include <optional>

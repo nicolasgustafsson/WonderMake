@@ -15,6 +15,7 @@ BaseRenderObject::~BaseRenderObject()
 void BaseRenderObject::Render()
 {
 	myCurrentRenderHandle.emplace(SystemPtr<RenderCommandProcessor>()->GetRenderLayer(myRenderLayer).AddToQueue(RenderCommand(*this, myRenderOrder)));
+	
 }
 
 void BaseRenderObject::RenderImmediate()

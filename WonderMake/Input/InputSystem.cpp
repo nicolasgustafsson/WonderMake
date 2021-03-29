@@ -95,7 +95,7 @@ bool InputSystem::IsMouseButtonPressed(const EMouseButton aMouseButton) const no
 
 GLFWwindow* InputSystem::GetCurrentWindow() const
 {
-	if constexpr (Constants::IsDebugging)
+	if constexpr (Constants::EnableImGui)
 	{
 		for (auto viewport : ImGui::GetPlatformIO().Viewports)
 		{
@@ -211,7 +211,7 @@ void InputSystem::Debug()
 
 bool InputSystem::ShouldCaptureMouseInput() const noexcept
 {
-	if constexpr (!Constants::IsDebugging)
+	if constexpr (!Constants::EnableImGui)
 		return true;
 
 	return Get<CameraManager>().AnyDisplayIsFocused();

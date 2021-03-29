@@ -14,12 +14,13 @@
 #include "Camera/CameraManager.h"
 #include "Program/ImguiWrapper.h"
 #include "EngineTools/EngineTools.h"
-
+#include "Vulkan/VulkanWrapper.h"
 
 class Program
 {
 public:
 	Program();
+	~Program();
 
 	void Update();
 
@@ -35,6 +36,7 @@ private:
 	ConsoleLogger myLogger;
 	FileLogger myFileLogger;
 	ImGuiLogger myImGuiLogger;
+	VulkanWrapper myVulkanWrapper;
 
 	static constexpr SVector2<i32> WindowSize = {1600, 900};
 };

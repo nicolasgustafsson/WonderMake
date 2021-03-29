@@ -10,5 +10,5 @@
 
 void Start()
 {
-	SystemContainer::Get().CreateSystem<GameWorld>();
+	//SystemContainer::Get().CreateSystem<GameWorld>();
 }

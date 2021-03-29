@@ -23,14 +23,14 @@ REGISTER_SYSTEM(GameWorld);
 GameWorld::GameWorld()
 	: mySubscriber(BindHelper(&GameWorld::OnPlayerDeath, this)), myBackground(std::filesystem::current_path() / "Shaders/Fragment/Background.frag")
 {
-	myBackground.SetRenderLayer("Background");
-	myBackground.SetRenderOrder(-9999);
-	myBackground.SetProperty("MainColor", SColor::RaisinBlack());
-	myBackground.SetProperty("DetailColor", SColor::Seashell());
-
-	RestartLevel(true);
-
-	Get<ScheduleSystem>().ScheduleRepeating<>([this]() { Tick(); });
+	//myBackground.SetRenderLayer("Background");
+	//myBackground.SetRenderOrder(-9999);
+	//myBackground.SetProperty("MainColor", SColor::RaisinBlack());
+	//myBackground.SetProperty("DetailColor", SColor::Seashell());
+	//
+	//RestartLevel(true);
+	//
+	//Get<ScheduleSystem>().ScheduleRepeating<>([this]() { Tick(); });
 }
 
 void GameWorld::RestartLevel(const bool aAddPlayer)

@@ -17,6 +17,22 @@ public:
 	virtual void Perform(Sketch& aSketch) const override;
 };
 
+class GenerateMoveTypes : public Operation
+{
+public:
+	virtual bool IsEligible(const Sketch& aSketch) const override;
+
+	virtual void Perform(Sketch& aSketch) const override;
+};
+
+class RandomizeMoveTypes : public Operation
+{
+public:
+	virtual bool IsEligible(const Sketch& aSketch) const override;
+
+	virtual void Perform(Sketch& aSketch) const override;
+};
+
 class AddMoves : public Operation
 {
 public:

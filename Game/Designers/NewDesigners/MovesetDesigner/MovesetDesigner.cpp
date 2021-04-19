@@ -6,6 +6,8 @@ MovesetDesigner::MovesetDesigner()
 {	
 	AddOperation<RandomizeMovesetType>();
 	AddOperation<DetermineAmountOfMoves>();
+	AddOperation<GenerateMoveTypes>();
+	AddOperation<RandomizeMoveTypes>();
 	AddOperation<AddMoves>();
 	AddOperation<SmashTogetherMoveset>();
 }

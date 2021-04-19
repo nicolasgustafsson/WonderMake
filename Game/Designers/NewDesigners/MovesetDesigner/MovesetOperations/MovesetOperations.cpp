@@ -8,28 +8,80 @@
 #include "../MovesetAttributes.h"
 #include <Randomizer/Randomizer.h>
 
+bool GenerateMoveTypes::IsEligible(const Sketch& aSketch) const
+{
+	return aSketch.GetAttribute<SAmountOfMoves>()
+		&& aSketch.ContainsAttribute<SMovesetType>();
+}
+
+void GenerateMoveTypes::Perform(Sketch& aSketch) const
+{
+	SMoveTypes moveTypes;
+	const u32 size = aSketch.GetAttribute<SAmountOfMoves>()->TotalMoves;
+
+	moveTypes.Types.reserve(static_cast<size_t>(size));
+
+	for (u32 i = 0; i < size; i++)
+	{
+		switch (aSketch.GetAttribute<SMovesetType>()->Type)
+		{
+		case EMovesetType::Melee:
+			moveTypes.Types.emplace_back(SystemPtr<Randomizer>()->SelectOne<ESwingType, ESwingType::Slash, ESwingType::Stab>());
+			break;
+		case EMovesetType::Ranged:
+			moveTypes.Types.emplace_back(ESwingType::Projectile);
+			break;
+		}
+	}
+
+	aSketch.AddAttribute(std::move(moveTypes));
+}
+
+bool RandomizeMoveTypes::IsEligible(const Sketch& aSketch) const
+{
+	return aSketch.GetAttribute<SAmountOfMoves>()
+		&& !aSketch.ContainsAttribute<SMoveTypes>();
+}
+
+void RandomizeMoveTypes::Perform(Sketch& aSketch) const
+{
+	SMoveTypes moveTypes;
+	const u32 size = aSketch.GetAttribute<SAmountOfMoves>()->TotalMoves;
+
+	moveTypes.Types.reserve(static_cast<size_t>(size));
+
+	for (u32 i = 0; i < size; i++)
+	{
+		moveTypes.Types.emplace_back(SystemPtr<Randomizer>()->SelectOne<ESwingType, ESwingType::Slash, ESwingType::Stab, ESwingType::Projectile>());
+	}
+
+	aSketch.AddAttribute(std::move(moveTypes));
+}
+
 bool AddMoves::IsEligible(const Sketch& aSketch) const
 {
-	return aSketch.ContainsAttribute<SAmountOfMoves>();
+	return aSketch.ContainsAttribute<SMoveTypes>();
 }
 
 void AddMoves::Perform(Sketch& aSketch) const
 {
 	const EMeleeMovesetType movesetType = aSketch.GetAttribute<SMeleeMovesetTypeAttribute>()->Moveset;
 
+	auto&& moveTypes = aSketch.GetAttribute<SMoveTypes>()->Types;
+
 	SGenericAttribute<SMoveset> genericSwingAttribute;
-	for (i32 i = 0; i < aSketch.GetAttribute<SAmountOfMoves>()->TotalMoves; i++)
+	for (size_t i = 0; i < moveTypes.size(); i++)
 	{
 		SwingDesigner swingDesigner;
 
 		Sketch newSketch;
 		SSwingTypeAttribute swingTypeAttribute;
-		swingTypeAttribute.Type = static_cast<ESwingType>(SystemPtr<Randomizer>()->GetRandomNumber(0, 1));
+		swingTypeAttribute.Type = moveTypes[i];
 		SSwingSpeedAttribute swingSpeedAttribute;
 
 		newSketch.AddAttribute(swingTypeAttribute);
 
-		const bool isLastAttack = i == aSketch.GetAttribute<SAmountOfMoves>()->TotalMoves - 1;
+		const bool isLastAttack = i == moveTypes.size() - 1;
 		SSwingThreatAttribute swingThreatAttribute;
 
 		switch (movesetType)
@@ -55,7 +107,7 @@ void AddMoves::Perform(Sketch& aSketch) const
 		newSketch.AddAttribute(std::move(swingThreatAttribute));
 		newSketch.AddAttribute(std::move(swingSpeedAttribute));
 
-		const SSwing swing = swingDesigner.Design(newSketch); //why are we sending over the same sketch, should we not make a new one for the swing?
+		const SAttackMove swing = swingDesigner.Design(newSketch); //why are we sending over the same sketch, should we not make a new one for the swing?
 
 		genericSwingAttribute.Attribute.Moves.push_back(swing);
 	}
@@ -79,7 +131,7 @@ void SmashTogetherMoveset::Perform(Sketch& aSketch) const
 	aSketch.AddAttribute<SDesignedObjectAttribute<SMoveset>>(std::move(attribute));
 }
 
-bool DetermineAmountOfMoves::IsEligible(const Sketch& aSketch) const
+bool DetermineAmountOfMoves::IsEligible(const Sketch& /*aSketch*/) const
 {
 	return true;
 }

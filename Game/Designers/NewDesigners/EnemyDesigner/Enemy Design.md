@@ -1,7 +1,7 @@
 ## Enemy Design
 - [x] Moveset
-- [ ] Ranged Attacks
+- [x] Ranged Attacks
 - [ ] Debuffs
 - [ ] Abilites
 - [ ] Class like tags. Tank, DPS, healer, boss, etc.
-- [ ] AI
+- [ ] AI: Ranged, etc.

@@ -7,8 +7,12 @@
 #include "Levels/LevelFunctionality.h"
 #include "Utility/Palette.h"
 #include "Designers/NewDesigners/MeleeWeaponDesigner2/MeleeWeaponDesigner2.h"
+#include "Designers/NewDesigners/MovesetDesigner/MovesetAttributes.h"
 
 REGISTER_FUNCTIONALITY(PlayerControllerFunctionality);
+
+inline constexpr u32 AttackIndexMelee	= 0;
+inline constexpr u32 AttackIndexRanged	= 1;
 
 PlayerControllerFunctionality::PlayerControllerFunctionality()
 	: Debugged("Player Controller")
@@ -20,9 +24,23 @@ PlayerControllerFunctionality::PlayerControllerFunctionality()
 	Get<CharacterFunctionality>().Get<CharacterStatsFunctionality>().SetBaseValue(ECharacterStat::MovementSpeed, 200.f);
 
 	MeleeWeaponDesigner2 meleeWeaponDesigner;
+	Sketch sketchMelee;
+	Sketch sketchRanged;
+	SMovesetType movesetTypeMelee;
+	SMovesetType movesetTypeRanged;
 
+	movesetTypeMelee.Type = EMovesetType::Melee;
+	movesetTypeRanged.Type = EMovesetType::Ranged;
 
-	Get<MeleeWeaponUserFunctionality>().SetWeapon(meleeWeaponDesigner.Design(Sketch()));
+	sketchMelee.AddAttribute(movesetTypeMelee);
+	sketchRanged.AddAttribute(movesetTypeRanged);
+
+	std::vector<MeleeWeapon> weapons;
+
+	weapons.emplace_back(meleeWeaponDesigner.Design(sketchMelee));
+	weapons.emplace_back(meleeWeaponDesigner.Design(sketchRanged));
+
+	Get<MeleeWeaponUserFunctionality>().SetWeapons(std::move(weapons));
 
 	Get<SLevelDenizenComponent>().PersistentOnLevelChange = true;
 
@@ -46,8 +64,12 @@ void PlayerControllerFunctionality::Tick() noexcept
 	else
 		Get<MovementInputFunctionality>().SetMovementInput({0.f, 0.f});
 
+	const auto mouseDirection = Get<InputSystem>().GetMousePositionInWorld() - Get<TransformFunctionality2D>().GetPosition();
+
 	if (Get<InputSystem>().IsMouseButtonPressed(EMouseButton::Left))
-		Get<MeleeWeaponUserFunctionality>().SwingWeapon(Get<InputSystem>().GetMousePositionInWorld() - Get<TransformFunctionality2D>().GetPosition());
+		Get<MeleeWeaponUserFunctionality>().SwingWeapon(AttackIndexMelee, mouseDirection);
+	if (Get<InputSystem>().IsMouseButtonPressed(EMouseButton::Right))
+		Get<MeleeWeaponUserFunctionality>().SwingWeapon(AttackIndexRanged, mouseDirection);
 
 	WmDrawDebugLine(Get<TransformFunctionality2D>().GetPosition(), Get<InputSystem>().GetMousePositionInWorld(), SColor::White());
 }

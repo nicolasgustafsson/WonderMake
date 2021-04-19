@@ -7,9 +7,9 @@ enum class ESwingStages
 	BackSwing
 };
 
-struct SSwing
+struct SAttackMove
 {
-	BezierCurve SwingPath;
+	BezierCurve AttackPath;
 
 	f32 ChargeTime = 0.4f;
 	f32 SwingTime = 0.2f;

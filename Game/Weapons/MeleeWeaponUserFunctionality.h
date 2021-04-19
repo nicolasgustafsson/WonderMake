@@ -13,7 +13,7 @@ class MeleeWeapon;
 struct SMeleeWeaponUserComponent
 	: public SComponent
 {
-	std::optional<MeleeWeapon> Weapon;
+	std::vector<MeleeWeapon> Weapons;
 
 	i32 CurrentSwingIndex = 0;
 };
@@ -29,6 +29,6 @@ class MeleeWeaponUserFunctionality
 public:
 	void Inspect();
 
-	void SwingWeapon(SVector2f aDirection);
-	void SetWeapon(MeleeWeapon&& aWeapon);
+	void SwingWeapon(u32 aWeaponIndex, SVector2f aDirection);
+	void SetWeapons(std::vector<MeleeWeapon>&& aWeapons);
 };

@@ -7,7 +7,8 @@
 enum class ESwingType
 {
 	Stab,
-	Slash
+	Slash,
+	Projectile
 };
 
 enum class ESwingThreat
@@ -26,7 +27,7 @@ enum class ESwingSpeed
 
 struct SSwingInProgressAttribute : public SAttribute
 {
-	SSwing SwingInProgress;
+	SAttackMove SwingInProgress;
 };
 
 

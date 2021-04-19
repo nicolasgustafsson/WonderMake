@@ -5,5 +5,5 @@
 
 struct SMoveset
 {
-	std::vector<SSwing> Moves;
+	std::vector<SAttackMove> Moves;
 };

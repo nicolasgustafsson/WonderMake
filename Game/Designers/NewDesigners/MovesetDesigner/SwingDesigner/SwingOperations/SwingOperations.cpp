@@ -18,20 +18,19 @@ void FinalizeSwing::Perform(Sketch& aSketch) const
 	const f32 sidewayMultiplier = 1.0f;
 
 	//todo: these should pick from existing attributes
-	SSwing swing;
+	SAttackMove swing;
 	swing = aSketch.GetAttribute<SSwingInProgressAttribute>()->SwingInProgress;
 
 	//boilerplate - we should be able to construct this inside the function call parameters
-	SDesignedObjectAttribute<SSwing> designedSwingAttributes;
+	SDesignedObjectAttribute<SAttackMove> designedSwingAttributes;
 	designedSwingAttributes.FinishedDesign = swing;
 
-	//todo - find out why we need to move; copying /should/ work here
 	aSketch.AddAttribute(std::move(designedSwingAttributes));
 
 	//todo - better error handling
 }
 
-bool GenerateSwingPath::IsEligible(const Sketch& aSketch) const
+bool GenerateSwingPath::IsEligible(const Sketch& /*aSketch*/) const
 {
 	return true;
 }
@@ -67,6 +66,11 @@ void GenerateSwingPath::Perform(Sketch& aSketch) const
 			start = { 25 * swingDirection, -25 };
 			end = { 0, 100 };
 			break;
+
+		case ESwingType::Projectile:
+			start = { 0 , 10 };
+			end = { 0 , 500 };
+			break;
 		}
 	}
 
@@ -80,10 +84,10 @@ void GenerateSwingPath::Perform(Sketch& aSketch) const
 	
 	auto swing = aSketch.GetAttribute<SSwingInProgressAttribute>();
 	BezierDesigner bezierDesigner;
-	swing->SwingInProgress.SwingPath = bezierDesigner.Design(bezierSketch);
+	swing->SwingInProgress.AttackPath = bezierDesigner.Design(bezierSketch);
 }
 
-bool DetermineSwingDamage::IsEligible(const Sketch& aSketch) const
+bool DetermineSwingDamage::IsEligible(const Sketch& /*aSketch*/) const
 {
 	return true;
 }
@@ -126,7 +130,7 @@ void RandomizeSwingSpeed::Perform(Sketch& aSketch) const
 	aSketch.AddAttribute(std::move(swingSpeedAttribute));
 }
 
-bool DetermineSwingTimings::IsEligible(const Sketch& aSketch) const
+bool DetermineSwingTimings::IsEligible(const Sketch& /*aSketch*/) const
 {
 	return true;
 }
@@ -138,7 +142,7 @@ void DetermineSwingTimings::Perform(Sketch& aSketch) const
 
 	ESwingSpeed swingSpeed = aSketch.GetAttribute<SSwingSpeedAttribute>()->SwingSpeed;
 
-	SSwing& currentSwing = aSketch.GetAttribute<SSwingInProgressAttribute>()->SwingInProgress;
+	SAttackMove& currentSwing = aSketch.GetAttribute<SSwingInProgressAttribute>()->SwingInProgress;
 
 	switch (swingSpeed)
 	{

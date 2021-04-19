@@ -2,7 +2,7 @@
 #include "WeaponSwingHitShapeAction.h"
 #include "Input/InputSystem.h"
 
-WeaponSwingHitShapeAction::WeaponSwingHitShapeAction(CharacterFunctionality& aUser, SVector2f aDirection, const SSwing aSwing) noexcept
+WeaponSwingHitShapeAction::WeaponSwingHitShapeAction(CharacterFunctionality& aUser, SVector2f aDirection, const SAttackMove aSwing) noexcept
 	: myUser(aUser), myDirection(aDirection), mySwing(aSwing)
 {
 
@@ -14,7 +14,7 @@ void WeaponSwingHitShapeAction::BeginAction()
 
 	HitShapeSpawnerFunctionality& hitShapeSpawner = myUser.Get<HitShapeSpawnerFunctionality>();
 
-	hitShapeSpawner.SpawnSwordSwing(mySwing.SwingPath, mySwing.ChargeTime, mySwing.SwingTime, 50.f, 100.f * mySwing.DamageMultipiler);
+	hitShapeSpawner.SpawnSwordSwing(mySwing.AttackPath, mySwing.ChargeTime, mySwing.SwingTime, 50.f, 100.f * mySwing.DamageMultipiler);
 
 	myCooldown = mySwing.ChargeTime + mySwing.SwingTime;
 }

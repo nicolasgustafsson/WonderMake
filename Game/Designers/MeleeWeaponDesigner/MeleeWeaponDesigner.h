@@ -17,9 +17,9 @@ public:
 	MeleeWeapon DesignWeapon();
 
 protected:
-	std::vector<SSwing> CreateMoveset(const MeleeWeapon& aWeapon);
+	std::vector<SAttackMove> CreateMoveset(const MeleeWeapon& aWeapon);
 
-	SSwing DesignSwing(const MeleeWeapon& aWeapon, const bool aMirror) const;
+	SAttackMove DesignSwing(const MeleeWeapon& aWeapon, const bool aMirror) const;
 
-	SSwing DesignFinisher(const MeleeWeapon& aWeapon, const bool aMirror) const;
+	SAttackMove DesignFinisher(const MeleeWeapon& aWeapon, const bool aMirror) const;
 };

@@ -13,25 +13,33 @@ REGISTER_FUNCTIONALITY(MeleeWeaponUserFunctionality);
 
 void MeleeWeaponUserFunctionality::Inspect()
 {
-	Get<SMeleeWeaponUserComponent>().Weapon->Inspect();
+	for (auto&& weapon : Get<SMeleeWeaponUserComponent>().Weapons)
+	{
+		weapon.Inspect();
+	}
 
 	if (ImGui::Button("Randomize"))
 	{
 		MeleeWeaponDesigner2 weaponDesigner;
-		SetWeapon(weaponDesigner.Design({}));
+		std::vector<MeleeWeapon> weapons;
+
+		weapons.emplace_back(weaponDesigner.Design({}));
+		weapons.emplace_back(weaponDesigner.Design({}));
+
+		SetWeapons(std::move(weapons));
 	}
 }
 
-void MeleeWeaponUserFunctionality::SwingWeapon(SVector2f aDirection)
+void MeleeWeaponUserFunctionality::SwingWeapon(u32 aWeaponIndex, SVector2f aDirection)
 {
 	auto& meleeWeaponUserComponent = Get<SMeleeWeaponUserComponent>();
 
-	if (!meleeWeaponUserComponent.Weapon)
+	if (meleeWeaponUserComponent.Weapons.size() <= aWeaponIndex)
 		return;
 
-	auto& actionFunctionality = Get<ActionFunctionality>();
+	auto&& actionFunctionality = Get<ActionFunctionality>();
 
-	MeleeWeapon& weapon = *meleeWeaponUserComponent.Weapon;
+	auto&& weapon = meleeWeaponUserComponent.Weapons[aWeaponIndex];
 
 	if (weapon.myMoveset.Moves.empty())
 		return;
@@ -58,7 +66,7 @@ void MeleeWeaponUserFunctionality::SwingWeapon(SVector2f aDirection)
 		meleeWeaponUserComponent.CurrentSwingIndex++;
 }
 
-void MeleeWeaponUserFunctionality::SetWeapon(MeleeWeapon&& aWeapon)
+void MeleeWeaponUserFunctionality::SetWeapons(std::vector<MeleeWeapon>&& aWeapons)
 {
-	Get<SMeleeWeaponUserComponent>().Weapon.emplace(std::forward<MeleeWeapon>(aWeapon));
+	Get<SMeleeWeaponUserComponent>().Weapons = std::move(aWeapons);
 }

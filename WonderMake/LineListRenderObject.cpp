@@ -12,10 +12,10 @@ LineListRenderObject::LineListRenderObject(const std::vector<SVector2f>& aPoints
 {
 	myShaderProgram.SetProperty("Color", aColor);
 	
-	SetRenderCount(aPoints.size() * 2 + 2);
+	SetRenderCount(static_cast<u32>(aPoints.size() * 2 + 2));
 	
 	SVector2f previousPoint = aPoints.back();
-	for (i32 i = 0; i < aPoints.size() + 1; i++)
+	for (size_t i = 0; i < aPoints.size() + 1; i++)
 	{
 		SVector2f previousLocation = previousPoint;
 		SVector2f location = aPoints[i % aPoints.size()];
@@ -25,8 +25,8 @@ LineListRenderObject::LineListRenderObject(const std::vector<SVector2f>& aPoints
 		SVector2f perpendicularCw = direction.GetPerpendicularClockWise();
 		SVector2f perpendicularCcw = direction.GetPerpendicularCounterClockWise();
 
-		SetAttribute<EVertexAttribute::Position>(i * 2, location + perpendicularCw * (outerThickness));
-		SetAttribute<EVertexAttribute::Position>(i * 2 + 1, location + perpendicularCcw * (innerThickness));
+		SetAttribute<EVertexAttribute::Position>(static_cast<u32>(i * 2), location + perpendicularCw * (outerThickness));
+		SetAttribute<EVertexAttribute::Position>(static_cast<u32>(i * 2 + 1), location + perpendicularCcw * (innerThickness));
 
 		WmDrawDebugLine(location + perpendicularCw * (outerThickness), location + perpendicularCcw * (innerThickness), SColor::Blue(), 100.f);
 

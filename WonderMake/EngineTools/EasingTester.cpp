@@ -13,7 +13,7 @@ enum class EInterpolationMethod
 
 void Plot(std::vector<f32> aPoints, const char* aName)
 {
-	ImGui::PlotLines(aName, aPoints.data(), aPoints.size(), 0, NULL, FLT_MAX, FLT_MAX, { 200.f, 200.f });
+	ImGui::PlotLines(aName, aPoints.data(), static_cast<int>(aPoints.size()), 0, NULL, FLT_MAX, FLT_MAX, { 200.f, 200.f });
 	ImGui::SameLine();
 }
 

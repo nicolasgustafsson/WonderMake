@@ -48,18 +48,18 @@ SConnection& SConnection::operator=(SConnection&& aOther)
 
 std::optional<i32> SNode::GetIndexOfInputSlot(SInputSlotInstanceBase* aSlot) const
 {
-	for (i32 i = 0; i < InputSlotInstances.size(); i++)
+	for (size_t i = 0; i < InputSlotInstances.size(); i++)
 		if (InputSlotInstances[i].get() == aSlot)
-			return i;
+			return static_cast<i32>(i);
 
 	return {};
 }
 
 std::optional<i32> SNode::GetIndexOfOutputSlot(SOutputSlotInstanceBase* aSlot) const
 {
-	for (i32 i = 0; i < OutputSlotInstances.size(); i++)
+	for (size_t i = 0; i < OutputSlotInstances.size(); i++)
 		if (OutputSlotInstances[i].get() == aSlot)
-			return i;
+			return static_cast<i32>(i);
 
 	return {};
 }

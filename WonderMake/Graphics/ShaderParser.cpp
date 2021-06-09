@@ -9,7 +9,7 @@ namespace ShaderParser
 
 		std::ifstream file{ aShaderPath };
 
-		const size_t fileSize = std::filesystem::file_size(aShaderPath);
+		const size_t fileSize = static_cast<size_t>(std::filesystem::file_size(aShaderPath));
 
 		std::string shaderString(fileSize, ' ');
 
@@ -90,7 +90,7 @@ namespace ShaderParser
 						}
 						std::ifstream includedFileStream{ includePath };
 
-						const size_t fileSize = std::filesystem::file_size(includePath);
+						const size_t fileSize = static_cast<size_t>(std::filesystem::file_size(includePath));
 
 						std::string includedShaderString(fileSize, ' ');
 

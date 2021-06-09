@@ -5,7 +5,7 @@
 NodeGraph::NodeGraph(std::filesystem::path aFilePath)
 	: myPath(aFilePath)
 {
-	static u64 uniqueIdCounter = 0;
+	static size_t uniqueIdCounter = 0;
 	myUniqueId = uniqueIdCounter;
 	uniqueIdCounter++;
 }
@@ -341,14 +341,14 @@ void NodeGraph::CompileNodeGraph(SNode& aRoot, std::vector<SCompiledNode>& aNode
 
 void NodeGraph::SerializeInlineInputs(SNode& aNode, json& aInputArray)
 {
-	for (i32 i = 0; i < aNode.InputSlotInstances.size(); i++)
+	for (size_t i = 0; i < aNode.InputSlotInstances.size(); i++)
 	{
 		auto* inputSlotInstance = aNode.InputSlotInstances[i].get();
 
 		if (inputSlotInstance->HasConnection())
 			continue;
 
-		inputSlotInstance->SerializeInlineInput(static_cast<i32>(aNode.Id), i, aInputArray);
+		inputSlotInstance->SerializeInlineInput(static_cast<i32>(aNode.Id), static_cast<i32>(i), aInputArray);
 	}
 }
 

@@ -24,7 +24,7 @@ public:
 
 	void Resize(const u64 aElements)
 	{
-		this->myBackend.resize(aElements);
+		this->myBackend.resize(static_cast<size_t>(aElements));
 	}
 	
 	size_t Erase(const TObjectType& aElementType)

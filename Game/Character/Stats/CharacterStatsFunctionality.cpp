@@ -109,5 +109,7 @@ void SStatChange::Inspect() const
 	case ECharacterStat::MeleeAttackDamage:
 		ImGui::Text("Melee Attack Damage");
 		break;
+	case ECharacterStat::Count:
+		break;
 	}
 }

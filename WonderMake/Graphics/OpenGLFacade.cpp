@@ -158,12 +158,12 @@ void OpenGLFacade::BindBufferToSlot(const GLenum aTarget, const u32 aIndex, cons
 
 void OpenGLFacade::AllocateBufferData(const GLenum aTarget, const i64 aSize, const void* aData, const GLenum aUsage)
 {
-	glBufferData(aTarget, aSize, aData, aUsage);
+	glBufferData(aTarget, static_cast<GLsizeiptr>(aSize), aData, aUsage);
 }
 
 void OpenGLFacade::UpdateBufferData(const GLenum aTarget, const i64 aOffset, const i64 aSize, const void* aData)
 {
-	glBufferSubData(aTarget, aOffset, aSize, aData);
+	glBufferSubData(aTarget, static_cast<GLintptr>(aOffset), static_cast<GLsizeiptr>(aSize), aData);
 }
 
 void OpenGLFacade::DefineVertexAttributeData(const u32 aIndex, const i32 aSize, const GLenum aType, const bool aNormalized, const i32 aStride, const void* aOffset)

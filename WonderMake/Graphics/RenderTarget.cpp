@@ -46,7 +46,7 @@ void RenderTarget::BindAsTarget()
 		return;
 	}
 	openGL->BindFramebuffer(GL_FRAMEBUFFER, myFrameBufferObject);
-	openGL->SetViewportSize(SVector2i(std::lroundf(mySettings.Size.X), std::lroundf(mySettings.Size.Y)));
+	openGL->SetViewportSize(SVector2i(static_cast<i32>(mySettings.Size.X), static_cast<i32>(mySettings.Size.Y)));
 }
 
 void RenderTarget::BindAsTexture(const u32 aIndex /*= 0*/)

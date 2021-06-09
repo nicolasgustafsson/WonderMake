@@ -28,7 +28,7 @@ namespace std {
 	{
 		size_t operator()(const Id& aId) const
 		{
-			return aId.GetRawId();
+			return static_cast<size_t>(aId.GetRawId());
 		}
 	};
 }

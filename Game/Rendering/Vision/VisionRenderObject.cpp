@@ -18,7 +18,7 @@ void VisionRenderObject::SetVision(const std::vector<Geometry::STriangle>& aPoly
 	if (aPolygon.empty())
 		return;
 
-	SetRenderCount(aPolygon.size() * 3);
+	SetRenderCount(static_cast<u32>(aPolygon.size() * 3));
 
 	i32 index = 0;
 	for (auto tri : aPolygon)

@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)External\Imgui\Lib</OutDir>
+    <OutDir>$(SolutionDir)Lib\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
     <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\SoLoud\Inc;$(SolutionDir)External\MetaStuff\Inc;$(SolutionDir)External\stb\Inc;$(IncludePath)</IncludePath>
@@ -80,7 +80,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)External\Imgui\Lib</OutDir>
+    <OutDir>$(SolutionDir)Lib\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
     <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\SoLoud\Inc;$(SolutionDir)External\MetaStuff\Inc;$(SolutionDir)External\stb\Inc;$(IncludePath)</IncludePath>
@@ -88,7 +88,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)External\Imgui\Lib</OutDir>
+    <OutDir>$(SolutionDir)Lib\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
     <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\SoLoud\Inc;$(SolutionDir)External\MetaStuff\Inc;$(SolutionDir)External\stb\Inc;$(IncludePath)</IncludePath>
@@ -96,7 +96,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)External\Imgui\Lib</OutDir>
+    <OutDir>$(SolutionDir)Lib\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
     <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\SoLoud\Inc;$(SolutionDir)External\MetaStuff\Inc;$(SolutionDir)External\stb\Inc;$(IncludePath)</IncludePath>
@@ -105,7 +105,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -114,7 +114,9 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <AdditionalOptions>/w44702 %(AdditionalOptions)</AdditionalOptions>
+      <SupportJustMyCode>false</SupportJustMyCode>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -124,7 +126,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -133,7 +135,9 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <AdditionalOptions>/w44702 %(AdditionalOptions)</AdditionalOptions>
+      <SupportJustMyCode>false</SupportJustMyCode>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -143,7 +147,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -154,7 +158,8 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <AdditionalOptions>/w44702 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -166,7 +171,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -177,7 +182,8 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <AdditionalOptions>/w44702 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

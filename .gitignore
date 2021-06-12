@@ -40,6 +40,10 @@ Bin/*.lib
 Bin/imgui.ini
 Bin/Logs/
 
+Tests/
+
+Lib/
+
 Intermediate/
 
 WonderMakeLauncher/Registry/*.cpp

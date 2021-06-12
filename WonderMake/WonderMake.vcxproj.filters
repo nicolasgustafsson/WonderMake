@@ -81,6 +81,7 @@
     <ClCompile Include="EngineTools\EasingTester.cpp" />
     <ClCompile Include="Job\JobSystem.cpp" />
     <ClCompile Include="Job\JobBase.cpp" />
+    <ClCompile Include="Imgui\AssetBrowser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />

@@ -6,8 +6,11 @@ namespace SlotColors
 	{
 		if constexpr (!Constants::IsDebugging)
 			return ImColor();
-		auto& imguiStyle = ImGui::GetStyle();
-		return imguiStyle.Colors[ImGuiCol_PlotLines];
+		else
+		{
+			auto& imguiStyle = ImGui::GetStyle();
+			return imguiStyle.Colors[ImGuiCol_PlotLines];
+		}
 	}
 
 	template<>

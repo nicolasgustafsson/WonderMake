@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Typedefs.h"
+#include "Utilities/UniqueFunction.h"
 
 namespace Engine
 {

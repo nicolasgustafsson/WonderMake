@@ -70,40 +70,40 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
-    <OutDir>$(SolutionDir)Lib\</OutDir>
+    <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
+    <OutDir>$(ProjectDir)../Lib/</OutDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\CTPL\Inc;$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\SoLoud\Inc;$(SolutionDir)External\stb\Inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../$(ProjectName);$(ProjectDir)../External/CTPL/Inc;$(ProjectDir)../External/glad/Inc;$(ProjectDir)../External/glfw-3.3/Inc;$(ProjectDir)../External/json-3.5.0/Inc;$(ProjectDir)../External/KHR/Inc;$(ProjectDir)../External/SoLoud/Inc;$(ProjectDir)../External/stb/Inc;$(ProjectDir)../Imgui;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <EnableMicrosoftCodeAnalysis>false</EnableMicrosoftCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
-    <OutDir>$(SolutionDir)Lib\</OutDir>
+    <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
+    <OutDir>$(ProjectDir)../Lib/</OutDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\CTPL\Inc;$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\SoLoud\Inc;$(SolutionDir)External\stb\Inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../$(ProjectName);$(ProjectDir)../External/CTPL/Inc;$(ProjectDir)../External/glad/Inc;$(ProjectDir)../External/glfw-3.3/Inc;$(ProjectDir)../External/json-3.5.0/Inc;$(ProjectDir)../External/KHR/Inc;$(ProjectDir)../External/SoLoud/Inc;$(ProjectDir)../External/stb/Inc;$(ProjectDir)../Imgui;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <EnableMicrosoftCodeAnalysis>false</EnableMicrosoftCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
-    <OutDir>$(SolutionDir)Lib\</OutDir>
+    <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
+    <OutDir>$(ProjectDir)../Lib/</OutDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\CTPL\Inc;$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\SoLoud\Inc;$(SolutionDir)External\stb\Inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../$(ProjectName);$(ProjectDir)../External/CTPL/Inc;$(ProjectDir)../External/glad/Inc;$(ProjectDir)../External/glfw-3.3/Inc;$(ProjectDir)../External/json-3.5.0/Inc;$(ProjectDir)../External/KHR/Inc;$(ProjectDir)../External/SoLoud/Inc;$(ProjectDir)../External/stb/Inc;$(ProjectDir)../Imgui;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <EnableMicrosoftCodeAnalysis>false</EnableMicrosoftCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
-    <OutDir>$(SolutionDir)Lib\</OutDir>
+    <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
+    <OutDir>$(ProjectDir)../Lib/</OutDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)$(ProjectName);$(SolutionDir)External\CTPL\Inc;$(SolutionDir)External\glad\Inc;$(SolutionDir)External\glfw-3.3\Inc;$(SolutionDir)External\Imgui\Inc;$(SolutionDir)External\json-3.5.0\Inc;$(SolutionDir)External\KHR\Inc;$(SolutionDir)External\SoLoud\Inc;$(SolutionDir)External\stb\Inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../$(ProjectName);$(ProjectDir)../External/CTPL/Inc;$(ProjectDir)../External/glad/Inc;$(ProjectDir)../External/glfw-3.3/Inc;$(ProjectDir)../External/json-3.5.0/Inc;$(ProjectDir)../External/KHR/Inc;$(ProjectDir)../External/SoLoud/Inc;$(ProjectDir)../External/stb/Inc;$(ProjectDir)../Imgui;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -121,7 +121,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnablePREfast>false</EnablePREfast>
       <CompileAs>CompileAsCpp</CompileAs>
-      <PreprocessorDefinitions>_MBCS;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions);CONFIGURATION_$(Configuration);CONFIGURATION_$(Configuration);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions);CONFIGURATION_$(Configuration);IMGUI_DEFINE_MATH_OPERATORS;CONFIGURATION_$(Configuration);</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <SupportJustMyCode>false</SupportJustMyCode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -144,7 +144,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnablePREfast>false</EnablePREfast>
       <CompileAs>CompileAsCpp</CompileAs>
-      <PreprocessorDefinitions>_MBCS;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions);CONFIGURATION_$(Configuration);CONFIGURATION_$(Configuration);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions);CONFIGURATION_$(Configuration);IMGUI_DEFINE_MATH_OPERATORS;CONFIGURATION_$(Configuration);</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <SupportJustMyCode>false</SupportJustMyCode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -170,7 +170,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnablePREfast>false</EnablePREfast>
       <CompileAs>CompileAsCpp</CompileAs>
-      <PreprocessorDefinitions>_MBCS;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions);CONFIGURATION_$(Configuration);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions);CONFIGURATION_$(Configuration);IMGUI_DEFINE_MATH_OPERATORS;</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -196,7 +196,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnablePREfast>false</EnablePREfast>
       <CompileAs>CompileAsCpp</CompileAs>
-      <PreprocessorDefinitions>_MBCS;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions);CONFIGURATION_$(Configuration);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions);CONFIGURATION_$(Configuration);IMGUI_DEFINE_MATH_OPERATORS;</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

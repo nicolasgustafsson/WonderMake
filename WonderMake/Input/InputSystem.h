@@ -31,8 +31,10 @@ public:
 	[[nodiscard]] SVector2f GetMousePositionInWorld() noexcept;
 	[[nodiscard]] SVector2f GetMousePositionOnWindow() noexcept;
 
+	bool IsKeyPressed(const EKeyboardKey aKey) const noexcept;
 	bool IsKeyDown(const EKeyboardKey aKey) const noexcept;
 	bool IsMouseButtonPressed(const EMouseButton aKey) const noexcept;
+	bool IsMouseButtonDown(const EMouseButton aKey) const noexcept;
 
 private:
 	GLFWwindow* GetCurrentWindow() const;

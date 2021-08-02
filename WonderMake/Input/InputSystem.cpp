@@ -80,6 +80,11 @@ SVector2f InputSystem::GetMousePositionOnWindow() noexcept
 	return { static_cast<f32>(x), static_cast<f32>(y) };
 }
 
+bool InputSystem::IsKeyPressed(const EKeyboardKey aKey) const noexcept
+{
+	return myKeyboardKeyStates[static_cast<u32>(aKey)] == EInputItemState::Pressed;
+}
+
 bool InputSystem::IsKeyDown(const EKeyboardKey aKey) const noexcept
 {
 	return myKeyboardKeyStates[static_cast<u32>(aKey)] == EInputItemState::Down;
@@ -91,6 +96,14 @@ bool InputSystem::IsMouseButtonPressed(const EMouseButton aMouseButton) const no
 		return false;
 
 	return myMouseButtonStates[static_cast<u32>(aMouseButton)] == EInputItemState::Pressed;
+}
+
+bool InputSystem::IsMouseButtonDown(const EMouseButton aMouseButton) const noexcept
+{
+	if (!ShouldCaptureMouseInput())
+		return false;
+
+	return myMouseButtonStates[static_cast<u32>(aMouseButton)] == EInputItemState::Down;
 }
 
 GLFWwindow* InputSystem::GetCurrentWindow() const
@@ -211,7 +224,7 @@ void InputSystem::Debug()
 
 bool InputSystem::ShouldCaptureMouseInput() const noexcept
 {
-	if constexpr (!Constants::IsDebugging)
+	if (!Constants::IsDebugging)
 		return true;
 
 	return Get<CameraManager>().AnyDisplayIsFocused();

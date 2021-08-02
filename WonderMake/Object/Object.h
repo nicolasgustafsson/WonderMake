@@ -19,6 +19,9 @@ public:
 	Object() = default;
 	~Object() noexcept;
 
+	template<typename TType>
+	inline TType& Add();
+
 	// Will not add the type if it already exists.
 	template<typename TType, typename TCreateFunc>
 	inline TType& Add(TCreateFunc aCreateFunc, DependencyDestructor& aDestructor, const bool aExplicitlyAdded = true);
@@ -66,6 +69,12 @@ private:
 	FunctionalityList myFunctionalities;
 	ComponentList myComponents;
 };
+
+template<typename TType>
+inline TType& Object::Add()
+{
+	return SystemPtr<FunctionalitySystem<TType>>()->AddFunctionality(*this, true);
+}
 
 template<typename TType, typename TCreateFunc>
 inline TType& Object::Add(TCreateFunc aCreateFunc, DependencyDestructor& aDestructor, const bool aExplicitlyAdded)

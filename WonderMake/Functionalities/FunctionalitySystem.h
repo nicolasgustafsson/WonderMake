@@ -71,15 +71,24 @@ public:
 
 	inline [[nodiscard]] TFunctionality& AddFunctionality(Object& aObject, const bool aExplicitlyAdded = true)
 	{
-		return aObject.Add<TFunctionality>([this](auto& aObject) -> auto&
+		TFunctionality& added = aObject.Add<TFunctionality>([this](auto& aObject) -> auto&
 		{
 			TFunctionality::InjectDependencies(PopulateDependencies(aObject));
 
 			return *myFunctionalities.emplace();
 		}, myDependencyDestructor, aExplicitlyAdded);
+
+		return added;
 	}
+
 	inline void RemoveFunctionality(TFunctionality& aFunctionality)
 	{
+		if (myInTick)
+		{
+			myFunctionalitiesToErase.insert(&aFunctionality);
+			return;
+		}
+
 		myFunctionalities.erase(myFunctionalities.get_iterator_from_pointer(&aFunctionality));
 	}
 
@@ -90,12 +99,28 @@ public:
 
 	inline [[nodiscard]] void Tick()
 	{
+		myInTick = true;
+		plf::colony<TFunctionality*> functionalitiesReferenced;
+
 		for (auto&& functionality : myFunctionalities)
-			functionality.TFunctionality::Tick();
+			functionalitiesReferenced.insert(&functionality);
+
+		for (auto&& functionality : functionalitiesReferenced)
+			functionality->Tick();
+
+		myInTick = false;
+
+		for (auto&& functionality : myFunctionalitiesToErase)
+			myFunctionalities.erase(myFunctionalities.get_iterator_from_pointer(functionality));
+
+		myFunctionalitiesToErase.clear();
 	}
 
 private:
+
+	bool myInTick = false;
 	plf::colony<TFunctionality>	myFunctionalities;
+	plf::colony<TFunctionality*> myFunctionalitiesToErase;
 	DependencyDestructor		myDependencyDestructor;
 
 	template<typename... TDependencies>

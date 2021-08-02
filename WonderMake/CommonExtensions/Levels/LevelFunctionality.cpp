@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "LevelFunctionality.h"
-#include "Levels/LevelDenizenFunctionality.h"
+#include "LevelDenizenFunctionality.h"
 
 REGISTER_COMPONENT(SLevelComponent);
 REGISTER_FUNCTIONALITY(LevelFunctionality);

@@ -18,7 +18,6 @@
     <ClCompile Include="Character\CharacterFunctionality.cpp" />
     <ClCompile Include="Movement\SpinnerFunctionality.cpp" />
     <ClCompile Include="Physics\StaticGeometryFunctionality.cpp" />
-    <ClCompile Include="Camera\CameraFunctionality.cpp" />
     <ClCompile Include="Designers\LevelDesigner\Geometry\Polygon.cpp" />
     <ClCompile Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonFloatingPointOperator.cpp" />
     <ClCompile Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonPointOperator.cpp" />
@@ -36,9 +35,6 @@
     <ClCompile Include="Levels\BuffGiver\BuffGiverFunctionality.cpp" />
     <ClCompile Include="Levels\BuffGiver\BuffGiverRenderObject.cpp" />
     <ClCompile Include="Levels\LevelPortalFunctionality.cpp" />
-    <ClCompile Include="Levels\LevelFunctionality.cpp" />
-    <ClCompile Include="Levels\LevelDenizenFunctionality.cpp" />
-    <ClCompile Include="UtilityFunctionalities\TimeToLiveFunctionality.cpp" />
     <ClCompile Include="HitShapes\HitShapeFunctionality.cpp" />
     <ClCompile Include="Enemy\EnemyActions\PunchAction.cpp" />
     <ClCompile Include="HitShapes\HitShapeSpawnerFunctionality.cpp" />
@@ -72,7 +68,6 @@
     <ClInclude Include="Character\CharacterFunctionality.h" />
     <ClInclude Include="Movement\SpinnerFunctionality.h" />
     <ClInclude Include="Physics\StaticGeometryFunctionality.h" />
-    <ClInclude Include="Camera\CameraFunctionality.h" />
     <ClInclude Include="Designers\LevelDesigner\Geometry\Polygon.h" />
     <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonSideOperator.h" />
     <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonFloatingPointOperator.h" />
@@ -91,9 +86,6 @@
     <ClInclude Include="Levels\BuffGiver\BuffGiverFunctionality.h" />
     <ClInclude Include="Levels\BuffGiver\BuffGiverRenderObject.h" />
     <ClInclude Include="Levels\LevelPortalFunctionality.h" />
-    <ClInclude Include="Levels\LevelFunctionality.h" />
-    <ClInclude Include="Levels\LevelDenizenFunctionality.h" />
-    <ClInclude Include="UtilityFunctionalities\TimeToLiveFunctionality.h" />
     <ClInclude Include="HitShapes\HitShapeFunctionality.h" />
     <ClInclude Include="Enemy\EnemyActions\PunchAction.h" />
     <ClInclude Include="HitShapes\HitShapeSpawnerFunctionality.h" />

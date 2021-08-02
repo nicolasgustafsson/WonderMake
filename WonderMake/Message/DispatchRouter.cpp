@@ -13,6 +13,10 @@ void DispatchRouter::RouteDispatchable(const Dispatchable& aDispatchedMessage)
 
 	for (auto& subscriberIt : it->second)
 	{
+		if (std::find(myNewUnsubscriptions.begin(), myNewUnsubscriptions.end(), subscriberIt.mySubscription) != myNewUnsubscriptions.end())
+		{
+			continue;
+		}
 		subscriberIt.myCallback(aDispatchedMessage);
 	}
 }

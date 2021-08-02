@@ -27,6 +27,11 @@ private:
 	{
 		const MessageSubscriber* mySubscriber;
 		size_t myTypeHash;
+
+		bool operator==(const SSubscription& aOther) const 
+		{
+			return mySubscriber == aOther.mySubscriber && myTypeHash == aOther.myTypeHash;
+		}
 	};
 
 	struct SSubscriptionOrder

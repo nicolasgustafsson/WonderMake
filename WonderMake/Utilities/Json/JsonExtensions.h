@@ -37,3 +37,16 @@ namespace std
 		aOptional = aJson["value"].get<T>();
 	}
 }
+
+inline void to_json(json& aJson, const SColor& aColor)
+{
+	aJson = { {"R", aColor.R}, {"G", aColor.G}, {"B", aColor.B},{"A", aColor.A}, };
+}
+
+inline void from_json(const json& aJson, SColor& aColor)
+{
+	aColor.R = aJson["R"].get<f32>();
+	aColor.G = aJson["G"].get<f32>();
+	aColor.B = aJson["B"].get<f32>();
+	aColor.A = aJson["A"].get<f32>();
+}

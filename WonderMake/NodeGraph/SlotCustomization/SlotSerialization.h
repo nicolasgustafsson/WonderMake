@@ -8,7 +8,7 @@ namespace InputSlotSerialization
 	template<typename TSlotType> //[Nicos]: I use maybe_unused here to keep the names as an example
 	void SerializeInput([[maybe_unused]] const i32 aNodeId, [[maybe_unused]] const i32 aSlotId, [[maybe_unused]] json& aJson, [[maybe_unused]] TSlotType aSlotValue)
 	{
-
+		WmLog(TagWarning, "Could not serialize input for slot of type ", typeid(aSlotValue).name());
 	}
 
 	template<typename TSlotType>

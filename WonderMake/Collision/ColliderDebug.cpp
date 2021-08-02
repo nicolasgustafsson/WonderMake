@@ -41,7 +41,7 @@ void DrawLine(const Colliders::SCollisionLine& aCollider, const SColor& aColor)
 
 	line.Start = aCollider.Position;
 	line.End = aCollider.GetLineEnd();
-	//WmDrawDebugLine(line);
+	WmDrawDebugLine(line);
 }
 
 void DrawCollider(const Colliders::Shape& aCollider, const SColor& aColor)

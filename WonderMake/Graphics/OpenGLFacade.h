@@ -7,8 +7,6 @@ class OpenGLFacade
 	: public System<>
 {
 public:
-	using Super::Super;
-
 	void Enable(const GLenum aSetting);
 
 	void SetViewportSize(const SVector2i aWindowSize);

@@ -16,11 +16,12 @@ protected:
 	constexpr SystemBase() noexcept = default;
 };
 
-template<typename TPolicySet = Policy::Set<>>
+template<typename ... TPolicies>
 class System
 	: public SystemBase
 {
 public:
+	using TPolicySet = decltype(ConvertToPolicySet<TPolicies...>());
 	using Super = System<TPolicySet>;
 	using PolicySet = TPolicySet;
 	using Dependencies = typename TPolicySet::template DependenciesRef;
@@ -58,5 +59,5 @@ private:
 	friend class FunctionalitySystem;
 };
 
-template<typename TPolicySet>
-thread_local std::optional<typename System<TPolicySet>::Dependencies> System<TPolicySet>::myInjectedDependencies;
+template<typename ... TPolicies>
+thread_local std::optional<typename System<TPolicies...>::Dependencies> System<TPolicies...>::myInjectedDependencies;

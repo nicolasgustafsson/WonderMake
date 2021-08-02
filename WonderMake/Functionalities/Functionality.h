@@ -9,12 +9,13 @@
 
 class Object;
 
-template<
-	typename TPolicySet = Policy::Set<>>
+
+template<typename ... TPolicies>
 class Functionality
 	: public _BaseFunctionality
 {
 public:
+	using TPolicySet = decltype(ConvertToPolicySet<TPolicies...>());
 	using Super = Functionality<TPolicySet>;
 	using Dependencies = typename TPolicySet::DependenciesRef;
 	using PolicySet = TPolicySet;
@@ -51,5 +52,5 @@ private:
 	Dependencies myDependencies;
 };
 
-template<typename TPolicySet>
-thread_local std::optional<typename Functionality<TPolicySet>::Dependencies> Functionality<TPolicySet>::myInjectedDependencies;
+template<typename  ... TPolicies>
+thread_local std::optional<typename Functionality<TPolicies...>::Dependencies> Functionality<TPolicies...>::myInjectedDependencies;

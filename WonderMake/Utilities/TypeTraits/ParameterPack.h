@@ -27,7 +27,6 @@ struct Concatenate<ParameterPack<T1...>, ParameterPack<T2...>, Ts...>
 template<class... Ts>
 using Concatenate_t = typename Concatenate<Ts...>::type;
 
-
 template <typename T, typename... Ts>
 struct Unique : std::type_identity<T> {};
 

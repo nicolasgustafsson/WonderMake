@@ -5,6 +5,7 @@
 #include <type_traits>
 
 #include "Policies/SystemId.h"
+#include "Utilities/TypeTraits/TypeTraits.h"
 
 struct Policy final
 {
@@ -120,3 +121,44 @@ using PAdd = Policy::Add<TDependency, TPermission>;
 
 static constexpr auto PWrite		= Policy::EPermission::Write;
 static constexpr auto PRead			= Policy::EPermission::Read;
+
+template <typename T>
+constexpr auto ConvertToPolicy()
+{
+	if constexpr (std::is_const_v<T>)
+	{
+		return Policy::Add<std::remove_const_t<T>, PRead>();
+	}
+	else
+	{
+		return Policy::Add<std::remove_const_t<T>, PWrite>();
+	}
+}
+
+template<typename T>
+constexpr auto ConvertFromVariadicToSingleType()
+{
+	return T{};
+}
+
+template <typename ... TPolicies>
+constexpr auto ConvertToPolicySet()
+{
+	if constexpr (sizeof...(TPolicies) == 1)
+	{
+		if constexpr (IsTemplateInstanceOf<TPolicies..., Policy::Set>::value)
+		{
+			return ConvertFromVariadicToSingleType<TPolicies...>();
+		}
+		else
+		{
+			using TPolicySet = Policy::Set<decltype(ConvertToPolicy<TPolicies>())...>;
+			return TPolicySet();
+		}
+	}
+	else
+	{
+		using TPolicySet = Policy::Set<decltype(ConvertToPolicy<TPolicies>())...>;
+		return TPolicySet();
+	}
+}

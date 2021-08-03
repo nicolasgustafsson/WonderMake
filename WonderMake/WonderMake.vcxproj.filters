@@ -86,6 +86,11 @@
     <ClCompile Include="CommonExtensions\Levels\LevelFunctionality.cpp" />
     <ClCompile Include="CommonExtensions\Camera\CameraFunctionality.cpp" />
     <ClCompile Include="CommonExtensions\TimeToLiveFunctionality.cpp" />
+    <ClCompile Include="CommonExtensions\AttachedFunctionality.cpp" />
+    <ClCompile Include="CommonExtensions\SpinnerFunctionality.cpp" />
+    <ClCompile Include="Graphics\Text\TextRenderObject.cpp" />
+    <ClCompile Include="Graphics\Text\Font.cpp" />
+    <ClCompile Include="Utilities\Json\JsonUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -286,6 +291,12 @@
     <ClInclude Include="CommonExtensions\Levels\LevelDenizenFunctionality.h" />
     <ClInclude Include="CommonExtensions\Camera\CameraFunctionality.h" />
     <ClInclude Include="CommonExtensions\TimeToLiveFunctionality.h" />
+    <ClInclude Include="CommonExtensions\AttachedFunctionality.h" />
+    <ClInclude Include="CommonExtensions\SpinnerFunctionality.h" />
+    <ClInclude Include="Graphics\Text\TextRenderObject.h" />
+    <ClInclude Include="Graphics\Text\Font.h" />
+    <ClInclude Include="Graphics\Text\FontMetrics.h" />
+    <ClInclude Include="Utilities\Json\JsonUtility.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

@@ -38,6 +38,11 @@ public:
 		return (*(this->myBackend.find(aKey))).second;
 	}
 
+	[[nodiscard]] const TObjectType& Get(const TKeyType& aKey) const
+	{
+		return (*(this->myBackend.find(aKey))).second;
+	}
+
 	IteratorType Erase(IteratorType aIt)
 	{
 		return this->myBackend.erase(aIt);

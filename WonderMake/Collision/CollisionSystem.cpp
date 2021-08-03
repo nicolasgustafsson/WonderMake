@@ -15,6 +15,8 @@ CollisionSystem::CollisionSystem() noexcept
 
 void CollisionSystem::Tick()
 {
+	plf::colony<std::function<void()>> reactionsToTrigger;
+
 	for (Colliders::Shape* shape : myCollidersWithReactions)
 	{
 		Colliders::Shape& shapeRef = *shape;
@@ -23,9 +25,17 @@ void CollisionSystem::Tick()
 				//should iterate backwards ? alt. change to colony
 				for (const Colliders::SReaction& reaction : aCollider.Reactions)
 				{
-					OverlapAgainstFunctionalityInternal(shapeRef, reaction);
+					reactionsToTrigger.insert([this, shapeRef, reaction]()
+					{
+						OverlapAgainstFunctionalityInternal(shapeRef, reaction);
+					});
 				}
 			}, shapeRef);
+	}
+
+	for (auto&& reaction : reactionsToTrigger)
+	{
+		reaction();
 	}
 }
 

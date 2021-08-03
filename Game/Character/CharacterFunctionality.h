@@ -6,9 +6,9 @@
 #include "Movement/DefaultMovementFunctionality.h"
 #include "Character/Stats/CharacterStatsFunctionality.h"
 #include "Character/Buffs/CharacterBuffsFunctionality.h"
-#include "Levels/LevelDenizenFunctionality.h"
 #include "HitShapes/HitShapeSpawnerFunctionality.h"
 #include "UtilityFunctionalities/FactionFunctionality.h"
+#include "CommonExtensions/Levels/LevelDenizenFunctionality.h"
 
 class InputSystem;
 

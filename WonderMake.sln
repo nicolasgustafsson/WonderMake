@@ -19,6 +19,17 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WonderMakeLauncher", "Wonde
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WonderMakeTests", "WonderMakeTests\WonderMakeTests.vcxproj", "{C10C0693-7158-4D39-892B-574A1377E242}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FletcheretteLauncher", "..\FletcheretteLauncher\FletcheretteLauncher.vcxproj", "{9E575EA1-12C7-44ED-A489-16194BC0AEA0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F28CF679-1D5C-4A1A-964A-EF73803C8A76} = {F28CF679-1D5C-4A1A-964A-EF73803C8A76}
+		{BB396F7D-1134-4DAE-B855-1CA77A2B0C04} = {BB396F7D-1134-4DAE-B855-1CA77A2B0C04}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Fletcherette", "..\Fletcherette\Fletcherette.vcxproj", "{F28CF679-1D5C-4A1A-964A-EF73803C8A76}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BB396F7D-1134-4DAE-B855-1CA77A2B0C04} = {BB396F7D-1134-4DAE-B855-1CA77A2B0C04}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -67,6 +78,22 @@ Global
 		{C10C0693-7158-4D39-892B-574A1377E242}.Release|x64.Build.0 = Release|x64
 		{C10C0693-7158-4D39-892B-574A1377E242}.Release|x86.ActiveCfg = Release|Win32
 		{C10C0693-7158-4D39-892B-574A1377E242}.Release|x86.Build.0 = Release|Win32
+		{9E575EA1-12C7-44ED-A489-16194BC0AEA0}.Debug|x64.ActiveCfg = Debug|x64
+		{9E575EA1-12C7-44ED-A489-16194BC0AEA0}.Debug|x64.Build.0 = Debug|x64
+		{9E575EA1-12C7-44ED-A489-16194BC0AEA0}.Debug|x86.ActiveCfg = Debug|Win32
+		{9E575EA1-12C7-44ED-A489-16194BC0AEA0}.Debug|x86.Build.0 = Debug|Win32
+		{9E575EA1-12C7-44ED-A489-16194BC0AEA0}.Release|x64.ActiveCfg = Release|x64
+		{9E575EA1-12C7-44ED-A489-16194BC0AEA0}.Release|x64.Build.0 = Release|x64
+		{9E575EA1-12C7-44ED-A489-16194BC0AEA0}.Release|x86.ActiveCfg = Release|Win32
+		{9E575EA1-12C7-44ED-A489-16194BC0AEA0}.Release|x86.Build.0 = Release|Win32
+		{F28CF679-1D5C-4A1A-964A-EF73803C8A76}.Debug|x64.ActiveCfg = Debug|x64
+		{F28CF679-1D5C-4A1A-964A-EF73803C8A76}.Debug|x64.Build.0 = Debug|x64
+		{F28CF679-1D5C-4A1A-964A-EF73803C8A76}.Debug|x86.ActiveCfg = Debug|Win32
+		{F28CF679-1D5C-4A1A-964A-EF73803C8A76}.Debug|x86.Build.0 = Debug|Win32
+		{F28CF679-1D5C-4A1A-964A-EF73803C8A76}.Release|x64.ActiveCfg = Release|x64
+		{F28CF679-1D5C-4A1A-964A-EF73803C8A76}.Release|x64.Build.0 = Release|x64
+		{F28CF679-1D5C-4A1A-964A-EF73803C8A76}.Release|x86.ActiveCfg = Release|Win32
+		{F28CF679-1D5C-4A1A-964A-EF73803C8A76}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

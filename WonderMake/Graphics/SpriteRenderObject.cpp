@@ -7,7 +7,7 @@ SpriteRenderObject::SpriteRenderObject(const std::string_view aTextureAssetLink)
 		,	std::filesystem::current_path() / "Shaders/Geometry/Sprite.geom"
 		,	std::filesystem::current_path() / "Shaders/Fragment/Sprite.frag"
 		,	aTextureAssetLink
-		,	1 })
+		,	1  })
 {
 	if (myTextures[0].IsValid())
 		myShaderProgram.SetProperty("TextureSize", SVector2f{ static_cast<f32>(myTextures[0]->GetWidth()), static_cast<f32>(myTextures[0]->GetHeight()) });

@@ -31,6 +31,7 @@ GameWorld::GameWorld()
 	RestartLevel(true);
 
 	Get<ScheduleSystem>().ScheduleRepeating<>([this]() { Tick(); });
+
 }
 
 void GameWorld::RestartLevel(const bool aAddPlayer)

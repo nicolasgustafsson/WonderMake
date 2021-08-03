@@ -24,7 +24,6 @@ void Routine::Run()
 
 		SystemPtr<ImguiWrapper>()->EndFrame();
 	}
-
 }
 
 void Routine::RouteMessages()

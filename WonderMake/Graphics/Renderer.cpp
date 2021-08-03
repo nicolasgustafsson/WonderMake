@@ -35,6 +35,7 @@ Renderer::Renderer() noexcept
 {
 	Get<OpenGLFacade>().Enable(GL_DEBUG_OUTPUT);
 	Get<OpenGLFacade>().Enable(GL_BLEND);
+	Get<OpenGLFacade>().Enable(GL_MULTISAMPLE);
 
 	Get<OpenGLFacade>().Enable(GL_DEPTH_TEST);
 

@@ -176,7 +176,10 @@ RenderObject<TAttributes...>::RenderObject(const SRenderObjectInfo& aRenderObjec
 	, myGeometryType(aRenderObjectInfo.GeometryType)
 {
 	myVertexCount = aRenderObjectInfo.VertexCount;
+	
 	if (!aRenderObjectInfo.TextureAssetLink.empty())
+	{
 		myTextures.Add(SystemPtr<AssetDatabase<Texture>>()->GetResource(aRenderObjectInfo.TextureAssetLink));
+	}
 }
 

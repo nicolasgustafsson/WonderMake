@@ -19,7 +19,7 @@ TextRenderObject::TextRenderObject(const std::filesystem::path& aFontPath) :
 }
 
 void TextRenderObject::SetText(const std::string& aText)
-{
+{ 
 	myText = aText;
 	SetRenderCount(static_cast<u32>(myText.size()) * 6);
 	UpdateVertices();

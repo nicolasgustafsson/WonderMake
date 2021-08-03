@@ -1,9 +1,9 @@
 #pragma once
 #include "Utilities/BezierCurve.h"
-#include <UtilityFunctionalities/TimeToLiveFunctionality.h>
 #include "HitShapeRenderObject.h"
 #include "Character/CharacterFunctionality.h"
 #include "UtilityFunctionalities/FactionFunctionality.h"
+#include "CommonExtensions/TimeToLiveFunctionality.h"
 
 class CollisionSystem;
 class TimeKeeper;

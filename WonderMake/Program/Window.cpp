@@ -19,6 +19,7 @@ Window::Window()
 	glfw.SetWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfw.SetWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 	glfw.SetWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfw.SetWindowHint(GLFW_SAMPLES, 4);
 
 	SVector2i windowSize = { windowSettings["X"].get<i32>(), windowSettings["Y"].get<i32>() };
 	myGlfwWindow = glfw.CreateGlfwWindow(windowSize.X, windowSize.Y, "WonderMake", NULL, NULL);

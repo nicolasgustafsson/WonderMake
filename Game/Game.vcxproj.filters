@@ -16,7 +16,6 @@
     <ClCompile Include="Designers\MeleeWeaponDesigner\MeleeWeaponDesigner.cpp" />
     <ClCompile Include="Designers\LevelDesigner\LevelDesigner.cpp" />
     <ClCompile Include="Character\CharacterFunctionality.cpp" />
-    <ClCompile Include="Movement\SpinnerFunctionality.cpp" />
     <ClCompile Include="Physics\StaticGeometryFunctionality.cpp" />
     <ClCompile Include="Designers\LevelDesigner\Geometry\Polygon.cpp" />
     <ClCompile Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonFloatingPointOperator.cpp" />
@@ -66,7 +65,6 @@
     <ClInclude Include="Designers\MeleeWeaponDesigner\MeleeWeaponDesigner.h" />
     <ClInclude Include="Designers\LevelDesigner\LevelDesigner.h" />
     <ClInclude Include="Character\CharacterFunctionality.h" />
-    <ClInclude Include="Movement\SpinnerFunctionality.h" />
     <ClInclude Include="Physics\StaticGeometryFunctionality.h" />
     <ClInclude Include="Designers\LevelDesigner\Geometry\Polygon.h" />
     <ClInclude Include="Designers\LevelDesigner\Geometry\PolygonOperators\PolygonSideOperator.h" />

@@ -1,7 +1,7 @@
 #pragma once
-#include "Levels/LevelDenizenFunctionality.h"
 #include "Functionalities/TransformFunctionality.h"
 #include "Designers/LevelDesigner/Geometry/PolygonOperators/PolygonPointOperator.h"
+#include "CommonExtensions/Levels/LevelDenizenFunctionality.h"
 
 struct SLineOfSightComponent
 	: public SComponent

@@ -249,7 +249,6 @@
     <ClInclude Include="Character\Stats\CharacterStatsFunctionality.h" />
     <ClInclude Include="Levels\BuffGiver\BuffGiverFunctionality.h" />
     <ClInclude Include="Enemy\EnemyActions\PunchAction.h" />
-    <ClInclude Include="Movement\SpinnerFunctionality.h" />
     <ClInclude Include="Designers\LevelDesigner\LevelDesigner.h" />
     <ClInclude Include="Character\CharacterFunctionality.h" />
     <ClInclude Include="Enemy\EnemyControllerFunctionality.h" />
@@ -298,7 +297,6 @@
     <ClCompile Include="Character\Buffs\CharacterBuffsFunctionality.cpp" />
     <ClCompile Include="Character\Stats\CharacterStatsFunctionality.cpp" />
     <ClCompile Include="Levels\BuffGiver\BuffGiverFunctionality.cpp" />
-    <ClCompile Include="Movement\SpinnerFunctionality.cpp" />
     <ClCompile Include="Designers\LevelDesigner\LevelDesigner.cpp" />
     <ClCompile Include="Character\CharacterFunctionality.cpp" />
     <ClCompile Include="Enemy\EnemyControllerFunctionality.cpp" />

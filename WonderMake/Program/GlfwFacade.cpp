@@ -35,6 +35,26 @@ void GlfwFacade::GetCursorPos(GLFWwindow* aWindow, double* aXPosition, double* a
 	glfwGetCursorPos(aWindow, aXPosition, aYPosition);
 }
 
+void GlfwFacade::SetCursorPos(GLFWwindow* aWindow, SVector2f aPosition)
+{
+	glfwSetCursorPos(aWindow, aPosition.X, aPosition.Y);
+}
+
+void GlfwFacade::HideMouse(GLFWwindow* aWindow)
+{
+	SetMouseVisibility(aWindow, false);
+}
+
+void GlfwFacade::ShowMouse(GLFWwindow* aWindow)
+{
+	SetMouseVisibility(aWindow, true);
+}
+
+void GlfwFacade::SetMouseVisibility(GLFWwindow* aWindow, const bool aIsVisible)
+{
+	glfwSetInputMode(aWindow, GLFW_CURSOR, aIsVisible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN);
+}
+
 void GlfwFacade::SetFramebufferSizeCallback(GLFWwindow* aWindow, GLFWframebuffersizefun aCallback)
 {
 	glfwSetFramebufferSizeCallback(aWindow, aCallback);
@@ -63,6 +83,7 @@ GLFWwindow* GlfwFacade::GetCurrentContext()
 void GlfwFacade::MakeContextCurrent(GLFWwindow* aWindow)
 {
 	glfwMakeContextCurrent(aWindow);
+	//glfwSwapInterval(0);
 }
 
 void GlfwFacade::SetWindowHint(const i32 aHintName, const i32 aHintValue)

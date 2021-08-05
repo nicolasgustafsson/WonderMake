@@ -106,15 +106,20 @@ bool InputSystem::IsMouseButtonDown(const EMouseButton aMouseButton) const noexc
 	return myMouseButtonStates[static_cast<u32>(aMouseButton)] == EInputItemState::Down;
 }
 
+void InputSystem::SetMousePosition(const SVector2f aWindowPosition)
+{
+	Get<GlfwFacade>().SetCursorPos(GetCurrentWindow(), aWindowPosition);
+}
+
 GLFWwindow* InputSystem::GetCurrentWindow() const
 {
 	if constexpr (Constants::IsDebugging)
 	{
-		for (auto viewport : ImGui::GetPlatformIO().Viewports)
+		for (const auto viewport : ImGui::GetPlatformIO().Viewports)
 		{
 			if (ImGui::GetPlatformIO().Platform_GetWindowFocus(viewport))
 			{
-				return reinterpret_cast<GLFWwindow*>(viewport->PlatformHandle);
+				return static_cast<GLFWwindow*>(viewport->PlatformHandle);
 			}
 		}
 	}

@@ -16,6 +16,12 @@ public:
 	void GetWindowPos(GLFWwindow* aWindow, int* aXPosition, int* aYPosition);
 	void GetCursorPos(GLFWwindow* aWindow, double* aXPosition, double* aYPosition);
 
+	void SetCursorPos(GLFWwindow* aWindow, SVector2f aPosition);
+
+	void HideMouse(GLFWwindow* aWindow);
+	void ShowMouse(GLFWwindow* aWindow);
+	void SetMouseVisibility(GLFWwindow* aWindow, const bool aIsVisible);
+
 	void SetFramebufferSizeCallback(GLFWwindow* aWindow, GLFWframebuffersizefun aCallback);
 
 	void SetWindowUserPointer(GLFWwindow* aWindow, void* aPointer);

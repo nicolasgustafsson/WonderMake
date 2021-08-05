@@ -16,7 +16,17 @@ SpriteRenderObject::SpriteRenderObject(const std::string_view aTextureAssetLink)
 	SetAttribute<EVertexAttribute::Color>(0, { 1.0f, 1.0f, 1.0f, 1.0f });
 }
 
+void SpriteRenderObject::SetPosition(const SVector2f aPosition)
+{
+	SetAttribute<EVertexAttribute::Position>(0, aPosition);
+}
+
 void SpriteRenderObject::SetColor(const SColor aColor)
 {
 	SetAttribute<EVertexAttribute::Color>(0, aColor);
+}
+
+void SpriteRenderObject::SetScale(const SVector2f aScale)
+{
+	SetAttribute<EVertexAttribute::Scale>(0, aScale);
 }

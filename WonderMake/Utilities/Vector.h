@@ -275,6 +275,7 @@ struct SVector
 	{
 		return static_cast<TRep>(std::sqrt(LengthSquared()));
 	}
+
 	[[nodiscard]] constexpr TRep DistanceTo(const SVector<TRep, TSize> aRhs) const noexcept
 	{
 		return (aRhs - *this).Length();
@@ -289,6 +290,13 @@ struct SVector
 		}
 
 		return sum;
+	}
+
+	constexpr void Resize(TRep aNewLength) noexcept
+	{
+		Normalize();
+
+		(*this) *= aNewLength;
 	}
 
 	template<u64 TArraySize, typename TVector> requires std::is_same_v<SVector, std::decay_t<TVector>>

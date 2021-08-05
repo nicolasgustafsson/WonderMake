@@ -277,7 +277,8 @@ struct SMatrix final
 	inline [[nodiscard]] static SMatrix CreateRotation2D(const TRotation aRotation) noexcept
 		requires (HasOrientation<2> && std::is_floating_point_v<typename TRotation::Representation>)
 	{
-		return SetRotation2D(aRotation);
+		SMatrix matrix;
+		return matrix.SetRotation2D(aRotation);
 	}
 
 	template<typename TRotation>

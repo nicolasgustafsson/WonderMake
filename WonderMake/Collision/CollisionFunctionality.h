@@ -16,12 +16,7 @@ namespace Colliders
 }
 
 class CollisionFunctionality final
-	: public Functionality<
-		Policy::Set<
-			PAdd<CollisionSystem, PWrite>,
-			PAdd<DebugSettingsSystem, PWrite>,
-			PAdd<SCollisionComponent, PWrite>,
-			PAdd<TransformFunctionality2D, PRead>>>
+	: public Functionality<CollisionSystem, DebugSettingsSystem, SCollisionComponent, const TransformFunctionality2D>
 	, public Debugged
 {
 public:

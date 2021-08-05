@@ -71,6 +71,24 @@ namespace WmMath
 	}
 
 	template <class T> requires std::totally_ordered<T>
+	inline [[nodiscard]] constexpr T Min(const T aFirst, const T aSecond) noexcept
+	{
+		if (aFirst < aSecond)
+			return aFirst;
+
+		return aSecond;
+	}
+
+	template <class T> requires std::totally_ordered<T>
+	inline [[nodiscard]] constexpr T Max(const T aFirst, const T aSecond) noexcept
+	{
+		if (aFirst > aSecond)
+			return aFirst;
+
+		return aSecond;
+	}
+
+	template <class T> requires std::totally_ordered<T>
 	inline [[nodiscard]] constexpr T Clamp(const T aMin, const T aMax, const T aValue) noexcept
 	{
 		if (aValue < aMin)

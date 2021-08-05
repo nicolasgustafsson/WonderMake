@@ -16,11 +16,12 @@ public:
 	[[nodiscard]] bool AnyDisplayIsFocused() const;
 
 	void SetViewportSize(const SVector2i aViewportSize);
-protected:
-	void Debug() override;
 
 	[[nodiscard]] const Display* GetFocusedDisplay() const;
 	[[nodiscard]] Display* GetFocusedDisplay();
+
+protected:
+	void Debug() override;
 
 private:
 	plf::colony<Camera> myCameras;

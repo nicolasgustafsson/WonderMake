@@ -44,6 +44,16 @@ void Display::SetViewportSize(const SVector2i aViewportSize) noexcept
 	myRenderGraph->myGlobalData["ViewportSize"].emplace<SVector2f>(myViewportSize);
 }
 
+SVector2f Display::GetViewportSize() const noexcept
+{
+	return myViewportSize;
+}
+
+SVector2f Display::GetImguiWindowOffset() const noexcept
+{
+	return myImguiWindowOffset;
+}
+
 void Display::SetImguiWindowOffset(const SVector2f aImguiOffset) noexcept
 {
 	myImguiWindowOffset = aImguiOffset;

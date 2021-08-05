@@ -5,10 +5,7 @@
 #include "Functionalities/TransformFunctionality.h"
 
 class SpriteRenderingFunctionality
-	: public Functionality<
-		Policy::Set<
-			PAdd<TransformFunctionality2D, PRead>,
-			PAdd<SSpriteComponent, PWrite>>>
+	: public Functionality<TransformFunctionality2D, SSpriteComponent>
 {
 public:
 	void Tick();

@@ -11,12 +11,7 @@ class Renderer;
 class Window;
 
 class InputSystem
-	: public System<
-		Policy::Set<
-			PAdd<GlfwFacade, PWrite>,
-			PAdd<Renderer, PWrite>,
-			PAdd<CameraManager, PWrite>,
-			PAdd<Window, PWrite>>>
+	: public System<GlfwFacade, Renderer, CameraManager, Window>
 	, public Debugged
 {
 public:
@@ -36,8 +31,10 @@ public:
 	bool IsMouseButtonPressed(const EMouseButton aKey) const noexcept;
 	bool IsMouseButtonDown(const EMouseButton aKey) const noexcept;
 
-private:
+	void SetMousePosition(const SVector2f aWindowPosition);
+
 	GLFWwindow* GetCurrentWindow() const;
+private:
 
 	[[nodiscard]] constexpr EInputItemState GetNewInputState(const EInputItemState aOldState, const bool aIsPressed) const noexcept;
 

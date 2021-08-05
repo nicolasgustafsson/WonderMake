@@ -22,6 +22,8 @@ public:
 	
 	void Inspect();
 	void SetViewportSize(const SVector2i aViewportSize) noexcept;
+	SVector2f GetViewportSize() const noexcept;
+	SVector2f GetImguiWindowOffset() const noexcept;
 
 private:
 	void Update();

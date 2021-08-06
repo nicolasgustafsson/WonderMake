@@ -11,6 +11,7 @@ struct SAssetLink
 	Asset<TAssetType>* CachedAsset;
 	std::optional<Id> AssetId;
 	std::optional<Id> SavedAssetId;
+	std::optional<std::filesystem::path> AssetPath;
 	bool IsSelectingAsset = false;
 };
 
@@ -24,7 +25,7 @@ struct SAssetLinkProxy
 template<class T>
 inline void to_json(json& aJson, const SAssetLink<T>& aAssetLink)
 {
-	aJson = { {"AssetId", aAssetLink.SavedAssetId} };
+	aJson = { {"AssetId", aAssetLink.SavedAssetId}, {"AssetPath", aAssetLink.AssetPath} };
 }
 
 template<class T>
@@ -32,5 +33,7 @@ inline void from_json(const json& aJson, SAssetLink<T>& aAssetLink)
 {
 	aAssetLink.AssetId = aJson["AssetId"].get<std::optional<Id>>();
 	aAssetLink.SavedAssetId = aAssetLink.AssetId;
+
+	aAssetLink.AssetPath = aJson["AssetPath"].get<std::optional<std::filesystem::path>>();
 }
 

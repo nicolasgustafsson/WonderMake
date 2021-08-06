@@ -50,8 +50,43 @@ public:
 	{
 		myRootPath = aJson["rootPath"].get<std::filesystem::path>();
 		myAssetLinks = aJson["container"].get<decltype(myAssetLinks)>();
-
 		SweepAssetDirectories();
+
+		for (auto& assetLink : myAssetLinks)
+		{
+			LocateAsset(assetLink.second);
+		}
+
+		Save();
+	}
+
+	void LocateAsset(SAssetLink<TAssetType>& aAssetLink)
+	{
+		if (!aAssetLink.AssetId || !aAssetLink.AssetPath)
+			return;
+
+		if (!myAssets.KeyExists(*(aAssetLink.AssetId)))
+			return;
+
+		if (myAssets.Get(*(aAssetLink.AssetId)).myMetadata.Filepath != aAssetLink.AssetPath)
+		{
+			for(auto& it : myAssets)
+			{
+				Asset<TAssetType>& asset = it.second;
+				if (asset.myMetadata.Filepath == aAssetLink.AssetPath)
+				{
+					aAssetLink.AssetId = asset.myMetadata.AssetId;
+					aAssetLink.SavedAssetId = asset.myMetadata.AssetId;
+					WmLog(TagSuccess, "Located asset!");
+
+					return;
+				}
+			}
+
+			WmLog(TagError, "Could not locate asset with path: ", *(aAssetLink.AssetPath));
+			aAssetLink.AssetId.reset();
+			aAssetLink.SavedAssetId.reset();
+		}
 	}
 
 	Asset<TAssetType>* GetAsset(std::string_view aAssetLink)
@@ -120,7 +155,6 @@ public:
 			Asset<TAssetType> asset{ relativePath, assetId };
 			asset.LoadAsset();
 			myAssets.Add(assetId, asset);
-
 		}
 
 		Save();

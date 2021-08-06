@@ -5,9 +5,11 @@
 namespace WmGui
 {
 	template<std::input_iterator TIterator>
-	[[nodiscard]] std::optional<Id> InlineAssetBrowser(TIterator aBegin, TIterator aEnd, std::optional<Id> aCurrentSelected)
+	[[nodiscard]] std::optional<SAssetMetadata> InlineAssetBrowser(TIterator aBegin, TIterator aEnd, std::optional<Id> aCurrentSelected)
 	{
 		using AssetType = typename TIterator::value_type;
+
+		std::optional<SAssetMetadata> selectedAsset;
 
 		static ImGuiTableFlags flags =
 			ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable
@@ -36,7 +38,7 @@ namespace WmGui
 				idLabel += std::to_string(asset.second.myMetadata.AssetId.GetRawId());
 
 				if (ImGui::Selectable(asset.second.myMetadata.Filepath.string().c_str(), item_is_selected, ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap, ImVec2(0, 0)))
-					aCurrentSelected = asset.second.myMetadata.AssetId;
+					selectedAsset = asset.second.myMetadata;
 
 				ImGui::PopID();
 			}
@@ -44,7 +46,7 @@ namespace WmGui
 
 		ImGui::EndTable();
 
-		return aCurrentSelected;
+		return selectedAsset;
 	}
 
 	//returns true if a new asset was picked
@@ -54,13 +56,27 @@ namespace WmGui
 		std::string windowName = "Pick an asset for <" + std::string(aAssetLinkName) + ">";
 		ImGui::Begin(windowName.c_str());
 
-		aAssetLink.AssetId = WmGui::InlineAssetBrowser(aBegin, aEnd, aAssetLink.AssetId);
+		std::optional<SAssetMetadata> assetMetadata = WmGui::InlineAssetBrowser(aBegin, aEnd, aAssetLink.AssetId);
+
+		if (assetMetadata)
+			aAssetLink.AssetId = assetMetadata->AssetId;
+		else
+			aAssetLink.AssetId.reset();
 
 		bool pickedNewAsset = false;
 
 		if (ImGui::Button("Pick Asset"))
 		{
-			aAssetLink.SavedAssetId = aAssetLink.AssetId;
+			if (assetMetadata)
+			{
+				aAssetLink.SavedAssetId = assetMetadata->AssetId;
+				aAssetLink.AssetPath = assetMetadata->Filepath;
+			}
+			else
+			{
+				aAssetLink.SavedAssetId.reset();
+				aAssetLink.AssetPath.reset();
+			}
 			aAssetLink.IsSelectingAsset = false;
 			pickedNewAsset = true;
 		}

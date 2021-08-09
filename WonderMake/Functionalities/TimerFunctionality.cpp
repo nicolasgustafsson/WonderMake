@@ -5,9 +5,41 @@
 REGISTER_COMPONENT(STimerComponent);
 REGISTER_FUNCTIONALITY(TimerFunctionality);
 
-void TimerFunctionality::AddTimer(const f32 aDuration, Closure aClosure)
+STimerHandle TimerFunctionality::AddTimer(const f32 aDuration, Closure aClosure)
 {
-	Get<STimerComponent>().Timers.insert({ aDuration, std::move(aClosure)});
+	return  { *(Get<STimerComponent>().Timers.insert({ aDuration, std::move(aClosure)})) };
+}
+
+f32 TimerFunctionality::GetTimeLeft(const STimerHandle aTimerHandle) const
+{
+	if (!IsValidTimer(aTimerHandle))
+		return 0.f;
+
+	return Get<STimerComponent>().Timers.get_iterator_from_pointer(&aTimerHandle.Timer)->TimeLeft;
+}
+
+void TimerFunctionality::Invalidate(const STimerHandle aTimerHandle)
+{
+	if (!IsValidTimer(aTimerHandle))
+		return;
+
+	Get<STimerComponent>().Timers.erase(Get<STimerComponent>().Timers.get_iterator_from_pointer(&aTimerHandle.Timer));
+}
+
+void TimerFunctionality::ResetTimer(const STimerHandle aTimerHandle, const f32 aTime)
+{
+	if (!IsValidTimer(aTimerHandle))
+		WmLog(TagWarning, "Tried to set a non-existent timer!");
+
+	Get<STimerComponent>().Timers.get_iterator_from_pointer(&aTimerHandle.Timer)->TimeLeft = aTime;
+}
+
+bool TimerFunctionality::IsValidTimer(const STimerHandle aTimerHandle) const
+{
+	if (Get<STimerComponent>().Timers.empty())
+		return false;
+
+	return Get<STimerComponent>().Timers.get_iterator_from_pointer(&aTimerHandle.Timer) != Get<STimerComponent>().Timers.end();
 }
 
 void TimerFunctionality::Tick() 

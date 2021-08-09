@@ -25,6 +25,17 @@ ShaderProgram::ShaderProgram(const std::filesystem::path& VertexShaderPath, cons
 	Create();
 }
 
+void ShaderProgram::SetUniforms()
+{
+	if (!Activate())
+		return;
+
+	for(auto&& uniformSetter : myUniformSetters)
+	{
+		uniformSetter.second();
+	}
+}
+
 void ShaderProgram::Create()
 {
 	SystemPtr<OpenGLFacade> openGL;
@@ -61,6 +72,33 @@ ShaderProgram::~ShaderProgram()
 	}
 }
 
+void ShaderProgram::SetShader(const EShaderType aShaderType, const std::filesystem::path& aShaderPath)
+{
+	switch(aShaderType)
+	{
+		case EShaderType::Vertex:
+		{
+			SystemPtr<ResourceSystem<Shader<EShaderType::Vertex>>> rmVertex;
+			myVertexShader = rmVertex->GetResource(aShaderPath);
+			break;
+		}
+		case EShaderType::Fragment:
+		{
+			SystemPtr<ResourceSystem<Shader<EShaderType::Fragment>>> rmFragment;
+			myFragmentShader = rmFragment->GetResource(aShaderPath);
+			break;
+		}
+		case EShaderType::Geometry:
+		{
+			SystemPtr<ResourceSystem<Shader<EShaderType::Geometry>>> rmGeometry;
+			myGeometryShader = rmGeometry->GetResource(aShaderPath);
+			break;
+		}
+	}
+
+	Recreate();
+}
+
 void ShaderProgram::Destroy()
 {
 	SystemPtr<OpenGLFacade> openGL;
@@ -72,6 +110,7 @@ void ShaderProgram::Recreate()
 {
 	Destroy();
 	Create();
+	SetUniforms();
 }
 
 bool ShaderProgram::Activate()

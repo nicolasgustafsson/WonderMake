@@ -2,12 +2,11 @@
 #include "Graphics/Shader.h"
 #include "Resources/ResourceProxy.h"
 #include "Utilities/Vector.h"
-#include "Utilities/Vector.h"
-#include "Utilities/Vector.h"
 
 #include <filesystem>
 #include <optional>
 #include "OpenGLFacade.h"
+#include "Utilities/Container/Container.h"
 
 class ShaderProgram : NonCopyable
 {
@@ -17,6 +16,8 @@ public:
 
 	~ShaderProgram();
 
+	void SetShader(const EShaderType aShaderType, const std::filesystem::path& aShaderPath);
+
 	bool Activate();
 
 	template<typename TProperty>
@@ -25,20 +26,33 @@ public:
 		if (!Activate())
 			return;
 
-		SystemPtr<OpenGLFacade> openGL;
+		std::string name{ aName };
+		TProperty uniformProperty = aProperty;
 
-		const i32 location = openGL->GetUniformVariableLocation(*myProgramHandle, aName.data());
+		Closure propertySetter = [this, name, uniformProperty]()
+		{
+			SystemPtr<OpenGLFacade> openGL;
 
-		openGL->SetUniformVariable(location, aProperty);
-	}	
+			const i32 location = openGL->GetUniformVariableLocation(*myProgramHandle, name.data());
+
+			openGL->SetUniformVariable(location, uniformProperty);
+		};
+
+		propertySetter();
+
+		myUniformSetters.Add(std::string(aName), std::move(propertySetter));
+	}
 
 private:
+	void SetUniforms();
 	void Create();
 	void Destroy();
 	void Recreate();
 	bool CheckIfUpToDate();
 
 	std::optional<u32> myProgramHandle;
+
+	Container<Closure, Key<std::string>> myUniformSetters;
 
 	ResourceProxy<Shader<EShaderType::Vertex>> myVertexShader;
 	ResourceProxy<Shader<EShaderType::Fragment>> myFragmentShader;

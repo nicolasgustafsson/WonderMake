@@ -15,14 +15,14 @@ public:
 
 	bool GetRandomBool();
 
-	template <typename T, T... TOptions>
-	T SelectOne()
+	template <SameType ... TOptions>
+	auto SelectOne(TOptions... Options)
 	{
 		const size_t numberOfOptions = sizeof...(TOptions);
 
 		const size_t selectedOption = GetRandomNumber<size_t>(0, numberOfOptions - 1);
 
-		std::array<T, numberOfOptions> optionsAsArray = { { TOptions... } };
+		std::array<FirstType<TOptions...>, numberOfOptions> optionsAsArray = { { Options... } };
 
 		return optionsAsArray[selectedOption];
 	}

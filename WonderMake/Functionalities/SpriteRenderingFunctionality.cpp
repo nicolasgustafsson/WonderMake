@@ -28,6 +28,19 @@ void SpriteRenderingFunctionality::SetTexture(const std::string_view aAssetLink)
 		spriteComponent.RenderObject.emplace(aAssetLink);
 }
 
+void SpriteRenderingFunctionality::SetFragmentShader(const std::filesystem::path& aAssetPath)
+{
+	auto& spriteComponent = Get<SSpriteComponent>();
+	if (!spriteComponent.RenderObject)
+	{
+		WmLog(TagWarning, "Tried to set fragment shader on a sprite render object that doesn't exist!");
+		return;
+	}
+
+	spriteComponent.RenderObject->SetShader(EShaderType::Fragment, aAssetPath);
+	//spriteComponent.RenderObject->SetProperty("TextureSize", )
+}
+
 void SpriteRenderingFunctionality::SetScale(const SVector2f aScale)
 {
 	Get<SSpriteComponent>().RenderObject->SetAttribute<EVertexAttribute::Scale>(0, aScale);

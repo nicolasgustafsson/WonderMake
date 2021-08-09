@@ -78,6 +78,7 @@ public:
 
 	void SetTexture(ResourceProxy<Texture> aResource);
 	void SetTexture(const std::string_view aAssetLinkName);
+	void SetShader(const EShaderType aShaderType, const std::filesystem::path& aShaderFile);
 
 	void BindTextures();
 
@@ -137,6 +138,11 @@ void RenderObject<TAttributes...>::SetTexture(const std::string_view aAssetLinkN
 	SetTexture(SystemPtr<AssetDatabase<Texture>>()->GetResource(aAssetLinkName));
 }
 
+template <EVertexAttribute... TAttributes>
+void RenderObject<TAttributes...>::SetShader(const EShaderType aShaderType, const std::filesystem::path& aShaderFile)
+{
+	myShaderProgram.SetShader(aShaderType, aShaderFile);
+}
 
 template<EVertexAttribute... TAttributes>
 void RenderObject<TAttributes...>::SetRenderCount(const u32 aRenderCount)

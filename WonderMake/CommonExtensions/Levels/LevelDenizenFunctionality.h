@@ -11,9 +11,9 @@ struct SLevelDenizenComponent : public SComponent
 	bool SlatedForRemoval = false;
 };
 
-class LevelDenizenFunctionality : public Functionality<
-	Policy::Set<
-		PAdd<SLevelDenizenComponent, PWrite>>>
+class LevelDenizenFunctionality : public Functionality<SLevelDenizenComponent>
 {
 public:
+	void Destroy();
+	LevelFunctionality* GetLevel() const;
 };

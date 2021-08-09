@@ -29,7 +29,11 @@ namespace WmGui
 			{
 				AssetType& asset = *it;
 
-				const bool item_is_selected = asset.second.myMetadata.AssetId == aCurrentSelected;
+				const bool itemIsSelected = asset.second.myMetadata.AssetId == aCurrentSelected;
+
+				if (itemIsSelected)
+					selectedAsset = asset.second.myMetadata;
+
 				ImGui::PushID(static_cast<i32>(asset.second.myMetadata.AssetId.GetRawId()));
 				ImGui::TableNextRow(ImGuiTableRowFlags_None);
 				ImGui::TableNextColumn();
@@ -37,7 +41,7 @@ namespace WmGui
 				std::string idLabel = "";
 				idLabel += std::to_string(asset.second.myMetadata.AssetId.GetRawId());
 
-				if (ImGui::Selectable(asset.second.myMetadata.Filepath.string().c_str(), item_is_selected, ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap, ImVec2(0, 0)))
+				if (ImGui::Selectable(asset.second.myMetadata.Filepath.string().c_str(), itemIsSelected, ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap, ImVec2(0, 0)))
 					selectedAsset = asset.second.myMetadata;
 
 				ImGui::PopID();

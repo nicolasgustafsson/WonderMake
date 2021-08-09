@@ -77,7 +77,7 @@ public:
 				{
 					aAssetLink.AssetId = asset.myMetadata.AssetId;
 					aAssetLink.SavedAssetId = asset.myMetadata.AssetId;
-					WmLog(TagSuccess, "Located asset!");
+					WmLog(TagSuccess, "Located asset with path ", *(aAssetLink.AssetPath), "!");
 
 					return;
 				}

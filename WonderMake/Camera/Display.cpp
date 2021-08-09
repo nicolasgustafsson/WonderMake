@@ -34,14 +34,17 @@ void Display::Update()
 
 void Display::SetViewportSize(const SVector2i aViewportSize) noexcept
 {
-	myProjectionMatrix[0][0] = 2.0f / aViewportSize.X;
-	myProjectionMatrix[1][1] = 2.0f / aViewportSize.Y;
-
-	myProjectionMatrixInverse[0][0] = aViewportSize.X / 2.0f;
-	myProjectionMatrixInverse[1][1] = aViewportSize.Y / 2.0f;
 	myViewportSize = { aViewportSize.X, aViewportSize.Y };
 
+	UpdateProjection();
+
 	myRenderGraph->myGlobalData["ViewportSize"].emplace<SVector2f>(myViewportSize);
+}
+
+void Display::SetGameSize(const SVector2i aGameSize) noexcept
+{
+	myGameSize = SVector2f(aGameSize.X, aGameSize.Y);
+	UpdateProjection();
 }
 
 SVector2f Display::GetViewportSize() const noexcept
@@ -49,9 +52,29 @@ SVector2f Display::GetViewportSize() const noexcept
 	return myViewportSize;
 }
 
+SVector2f Display::GetGameSize() const noexcept
+{
+	if (myGameSize)
+		return *myGameSize;
+
+	//if no game size is defined, just return the viewport size;
+	return myViewportSize;
+}
+
 SVector2f Display::GetImguiWindowOffset() const noexcept
 {
 	return myImguiWindowOffset;
+}
+
+void Display::UpdateProjection()
+{
+	const SVector2f gameSize = GetGameSize();
+
+	myProjectionMatrix[0][0] = 2.0f / static_cast<f32>(gameSize.X);
+	myProjectionMatrix[1][1] = 2.0f / static_cast<f32>(gameSize.Y);
+
+	myProjectionMatrixInverse[0][0] = static_cast<f32>(gameSize.X) / 2.0f;
+	myProjectionMatrixInverse[1][1] = static_cast<f32>(gameSize.Y) / 2.0f;
 }
 
 void Display::SetImguiWindowOffset(const SVector2f aImguiOffset) noexcept

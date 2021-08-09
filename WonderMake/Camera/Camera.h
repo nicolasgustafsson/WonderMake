@@ -29,6 +29,8 @@ public:
 
 	void Inspect();
 
+	[[nodiscard]] Display* GetFirstDisplay();
+	[[nodiscard]] const Display* GetFirstDisplay() const;
 	[[nodiscard]] Display* GetFocusedDisplay();
 	[[nodiscard]] const Display* GetFocusedDisplay() const;
 

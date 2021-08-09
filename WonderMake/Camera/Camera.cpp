@@ -96,6 +96,26 @@ void Camera::Inspect()
 	ImGui::PopID();
 }
 
+Display* Camera::GetFirstDisplay()
+{
+	if (!myDisplays.empty())
+	{
+		return &(myDisplays.begin()->second);
+	}
+
+	return nullptr;
+}
+
+const Display* Camera::GetFirstDisplay() const
+{
+	if (!myDisplays.empty())
+	{
+		return &(myDisplays.cbegin()->second);
+	}
+
+	return nullptr;
+}
+
 SVector2f Camera::ConvertToWorldPosition(const SVector2f aScreenPosition) const 
 {
 	if (myDisplays.empty())

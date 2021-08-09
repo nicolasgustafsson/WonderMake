@@ -22,10 +22,13 @@ public:
 	
 	void Inspect();
 	void SetViewportSize(const SVector2i aViewportSize) noexcept;
+	void SetGameSize(const SVector2i aGameSize) noexcept;
 	SVector2f GetViewportSize() const noexcept;
+	SVector2f GetGameSize() const noexcept;
 	SVector2f GetImguiWindowOffset() const noexcept;
 
 private:
+	void UpdateProjection();
 	void Update();
 	void SetImguiWindowOffset(const SVector2f aImguiOffset) noexcept;
 
@@ -39,6 +42,7 @@ private:
 
 	SVector2f myImguiWindowOffset;
 	SVector2f myViewportSize;
+	std::optional<SVector2f> myGameSize;
 
 	ResourceProxy<RenderNodeGraph> myRenderGraph;
 

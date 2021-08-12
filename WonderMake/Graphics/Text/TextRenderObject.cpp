@@ -12,8 +12,8 @@ TextRenderObject::TextRenderObject(const std::filesystem::path& aFontPath) :
 		,	6 * 16
 		,	GL_TRIANGLES })
 {
-	SetSize(mySize);
 	myFont = SystemPtr<ResourceSystem<Font>>()->GetResource(aFontPath);
+	SetSize(mySize);
 	SetTexture(myFont->GetTexture());
 	UpdateVertices();
 }
@@ -37,23 +37,46 @@ void TextRenderObject::SetColor(const SColor aColor)
 	SetProperty("Color", aColor);
 }
 
+void TextRenderObject::SetOrigin(const SVector2f aOrigin)
+{
+	myOrigin = aOrigin;
+	UpdateVertices();
+}
+
 void TextRenderObject::SetPosition(const SVector2f aPosition)
 {
 	myPosition = aPosition;
 	UpdateVertices();
 }
 
+SRectangle TextRenderObject::GetBoundingBox() const
+{
+	return myBoundingBox;
+}
+
 void TextRenderObject::UpdateVertices()
 {
+	myBoundingBox = CalculateBoundingBox();
+	const SFontMetrics fontMetrics = myFont->GetFontMetrics();
+
 	SVector2f cursorPosition = myPosition;
+	cursorPosition.Y -= GetAscent() * mySize;
+
+	cursorPosition.X -= myOrigin.X * myBoundingBox.GetWidth();
+	cursorPosition.Y += myOrigin.Y * myBoundingBox.GetHeight();
 	for (u32 i = 0; i < myText.size(); i++)
 	{
-		SGlyphMetrics glyph = myFont->GetGlyphMetrics(myText[i]);
-
+		const SGlyphMetrics glyph = myFont->GetGlyphMetrics(myText[i]);
+		
 		if (myText[i] == '\n')
 		{
-			cursorPosition.Y -= myFont->GetFontMetrics().LineHeight * mySize;
+			cursorPosition.Y -= fontMetrics.LineHeight * mySize;
 			cursorPosition.X = myPosition.X;
+		}
+
+		if (i > 0)
+		{
+			cursorPosition.X += myFont->GetKerning(myText[i - 1], myText[i]) * mySize;
 		}
 
 		SetAttribute<EVertexAttribute::Position>(i * 6 + 0, cursorPosition + SVector2f(glyph.PlaneBounds.Left, glyph.PlaneBounds.Bottom) * mySize);
@@ -73,25 +96,61 @@ void TextRenderObject::UpdateVertices()
 		SetAttribute<EVertexAttribute::TexCoord>(i * 6 + 5, SVector2f(glyph.AtlasBounds.Left, 1.f - glyph.AtlasBounds.Top));
 
 		cursorPosition.X += glyph.Advance * mySize;
-		if (i > 0)
+	}
+}
+
+SRectangle TextRenderObject::CalculateBoundingBox() const
+{
+	const SFontMetrics fontMetrics = myFont->GetFontMetrics();
+
+	SRectangle boundingBox{};
+	boundingBox.Left = myPosition.X;
+
+	f32 maxX = myPosition.X;
+
+	SVector2f cursorPosition = myPosition;
+	cursorPosition.Y -= GetAscent() * mySize;
+	boundingBox.Top = cursorPosition.Y + GetAscent() * mySize;
+
+	for (u32 i = 0; i < myText.size(); i++)
+	{
+		const SGlyphMetrics glyph = myFont->GetGlyphMetrics(myText[i]);
+
+		if (myText[i] == '\n')
 		{
-			cursorPosition.X += myFont->GetKerning(myText[i], myText[i]);
+			cursorPosition.Y -= fontMetrics.LineHeight * mySize;
+			cursorPosition.X = myPosition.X;
 		}
 
+		if (i > 0)
+		{
+			cursorPosition.X += myFont->GetKerning(myText[i - 1], myText[i]) * mySize;
+		}
 
-		//SVector2f previousLocation = previousPoint;
-		//SVector2f location = aPoints[i % aPoints.size()];
-		//SVector2f nextLocation = aPoints[(i + 1) % aPoints.size()];
-		//
-		//SVector2f direction = ((location - nextLocation).GetNormalized() - (location - previousLocation).GetNormalized()).GetNormalized();
-		//SVector2f perpendicularCw = direction.GetPerpendicularClockWise();
-		//SVector2f perpendicularCcw = direction.GetPerpendicularCounterClockWise();
-		//
-		//SetAttribute<EVertexAttribute::Position>(static_cast<u32>(i * 2), location + perpendicularCw * (outerThickness));
-		//SetAttribute<EVertexAttribute::Position>(static_cast<u32>(i * 2 + 1), location + perpendicularCcw * (innerThickness));
-		//
-		//WmDrawDebugLine(location + perpendicularCw * (outerThickness), location + perpendicularCcw * (innerThickness), SColor::Blue(), 100.f);
-		//
-		//previousPoint = location;
+		if (cursorPosition.X + glyph.PlaneBounds.Right * mySize > maxX)
+			maxX = cursorPosition.X + glyph.PlaneBounds.Right * mySize;
+
+		cursorPosition.X += glyph.Advance * mySize;
+
+		if (cursorPosition.X > maxX)
+			maxX = cursorPosition.X;
 	}
+	boundingBox.Right = maxX;
+	boundingBox.Bottom = cursorPosition.Y;// + fontMetrics.Descender * mySize; not including descender here cause it goes "under the line", so if we center it from there it will look off.
+
+	const f32 width = boundingBox.GetWidth();
+	const f32 height = boundingBox.GetHeight();
+
+	boundingBox.Left -= width * myOrigin.X;
+	boundingBox.Right -= width * myOrigin.X;
+	boundingBox.Top += height * myOrigin.Y;
+	boundingBox.Bottom += height * myOrigin.Y;
+
+	return boundingBox;
+}
+
+f32 TextRenderObject::GetAscent() const
+{
+	//this is the best looking result
+	return myFont->GetGlyphMetrics('W').PlaneBounds.Top;
 }

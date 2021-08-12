@@ -43,7 +43,12 @@ void SpriteRenderingFunctionality::SetFragmentShader(const std::filesystem::path
 
 void SpriteRenderingFunctionality::SetScale(const SVector2f aScale)
 {
-	Get<SSpriteComponent>().RenderObject->SetAttribute<EVertexAttribute::Scale>(0, aScale);
+	Get<SSpriteComponent>().RenderObject->SetScale(aScale);
+}
+
+void SpriteRenderingFunctionality::SetScale(const f32 aScale)
+{
+	Get<SSpriteComponent>().RenderObject->SetScale(aScale);
 }
 
 void SpriteRenderingFunctionality::SetRotation(const f32 aRotation)

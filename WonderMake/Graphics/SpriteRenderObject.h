@@ -15,5 +15,6 @@ public:
 	void SetPosition(const SVector2f aPosition);
 	void SetColor(const SColor aColor);
 	void SetScale(const SVector2f aScale);
+	void SetScale(const f32 aScale);
 };
 

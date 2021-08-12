@@ -30,3 +30,8 @@ void SpriteRenderObject::SetScale(const SVector2f aScale)
 {
 	SetAttribute<EVertexAttribute::Scale>(0, aScale);
 }
+
+void SpriteRenderObject::SetScale(const f32 aScale)
+{
+	SetScale({ aScale, aScale });
+}

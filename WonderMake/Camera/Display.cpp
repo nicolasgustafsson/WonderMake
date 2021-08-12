@@ -145,14 +145,18 @@ SVector2f Display::ConvertToWorldPosition(const SVector2f aWindowPosition) const
 	SMatrix33f view = rotationMatrix * myCamera.GetViewMatrix();
 
 	const f32 cameraScale = myCamera.GetScale();
+
 	view[0][0] /= cameraScale;
 	view[0][1] /= cameraScale;
 	view[1][1] /= cameraScale;
 	view[1][0] /= cameraScale;
 
 	SVector2f offsetScreenPosition = aWindowPosition - myImguiWindowOffset;
-	offsetScreenPosition -= myViewportSize / 2.f;
+	offsetScreenPosition -= (myViewportSize / 2.f);
 	offsetScreenPosition.Y = -offsetScreenPosition.Y;
+
+	offsetScreenPosition.X *= (GetGameSize().X / myViewportSize.X);
+	offsetScreenPosition.Y *= (GetGameSize().Y / myViewportSize.Y);
 
 	SMatrix33f screenPositionMatrix = SMatrix33f::Identity();
 	screenPositionMatrix.SetPosition(offsetScreenPosition);

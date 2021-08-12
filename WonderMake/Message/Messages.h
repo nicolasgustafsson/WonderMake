@@ -10,6 +10,8 @@
 #include <sstream>
 #include <memory>
 #include "Utilities/BezierCurve.h"
+#include "Utilities/Geometry.h"
+
 
 template<typename TMessage>
 inline static void WmDispatchMessage(const TMessage& aMessage)
@@ -45,6 +47,14 @@ inline static void WmDrawDebugLine(const SVector2f& aStart, const SVector2f& aEn
 	SDebugLine line{ aColor, aStart, aEnd, aDuration };
 
 	WmDrawDebugLine(line);
+}
+
+inline static void WmDrawDebugRectangle(const SRectangle& aRectangle, const SColor& aColor, const f32 aDuration = 0.0f)
+{
+	WmDrawDebugLine({ aRectangle.Left , aRectangle.Top }, { aRectangle.Left, aRectangle.Bottom }, aColor, aDuration);
+	WmDrawDebugLine({ aRectangle.Right , aRectangle.Top }, { aRectangle.Right, aRectangle.Bottom }, aColor, aDuration);
+	WmDrawDebugLine({ aRectangle.Left , aRectangle.Top }, { aRectangle.Right, aRectangle.Top }, aColor, aDuration);
+	WmDrawDebugLine({ aRectangle.Left , aRectangle.Bottom }, { aRectangle.Right, aRectangle.Bottom }, aColor, aDuration);
 }
 
 inline static void WmDrawDebugBezier(const BezierCurve& aCurve, const SColor& aColor, const i32 aSegments = 10, const f32 aDuration = 0.0f)

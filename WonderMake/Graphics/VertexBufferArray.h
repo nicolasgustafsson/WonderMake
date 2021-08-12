@@ -21,6 +21,9 @@ public:
 
 	void Set(const u32 aVertexIndex, const ValueType aValue)
 	{
+		if (myContainer[aVertexIndex] == aValue)
+			return;
+
 		myContainer[aVertexIndex] = aValue;
 		myIsDirty = true;
 	}

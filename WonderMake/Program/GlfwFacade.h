@@ -20,6 +20,7 @@ public:
 
 	void HideMouse(GLFWwindow* aWindow);
 	void ShowMouse(GLFWwindow* aWindow);
+
 	void SetMouseVisibility(GLFWwindow* aWindow, const bool aIsVisible);
 
 	void SetFramebufferSizeCallback(GLFWwindow* aWindow, GLFWframebuffersizefun aCallback);

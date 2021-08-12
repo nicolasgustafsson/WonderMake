@@ -22,3 +22,4 @@
 #include "Components/Component.h"
 #include "Utilities/TimeKeeper.h"
 #include "Utilities/Json/JsonExtensions.h"
+#include "Utilities/Geometry.h"

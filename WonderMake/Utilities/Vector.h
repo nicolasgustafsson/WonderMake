@@ -292,6 +292,17 @@ struct SVector
 		return sum;
 	}
 
+	[[nodiscard]] constexpr bool IsWithin(const SVector<TRep, TSize> aMin, const SVector<TRep, TSize> aMax) const noexcept
+	{
+		for (u32 i = 0; i < TSize; i++)
+		{
+			if ((*this)[i] < aMin[i] || (*this)[i] > aMax[i])
+				return false;
+		}
+
+		return true;
+	}
+
 	constexpr void Resize(TRep aNewLength) noexcept
 	{
 		Normalize();

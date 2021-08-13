@@ -54,6 +54,12 @@ SRectangle TextRenderObject::GetBoundingBox() const
 	return myBoundingBox;
 }
 
+void TextRenderObject::SetMaxWidth(const f32 aWidth)
+{
+	myMaxWidth = aWidth;
+	UpdateVertices();
+}
+
 void TextRenderObject::UpdateVertices()
 {
 	myBoundingBox = CalculateBoundingBox();
@@ -68,13 +74,13 @@ void TextRenderObject::UpdateVertices()
 	{
 		const SGlyphMetrics glyph = myFont->GetGlyphMetrics(myText[i]);
 		
-		if (myText[i] == '\n')
+		if (myText[i] == '\n' || ((cursorPosition.X - myPosition.X) > myMaxWidth && myMaxWidth > 0.f))
 		{
 			cursorPosition.Y -= fontMetrics.LineHeight * mySize;
 			cursorPosition.X = myPosition.X;
 		}
 
-		if (i > 0)
+		if (i > 0 && cursorPosition.X != myPosition.X)
 		{
 			cursorPosition.X += myFont->GetKerning(myText[i - 1], myText[i]) * mySize;
 		}
@@ -116,13 +122,13 @@ SRectangle TextRenderObject::CalculateBoundingBox() const
 	{
 		const SGlyphMetrics glyph = myFont->GetGlyphMetrics(myText[i]);
 
-		if (myText[i] == '\n')
+		if (myText[i] == '\n' || ((cursorPosition.X - myPosition.X) > myMaxWidth && myMaxWidth > 0.f))
 		{
 			cursorPosition.Y -= fontMetrics.LineHeight * mySize;
 			cursorPosition.X = myPosition.X;
 		}
 
-		if (i > 0)
+		if (i > 0 && cursorPosition.X != myPosition.X)
 		{
 			cursorPosition.X += myFont->GetKerning(myText[i - 1], myText[i]) * mySize;
 		}

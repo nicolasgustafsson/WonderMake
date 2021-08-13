@@ -17,8 +17,11 @@ public:
 
 	SRectangle GetBoundingBox() const;
 
+	void SetMaxWidth(const f32 aWidth);
+
 private:
 
+	f32 myMaxWidth{};
 	void UpdateVertices();
 
 	SRectangle CalculateBoundingBox() const;

@@ -66,6 +66,11 @@ void SpriteRenderingFunctionality::SetColor(const SColor aColor)
 	Get<SSpriteComponent>().RenderObject->SetColor(aColor);
 }
 
+void SpriteRenderingFunctionality::SetRenderOrder(const i32 aOrder)
+{
+	Get<SSpriteComponent>().RenderObject->SetRenderOrder(aOrder);
+}
+
 void SpriteRenderingFunctionality::Hide() noexcept
 {
 	Get<SSpriteComponent>().IsHidden = true;

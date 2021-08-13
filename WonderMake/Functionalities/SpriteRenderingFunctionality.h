@@ -16,6 +16,7 @@ public:
 	void SetRotation(const f32 aRotation);
 	void SetOrigin(const SVector2f aOrigin);
 	void SetColor(const SColor aColor);
+	void SetRenderOrder(const i32 aOrder);
 
 	template<typename TProperty>
 	void SetProperty(std::string_view aName, TProperty aProperty);

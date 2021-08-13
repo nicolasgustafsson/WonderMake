@@ -21,4 +21,37 @@ struct SRectangle
 	{
 		return { Left + GetWidth() * 0.5f, Bottom + GetHeight() * 0.5f };
 	}
+
+	SVector2f GetTopLeft() const
+	{
+		return { Left, Top };
+	}
+
+	SVector2f GetTopRight() const
+	{
+		return { Right, Top };
+	}
+
+	SVector2f GetBottomLeft() const
+	{
+		return { Left, Bottom };
+	}
+
+	SVector2f GetBottomRight() const
+	{
+		return { Right, Bottom };
+	}
+
+	SRectangle GetSmallerRectangle(const f32 aSpacingAmount) const
+	{
+		return { Left + aSpacingAmount, Top - aSpacingAmount, Right - aSpacingAmount, Bottom + aSpacingAmount };
+	}
+
+	void Move(const SVector2f aDelta)
+	{
+		Left += aDelta.X;
+		Right += aDelta.X;
+		Top += aDelta.Y;
+		Bottom += aDelta.Y;
+	}
 };

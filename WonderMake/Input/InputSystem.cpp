@@ -98,6 +98,22 @@ bool InputSystem::IsMouseButtonPressed(const EMouseButton aMouseButton) const no
 	return myMouseButtonStates[static_cast<u32>(aMouseButton)] == EInputItemState::Pressed;
 }
 
+bool InputSystem::IsMouseButtonReleased(const EMouseButton aMouseButton) const noexcept
+{
+	if (!ShouldCaptureMouseInput())
+		return false;
+
+	return myMouseButtonStates[static_cast<u32>(aMouseButton)] == EInputItemState::Released;
+}
+
+bool InputSystem::IsMouseButtonUp(const EMouseButton aMouseButton) const noexcept
+{
+	if (!ShouldCaptureMouseInput())
+		return false;
+
+	return myMouseButtonStates[static_cast<u32>(aMouseButton)] == EInputItemState::Up;
+}
+
 bool InputSystem::IsMouseButtonDown(const EMouseButton aMouseButton) const noexcept
 {
 	if (!ShouldCaptureMouseInput())

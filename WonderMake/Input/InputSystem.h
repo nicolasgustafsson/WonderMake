@@ -28,8 +28,10 @@ public:
 
 	bool IsKeyPressed(const EKeyboardKey aKey) const noexcept;
 	bool IsKeyDown(const EKeyboardKey aKey) const noexcept;
-	bool IsMouseButtonPressed(const EMouseButton aKey) const noexcept;
-	bool IsMouseButtonDown(const EMouseButton aKey) const noexcept;
+	bool IsMouseButtonPressed(const EMouseButton aMouseButton) const noexcept;
+	bool IsMouseButtonReleased(const EMouseButton aMouseButton) const noexcept;
+	bool IsMouseButtonUp(const EMouseButton aMouseButton) const noexcept;
+	bool IsMouseButtonDown(const EMouseButton aMouseButton) const noexcept;
 
 	void SetMousePosition(const SVector2f aWindowPosition);
 

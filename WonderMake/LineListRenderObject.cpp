@@ -11,9 +11,16 @@ LineListRenderObject::LineListRenderObject(const std::vector<SVector2f>& aPoints
 		,   GL_TRIANGLE_STRIP })
 {
 	myShaderProgram.SetProperty("Color", aColor);
-	
+
+	if (!aPoints.empty())
+		SetPoints(aPoints, innerThickness, outerThickness);
+}
+
+void LineListRenderObject::SetPoints(const std::vector<SVector2f>& aPoints, const f32 innerThickness,
+	const f32 outerThickness)
+{
 	SetRenderCount(static_cast<u32>(aPoints.size() * 2 + 2));
-	
+
 	SVector2f previousPoint = aPoints.back();
 	for (size_t i = 0; i < aPoints.size() + 1; i++)
 	{
@@ -28,7 +35,7 @@ LineListRenderObject::LineListRenderObject(const std::vector<SVector2f>& aPoints
 		SetAttribute<EVertexAttribute::Position>(static_cast<u32>(i * 2), location + perpendicularCw * (outerThickness));
 		SetAttribute<EVertexAttribute::Position>(static_cast<u32>(i * 2 + 1), location + perpendicularCcw * (innerThickness));
 
-		WmDrawDebugLine(location + perpendicularCw * (outerThickness), location + perpendicularCcw * (innerThickness), SColor::Blue(), 100.f);
+		//WmDrawDebugLine(location + perpendicularCw * (outerThickness), location + perpendicularCcw * (innerThickness), SColor::Blue(), 100.f);
 
 		previousPoint = location;
 	}

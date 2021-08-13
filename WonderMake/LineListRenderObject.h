@@ -9,6 +9,8 @@ class LineListRenderObject
 public:
 	LineListRenderObject(const std::vector<SVector2f>& aPoints, const f32 innerThickness = 1.0f, const f32 outerThickness = 1.0f, const SColor aColor = SColor::RaisinBlack());
 
+	void SetPoints(const std::vector<SVector2f>& aPoints, const f32 innerThickness = 1.0f, const f32 outerThickness = 1.0f);
+
 	void SetColor(const SColor aColor);
 protected:
 	void RenderInternal() override;

@@ -4,6 +4,8 @@
 #include <cctype>
 #include <iostream>
 
+REGISTER_SYSTEM(ImGuiLogger);
+
 ImGuiLogger::ImGuiLogger()
 	: mySubscriber(BindHelper(&ImGuiLogger::OnLogMessage, this))
 	, Debugged("Output Log")

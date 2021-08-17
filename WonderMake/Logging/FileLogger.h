@@ -3,9 +3,12 @@
 #include "Message/Messages.h"
 #include "Message/MessageSubscriber.h"
 
+#include "System/System.h"
+
 #include <fstream>
 
 class FileLogger
+	: public System<>
 {
 public:
 	FileLogger() noexcept;

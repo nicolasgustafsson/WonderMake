@@ -1,5 +1,7 @@
 #pragma once
 
+class OpenGLFacade;
+
 enum class EBlendMode
 {
 	Alpha,
@@ -31,7 +33,11 @@ struct SRenderSettings final
 
 	bool IsEmpty() const;
 };
-class RenderSettingsManager : public System<>
+
+class RenderSettingsManager
+	: public System<
+		Policy::Set<
+			PAdd<OpenGLFacade, PWrite>>>
 {
 public:
 	RenderSettingsManager();

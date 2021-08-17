@@ -2,11 +2,11 @@
 #include "ConsoleLogger.h"
 #include <iostream>
 
-ConsoleLogger::ConsoleLogger() noexcept
-	:mySubscriber(BindHelper(&ConsoleLogger::OnLogMessage, this))
-{
+REGISTER_SYSTEM(ConsoleLogger);
 
-}
+ConsoleLogger::ConsoleLogger() noexcept
+	: mySubscriber(BindHelper(&ConsoleLogger::OnLogMessage, this))
+{}
 
 void ConsoleLogger::OnLogMessage(const SLogMessage& aMessage)
 {

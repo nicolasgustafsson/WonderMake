@@ -1,6 +1,9 @@
 #pragma once
 #include "Message/MessageSubscriber.h"
-#include <Utilities/Debugging/Debugged.h>
+
+#include "System/System.h"
+
+#include "Utilities/Debugging/Debugged.h"
 
 struct SImGuiLogMessage
 {
@@ -10,6 +13,7 @@ struct SImGuiLogMessage
 
 class ImGuiLogger
 	: public Debugged
+	, public System<>
 {
 public:
 	ImGuiLogger();

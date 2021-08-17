@@ -64,10 +64,10 @@ void RenderSettingsManager::SetBlendMode(const EBlendMode aBlendMode)
 	switch(aBlendMode)
 	{
 	case EBlendMode::Alpha:
-		SystemPtr<OpenGLFacade>()->SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		Get<OpenGLFacade>().SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		break;
 	case EBlendMode::Additive:
-		SystemPtr<OpenGLFacade>()->SetBlendFunction(GL_SRC_ALPHA, GL_ONE);
+		Get<OpenGLFacade>().SetBlendFunction(GL_SRC_ALPHA, GL_ONE);
 		break;
 	}
 }
@@ -77,28 +77,28 @@ void RenderSettingsManager::SetDepthMode(const EDepthMode aDepthMode)
 	switch (aDepthMode)
 	{
 	case EDepthMode::Greater:
-		SystemPtr<OpenGLFacade>()->SetDepthFunction(GL_GREATER);
+		Get<OpenGLFacade>().SetDepthFunction(GL_GREATER);
 		break;
 	case EDepthMode::GreaterEqual:
-		SystemPtr<OpenGLFacade>()->SetDepthFunction(GL_GEQUAL);
+		Get<OpenGLFacade>().SetDepthFunction(GL_GEQUAL);
 		break;
 	case EDepthMode::Equal:
-		SystemPtr<OpenGLFacade>()->SetDepthFunction(GL_EQUAL);
+		Get<OpenGLFacade>().SetDepthFunction(GL_EQUAL);
 		break;
 	case EDepthMode::NotEqual:
-		SystemPtr<OpenGLFacade>()->SetDepthFunction(GL_NOTEQUAL);
+		Get<OpenGLFacade>().SetDepthFunction(GL_NOTEQUAL);
 		break;
 	case EDepthMode::LessEqual:
-		SystemPtr<OpenGLFacade>()->SetDepthFunction(GL_LEQUAL);
+		Get<OpenGLFacade>().SetDepthFunction(GL_LEQUAL);
 		break;
 	case EDepthMode::Less:
-		SystemPtr<OpenGLFacade>()->SetDepthFunction(GL_LESS);
+		Get<OpenGLFacade>().SetDepthFunction(GL_LESS);
 		break;
 	case EDepthMode::Never:
-		SystemPtr<OpenGLFacade>()->SetDepthFunction(GL_NEVER);
+		Get<OpenGLFacade>().SetDepthFunction(GL_NEVER);
 		break;
 	case EDepthMode::Always:
-		SystemPtr<OpenGLFacade>()->SetDepthFunction(GL_ALWAYS);
+		Get<OpenGLFacade>().SetDepthFunction(GL_ALWAYS);
 		break;
 	}
 }

@@ -2,6 +2,8 @@
 #include "Message/MessageTypes.h"
 #include "Message/MessageSubscriber.h"
 
+#include "System/System.h"
+
 enum class EConsoleColor
 {
 	Red,
@@ -12,14 +14,15 @@ enum class EConsoleColor
 };
 
 class ConsoleLogger
+	: public System<>
 {
 public:
 	ConsoleLogger() noexcept;
-	~ConsoleLogger() = default;
 
 private:
 	void OnLogMessage(const SLogMessage& aMessage);
 	void SetColor(const EConsoleColor aColor) noexcept;
+
 	MessageSubscriber mySubscriber;
 };
 

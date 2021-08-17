@@ -27,7 +27,7 @@
     <ClCompile Include="Message\DispatchRouter.cpp" />
     <ClCompile Include="Message\MessageSubscriber.cpp" />
     <ClCompile Include="Program\ImguiWrapper.cpp" />
-    <ClCompile Include="Program\Program.cpp" />
+    <ClCompile Include="Program\ProgramSystem.cpp" />
     <ClCompile Include="Graphics\ShaderProgram.cpp" />
     <ClCompile Include="Graphics\SpriteRenderObject.cpp" />
     <ClCompile Include="pch.cpp" />
@@ -135,7 +135,7 @@
     <ClInclude Include="Message\MessageTypes.h" />
     <ClInclude Include="Message\MessageSubscriber.h" />
     <ClInclude Include="Program\ImguiWrapper.h" />
-    <ClInclude Include="Program\Program.h" />
+    <ClInclude Include="Program\ProgramSystem.h" />
     <ClInclude Include="Graphics\ShaderProgram.h" />
     <ClInclude Include="Graphics\RenderObject.h" />
     <ClInclude Include="Resources\ResourceSystem.h" />

@@ -1,15 +1,18 @@
 #pragma once
-#include <mutex>
+
 #include "Message/MessageSubscriber.h"
 
+#include "System/System.h"
+
 class DockSpace
+	: public System<>
 {
 public:
 	DockSpace();
-	~DockSpace();
 
 private:
-	MessageSubscriber mySubscriber;
 	void OnDebugMessage(const SDebugMessage&);
+
+	MessageSubscriber mySubscriber;
 };
 

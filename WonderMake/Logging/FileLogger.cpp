@@ -10,6 +10,8 @@
 constexpr auto LogFileDirectory = "Logs";
 constexpr auto LogFileSuffix = ".txt";
 
+REGISTER_SYSTEM(FileLogger);
+
 FileLogger::FileLogger() noexcept
 	: mySubscriber(BindHelper(&FileLogger::OnLogMessage, this))
 {

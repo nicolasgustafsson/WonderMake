@@ -1,14 +1,10 @@
 #include "pch.h"
 #include "DockSpace.h"
 
+REGISTER_SYSTEM(DockSpace);
 
 DockSpace::DockSpace()
 	: mySubscriber(BindHelper(&DockSpace::OnDebugMessage, this))
-{
-}
-
-
-DockSpace::~DockSpace()
 {
 }
 

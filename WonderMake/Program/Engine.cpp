@@ -3,8 +3,6 @@
 
 #include "Job/JobSystem.h"
 
-#include "Program/Program.h"
-
 #include "System/SystemContainer.h"
 
 #include "Scheduling/ScheduleSystem.h"
@@ -18,14 +16,8 @@ namespace Engine
 {
 	void Start(Closure&& aCallback)
 	{
-		Program program;
 		Routine routine;
 		TaskManager taskManager;
-
-		taskManager.ScheduleRepeating([&program]()
-			{
-				program.Update();
-			});
 
 		auto scheduleProc = [&taskManager](Closure aTask)
 		{

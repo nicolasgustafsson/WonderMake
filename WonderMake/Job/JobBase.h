@@ -93,7 +93,7 @@ protected:
 	{
 		OnCompleted(EJobResult::Failed);
 
-		// Complete promise
+		myPromise.Fail(std::forward<TArgs>(aArgs)...);
 	}
 
 private:

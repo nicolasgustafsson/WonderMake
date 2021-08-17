@@ -22,11 +22,11 @@ public:
 	template<typename TType, typename TCreateFunc, typename... TDependencies>
 	inline void Add(TCreateFunc aCreateFunc);
 
-	// Note: this function may throw MissingDependencyException if the type or one of its dependencies were not added to the DependencyInjector. No guarantees are given on which dependencies were constructed if this is the case.
+	// Note: This function may throw MissingDependencyException if the type or one of its dependencies were not added to the DependencyInjector. If it throws, no guarantees are given on which dependencies were constructed.
 	template<typename TType>
 	inline TType& Get();
 
-	// Note: this function may throw MissingDependencyException if a dependency is missing, if it throws. No guarantees are given on which dependencies were constructed if this is the case.
+	// Note: This function may throw MissingDependencyException if a dependency is missing. If it throws, no guarantees are given on which dependencies were constructed.
 	void CreateAll();
 
 private:

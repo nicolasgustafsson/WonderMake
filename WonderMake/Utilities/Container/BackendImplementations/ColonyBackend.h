@@ -47,9 +47,18 @@ public:
 	}
 
 	template<typename TObjectTypeFunc> requires std::is_same_v<TObjectType, std::decay_t<TObjectTypeFunc>> || std::is_constructible_v<TObjectType, TObjectTypeFunc>
-	void Add(TObjectTypeFunc aObjectType)
+	auto&& Add(TObjectTypeFunc aObjectType)
 	{
-		this->myBackend.insert(std::forward<TObjectTypeFunc>(aObjectType));
+		auto&& iterator = this->myBackend.insert(std::forward<TObjectTypeFunc>(aObjectType));
+		return *iterator;
+	}
+
+	template<typename ... TObjectTypes>
+	auto&& Emplace(TObjectTypes... aObjectType)
+	{
+		auto&& iterator = this->myBackend.emplace(std::forward<TObjectTypes...>(aObjectType...));
+		 
+		return *iterator;
 	}
 
 	IteratorType Erase(IteratorType aIt)

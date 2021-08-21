@@ -225,6 +225,7 @@
     <ClCompile Include="Graphics\RenderHandle.cpp" />
     <ClCompile Include="Graphics\RenderNodeGraph\RenderNodeTypes.cpp" />
     <ClCompile Include="Graphics\RenderObject.cpp" />
+    <ClCompile Include="Utilities\Guid.cpp" />
     <ClCompile Include="Utilities\Id.cpp" />
     <ClCompile Include="Imgui\Canvas.cpp" />
     <ClCompile Include="Imgui\FileSelector.cpp" />
@@ -308,6 +309,7 @@
     <ClInclude Include="Scheduling\ScheduleSystem.h" />
     <ClInclude Include="Imgui\AssetBrowser.h" />
     <ClInclude Include="Resources\AssetLink.h" />
+    <ClInclude Include="Utilities\Guid.h" />
     <ClInclude Include="Utilities\Id.h" />
     <ClInclude Include="Utilities\Container\BackendImplementations\ColonyBackend.h" />
     <ClInclude Include="Resources\Asset.h" />

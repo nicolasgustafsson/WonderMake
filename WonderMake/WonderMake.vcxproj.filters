@@ -82,6 +82,7 @@
     <ClCompile Include="Job\JobSystem.cpp" />
     <ClCompile Include="Job\JobBase.cpp" />
     <ClCompile Include="Imgui\AssetBrowser.cpp" />
+    <ClCompile Include="Utilities\Guid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -278,6 +279,7 @@
     <ClInclude Include="Utilities\Alias.h" />
     <ClInclude Include="Job\JobOutput.h" />
     <ClInclude Include="Utilities\UniqueValue.h" />
+    <ClInclude Include="Utilities\Guid.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

@@ -3,11 +3,13 @@
 #include "Typedefs.h"
 
 class TimeKeeper;
+class TimerFunctionality;
 
 struct STimer
 {
 	f32 TimeLeft;
 	Closure Callback;
+	Id Id;
 };
 
 struct STimerComponent
@@ -18,33 +20,44 @@ struct STimerComponent
 
 struct STimerHandle
 {
-	STimerHandle(STimer& aTimer)
-		:Timer(aTimer) {}
+	STimerHandle(STimer& aTimer, TimerFunctionality& aFunctionality)
+		:TimerId(aTimer.Id), TimerFunctionality(aFunctionality) {}
 
 	STimerHandle(const STimerHandle& aTimerHandle)
-		:Timer(aTimerHandle.Timer) {}
+		:TimerId(aTimerHandle.TimerId), TimerFunctionality(aTimerHandle.TimerFunctionality) {}
 
 	STimerHandle(STimerHandle&& aTimerHandle) noexcept
-		:Timer(aTimerHandle.Timer) {}
+		:TimerId(aTimerHandle.TimerId), TimerFunctionality(aTimerHandle.TimerFunctionality) {}
+
+	f32 GetTimeLeft() const;
+	void Invalidate() const;
+	void SetTimeLeft(const f32 aTime) const;
+	bool IsValid() const;
 
 	friend class TimerFunctionality;
 private:
-	STimer& Timer;
+	Id TimerId;
+	TimerFunctionality& TimerFunctionality;
 };
 
 class TimerFunctionality
 	: public Functionality<TimeKeeper, STimerComponent>
 {
 public:
-	STimerHandle AddTimer(const f32 aDuration, Closure aClosure);
+	STimerHandle AddTimer(const f32 aDuration, Closure aClosure = [](){});
 
 	f32 GetTimeLeft(const STimerHandle aTimerHandle) const;
 
 	void Invalidate(const STimerHandle aTimerHandle);
 
-	void ResetTimer(const STimerHandle aTimerHandle, const f32 aTime);
+	void SetTimeLeft(const STimerHandle aTimerHandle, const f32 aTime);
 
 	bool IsValidTimer(const STimerHandle aTimerHandle) const;
-	
+
+	STimer const* GetTimerFromHandle(const STimerHandle aTimerHandle) const;
+	STimer* GetTimerFromHandle(const STimerHandle aTimerHandle);
+
 	void Tick();
+
+	IdCounter myIdCounter;
 };

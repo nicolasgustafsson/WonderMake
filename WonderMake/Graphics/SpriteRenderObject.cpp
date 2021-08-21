@@ -35,3 +35,10 @@ void SpriteRenderObject::SetScale(const f32 aScale)
 {
 	SetScale({ aScale, aScale });
 }
+
+SVector2f SpriteRenderObject::GetTextureSize() const
+{
+	if (!myTextures[0].IsValid())
+		return SVector2f::Zero();
+	return { myTextures[0]->GetWidth(), myTextures[0]->GetHeight() };
+}

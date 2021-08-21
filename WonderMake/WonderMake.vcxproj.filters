@@ -91,6 +91,7 @@
     <ClCompile Include="Graphics\Text\TextRenderObject.cpp" />
     <ClCompile Include="Graphics\Text\Font.cpp" />
     <ClCompile Include="Utilities\Json\JsonUtility.cpp" />
+    <ClCompile Include="Graphics\RectangleRenderObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -297,6 +298,7 @@
     <ClInclude Include="Graphics\Text\Font.h" />
     <ClInclude Include="Graphics\Text\FontMetrics.h" />
     <ClInclude Include="Utilities\Json\JsonUtility.h" />
+    <ClInclude Include="Graphics\RectangleRenderObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

@@ -233,6 +233,7 @@
     <ClCompile Include="Graphics\RenderNodeGraph\RenderNodeTypes.cpp" />
     <ClCompile Include="Graphics\RenderObject.cpp" />
     <ClCompile Include="Graphics\Text\TextRenderObject.cpp" />
+    <ClCompile Include="Graphics\RectangleRenderObject.cpp" />
     <ClCompile Include="Utilities\Id.cpp" />
     <ClCompile Include="Imgui\Canvas.cpp" />
     <ClCompile Include="Imgui\FileSelector.cpp" />
@@ -322,6 +323,7 @@
     <ClInclude Include="Job\JobPromise.h" />
     <ClInclude Include="Job\JobSystem.h" />
     <ClInclude Include="Object\CreateObjectJob.h" />
+    <ClInclude Include="Graphics\RectangleRenderObject.h" />
     <ClInclude Include="Scheduling\ScheduleSystem.h" />
     <ClInclude Include="Imgui\AssetBrowser.h" />
     <ClInclude Include="Resources\AssetLink.h" />

@@ -23,3 +23,4 @@
 #include "Utilities/TimeKeeper.h"
 #include "Utilities/Json/JsonExtensions.h"
 #include "Utilities/Geometry.h"
+#include "Utilities/Easing/EasingFunctions.h"

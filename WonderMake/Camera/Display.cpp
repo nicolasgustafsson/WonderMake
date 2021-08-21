@@ -28,6 +28,7 @@ void Display::Update()
 	buffer.ViewProjectionMatrix = viewProjectionMatrix;
 	buffer.Resolution = myViewportSize;
 	buffer.InverseResolution = { 1.f / myViewportSize.X, 1.f /myViewportSize.Y };
+	buffer.GameSize = GetGameSize();
 
 	myUniformBuffer.Update();
 }

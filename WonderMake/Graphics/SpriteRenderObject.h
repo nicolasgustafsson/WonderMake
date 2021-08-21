@@ -17,5 +17,7 @@ public:
 	void SetScale(const SVector2f aScale);
 	void SetScale(const f32 aScale);
 	void SetOrigin(const SVector2f aOrigin);
+
+	SVector2f GetTextureSize() const;
 };
 

@@ -192,6 +192,7 @@
   <ItemGroup>
     <ClCompile Include="ContainerTests.cpp" />
     <ClCompile Include="Functionalities\TransformFunctionalityTests.cpp" />
+    <ClCompile Include="GuidTests.cpp" />
     <ClCompile Include="Job\JobTests.cpp" />
     <ClCompile Include="Utilities\AliasTests.cpp" />
     <ClCompile Include="Utilities\DependencyInjectionTests.cpp" />

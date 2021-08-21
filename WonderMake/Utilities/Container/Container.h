@@ -90,6 +90,16 @@ public:
 
 	template <typename T>
 	constexpr static bool HasTrait = IsSubsetOf<ParameterPack<T>, TraitsPack>::value;
+
+	bool Contains(const TObjectType& aObject) const requires HasTrait<Iterable>
+	{
+		for (auto&& object : this->myBackend)
+		{
+			if (aObject == object)
+				return true;
+		}
+		return false;
+	}
 };
 
 template<typename TObjectType, typename ... TContainerTraits>

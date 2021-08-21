@@ -47,6 +47,11 @@ struct SRectangle
 		return { Left + aSpacingAmount, Top - aSpacingAmount, Right - aSpacingAmount, Bottom + aSpacingAmount };
 	}
 
+	bool ContainsPoint(const SVector2f aPoint) const
+	{
+		return aPoint.X < Right&& aPoint.X > Left && aPoint.Y < Top&& aPoint.Y > Bottom;
+	}
+
 	void Move(const SVector2f aDelta)
 	{
 		Left += aDelta.X;

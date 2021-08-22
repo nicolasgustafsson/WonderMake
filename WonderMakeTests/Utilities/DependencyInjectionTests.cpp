@@ -182,6 +182,52 @@ TEST_CASE("DependencyInjector are injecting the correct objects", "[DependencyIn
 	REQUIRE(greggPtr->myHobbe == hobbePtr);
 }
 
+TEST_CASE("DependencyInjector passed correct dependency when inherited class is registered.", "[DependencyInjector]")
+{
+	struct BaseClass
+	{
+		virtual std::string GetText() const
+		{
+			return "Base";
+		}
+	};
+	struct SubClass : public BaseClass
+	{
+		virtual std::string GetText() const override
+		{
+			return "Sub";
+		}
+	};
+	struct NeedyClass
+	{
+		NeedyClass() = default;
+		NeedyClass(BaseClass& aDep)
+			: myDep(&aDep)
+		{}
+
+		BaseClass* myDep;
+	};
+
+	SubClass sub;
+	NeedyClass needy;
+
+	const auto createSubClass = [&sub]() -> BaseClass&
+	{
+		return sub;
+	};
+	const auto createNeedy = [&needy](BaseClass& aDep) -> NeedyClass&
+	{
+		return needy = NeedyClass(aDep);
+	};
+
+	DependencyInjector di;
+
+	di.Add<BaseClass>(createSubClass);
+	di.Add<NeedyClass, decltype(createNeedy), BaseClass>(createNeedy);
+
+	REQUIRE(di.Get<NeedyClass>().myDep->GetText() == "Sub");
+}
+
 TEST_CASE("DependencyInjector throws an exception when a dependency is missing.", "[DependencyInjector]")
 {
 	Kalle kalle;

@@ -20,11 +20,24 @@ public:
 	};
 
 	template<typename TType, typename TCreateFunc, typename... TDependencies>
-	inline void Add(TCreateFunc aCreateFunc);
+	inline void Add(TCreateFunc aCreateFunc)
+	{
+		myCreateFuncs.emplace(typeid(Key<std::decay_t<TType>>), [createFunc = std::move(aCreateFunc)]([[maybe_unused]] DependencyInjector& aThis)
+		{
+			void* const dependency = (void*)&createFunc(aThis.GetDependency<TDependencies>()...);
+
+			aThis.myDependencies.emplace(typeid(Key<std::decay_t<TType>>), dependency);
+
+			return dependency;
+		});
+	}
 
 	// Note: This function may throw MissingDependencyException if the type or one of its dependencies were not added to the DependencyInjector. If it throws, no guarantees are given on which dependencies were constructed.
 	template<typename TType>
-	inline TType& Get();
+	inline TType& Get()
+	{
+		return GetDependency<TType>();
+	}
 
 	// Note: This function may throw MissingDependencyException if a dependency is missing. If it throws, no guarantees are given on which dependencies were constructed.
 	void CreateAll();
@@ -39,46 +52,24 @@ private:
 	std::unordered_map<std::type_index, void*>		myDependencies;
 
 	template<typename TType>
-	TType& GetDependency();
-};
+	TType& GetDependency()
+	{
+		const auto& typeIndex = typeid(Key<std::decay_t<TType>>);
 
-template<typename TType, typename TCreateFunc, typename... TDependencies>
-inline void DependencyInjector::Add(TCreateFunc aCreateFunc)
-{
-	myCreateFuncs.emplace(typeid(Key<std::decay_t<TType>>), [createFunc = std::move(aCreateFunc)]([[maybe_unused]] DependencyInjector& aThis)
+		const auto depIt = myDependencies.find(typeIndex);
+
+		if (depIt != myDependencies.cend())
 		{
-			void* const dependency = (void*)&createFunc(aThis.GetDependency<TDependencies>()...);
+			return *((TType*)depIt->second);
+		}
 
-			aThis.myDependencies.emplace(typeid(Key<std::decay_t<TType>>), dependency);
+		const auto createIt = myCreateFuncs.find(typeIndex);
 
-			return dependency;
-		});
-}
+		if (createIt == myCreateFuncs.cend())
+		{
+			throw MissingDependencyException(typeIndex.name());
+		}
 
-template<typename TType>
-inline TType& DependencyInjector::Get()
-{
-	return GetDependency<TType>();
-}
-
-template<typename TType>
-TType& DependencyInjector::GetDependency()
-{
-	const auto& typeIndex = typeid(Key<std::decay_t<TType>>);
-
-	const auto depIt = myDependencies.find(typeIndex);
-
-	if (depIt != myDependencies.cend())
-	{
-		return *((TType*)depIt->second);
+		return *((TType*)createIt->second(*this));
 	}
-
-	const auto createIt = myCreateFuncs.find(typeIndex);
-
-	if (createIt == myCreateFuncs.cend())
-	{
-		throw MissingDependencyException(typeIndex.name());
-	}
-
-	return *((TType*)createIt->second(*this));
-}
+};

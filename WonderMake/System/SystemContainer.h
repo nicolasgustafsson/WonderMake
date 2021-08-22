@@ -78,10 +78,12 @@ private:
 	}
 };
 
-template<typename TSystem>
+template<typename TSystem, typename TBaseSystem>
 static void _RegisterSystem()
 {
-	SystemContainer::Get().AddSystem<TSystem>([]() -> TSystem&
+	static_assert(std::is_same_v<TBaseSystem, TSystem> || std::is_base_of_v<TBaseSystem, TSystem>, "Registered system must inherit from the base system.");
+
+	SystemContainer::Get().AddSystem<TBaseSystem>([]() -> TBaseSystem&
 		{
 			static TSystem sys;
 
@@ -89,6 +91,10 @@ static void _RegisterSystem()
 		});
 }
 
-#define _REGISTER_SYSTEM_IMPL(aSystem, aSystemName) WM_AUTO_REGISTER(_RegisterSystem<aSystem>, aSystemName)
+#define _REGISTER_SYSTEM_CLASS(aSystem, aBaseSystem) _RegisterSystem<aSystem, aBaseSystem>
 
+#define _REGISTER_SYSTEM_MASKED_IMPL(aSystem, aBaseSystem, aSystemName) WM_AUTO_REGISTER(_REGISTER_SYSTEM_CLASS(aSystem, aBaseSystem), aSystemName)
+#define _REGISTER_SYSTEM_IMPL(aSystem, aSystemName) _REGISTER_SYSTEM_MASKED_IMPL(aSystem, aSystem, aSystemName)
+
+#define REGISTER_SYSTEM_MASKED(aSystem, aBaseSystem) _REGISTER_SYSTEM_MASKED_IMPL(aSystem, aBaseSystem, aSystem)
 #define REGISTER_SYSTEM(aSystem) _REGISTER_SYSTEM_IMPL(aSystem, aSystem)

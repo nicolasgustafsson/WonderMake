@@ -59,11 +59,20 @@ public:
 	}
 
 	constexpr Guid() noexcept = delete;
-	constexpr Guid(const Guid&) noexcept = default;
-	constexpr Guid(Guid&&) noexcept = default;
+	constexpr Guid(const Guid& aOther) noexcept
+	{
+		*this = aOther;
+	}
 	constexpr Guid(std::array<u8, 16>&& aData) noexcept
 		: std::array<u8, 16>(aData)
 	{}
+
+	constexpr Guid& operator=(const Guid& aRhs) noexcept
+	{
+		std::copy(aRhs.begin(), aRhs.end(), begin());
+
+		return *this;
+	}
 
 	inline explicit operator std::string() const
 	{

@@ -13,6 +13,7 @@
     <ClCompile Include="ContainerTests.cpp" />
     <ClCompile Include="Utilities\UniqueFunctionTests.cpp" />
     <ClCompile Include="Utilities\AliasTests.cpp" />
-    <ClCompile Include="GuidTests.cpp" />
+    <ClCompile Include="Guid\GuidTests.cpp" />
+    <ClCompile Include="Guid\WindowsGuidGeneratorSystemTests.cpp" />
   </ItemGroup>
 </Project>

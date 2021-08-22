@@ -10,24 +10,24 @@
 #include <functional>
 #include <mutex>
 
-class SystemBase;
+class SystemAbstracted;
 
 class SystemContainer final
 	: public Singleton<SystemContainer>
 {
 public:
-	template<typename TSystem, typename TCreateFunc>
+	template<typename TSystem, typename TBaseSystem = TSystem, typename TCreateFunc>
 	inline void AddSystem(TCreateFunc aCreateFunc)
 	{
-		static_assert(std::is_base_of<SystemBase, TSystem>::value, "Tried to add system that does not inherit from System.");
+		static_assert(std::is_base_of<SystemAbstracted, TSystem>::value, "Tried to add system that does not inherit from System.");
 
-		AddSystemHelper<TSystem>(std::move(aCreateFunc), TupleWrapper<typename TSystem::Dependencies>());
+		AddSystemHelper<TSystem, TBaseSystem>(std::move(aCreateFunc), TupleWrapper<typename TSystem::Dependencies>());
 	}
 
 	template<typename TSystem>
 	inline [[nodiscard]] TSystem& GetSystem()
 	{
-		static_assert(std::is_base_of<SystemBase, TSystem>::value, "Tried to get system that does not inherit from System.");
+		static_assert(std::is_base_of<SystemAbstracted, TSystem>::value, "Tried to get system that does not inherit from System.");
 
 		std::lock_guard<decltype(myMutex)> lock(myMutex);
 
@@ -50,7 +50,7 @@ public:
 	template<typename TSystem>
 	inline void CreateSystem()
 	{
-		static_assert(std::is_base_of<SystemBase, TSystem>::value, "Tried to create system that does not inherit from System.");
+		static_assert(std::is_base_of<SystemAbstracted, TSystem>::value, "Tried to create system that does not inherit from System.");
 
 		(void)GetSystem<TSystem>();
 	}
@@ -64,10 +64,10 @@ private:
 	std::recursive_mutex myMutex;
 	DependencyInjector myDependencyInjector;
 
-	template<typename TSystem, typename TCreateFunc, typename ...TDependencies>
+	template<typename TSystem, typename TBaseSystem, typename TCreateFunc, typename ...TDependencies>
 	inline void AddSystemHelper(TCreateFunc aCreateFunc, TupleWrapper<std::tuple<TDependencies...>>&&)
 	{
-		auto construct = [createFunc = std::move(aCreateFunc)](std::decay_t<TDependencies>&... aDependencies)->TSystem&
+		auto construct = [createFunc = std::move(aCreateFunc)](std::decay_t<TDependencies>&... aDependencies)->TBaseSystem&
 		{
 			TSystem::InjectDependencies(std::tie(aDependencies...));
 
@@ -83,7 +83,7 @@ static void _RegisterSystem()
 {
 	static_assert(std::is_same_v<TBaseSystem, TSystem> || std::is_base_of_v<TBaseSystem, TSystem>, "Registered system must inherit from the base system.");
 
-	SystemContainer::Get().AddSystem<TBaseSystem>([]() -> TBaseSystem&
+	SystemContainer::Get().AddSystem<TSystem, TBaseSystem>([]() -> TSystem&
 		{
 			static TSystem sys;
 

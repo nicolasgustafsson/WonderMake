@@ -17,11 +17,10 @@ protected:
 };
 
 template<typename TPolicySet = Policy::Set<>>
-class System
+class SystemSub
 	: public SystemBase
 {
 public:
-	using Super = System<TPolicySet>;
 	using PolicySet = TPolicySet;
 	using Dependencies = typename TPolicySet::template DependenciesRef;
 
@@ -31,7 +30,7 @@ public:
 	}
 
 protected:
-	inline System() noexcept
+	inline SystemSub() noexcept
 		: myDependencies(std::move(*myInjectedDependencies))
 	{
 		myInjectedDependencies.reset();
@@ -59,4 +58,29 @@ private:
 };
 
 template<typename TPolicySet>
-thread_local std::optional<typename System<TPolicySet>::Dependencies> System<TPolicySet>::myInjectedDependencies;
+thread_local std::optional<typename SystemSub<TPolicySet>::Dependencies> SystemSub<TPolicySet>::myInjectedDependencies;
+
+class SystemAbstracted
+	: public NonCopyable
+{
+public:
+	virtual ~SystemAbstracted() = default;
+
+protected:
+	constexpr SystemAbstracted() noexcept = default;
+};
+
+template<typename TPolicySet = Policy::Set<>>
+class System
+	: public SystemAbstracted
+	, public SystemSub<TPolicySet>
+{
+private:
+	using Test = SystemSub<TPolicySet>;
+
+public:
+	using Super = System<TPolicySet>;
+	using Dependencies = Test::Dependencies;
+
+	using Test::Test;
+};

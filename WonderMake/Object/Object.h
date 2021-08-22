@@ -7,7 +7,7 @@
 
 struct SComponent;
 class _BaseFunctionality;
-class SystemBase;
+class SystemAbstracted;
 
 class Object final
 	: public NonMovable
@@ -91,7 +91,7 @@ inline void Object::Remove(const bool aExplicitlyRemoved)
 		Remove<TType>(myComponents, aExplicitlyRemoved);
 	else if constexpr (std::is_base_of<_BaseFunctionality, TType>::value)
 		Remove<TType>(myFunctionalities, aExplicitlyRemoved);
-	else if constexpr (std::is_base_of<SystemBase, TType>::value) {}
+	else if constexpr (std::is_base_of<SystemAbstracted, TType>::value) {}
 	else
 		static_assert(false, "Type must inherit from SComponent or _BaseFunctionality!");
 }

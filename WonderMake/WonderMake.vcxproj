@@ -225,6 +225,7 @@
     <ClCompile Include="Graphics\RenderHandle.cpp" />
     <ClCompile Include="Graphics\RenderNodeGraph\RenderNodeTypes.cpp" />
     <ClCompile Include="Graphics\RenderObject.cpp" />
+    <ClCompile Include="PlatformWindows\PlatformWindowsSystem.cpp" />
     <ClCompile Include="Utilities\Id.cpp" />
     <ClCompile Include="Imgui\Canvas.cpp" />
     <ClCompile Include="Imgui\FileSelector.cpp" />
@@ -306,6 +307,8 @@
     <ClInclude Include="Job\JobPromise.h" />
     <ClInclude Include="Job\JobSystem.h" />
     <ClInclude Include="Object\CreateObjectJob.h" />
+    <ClInclude Include="PlatformWindows\PlatformWindows.h" />
+    <ClInclude Include="PlatformWindows\PlatformWindowsSystem.h" />
     <ClInclude Include="Scheduling\ScheduleSystem.h" />
     <ClInclude Include="Imgui\AssetBrowser.h" />
     <ClInclude Include="Resources\AssetLink.h" />

@@ -83,6 +83,7 @@
     <ClCompile Include="Job\JobBase.cpp" />
     <ClCompile Include="Imgui\AssetBrowser.cpp" />
     <ClCompile Include="Guid\WindowsGuidGeneratorSystem.cpp" />
+    <ClCompile Include="PlatformWindows\PlatformWindowsSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -282,6 +283,8 @@
     <ClInclude Include="Guid\Guid.h" />
     <ClInclude Include="Guid\GuidGeneratorSystem.h" />
     <ClInclude Include="Guid\WindowsGuidGeneratorSystem.h" />
+    <ClInclude Include="PlatformWindows\PlatformWindowsSystem.h" />
+    <ClInclude Include="PlatformWindows\PlatformWindows.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

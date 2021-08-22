@@ -5,7 +5,7 @@
 #include "Guid/Guid.h"
 
 class GuidGeneratorSystem
-	: public System<>
+	: public SystemAbstracted
 {
 public:
 	virtual ~GuidGeneratorSystem() = default;

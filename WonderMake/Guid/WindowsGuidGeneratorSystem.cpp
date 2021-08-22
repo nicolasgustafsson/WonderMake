@@ -1,6 +1,7 @@
 #include "pch.h"
-
 #include "Guid/WindowsGuidGeneratorSystem.h"
+
+#include "PlatformWindows/PlatformWindowsSystem.h"
 
 #include <Combaseapi.h>
 
@@ -12,7 +13,7 @@ std::optional<Guid> WindowsGuidGeneratorSystem::GenerateNew()
 
 	GUID gidReference;
 
-	HRESULT hCreateGuid = CoCreateGuid(&gidReference);
+	HRESULT hCreateGuid = Get<PlatformWindowsSystem>().CoCreateGuid(&gidReference);
 
 	if (hCreateGuid != S_OK)
 		return std::nullopt;

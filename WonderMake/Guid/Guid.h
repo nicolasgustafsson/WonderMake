@@ -52,7 +52,6 @@ public:
 		return std::nullopt;
 	}
 
-	static [[nodiscard]] std::optional<Guid> Random();
 	static [[nodiscard]] constexpr Guid Zero()
 	{
 		return std::array<u8, 16> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };

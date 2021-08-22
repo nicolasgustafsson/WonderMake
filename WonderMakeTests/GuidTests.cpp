@@ -2,7 +2,7 @@
 
 #include <catch2/catch.hpp>
 
-#include "Utilities/Guid.h"
+#include "Guid/Guid.h"
 
 void StaticTest_Guid_Parse()
 {

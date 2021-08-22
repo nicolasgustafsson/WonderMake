@@ -1,10 +1,12 @@
 #include "pch.h"
-#include "Guid.h"
 
-// TODO(Kevin): We need to handle platform specific code in a better manner. ASAP
+#include "Guid/WindowsGuidGeneratorSystem.h"
+
 #include <Combaseapi.h>
 
-[[nodiscard]] std::optional<Guid> Guid::Random()
+REGISTER_SYSTEM_MASKED(WindowsGuidGeneratorSystem, GuidGeneratorSystem);
+
+std::optional<Guid> WindowsGuidGeneratorSystem::GenerateNew()
 {
 	static_assert(sizeof(GUID) <= sizeof(Guid));
 

@@ -7,6 +7,8 @@ namespace Constants
 	constexpr bool IsDebugging = true;
 #endif
 
+	constexpr bool ContainerBoundsChecking = IsDebugging;
+
 	constexpr bool EnableAssetHotReload = true;//IsDebugging;
 
 	constexpr f32 Pi = 3.141592f;

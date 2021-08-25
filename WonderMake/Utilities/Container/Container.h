@@ -81,6 +81,9 @@ class ContainerBase : public _ContainerDetail::ResolvedBackend<TObjectType, TCon
 public:
 	using ResolvedTypes = typename _ContainerDetail::ResolvedTypes<TObjectType, TContainerTraits...>;
 	using TraitsPack = typename ResolvedTypes::TraitsPack;
+	using Key = typename ResolvedTypes::Key;
+
+	using Super = typename _ContainerDetail::ResolvedBackend<TObjectType, TContainerBackends, TContainerTraits...>::Storage;
 
 	template<typename TBackend>
 	inline constexpr bool HasBackend() const
@@ -99,6 +102,32 @@ public:
 				return true;
 		}
 		return false;
+	}
+
+	TObjectType& operator[](const size_t aIndex)
+	{
+		if constexpr (Constants::ContainerBoundsChecking)
+			assert(aIndex < this->Count());
+
+		return Super::operator[](aIndex);
+	}
+
+	const TObjectType& operator[](const size_t aIndex) const
+	{
+		if constexpr (Constants::ContainerBoundsChecking)
+			assert(aIndex < this->Count());
+
+		return Super::operator[](aIndex);
+	}
+
+	TObjectType& operator[](const Key& aKey)
+	{
+		return Super::operator[](aKey);
+	}
+
+	const TObjectType& operator[](const Key& aKey) const
+	{
+		return Super::operator[](aKey);
 	}
 };
 

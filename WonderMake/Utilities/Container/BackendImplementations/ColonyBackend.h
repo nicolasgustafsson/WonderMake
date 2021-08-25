@@ -56,7 +56,7 @@ public:
 	template<typename ... TObjectTypes>
 	auto&& Emplace(TObjectTypes... aObjectType)
 	{
-		auto&& iterator = this->myBackend.emplace(std::forward<TObjectTypes...>(aObjectType...));
+		auto&& iterator = this->myBackend.emplace(std::forward<TObjectTypes>(aObjectType)...);
 		 
 		return *iterator;
 	}

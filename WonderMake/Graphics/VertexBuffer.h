@@ -9,6 +9,20 @@ public:
 	VertexBuffer();
 	VertexBuffer(const std::vector<TVertexData>& aData);
 
+	VertexBuffer(VertexBuffer&& aOther) noexcept
+	{
+		*this = std::move(aOther);
+	}
+
+	VertexBuffer& operator=(VertexBuffer&& aOther) noexcept
+	{
+		myVertexCount = aOther.myVertexCount;
+		myBufferHandle = std::move(aOther.myBufferHandle);
+		aOther.myBufferHandle.reset();
+
+		return *this;
+	}
+
 	void ResizeBuffer(const u32 aCount);
 
 	template<class TContainer>
@@ -17,7 +31,7 @@ public:
 	void Bind(const u32 aIndex);
 
 private:
-	u32 myBufferHandle;
+	std::optional<u32> myBufferHandle;
 	u32 myVertexCount = 0;
 };
 
@@ -40,7 +54,7 @@ void VertexBuffer<TVertexData>::ResizeBuffer(const u32 aCount)
 {
 	SystemPtr<OpenGLFacade> openGL;
 	myVertexCount = aCount;
-	openGL->BindBuffer(GL_ARRAY_BUFFER, myBufferHandle);
+	openGL->BindBuffer(GL_ARRAY_BUFFER, *myBufferHandle);
 	openGL->AllocateBufferData(GL_ARRAY_BUFFER, sizeof(TVertexData) * myVertexCount, nullptr, GL_DYNAMIC_DRAW);
 }
 
@@ -49,7 +63,7 @@ template<class TContainer>
 void VertexBuffer<TVertexData>::SetData(const TContainer& aData)
 {
 	SystemPtr<OpenGLFacade> openGL;
-	openGL->BindBuffer(GL_ARRAY_BUFFER, myBufferHandle);
+	openGL->BindBuffer(GL_ARRAY_BUFFER, *myBufferHandle);
 
 	if (myVertexCount != static_cast<u32>(aData.Count()))
 		ResizeBuffer(static_cast<u32>(aData.Count()));
@@ -61,7 +75,7 @@ template <typename TVertexData>
 void VertexBuffer<TVertexData>::Bind(const u32 aIndex)
 {
 	SystemPtr<OpenGLFacade> openGL;
-	openGL->BindBuffer(GL_ARRAY_BUFFER, myBufferHandle);
+	openGL->BindBuffer(GL_ARRAY_BUFFER, *myBufferHandle);
 	
 	openGL->DefineVertexAttributeData(aIndex, sizeof(TVertexData) / 4, GL_FLOAT, false, 0, nullptr);
 

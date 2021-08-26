@@ -25,6 +25,25 @@ ShaderProgram::ShaderProgram(const std::filesystem::path& VertexShaderPath, cons
 	Create();
 }
 
+ShaderProgram::ShaderProgram(ShaderProgram&& aOther) noexcept
+{
+	*this = std::move(aOther);
+}
+
+ShaderProgram& ShaderProgram::operator=(ShaderProgram&& aOther) noexcept
+{
+	myProgramHandle = std::move (aOther.myProgramHandle);
+	myUniformSetters = std::move(aOther.myUniformSetters);
+	myFragmentShader = std::move(aOther.myFragmentShader);
+	myVertexShader = std::move(aOther.myVertexShader);
+	myGeometryShader = std::move(aOther.myGeometryShader);
+
+	if (aOther.myProgramHandle)
+		aOther.myProgramHandle.reset();
+
+	return *this;
+}
+
 void ShaderProgram::SetUniforms()
 {
 	if (!Activate())

@@ -7,4 +7,3 @@ void RenderHandle::Invalidate()
 	myRenderLayer.RemoveObjectFromQueue(myId);
 }
 
-

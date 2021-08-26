@@ -25,7 +25,12 @@ struct SRenderObjectInfo
 class BaseRenderObject
 {
 public:
+	BaseRenderObject() = default;
 	virtual ~BaseRenderObject();
+
+	BaseRenderObject(BaseRenderObject&& aOther) noexcept;
+	BaseRenderObject& operator=(BaseRenderObject&& aOther) noexcept;
+
 	void Render();
 	void RenderImmediate();
 
@@ -75,6 +80,28 @@ class RenderObject : public BaseRenderObject
 {
 public:
 	RenderObject(const SRenderObjectInfo& aRenderObjectInfo);
+
+	RenderObject(RenderObject&& aOther) noexcept
+		:myShaderProgram(std::move(aOther.myShaderProgram))
+	{
+		myVertexBufferArray = std::move(aOther.myVertexBufferArray);
+		myTextures = std::move(aOther.myTextures);
+		myRenderCount = std::move(aOther.myRenderCount);
+		myGeometryType = aOther.myGeometryType;
+		myVertexCount = aOther.myVertexCount;
+	}
+
+	RenderObject& operator=(RenderObject&& aOther) noexcept
+	{	
+		myShaderProgram = std::move(aOther.myShaderProgram);
+		myVertexBufferArray = std::move(aOther.myVertexBufferArray);
+		myTextures = std::move(aOther.myTextures);
+		myRenderCount = std::move(aOther.myRenderCount);
+		myGeometryType = aOther.myGeometryType;
+		myVertexCount = aOther.myVertexCount;
+
+		return *this;
+	}
 
 	void SetTexture(ResourceProxy<Texture> aResource);
 	void SetTexture(const std::string_view aAssetLinkName);

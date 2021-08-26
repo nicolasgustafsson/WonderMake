@@ -7,12 +7,29 @@
 #include "Utilities/Container/Container.h"
 
 template<EVertexAttribute TAttribute>
-class SVertexAttributeContainer final
+class SVertexAttributeContainer final : NonCopyable
 {
 private:
 	using ValueType = decltype(GetValueFromAttribute<TAttribute>());
 
 public:
+	SVertexAttributeContainer() = default;
+
+	SVertexAttributeContainer(SVertexAttributeContainer&& aOther) noexcept
+	{
+		*this = aOther;
+	}
+
+	SVertexAttributeContainer& operator=(SVertexAttributeContainer&& aOther) noexcept
+	{
+		myContainer = std::move(aOther.myContainer);
+		myVertexBuffer = std::move(aOther.myVertexBuffer);
+		myVertexAttributeIndex = aOther.myVertexAttributeIndex;
+		myIsDirty = aOther.myIsDirty;
+
+		return *this;
+	}
+
 	void Resize(const u32 aSize)
 	{
 		myContainer.Resize(aSize);
@@ -63,6 +80,20 @@ public:
 	~VertexBufferArray();
 	VertexBufferArray(const u32 aSize);
 
+	VertexBufferArray(VertexBufferArray&& aOther) noexcept
+	{
+		*this = aOther;
+	}
+
+	VertexBufferArray& operator=(VertexBufferArray&& aOther) noexcept
+	{
+		myAttributeData = std::move(aOther.myAttributeData);
+		myVao = std::move(aOther.myVao);
+		aOther.myVao.reset();
+
+		return *this;
+	}
+
 	void Render();
 
 	template<EVertexAttribute TAttribute>
@@ -74,14 +105,15 @@ public:
 private:
 	std::tuple<SVertexAttributeContainer<TAttributes>...> myAttributeData;
 
-	u32 myVao;
+	std::optional<u32> myVao;
 };
 
 template<EVertexAttribute... TAttributes>
 VertexBufferArray<TAttributes...>::~VertexBufferArray()
 {
 	SystemPtr<OpenGLFacade> openGL;
-	openGL->DeleteVertexArray(myVao);
+	if (myVao)
+		openGL->DeleteVertexArray(*myVao);
 }
 
 template<EVertexAttribute... TAttributes>
@@ -105,7 +137,7 @@ template<EVertexAttribute... TAttributes>
 void VertexBufferArray<TAttributes...>::Render()
 {
 	SystemPtr<OpenGLFacade> openGL;
-	openGL->BindVertexArray(myVao);
+	openGL->BindVertexArray(*myVao);
 
 	(std::get<SVertexAttributeContainer<TAttributes>>(myAttributeData).Update(), ...);
 }

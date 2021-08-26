@@ -14,6 +14,9 @@ public:
 	ShaderProgram() = delete;
 	ShaderProgram(const std::filesystem::path& aVertexShaderPath, const std::filesystem::path& aFragmentShaderPath, const std::filesystem::path& aGeometryShaderPath = "");
 
+	ShaderProgram(ShaderProgram&& aOther) noexcept;
+	ShaderProgram& operator=(ShaderProgram&& aOther) noexcept;
+
 	~ShaderProgram();
 
 	void SetShader(const EShaderType aShaderType, const std::filesystem::path& aShaderPath);

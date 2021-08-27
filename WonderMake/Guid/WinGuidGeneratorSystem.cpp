@@ -3,8 +3,6 @@
 
 #include "WinPlatform/WinPlatformSystem.h"
 
-#include <Combaseapi.h>
-
 REGISTER_SYSTEM_MASKED(WinGuidGeneratorSystem, GuidGeneratorSystem);
 
 std::optional<Guid> WinGuidGeneratorSystem::GenerateNew()

@@ -2,16 +2,16 @@
 
 #include <catch2/catch.hpp>
 
-#include "Guid/WindowsGuidGeneratorSystem.h"
-#include "PlatformWindows/PlatformWindows.h"
-#include "PlatformWindows/PlatformWindowsSystem.h"
+#include "Guid/WinGuidGeneratorSystem.h"
+#include "WinPlatform/WinPlatform.h"
+#include "WinPlatform/WinPlatformSystem.h"
 
 constexpr Guid GuidData = std::array<u8, 16> { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
 
-TEST_CASE("GenerateNew returns a valid Guid.", "[WindowsGuidGeneratorSystem]")
+TEST_CASE("GenerateNew returns a valid Guid.", "[WinGuidGeneratorSystem]")
 {
 	class PlatformWindowsSystemMock
-		: public PlatformWindowsSystem
+		: public WinPlatformSystem
 	{
 	public:
 		HRESULT CoCreateGuid(GUID* pguid) override
@@ -24,9 +24,9 @@ TEST_CASE("GenerateNew returns a valid Guid.", "[WindowsGuidGeneratorSystem]")
 
 	PlatformWindowsSystemMock mock;
 
-	WindowsGuidGeneratorSystem::InjectDependencies(std::tie(mock));
+	WinGuidGeneratorSystem::InjectDependencies(std::tie(mock));
 
-	WindowsGuidGeneratorSystem guidGenerator;
+	WinGuidGeneratorSystem guidGenerator;
 
 	const auto guid = guidGenerator.GenerateNew();
 
@@ -34,10 +34,10 @@ TEST_CASE("GenerateNew returns a valid Guid.", "[WindowsGuidGeneratorSystem]")
 	REQUIRE(*guid == GuidData);
 }
 
-TEST_CASE("GenerateNew returns nullopt on error.", "[WindowsGuidGeneratorSystem]")
+TEST_CASE("GenerateNew returns nullopt on error.", "[WinGuidGeneratorSystem]")
 {
 	class PlatformWindowsSystemMock
-		: public PlatformWindowsSystem
+		: public WinPlatformSystem
 	{
 	public:
 		HRESULT CoCreateGuid(GUID* /*pguid*/) override
@@ -48,9 +48,9 @@ TEST_CASE("GenerateNew returns nullopt on error.", "[WindowsGuidGeneratorSystem]
 
 	PlatformWindowsSystemMock mock;
 
-	WindowsGuidGeneratorSystem::InjectDependencies(std::tie(mock));
+	WinGuidGeneratorSystem::InjectDependencies(std::tie(mock));
 
-	WindowsGuidGeneratorSystem guidGenerator;
+	WinGuidGeneratorSystem guidGenerator;
 
 	const auto guid = guidGenerator.GenerateNew();
 

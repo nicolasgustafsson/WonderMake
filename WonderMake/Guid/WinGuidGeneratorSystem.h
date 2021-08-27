@@ -2,13 +2,13 @@
 
 #include "Guid/GuidGeneratorSystem.h"
 
-class PlatformWindowsSystem;
+class WinPlatformSystem;
 
-class WindowsGuidGeneratorSystem
+class WinGuidGeneratorSystem
 	: public GuidGeneratorSystem
 	, public SystemSub<
 		Policy::Set<
-			PAdd<PlatformWindowsSystem, PWrite>>>
+			PAdd<WinPlatformSystem, PWrite>>>
 {
 public:
 	std::optional<Guid> GenerateNew() override;

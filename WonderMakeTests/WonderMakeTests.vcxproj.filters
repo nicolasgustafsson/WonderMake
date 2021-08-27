@@ -14,6 +14,6 @@
     <ClCompile Include="Utilities\UniqueFunctionTests.cpp" />
     <ClCompile Include="Utilities\AliasTests.cpp" />
     <ClCompile Include="Guid\GuidTests.cpp" />
-    <ClCompile Include="Guid\WindowsGuidGeneratorSystemTests.cpp" />
+    <ClCompile Include="Guid\WinGuidGeneratorSystemTests.cpp" />
   </ItemGroup>
 </Project>

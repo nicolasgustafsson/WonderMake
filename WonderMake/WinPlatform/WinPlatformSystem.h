@@ -1,10 +1,10 @@
 #pragma once
 
-#include "PlatformWindows/PlatformWindows.h"
+#include "WinPlatform/WinPlatform.h"
 
 #include "System/System.h"
 
-class PlatformWindowsSystem
+class WinPlatformSystem
 	: public System<>
 {
 public:

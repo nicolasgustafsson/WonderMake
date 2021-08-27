@@ -136,6 +136,82 @@ TEST_CASE("GetFolderLocation returns user data folder.", "[WinFileSystem]")
 	CHECK(mock.CallCountFree() == 1);
 }
 
+TEST_CASE("GetFolderLocation returns bin folder with suffix.", "[WinFileSystem]")
+{
+	PlatformWindowsSystemMock mock;
+
+	WinFileSystem::InjectDependencies(std::tie(mock));
+
+	WinFileSystem fileSystem;
+
+	fileSystem.SetFolderSuffix(FolderLocation::Bin, "suffix");
+
+	CHECK(fileSystem.GetFolderLocation(FolderLocation::Bin) == (std::filesystem::current_path() / "suffix"));
+
+	CHECK(mock.CallCountGet() == 0);
+	CHECK(mock.CallCountFree() == 0);
+}
+
+TEST_CASE("GetFolderLocation returns data folder with suffix.", "[WinFileSystem]")
+{
+	PlatformWindowsSystemMock mock;
+
+	mock.SetExpectedArgs(FOLDERID_AppDataProgramData, 0, NULL);
+	mock.SetReturnValue(S_OK);
+	mock.SetPath(L"TEST");
+
+	WinFileSystem::InjectDependencies(std::tie(mock));
+
+	WinFileSystem fileSystem;
+
+	fileSystem.SetFolderSuffix(FolderLocation::Data, "suffix");
+
+	CHECK(fileSystem.GetFolderLocation(FolderLocation::Data) == L"TEST//suffix");
+
+	CHECK(mock.CallCountGet() == 1);
+	CHECK(mock.CallCountFree() == 1);
+}
+
+TEST_CASE("GetFolderLocation returns user folder with suffix.", "[WinFileSystem]")
+{
+	PlatformWindowsSystemMock mock;
+
+	mock.SetExpectedArgs(FOLDERID_AppDataDocuments, 0, NULL);
+	mock.SetReturnValue(S_OK);
+	mock.SetPath(L"TEST");
+
+	WinFileSystem::InjectDependencies(std::tie(mock));
+
+	WinFileSystem fileSystem;
+
+	fileSystem.SetFolderSuffix(FolderLocation::User, "suffix");
+
+	CHECK(fileSystem.GetFolderLocation(FolderLocation::User) == L"TEST//suffix");
+
+	CHECK(mock.CallCountGet() == 1);
+	CHECK(mock.CallCountFree() == 1);
+}
+
+TEST_CASE("GetFolderLocation returns user data folder with suffix.", "[WinFileSystem]")
+{
+	PlatformWindowsSystemMock mock;
+
+	mock.SetExpectedArgs(FOLDERID_UserProgramFiles, 0, NULL);
+	mock.SetReturnValue(S_OK);
+	mock.SetPath(L"TEST");
+
+	WinFileSystem::InjectDependencies(std::tie(mock));
+
+	WinFileSystem fileSystem;
+
+	fileSystem.SetFolderSuffix(FolderLocation::UserData, "suffix");
+
+	CHECK(fileSystem.GetFolderLocation(FolderLocation::UserData) == L"TEST//suffix");
+
+	CHECK(mock.CallCountGet() == 1);
+	CHECK(mock.CallCountFree() == 1);
+}
+
 TEST_CASE("GetFolderLocation returns nullopt on failure when getting data folder.", "[WinFileSystem]")
 {
 	PlatformWindowsSystemMock mock;

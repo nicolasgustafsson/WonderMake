@@ -84,6 +84,7 @@
     <ClCompile Include="Imgui\AssetBrowser.cpp" />
     <ClCompile Include="Guid\WinGuidGeneratorSystem.cpp" />
     <ClCompile Include="WinPlatform\WinPlatformSystem.cpp" />
+    <ClCompile Include="FileSystem\WinFileSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -285,6 +286,9 @@
     <ClInclude Include="Guid\WinGuidGeneratorSystem.h" />
     <ClInclude Include="WinPlatform\WinPlatformSystem.h" />
     <ClInclude Include="WinPlatform\WinPlatform.h" />
+    <ClInclude Include="FileSystem\FileSystem.h" />
+    <ClInclude Include="FileSystem\FileTypes.h" />
+    <ClInclude Include="FileSystem\WinFileSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

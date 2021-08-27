@@ -9,4 +9,7 @@ class WinPlatformSystem
 {
 public:
 	virtual HRESULT CoCreateGuid(GUID* pguid);
+
+	virtual HRESULT SHGetKnownFolderPath(REFKNOWNFOLDERID rfid, DWORD dwFlags, HANDLE hToken, PWSTR* ppszPath);
+	virtual void CoTaskMemFree(LPVOID pv);
 };

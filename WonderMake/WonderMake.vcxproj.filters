@@ -85,6 +85,7 @@
     <ClCompile Include="Guid\WinGuidGeneratorSystem.cpp" />
     <ClCompile Include="WinPlatform\WinPlatformSystem.cpp" />
     <ClCompile Include="FileSystem\WinFileSystem.cpp" />
+    <ClCompile Include="FileSystem\ReadFileJob.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -289,6 +290,7 @@
     <ClInclude Include="FileSystem\FileSystem.h" />
     <ClInclude Include="FileSystem\FileTypes.h" />
     <ClInclude Include="FileSystem\WinFileSystem.h" />
+    <ClInclude Include="FileSystem\ReadFileJob.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

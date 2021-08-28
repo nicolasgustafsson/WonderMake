@@ -210,6 +210,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FileSystem\ReadFileJob.cpp" />
     <ClCompile Include="FileSystem\WinFileSystem.cpp" />
     <ClCompile Include="Imgui\AssetBrowser.cpp" />
     <ClCompile Include="Audio\AudioMixingNodeGraph.cpp" />
@@ -303,6 +304,7 @@
     <ClInclude Include="EngineTools\EasingTester.h" />
     <ClInclude Include="FileSystem\FileTypes.h" />
     <ClInclude Include="FileSystem\FileSystem.h" />
+    <ClInclude Include="FileSystem\ReadFileJob.h" />
     <ClInclude Include="FileSystem\WinFileSystem.h" />
     <ClInclude Include="Job\Cargo.h" />
     <ClInclude Include="Job\Job.h" />

@@ -5,7 +5,7 @@
 template <typename TObjectType>
 class VectorBackend
 	: public ContainerBackend<std::vector<TObjectType>>
-	, public ImplementTraits<VectorBackend<TObjectType>, Iterable, Indexable, RandomAccess, Resizable, ContiguousElements>
+	, public ImplementTraits<VectorBackend<TObjectType>, Iterable, Indexable, RandomAccess, Resizable, ContiguousElements, EqualityComparable>
 {
 public:
 	using RawBackend = std::vector<TObjectType>;
@@ -19,6 +19,15 @@ public:
 	VectorBackend(TIterator aFirst, TIterator aLast) noexcept(std::is_nothrow_constructible_v<Backend, TIterator, TIterator>)
 		: Backend(aFirst, aLast)
 	{}
+
+	bool operator==(const VectorBackend& aRhs)
+	{
+		return (this->myBackend == aRhs.myBackend);
+	}
+	bool operator!=(const VectorBackend& aRhs)
+	{
+		return (this->myBackend != aRhs.myBackend);
+	}
 
 	TObjectType& operator[](const size_t aIndex)
 	{

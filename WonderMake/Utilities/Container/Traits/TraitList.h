@@ -18,6 +18,7 @@ class ConstantDeletion : public BackendTrait {};
 class Associative : public BackendTrait {};
 class Sortable : public BackendTrait {};
 class KeyIndex : public BackendTrait {};
+class EqualityComparable : public BackendTrait {};
 
 //Elements are stored contiguously, to allow memcpy and other operations that depends on the elements being beside eachother in memory
 class ContiguousElements : public BackendTrait {};

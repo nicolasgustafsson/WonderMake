@@ -18,4 +18,7 @@
     <ClCompile Include="FileSystem\WinFileSystemTests.cpp" />
     <ClCompile Include="FileSystem\ReadFileJobTests.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Job\JobMock.h" />
+  </ItemGroup>
 </Project>

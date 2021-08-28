@@ -12,6 +12,11 @@ public:
 	using ConstIteratorType = typename TStorage::const_iterator;
 	using ElementType = typename TStorage::value_type;
 
+	template<typename... TArgs>
+	ContainerBackend(TArgs&&... aArgs) // noexcept(std::is_nothrow_constructible_v<TStorage, decltype(std::forward<TArgs>(aArgs))...>)
+		: myBackend(std::forward<TArgs>(aArgs)...)
+	{}
+
 	void Clear()
 	{
 		myBackend.clear();

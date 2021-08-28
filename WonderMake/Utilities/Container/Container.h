@@ -79,13 +79,16 @@ template<typename TObjectType, typename TContainerBackends, ContainerTrait ... T
 class ContainerBase : public _ContainerDetail::ResolvedBackend<TObjectType, TContainerBackends, TContainerTraits...>::Storage //[Nicos]: Derive from the selected storage
 {
 public:
+	using Backend = _ContainerDetail::ResolvedBackend<TObjectType, TContainerBackends, TContainerTraits...>::Storage;
 	using ResolvedTypes = typename _ContainerDetail::ResolvedTypes<TObjectType, TContainerTraits...>;
 	using TraitsPack = typename ResolvedTypes::TraitsPack;
+
+	using Backend::Backend;
 
 	template<typename TBackend>
 	inline constexpr bool HasBackend() const
 	{
-		return typeid(TBackend) == typeid(_ContainerDetail::ResolvedBackend<TObjectType, TContainerBackends, TContainerTraits...>::Storage);
+		return typeid(TBackend) == typeid(Backend);
 	}
 
 	template <typename T>

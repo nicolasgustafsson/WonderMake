@@ -13,6 +13,13 @@ public:
 	using IteratorType = typename Backend::IteratorType;
 	using ConstIteratorType = typename Backend::ConstIteratorType;
 
+	VectorBackend() = default;
+	
+	template<typename TIterator>
+	VectorBackend(TIterator aFirst, TIterator aLast) noexcept(std::is_nothrow_constructible_v<Backend, TIterator, TIterator>)
+		: Backend(aFirst, aLast)
+	{}
+
 	TObjectType& operator[](const size_t aIndex)
 	{
 		return this->myBackend[aIndex];
@@ -65,6 +72,16 @@ public:
 	void Add(TObjectTypeFunc aObjectType)
 	{
 		this->myBackend.push_back(std::forward<TObjectTypeFunc>(aObjectType));
+	}
+
+	TObjectType* data() noexcept
+	{
+		return this->myBackend.data();
+	}
+
+	const TObjectType* data() const noexcept
+	{
+		return this->myBackend.data();
 	}
 
 	IteratorType begin()

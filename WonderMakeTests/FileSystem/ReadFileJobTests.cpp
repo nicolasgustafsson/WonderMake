@@ -74,6 +74,42 @@ private:
 
 const auto MockDir = std::filesystem::current_path() / "FileSystem/MockFiles";
 
+TEST_CASE("Passes Location correctly to FileSystem.", "[ReadFileJob]")
+{
+	JobDependencies dependencies;
+	FileSystemMock fsMock;
+	ReadFileJob::Promise promise;
+
+	{
+		fsMock.SetExpectedArgs(FolderLocation::Bin);
+
+		ReadFileJob::InjectDependencies(promise, std::tie(dependencies.myJobSystem, fsMock));
+
+		ReadFileJob readFile(FolderLocation::Bin, "Dummy");
+	}
+	{
+		fsMock.SetExpectedArgs(FolderLocation::Data);
+
+		ReadFileJob::InjectDependencies(promise, std::tie(dependencies.myJobSystem, fsMock));
+
+		ReadFileJob readFile(FolderLocation::Data, "Dummy");
+	}
+	{
+		fsMock.SetExpectedArgs(FolderLocation::User);
+
+		ReadFileJob::InjectDependencies(promise, std::tie(dependencies.myJobSystem, fsMock));
+
+		ReadFileJob readFile(FolderLocation::User, "Dummy");
+	}
+	{
+		fsMock.SetExpectedArgs(FolderLocation::UserData);
+
+		ReadFileJob::InjectDependencies(promise, std::tie(dependencies.myJobSystem, fsMock));
+
+		ReadFileJob readFile(FolderLocation::UserData, "Dummy");
+	}
+}
+
 TEST_CASE("Completes with error if the location is unable to be found.", "[ReadFileJob]")
 {
 	JobDependencies dependencies;

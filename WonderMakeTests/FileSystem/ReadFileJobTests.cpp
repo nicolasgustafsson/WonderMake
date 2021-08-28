@@ -215,11 +215,9 @@ TEST_CASE("Successfully reads a file.", "[ReadFileJob]")
 	u32 callCountCompleted = 0;
 	u32 callCountError = 0;
 
-	std::string buffer;
-
-	future.Then([&callCountCompleted, &buffer](auto&& aBuffer)
+	future.Then([&callCountCompleted](auto&& aBuffer)
 		{
-			buffer = std::string(aBuffer.begin(), aBuffer.end());
+			CHECK(std::string(aBuffer.begin(), aBuffer.end()) == "Hello World!");
 
 			++callCountCompleted;
 		});
@@ -234,5 +232,4 @@ TEST_CASE("Successfully reads a file.", "[ReadFileJob]")
 
 	CHECK(callCountCompleted == 1);
 	CHECK(callCountError == 0);
-	CHECK(buffer == "Hello World!");
 }

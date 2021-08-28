@@ -18,7 +18,7 @@ class ReadFileJob
 	: public Job<
 		Policy::Set<
 			PAdd<FileSystem, PWrite>>,
-		JobOutput<Container<u8, Iterable, Indexable, ContiguousElements>>,
+		JobOutput<Container<u8, Iterable, Indexable, ContiguousElements, EqualityComparable>>,
 		JobOutputError<ReadFileError>>
 {
 public:

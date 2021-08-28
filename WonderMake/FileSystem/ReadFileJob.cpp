@@ -41,7 +41,7 @@ ReadFileJob::ReadFileJob(const FolderLocation aLocation, const std::filesystem::
 		return;
 	}
 
-	Container<u8, Iterable, Indexable, ContiguousElements> buffer(std::istreambuf_iterator<char>(file), {});
+	Container<u8, Iterable, Indexable, ContiguousElements, EqualityComparable> buffer(std::istreambuf_iterator<char>(file), {});
 	
 	CompleteSuccess(std::move(buffer));
 }

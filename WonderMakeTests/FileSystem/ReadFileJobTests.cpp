@@ -2,29 +2,10 @@
 
 #include <catch2/catch.hpp>
 
+#include "Job/JobMock.h"
+
 #include "FileSystem/ReadFileJob.h"
 #include "FileSystem/WinFileSystem.h"
-
-constexpr auto InlineExecutor = [](auto aCallable)
-{
-	aCallable();
-};
-
-struct JobDependencies
-{
-	JobDependencies()
-		: myScheduleSystem(InlineExecutor, InlineExecutor)
-		, myJobSystem([this]() { JobSystem::InjectDependencies(std::tie(myScheduleSystem)); return JobSystem(mySystemContainer); }())
-	{
-		mySystemContainer.AddSystem<ScheduleSystem>([this]() -> auto& { return myScheduleSystem; });
-		mySystemContainer.AddSystem<JobSystem>([this]() -> auto& { return myJobSystem; });
-	};
-
-	SystemContainer mySystemContainer;
-	ScheduleSystem myScheduleSystem;
-
-	JobSystem myJobSystem;
-};
 
 class FileSystemMock
 	: public FileSystem
@@ -76,160 +57,87 @@ const auto MockDir = std::filesystem::current_path() / "FileSystem/MockFiles";
 
 TEST_CASE("Passes Location correctly to FileSystem.", "[ReadFileJob]")
 {
-	JobDependencies dependencies;
+	JobMock<ReadFileJob> jobMock;
 	FileSystemMock fsMock;
-	ReadFileJob::Promise promise;
 
+	jobMock.Inject(fsMock);
+	jobMock.ExpectAny();
+
+	SECTION("Bin")
 	{
 		fsMock.SetExpectedArgs(FolderLocation::Bin);
 
-		ReadFileJob::InjectDependencies(promise, std::tie(dependencies.myJobSystem, fsMock));
-
-		ReadFileJob readFile(FolderLocation::Bin, "Dummy");
+		jobMock.Run(FolderLocation::Bin, "Dummy");
 	}
+	SECTION("Data")
 	{
 		fsMock.SetExpectedArgs(FolderLocation::Data);
 
-		ReadFileJob::InjectDependencies(promise, std::tie(dependencies.myJobSystem, fsMock));
-
-		ReadFileJob readFile(FolderLocation::Data, "Dummy");
+		jobMock.Run(FolderLocation::Data, "Dummy");
 	}
+	SECTION("User")
 	{
 		fsMock.SetExpectedArgs(FolderLocation::User);
 
-		ReadFileJob::InjectDependencies(promise, std::tie(dependencies.myJobSystem, fsMock));
-
-		ReadFileJob readFile(FolderLocation::User, "Dummy");
+		jobMock.Run(FolderLocation::User, "Dummy");
 	}
+	SECTION("UserData")
 	{
 		fsMock.SetExpectedArgs(FolderLocation::UserData);
 
-		ReadFileJob::InjectDependencies(promise, std::tie(dependencies.myJobSystem, fsMock));
-
-		ReadFileJob readFile(FolderLocation::UserData, "Dummy");
+		jobMock.Run(FolderLocation::UserData, "Dummy");
 	}
 }
 
 TEST_CASE("Completes with error if the location is unable to be found.", "[ReadFileJob]")
 {
-	JobDependencies dependencies;
+	JobMock<ReadFileJob> jobMock;
 	FileSystemMock fsMock;
-	ReadFileJob::Promise promise;
 
 	fsMock.SetExpectedArgs(FolderLocation::Bin);
+	jobMock.Inject(fsMock);
+	jobMock.ExpectError(ReadFileError::InvalidArguments);
 
-	JobFuture<ReadFileJob::Output, ReadFileJob::OutputError> future(promise, dependencies.myScheduleSystem);
-	u32 callCountCompleted = 0;
-	u32 callCountError = 0;
-
-	future.Then([&callCountCompleted](auto&&)
-		{
-			++callCountCompleted;
-		});
-	future.Error([&callCountError](auto&& aError)
-		{
-			++callCountError;
-			CHECK(aError == ReadFileError::InvalidArguments);
-		});
-
-	ReadFileJob::InjectDependencies(promise, std::tie(dependencies.myJobSystem, fsMock));
-
-	ReadFileJob readFile(FolderLocation::Bin, "Dummy");
-
-	CHECK(callCountCompleted == 0);
-	CHECK(callCountError == 1);
+	jobMock.Run(FolderLocation::Bin, "Dummy");
 }
 
 TEST_CASE("Completes with error if file does not exist.", "[ReadFileJob]")
 {
-	JobDependencies dependencies;
+	JobMock<ReadFileJob> jobMock;
 	FileSystemMock fsMock;
-	ReadFileJob::Promise promise;
 
 	fsMock.SetExpectedArgs(FolderLocation::Bin);
 	fsMock.SetReturnValue(MockDir);
+	jobMock.Inject(fsMock);
+	jobMock.ExpectError(ReadFileError::FileNotFound);
 
-	JobFuture<ReadFileJob::Output, ReadFileJob::OutputError> future(promise, dependencies.myScheduleSystem);
-	u32 callCountCompleted = 0;
-	u32 callCountError = 0;
-
-	future.Then([&callCountCompleted](auto&&)
-		{
-			++callCountCompleted;
-		});
-	future.Error([&callCountError](auto&& aError)
-		{
-			++callCountError;
-			CHECK(aError == ReadFileError::FileNotFound);
-		});
-
-	ReadFileJob::InjectDependencies(promise, std::tie(dependencies.myJobSystem, fsMock));
-
-	ReadFileJob readFile(FolderLocation::Bin, "Non.Existent");
-
-	CHECK(callCountCompleted == 0);
-	CHECK(callCountError == 1);
+	jobMock.Run(FolderLocation::Bin, "Non.Existent");
 }
 
 TEST_CASE("Completes with error if path is folder.", "[ReadFileJob]")
 {
-	JobDependencies dependencies;
+	JobMock<ReadFileJob> jobMock;
 	FileSystemMock fsMock;
-	ReadFileJob::Promise promise;
 
 	fsMock.SetExpectedArgs(FolderLocation::Bin);
 	fsMock.SetReturnValue(MockDir);
+	jobMock.Inject(fsMock);
+	jobMock.ExpectError(ReadFileError::NotAFile);
 
-	JobFuture<ReadFileJob::Output, ReadFileJob::OutputError> future(promise, dependencies.myScheduleSystem);
-	u32 callCountCompleted = 0;
-	u32 callCountError = 0;
-
-	future.Then([&callCountCompleted](auto&&)
-		{
-			++callCountCompleted;
-		});
-	future.Error([&callCountError](auto&& aError)
-		{
-			++callCountError;
-			CHECK(aError == ReadFileError::NotAFile);
-		});
-
-	ReadFileJob::InjectDependencies(promise, std::tie(dependencies.myJobSystem, fsMock));
-
-	ReadFileJob readFile(FolderLocation::Bin, "Folder");
-
-	CHECK(callCountCompleted == 0);
-	CHECK(callCountError == 1);
+	jobMock.Run(FolderLocation::Bin, "Folder");
 }
 
 TEST_CASE("Successfully reads a file.", "[ReadFileJob]")
 {
-	JobDependencies dependencies;
+	constexpr std::string_view dataInFile = "Hello World!";
+
+	JobMock<ReadFileJob> jobMock;
 	FileSystemMock fsMock;
-	ReadFileJob::Promise promise;
 
 	fsMock.SetExpectedArgs(FolderLocation::Bin);
 	fsMock.SetReturnValue(MockDir);
+	jobMock.Inject(fsMock);
+	jobMock.ExpectOutput(Container<u8, Iterable, Indexable, ContiguousElements, EqualityComparable>(dataInFile.begin(), dataInFile.end()));
 
-	JobFuture<ReadFileJob::Output, ReadFileJob::OutputError> future(promise, dependencies.myScheduleSystem);
-	u32 callCountCompleted = 0;
-	u32 callCountError = 0;
-
-	future.Then([&callCountCompleted](auto&& aBuffer)
-		{
-			CHECK(std::string(aBuffer.begin(), aBuffer.end()) == "Hello World!");
-
-			++callCountCompleted;
-		});
-	future.Error([&callCountError](auto&&)
-		{
-			++callCountError;
-		});
-
-	ReadFileJob::InjectDependencies(promise, std::tie(dependencies.myJobSystem, fsMock));
-
-	ReadFileJob readFile(FolderLocation::Bin, "TextFile.txt");
-
-	CHECK(callCountCompleted == 1);
-	CHECK(callCountError == 0);
+	jobMock.Run(FolderLocation::Bin, "TextFile.txt");
 }

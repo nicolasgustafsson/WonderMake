@@ -27,6 +27,19 @@ public:
 		return optionsAsArray[selectedOption];
 	}
 
+	SDegreeF32 GetRandomAngle()
+	{
+		return GetRandomNumber(0.f, 360.f);
+	}
+
+	//weighted towards middle right now; may change in future
+	SVector2f GetRandomPositionInCircle(const SCircle aCircle) 
+	{
+		const SVector2f movement = SVector2f(0.f, 1.0f).RotateClockwise(GetRandomAngle()) * aCircle.Radius;
+
+		return aCircle.Position + movement;
+	}
+
 
 private:
 	std::random_device myRandomDevice;

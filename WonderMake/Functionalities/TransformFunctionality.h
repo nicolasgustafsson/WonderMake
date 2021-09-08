@@ -64,6 +64,34 @@ public:
 		Get<STransformComponent2D>().Position += aMovement;
 	}
 
+	void Rotate(const RepRotation aRotation) noexcept
+	{
+		Get<STransformComponent2D>().Rotation += aRotation;
+	}
+
+	void RotateTowards(const SVector2f aPosition, const RepRotation aSpeed, const f32 aDeltaTime) noexcept
+	{
+		const auto deltaPosition = aPosition - GetPosition();
+		const auto finalRotation = deltaPosition.GetAngle<RepRotation>(RepVector(0, 1));
+
+		auto deltaRotation = finalRotation - Get<STransformComponent2D>().Rotation;
+
+		while (deltaRotation > SDegreeF32(180.f))
+			deltaRotation -= SDegreeF32(360.f);
+
+		while (deltaRotation < SDegreeF32(-180.f))
+			deltaRotation += SDegreeF32(360.f);
+
+		const auto sign = WmMath::Sign(deltaRotation);
+		const auto rotationAmount = (WmMath::Abs(deltaRotation) < 1.0f ? deltaRotation : sign) * aSpeed * aDeltaTime;
+
+		//dont overcompensate
+		if (WmMath::Abs(deltaRotation) < WmMath::Abs(rotationAmount))
+			Get<STransformComponent2D>().Rotation += deltaRotation;
+		else
+			Get<STransformComponent2D>().Rotation += rotationAmount;
+	}
+
 	[[nodiscard]] SMatrix33f GetMatrix() const noexcept
 	{
 		SMatrix33f matrix;

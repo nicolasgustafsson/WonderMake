@@ -21,8 +21,20 @@ Window::Window()
 	glfw.SetWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfw.SetWindowHint(GLFW_SAMPLES, 4);
 
-	SVector2i windowSize = { windowSettings["X"].get<i32>(), windowSettings["Y"].get<i32>() };
-	myGlfwWindow = glfw.CreateGlfwWindow(windowSize.X, windowSize.Y, "WonderMake", NULL, NULL);
+	auto* primaryMonitor = glfwGetPrimaryMonitor();
+
+	const GLFWvidmode* mode = glfwGetVideoMode(primaryMonitor);
+
+	const bool fullscreen = windowSettings["Fullscreen"].get<bool>();
+
+	SVector2i windowSize{};
+
+	if (!fullscreen)
+		windowSize = { windowSettings["X"].get<i32>(), windowSettings["Y"].get<i32>() };
+	else
+		windowSize = { mode->width, mode->height };
+
+	myGlfwWindow = glfw.CreateGlfwWindow(windowSize.X, windowSize.Y, "WonderMake", windowSettings["Fullscreen"].get<bool>() ? primaryMonitor : NULL, NULL);
 	if (!myGlfwWindow)
 	{
 		WmLog(TagError, TagOpenGL, "Failed to create GLFW window!");

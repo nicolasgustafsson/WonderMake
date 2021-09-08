@@ -17,6 +17,12 @@ namespace SlotInputEdits
 	}
 
 	template<>
+	inline void EditInputSlot<int>(int& aInput)
+	{
+		ImGui::InputInt("", &aInput);
+	}
+
+	template<>
 	inline void EditInputSlot<std::string>(std::string& aInput)
 	{
 		ImGui::InputText("", &aInput);
@@ -36,6 +42,16 @@ namespace SlotInputEdits
 
 		aInput.X = static_cast<u32>(inputs[0]);
 		aInput.Y = static_cast<u32>(inputs[1]);
+	}
+
+	template<>
+	inline void EditInputSlot<SVector2f>(SVector2f& aInput)
+	{
+		f32 inputs[]{ static_cast<f32>(aInput.X), static_cast<f32>(aInput.Y) };
+		ImGui::InputFloat2("", inputs);
+
+		aInput.X = (inputs[0]);
+		aInput.Y = (inputs[1]);
 	}
 
 	template<>

@@ -9,4 +9,5 @@ struct SSpriteComponent
 {
 	std::optional<SpriteRenderObject> RenderObject;
 	bool IsHidden = false;
+	SVector2f Scale = SVector2f::One();
 };

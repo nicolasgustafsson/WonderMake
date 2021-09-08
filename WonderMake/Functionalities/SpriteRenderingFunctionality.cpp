@@ -16,6 +16,7 @@ void SpriteRenderingFunctionality::Tick()
 	const auto& transform = Get<TransformFunctionality2D>();
 
 	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Position>(0, transform.GetPosition());
+	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Scale>(0, spriteComponent.Scale);
 	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Rotation>(0, transform.GetRotation());
 	spriteComponent.RenderObject->Render();
 }
@@ -43,12 +44,12 @@ void SpriteRenderingFunctionality::SetFragmentShader(const std::filesystem::path
 
 void SpriteRenderingFunctionality::SetScale(const SVector2f aScale)
 {
-	Get<SSpriteComponent>().RenderObject->SetScale(aScale);
+	Get<SSpriteComponent>().Scale = aScale;
 }
 
 void SpriteRenderingFunctionality::SetScale(const f32 aScale)
 {
-	Get<SSpriteComponent>().RenderObject->SetScale(aScale);
+	Get<SSpriteComponent>().Scale = { aScale, aScale };
 }
 
 void SpriteRenderingFunctionality::SetRotation(const f32 aRotation)
@@ -69,6 +70,11 @@ void SpriteRenderingFunctionality::SetColor(const SColor aColor)
 void SpriteRenderingFunctionality::SetRenderOrder(const i32 aOrder)
 {
 	Get<SSpriteComponent>().RenderObject->SetRenderOrder(aOrder);
+}
+
+SVector2f SpriteRenderingFunctionality::GetScale() const
+{
+	return Get<SSpriteComponent>().Scale;
 }
 
 void SpriteRenderingFunctionality::Hide() noexcept

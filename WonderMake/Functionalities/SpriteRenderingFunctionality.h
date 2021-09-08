@@ -18,11 +18,14 @@ public:
 	void SetColor(const SColor aColor);
 	void SetRenderOrder(const i32 aOrder);
 
+	SVector2f GetScale() const;
+
 	template<typename TProperty>
 	void SetProperty(std::string_view aName, TProperty aProperty);
 
 	void Hide() noexcept;
 	void Show() noexcept;
+	
 };
 
 template <typename TProperty>

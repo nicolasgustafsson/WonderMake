@@ -29,10 +29,10 @@ struct STimerHandle
 	STimerHandle(STimerHandle&& aTimerHandle) noexcept
 		:TimerId(aTimerHandle.TimerId), TimerFunctionality(aTimerHandle.TimerFunctionality) {}
 
-	f32 GetTimeLeft() const;
+	[[nodiscard]] f32 GetTimeLeft() const;
 	void Invalidate() const;
 	void SetTimeLeft(const f32 aTime) const;
-	bool IsValid() const;
+	[[nodiscard]] bool IsValid() const;
 
 	friend class TimerFunctionality;
 private:

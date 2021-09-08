@@ -15,5 +15,6 @@ class LevelDenizenFunctionality : public Functionality<SLevelDenizenComponent>
 {
 public:
 	void Destroy();
+
 	LevelFunctionality* GetLevel() const;
 };

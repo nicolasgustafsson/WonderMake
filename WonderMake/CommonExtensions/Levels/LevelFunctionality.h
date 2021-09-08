@@ -30,6 +30,7 @@ class LevelFunctionality : public Functionality<
 		PAdd<SLevelComponent, PWrite>>>
 {
 public:
+	~LevelFunctionality() override;
 	void Tick();
 
 	Object& AddDenizen();

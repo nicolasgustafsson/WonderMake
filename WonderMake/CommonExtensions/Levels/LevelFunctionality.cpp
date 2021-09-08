@@ -5,6 +5,14 @@
 REGISTER_COMPONENT(SLevelComponent);
 REGISTER_FUNCTIONALITY(LevelFunctionality);
 
+LevelFunctionality::~LevelFunctionality()
+{
+	for (auto&& denizen : Get<SLevelComponent>().Denizens)
+	{
+		denizen.DenizenFunctionality.Get<SLevelDenizenComponent>().Level = nullptr;
+	}
+}
+
 void LevelFunctionality::Tick()
 {
 	auto&& denizens = Get<SLevelComponent>().Denizens;
@@ -60,6 +68,8 @@ void LevelFunctionality::TransferToNewLevel(LevelFunctionality& aNewLevel)
 	{
 		if (denizen.DenizenFunctionality.Get<SLevelDenizenComponent>().PersistentOnLevelChange)
 			aNewLevel.AddDenizen(std::move(denizen.DenizenObject));
+		else
+			denizen.DenizenFunctionality.Get<SLevelDenizenComponent>().Level = nullptr;
 	}
 
 	Get<SLevelComponent>().Denizens.clear();

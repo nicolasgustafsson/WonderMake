@@ -7,9 +7,9 @@ class LineListRenderObject
 	<EVertexAttribute::Position>
 {
 public:
-	LineListRenderObject(const std::vector<SVector2f>& aPoints, const f32 innerThickness = 1.0f, const f32 outerThickness = 1.0f, const SColor aColor = SColor::RaisinBlack());
+	LineListRenderObject(const std::vector<SVector2f>& aPoints = {}, const f32 innerThickness = 1.0f, const f32 outerThickness = 1.0f, const SColor aColor = SColor::RaisinBlack());
 
-	void SetPoints(const std::vector<SVector2f>& aPoints, const f32 innerThickness = 1.0f, const f32 outerThickness = 1.0f);
+	void SetPoints(const std::vector<SVector2f>& aPoints, const f32 innerThickness = 1.0f, const f32 outerThickness = 1.0f, const bool aLoop = true);
 
 	void SetColor(const SColor aColor);
 protected:

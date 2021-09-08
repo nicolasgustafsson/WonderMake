@@ -17,16 +17,21 @@ LineListRenderObject::LineListRenderObject(const std::vector<SVector2f>& aPoints
 }
 
 void LineListRenderObject::SetPoints(const std::vector<SVector2f>& aPoints, const f32 innerThickness,
-	const f32 outerThickness)
+	const f32 outerThickness, const bool aLoop)
 {
-	SetRenderCount(static_cast<u32>(aPoints.size() * 2 + 2));
+	SetRenderCount(static_cast<u32>(aPoints.size() * 2 + 2 * aLoop));
 
-	SVector2f previousPoint = aPoints.back();
-	for (size_t i = 0; i < aPoints.size() + 1; i++)
+	SVector2f previousPoint = aLoop ? aPoints.back() : aPoints.front();
+	for (size_t i = 0; i < aPoints.size() + (aLoop ? 1 : 0); i++)
 	{
 		SVector2f previousLocation = previousPoint;
 		SVector2f location = aPoints[i % aPoints.size()];
 		SVector2f nextLocation = aPoints[(i + 1) % aPoints.size()];
+
+		if (!aLoop && i == aPoints.size() - 1)
+		{
+			nextLocation = location;
+		}
 
 		SVector2f direction = ((location - nextLocation).GetNormalized() - (location - previousLocation).GetNormalized()).GetNormalized();
 		SVector2f perpendicularCw = direction.GetPerpendicularClockWise();

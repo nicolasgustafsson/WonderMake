@@ -27,6 +27,11 @@ f64 TimeKeeper::TimeSincePrecise(const f64 aTime) const noexcept
 	return GetGameTimePrecise() - aTime;
 }
 
+void TimeKeeper::SetTimeScale(f32 aTimeScale)
+{
+	myTimeDilation = aTimeScale;
+}
+
 void TimeKeeper::Debug()
 {
 	ImGui::Begin("Time Keeper");

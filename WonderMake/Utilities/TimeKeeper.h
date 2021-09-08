@@ -24,6 +24,7 @@ public:
 	[[nodiscard]] __forceinline f32 GetGameTime() const noexcept;
 	[[nodiscard]] __forceinline f64 GetGameTimePrecise() const noexcept;
 
+	void SetTimeScale(f32 aTimeScale);
 protected:
 	virtual void Debug() override;
 

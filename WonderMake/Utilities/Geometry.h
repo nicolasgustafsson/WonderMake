@@ -60,3 +60,19 @@ struct SRectangle
 		Bottom += aDelta.Y;
 	}
 };
+
+struct SCircle
+{
+	SVector2f Position;
+	f32 Radius;
+
+	SRectangle GetBoundingBox() const
+	{
+		return { Position.X - Radius, Position.Y + Radius, Position.X + Radius, Position.Y - Radius };
+	}
+
+	bool ContainsPoint(const SVector2f aPoint) const
+	{
+		return Position.DistanceTo(aPoint) < Radius;
+	}
+};

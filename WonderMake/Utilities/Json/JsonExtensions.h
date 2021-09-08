@@ -1,6 +1,8 @@
 #pragma once
 #include <json/json.hpp>
 #include <filesystem>
+#include <sstream>
+#include <chrono>
 #include "Graphics/Text/FontMetrics.h"
 
 
@@ -37,11 +39,36 @@ namespace std
 		
 		aOptional = aJson["value"].get<T>();
 	}
+
+
+	//inline void to_json(json& aJson, const std::chrono::time_point<std::chrono::system_clock>& aTimePoint)
+	//{
+	//	std::stringstream timepointstream;
+	//	timepointstream << std::chrono::system_clock::now();
+	//	//aJson = { {"X", aVector.X}, {"Y", aVector.Y} };
+	//}
+	//
+	//inline void from_json(const json& aJson, std::chrono::time_point<std::chrono::system_clock>& aTimePoint)
+	//{
+	//
+	//}
+
 }
 
 inline void to_json(json& aJson, const SColor& aColor)
 {
 	aJson = { {"R", aColor.R}, {"G", aColor.G}, {"B", aColor.B},{"A", aColor.A}, };
+}
+
+inline void to_json(json& aJson, const SVector2f& aVector)
+{
+	aJson = { {"X", aVector.X}, {"Y", aVector.Y} };
+}
+
+inline void from_json(const json& aJson, SVector2f& aVector)
+{
+	aVector.X = aJson["X"].get<f32>();
+	aVector.Y = aJson["Y"].get<f32>();
 }
 
 inline void from_json(const json& aJson, SColor& aColor)
@@ -116,53 +143,3 @@ inline void from_json(const json& aJson, SFontInfo& aFontInfo)
 		aFontInfo.Kerning[unicode1][unicode2] = advance;
 	}
 }
-
-/*
-struct SFontAtlasMetrics
-{
-	//Nicos: type and yOrigin are not covered here - if you want to use them, make sure to look in a json file to see how they are used and implement them
-	i32 DistanceRange{};
-	f32 Size{};
-	i32 Width{};
-	i32 Height{};
-};
-
-struct SFontMetrics
-{
-	i32 EmSize{};
-	f32 LineHeight{};
-	f32 Ascender{};
-	f32 Descender{};
-	f32 UnderlineY{};
-	f32 UnderlineThickness{};
-};
-
-struct SGlyphBounds
-{
-	f32 Left{};
-	f32 Bottom{};
-	f32 Right{};
-	f32 Top{};
-};
-
-struct SGlyphMetrics
-{
-	u32 Unicode{};
-	f32 Advance{};
-
-	SGlyphBounds PlaneBounds;
-	SGlyphBounds AtlasBounds;
-};
-
-struct SFontInfo
-{
-	std::filesystem::path AtlasPath;
-	SFontAtlasMetrics AtlasMetrics;
-	SFontMetrics FontMetrics;
-
-	Container<SGlyphMetrics, Iterable, Key<u32>> GlyphMetrics;
-
-	Container<Container<f32, Key<u32>>, Key<u32>> Kerning;
-};
-
-*/

@@ -119,6 +119,26 @@ namespace WmMath
 	}
 
 	template<typename T>
+	inline [[nodiscard]] constexpr T Sign(const T aValue) noexcept
+	{
+		if (aValue < 0)
+			return -1;
+		if (aValue > 0)
+			return 1;
+
+		return 0;
+	}
+
+	template<typename T>
+	inline [[nodiscard]] constexpr T Abs(const T aValue) noexcept
+	{
+		if (aValue < 0)
+			return aValue * -1.f;
+
+		return aValue;
+	}
+
+	template<typename T>
 	requires has_floating_representation_v<T>
 		inline [[nodiscard]] FloatingRepresentation<T> Atan(const T aRotation) noexcept
 	{

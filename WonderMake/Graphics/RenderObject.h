@@ -82,7 +82,7 @@ public:
 	RenderObject(const SRenderObjectInfo& aRenderObjectInfo);
 
 	RenderObject(RenderObject&& aOther) noexcept
-		:myShaderProgram(std::move(aOther.myShaderProgram))
+		:myShaderProgram(std::move(aOther.myShaderProgram)), BaseRenderObject(std::move(aOther))
 	{
 		myVertexBufferArray = std::move(aOther.myVertexBufferArray);
 		myTextures = std::move(aOther.myTextures);

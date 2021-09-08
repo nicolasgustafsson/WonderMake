@@ -210,6 +210,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Cheats\CheatManager.cpp" />
     <ClCompile Include="CommonExtensions\AttachedFunctionality.cpp" />
     <ClCompile Include="CommonExtensions\Camera\CameraFunctionality.cpp" />
     <ClCompile Include="CommonExtensions\Levels\LevelDenizenFunctionality.cpp" />
@@ -234,6 +235,8 @@
     <ClCompile Include="Graphics\RenderObject.cpp" />
     <ClCompile Include="Graphics\Text\TextRenderObject.cpp" />
     <ClCompile Include="Graphics\RectangleRenderObject.cpp" />
+    <ClCompile Include="TweakableValues\TweakableValueDatabase.cpp" />
+    <ClCompile Include="Utilities\StaticRegistry\StaticRegistry.cpp" />
     <ClCompile Include="Utilities\Id.cpp" />
     <ClCompile Include="Imgui\Canvas.cpp" />
     <ClCompile Include="Imgui\FileSelector.cpp" />
@@ -306,6 +309,7 @@
     <ClCompile Include="Utilities\Platform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Cheats\CheatManager.h" />
     <ClInclude Include="CommonExtensions\AttachedFunctionality.h" />
     <ClInclude Include="CommonExtensions\Camera\CameraFunctionality.h" />
     <ClInclude Include="CommonExtensions\Levels\LevelDenizenFunctionality.h" />
@@ -328,6 +332,9 @@
     <ClInclude Include="Imgui\AssetBrowser.h" />
     <ClInclude Include="Resources\AssetLink.h" />
     <ClInclude Include="Graphics\Text\TextRenderObject.h" />
+    <ClInclude Include="TweakableValues\TweakableValueDatabase.h" />
+    <ClInclude Include="Utilities\StaticRegistry\FixedString.h" />
+    <ClInclude Include="Utilities\StaticRegistry\StaticRegistry.h" />
     <ClInclude Include="Utilities\Id.h" />
     <ClInclude Include="Utilities\Container\BackendImplementations\ColonyBackend.h" />
     <ClInclude Include="Resources\Asset.h" />

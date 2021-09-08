@@ -15,7 +15,10 @@ namespace NodeTypes
 		soloudEngine.stopAll();
 
 		if (audioSource)
-			soloudEngine.play(*audioSource);
+		{
+			auto handle = soloudEngine.play(*audioSource);
+			soloudEngine.setRelativePlaySpeed(handle, 1.f);
+		}
 	}
 
 
@@ -25,10 +28,10 @@ namespace NodeTypes
 
 		auto& bus = audioMix.has_value() ? std::any_cast<SoLoud::Bus&>(audioMix) : audioMix.emplace<SoLoud::Bus>();
 
-		bus.setFilter(0, nullptr);
-		bus.setFilter(1, nullptr);
-		bus.setFilter(2, nullptr);
-		bus.setFilter(3, nullptr);
+		for (i32 i = 0; i < 8; i++)
+		{
+			bus.setFilter(i, nullptr);
+		}
 
 		aNode.SetOutput<SoLoud::Bus*>(0, &bus);
 
@@ -50,10 +53,10 @@ namespace NodeTypes
 
 		SoLoud::Bus& bus = audioManager->GetBus(aNode.GetInput<std::string>(0));
 
-		bus.setFilter(0, nullptr);
-		bus.setFilter(1, nullptr);
-		bus.setFilter(2, nullptr);
-		bus.setFilter(3, nullptr);
+		for (i32 i = 0; i < 8; i++)
+		{
+			bus.setFilter(i, nullptr);
+		}
 
 		aNode.SetOutput<SoLoud::Bus*>(0, &bus);
 	}
@@ -75,9 +78,14 @@ namespace NodeTypes
 
 			filter.setParams(delay, decay);
 
-			audioSource->setFilter(0, &filter);
+			for(i32 i = 0; i < 8; i++)
+			{
+				if (audioSource->mFilter[i] == nullptr)
+					audioSource->setFilter(i, &filter);
+			}
 		}
 	}
+
 
 	void SSoundEffectResultNode::ExecuteNode(SNode& aNode)
 	{
@@ -109,11 +117,10 @@ namespace NodeTypes
 		
 		SoLoud::Wav& wav = audioFile->GetSource();
 
-		wav.setFilter(0, nullptr);
-		wav.setFilter(1, nullptr);
-		wav.setFilter(2, nullptr);
-		wav.setFilter(3, nullptr);
-		//wav.setSingleInstance(true);
+		for (i32 i = 0; i < 8; i++)
+		{
+			wav.setFilter(i, nullptr);
+		}
 
 		aNode.SetOutput<SoLoud::AudioSource*>(0, &wav);
 	}

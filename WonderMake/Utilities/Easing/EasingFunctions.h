@@ -208,6 +208,21 @@ namespace WmEasings
 	}
 
 	template <WmMath::Interpolable TMotionType = f32>
+	SSpringMotionParameters<TMotionType> UpdateDampedSpringMotiona(
+		SDampedSpringMotionParams<f32> 	dampedParams,
+		SSpringMotionParameters<TMotionType>	aCurrentSpringMotionParams,
+		const TMotionType						equilibriumPos)				
+	{
+
+		const TMotionType oldPos = aCurrentSpringMotionParams.Position - equilibriumPos; // update in equilibrium relative space
+		const TMotionType oldVel = aCurrentSpringMotionParams.Velocity;
+
+		aCurrentSpringMotionParams.Position = oldPos * dampedParams.PosPosCoef + oldVel * dampedParams.PosVelCoef + equilibriumPos;
+		aCurrentSpringMotionParams.Velocity = oldPos * dampedParams.VelPosCoef + oldVel * dampedParams.VelVelCoef;
+		return aCurrentSpringMotionParams;
+	}
+
+	template <WmMath::Interpolable TMotionType = f32>
 	SSpringMotionParameters<TMotionType> UpdateDampedSpringMotion(
 		SSpringMotionParameters<TMotionType>	aCurrentSpringMotionParams,	// velocity value to update
 		const TMotionType						equilibriumPos,				// position to approach
@@ -217,11 +232,6 @@ namespace WmEasings
 	{
 		auto params = CalcDampedSpringMotionParams(deltaTime, angularFrequency, dampingRatio);
 
-		const TMotionType oldPos = aCurrentSpringMotionParams.Position - equilibriumPos; // update in equilibrium relative space
-		const TMotionType oldVel = aCurrentSpringMotionParams.Velocity;
-
-		aCurrentSpringMotionParams.Position = oldPos * params.PosPosCoef + oldVel * params.PosVelCoef + equilibriumPos;
-		aCurrentSpringMotionParams.Velocity = oldPos * params.VelPosCoef + oldVel * params.VelVelCoef;
-		return aCurrentSpringMotionParams;
+		return UpdateDampedSpringMotiona<TMotionType>(params, aCurrentSpringMotionParams, equilibriumPos);
 	}
 }

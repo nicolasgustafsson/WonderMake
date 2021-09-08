@@ -43,6 +43,11 @@ public:
 		return (*(this->myBackend.find(aKey))).second;
 	}
 
+	IteratorType Erase(const TKeyType& aKey)
+	{
+		return Erase(this->myBackend.find(aKey));
+	}
+
 	IteratorType Erase(IteratorType aIt)
 	{
 		return this->myBackend.erase(aIt);

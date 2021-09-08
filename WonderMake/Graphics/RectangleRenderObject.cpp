@@ -23,4 +23,12 @@ void RectangleRenderObject::SetRectangle(const SRectangle aRectangle)
 	SetAttribute<EVertexAttribute::Position>(index++, { aRectangle.Right, aRectangle.Top });
 	SetAttribute<EVertexAttribute::Position>(index++, { aRectangle.Left, aRectangle.Top});
 	SetAttribute<EVertexAttribute::Position>(index++, { aRectangle.Right, aRectangle.Bottom });
+
+
+	SetAttribute<EVertexAttribute::TexCoord>(0, { 0.0f, 1.0f });
+	SetAttribute<EVertexAttribute::TexCoord>(1, { 0.0f, 0.0f });
+	SetAttribute<EVertexAttribute::TexCoord>(2, { 1.0f, 0.0f });
+	SetAttribute<EVertexAttribute::TexCoord>(3, { 1.0f, 1.0f });
+	SetAttribute<EVertexAttribute::TexCoord>(4, { 0.0f, 1.0f });
+	SetAttribute<EVertexAttribute::TexCoord>(5, { 1.0f, 0.0f });
 }

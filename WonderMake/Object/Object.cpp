@@ -43,6 +43,11 @@ Object::Object(Object&& aOther)
 {
 	myFunctionalities = std::move(aOther.myFunctionalities);
 	myComponents = std::move(aOther.myComponents);
+
+	for(auto&& functionality : myFunctionalities)
+	{
+		functionality.second.Reference->OnNewObject(*this);
+	}
 }
 
 Object& Object::operator=(Object&& aOther)
@@ -50,6 +55,11 @@ Object& Object::operator=(Object&& aOther)
 	Destroy();
 	myFunctionalities = std::move(aOther.myFunctionalities);
 	myComponents = std::move(aOther.myComponents);
+
+	for (auto&& functionality : myFunctionalities)
+	{
+		functionality.second.Reference->OnNewObject(*this);
+	}
 
 	return *this;
 }

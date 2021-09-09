@@ -10,5 +10,7 @@ class _BaseFunctionality
 public:
 	virtual ~_BaseFunctionality() = default;
 
+	virtual void OnNewObject(Object& aObjectAddedTo) { aObjectAddedTo; };
+
 	virtual void Tick() {}
 };

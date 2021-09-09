@@ -78,6 +78,8 @@ public:
 			return *myFunctionalities.emplace();
 		}, myDependencyDestructor, aExplicitlyAdded);
 
+		added.OnNewObject(aObject);
+		
 		return added;
 	}
 

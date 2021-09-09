@@ -95,7 +95,16 @@ void Display::FinishDebugFrame()
 	ImGui::BeginChild(15, ImVec2(0, 0), false, ImGuiWindowFlags_NoMove);
 	SystemPtr<GlfwFacade> glfw;
 
+	const bool hadFocus = myHasFocus;
+
 	myHasFocus = ImGui::IsWindowFocused();
+
+	myImGuiWindow = ImGui::GetCurrentWindow();
+
+	if (hadFocus && !myHasFocus)
+	{
+		WmLog("Lost focus!");
+	}
 
 	i32 windowX, windowY;
 	glfw->GetWindowPos(SystemPtr<Window>()->myGlfwWindow, &windowX, &windowY);
@@ -165,6 +174,18 @@ SVector2f Display::ConvertToWorldPosition(const SVector2f aWindowPosition) const
 	screenPositionMatrix *= view;
 
 	return screenPositionMatrix.GetPosition();
+}
+
+bool Display::HasFocus() const
+{
+	if constexpr (Constants::IsDebugging)
+	{
+		ImGuiContext& g = *GImGui;
+
+		return g.NavWindow == myImGuiWindow;
+	}
+
+	return myHasFocus;
 }
 
 void Display::Focus()

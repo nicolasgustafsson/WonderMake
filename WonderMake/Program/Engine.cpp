@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Engine.h"
 
+#include "GlfwFacade.h"
 #include "Job/JobSystem.h"
 
 #include "Program/Program.h"
@@ -57,9 +58,10 @@ namespace Engine
 		{
 			//update the timekeeper before any threads have run so that delta time can be accessed asynchronously
 			SystemPtr<TimeKeeper>()->Update();
+			SystemPtr<GlfwFacade>()->PollEvents();
 
-			taskManager.Update();
 			routine.Run();
+			taskManager.Update();
 		}
 	}
 }

@@ -16,7 +16,7 @@ public:
 	void FinishFrame(); 
 	[[nodiscard]] SVector2f ConvertToWorldPosition(const SVector2f aWindowPosition) const noexcept;
 
-	[[nodiscard]] bool HasFocus() const { return myHasFocus; }
+	[[nodiscard]] bool HasFocus() const;
 
 	void Focus();
 	
@@ -53,5 +53,7 @@ private:
 	const SColor ClearColor = SColor::Grey();
 
 	bool myHasFocus = false;
+
+	ImGuiWindow* myImGuiWindow{};
 };
 

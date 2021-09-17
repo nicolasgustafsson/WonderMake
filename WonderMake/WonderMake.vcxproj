@@ -235,6 +235,7 @@
     <ClCompile Include="Graphics\RenderObject.cpp" />
     <ClCompile Include="Graphics\Text\TextRenderObject.cpp" />
     <ClCompile Include="Graphics\RectangleRenderObject.cpp" />
+    <ClCompile Include="Functionalities\ObjectInterfaceFunctionality.cpp" />
     <ClCompile Include="TweakableValues\TweakableValueDatabase.cpp" />
     <ClCompile Include="Utilities\StaticRegistry\StaticRegistry.cpp" />
     <ClCompile Include="Utilities\Id.cpp" />
@@ -318,6 +319,7 @@
     <ClInclude Include="CommonExtensions\TimeToLiveFunctionality.h" />
     <ClInclude Include="EngineTools\EngineTools.h" />
     <ClInclude Include="EngineTools\EasingTester.h" />
+    <ClInclude Include="Functionalities\ObjectInterfaceFunctionality.h" />
     <ClInclude Include="Graphics\Text\Font.h" />
     <ClInclude Include="Graphics\Text\FontMetrics.h" />
     <ClInclude Include="Job\Cargo.h" />

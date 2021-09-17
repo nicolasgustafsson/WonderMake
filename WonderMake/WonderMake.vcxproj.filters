@@ -95,6 +95,8 @@
     <ClCompile Include="Utilities\StaticRegistry\StaticRegistry.cpp" />
     <ClCompile Include="TweakableValues\TweakableValueDatabase.cpp" />
     <ClCompile Include="Cheats\CheatManager.cpp" />
+    <ClCompile Include="Functionalities\ObjectInterfaceFunctionality.cpp" />
+    <ClCompile Include="Imgui\WmGuiUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -306,6 +308,8 @@
     <ClInclude Include="Utilities\StaticRegistry\FixedString.h" />
     <ClInclude Include="TweakableValues\TweakableValueDatabase.h" />
     <ClInclude Include="Cheats\CheatManager.h" />
+    <ClInclude Include="Functionalities\ObjectInterfaceFunctionality.h" />
+    <ClInclude Include="Imgui\WmGuiUtility.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

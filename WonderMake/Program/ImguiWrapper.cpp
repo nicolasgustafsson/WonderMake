@@ -28,7 +28,7 @@ ImguiWrapper::ImguiWrapper()
 	io.Fonts->AddFontFromFileTTF("Fonts/Roboto-Medium.ttf", 13.f);
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-	io.ConfigDockingWithShift = true;
+	//io.ConfigDockingWithShift = true;
 
 	// Setup Platform/Renderer bindings
 	ImGui_ImplGlfw_InitForOpenGL(Get<Window>().myGlfwWindow, true);
@@ -52,6 +52,7 @@ void ImguiWrapper::EndFrame()
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 	GLFWwindow* backup_current_context = glfwGetCurrentContext();
+
 	ImGui::UpdatePlatformWindows();
 	ImGui::RenderPlatformWindowsDefault();
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <optional>
 #include <tuple>
+#include <variant>
 
 namespace Utility
 {
@@ -63,5 +64,57 @@ namespace Utility
 	{
 		if (aCallable)
 			(void)(*aCallable)(std::forward<TArgs>(aArgs)...);
+	}
+
+	template <typename Out>
+	static inline void Split(const std::string& aString, char aDelimiter, Out aResult) {
+		std::istringstream stringstream(aString);
+		std::string item;
+		while (std::getline(stringstream, item, aDelimiter)) {
+			*aResult++ = item;
+		}
+	}
+
+	static inline std::vector<std::string> Split(const std::string& aString, char aDelimiter) {
+		std::vector<std::string> elems;
+		Split(aString, aDelimiter, std::back_inserter(elems));
+		return elems;
+	}
+
+	namespace detail
+	{
+		template<typename ...Ts>
+		struct MakeVariantImpl
+		{
+
+			using Variant = std::variant<Ts...>;
+
+			template<std::size_t Index, typename, typename ...Rest>
+			static decltype(auto) make_variant(std::size_t index)
+			{
+				if (Index == index)
+					return Variant{ std::in_place_index_t<Index>{} };
+
+				if constexpr (sizeof...(Rest) != 0)
+					return make_variant<Index + 1, Rest...>(index);
+				else
+					throw std::runtime_error("Invalid variant index");
+			}
+
+		};
+
+	} // namespace detail
+
+
+	template<typename ...Ts>
+	decltype(auto) VariantFromIndex(std::size_t aIndex)
+	{
+		return detail::MakeVariantImpl<Ts...>::template make_variant<0, Ts...>(aIndex);
+	}
+
+	template<class... Vs>
+	decltype(auto) VariantFromIndex(std::variant<Vs...> const&, std::size_t aIndex)
+	{
+		return VariantFromIndex<Vs...>(aIndex);
 	}
 }

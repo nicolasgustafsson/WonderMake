@@ -78,6 +78,16 @@ public:
 		return this->myBackend.end();
 	}
 
+	ConstIteratorType begin() const
+	{
+		return this->myBackend.begin();
+	}
+
+	ConstIteratorType end() const
+	{
+		return this->myBackend.end();
+	}
+
 	ConstIteratorType cbegin() const
 	{
 		return this->myBackend.cbegin();

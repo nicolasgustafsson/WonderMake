@@ -178,13 +178,12 @@ SVector2f Display::ConvertToWorldPosition(const SVector2f aWindowPosition) const
 
 bool Display::HasFocus() const
 {
-	if constexpr (Constants::IsDebugging)
+	if (Constants::IsDebugging)
 	{
 		ImGuiContext& g = *GImGui;
 
 		return g.NavWindow == myImGuiWindow;
 	}
-
 	return myHasFocus;
 }
 

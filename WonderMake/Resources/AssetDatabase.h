@@ -128,7 +128,7 @@ public:
 
 		std::ofstream file("AssetDatabases\\" + GetAssetTypeName() + ".json");
 
-		file << std::setw(4) << serialized.dump();
+		file << serialized.dump(4);
 	}
 
 	nlohmann::json Serialize()

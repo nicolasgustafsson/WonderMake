@@ -11,7 +11,7 @@ void TweakableValueDatabase::Save()
 {
 	std::ofstream file("tweakableValues.json");
 
-	file << std::setw(4) << myValues.dump();
+	file << myValues.dump(4);
 }
 
 void TweakableValueDatabase::Debug()

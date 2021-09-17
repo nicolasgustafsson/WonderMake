@@ -35,7 +35,7 @@ void NodeGraph::Save()
 
 	std::ofstream file(myPath);
 
-	file << std::setw(4) << json.dump();
+	file << json.dump(4);
 
 	WmLog(TagSuccess, TagNodeGraph, "Saved node graph [", myPath.string(), "]");
 }

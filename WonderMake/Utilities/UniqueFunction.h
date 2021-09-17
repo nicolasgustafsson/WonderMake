@@ -5,6 +5,8 @@
 
 #include <type_traits>
 
+#include "StaticRegistry/StaticRegistry.h"
+
 namespace _Impl
 {
 	template<template<typename> typename TAllocator, typename TReturnValue, typename... TArgs>
@@ -228,3 +230,34 @@ public:
 };
 
 using Closure = UniqueFunction<void()>;
+
+class ImmediateFunction
+{
+public:
+	ImmediateFunction(Closure aFunction)
+	{
+		aFunction();
+	}
+};
+
+template<void(TFunction)()>
+class TImmediateFunction
+{
+public:
+	TImmediateFunction()
+	{
+		TFunction();
+	}
+};
+
+template<void(TFunction)()>
+class StaticInitializationTimeFunction
+{
+public:
+	StaticInitializationTimeFunction()
+	{
+		FORCE_INSTANTIATE(RunImmediately);
+	}
+
+	static inline TImmediateFunction<TFunction> RunImmediately;
+};

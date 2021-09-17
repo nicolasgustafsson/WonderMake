@@ -1,4 +1,8 @@
 #pragma once
+//#include <json/json.hpp>
+
+#include <json/json.hpp>
+
 #include "Utilities/plf_colony.h"
 #include "Utilities/Container/ContainerBackend.h"
 
@@ -102,3 +106,21 @@ public:
 	}
 };
 
+
+namespace plf
+{
+	template<typename TObjectType>
+	inline void to_json(json& aJson, const colony<TObjectType>& aContainer)
+	{
+		for (auto&& object : aContainer)
+			aJson.push_back(object);
+	}
+
+	template<typename TObjectType>
+	inline void from_json(const json& aJson, colony<TObjectType>& aContainer)
+	{
+		for (auto&& object : aJson)
+			aContainer.insert(object.get<TObjectType>());
+	}
+
+}

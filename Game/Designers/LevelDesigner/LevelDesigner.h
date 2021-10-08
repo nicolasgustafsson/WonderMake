@@ -3,7 +3,7 @@
 #include "Geometry/Polygon.h"
 #include "System/System.h" 
 
-class LevelFunctionality;
+class ObjectContainerFunctionality;
 class LevelPortalFunctionality;
 class SpinnerFunctionality;
 class SpriteRenderingFunctionality;
@@ -76,7 +76,7 @@ class LevelDesigner
 public:
 	using Super::Super;
 
-	void DesignLevel(LevelFunctionality& aLevel);
+	void DesignLevel(ObjectContainerFunctionality& aLevel);
 
 protected:
 	plf::colony<Object> CreateWalls(SLevelGeometry& aGeometry);
@@ -95,7 +95,7 @@ protected:
 	void DesignStartPoint(const SSpace& aSpace);
 	void CreateEnemy(const SVector2f aPosition);
 
-	LevelFunctionality* myCurrentLevel;
+	ObjectContainerFunctionality* myCurrentLevel;
 
 	SLevelGeometry myGeometry;
 };

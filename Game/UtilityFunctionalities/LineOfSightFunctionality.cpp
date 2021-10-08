@@ -10,7 +10,7 @@ REGISTER_FUNCTIONALITY(LineOfSightFunctionality);
 
 void LineOfSightFunctionality::Tick()
 {
-	auto* level = Get<LevelDenizenFunctionality>().Get<SLevelDenizenComponent>().Level;
+	auto* level = Get<SubobjectFunctionality>().Get<SSubobjectComponent>().Level;
 
 	if (!level)
 		return;

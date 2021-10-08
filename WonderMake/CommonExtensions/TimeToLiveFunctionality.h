@@ -1,11 +1,11 @@
 #pragma once
 #include "Functionalities/TimerFunctionality.h"
-#include "Levels/LevelDenizenFunctionality.h"
+#include "Levels/SubobjectFunctionality.h"
 #include "Functionalities/Functionality.h"
 
 class TimeToLiveFunctionality : public Functionality<
 	Policy::Set<
-		PAdd<SLevelDenizenComponent, PWrite>, 
+		PAdd<SSubobjectComponent, PWrite>, 
 		PAdd<TimerFunctionality, PWrite>>>
 {
 public:

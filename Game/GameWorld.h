@@ -9,7 +9,7 @@
 struct SPlayerDiedMessage;
 
 class LevelDesigner;
-class LevelFunctionality;
+class ObjectContainerFunctionality;
 class ScheduleSystem;
 
 class GameWorld
@@ -30,13 +30,13 @@ public:
 
 private:
 	TransformFunctionality2D* myPlayerTransform = nullptr;
-	LevelFunctionality* myCurrentLevelFunctionality = nullptr;
+	ObjectContainerFunctionality* myCurrentLevelFunctionality = nullptr;
 
 	ScreenPassRenderObject myBackground;
 
-	void SetupPlayer(LevelFunctionality& aLevelFunctionality);
+	void SetupPlayer(ObjectContainerFunctionality& aLevelFunctionality);
 
-	void SetLevel(Object aLevel, LevelFunctionality& aLevelFunctionality, const bool aAddPlayer);
+	void SetLevel(Object aLevel, ObjectContainerFunctionality& aLevelFunctionality, const bool aAddPlayer);
 
 	void OnPlayerDeath(const SPlayerDiedMessage&);
 	MessageSubscriber mySubscriber;

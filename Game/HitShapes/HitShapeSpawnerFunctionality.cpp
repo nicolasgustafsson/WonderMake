@@ -40,7 +40,7 @@ void HitShapeSpawnerFunctionality::SpawnPunch(const f32 aLength, const f32 aDela
 	const EFaction faction = Get<FactionFunctionality>().GetFaction();
 	hitShapeFunctionality.SetFromBezier(curve, aWidth, aDuration, aDelay, aDamage, faction);
 
-	Get<SLevelDenizenComponent>().Level->AddDenizen(std::move(hitShape));
+	Get<SSubobjectComponent>().Level->AddDenizen(std::move(hitShape));
 }
 
 void HitShapeSpawnerFunctionality::SpawnSwordSwing(BezierCurve aSwordPath, const f32 aDelay, const f32 aDuration, const f32 aWidth, const f32 aDamage)
@@ -55,5 +55,5 @@ void HitShapeSpawnerFunctionality::SpawnSwordSwing(BezierCurve aSwordPath, const
 	const EFaction faction = Get<FactionFunctionality>().GetFaction();
 	hitShapeFunctionality.SetFromBezier(aSwordPath, aWidth, aDuration, aDelay, aDamage, faction);
 
-	Get<SLevelDenizenComponent>().Level->AddDenizen(std::move(hitShape));
+	Get<SSubobjectComponent>().Level->AddDenizen(std::move(hitShape));
 }

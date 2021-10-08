@@ -18,7 +18,7 @@
 
 REGISTER_SYSTEM(LevelDesigner);
 
-void LevelDesigner::DesignLevel(LevelFunctionality& aLevel)
+void LevelDesigner::DesignLevel(ObjectContainerFunctionality& aLevel)
 {
 	myCurrentLevel = &aLevel;
 

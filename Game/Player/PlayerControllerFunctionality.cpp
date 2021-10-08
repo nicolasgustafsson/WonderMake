@@ -20,7 +20,7 @@ PlayerControllerFunctionality::PlayerControllerFunctionality()
 
 	Get<MeleeWeaponUserFunctionality>().SetWeapon(Get<MeleeWeaponDesigner>().DesignWeapon());
 
-	Get<SLevelDenizenComponent>().PersistentOnLevelChange = true;
+	Get<SSubobjectComponent>().PersistentOnLevelChange = true;
 
 	Get<SpriteRenderingFunctionality>().SetTexture("Player");
 	
@@ -64,7 +64,7 @@ void PlayerControllerFunctionality::UpdateMovement()
 
 	if (Get<InputSystem>().IsKeyDown(EKeyboardKey::Enter))
 	{
-		LevelFunctionality* level = Get<SLevelDenizenComponent>().Level;
+		ObjectContainerFunctionality* level = Get<SSubobjectComponent>().Level;
 		if (level)
 		{
 			Object enemy;

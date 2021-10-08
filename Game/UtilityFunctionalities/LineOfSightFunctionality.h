@@ -1,7 +1,7 @@
 #pragma once
 #include "Functionalities/TransformFunctionality.h"
 #include "Designers/LevelDesigner/Geometry/PolygonOperators/PolygonPointOperator.h"
-#include "CommonExtensions/Levels/LevelDenizenFunctionality.h"
+#include "CommonExtensions/Levels/SubobjectFunctionality.h"
 
 struct SLineOfSightComponent
 	: public SComponent
@@ -11,7 +11,7 @@ struct SLineOfSightComponent
 
 class LineOfSightFunctionality : public Functionality<
 	Policy::Set<
-		PAdd<LevelDenizenFunctionality, PRead>,
+		PAdd<SubobjectFunctionality, PRead>,
 		PAdd<SLineOfSightComponent, PWrite>,
 		PAdd<TransformFunctionality2D, PRead>>>
 {

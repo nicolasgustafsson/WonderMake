@@ -43,7 +43,7 @@ class PlayerControllerFunctionality
 			PAdd<CharacterFunctionality, PWrite>,
 			PAdd<FactionFunctionality, PWrite>,
 			PAdd<TimerFunctionality, PWrite>,
-			PAdd<SLevelDenizenComponent, PWrite>,
+			PAdd<SSubobjectComponent, PWrite>,
 			PAdd<VisionFunctionality, PWrite>,
 			PAdd<SpriteRenderingFunctionality, PWrite>>>
 	, public Debugged

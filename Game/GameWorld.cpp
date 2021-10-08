@@ -36,10 +36,10 @@ GameWorld::GameWorld()
 
 void GameWorld::RestartLevel(const bool aAddPlayer)
 {
-	RunJob<CreateObjectJob<LevelFunctionality>>()
-		.Then(WrapCargo(*this), [aAddPlayer](Cargo<GameWorld>&& aCargo, Object&& aObject, Cargo<LevelFunctionality>&& aFunctionalities)
+	RunJob<CreateObjectJob<ObjectContainerFunctionality>>()
+		.Then(WrapCargo(*this), [aAddPlayer](Cargo<GameWorld>&& aCargo, Object&& aObject, Cargo<ObjectContainerFunctionality>&& aFunctionalities)
 			{
-				aCargo.Get<GameWorld>().SetLevel(std::move(aObject), aFunctionalities.Get<LevelFunctionality>(), aAddPlayer);
+				aCargo.Get<GameWorld>().SetLevel(std::move(aObject), aFunctionalities.Get<ObjectContainerFunctionality>(), aAddPlayer);
 			});
 }
 
@@ -50,13 +50,13 @@ void GameWorld::Tick()
 	myBackground.Render();
 }
 
-void GameWorld::SetupPlayer(LevelFunctionality& aLevelFunctionality)
+void GameWorld::SetupPlayer(ObjectContainerFunctionality& aLevelFunctionality)
 {
 	RunJob<CreateObjectJob<TransformFunctionality2D, PlayerControllerFunctionality, CameraFunctionality>>()
 		.Then(WrapCargo(*this, aLevelFunctionality), [](auto&& aCargo, auto&& aObject, auto&& aFunctionalities)
 			{
 				auto&& gameWorld = aCargo.Get<GameWorld>();
-				auto&& levelFunctionality = aCargo.Get<LevelFunctionality>();
+				auto&& levelFunctionality = aCargo.Get<ObjectContainerFunctionality>();
 
 				levelFunctionality.AddDenizen(std::move(aObject));
 				gameWorld.myPlayerTransform = &aFunctionalities.Get<TransformFunctionality2D>();
@@ -65,7 +65,7 @@ void GameWorld::SetupPlayer(LevelFunctionality& aLevelFunctionality)
 			});
 }
 
-void GameWorld::SetLevel(Object aLevel, LevelFunctionality& aLevelFunctionality, const bool aAddPlayer)
+void GameWorld::SetLevel(Object aLevel, ObjectContainerFunctionality& aLevelFunctionality, const bool aAddPlayer)
 {
 	Get<LevelDesigner>().DesignLevel(aLevelFunctionality);
 

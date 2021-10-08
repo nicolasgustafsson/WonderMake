@@ -8,7 +8,7 @@
 #include "Character/Buffs/CharacterBuffsFunctionality.h"
 #include "HitShapes/HitShapeSpawnerFunctionality.h"
 #include "UtilityFunctionalities/FactionFunctionality.h"
-#include "CommonExtensions/Levels/LevelDenizenFunctionality.h"
+#include "CommonExtensions/Levels/SubobjectFunctionality.h"
 
 class InputSystem;
 
@@ -31,7 +31,7 @@ class CharacterFunctionality
 			PAdd<DefaultMovementFunctionality, PWrite>,
 			PAdd<CharacterStatsFunctionality, PWrite>,
 			PAdd<HitShapeSpawnerFunctionality, PWrite>,
-			PAdd<LevelDenizenFunctionality, PWrite>,
+			PAdd<SubobjectFunctionality, PWrite>,
 			PAdd<CharacterBuffsFunctionality, PWrite>>>
 {
 public:

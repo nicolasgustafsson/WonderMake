@@ -57,7 +57,7 @@ public:
 	STimer const* GetTimerFromHandle(const STimerHandle aTimerHandle) const;
 	STimer* GetTimerFromHandle(const STimerHandle aTimerHandle);
 
-	void Tick();
+	void Tick() override;
 
 	IdCounter myIdCounter;
 };

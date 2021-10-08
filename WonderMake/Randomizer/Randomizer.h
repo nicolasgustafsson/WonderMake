@@ -40,7 +40,6 @@ public:
 		return aCircle.Position + movement;
 	}
 
-
 private:
 	std::random_device myRandomDevice;
 	std::mt19937 myRandomGenerator;

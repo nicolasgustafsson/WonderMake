@@ -2,8 +2,6 @@
 #include "TimeKeeper.h"
 #include "Debugging/DebugSettingsSystem.h"
 
-REGISTER_SYSTEM(TimeKeeper);
-
 float TimeKeeper::Update() noexcept
 {
 	myPreviousDeltaSecondsPrecise = std::min(myStopwatch.Restart() * myTimeDilation, myMaxDeltaTime);

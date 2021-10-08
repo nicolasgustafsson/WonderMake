@@ -1,10 +1,10 @@
 #pragma once
-#include "System/System.h"
+#include "System/Systemus.h"
 #include "Utilities/Debugging/Debugged.h"
 #include "Utilities/Stopwatch.h"
 
 class TimeKeeper
-	: public System<>
+	: public Systemus<TimeKeeper>
 	, public Debugged
 {
 public:

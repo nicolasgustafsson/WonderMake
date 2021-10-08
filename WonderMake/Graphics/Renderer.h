@@ -1,29 +1,25 @@
 #pragma once
-#include "RenderObject.h"
-#include "SpriteRenderObject.h"
-#include "RenderTarget.h"
 #include "ScreenPassRenderObject.h"
-#include "System/System.h"
-#include "Camera/CameraManager.h"
-#include "Program/Window.h"
-#include "Message/MessageSubscriber.h"
 #include "Utilities/Debugging/Debugged.h"
-#include "Debugging/DebugLineDrawer.h"
-#include "OpenGLFacade.h"
-#include "Graphics/RenderCommandProcessor.h"
 
+class CameraManager;
 class GlfwFacade;
+class Window;
+class EngineUniformBuffer;
+class OpenGLFacade;
+class RenderCommandProcessor;
+class DebugLineDrawer;
 
 class Renderer
-	: public System<
-		Policy::Set<
-			PAdd<EngineUniformBuffer, PWrite>,
-			PAdd<Window, PWrite>,
-			PAdd<DebugLineDrawer, PWrite>,
-			PAdd<GlfwFacade, PWrite>,
-			PAdd<CameraManager, PWrite>,
-			PAdd<RenderCommandProcessor, PWrite>,
-			PAdd<OpenGLFacade, PWrite>>>
+	: public Systemus<
+			Renderer,
+			EngineUniformBuffer,
+			Window,
+			DebugLineDrawer,
+			GlfwFacade,
+			CameraManager,
+			RenderCommandProcessor,
+			OpenGLFacade>
 	, public Debugged
 {
 public:

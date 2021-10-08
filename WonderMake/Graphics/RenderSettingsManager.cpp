@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "RenderSettingsManager.h"
 
-REGISTER_SYSTEM(RenderSettingsManager);
-
 void SRenderSettings::Append(const SRenderSettings& aOther)
 {
 	if (aOther.BlendMode)

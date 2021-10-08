@@ -8,10 +8,8 @@
 class DebugSettingsSystem;
 
 class AudioManager
-	: public System<
-		Policy::Set<
-			PAdd<DebugSettingsSystem, PWrite>>
-	>, Debugged
+	: public Systemus<AudioManager, DebugSettingsSystem>
+	, Debugged
 {
 public:
 	AudioManager();

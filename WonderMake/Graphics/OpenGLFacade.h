@@ -1,10 +1,11 @@
 #pragma once
 #include "System/System.h"
+#include "System/Systemus.h"
 
 
 //[Nicos]: Note that this is not a complete facade for openGL; you may need to create your own wrapped functions.
 class OpenGLFacade
-	: public System<>
+	: public Systemus<OpenGLFacade>
 {
 public:
 	void Enable(const GLenum aSetting);

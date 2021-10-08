@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "OpenGLFacade.h"
 
-REGISTER_SYSTEM(OpenGLFacade);
-
 void OpenGLFacade::Enable(const GLenum aSetting)
 {
 	glEnable(aSetting);

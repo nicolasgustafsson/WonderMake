@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "EngineUniformBuffer.h"
 
-REGISTER_SYSTEM(EngineUniformBuffer);
-
 EngineUniformBuffer::EngineUniformBuffer()
 	: UniformBuffer<SEngineUniformBufferData>(0)
 {

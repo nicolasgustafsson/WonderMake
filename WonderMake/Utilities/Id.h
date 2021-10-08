@@ -22,6 +22,17 @@ private:
 	u64 myInternalId = 0;
 };
 
+//Unique id per object per class
+template<typename T>
+class UniqueId : public Id
+{
+public:
+	UniqueId() : Id(UniqueIdCounter.NextId()) {}
+
+private:
+	static IdCounter UniqueIdCounter;
+};
+
 
 namespace std {
 	template <> struct hash<Id>

@@ -61,7 +61,6 @@ public:
 				auto& functionality = *static_cast<TFunctionality*>(static_cast<_BaseFunctionality*>(aFunctionality));
 
 				RemoveFunctionality(functionality);
-
 				RemoveDependencies(aObject);
 			})
 	{
@@ -108,7 +107,10 @@ public:
 			functionalitiesReferenced.insert(&functionality);
 
 		for (auto&& functionality : functionalitiesReferenced)
-			functionality->Tick();
+		{
+			if (myFunctionalitiesToErase.empty() || std::find(myFunctionalitiesToErase.cbegin(), myFunctionalitiesToErase.cend(), functionality) == myFunctionalitiesToErase.cend())
+				functionality->Tick();
+		}
 
 		myInTick = false;
 

@@ -2,8 +2,6 @@
 #include "DebugLineDrawer.h"
 #include "Utilities/Utility.h"
 
-REGISTER_SYSTEM(DebugLineDrawer);
-
 DebugLineDrawer::DebugLineDrawer() noexcept
 	: myRenderObject(10000)
 	, mySubscriber(BindHelper(&DebugLineDrawer::OnGotDebugLineMessage, this))

@@ -7,9 +7,7 @@ class Randomizer;
 
 //[Nicos]: Very basic atm; when extending, think of how you would design a weapon for a game IRL and code it in here :)
 class MeleeWeaponDesigner
-	: public System<
-		Policy::Set<
-			PAdd<Randomizer, PWrite>>>
+	: public Systemus<MeleeWeaponDesigner, Randomizer>
 {
 public:
 	using Super::Super;

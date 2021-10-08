@@ -58,20 +58,20 @@ struct SRoom
 };
 
 class LevelDesigner
-	: public System<
-		Policy::Set<
-			PAdd<Randomizer, PWrite>,
-			PAdd<BuffDesigner, PWrite>,
-			PAdd<FunctionalitySystemDelegate<LevelPortalFunctionality>, PWrite>,
-			PAdd<FunctionalitySystemDelegate<SpinnerFunctionality>, PWrite>,
-			PAdd<FunctionalitySystemDelegate<TransformFunctionality2D>, PWrite>,
-			//[Nicos]: TODO REMOVE - After we have chains and stuff
-			PAdd<FunctionalitySystemDelegate<CollisionFunctionality>, PWrite>,
-			PAdd<DebugSettingsSystem, PWrite>,
-			PAdd<FunctionalitySystemDelegate<SpriteRenderingFunctionality>, PWrite>,
-			PAdd<FunctionalitySystemDelegate<BuffGiverFunctionality>, PWrite>,
-			PAdd<FunctionalitySystemDelegate<EnemyControllerFunctionality>, PWrite>,
-			PAdd<FunctionalitySystemDelegate<StaticGeometryFunctionality>, PWrite>>>
+	: public Systemus<
+		LevelDesigner,
+		Randomizer,
+		BuffDesigner,
+		FunctionalitySystemDelegate<LevelPortalFunctionality>,
+		FunctionalitySystemDelegate<SpinnerFunctionality>,
+		FunctionalitySystemDelegate<TransformFunctionality2D>, 
+		//[Nicos]: TODO REMOVE - After we have chains and stuff
+		FunctionalitySystemDelegate<CollisionFunctionality>,
+		DebugSettingsSystem,
+		FunctionalitySystemDelegate<SpriteRenderingFunctionality>,
+		FunctionalitySystemDelegate<BuffGiverFunctionality>,
+		FunctionalitySystemDelegate<EnemyControllerFunctionality>,
+		FunctionalitySystemDelegate<StaticGeometryFunctionality>>
 {
 public:
 	using Super::Super;

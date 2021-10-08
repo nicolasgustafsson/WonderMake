@@ -6,8 +6,6 @@
 
 #include "Scheduling/ScheduleSystem.h"
 
-REGISTER_SYSTEM(CollisionSystem);
-
 CollisionSystem::CollisionSystem() noexcept
 {
 	Get<ScheduleSystem>().ScheduleRepeating<>([this](){ Tick(); });

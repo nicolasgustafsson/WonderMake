@@ -7,8 +7,6 @@
 #include "Designers/EffectDesigner/EffectDesigner.h"
 #include "Character/Effects/CharacterEffect.h"
 
-REGISTER_SYSTEM(BuffDesigner);
-
 BuffDesigner::BuffDesigner()
 	: Debugged("Buff Designer")
 {}

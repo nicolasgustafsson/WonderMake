@@ -30,9 +30,7 @@ struct SEffectDesign
 class CharacterEffect;
 
 class EffectDesigner
-	: public System<
-		Policy::Set<
-			PAdd<Randomizer, PWrite>>>
+	: public Systemus<EffectDesigner, Randomizer>
 {
 public:
 	using Super::Super;

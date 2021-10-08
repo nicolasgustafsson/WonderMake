@@ -44,16 +44,16 @@ namespace _Impl
 	template<typename TPolicySet>
 	using ConvertPolicySet = typename TPolicySet::template ExtractPolicies<CreatePolicySet>;
 
-	template<typename TFunctionality>
-	using GetFunctionalitySystem = System<ConvertPolicySet<typename TFunctionality::PolicySet>>;
+	template<typename TFunctionality, typename TFunctionalitySystem>
+	using GetFunctionalitySystem = Systemus<TFunctionalitySystem, ConvertPolicySet<typename TFunctionality::PolicySet>>;
 }
 
 template<typename TFunctionality>
 class FunctionalitySystem final
-	: public _Impl::GetFunctionalitySystem<TFunctionality>
+	: public _Impl::GetFunctionalitySystem<TFunctionality, FunctionalitySystem<TFunctionality>>
 {
 public:
-	using Super = _Impl::GetFunctionalitySystem<TFunctionality>;
+	using Super = _Impl::GetFunctionalitySystem<TFunctionality, FunctionalitySystem<TFunctionality>>;
 
 	inline FunctionalitySystem()
 		: myDependencyDestructor([this](Object& aObject, auto* aFunctionality)

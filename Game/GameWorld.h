@@ -13,10 +13,7 @@ class ObjectContainerFunctionality;
 class ScheduleSystem;
 
 class GameWorld
-	: public System<
-		Policy::Set<
-			PAdd<LevelDesigner, PWrite>,
-			PAdd<ScheduleSystem, PWrite>>>
+	: public Systemus<GameWorld, LevelDesigner, ScheduleSystem>
 {
 public:
 	GameWorld();

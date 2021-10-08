@@ -21,9 +21,7 @@
 class JobBase;
 
 class JobSystem
-	: public System<
-		Policy::Set<
-			PAdd<ScheduleSystem, PWrite>>>
+	: public System<ScheduleSystem>
 {
 public:
 	template<typename TOutput, typename TOutputError>

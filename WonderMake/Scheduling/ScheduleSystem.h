@@ -3,6 +3,7 @@
 #include "Typedefs.h"
 
 #include "System/System.h"
+#include "System/Systemus.h"
 
 #include "Utilities/UniqueFunction.h"
 
@@ -29,5 +30,4 @@ public:
 private:
 	ScheduleProc myScheduleProc;
 	ScheduleProc myScheduleRepeatingProc;
-
 };

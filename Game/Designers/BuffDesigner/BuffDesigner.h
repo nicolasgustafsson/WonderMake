@@ -35,10 +35,7 @@ struct SBuffDesign
 };
 
 class BuffDesigner
-	: public System<
-		Policy::Set<
-			PAdd<Randomizer, PWrite>,
-			PAdd<EffectDesigner, PWrite>>>
+	: public Systemus<BuffDesigner, Randomizer, EffectDesigner>
 	, public Debugged
 {
 public:

@@ -6,8 +6,6 @@
 #include "Program/GlfwFacade.h"
 #include "Debugging/DebugSettingsSystem.h"
 
-REGISTER_SYSTEM(ImguiWrapper);
-
 ImguiWrapper::ImguiWrapper()
 {
 	IMGUI_CHECKVERSION();

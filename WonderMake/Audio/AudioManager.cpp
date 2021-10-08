@@ -21,6 +21,7 @@ AudioManager::AudioManager()
 	myBusHandle = mySoloudEngine.play(myBus);
 
 	mySoloudEngine.setMaxActiveVoiceCount(255);
+	mySoloudEngine.mGlobalVolume = 0.1f;
 }
 
 AudioManager::~AudioManager()
@@ -52,10 +53,13 @@ void AudioManager::PlayAudio(const std::filesystem::path& aAudioPath)
 	(*it)->Execute();
 }
 
-void AudioManager::PlayAudio(ResourceProxy<AudioFile> aAudioFileToPlay)
+SoLoud::handle AudioManager::PlayAudio(ResourceProxy<AudioFile> aAudioFileToPlay)
 {
 	auto handle = myBusses["Gameplay"].play(aAudioFileToPlay->GetSource());
+
 	myCurrentlyPlayingAudioFiles.insert({ handle, aAudioFileToPlay });
+
+	return handle;
 }
 
 SoLoud::Bus& AudioManager::GetBus(const std::string& aBusName)

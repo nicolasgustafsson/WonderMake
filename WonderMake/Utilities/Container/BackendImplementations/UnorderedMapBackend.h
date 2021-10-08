@@ -28,6 +28,11 @@ public:
 		return elementsRemoved;
 	}
 
+	void Merge(UnorderedMapBackend& aOther)
+	{
+		this->myBackend.merge(aOther.myBackend);
+	}
+
 	[[nodiscard]] bool KeyExists(const TKeyType& aKey) const
 	{
 		return this->myBackend.find(aKey) != cend();
@@ -45,7 +50,10 @@ public:
 
 	IteratorType Erase(const TKeyType& aKey)
 	{
-		return Erase(this->myBackend.find(aKey));
+		if (this->myBackend.find(aKey) != this->myBackend.end())
+			return Erase(this->myBackend.find(aKey));
+
+		return this->myBackend.end();
 	}
 
 	IteratorType Erase(IteratorType aIt)

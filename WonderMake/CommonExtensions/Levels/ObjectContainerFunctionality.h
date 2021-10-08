@@ -1,36 +1,34 @@
 #pragma once
 #include "Functionalities/Functionality.h"
 
-class LevelDenizenFunctionality;
+class SubobjectFunctionality;
 
 //[Nicos]: This kind of Level-Leveldenizen structure can probably be generalized into a more generic architecture of using some kind of object container functionality in the future.
 //[Nicos]: The basic idea is just to be able to access the level to spawn and remove objects whenever
 
-struct SLevelComponent : public SComponent
+struct SObjectContainerComponent : public SComponent
 {
 	struct SDenizen
 	{
-		SDenizen(Object&& aDenizen, LevelDenizenFunctionality& aDenizenFunctionality)
+		SDenizen(Object&& aDenizen, SubobjectFunctionality& aDenizenFunctionality)
 			: DenizenObject(std::move(aDenizen)), DenizenFunctionality(aDenizenFunctionality)
 		{
 
 		}
 		Object DenizenObject;
-		LevelDenizenFunctionality& DenizenFunctionality;
+		SubobjectFunctionality& DenizenFunctionality;
 	};
 
 	plf::colony<SDenizen> Denizens;
-
-	SVector2f StartPosition;
 };
 
-class LevelFunctionality : public Functionality<
+class ObjectContainerFunctionality : public Functionality<
 	Policy::Set<
-		PAdd<FunctionalitySystemDelegate<LevelDenizenFunctionality>, PWrite>,
-		PAdd<SLevelComponent, PWrite>>>
+		PAdd<FunctionalitySystemDelegate<SubobjectFunctionality>, PWrite>,
+		PAdd<SObjectContainerComponent, PWrite>>>
 {
 public:
-	~LevelFunctionality() override;
+	~ObjectContainerFunctionality() override;
 	void Tick();
 
 	Object& AddDenizen();
@@ -40,8 +38,5 @@ public:
 
 	void AddDenizens(plf::colony<Object>&& aObjects);
 
-	void TransferToNewLevel(LevelFunctionality& aNewLevel);
-
-	void SetStartPosition(const SVector2f aPosition);
-	[[nodiscard]] SVector2f GetStartPosition() const noexcept { return Get<SLevelComponent>().StartPosition; }
+	void TransferToOtherContainer(ObjectContainerFunctionality& aNewLevel);
 };

@@ -9,8 +9,11 @@
 
 #include <sstream>
 #include <memory>
+
+#include "Constants.h"
 #include "Utilities/BezierCurve.h"
 #include "Utilities/Geometry.h"
+#include "Utilities/Container/Container.h"
 
 
 template<typename TMessage>
@@ -57,13 +60,46 @@ inline static void WmDrawDebugRectangle(const SRectangle& aRectangle, const SCol
 	WmDrawDebugLine({ aRectangle.Left , aRectangle.Bottom }, { aRectangle.Right, aRectangle.Bottom }, aColor, aDuration);
 }
 
-inline static void WmDrawDebugBezier(const BezierCurve& aCurve, const SColor& aColor, const i32 aSegments = 10, const f32 aDuration = 0.0f)
+inline static void WmDrawDebugBezier(const BezierCurve& aCurve, const SColor& aColor, const u32 aSegments = 10, const f32 aDuration = 0.0f)
 {
 	SVector2f previousLocation = aCurve.GetConstantLocationAt(0.f);
-	for (i32 i = 1; i <= aSegments - 1; i++)
+	for (u32 i = 1; i <= aSegments - 1; i++)
 	{
 		const SVector2f location = aCurve.GetConstantLocationAt(static_cast<f32>(i) / static_cast<f32>(aSegments));
 		WmDrawDebugLine(previousLocation, location, aColor, aDuration);
 		previousLocation = location;
 	}
+}
+
+inline static void WmDrawDebugCircle(const SCircle& aCircle, const SColor& aColor, const u32 aSegments = 10, const f32 aDuration = 0.0f)
+{
+	Container<SVector2f> positions;
+
+	for (u32 i = 0; i < aSegments; ++i)
+	{
+		positions.Add(SVector2f{});
+		positions[i].X = std::cosf(((Constants::Pi * 2.f) / (aSegments )) * i);
+		positions[i].Y = std::sinf(((Constants::Pi * 2.f) / (aSegments )) * i);
+
+		positions[i] *= aCircle.Radius;
+		positions[i] += aCircle.Position;
+	}
+
+	SDebugLine line;
+	line.Color = aColor;
+	line.Duration = aDuration;
+
+	for (u32 i = 0; i < aSegments - 1; ++i)
+	{
+		line.Start = positions[i];
+		line.End = positions[i + 1];
+
+		WmDrawDebugLine(line);
+	}
+
+
+	line.Start = positions[0];
+	line.End = positions[aSegments - 1];
+
+	WmDrawDebugLine(line);
 }

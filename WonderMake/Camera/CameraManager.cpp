@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "CameraManager.h"
 
+REGISTER_SYSTEM(CameraManager);
+
 CameraManager::CameraManager()
 	: Debugged("Camera Manager")
 {

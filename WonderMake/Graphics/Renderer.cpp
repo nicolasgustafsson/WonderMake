@@ -4,15 +4,13 @@
 #include "VertexAttributes.h"
 #include "EngineUniformBuffer.h"
 #include "Camera/Camera.h"
-#include "Camera/CameraManager.h"
 #include <GLFW/glfw3.h>
 #include "Program/GlfwFacade.h"
 #include "Graphics/RenderCommandProcessor.h"
 #include <any>
-#include "Debugging/DebugLineDrawer.h"
-#include "Program/Window.h"
+#include "Graphics/RenderTarget.h"
 
-//REGISTER_SYSTEM(Renderer);
+REGISTER_SYSTEM(Renderer);
 
 void GLAPIENTRY
 MessageCallback([[maybe_unused]] GLenum source,
@@ -65,7 +63,8 @@ void Renderer::StartFrame()
 
 void Renderer::FinishFrame()
 {
-	Get<CameraManager>().FinishFrame(); 
+	Get<CameraManager>().FinishFrame();
+
 	Get<DebugLineDrawer>().Update();
 
 	Get<OpenGLFacade>().BindFramebuffer(GL_FRAMEBUFFER, 0);

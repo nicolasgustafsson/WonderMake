@@ -31,7 +31,7 @@ struct SRenderSettings final
 
 	bool IsEmpty() const;
 };
-class RenderSettingsManager : public Systemus<RenderSettingsManager>
+class RenderSettingsManager : public System<>
 {
 public:
 	RenderSettingsManager();

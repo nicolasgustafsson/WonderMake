@@ -4,7 +4,7 @@ struct GLFWwindow;
 
 typedef void (*GLFWframebuffersizefun)(GLFWwindow*, int, int);
 
-class GlfwFacade : public Systemus<GlfwFacade>
+class GlfwFacade : public System<>
 {
 public:
 	GlfwFacade();

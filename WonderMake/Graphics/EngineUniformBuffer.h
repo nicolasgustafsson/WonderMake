@@ -74,7 +74,10 @@ class Window;
 
 class EngineUniformBuffer 
 	: public UniformBuffer<SEngineUniformBufferData>
-	, public Systemus<EngineUniformBuffer, Window, OpenGLFacade>
+	, public System<
+		Policy::Set<
+			PAdd<Window, PWrite>,
+			PAdd<OpenGLFacade, PWrite>>>
 	
 {
 public:

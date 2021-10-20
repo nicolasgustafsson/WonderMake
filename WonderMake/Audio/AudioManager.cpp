@@ -13,6 +13,8 @@
 #include "Imgui/NodeGraphGui.h"
 #include "Audio/AudioMixingNodeGraph.h"
 
+REGISTER_SYSTEM(AudioManager);
+
 AudioManager::AudioManager()
 	: Debugged("Audio Manager")
 {

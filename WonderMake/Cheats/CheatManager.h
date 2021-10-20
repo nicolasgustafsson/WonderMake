@@ -1,5 +1,5 @@
 #pragma once
-class CheatManager : public Systemus<CheatManager>, Debugged
+class CheatManager : public System<>, Debugged
 {
 public:
 	 CheatManager()

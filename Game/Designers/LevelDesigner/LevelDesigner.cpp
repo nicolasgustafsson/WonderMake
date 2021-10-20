@@ -16,6 +16,8 @@
 #include "Levels/LevelFunctionality.h"
 #include "Debugging/DebugSettingsSystem.h"
 
+REGISTER_SYSTEM(LevelDesigner);
+
 void LevelDesigner::DesignLevel(ObjectContainerFunctionality& aLevel)
 {
 	myCurrentLevel = &aLevel;

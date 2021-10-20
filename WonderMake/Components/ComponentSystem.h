@@ -4,7 +4,6 @@
 #include "Object/Object.h"
 
 #include "System/System.h"
-#include "System/Systemus.h"
 
 #include "Utilities/plf_colony.h"
 
@@ -12,7 +11,7 @@ class Object;
 
 template<typename TData>
 class ComponentSystem
-	: public Systemus<ComponentSystem<TData>>
+	: public System<>
 {
 public:
 	ComponentSystem();

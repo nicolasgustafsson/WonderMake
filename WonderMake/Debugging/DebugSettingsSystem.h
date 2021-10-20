@@ -5,7 +5,7 @@
 #include <string>
 
 class DebugSettingsSystem 
-	: public Systemus<DebugSettingsSystem>
+	: public System<>
 	, public Debugged
 {
 public:

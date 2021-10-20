@@ -11,7 +11,7 @@ class Renderer;
 class Window;
 
 class InputSystem
-	: public Systemus<InputSystem, GlfwFacade, Renderer, CameraManager, Window>
+	: public System<GlfwFacade, Renderer, CameraManager, Window>
 	, public Debugged
 {
 public:

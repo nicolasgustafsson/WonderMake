@@ -5,7 +5,9 @@
 #include "Utilities/TimeKeeper.h"
 
 class DebugLineDrawer
-	: public Systemus<DebugLineDrawer, TimeKeeper>
+	: public System<
+		Policy::Set<
+			PAdd<TimeKeeper, PRead>>>
 {
 public:
 	DebugLineDrawer() noexcept;

@@ -8,6 +8,8 @@
 
 #include "Randomizer/Randomizer.h"
 
+REGISTER_SYSTEM(EffectDesigner);
+
 CharacterEffect& EffectDesigner::DesignCharacterEffect(SEffectRequirements aRequirements)
 {
 	SEffectDesign design;

@@ -5,6 +5,8 @@
 
 #include "NodeGraph/SlotCustomization/SlotInputEdits.h"
 
+REGISTER_SYSTEM(TweakableValueDatabase);
+
 void TweakableValueDatabase::Save()
 {
 	std::ofstream file("tweakableValues.json");

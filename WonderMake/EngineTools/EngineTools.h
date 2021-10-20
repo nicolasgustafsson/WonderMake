@@ -1,7 +1,7 @@
 #pragma once
 #include "Utilities/Debugging/Debugged.h"
 
-class EngineTools : public Systemus<EngineTools>, public Debugged
+class EngineTools : public System<>, public Debugged
 {
 public:
 	EngineTools()

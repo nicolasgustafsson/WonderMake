@@ -6,6 +6,8 @@
 #include "Program/GlfwFacade.h"
 #include "Camera/CameraManager.h"
 
+REGISTER_SYSTEM(Window);
+
 Window::Window()
 {
 	std::ifstream windowSettingsFile("windowSettings.json");
@@ -39,22 +41,6 @@ Window::Window()
 		glfw.Terminate();
 		return;
 	}
-
-	//shop not intuitive show costs
-	//show spawning enemy
-	//randomize to avoid duplicates
-	//better player kill animation
-	//more feedback on turret shot
-	//player direction confusing
-	//unclear what goal is
-	//likes unique wave
-	//charger unclear
-	//wants dash/dodge
-	//multishot confusing, hard to aim with one
-	//not enough take damage feedback
-	//damage doesn't feels consistent
-	//temporary powerups
-	//some kind of feeling of progression
 
 	glfw.MakeContextCurrent(myGlfwWindow);
 

@@ -7,7 +7,7 @@
 //[Nicos]: Also it's windows specific, so we will have to turn it off on linux :(
 
 class FileWatcher 
-	: public Systemus<FileWatcher>
+	: public System<>
 {
 public:
 	FileWatcher();

@@ -3,7 +3,7 @@
 #include "Resources/Resource.h"
 #include "Resources/ResourceProxy.h"
 
-#include "System/Systemus.h"
+#include "System/System.h"
 
 #include <filesystem>
 #include <functional>
@@ -15,7 +15,7 @@
 
 template<typename TResource>
 class ResourceSystem
-	: public Systemus<ResourceSystem<TResource>>
+	: public System<>
 {
 public:
 	ResourceSystem();

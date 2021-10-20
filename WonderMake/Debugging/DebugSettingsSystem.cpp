@@ -2,6 +2,8 @@
 #include "DebugSettingsSystem.h"
 #include "Imgui/JsonInspector.h"
 
+REGISTER_SYSTEM(DebugSettingsSystem);
+
 DebugSettingsSystem::DebugSettingsSystem()
 	: Debugged("Debug Settings")
 {

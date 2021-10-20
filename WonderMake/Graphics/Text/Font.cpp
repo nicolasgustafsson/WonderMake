@@ -2,6 +2,9 @@
 #include "Font.h"
 #include "Utilities/Json/JsonUtility.h"
 
+REGISTER_RESOURCE(Font);
+
+
 Font::Font(const std::filesystem::path& aPath)
 {
 	std::optional<nlohmann::json> jsonFile = JsonUtility::LoadJson(aPath);

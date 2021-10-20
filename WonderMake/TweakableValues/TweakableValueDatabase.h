@@ -12,7 +12,7 @@ struct STweakableValueEntry
 
 
 
-class TweakableValueDatabase : public Systemus<TweakableValueDatabase>
+class TweakableValueDatabase : public System<>
                                , public Debugged
 {
 public:

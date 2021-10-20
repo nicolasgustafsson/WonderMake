@@ -10,7 +10,9 @@ class CollisionFunctionality;
 class ScheduleSystem;
 
 class CollisionSystem final
-	: public Systemus<CollisionSystem, ScheduleSystem>
+	: public System<
+		Policy::Set<
+			PAdd<ScheduleSystem, PWrite>>>
 {
 public:
 	CollisionSystem() noexcept;

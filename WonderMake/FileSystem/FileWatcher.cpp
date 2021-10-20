@@ -3,6 +3,8 @@
 
 #include <Windows.h>
 
+REGISTER_SYSTEM(FileWatcher);
+
 FileWatcher::FileWatcher()
 {
 	myShouldStop.store(false);

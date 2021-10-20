@@ -7,6 +7,8 @@
 #include "Program/GlfwFacade.h"
 #include "Camera/CameraManager.h"
 
+REGISTER_SYSTEM(InputSystem);
+
 void InputSystem::Update() noexcept
 {
 	UpdateKeyboard();

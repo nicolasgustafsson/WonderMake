@@ -5,7 +5,7 @@
 #include <random>
 
 class Randomizer
-	: public Systemus<Randomizer>
+	: public System<>
 {
 public:
 	Randomizer();

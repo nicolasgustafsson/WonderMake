@@ -5,6 +5,8 @@
 #include "OpenGLFacade.h"
 #include "Resources/AssetDatabase.h"
 
+REGISTER_RESOURCE(Texture);
+
 Texture::Texture(const std::filesystem::path& aPath)
 {
 	myPath = aPath;

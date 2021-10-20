@@ -18,12 +18,12 @@ public:
 	void Update() noexcept;
 
 	void PlayAudio(const std::filesystem::path& aAudioPath);
-	SoLoud::handle PlayAudio(ResourceProxy<AudioFile> aAudioFileToPlay);
 
 	SoLoud::Bus& GetBus(const std::string& aBusName);
 	SoLoud::Soloud& GetSoloudEngine();
 
 protected:
+	void PlayAudio(ResourceProxy<AudioFile> aAudioFileToPlay);
 
 	void TryPlayQueuedAudioFiles();
 	void RemoveNonPlayingFiles();

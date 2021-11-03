@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Utilities/Math.h"
 #include "System/System.h"
 
 #include <random>
@@ -12,6 +13,12 @@ public:
 
 	template <typename T = f32>
 	T GetRandomNumber(T aMin = 0, T aMax = 1);
+	
+	template <WmMath::Interpolable T>
+	T GetRandomInRange(T aMin = 0, T aMax = 1)
+	{
+		return WmMath::Lerp(aMin, aMax, GetRandomNumber());
+	}
 
 	bool GetRandomBool();
 

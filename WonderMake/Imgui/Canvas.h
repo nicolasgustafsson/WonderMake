@@ -4,8 +4,11 @@ namespace WmGui
 {
 	struct SCanvasState
 	{
-		f32 ZoomLevel = 1;
+		ImVec2 ZoomLevel = {1.f, 1.f};
 		ImVec2 Offset = { 0.f, 0.f };
+		ImVec2 WindowSize = { 100.f, 100.f };
+
+		void ScaleToRectangle(const SRectangle& aRectangle);
 	};
 
 	void BeginCanvas(SCanvasState* aCanvasState, bool aAllowMovement = true, bool aShowGrid = true);

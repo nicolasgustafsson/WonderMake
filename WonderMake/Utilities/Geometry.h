@@ -1,4 +1,5 @@
 #pragma once
+#include "TypeTraits/TypeTraits.h"
 
 struct SRectangle
 {
@@ -6,6 +7,37 @@ struct SRectangle
 	f32 Top{};
 	f32 Right{};
 	f32 Bottom{};
+
+	template <SameType ... TPoints> requires std::is_same_v<FirstType<TPoints...>, SVector2f>
+	static SRectangle GenerateBoundingBox(TPoints... aPoints)
+	{
+		const size_t numberOfOptions = sizeof...(TPoints);
+
+		std::array<SVector2f, numberOfOptions> pointsAsArray = { { aPoints... } };
+
+		SRectangle boundingBox;
+
+		boundingBox.Left = pointsAsArray[0].X;
+		boundingBox.Right = pointsAsArray[0].X;
+		boundingBox.Top = pointsAsArray[0].Y;
+		boundingBox.Bottom = pointsAsArray[0].Y;
+
+		for (i32 i = 1; i < pointsAsArray.size(); i++)
+		{
+			SVector2f point = pointsAsArray[i];
+
+			if (point.X < boundingBox.Left)
+				boundingBox.Left = point.X;
+			if (point.X > boundingBox.Right)
+				boundingBox.Right = point.X;
+			if (point.Y < boundingBox.Bottom)
+				boundingBox.Bottom = point.Y;
+			if (point.Y > boundingBox.Top)
+				boundingBox.Top = point.Y;
+		}
+
+		return boundingBox;
+	}
 
 	f32 GetWidth() const
 	{

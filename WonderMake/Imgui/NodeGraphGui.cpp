@@ -118,7 +118,7 @@ bool WmGui::NodeGraphEditor::RenderConnection(const ImVec2& aInputPosition, cons
 
 	ImDrawList* drawList = ImGui::GetWindowDrawList();
 
-	aThiccness *= CurrentNodeGraph->CanvasState.ZoomLevel;
+	aThiccness *= CurrentNodeGraph->CanvasState.ZoomLevel.x;
 
 	auto isCloseLambda = [](ImVec2 aStart, ImVec2 aEnd) {
 		const ImVec2 closestPoint = ImLineClosestPoint(aStart, aEnd, ImGui::GetMousePos());
@@ -336,11 +336,11 @@ void WmGui::NodeGraphEditor::Slot(const bool aIsInput, SSlotInstanceBase& aSlotI
 
 	auto* storage = ImGui::GetStateStorage();
 	const auto& style = ImGui::GetStyle();
-	const f32 circleRadius = 6.5f * CurrentNodeGraph->CanvasState.ZoomLevel;
+	const f32 circleRadius = 6.5f * CurrentNodeGraph->CanvasState.ZoomLevel.x;
 
 	ImVec2 titleSize = ImGui::CalcTextSize(aSlotInstance.SlotType.Name.c_str());
 
-	f32 itemOffsetX = 2.5f + style.ItemSpacing.x * CurrentNodeGraph->CanvasState.ZoomLevel;
+	f32 itemOffsetX = 2.5f + style.ItemSpacing.x * CurrentNodeGraph->CanvasState.ZoomLevel.x;
 	if (aIsInput)
 		itemOffsetX = -itemOffsetX;
 
@@ -356,11 +356,11 @@ void WmGui::NodeGraphEditor::Slot(const bool aIsInput, SSlotInstanceBase& aSlotI
 
 		// Reset max width if zoom has changed
 		ImGuiID canvasZoomLevel = ImGui::GetID("canvas-zoom");
-		if (storage->GetFloat(canvasZoomLevel, CurrentNodeGraph->CanvasState.ZoomLevel) != CurrentNodeGraph->CanvasState.ZoomLevel)
+		if (storage->GetFloat(canvasZoomLevel, CurrentNodeGraph->CanvasState.ZoomLevel.x) != CurrentNodeGraph->CanvasState.ZoomLevel.x)
 		{
 			storage->SetFloat(maxWidthId, 0.0f);
 		}
-		storage->SetFloat(canvasZoomLevel, CurrentNodeGraph->CanvasState.ZoomLevel);
+		storage->SetFloat(canvasZoomLevel, CurrentNodeGraph->CanvasState.ZoomLevel.x);
 
 		const f32 outputMaxTitleWidth = ImMax(storage->GetFloat(maxWidthId, titleSize.x), titleSize.x);
 		storage->SetFloat(maxWidthId, outputMaxTitleWidth);
@@ -736,7 +736,7 @@ void WmGui::NodeGraphEditor::DrawPendingConnection()
 					dragPayload->IsInput)),
 			};
 
-			const f32 connectionIndent = 5.f * CurrentNodeGraph->CanvasState.ZoomLevel;
+			const f32 connectionIndent = 5.f * CurrentNodeGraph->CanvasState.ZoomLevel.x;
 
 			ImVec2 inputPosition, outputPosition;
 			if (dragPayload->IsInput)

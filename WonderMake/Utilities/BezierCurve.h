@@ -29,4 +29,3 @@ private:
 
 	SVector2f myStart, myEnd, myFirstControl, mySecondControl;
 };
-

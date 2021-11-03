@@ -11,3 +11,4 @@ using FirstType = std::tuple_element_t<0, std::tuple<T...>>;
 
 template <class ... T>
 concept SameType = std::conjunction_v<std::is_same<FirstType<T...>, T>...>;
+

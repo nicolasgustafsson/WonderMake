@@ -7,6 +7,7 @@
 #include "Functionalities/Functionality.h"
 #include "Functionalities/TransformFunctionality.h"
 #include "Collision/CollisionSystem.h"
+#include "Universe/UniverseDenizen.h"
 
 class DebugSettingsSystem;
 
@@ -16,7 +17,7 @@ namespace Colliders
 }
 
 class CollisionFunctionality final
-	: public Functionality<CollisionSystem, DebugSettingsSystem, SCollisionComponent, const TransformFunctionality2D>
+	: public Functionality<CollisionSystem, DebugSettingsSystem, SCollisionComponent, const TransformFunctionality2D, UniverseDenizen>
 	, public Debugged
 {
 public:

@@ -736,7 +736,7 @@ void WmGui::NodeGraphEditor::DrawPendingConnection()
 					dragPayload->IsInput)),
 			};
 
-			const f32 connectionIndent = 5.f * CurrentNodeGraph->CanvasState.ZoomLevel.x;
+			//const f32 connectionIndent = 5.f * CurrentNodeGraph->CanvasState.ZoomLevel.x;
 
 			ImVec2 inputPosition, outputPosition;
 			if (dragPayload->IsInput)

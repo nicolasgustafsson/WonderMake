@@ -98,6 +98,8 @@
     <ClCompile Include="CommonExtensions\Levels\ObjectContainerFunctionality.cpp" />
     <ClCompile Include="CommonExtensions\Levels\SubobjectFunctionality.cpp" />
     <ClCompile Include="Utilities\Spline.cpp" />
+    <ClCompile Include="Universe\UniverseSystem.cpp" />
+    <ClCompile Include="Universe\UniverseDenizen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -313,6 +315,8 @@
     <ClInclude Include="CommonExtensions\Levels\ObjectContainerFunctionality.h" />
     <ClInclude Include="CommonExtensions\Levels\SubobjectFunctionality.h" />
     <ClInclude Include="Utilities\Spline.h" />
+    <ClInclude Include="Universe\UniverseSystem.h" />
+    <ClInclude Include="Universe\UniverseDenizen.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

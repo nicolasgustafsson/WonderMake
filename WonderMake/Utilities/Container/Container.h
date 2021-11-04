@@ -44,7 +44,7 @@ namespace _ContainerDetail
 		template <typename ... TKey>
 		inline constexpr static auto KeyType(ParameterPack<TKey...>)
 		{
-			return Empty();
+			return size_t{};
 		}
 
 		template <typename TKey>
@@ -54,6 +54,11 @@ namespace _ContainerDetail
 		}
 
 		using Key = decltype(KeyType(KeysPack()));
+
+		constexpr bool HasKey()
+		{
+			return ParameterPackSize(KeysPack()) > 0;
+		}
 	};
 
 	template<typename TObjectType, typename TContainerBackends, ContainerTrait ... TContainerTraits>
@@ -105,21 +110,21 @@ public:
 		return false;
 	}
 
-	TObjectType& operator[](const size_t aIndex)
-	{
-		if constexpr (Constants::ContainerBoundsChecking)
-			assert(aIndex < this->Count());
-
-		return Super::operator[](aIndex);
-	}
-
-	const TObjectType& operator[](const size_t aIndex) const
-	{
-		if constexpr (Constants::ContainerBoundsChecking)
-			assert(aIndex < this->Count());
-
-		return Super::operator[](aIndex);
-	}
+	//TObjectType& operator[](const size_t aIndex) requires (!ResolvedTypes::HasKey())
+	//{
+	//	if constexpr (Constants::ContainerBoundsChecking)
+	//		assert(aIndex < this->Count());
+	//
+	//	return Super::operator[](aIndex);
+	//}
+	//
+	//const TObjectType& operator[](const size_t aIndex) const requires (!ResolvedTypes::HasKey())
+	//{
+	//	if constexpr (Constants::ContainerBoundsChecking)
+	//		assert(aIndex < this->Count());
+	//
+	//	return Super::operator[](aIndex);
+	//}
 
 	TObjectType& operator[](const Key& aKey)
 	{

@@ -63,6 +63,8 @@ void Renderer::StartFrame()
 
 void Renderer::FinishFrame()
 {
+	WmDispatchMessage(RenderPassMessage{});
+
 	Get<CameraManager>().FinishFrame();
 
 	Get<DebugLineDrawer>().Update();

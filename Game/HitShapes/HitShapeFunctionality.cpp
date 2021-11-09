@@ -3,7 +3,7 @@
 #include "Utilities/TimeKeeper.h"
 #include "Collision/CollisionSystem.h"
 #include "UtilityFunctionalities/FactionFunctionality.h"
-#include "Utilities/Math.h"
+#include "Utilities/WmMath.h"
 #include "Audio/AudioManager.h"
 #include "Utility/Palette.h"
 

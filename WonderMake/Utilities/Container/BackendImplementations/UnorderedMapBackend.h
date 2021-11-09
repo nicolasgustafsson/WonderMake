@@ -21,6 +21,12 @@ public:
 		this->myBackend.insert(std::make_pair(aKey, std::forward<TObjectTypeFunc>(aObjectType)));
 	}
 
+	template<typename ... TArgs>
+	void Emplace(const TKeyType aKey, TArgs... aArgs)
+	{
+		this->myBackend.try_emplace(aKey, aArgs...);
+	}
+
 	template<typename TPredicate>
 	size_t EraseIf(TPredicate aPredicate)
 	{
@@ -40,11 +46,15 @@ public:
 
 	[[nodiscard]] TObjectType& Get(const TKeyType& aKey)
 	{
+		if (!KeyExists(aKey))
+			assert(false);
 		return (*(this->myBackend.find(aKey))).second;
 	}
 
 	[[nodiscard]] const TObjectType& Get(const TKeyType& aKey) const
 	{
+		if (!KeyExists(aKey))
+			assert(false);
 		return (*(this->myBackend.find(aKey))).second;
 	}
 

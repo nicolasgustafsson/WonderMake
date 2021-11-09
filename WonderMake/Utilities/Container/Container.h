@@ -110,22 +110,6 @@ public:
 		return false;
 	}
 
-	//TObjectType& operator[](const size_t aIndex) requires (!ResolvedTypes::HasKey())
-	//{
-	//	if constexpr (Constants::ContainerBoundsChecking)
-	//		assert(aIndex < this->Count());
-	//
-	//	return Super::operator[](aIndex);
-	//}
-	//
-	//const TObjectType& operator[](const size_t aIndex) const requires (!ResolvedTypes::HasKey())
-	//{
-	//	if constexpr (Constants::ContainerBoundsChecking)
-	//		assert(aIndex < this->Count());
-	//
-	//	return Super::operator[](aIndex);
-	//}
-
 	TObjectType& operator[](const Key& aKey)
 	{
 		return Super::operator[](aKey);

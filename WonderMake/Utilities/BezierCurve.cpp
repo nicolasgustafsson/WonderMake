@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "BezierCurve.h"
-#include "Math.h"
+#include "WmMath.h"
 #include "Easing/EasingFunctions.h"
 
 BezierCurve::BezierCurve(const SVector2f aStart, const SVector2f aEnd, const SVector2f aFirstControl, const SVector2f aSecondControl) noexcept

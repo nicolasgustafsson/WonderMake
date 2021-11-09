@@ -8,7 +8,6 @@ DebugLineDrawer::DebugLineDrawer() noexcept
 	: myRenderObject(10000)
 	, mySubscriber(BindHelper(&DebugLineDrawer::OnGotDebugLineMessage, this))
 {
-
 }
 
 void DebugLineDrawer::Render()

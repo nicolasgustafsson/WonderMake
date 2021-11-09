@@ -210,6 +210,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Graphics\SpriteBatchRenderObject.cpp" />
+    <ClCompile Include="Universe\UniverseSystem.cpp" />
+    <ClCompile Include="Utilities\AnimatedValue.cpp" />
     <ClCompile Include="Cheats\CheatManager.cpp" />
     <ClCompile Include="CommonExtensions\AttachedFunctionality.cpp" />
     <ClCompile Include="CommonExtensions\Camera\CameraFunctionality.cpp" />
@@ -237,7 +240,7 @@
     <ClCompile Include="Graphics\RectangleRenderObject.cpp" />
     <ClCompile Include="Functionalities\ObjectInterfaceFunctionality.cpp" />
     <ClCompile Include="Universe\UniverseDenizen.cpp" />
-    <ClCompile Include="Universe\UniverseSystem.cpp" />
+    <ClCompile Include="Universe\UniverseManagerSystem.cpp" />
     <ClCompile Include="Utilities\Spline.cpp" />
     <ClCompile Include="TweakableValues\TweakableValueDatabase.cpp" />
     <ClCompile Include="Utilities\StateMachine.cpp" />
@@ -258,7 +261,7 @@
     <ClCompile Include="LineListRenderObject.cpp" />
     <ClCompile Include="EngineTools\EasingTester.cpp" />
     <ClCompile Include="Utilities\Json\JsonUtility.cpp" />
-    <ClCompile Include="Utilities\Math.cpp" />
+    <ClCompile Include="Utilities\WmMath.cpp" />
     <ClCompile Include="NodeGraph\NodeGraph.cpp" />
     <ClCompile Include="NodeGraph\NodeTypes.cpp" />
     <ClCompile Include="Program\GlfwFacade.cpp" />
@@ -314,6 +317,9 @@
     <ClCompile Include="Utilities\Platform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Graphics\SpriteBatchRenderObject.h" />
+    <ClInclude Include="Universe\UniverseSystem.h" />
+    <ClInclude Include="Utilities\AnimatedValue.h" />
     <ClInclude Include="Cheats\CheatManager.h" />
     <ClInclude Include="CommonExtensions\AttachedFunctionality.h" />
     <ClInclude Include="CommonExtensions\Camera\CameraFunctionality.h" />
@@ -339,7 +345,7 @@
     <ClInclude Include="Resources\AssetLink.h" />
     <ClInclude Include="Graphics\Text\TextRenderObject.h" />
     <ClInclude Include="Universe\UniverseDenizen.h" />
-    <ClInclude Include="Universe\UniverseSystem.h" />
+    <ClInclude Include="Universe\UniverseManagerSystem.h" />
     <ClInclude Include="Utilities\Spline.h" />
     <ClInclude Include="TweakableValues\TweakableValueDatabase.h" />
     <ClInclude Include="Utilities\Geometry.h" />
@@ -384,7 +390,7 @@
     <ClInclude Include="Utilities\Json\JsonExtensions.h" />
     <ClInclude Include="Utilities\Json\JsonUtility.h" />
     <ClInclude Include="Utilities\Line.h" />
-    <ClInclude Include="Utilities\Math.h" />
+    <ClInclude Include="Utilities\WmMath.h" />
     <ClInclude Include="NodeGraph\SlotCustomization\SlotInputEdits.h" />
     <ClInclude Include="NodeGraph\NodeGraph.h" />
     <ClInclude Include="NodeGraph\NodeTypes.h" />

@@ -57,7 +57,7 @@
     <ClCompile Include="Audio\SoundEffectNodeGraph.cpp" />
     <ClCompile Include="Utilities\Platform.cpp" />
     <ClCompile Include="Functionalities\TimerFunctionality.cpp" />
-    <ClCompile Include="Utilities\Math.cpp" />
+    <ClCompile Include="Utilities\WmMath.cpp" />
     <ClCompile Include="FileSystem\FileWatcher.cpp" />
     <ClCompile Include="Graphics\ShaderParser.cpp" />
     <ClCompile Include="Utilities\DependencyInjector.cpp" />
@@ -98,8 +98,11 @@
     <ClCompile Include="CommonExtensions\Levels\ObjectContainerFunctionality.cpp" />
     <ClCompile Include="CommonExtensions\Levels\SubobjectFunctionality.cpp" />
     <ClCompile Include="Utilities\Spline.cpp" />
-    <ClCompile Include="Universe\UniverseSystem.cpp" />
+    <ClCompile Include="Universe\UniverseManagerSystem.cpp" />
     <ClCompile Include="Universe\UniverseDenizen.cpp" />
+    <ClCompile Include="Utilities\AnimatedValue.cpp" />
+    <ClCompile Include="Graphics\SpriteBatchRenderObject.cpp" />
+    <ClCompile Include="Universe\UniverseSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -243,7 +246,7 @@
     <ClInclude Include="Threads\ThreadChecker.h" />
     <ClInclude Include="Utilities\Platform.h" />
     <ClInclude Include="Functionalities\TimerFunctionality.h" />
-    <ClInclude Include="Utilities\Math.h" />
+    <ClInclude Include="Utilities\WmMath.h" />
     <ClInclude Include="FileSystem\FileWatcher.h" />
     <ClInclude Include="Graphics\ShaderParser.h" />
     <ClInclude Include="Utilities\Rotation.h" />
@@ -315,8 +318,11 @@
     <ClInclude Include="CommonExtensions\Levels\ObjectContainerFunctionality.h" />
     <ClInclude Include="CommonExtensions\Levels\SubobjectFunctionality.h" />
     <ClInclude Include="Utilities\Spline.h" />
-    <ClInclude Include="Universe\UniverseSystem.h" />
+    <ClInclude Include="Universe\UniverseManagerSystem.h" />
     <ClInclude Include="Universe\UniverseDenizen.h" />
+    <ClInclude Include="Utilities\AnimatedValue.h" />
+    <ClInclude Include="Graphics\SpriteBatchRenderObject.h" />
+    <ClInclude Include="Universe\UniverseSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

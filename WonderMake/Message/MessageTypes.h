@@ -70,3 +70,8 @@ struct SFileChangedMessage
 {
 	std::filesystem::path FilePath;
 };
+
+struct RenderPassMessage
+	: public Message<RenderPassMessage>
+{
+};

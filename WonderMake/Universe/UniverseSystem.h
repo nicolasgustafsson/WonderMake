@@ -1,24 +1,53 @@
 #pragma once
+#include "UniverseManagerSystem.h"
+#include "System/System.h"
 
-class UniverseSystem : public System<>
+template <typename TUniverseSystem>
+class UniverseSystemCollection : public System<UniverseManagerSystem>
 {
 public:
-	[[nodiscard]] Id GetUniverseId(std::string aUniverseName)
+	TUniverseSystem& GetSystemFromCurrentUniverse() const
 	{
-		u64 hash = std::hash<std::string>{}(aUniverseName);
-		Id id(hash);
-		myUniverseIdsToName[hash] = std::string(aUniverseName);
+		const u64 key = Get<const UniverseManagerSystem>().GetCurrentUniverse().GetRawId();
 
-		return id;
+		if (myUniverseSystems.KeyExists(key))
+			return myUniverseSystems.Get(key);
+		else
+		{
+			myUniverseSystems.Emplace(key);
+			TUniverseSystem& ref = myUniverseSystems.Get(key);
+
+			return ref;
+		}
+		
 	}
 
-	std::string GetUniverseName(const Id aId)
-	{
-		if (myUniverseIdsToName.KeyExists(aId.GetRawId()))
-			return myUniverseIdsToName.Get(aId.GetRawId());
-
-		return "Unknown Universe";
-	}
-
-	Container<std::string, Key<u64>> myUniverseIdsToName;
+private:
+	mutable Container<TUniverseSystem, Key<u64>> myUniverseSystems;
 };
+
+template <typename CRTP, typename ... TDependencies>
+class UniverseSystem : public System<UniverseSystemCollection<CRTP>, TDependencies...>
+{
+public:
+	using Super = UniverseSystem;
+
+	[[nodiscard]] CRTP& GetSystem() const
+	{
+		return this->Get<const UniverseSystemCollection<CRTP>>().GetSystemFromCurrentUniverse();
+	}
+
+	template<typename T>
+	T& Resolve()
+	{
+		return GetSystem();
+	}
+
+	template<typename T>
+	T& Resolve() const
+	{
+		return GetSystem();
+	}
+};
+
+#define REGISTER_UNIVERSE_SYSTEM(aSystem) _REGISTER_SYSTEM_IMPL(aSystem, aSystem); _REGISTER_SYSTEM_IMPL(UniverseSystemCollection<aSystem>, UniverseSystemCollection##aSystem)

@@ -4,7 +4,7 @@
 #include "Levels/LevelDenizenFunctionality.h"
 #include "Levels/LevelFunctionality.h"
 #include <Randomizer/Randomizer.h>
-#include "Utilities/Math.h"
+#include "Utilities/WmMath.h"
 
 REGISTER_FUNCTIONALITY(HitShapeSpawnerFunctionality);
 

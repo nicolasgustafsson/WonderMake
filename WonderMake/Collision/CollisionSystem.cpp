@@ -6,11 +6,12 @@
 
 #include "Scheduling/ScheduleSystem.h"
 
-REGISTER_SYSTEM(CollisionSystem);
+REGISTER_UNIVERSE_SYSTEM(CollisionSystem);
 
 CollisionSystem::CollisionSystem() noexcept
 {
 	Get<ScheduleSystem>().ScheduleRepeating<>([this](){ Tick(); });
+	WmLog("Created collision system!!");
 }
 
 void CollisionSystem::Tick()

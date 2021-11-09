@@ -10,6 +10,8 @@
 #include <functional>
 #include <mutex>
 
+#include "Universe/UniverseSystem.h"
+
 class SystemBase;
 
 class SystemContainer final
@@ -33,7 +35,7 @@ public:
 
 		try
 		{
-			return myDependencyInjector.Get<TSystem>();
+			return myDependencyInjector.Get<TSystem>().Resolve<TSystem>();
 		}
 		catch (DependencyInjector::MissingDependencyException aException)
 		{

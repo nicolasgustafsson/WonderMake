@@ -6,7 +6,7 @@
 #include <ratio>
 #include <type_traits>
 
-#include "Utilities/Math.h"
+#include "Utilities/WmMath.h"
 
 #include "Typedefs.h"
 

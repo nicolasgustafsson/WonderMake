@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Utilities/Math.h"
+#include "Utilities/WmMath.h"
 #include "System/System.h"
 
 #include <random>

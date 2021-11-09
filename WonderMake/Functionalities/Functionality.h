@@ -25,10 +25,16 @@ public:
 		myInjectedDependencies.emplace(std::move(aDependencies));
 	}
 
+#pragma warning( push )
+#pragma warning( disable : 4702 )
+
 	template<typename TDependency> requires
 		TPolicySet::template HasPolicy_v<TDependency, PWrite>
 		constexpr __forceinline TDependency& Get() noexcept
 	{
+		if constexpr (std::is_base_of_v<SystemBase, TDependency>)
+			return std::get<std::decay_t<TDependency>&>(myDependencies).Resolve<TDependency>();
+
 		return std::get<std::decay_t<TDependency>&>(myDependencies);
 	}
 
@@ -36,8 +42,13 @@ public:
 		TPolicySet::template HasDependency_v<TDependency>
 		constexpr __forceinline const TDependency& Get() const noexcept
 	{
+		if constexpr (std::is_base_of_v<SystemBase, TDependency>)
+			return std::get<std::decay_t<TDependency>&>(myDependencies).Resolve<TDependency>();
+
 		return std::get<std::decay_t<TDependency>&>(myDependencies);
 	}
+#pragma warning( pop )
+
 
 protected:
 	Functionality()

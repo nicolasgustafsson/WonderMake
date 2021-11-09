@@ -91,6 +91,7 @@ public:
 	[[nodiscard]] constexpr static SColorTemplate SeaGreenCrayola(f32 aAlpha = 1.0f)			noexcept { return SColorTemplate(0x2AE5BF, aAlpha); }
 	[[nodiscard]] constexpr static SColorTemplate MiddleYellow(const f32 aAlpha = 1.0f)			noexcept { return SColorTemplate(0xFFE921, aAlpha); }
 	[[nodiscard]] constexpr static SColorTemplate EerieBlack(const f32 aAlpha = 1.0f)			noexcept { return SColorTemplate(0x151514, aAlpha); }
+	[[nodiscard]] constexpr static SColorTemplate LightYellow(const f32 aAlpha = 1.0f)			noexcept { return SColorTemplate(0xffffe0, aAlpha); }
 };
 
 template <>

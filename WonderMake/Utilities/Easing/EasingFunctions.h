@@ -1,5 +1,5 @@
 #pragma once
-#include "Utilities/Math.h"
+#include "Utilities/WmMath.h"
 #include <concepts>
 
 template<typename T>

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "HitShapeRenderObject.h"
-#include <Utilities/Math.h>
+#include <Utilities/WmMath.h>
 #include "Utilities/TimeKeeper.h"
 
 HitShapeRenderObject::HitShapeRenderObject(const BezierCurve& aCurve, const i32 aSegments, const f32 aThickness)

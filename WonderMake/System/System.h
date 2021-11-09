@@ -4,6 +4,8 @@
 
 #include "Utilities/RestrictTypes.h"
 
+#include "Universe/UniverseSystem.h"
+
 #include <optional>
 
 class SystemBase
@@ -11,6 +13,18 @@ class SystemBase
 {
 public:
 	virtual ~SystemBase() = default;
+
+	template<typename T>
+	T& Resolve()
+	{
+		return *(static_cast<T*>(this));
+	}
+
+	template<typename T>
+	T& Resolve() const
+	{
+		return *(static_cast<const T*>(this));
+	}
 
 protected:
 	constexpr SystemBase() noexcept = default;
@@ -32,6 +46,7 @@ public:
 	}
 
 protected:
+
 	inline System() noexcept
 		: myDependencies(std::move(*myInjectedDependencies))
 	{
@@ -41,13 +56,17 @@ protected:
 	template<typename TDependency> requires TPolicySet::template HasPolicy_v<TDependency, PWrite>
 	constexpr __forceinline [[nodiscard]] TDependency& Get()
 	{
-		return std::get<std::decay_t<TDependency>&>(myDependencies);
+		TDependency& ref = std::get<std::decay_t<TDependency>&>(myDependencies);
+
+		return ref.Resolve<TDependency>();
 	}
 
 	template<typename TDependency> requires TPolicySet::template HasDependency_v<TDependency>
 	constexpr __forceinline [[nodiscard]] const TDependency& Get() const
 	{
-		return std::get<std::decay_t<TDependency>&>(myDependencies);
+		TDependency& ref = std::get<std::decay_t<TDependency>&>(myDependencies);
+
+		return ref.Resolve<TDependency>();
 	}
 
 private:

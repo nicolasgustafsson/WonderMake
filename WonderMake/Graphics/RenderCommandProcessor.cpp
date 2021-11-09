@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "RenderCommandProcessor.h"
 
-REGISTER_SYSTEM(RenderCommandProcessor);
+REGISTER_UNIVERSE_SYSTEM(RenderCommandProcessor);
 
 RenderLayer::RenderLayer()
 {

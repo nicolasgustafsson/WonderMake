@@ -2,7 +2,7 @@
 
 #include "Typedefs.h"
 
-#include "Utilities/Math.h"
+#include "Utilities/WmMath.h"
 #include "Utilities/Rotation.h"
 #include "Utilities/Vector.h"
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "UniverseSystem.h"
+#include "UniverseManagerSystem.h"
 
 class SUniverseDenizenComponent : public SComponent
 {
@@ -10,7 +10,7 @@ private:
 	Id myUniverseId;
 };
 
-class UniverseDenizen : public Functionality<SUniverseDenizenComponent, UniverseSystem>
+class UniverseDenizen : public Functionality<SUniverseDenizenComponent, UniverseManagerSystem>
 {
 public:
 	void SetUniverse(std::string aUniverseName);

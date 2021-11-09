@@ -110,6 +110,7 @@ public:
 	void BindTextures();
 
 	void SetRenderCount(const u32 aRenderCount);
+	void IncreaseRenderCount(const u32 aIncrease = 1);
 
 	template<EVertexAttribute TAttribute>
 	void SetAttribute(const u32 aIndex, decltype(GetValueFromAttribute<TAttribute>()) aAttribute);
@@ -118,6 +119,7 @@ public:
 	void SetProperty(std::string_view aName, TProperty aProperty);
 
 protected:
+	using Super = RenderObject;
 	virtual void RenderInternal() override;
 
 	ShaderProgram myShaderProgram;
@@ -183,6 +185,12 @@ void RenderObject<TAttributes...>::SetRenderCount(const u32 aRenderCount)
 		new (&myVertexBufferArray)VertexBufferArray<TAttributes...>(myVertexCount);
 	}
 	myRenderCount = aRenderCount;
+}
+
+template <EVertexAttribute... TAttributes>
+void RenderObject<TAttributes...>::IncreaseRenderCount(const u32 aIncrease)
+{
+	SetRenderCount((myRenderCount ? *myRenderCount : 0) + aIncrease);
 }
 
 template<EVertexAttribute... TAttributes>

@@ -6,7 +6,7 @@ REGISTER_FUNCTIONALITY(UniverseDenizen)
 
 void UniverseDenizen::SetUniverse(std::string aUniverseName)
 {
-	Get<SUniverseDenizenComponent>().myUniverseId = Get<UniverseSystem>().GetUniverseId(aUniverseName);
+	Get<SUniverseDenizenComponent>().myUniverseId = Get<UniverseManagerSystem>().GetUniverseId(aUniverseName);
 }
 
 Id UniverseDenizen::GetUniverseId() const

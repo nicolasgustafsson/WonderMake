@@ -7,7 +7,8 @@ class UniverseManagerSystem : public System<>
 public:
 	UniverseManagerSystem()
 	{
-		PushUniverse("Game");
+		myCurrentUniverseName = "Game";
+		myUniverseStack.Add(GetUniverseId(std::move("Game")));
 	}
 
 	[[nodiscard]] Id GetUniverseId(const std::string aUniverseName) const
@@ -32,12 +33,9 @@ public:
 		return myUniverseStack[myUniverseStack.Count() - 1];
 	}
 
-	void PushUniverse(const std::string aUniverseName)
-	{
-		myCurrentUniverseName = aUniverseName;
-		myUniverseStack.Add(GetUniverseId(std::move(aUniverseName)));
-	}
+	[[nodiscard]] struct UniverseStackGuard PushUniverse(const std::string aUniverseName);
 
+private:
 	void PopUniverse()
 	{
 		myUniverseStack.EraseAt(myUniverseStack.Count() - 1);
@@ -48,5 +46,16 @@ public:
 
 	std::string myCurrentUniverseName = "";
 
+	friend struct UniverseStackGuard;
+
 	mutable Container<std::string, Key<u64>> myUniverseIdsToName;
+};
+
+struct UniverseStackGuard : public NonCopyable, public NonMovable
+{
+	~UniverseStackGuard();
+
+private:
+	UniverseStackGuard() = default;
+	friend class UniverseManagerSystem;
 };

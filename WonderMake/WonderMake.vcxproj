@@ -211,6 +211,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Graphics\SpriteBatchRenderObject.cpp" />
+    <ClCompile Include="Universe\UniverseHelper.cpp" />
     <ClCompile Include="Universe\UniverseSystem.cpp" />
     <ClCompile Include="Utilities\AnimatedValue.cpp" />
     <ClCompile Include="Cheats\CheatManager.cpp" />
@@ -318,6 +319,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\SpriteBatchRenderObject.h" />
+    <ClInclude Include="Universe\UniverseHelper.h" />
     <ClInclude Include="Universe\UniverseSystem.h" />
     <ClInclude Include="Utilities\AnimatedValue.h" />
     <ClInclude Include="Cheats\CheatManager.h" />
@@ -390,6 +392,7 @@
     <ClInclude Include="Utilities\Json\JsonExtensions.h" />
     <ClInclude Include="Utilities\Json\JsonUtility.h" />
     <ClInclude Include="Utilities\Line.h" />
+    <ClInclude Include="Utilities\TypeTraits\TypeString.h" />
     <ClInclude Include="Utilities\WmMath.h" />
     <ClInclude Include="NodeGraph\SlotCustomization\SlotInputEdits.h" />
     <ClInclude Include="NodeGraph\NodeGraph.h" />

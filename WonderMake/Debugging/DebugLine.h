@@ -2,6 +2,7 @@
 #include "Message/MessageTypes.h"
 
 #include "Utilities/Color.h"
+#include "Utilities/Id.h"
 #include "Utilities/Vector.h"
 
 struct SDebugLine
@@ -16,8 +17,9 @@ public:
 struct SDebugLineMessage
 	: public Message<SDebugLineMessage>
 {
-	SDebugLineMessage(const SDebugLine& aDebugLine) noexcept
-		: Line(aDebugLine) {}
+	SDebugLineMessage(const SDebugLine& aDebugLine, const Id aUniverseId) noexcept
+		: Line(aDebugLine), UniverseId(aUniverseId) {}
 
 	SDebugLine Line;
+	Id UniverseId;
 };

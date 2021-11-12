@@ -11,6 +11,7 @@
 #include "System/System.h"
 
 #include "Utilities/plf_colony.h"
+#include "Universe/UniverseSystem.h"
 
 #include <type_traits>
 
@@ -44,16 +45,16 @@ namespace _Impl
 	template<typename TPolicySet>
 	using ConvertPolicySet = typename TPolicySet::template ExtractPolicies<CreatePolicySet>;
 
-	template<typename TFunctionality>
-	using GetFunctionalitySystem = System<ConvertPolicySet<typename TFunctionality::PolicySet>>;
+	template<typename CRTP, typename TFunctionality>
+	using GetFunctionalitySystem = UniverseSystem<CRTP, ConvertPolicySet<typename TFunctionality::PolicySet>>;
 }
 
 template<typename TFunctionality>
 class FunctionalitySystem final
-	: public _Impl::GetFunctionalitySystem<TFunctionality>
+	: public _Impl::GetFunctionalitySystem<FunctionalitySystem<TFunctionality>, TFunctionality>
 {
 public:
-	using Super = _Impl::GetFunctionalitySystem<TFunctionality>;
+	using Super = _Impl::GetFunctionalitySystem<FunctionalitySystem<TFunctionality>, TFunctionality>;
 
 	inline FunctionalitySystem()
 		: myDependencyDestructor([this](Object& aObject, auto* aFunctionality)
@@ -100,6 +101,8 @@ public:
 
 	inline [[nodiscard]] void Tick()
 	{
+		auto guard = SystemPtr<UniverseManagerSystem>()->PushUniverse(this->myUniverseId);
+
 		myInTick = true;
 		plf::colony<TFunctionality*> functionalitiesReferenced;
 
@@ -186,4 +189,4 @@ private:
 	UniqueFunction<TFunctionality& (Object&, const bool)> myFunctionalityConstructor;
 };
 
-#define REGISTER_FUNCTIONALITY_SYSTEM(aFunctionality) _REGISTER_SYSTEM_IMPL(FunctionalitySystem<aFunctionality>, aFunctionality) _REGISTER_SYSTEM_IMPL(FunctionalitySystemDelegate<aFunctionality>, aFunctionality##_Delegate) 
+#define REGISTER_FUNCTIONALITY_SYSTEM(aFunctionality) _REGISTER_SYSTEM_IMPL(FunctionalitySystem<aFunctionality>, aFunctionality) _REGISTER_SYSTEM_IMPL(FunctionalitySystemDelegate<aFunctionality>, aFunctionality##_Delegate)  _REGISTER_SYSTEM_IMPL(UniverseSystemCollection<FunctionalitySystem<aFunctionality>>, UniverseSystemCollection##aFunctionality)

@@ -11,6 +11,14 @@ UniverseStackGuard UniverseManagerSystem::PushUniverse(const std::string aUniver
 	return UniverseStackGuard();
 }
 
+UniverseStackGuard UniverseManagerSystem::PushUniverse(const Id aUniverseId)
+{
+	myCurrentUniverseName = GetUniverseName(aUniverseId);
+	myUniverseStack.Add(aUniverseId);
+
+	return UniverseStackGuard();
+}
+
 UniverseStackGuard::~UniverseStackGuard()
 {
 	SystemPtr<UniverseManagerSystem>()->PopUniverse();

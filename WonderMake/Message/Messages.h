@@ -11,6 +11,8 @@
 #include <memory>
 
 #include "Constants.h"
+#include "Universe/UniverseHelper.h"
+#include "Universe/UniverseManagerSystem.h"
 #include "Utilities/BezierCurve.h"
 #include "Utilities/Geometry.h"
 #include "Utilities/Container/Container.h"
@@ -42,7 +44,7 @@ inline static void WmLog(TMessageArgs... aMessageArgs)
 
 inline static void WmDrawDebugLine(const SDebugLine& aDebugLine)
 {
-	WmDispatchMessage(SDebugLineMessage(aDebugLine));
+	WmDispatchMessage(SDebugLineMessage{ aDebugLine, GetCurrentUniverseId() });
 }
 
 inline static void WmDrawDebugLine(const SVector2f& aStart, const SVector2f& aEnd, const SColor& aColor, const f32 aDuration = 0.0f)

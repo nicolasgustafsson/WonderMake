@@ -84,7 +84,12 @@ void Renderer::FinishFrame()
 		Get<GlfwFacade>().SwapBuffers(Get<Window>().myGlfwWindow);
 	}
 
-	Get<RenderCommandProcessor>().Clear();
+	auto&& renderCommandProcessors = Get<UniverseSystemCollection<RenderCommandProcessor>>().GetAllSystems();
+
+	for (auto& renderCommandProcessor : renderCommandProcessors)
+	{
+		renderCommandProcessor->Clear();
+	}
 }
 
 void Renderer::Debug()

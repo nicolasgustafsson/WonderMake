@@ -8,6 +8,7 @@ class UniverseSystemCollection : public System<UniverseManagerSystem>
 public:
 	TUniverseSystem& GetSystemFromCurrentUniverse() const
 	{
+		const Id universeId = Get<const UniverseManagerSystem>().GetCurrentUniverse();
 		const u64 key = Get<const UniverseManagerSystem>().GetCurrentUniverse().GetRawId();
 
 		if (myUniverseSystems.KeyExists(key))
@@ -16,20 +17,32 @@ public:
 		{
 			myUniverseSystems.Emplace(key);
 			TUniverseSystem& ref = myUniverseSystems.Get(key);
-
+			
+			ref.myUniverseId = universeId;
 			return ref;
 		}
-		
+	}
+
+	Container<TUniverseSystem*> GetAllSystems()
+	{
+		Container<TUniverseSystem*> universes;
+		for (auto& i : myUniverseSystems)
+		{
+			universes.Add(&i.second);
+		}
+
+		return universes;
 	}
 
 private:
 	mutable Container<TUniverseSystem, Key<u64>> myUniverseSystems;
 };
 
-template <typename CRTP, typename ... TDependencies>
+template <class CRTP, typename ... TDependencies>
 class UniverseSystem : public System<UniverseSystemCollection<CRTP>, TDependencies...>
 {
 public:
+	UniverseSystem() = default;
 	using Super = UniverseSystem;
 
 	[[nodiscard]] CRTP& GetSystem() const
@@ -48,6 +61,15 @@ public:
 	{
 		return GetSystem();
 	}
+
+
+
+protected:
+	Id myUniverseId;
+
+private:
+	friend CRTP;
+	friend UniverseSystemCollection<CRTP>;
 };
 
 #define REGISTER_UNIVERSE_SYSTEM(aSystem) _REGISTER_SYSTEM_IMPL(aSystem, aSystem); _REGISTER_SYSTEM_IMPL(UniverseSystemCollection<aSystem>, UniverseSystemCollection##aSystem)

@@ -23,7 +23,8 @@ class Renderer
 			PAdd<GlfwFacade, PWrite>,
 			PAdd<CameraManager, PWrite>,
 			PAdd<RenderCommandProcessor, PWrite>,
-			PAdd<OpenGLFacade, PWrite>>>
+			PAdd<OpenGLFacade, PWrite>,
+			PAdd<UniverseSystemCollection<RenderCommandProcessor>, PWrite>>>
 	, public Debugged
 {
 public:

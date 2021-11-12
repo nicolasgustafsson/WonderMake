@@ -4,8 +4,6 @@
 
 #include "Utilities/RestrictTypes.h"
 
-#include "Universe/UniverseSystem.h"
-
 #include <optional>
 
 class SystemBase

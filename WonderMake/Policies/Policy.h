@@ -4,6 +4,7 @@
 #include <vector>
 #include <type_traits>
 
+#include "Policy.h"
 #include "Policies/SystemId.h"
 #include "Utilities/TypeTraits/TypeTraits.h"
 
@@ -135,6 +136,23 @@ constexpr auto ConvertToPolicy()
 	}
 }
 
+template <typename T>
+constexpr auto ConvertSingleToPolicySet()
+{
+	if constexpr (IsTemplateInstanceOf<T, Policy::Set>::value)
+	{
+		return T{};
+	}
+	else if constexpr (std::is_const_v<T>)
+	{
+		return Policy::Set<Policy::Add<std::remove_const_t<T>, PRead>>();
+	}
+	else
+	{
+		return Policy::Set<Policy::Add<std::remove_const_t<T>, PWrite>>();
+	}
+}
+
 template<typename T>
 constexpr auto ConvertFromVariadicToSingleType()
 {
@@ -158,7 +176,7 @@ constexpr auto ConvertToPolicySet()
 	}
 	else
 	{
-		using TPolicySet = Policy::Set<decltype(ConvertToPolicy<TPolicies>())...>;
+		using TPolicySet = Policy::Concat<decltype(ConvertSingleToPolicySet<TPolicies>())...>;
 		return TPolicySet();
 	}
 }

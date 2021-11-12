@@ -26,6 +26,7 @@ public:
 	void Clear();
 
 private:
+
 	std::unordered_map<std::string, RenderLayer> myRenderLayers;
 };
 

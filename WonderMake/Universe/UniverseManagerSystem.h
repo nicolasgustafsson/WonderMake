@@ -1,6 +1,7 @@
 #pragma once
-#include "System.h"
+#include "System/System.h"
 #include "Utilities/Id.h"
+#include "Utilities/Container/Container.h"
 
 class UniverseManagerSystem : public System<>
 {
@@ -34,6 +35,7 @@ public:
 	}
 
 	[[nodiscard]] struct UniverseStackGuard PushUniverse(const std::string aUniverseName);
+	[[nodiscard]] struct UniverseStackGuard PushUniverse(const Id aUniverseId);
 
 private:
 	void PopUniverse()

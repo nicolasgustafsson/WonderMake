@@ -7,6 +7,11 @@ struct SFixedString
 	{
 		for (unsigned i = 0; i != N; ++i) buf[i] = s[i];
 	}
+
+	constexpr SFixedString()
+	{
+		//for (unsigned i = 0; i != N; ++i) buf[i] = s[i];
+	}
 	constexpr operator char const* () const { return buf; }
 };
 template<unsigned N> SFixedString(char const (&)[N])->SFixedString<N - 1>;

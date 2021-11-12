@@ -92,6 +92,16 @@ void Display::FinishDebugFrame()
 
 	ImGui::Begin(myName.c_str(), nullptr);
 
+	FinishDebugFrameInline();
+
+	ImGui::End();
+
+	ImGui::PopStyleVar();
+	ImGui::PopStyleVar();
+}
+
+void Display::FinishDebugFrameInline()
+{
 	ImGui::BeginChild(15, ImVec2(0, 0), false, ImGuiWindowFlags_NoMove);
 	SystemPtr<GlfwFacade> glfw;
 
@@ -112,9 +122,6 @@ void Display::FinishDebugFrame()
 		{ ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x - windowX
 		, ImGui::GetWindowContentRegionMin().y + ImGui::GetWindowPos().y - windowY });
 
-	ImGui::PopStyleVar();
-	ImGui::PopStyleVar();
-
 	const SVector2i ViewportSize = { static_cast<i32>(ImGui::GetContentRegionAvail().x), static_cast<i32>(ImGui::GetContentRegionAvail().y) };
 
 	RenderTarget* const finalRenderTarget = myRenderGraph->GetFinalRenderTarget();
@@ -130,10 +137,7 @@ void Display::FinishDebugFrame()
 	}
 
 	SetViewportSize(ViewportSize);
-
 	ImGui::EndChild();
-
-	ImGui::End();
 }
 
 void Display::FinishFrame()

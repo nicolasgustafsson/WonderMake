@@ -13,6 +13,7 @@ public:
 	Display(const std::string& aName, Camera& aCamera);
 
 	void FinishDebugFrame();
+	void FinishDebugFrameInline();
 	void FinishFrame(); 
 	[[nodiscard]] SVector2f ConvertToWorldPosition(const SVector2f aWindowPosition) const noexcept;
 

@@ -5,7 +5,7 @@
 #include "Utilities/TimeKeeper.h"
 
 class DebugLineDrawer
-	: public System<TimeKeeper>
+	: public UniverseSystem<DebugLineDrawer, TimeKeeper>
 {
 public:
 	DebugLineDrawer() noexcept;

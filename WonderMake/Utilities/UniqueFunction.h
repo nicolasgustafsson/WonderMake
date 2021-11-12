@@ -111,7 +111,6 @@ namespace _Impl
 
 			return (*data)(std::forward<TArgs>(aArgs)...);
 		}
-
 		template<typename TCallable>
 		static void MoveToCallableLocal(_CallableImpl& aThis, _CallableImpl& aTarget) noexcept
 		{

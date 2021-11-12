@@ -2,7 +2,7 @@
 #include "DebugLineDrawer.h"
 #include "Utilities/Utility.h"
 
-REGISTER_SYSTEM(DebugLineDrawer);
+REGISTER_UNIVERSE_SYSTEM(DebugLineDrawer);
 
 DebugLineDrawer::DebugLineDrawer() noexcept
 	: myRenderObject(10000)
@@ -42,5 +42,8 @@ void DebugLineDrawer::Update()
 
 void DebugLineDrawer::OnGotDebugLineMessage(const SDebugLineMessage& aDebugLineMessage)
 {
+	if (myUniverseId != aDebugLineMessage.UniverseId)
+		return;
+
 	myDebugLines.push_back(aDebugLineMessage.Line);
 }

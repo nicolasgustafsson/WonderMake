@@ -102,11 +102,11 @@ namespace WmGui::NodeGraphEditor
 
 	[[nodiscard]] bool IsConnectingCompatibleSlot();
 	
-	void Slot(const bool aIsInput, SSlotInstanceBase& aSlotInstance); //[Nicos] TODO: make IsInput into slot type instead
+	void Slot(const bool aIsInput, SSlotInstanceBase& aSlotInstance, NodeGraph& aNodeGraph); //[Nicos] TODO: make IsInput into slot type instead
 
-	void InputSlots(std::vector<std::unique_ptr<SInputSlotInstanceBase>>& aSlots);
+	void InputSlots(std::vector<std::unique_ptr<SInputSlotInstanceBase>>& aSlots, NodeGraph& aNodeGraph);
 
-	void OutputSlots(std::vector<std::unique_ptr<SOutputSlotInstanceBase>>& aSlots);
+	void OutputSlots(std::vector<std::unique_ptr<SOutputSlotInstanceBase>>& aSlots, NodeGraph& aNodeGraph);
 
 	void EndNode();
 

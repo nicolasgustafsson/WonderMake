@@ -5,9 +5,7 @@
 NodeGraph::NodeGraph(std::filesystem::path aFilePath)
 	: myPath(aFilePath)
 {
-	static size_t uniqueIdCounter = 0;
-	myUniqueId = uniqueIdCounter;
-	uniqueIdCounter++;
+	InitId();
 }
 
 void NodeGraph::SetNewPath(std::filesystem::path aNewFilePath)
@@ -337,6 +335,13 @@ void NodeGraph::CompileNodeGraph(SNode& aRoot, std::vector<SCompiledNode>& aNode
 
 	if (aIsFirstCompileCall)
 		WmLog(TagSuccess, TagNodeGraph, "Compiled node graph [", myPath.string(), "]!");
+}
+
+void NodeGraph::InitId()
+{
+	static size_t uniqueIdCounter = 0;
+	myUniqueId = uniqueIdCounter;
+	uniqueIdCounter++;
 }
 
 void NodeGraph::SerializeInlineInputs(SNode& aNode, json& aInputArray)

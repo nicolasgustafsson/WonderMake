@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <json/json.hpp>
 
+class NodeGraph;
 struct SSlotTypeBase;
 struct SNode;
 struct SInputSlotInstanceBase;
@@ -45,7 +46,7 @@ struct SSlotInstanceBase
 	virtual ~SSlotInstanceBase() {};
 
 	const SSlotTypeBase& SlotType;
-	virtual void Inspect() {};
+	virtual void Inspect(NodeGraph&) {};
 	[[nodiscard]] virtual bool HasConnection() const = 0;
 };
 
@@ -55,7 +56,7 @@ struct SOutputSlotInstanceBase : public SSlotInstanceBase
 		: SSlotInstanceBase(aSlotType) {}
 
 	std::vector<SConnection*> Connections;
-	virtual void Inspect() override final {};
+	virtual void Inspect(NodeGraph&) override final {};
 	[[nodiscard]] virtual bool HasConnection() const override final
 	{
 		return Connections.size() != 0;
@@ -84,9 +85,9 @@ struct SInputSlotInstance : public SInputSlotInstanceBase
 	SInputSlotInstance(const SSlotTypeBase& aSlotType)
 		: SInputSlotInstanceBase(aSlotType) {}
 
-	virtual void Inspect() override
+	virtual void Inspect(NodeGraph& aNodeGraph) override
 	{
-		SlotInputEdits::template EditInputSlot<T>(EditableValue);
+		SlotInputEdits::template EditNodeGraphInputSlot<T>(EditableValue, aNodeGraph);
 	}
 
 	virtual void SerializeInlineInput(const i32 aNodeId, const i32 aSlotId, json& aJson) const override
@@ -205,6 +206,17 @@ struct SNodeTypeBase
 	virtual void ExecuteNode(struct SNode&) {}
 };
 
+namespace _NodeTypes
+{
+	template<typename TNodeType>
+	TNodeType& GetStaticObject()
+	{
+		static TNodeType StaticObject;
+
+		return StaticObject;
+	}
+}
+
 template<typename TNodeType>
 struct SNodeType : public SNodeTypeBase
 {
@@ -214,7 +226,6 @@ struct SNodeType : public SNodeTypeBase
 
 	}
 
-	static TNodeType StaticObject;
 
 protected:
 	template <typename T>
@@ -238,9 +249,6 @@ protected:
 	}
 };
 
-template<typename TNodeType>
-TNodeType SNodeType<TNodeType>::StaticObject = {};
-
 struct SNode final
 {
 	SNode(SNodeTypeBase& aNodeType)
@@ -258,7 +266,7 @@ struct SNode final
 	template<typename TNode>
 	[[nodiscard]] SNodeType<TNode>& GetNodeType()
 	{
-		return SNodeType<TNode>::StaticObject;
+		return _NodeTypes::GetStaticObject<TNode>();
 	}
 
 	void ClearNodeData();

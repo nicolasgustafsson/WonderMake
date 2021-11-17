@@ -20,6 +20,7 @@ struct SCompiledNode
 class NodeGraph : public NonCopyable, public NonMovable, public Resource
 {
 public:
+	NodeGraph() { InitId(); };
 	NodeGraph(std::filesystem::path aFilePath);
 
 	void SetNewPath(std::filesystem::path aNewFilePath);
@@ -48,7 +49,8 @@ public:
 
 	bool ShouldBeVisible = false;
 
-	[[nodiscard]] std::string GetName() const { return myPath.string(); }
+	void SetName(const std::string& aName) { myName = aName; }
+	[[nodiscard]] std::string GetName() const { return myName ? *myName : myPath.string(); }
 	[[nodiscard]] std::filesystem::path GetPath() const { return myPath; }
 
 	void Load();
@@ -57,10 +59,13 @@ public:
 
 	inline virtual bool ShouldHotReload() const override { return false; }
 
+	[[nodiscard]] nlohmann::json Serialize();
+	void Deserialize(const nlohmann::json& aJsonFile);
+
 protected:
 	virtual void Compile();
 
-
+	std::optional<std::string> myName;
 	[[nodiscard]] plf::colony<SNode>::colony_iterator<false> KillNode(plf::colony<SNode>::colony_iterator<false> aIterator);
 
 	virtual void PostLoad() {}
@@ -71,8 +76,6 @@ protected:
 
 	virtual void RegisterNodes() = 0;
 	
-	[[nodiscard]] nlohmann::json Serialize();
-	void Deserialize(const nlohmann::json& aJsonFile);
 
 	void SerializeNode(const SNode& aNode, nlohmann::json& aJson);
 	void DeserializeNode(const nlohmann::json& aJson);
@@ -100,6 +103,7 @@ protected:
 	SNode* myRootNode = nullptr;
 
 private:
+	void InitId();
 	void SerializeInlineInputs(SNode& aNode, nlohmann::json& aInputArray);
 	void DeserializeInput(const nlohmann::json& aInput);
 
@@ -117,13 +121,13 @@ private:
 template<typename T>
 SNode& NodeGraph::AddNode(const ImVec2 InLocation)
 {
-	SNode node(T::StaticObject);
+	SNode node(_NodeTypes::GetStaticObject<T>());
 
 	node.Id = NextNodeId;
 	node.Position = InLocation;
 	node.Selected = false;
-	node.InputSlotInstances = T::StaticObject.CreateInputSlotInstances();
-	node.OutputSlotInstances = T::StaticObject.CreateOutputSlotInstances();
+	node.InputSlotInstances = _NodeTypes::GetStaticObject<T>().CreateInputSlotInstances();
+	node.OutputSlotInstances = _NodeTypes::GetStaticObject<T>().CreateOutputSlotInstances();
 
 	NextNodeId++;
 
@@ -137,9 +141,9 @@ void NodeGraph::RegisterNode()
 {
 	SRegisteredNode node
 	{
-		T::StaticObject.Title,
+		_NodeTypes::GetStaticObject<T>().Title,
 		[&](const ImVec2 InLocation) -> SNode& {return AddNode<T>(InLocation); },
-		T::StaticObject
+		_NodeTypes::GetStaticObject<T>()
 	};
 
 	myRegisteredNodes.push_back(node);
@@ -150,6 +154,6 @@ void NodeGraph::RegisterRootNode()
 {
 	RegisterNode<T>();
 
-	myRootNodeType = &T::StaticObject;
+	myRootNodeType = &_NodeTypes::GetStaticObject<T>();
 }
 

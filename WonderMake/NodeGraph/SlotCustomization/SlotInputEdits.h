@@ -2,12 +2,26 @@
 #include "Imgui/FileSelector.h"
 #include "Graphics/RenderSettingsManager.h"
 
+class NodeGraph;
+
 namespace SlotInputEdits
 {
 	template<typename TSlotType>
 	void EditInputSlot(TSlotType&)
 	{
 	
+	}
+
+	template<typename TSlotType>
+	void EditNodeGraphInputSlot(TSlotType& aSlotType, NodeGraph&)
+	{
+		EditInputSlot(aSlotType);
+	}
+
+	template<typename TSlotType> requires requires (TSlotType x, NodeGraph& aNodeGraph) { x.NodeGraphInspect(aNodeGraph); }
+	void EditNodeGraphInputSlot(TSlotType& aSlotType, NodeGraph& aNodeGraph)
+	{
+		aSlotType.NodeGraphInspect(aNodeGraph);
 	}
 
 	template<>

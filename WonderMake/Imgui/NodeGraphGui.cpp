@@ -208,11 +208,11 @@ void WmGui::NodeGraphEditor::Node(SNode& aNode)
 	const ImU32 col = aNode.Selected ? CurrentNodeGraph->Colors[static_cast<i32>(StyleColor::ColSlotEditActiveBg)] : CurrentNodeGraph->Colors[static_cast<i32>(StyleColor::ColSlotEditBg)];
 	ImGui::PushStyleColor(ImGuiCol_FrameBg, col);
 
-	WmGui::NodeGraphEditor::InputSlots(aNode.InputSlotInstances);
+	WmGui::NodeGraphEditor::InputSlots(aNode.InputSlotInstances, *aNode.NodeGraph);
 
 	//[Nicos]: TODO add a way to preview stuff here - depending on compiler and node
 
-	WmGui::NodeGraphEditor::OutputSlots(aNode.OutputSlotInstances);
+	WmGui::NodeGraphEditor::OutputSlots(aNode.OutputSlotInstances, *aNode.NodeGraph);
 
 	ImGui::PopStyleColor();
 
@@ -316,7 +316,7 @@ bool WmGui::NodeGraphEditor::IsConnectingCompatibleSlot()
 	return false;
 }
 
-void WmGui::NodeGraphEditor::Slot(const bool aIsInput, SSlotInstanceBase& aSlotInstance)
+void WmGui::NodeGraphEditor::Slot(const bool aIsInput, SSlotInstanceBase& aSlotInstance, NodeGraph& aNodeGraph)
 {
 	CurrentNodeGraph->CurrentSlotInfo.Title = aSlotInstance.SlotType.Name;
 	CurrentNodeGraph->CurrentSlotInfo.IsInput = aIsInput;
@@ -552,7 +552,7 @@ void WmGui::NodeGraphEditor::Slot(const bool aIsInput, SSlotInstanceBase& aSlotI
 		auto before = window->IDStack.Size;
 		ImGui::BeginGroup();
 		if (!aSlotInstance.HasConnection())
-			aSlotInstance.Inspect();
+			aSlotInstance.Inspect(aNodeGraph);
 		ImGui::EndGroup();
 		auto after = window->IDStack.Size;
 
@@ -567,7 +567,7 @@ void WmGui::NodeGraphEditor::Slot(const bool aIsInput, SSlotInstanceBase& aSlotI
 	ImGui::EndGroup();
 }
 
-void WmGui::NodeGraphEditor::InputSlots(std::vector<std::unique_ptr<SInputSlotInstanceBase>>& aSlots)
+void WmGui::NodeGraphEditor::InputSlots(std::vector<std::unique_ptr<SInputSlotInstanceBase>>& aSlots, NodeGraph& aNodeGraph)
 {
 	const auto& style = ImGui::GetStyle();
 
@@ -577,7 +577,7 @@ void WmGui::NodeGraphEditor::InputSlots(std::vector<std::unique_ptr<SInputSlotIn
 		for (auto&& slot : aSlots)
 		{
 			SInputSlotInstanceBase& instance = *slot;
-			Slot(true, instance);
+			Slot(true, instance, aNodeGraph);
 		}
 	}
 	ImGui::EndGroup();
@@ -589,7 +589,7 @@ void WmGui::NodeGraphEditor::InputSlots(std::vector<std::unique_ptr<SInputSlotIn
 	ImGui::BeginGroup();
 }
 
-void WmGui::NodeGraphEditor::OutputSlots(std::vector<std::unique_ptr<SOutputSlotInstanceBase>>& slots)
+void WmGui::NodeGraphEditor::OutputSlots(std::vector<std::unique_ptr<SOutputSlotInstanceBase>>& slots, NodeGraph& aNodeGraph)
 {
 	const auto& style = ImGui::GetStyle();
 
@@ -601,7 +601,7 @@ void WmGui::NodeGraphEditor::OutputSlots(std::vector<std::unique_ptr<SOutputSlot
 	ImGui::BeginGroup();
 	{
 		for (auto&& slot : slots)
-			Slot(false, *slot);
+			Slot(false, *slot, aNodeGraph);
 	}
 	ImGui::EndGroup();
 }

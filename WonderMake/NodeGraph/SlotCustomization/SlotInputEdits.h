@@ -21,6 +21,7 @@ namespace SlotInputEdits
 	template<typename TSlotType> requires requires (TSlotType x, NodeGraph& aNodeGraph) { x.NodeGraphInspect(aNodeGraph); }
 	void EditNodeGraphInputSlot(TSlotType& aSlotType, NodeGraph& aNodeGraph)
 	{
+		ImGuiStyle tnest;
 		aSlotType.NodeGraphInspect(aNodeGraph);
 	}
 

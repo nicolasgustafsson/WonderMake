@@ -5,6 +5,8 @@
 
 #include <array>
 
+#include "TypeTraits/TypeString.h"
+
 template<typename TRep, u32 TSize>
 struct SVectorBase;
 
@@ -487,4 +489,49 @@ template<typename TRep, u32 TSize>
 	}
 
 	return retVec;
+}
+
+template <>
+constexpr std::string_view TypeString<SVector2f>() {
+	return "SVector2f";
+}
+
+template <>
+constexpr std::string_view TypeString<SVector3f>() {
+	return "SVector3f";
+}
+
+template <>
+constexpr std::string_view TypeString<SVector4f>() {
+	return "SVector4f";
+}
+
+template <>
+constexpr std::string_view TypeString<SVector2i>() {
+	return "SVector2i";
+}
+
+template <>
+constexpr std::string_view TypeString<SVector3i>() {
+	return "SVector3i";
+}
+
+template <>
+constexpr std::string_view TypeString<SVector4i>() {
+	return "SVector4i";
+}
+
+template <>
+constexpr std::string_view TypeString<SVector2u>() {
+	return "SVector2u";
+}
+
+template <>
+constexpr std::string_view TypeString<SVector3u>() {
+	return "SVector3u";
+}
+
+template <>
+constexpr std::string_view TypeString<SVector4u>() {
+	return "SVector4u";
 }

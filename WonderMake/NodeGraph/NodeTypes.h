@@ -173,6 +173,12 @@ struct SNodeTypeBase
 
 	virtual ~SNodeTypeBase() {};
 
+
+	virtual std::string GetTitle(SNode& /*aNode*/) const
+	{
+		return Title;
+	}
+
 	std::string Title = "";
 
 	std::vector<std::unique_ptr<SSlotTypeBase>> InputSlots = {};

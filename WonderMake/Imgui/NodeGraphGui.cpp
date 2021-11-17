@@ -20,27 +20,30 @@ struct _DragConnectionPayload
 	ImColor SlotColor;
 };
 
-void WmGui::NodeGraphEditor::NodeGraphEdit(NodeGraph& aNodeGraph)
+void WmGui::NodeGraphEditor::NodeGraphEdit(NodeGraph& aNodeGraph, const bool aShowMenu)
 {
 	if (!aNodeGraph.ShouldBeVisible)
 		return;
 
 	//[Nicos]: inline unique id into the name as push id doesn't work with begin -- otherwise we would not be able to stack several node graphs with the same name.
 	const std::string name = aNodeGraph.GetName();
-	if (ImGui::Begin(name.c_str(), &aNodeGraph.ShouldBeVisible, ImGuiWindowFlags_MenuBar))
+	if (ImGui::Begin((std::string(name) + "###" + std::string(aNodeGraph.GetIdentifier())).c_str(), &aNodeGraph.ShouldBeVisible, ImGuiWindowFlags_MenuBar))
 	{
-		if (ImGui::BeginMenuBar())
+		if (aShowMenu)
 		{
-			if (ImGui::Button("Compile"))
-				aNodeGraph.CompileExternal();
-			
-			if (ImGui::Button("Save"))
-				aNodeGraph.Save();
-			
-			if (ImGui::Button("Execute"))
-				aNodeGraph.ExecuteExternal();
+			if (ImGui::BeginMenuBar())
+			{
+				if (ImGui::Button("Compile"))
+					aNodeGraph.CompileExternal();
 
-			ImGui::EndMenuBar();
+				if (ImGui::Button("Save"))
+					aNodeGraph.Save();
+
+				if (ImGui::Button("Execute"))
+					aNodeGraph.ExecuteExternal();
+
+				ImGui::EndMenuBar();
+			}
 		}
 
 		CurrentNodeGraph = &aNodeGraph.GetNodeGraphGuiState();
@@ -58,7 +61,7 @@ void WmGui::NodeGraphEditor::NodeGraphEdit(NodeGraph& aNodeGraph)
 
 		drawList->ChannelsSetCurrent(0);
 
-		WmGui::NodeGraphEditor::Connections(aNodeGraph.GetConnections());
+		WmGui::NodeGraphEditor::Connections(aNodeGraph.GetConnections(), aNodeGraph);
 
 		WmGui::NodeGraphEditor::PotentialConnection(aNodeGraph);
 
@@ -203,7 +206,7 @@ bool WmGui::NodeGraphEditor::Connection(SNode* aInputNode, SInputSlotInstanceBas
 void WmGui::NodeGraphEditor::Node(SNode& aNode)
 {
 	WmGui::NodeGraphEditor::BeginNode(&aNode, &aNode.Position, &aNode.Selected);
-	WmGui::NodeGraphEditor::NodeTitle(aNode.NodeType.Title.c_str());
+	WmGui::NodeGraphEditor::NodeTitle(aNode.NodeType.GetTitle(aNode).c_str());
 
 	const ImU32 col = aNode.Selected ? CurrentNodeGraph->Colors[static_cast<i32>(StyleColor::ColSlotEditActiveBg)] : CurrentNodeGraph->Colors[static_cast<i32>(StyleColor::ColSlotEditBg)];
 	ImGui::PushStyleColor(ImGuiCol_FrameBg, col);
@@ -673,7 +676,7 @@ void WmGui::NodeGraphEditor::EndNode()
 	IdCount--;
 }
 
-void WmGui::NodeGraphEditor::Connections(plf::colony<SConnection>& aConnections)
+void WmGui::NodeGraphEditor::Connections(plf::colony<SConnection>& aConnections, NodeGraph& aNodeGraph)
 {
 	auto it = aConnections.begin();
 
@@ -682,9 +685,14 @@ void WmGui::NodeGraphEditor::Connections(plf::colony<SConnection>& aConnections)
 		auto& connection = *it;
 
 		if (!WmGui::NodeGraphEditor::Connection(connection.InputNodePointer, connection.InputSlot, connection.OutputNodePointer, connection.OutputSlot, connection.InputSlot->SlotType.GetColor()))
+		{
 			it = aConnections.erase(it);
+			aNodeGraph.MarkDirty();
+		}
 		else
+		{
 			it++;
+		}
 	}
 }
 
@@ -705,6 +713,7 @@ void WmGui::NodeGraphEditor::PotentialConnection(NodeGraph& aNodeGraph)
 				if (it->OutputNodePointer == potentialConnection.OutputNodePointer && it->OutputSlot != potentialConnection.OutputSlot)
 					shouldAddConnection = false;
 
+				aNodeGraph.MarkDirty();
 				connections.erase(it);
 				break;
 			}
@@ -716,6 +725,7 @@ void WmGui::NodeGraphEditor::PotentialConnection(NodeGraph& aNodeGraph)
 
 			insertedConnectionIt->InputSlot->Connection = &*insertedConnectionIt;
 			insertedConnectionIt->OutputSlot->Connections.push_back(&*insertedConnectionIt);
+			aNodeGraph.MarkDirty();
 		}
 	}
 }

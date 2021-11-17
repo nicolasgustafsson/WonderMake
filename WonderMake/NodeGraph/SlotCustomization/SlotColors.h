@@ -30,5 +30,11 @@ namespace SlotColors
 	{
 		return ImColor(255, 255, 255, 255);
 	}
+
+	template<>
+	inline ImColor GetColor<bool>()
+	{
+		return ImColor(255, 0, 0, 255);
+	}
 };
 

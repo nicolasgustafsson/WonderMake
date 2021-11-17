@@ -82,7 +82,7 @@ namespace WmGui::NodeGraphEditor
 		SCanvasState CanvasState = {};
 	};
 
-	void NodeGraphEdit(NodeGraph& aNodeGraph);
+	void NodeGraphEdit(NodeGraph& aNodeGraph, const bool aShowMenu = true);
 
 	[[nodiscard]] ImU32 MakeSlotDataID(const char* aData, const char* aSlotTitle, SNode* aNodePointer, bool aInputSlot);
 
@@ -110,7 +110,7 @@ namespace WmGui::NodeGraphEditor
 
 	void EndNode();
 
-	void Connections(plf::colony<SConnection>& aConnections);
+	void Connections(plf::colony<SConnection>& aConnections, NodeGraph& aNodeGraph);
 
 	void PotentialConnection(NodeGraph& aNodeGraph);
 

@@ -34,11 +34,16 @@ namespace _Impl
 }
 
 template <typename T>
-constexpr auto TypeString(T&& arg) {
-    return _Impl::type_of_impl_<decltype(arg)>();
+constexpr std::string_view TypeString() {
+    return _Impl::type_of_impl_<T>();
 }
 
 template <typename T>
-constexpr auto TypeString() {
-    return _Impl::type_of_impl_<T>();
+constexpr std::string_view TypeString(T&& arg) {
+    return TypeString<decltype(arg)>();
+}
+
+template <>
+constexpr std::string_view TypeString<std::string>() {
+    return "std::string";
 }

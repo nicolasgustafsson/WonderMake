@@ -42,17 +42,18 @@ void NodeGraph::ExecuteExternal()
 {
 	SystemPtr<DebugSettingsSystem> debugSettings;
 
-	const bool shouldCompile = debugSettings->GetOrCreateDebugValue("NodeGraph/Should compile before execute", true);
-
-	if (shouldCompile)
-		Compile();
+	//const bool shouldCompile = debugSettings->GetOrCreateDebugValue("NodeGraph/Should compile before execute", true);
+	//
+	//if (shouldCompile)
+	//	Compile();
 
 	Execute();
 }
 
 void NodeGraph::Load()
 {
-	RegisterNodes();
+	if (myRegisteredNodes.empty())
+		RegisterNodes();
 
 	if (myRootNodeType == nullptr)
 		WmLog(TagError, TagNodeGraph, "No root node type registered! Things may break.");
@@ -82,12 +83,12 @@ void NodeGraph::Compile()
 	myCompiledNodeStack.clear();
 
 	CompileNodeGraph(*myRootNode, myCompiledNodeStack);
-	myNeedsRecompile = false;
+	myIsDirty = false;
 }
 
 void NodeGraph::Execute()
 {
-	if (myNeedsRecompile)
+	if (myIsDirty)
 		Compile();
 
 	for (auto it = myCompiledNodeStack.rbegin(); it != myCompiledNodeStack.rend(); it++)
@@ -148,7 +149,7 @@ plf::colony<SNode>::colony_iterator<false> NodeGraph::KillNode(plf::colony<SNode
 		}
 	}
 
-	myNeedsRecompile = true;
+	myIsDirty = true;
 	return myNodes.erase(aIterator);
 }
 
@@ -160,6 +161,9 @@ void NodeGraph::FirstTimeSetup()
 void NodeGraph::SetupRootNode()
 {
 	if (!myRootNodeType)
+		return;
+
+	if (myRootNode)
 		return;
 
 	myRootNode = AddNode(myRootNodeType->Title, { 1000.f, 300.f });
@@ -300,6 +304,8 @@ SNode* NodeGraph::AddNode(const std::string aNodeType, const ImVec2 aLocation)
 			return &registeredNode.AddNodeLambda(aLocation);
 		}
 	}
+
+	myIsDirty = true;
 
 	return nullptr;
 }

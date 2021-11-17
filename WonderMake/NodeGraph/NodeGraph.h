@@ -51,6 +51,7 @@ public:
 
 	void SetName(const std::string& aName) { myName = aName; }
 	[[nodiscard]] std::string GetName() const { return myName ? *myName : myPath.string(); }
+	[[nodiscard]] virtual std::string GetIdentifier() const { return myPath.string(); }
 	[[nodiscard]] std::filesystem::path GetPath() const { return myPath; }
 
 	void Load();
@@ -61,6 +62,8 @@ public:
 
 	[[nodiscard]] nlohmann::json Serialize();
 	void Deserialize(const nlohmann::json& aJsonFile);
+
+	void MarkDirty() { myIsDirty = true; }
 
 protected:
 	virtual void Compile();
@@ -115,7 +118,7 @@ private:
 	size_t myUniqueId;
 	SNodeTypeBase* myRootNodeType = nullptr;
 	std::filesystem::path myPath;
-	bool myNeedsRecompile = false; 
+	bool myIsDirty = false; 
 };
 
 template<typename T>

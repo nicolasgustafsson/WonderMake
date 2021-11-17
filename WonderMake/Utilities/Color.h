@@ -3,6 +3,7 @@
 #include "Rotation.h"
 #include "Imgui/ImguiInclude.h"
 #include "Typedefs.h"
+#include "TypeTraits/TypeString.h"
 
 enum class EColorSpace
 {
@@ -121,3 +122,15 @@ public:
 
 using SColor = SColorTemplate<EColorSpace::LinearRGB>;
 using SColorHSV = SColorTemplate<EColorSpace::HSV>;
+
+
+template <>
+constexpr std::string_view TypeString<SColor>() {
+	return "SColorRGB";
+}
+
+
+template <>
+constexpr std::string_view TypeString<SColorHSV>() {
+	return "SColorHSV";
+}

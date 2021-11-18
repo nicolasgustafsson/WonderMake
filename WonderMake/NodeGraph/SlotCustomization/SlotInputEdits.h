@@ -4,86 +4,121 @@
 
 class NodeGraph;
 
+enum class EAlterStatus : bool
+{
+	Same = false,
+	Changed = true
+};
+
+inline EAlterStatus operator||(const EAlterStatus& aFirst, const EAlterStatus& aSecond)
+{
+	if (aFirst == EAlterStatus::Changed || aSecond == EAlterStatus::Changed)
+		return EAlterStatus::Changed;
+
+	return EAlterStatus::Same;
+}
+
+/*
+inline EAlterStatus& operator++(EAlterStatus& aAlterStatus) {
+	if (aAlterStatus == EAlterStatus::Same)
+	{
+		aAlterStatus = EAlterStatus::Changed;
+	}
+
+	//Nicos: The more things change, the more they stay the same
+	if (aAlterStatus == EAlterStatus::Changed)
+	{
+		aAlterStatus = EAlterStatus::Same;
+	}
+
+	return aAlterStatus;
+}
+*/
+
 namespace SlotInputEdits
 {
 	template<typename TSlotType>
-	void EditInputSlot(TSlotType&)
+	EAlterStatus EditInputSlot(TSlotType&)
 	{
-	
+		return EAlterStatus::Same;
 	}
 
 	template<typename TSlotType>
-	void EditNodeGraphInputSlot(TSlotType& aSlotType, NodeGraph&)
+	EAlterStatus EditNodeGraphInputSlot(TSlotType& aSlotType, NodeGraph&)
 	{
-		EditInputSlot(aSlotType);
+		return EditInputSlot(aSlotType);
 	}
 
 	template<typename TSlotType> requires requires (TSlotType x, NodeGraph& aNodeGraph) { x.NodeGraphInspect(aNodeGraph); }
-	void EditNodeGraphInputSlot(TSlotType& aSlotType, NodeGraph& aNodeGraph)
+	EAlterStatus EditNodeGraphInputSlot(TSlotType& aSlotType, NodeGraph& aNodeGraph)
 	{
-		ImGuiStyle tnest;
-		aSlotType.NodeGraphInspect(aNodeGraph);
+		return aSlotType.NodeGraphInspect(aNodeGraph) ? EAlterStatus::Changed : EAlterStatus::Same;
 	}
 
 	template<>
-	inline void EditInputSlot<float>(float& aInput)
+	inline EAlterStatus EditInputSlot<float>(float& aInput)
 	{
-		ImGui::InputFloat("", &aInput);
+		return ImGui::InputFloat("", &aInput) ? EAlterStatus::Changed : EAlterStatus::Same;
+	} 
+
+	template<>
+	inline EAlterStatus EditInputSlot<int>(int& aInput)
+	{
+		return ImGui::InputInt("", &aInput) ? EAlterStatus::Changed : EAlterStatus::Same;
 	}
 
 	template<>
-	inline void EditInputSlot<int>(int& aInput)
+	inline EAlterStatus EditInputSlot<std::string>(std::string& aInput)
 	{
-		ImGui::InputInt("", &aInput);
+		return ImGui::InputText("", &aInput) ? EAlterStatus::Changed : EAlterStatus::Same;
 	}
 
 	template<>
-	inline void EditInputSlot<std::string>(std::string& aInput)
+	inline EAlterStatus EditInputSlot<bool>(bool& aInput)
 	{
-		ImGui::InputText("", &aInput);
+		return ImGui::Checkbox("", &aInput) ? EAlterStatus::Changed : EAlterStatus::Same;
 	}
 
 	template<>
-	inline void EditInputSlot<bool>(bool& aInput)
-	{
-		ImGui::Checkbox("", &aInput);
-	}
-
-	template<>
-	inline void EditInputSlot<SVector2u>(SVector2u& aInput)
+	inline EAlterStatus EditInputSlot<SVector2u>(SVector2u& aInput)
 	{
 		i32 inputs[]{ static_cast<i32>(aInput.X), static_cast<i32>(aInput.Y)};
-		ImGui::InputInt2("", inputs);
+		const bool changed = ImGui::InputInt2("", inputs);
 
 		aInput.X = static_cast<u32>(inputs[0]);
 		aInput.Y = static_cast<u32>(inputs[1]);
+
+		return changed ? EAlterStatus::Changed : EAlterStatus::Same;
 	}
 
 	template<>
-	inline void EditInputSlot<SVector2f>(SVector2f& aInput)
+	inline EAlterStatus EditInputSlot<SVector2f>(SVector2f& aInput)
 	{
 		f32 inputs[]{ static_cast<f32>(aInput.X), static_cast<f32>(aInput.Y) };
-		ImGui::InputFloat2("", inputs);
+		const bool changed = ImGui::InputFloat2("", inputs);
 
 		aInput.X = (inputs[0]);
 		aInput.Y = (inputs[1]);
+
+		return changed ? EAlterStatus::Changed : EAlterStatus::Same;
 	}
 
 	template<>
-	inline void EditInputSlot<SColor>(SColor& aInput)
+	inline EAlterStatus EditInputSlot<SColor>(SColor& aInput)
 	{
-		ImGui::ColorEdit4("", ((f32*)&aInput));
+		return ImGui::ColorEdit4("", ((f32*)&aInput)) ? EAlterStatus::Changed : EAlterStatus::Same;
 	}
 
 	template<>
-	inline void EditInputSlot<std::filesystem::path>(std::filesystem::path& aInput)
+	inline EAlterStatus EditInputSlot<std::filesystem::path>(std::filesystem::path& aInput)
 	{
-		ImGui::FileSelector::SelectFile(aInput);
+		return ImGui::FileSelector::SelectFile(aInput) ? EAlterStatus::Changed : EAlterStatus::Same;
 	}
 
 	template<>
-	inline void EditInputSlot<SRenderSettings>(SRenderSettings& aInput)
+	inline EAlterStatus EditInputSlot<SRenderSettings>(SRenderSettings& aInput)
 	{
+		SRenderSettings initial = aInput;
 		ImGui::PushID(&aInput);
 		i32 blendModeIndex = 0;
 
@@ -113,5 +148,7 @@ namespace SlotInputEdits
 			}
 		}
 		ImGui::PopID();
+
+		return (aInput != initial) ? EAlterStatus::Changed : EAlterStatus::Same;
 	}
 };

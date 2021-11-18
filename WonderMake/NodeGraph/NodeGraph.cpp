@@ -200,6 +200,8 @@ nlohmann::json NodeGraph::Serialize()
 
 	jsonFile["InlineInputValues"] = inlineValueArray;
 
+	myIsDirty = false;
+
 	return jsonFile;
 }
 

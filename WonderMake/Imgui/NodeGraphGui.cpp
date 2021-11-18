@@ -555,7 +555,12 @@ void WmGui::NodeGraphEditor::Slot(const bool aIsInput, SSlotInstanceBase& aSlotI
 		auto before = window->IDStack.Size;
 		ImGui::BeginGroup();
 		if (!aSlotInstance.HasConnection())
-			aSlotInstance.Inspect(aNodeGraph);
+		{
+			const EAlterStatus modified = aSlotInstance.Inspect(aNodeGraph);
+
+			if (modified == EAlterStatus::Changed)
+				aNodeGraph.MarkDirty();
+		}
 		ImGui::EndGroup();
 		auto after = window->IDStack.Size;
 

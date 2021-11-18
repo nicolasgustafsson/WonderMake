@@ -46,7 +46,7 @@ struct SSlotInstanceBase
 	virtual ~SSlotInstanceBase() {};
 
 	const SSlotTypeBase& SlotType;
-	virtual void Inspect(NodeGraph&) {};
+	virtual EAlterStatus Inspect(NodeGraph&) { return EAlterStatus::Same; };
 	[[nodiscard]] virtual bool HasConnection() const = 0;
 };
 
@@ -56,7 +56,7 @@ struct SOutputSlotInstanceBase : public SSlotInstanceBase
 		: SSlotInstanceBase(aSlotType) {}
 
 	std::vector<SConnection*> Connections;
-	virtual void Inspect(NodeGraph&) override final {};
+	virtual EAlterStatus Inspect(NodeGraph&) override final { return EAlterStatus::Same; }
 	[[nodiscard]] virtual bool HasConnection() const override final
 	{
 		return Connections.size() != 0;
@@ -85,9 +85,9 @@ struct SInputSlotInstance : public SInputSlotInstanceBase
 	SInputSlotInstance(const SSlotTypeBase& aSlotType)
 		: SInputSlotInstanceBase(aSlotType) {}
 
-	virtual void Inspect(NodeGraph& aNodeGraph) override
+	virtual EAlterStatus Inspect(NodeGraph& aNodeGraph) override
 	{
-		SlotInputEdits::template EditNodeGraphInputSlot<T>(EditableValue, aNodeGraph);
+		return SlotInputEdits::template EditNodeGraphInputSlot<T>(EditableValue, aNodeGraph);
 	}
 
 	virtual void SerializeInlineInput(const i32 aNodeId, const i32 aSlotId, json& aJson) const override

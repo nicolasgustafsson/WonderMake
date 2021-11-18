@@ -3,8 +3,10 @@
 
 #include "Imgui/Canvas.h"
 
-void FloatSpline::Inspect()
+EAlterStatus FloatSpline::Inspect()
 {
+	const FloatSpline earlier = *this;
+
 	static SVector2f mousePos;
 	static WmGui::SCanvasState canvasState;
 
@@ -69,4 +71,5 @@ void FloatSpline::Inspect()
 
 	WmGui::EndCanvas();
 
+	return (earlier != *this) ? EAlterStatus::Changed : EAlterStatus::Same;
 }

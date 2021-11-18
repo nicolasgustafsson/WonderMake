@@ -64,6 +64,7 @@ public:
 	void Deserialize(const nlohmann::json& aJsonFile);
 
 	void MarkDirty() { myIsDirty = true; }
+	bool IsDirty() const { return myIsDirty; }
 
 protected:
 	virtual void Compile();
@@ -78,7 +79,6 @@ protected:
 	void SetupRootNode();
 
 	virtual void RegisterNodes() = 0;
-	
 
 	void SerializeNode(const SNode& aNode, nlohmann::json& aJson);
 	void DeserializeNode(const nlohmann::json& aJson);

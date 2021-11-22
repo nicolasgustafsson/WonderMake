@@ -91,6 +91,15 @@ struct SRectangle
 		Top += aDelta.Y;
 		Bottom += aDelta.Y;
 	}
+	
+	void ExpandMultiplicative(const f32 aMultiplier)
+	{
+		const auto center = GetMiddle();
+		Left = center.X + (Left - center.X) * aMultiplier;
+		Right = center.X + (Right - center.X) * aMultiplier;
+		Top = center.Y + (Top - center.Y) * aMultiplier;
+		Bottom = center.Y + (Bottom - center.Y) * aMultiplier;
+	}
 };
 
 struct SCircle

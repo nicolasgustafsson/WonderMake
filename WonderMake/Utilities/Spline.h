@@ -19,13 +19,16 @@ public:
 	}
 
 	SVector2f Start { 0.0f, 0.0f };
-	SVector2f End { 100.0f, 100.0f };
-	SVector2f ControlFirst { Start };
-	SVector2f ControlSecond { End };
+	SVector2f End { 1.0f, 1.0f };
+	SVector2f ControlFirst { WmMath::Lerp(Start, End, 0.3334f) };
+	SVector2f ControlSecond{ WmMath::Lerp(Start, End, 0.6667f) };
 
 	EAlterStatus Inspect();
 
+	bool ShouldCenterEditor = false;
+
 private:
 	SVector2f* SelectedPoint = nullptr;
+
 };
 

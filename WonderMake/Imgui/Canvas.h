@@ -17,8 +17,6 @@ namespace WmGui
 
 	ImVec2 GetMousePosOnCanvas(SCanvasState* aCanvasState);
 
-	ImVec2 GetPositionOnWindow(SCanvasState* aCanvasState, SVector2f aCanvasPosition);
-
 	void DrawCirleOnCanvas(SCanvasState* aCanvasState, const SVector2f aPosition, const SColor aColor, const f32 aRadius, bool aHandleOffset);
 	void DrawUnfilledCirleOnCanvas(SCanvasState* aCanvasState, const SVector2f aPosition, const SColor aColor, const f32 aRadius, bool aHandleOffset);
 
@@ -28,6 +26,8 @@ namespace WmGui
 
 	void DrawTextOnCanvas(SCanvasState* aCanvasState, const SVector2f aPosition, const char* aText, const SColor aColor, const SVector2<bool> aHandleOffset);
 	void EndCanvas();
+
+	SVector2f ConvertToScreenPosition(SCanvasState* aCanvasState, const SVector2f aCanvasPosition);
 
 	static int IdCount = 0;
 

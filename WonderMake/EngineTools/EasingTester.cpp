@@ -236,7 +236,7 @@ void EasingTester::CurveEditor()
 	{
 		if (ImGui::IsMouseClicked(0))
 		{
-			closest = &SVector2f::Closest(mousePos, std::array{ &start, &end, &controlFirst, &controlSecond });
+			closest = &SVector2f::ClosestRef(mousePos, std::array{ &start, &end, &controlFirst, &controlSecond });
 		}
 
 		if (ImGui::IsMouseDown(0) && closest)
@@ -281,7 +281,7 @@ void EasingTester::CurveEditor2D()
 	{
 		if (ImGui::IsMouseClicked(0))
 		{
-			closest = &SVector2f::Closest(mousePos, std::array{ &start, &end, &controlFirst, &controlSecond });
+			closest = &SVector2f::ClosestRef(mousePos, std::array{ &start, &end, &controlFirst, &controlSecond });
 		}
 
 		if (ImGui::IsMouseDown(0) && closest)

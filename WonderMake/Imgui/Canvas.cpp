@@ -98,11 +98,6 @@ ImVec2 WmGui::GetMousePosOnCanvas(SCanvasState* aCanvasState)
 	return (ImGui::GetMousePos() - ImGui::GetWindowPos() - aCanvasState->Offset) / aCanvasState->ZoomLevel;
 }
 
-ImVec2 WmGui::GetPositionOnWindow(SCanvasState* aCanvasState, SVector2f aCanvasPosition)
-{
-	return { aCanvasPosition.X * aCanvasState->ZoomLevel.x, aCanvasPosition.Y * aCanvasState->ZoomLevel.y };
-}
-
 void WmGui::DrawCirleOnCanvas(SCanvasState* aCanvasState, const SVector2f aPosition, const SColor aColor, const f32 aRadius, const bool aHandleOffset)
 {
 	assert(aCanvasState);
@@ -191,4 +186,14 @@ void WmGui::EndCanvas()
 	ImGui::SetWindowFontScale(1.f);
 	ImGui::PopID();
 	IdCount--;
+}
+
+SVector2f WmGui::ConvertToScreenPosition(SCanvasState* aCanvasState, const SVector2f aCanvasPosition)
+{
+	const ImVec2 windowPosition = ImGui::GetWindowPos();
+	const ImVec2 offset = windowPosition + aCanvasState->Offset;
+
+	const ImVec2 finalPosition = offset + ImVec2{ aCanvasPosition.X, aCanvasPosition.Y } *aCanvasState->ZoomLevel;
+
+	return { finalPosition.x, finalPosition.y };
 }

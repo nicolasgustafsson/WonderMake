@@ -23,6 +23,12 @@ namespace WmEasings
 		return WmMath::Lerp(aRange.Start, aRange.End, aProgress);
 	}
 
+	template <WmMath::Interpolable T>
+	inline [[nodiscard]] constexpr T InvLerp(const SRange<T>& aRange, const f32 aProgress) noexcept
+	{
+		return (aProgress - aRange.Start) / (aRange.End - aRange.Start);
+	}
+
 	template <u32 Power = 2, WmMath::Interpolable T>
 	inline [[nodiscard]] constexpr T SmoothStart(const SRange<T>& aRange, const f32 aProgress) noexcept
 	{

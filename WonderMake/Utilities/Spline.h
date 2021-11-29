@@ -4,13 +4,22 @@
 class FloatSpline
 {
 public:
+
+	struct SSplinePoint
+	{
+		SVector2f Point;
+		SVector2f Control;
+		SVector2f ControlInverse;
+	};
+
 	bool operator==(const FloatSpline& aOther) const
 	{
-		return
-			Start == aOther.Start &&
-			End == aOther.End &&
-			ControlFirst == aOther.ControlFirst &&
-			ControlSecond == aOther.ControlSecond;
+		aOther;
+		return true;
+			//First.Point == aOther.First.Point &&
+			//Second.Point == aOther.Second.Point &&
+			//First.Control == aOther.First.Control &&
+			//Second.Control == aOther.Second.Control;
 	}
 
 	bool operator!=(const FloatSpline& aOther) const
@@ -18,19 +27,18 @@ public:
 		return !(*this == aOther);
 	}
 
-	SVector2f Start { 0.0f, 0.0f };
-	SVector2f End { 1.0f, 1.0f };
-	SVector2f ControlFirst { WmMath::Lerp(Start, End, 0.3334f) };
-	SVector2f ControlSecond{ WmMath::Lerp(Start, End, 0.6667f) };
+	std::vector<SSplinePoint> Points{ {{{0.0f, 0.0f}, {0.33f, 0.33f}}, {{1.0f, 1.0f}, {0.66f, 0.66f}}, {{2.0f, 0.0f}, {1.5f, 0.66f}} } };
 
-	//SVector2f Third{ 2.0f, 0.0f };
-	//SVector2f ControlThird{ WmMath::Lerp(End, Third, 0.6667f) };
 
+	f32 GetValue(const f32 aX);
 	EAlterStatus Inspect();
 
 	bool ShouldCenterEditor = false;
 
 private:
+
+	f32 GetNextInterestingScreenX(const f32 aX);
+	std::pair<SSplinePoint&, SSplinePoint&> GetPointCombo(const f32 aX);
 	SVector2f* SelectedPoint = nullptr;
 
 };

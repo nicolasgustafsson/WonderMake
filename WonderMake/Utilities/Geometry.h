@@ -39,6 +39,31 @@ struct SRectangle
 		return boundingBox;
 	}
 
+	template <typename TContainer>
+	static SRectangle GenerateBoundingBox(TContainer aPointsContainer)
+	{
+		SRectangle boundingBox;
+
+		boundingBox.Left = aPointsContainer[0].X;
+		boundingBox.Right = aPointsContainer[0].X;
+		boundingBox.Top = aPointsContainer[0].Y;
+		boundingBox.Bottom = aPointsContainer[0].Y;
+
+		for (auto&& point : aPointsContainer)
+		{
+			if (point.X < boundingBox.Left)
+				boundingBox.Left = point.X;
+			if (point.X > boundingBox.Right)
+				boundingBox.Right = point.X;
+			if (point.Y < boundingBox.Bottom)
+				boundingBox.Bottom = point.Y;
+			if (point.Y > boundingBox.Top)
+				boundingBox.Top = point.Y;
+		}
+
+		return boundingBox;
+	}
+
 	f32 GetWidth() const
 	{
 		return Right - Left;

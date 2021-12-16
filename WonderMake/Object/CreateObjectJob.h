@@ -15,7 +15,7 @@ namespace _Impl
 	using _CreateObjectJobType = Job<
 		Policy::Set<
 			PAdd<FunctionalitySystemDelegate<std::decay_t<TFunctionalities>>, PWrite>...>,
-		JobOutput<Object&&, Cargo<TFunctionalities...>&&>>;
+		JobOutput<BaseObject&&, Cargo<TFunctionalities...>&&>>;
 }
 
 // TODO(Kevin): Make require write access for inherited policies. Do this by spawning smaller jobs.
@@ -36,5 +36,5 @@ private:
 		return _Impl::_CreateObjectJobType<TFunctionalities...>::template Get<FunctionalitySystemDelegate<std::decay_t<TFunctionality>>>().AddFunctionality(myObject);
 	}
 
-	Object myObject;
+	BaseObject myObject;
 };

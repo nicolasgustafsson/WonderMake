@@ -7,7 +7,7 @@
 
 #define REGISTER_FUNCTIONALITY(aFunctionality) REGISTER_FUNCTIONALITY_SYSTEM(aFunctionality)
 
-class Object;
+class BaseObject;
 
 
 template<typename ... TPolicies>
@@ -30,20 +30,20 @@ public:
 
 	template<typename TDependency> requires
 		TPolicySet::template HasPolicy_v<TDependency, PWrite>
-		constexpr __forceinline TDependency& Get() noexcept
+		constexpr inline TDependency& Get() noexcept
 	{
 		if constexpr (std::is_base_of_v<SystemBase, TDependency>)
-			return std::get<std::decay_t<TDependency>&>(myDependencies).Resolve<TDependency>();
+			return std::get<std::decay_t<TDependency>&>(myDependencies).template Resolve<TDependency>();
 
 		return std::get<std::decay_t<TDependency>&>(myDependencies);
 	}
 
 	template<typename TDependency> requires
 		TPolicySet::template HasDependency_v<TDependency>
-		constexpr __forceinline const TDependency& Get() const noexcept
+		constexpr inline const TDependency& Get() const noexcept
 	{
 		if constexpr (std::is_base_of_v<SystemBase, TDependency>)
-			return std::get<std::decay_t<TDependency>&>(myDependencies).Resolve<TDependency>();
+			return std::get<std::decay_t<TDependency>&>(myDependencies).template Resolve<TDependency>();
 
 		return std::get<std::decay_t<TDependency>&>(myDependencies);
 	}

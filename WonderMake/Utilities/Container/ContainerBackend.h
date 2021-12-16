@@ -7,7 +7,11 @@ template<typename TStorage>
 class ContainerBackend
 {
 public:
-	using StorageBackend = typename ContainerBackend<TStorage>;
+#ifdef __GNUC__
+	using StorageBackend = ContainerBackend<TStorage>;
+#else
+    using StorageBackend = typename ContainerBackend<TStorage>;
+#endif
 	using IteratorType = typename TStorage::iterator;
 	using ConstIteratorType = typename TStorage::const_iterator;
 	using ElementType = typename TStorage::value_type;

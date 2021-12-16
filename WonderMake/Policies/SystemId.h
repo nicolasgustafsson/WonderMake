@@ -6,7 +6,7 @@ class SystemId final
 {
 public:
 	template<typename TSystem>
-	inline static SystemId Create() noexcept;
+    inline static SystemId Create() noexcept;
 
 	[[nodiscard]] inline bool operator==(const SystemId aRhs) const noexcept;
 	[[nodiscard]] inline bool operator!=(const SystemId aRhs) const noexcept;
@@ -35,7 +35,7 @@ namespace std
 }
 
 template<typename TSystem>
-inline static SystemId SystemId::Create() noexcept
+inline SystemId SystemId::Create() noexcept
 {
 	return SystemId(typeid(Key<TSystem>).hash_code());
 }

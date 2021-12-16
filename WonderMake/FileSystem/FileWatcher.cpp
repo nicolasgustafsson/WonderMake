@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "FileWatcher.h"
 
+#ifdef _MSC_VER
 #include <Windows.h>
+#endif
 
 REGISTER_SYSTEM(FileWatcher);
 
@@ -31,6 +33,7 @@ void FileWatcher::UpdateFileChanges()
 
 void FileWatcher::Watch()
 {
+#ifdef _MSC_VER
 	auto path = std::filesystem::current_path();
 	HANDLE directory = CreateFile(path.string().c_str(), FILE_LIST_DIRECTORY, FILE_SHARE_WRITE | FILE_SHARE_READ | FILE_SHARE_DELETE, nullptr,
 		OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
@@ -94,6 +97,6 @@ void FileWatcher::Watch()
 			std::this_thread::sleep_for(std::chrono::milliseconds(250));
 		}
 	}
-
+#endif
 }
 

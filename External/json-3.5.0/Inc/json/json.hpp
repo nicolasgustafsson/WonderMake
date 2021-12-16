@@ -48,6 +48,7 @@ SOFTWARE.
 #include <string> // string, stoi, to_string
 #include <utility> // declval, forward, move, pair, swap
 
+#ifndef __GNUC__
 #define and	&&
 #define and_eq	&=
 #define bitand	&
@@ -59,6 +60,7 @@ SOFTWARE.
 #define or_eq	|=
 #define xor	^
 #define xor_eq	^=
+#endif
 
 // #include <nlohmann/json_fwd.hpp>
 #ifndef NLOHMANN_JSON_FWD_HPP
@@ -18824,7 +18826,7 @@ class basic_json
     @brief create a CBOR serialization of a given JSON value
 
     Serializes a given JSON value @a j to a byte vector using the CBOR (Concise
-    Binary Object Representation) serialization format. CBOR is a binary
+    Binary BaseObject Representation) serialization format. CBOR is a binary
     serialization format which aims to be more compact than JSON itself, yet
     more efficient to parse.
 
@@ -19211,7 +19213,7 @@ class basic_json
     @brief create a JSON value from an input in CBOR format
 
     Deserializes a given input @a i to a JSON value using the CBOR (Concise
-    Binary Object Representation) serialization format.
+    Binary BaseObject Representation) serialization format.
 
     The library maps CBOR types to JSON value types as follows:
 
@@ -20337,9 +20339,9 @@ class basic_json
 
     ```
     define MergePatch(Target, Patch):
-      if Patch is an Object:
-        if Target is not an Object:
-          Target = {} // Ignore the contents and set it to an empty Object
+      if Patch is an BaseObject:
+        if Target is not an BaseObject:
+          Target = {} // Ignore the contents and set it to an empty BaseObject
         for each Name/Value pair in Patch:
           if Value is null:
             if Name exists in Target:

@@ -2,14 +2,19 @@
 
 #include "Utilities/Platform.h"
 
-#include <processthreadsapi.h>
 #include <string>
 #include <time.h>
+
+#ifdef _MSC_VER
 #include <windows.h>
+#include <processthreadsapi.h>
+#endif
 
 namespace Platform
 {
-	const DWORD MS_VC_EXCEPTION = 0x406D1388;
+#ifdef _MSC_VER
+
+const DWORD MS_VC_EXCEPTION = 0x406D1388;
 
 #pragma pack(push,8)
 	typedef struct tagTHREADNAME_INFO
@@ -21,10 +26,13 @@ namespace Platform
 	} THREADNAME_INFO;
 #pragma pack(pop)
 
+#endif
 
 	void SetThreadName(const u32 aThreadId, const std::string& threadName)
 	{
-		THREADNAME_INFO info;
+#ifdef _MSC_VER
+
+        THREADNAME_INFO info;
 		info.dwType = 0x1000;
 		info.szName = threadName.c_str();
 		info.dwThreadID = aThreadId;
@@ -37,22 +45,34 @@ namespace Platform
 		__except (EXCEPTION_EXECUTE_HANDLER)
 		{
 		}
-	}
+#endif
+
+    }
 
 	void SetThreadName(const std::string& threadName)
 	{
-		SetThreadName(GetCurrentThreadId(), threadName);
-	}
+#ifdef _MSC_VER
+
+        SetThreadName(GetCurrentThreadId(), threadName);
+#endif
+
+    }
 
 	void SetThreadName(std::thread& aThread, const std::string& threadName)
 	{
-		DWORD threadId = ::GetThreadId(static_cast<HANDLE>(aThread.native_handle()));
+#ifdef _MSC_VER
+
+        DWORD threadId = ::GetThreadId(static_cast<HANDLE>(aThread.native_handle()));
 		SetThreadName(threadId, threadName);
-	}
+#endif
+
+    }
 
 	std::string GetDateTime()
 	{
-		std::time_t rawtime;
+#ifdef _MSC_VER
+
+        std::time_t rawtime;
 		std::tm timeinfo;
 		char buffer[80];
 
@@ -61,5 +81,8 @@ namespace Platform
 
 		std::strftime(buffer, sizeof(buffer), "%Y-%m-%d-%H-%M-%S", &timeinfo);
 		return buffer;
+#else
+        return "";
+#endif
 	}
 }

@@ -10,13 +10,13 @@ public:
 	{
 		const Id universeId = Get<const UniverseManagerSystem>().GetCurrentUniverse();
 		const u64 key = Get<const UniverseManagerSystem>().GetCurrentUniverse().GetRawId();
-
-		if (myUniverseSystems.KeyExists(key))
-			return myUniverseSystems.Get(key);
+        auto&& universeSystems = GetUniverseSystems();
+		if (universeSystems.KeyExists(key))
+			return universeSystems.Get(key);
 		else
 		{
-			myUniverseSystems.Emplace(key);
-			TUniverseSystem& ref = myUniverseSystems.Get(key);
+            universeSystems.Emplace(key);
+			TUniverseSystem& ref = universeSystems.Get(key);
 			
 			ref.myUniverseId = universeId;
 			return ref;
@@ -25,8 +25,10 @@ public:
 
 	Container<TUniverseSystem*> GetAllSystems()
 	{
-		Container<TUniverseSystem*> universes;
-		for (auto& i : myUniverseSystems)
+        auto&& universeSystems = GetUniverseSystems();
+
+        Container<TUniverseSystem*> universes;
+		for (auto& i : universeSystems)
 		{
 			universes.Add(&i.second);
 		}
@@ -35,7 +37,13 @@ public:
 	}
 
 private:
-	mutable Container<TUniverseSystem, Key<u64>> myUniverseSystems;
+
+    Container<TUniverseSystem, Key<u64>>& GetUniverseSystems() const
+    {
+        static Container<TUniverseSystem, Key<u64>> universeSystems;
+        return universeSystems;
+    }
+
 };
 
 template <class CRTP, typename ... TDependencies>
@@ -47,7 +55,7 @@ public:
 
 	[[nodiscard]] CRTP& GetSystem() const
 	{
-		return this->Get<const UniverseSystemCollection<CRTP>>().GetSystemFromCurrentUniverse();
+		return this->template Get<const UniverseSystemCollection<CRTP>>().GetSystemFromCurrentUniverse();
 	}
 
 	template<typename T>

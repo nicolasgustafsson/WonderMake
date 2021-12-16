@@ -79,6 +79,10 @@ struct SInputSlotInstanceBase : public SSlotInstanceBase
 	}
 };
 
+
+template<typename U>
+class SSlotType;
+
 template<typename T>
 struct SInputSlotInstance : public SInputSlotInstanceBase
 {
@@ -119,7 +123,7 @@ struct SOutputSlotInstance : public SOutputSlotInstanceBase
 };
 
 
-struct SSlotTypeBase abstract
+struct SSlotTypeBase //abstract
 {
 	virtual ~SSlotTypeBase() {};
 

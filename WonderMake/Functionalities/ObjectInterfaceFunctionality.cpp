@@ -3,7 +3,7 @@
 
 REGISTER_FUNCTIONALITY(ObjectInterfaceFunctionality)
 
-void ObjectInterfaceFunctionality::OnNewObject(Object& aObjectAddedTo)
+void ObjectInterfaceFunctionality::OnNewObject(BaseObject& aObjectAddedTo)
 {
 	myObject = &aObjectAddedTo;
 }

@@ -4,7 +4,7 @@
 #include "Functionalities/BaseFunctionality.h"
 
 #include "Object/DependencyDestructor.h"
-#include "Object/Object.h"
+#include "Object/BaseObject.h"
 
 #include "Scheduling/ScheduleSystem.h"
 
@@ -57,7 +57,7 @@ public:
 	using Super = _Impl::GetFunctionalitySystem<FunctionalitySystem<TFunctionality>, TFunctionality>;
 
 	inline FunctionalitySystem()
-		: myDependencyDestructor([this](Object& aObject, auto* aFunctionality)
+		: myDependencyDestructor([this](BaseObject& aObject, auto* aFunctionality)
 			{
 				auto& functionality = *static_cast<TFunctionality*>(static_cast<_BaseFunctionality*>(aFunctionality));
 
@@ -66,10 +66,10 @@ public:
 			})
 	{
 		if (typeid(&TFunctionality::Tick) != typeid(&_BaseFunctionality::Tick))
-			Super::template Get<ScheduleSystem>().ScheduleRepeating<_Impl::ConvertPolicySet<typename Super::PolicySet>>([this]() { Tick(); });
+			Super::template Get<ScheduleSystem>().template ScheduleRepeating<_Impl::ConvertPolicySet<typename Super::PolicySet>>([this]() { Tick(); });
 	}
 
-	inline [[nodiscard]] TFunctionality& AddFunctionality(Object& aObject, const bool aExplicitlyAdded = true)
+    [[nodiscard]] inline TFunctionality& AddFunctionality(BaseObject& aObject, const bool aExplicitlyAdded = true)
 	{
 		TFunctionality& added = aObject.Add<TFunctionality>([this](auto& aObject) -> auto&
 		{
@@ -99,7 +99,7 @@ public:
 		return myFunctionalities.empty();
 	}
 
-	inline [[nodiscard]] void Tick()
+    [[nodiscard]] inline void Tick()
 	{
 		auto guard = SystemPtr<UniverseManagerSystem>()->PushUniverse(this->myUniverseId);
 
@@ -134,7 +134,7 @@ private:
 	struct DependencyWrapper {};
 
 	template<typename TDependency>
-	inline [[nodiscard]] TDependency& PopulateDependency(Object& aObject) noexcept
+    [[nodiscard]] inline TDependency& PopulateDependency(BaseObject& aObject) noexcept
 	{
 		// TODO(Kevin): This is currently not thread-safe, to make it threadsafe it needs to be run from a job with the same dependencies, but write permission on them.
 		if constexpr (std::is_base_of_v<_BaseFunctionality, TDependency>)
@@ -145,21 +145,21 @@ private:
 			return std::get<std::decay_t<TDependency>&>(this->myDependencies);
 	}
 	template<typename... TDependencies>
-	inline [[nodiscard]] typename TFunctionality::Dependencies PopulateDependencies(DependencyWrapper<std::tuple<TDependencies...>>, Object& aObject) noexcept
+    [[nodiscard]] inline typename TFunctionality::Dependencies PopulateDependencies(DependencyWrapper<std::tuple<TDependencies...>>, BaseObject& aObject) noexcept
 	{
 		return std::tie(PopulateDependency<std::decay_t<TDependencies>>(aObject)...);
 	}
-	inline [[nodiscard]] typename TFunctionality::Dependencies PopulateDependencies(Object& aObject) noexcept
+    [[nodiscard]] inline typename TFunctionality::Dependencies PopulateDependencies(BaseObject& aObject) noexcept
 	{
 		return PopulateDependencies(DependencyWrapper<typename TFunctionality::Dependencies>(), aObject);
 	}
 
 	template<typename... TDependencies>
-	inline void RemoveDependencies(DependencyWrapper<std::tuple<TDependencies...>>, Object& aObject) noexcept
+	inline void RemoveDependencies(DependencyWrapper<std::tuple<TDependencies...>>, BaseObject& aObject) noexcept
 	{
 		(aObject.Remove<std::decay_t<TDependencies>>(false), ...);
 	}
-	inline void RemoveDependencies(Object& aObject) noexcept
+	inline void RemoveDependencies(BaseObject& aObject) noexcept
 	{
 		RemoveDependencies(DependencyWrapper<typename TFunctionality::Dependencies>(), aObject);
 	}
@@ -176,17 +176,17 @@ public:
 	inline FunctionalitySystemDelegate() noexcept
 		: myFunctionalityConstructor([this](auto& aObject, const bool aExplicitlyAdded) -> auto&
 			{
-				return this->Get<FunctionalitySystem<TFunctionality>>().AddFunctionality(aObject, aExplicitlyAdded);
+				return this->template Get<FunctionalitySystem<TFunctionality>>().AddFunctionality(aObject, aExplicitlyAdded);
 			})
 	{}
 
-	inline [[nodiscard]] TFunctionality& AddFunctionality(Object& aObject, const bool aExplicitlyAdded = true)
+    [[nodiscard]] inline TFunctionality& AddFunctionality(BaseObject& aObject, const bool aExplicitlyAdded = true)
 	{
 		return myFunctionalityConstructor(aObject, aExplicitlyAdded);
 	}
 
 private:
-	UniqueFunction<TFunctionality& (Object&, const bool)> myFunctionalityConstructor;
+	UniqueFunction<TFunctionality& (BaseObject&, const bool)> myFunctionalityConstructor;
 };
 
 #define REGISTER_FUNCTIONALITY_SYSTEM(aFunctionality) _REGISTER_SYSTEM_IMPL(FunctionalitySystem<aFunctionality>, aFunctionality) _REGISTER_SYSTEM_IMPL(FunctionalitySystemDelegate<aFunctionality>, aFunctionality##_Delegate)  _REGISTER_SYSTEM_IMPL(UniverseSystemCollection<FunctionalitySystem<aFunctionality>>, UniverseSystemCollection##aFunctionality)

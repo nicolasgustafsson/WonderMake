@@ -113,14 +113,14 @@ private:
 		{
 		case EOperation::Move:
 			if constexpr (std::is_move_assignable_v<TType>)
-				return static_cast<void*>(&Alias::OpMove<TAlias>);
+				return reinterpret_cast<void*>(&Alias::OpMove<TAlias>);
 		case EOperation::Copy:
 			if constexpr (std::is_copy_assignable_v<TType>)
-				return static_cast<void*>(&Alias::OpCopy<TAlias>);
+				return reinterpret_cast<void*>(&Alias::OpCopy<TAlias>);
 			else
 				break;
 		case EOperation::Destroy:
-			return static_cast<void*>(&Alias::OpDestroy<TAlias>);
+			return reinterpret_cast<void*>(&Alias::OpDestroy<TAlias>);
 		}
 
 		return nullptr;
@@ -131,19 +131,19 @@ private:
 		aTarget.InvokeOpDestroy();
 
 		if (myOperationFunc)
-			Utility::Invoke(static_cast<OpPtrCopy>(myOperationFunc(EOperation::Copy)), *this, aTarget);
+			Utility::Invoke(reinterpret_cast<OpPtrCopy>(myOperationFunc(EOperation::Copy)), *this, aTarget);
 	}
 	inline void InvokeOpMove(Alias&& aTarget) noexcept(std::is_nothrow_move_assignable_v<TType>)
 	{
 		aTarget.InvokeOpDestroy();
 
 		if (myOperationFunc)
-			Utility::Invoke(static_cast<OpPtrMove>(myOperationFunc(EOperation::Move)), *this, std::move(aTarget));
+			Utility::Invoke(reinterpret_cast<OpPtrMove>(myOperationFunc(EOperation::Move)), *this, std::move(aTarget));
 	}
 	inline void InvokeOpDestroy() noexcept(std::is_nothrow_destructible_v<TType>)
 	{
 		if (myOperationFunc)
-			Utility::Invoke(static_cast<OpPtrDestroy>(myOperationFunc(EOperation::Destroy)), *this);
+			Utility::Invoke(reinterpret_cast<OpPtrDestroy>(myOperationFunc(EOperation::Destroy)), *this);
 	}
 
 	template<typename TAlias, typename... TArgs>

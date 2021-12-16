@@ -7,22 +7,22 @@ REGISTER_FUNCTIONALITY(TimerFunctionality);
 
 f32 STimerHandle::GetTimeLeft() const
 {
-	return TimerFunctionality.GetTimeLeft(*this);
+	return TheTimerFunctionality.GetTimeLeft(*this);
 }
 
 void STimerHandle::Invalidate() const
 {
-	TimerFunctionality.Invalidate(*this);
+    TheTimerFunctionality.Invalidate(*this);
 }
 
 void STimerHandle::SetTimeLeft(const f32 aTimeLeft) const
 {
-	TimerFunctionality.SetTimeLeft(*this, aTimeLeft);
+    TheTimerFunctionality.SetTimeLeft(*this, aTimeLeft);
 }
 
 bool STimerHandle::IsValid() const
 {
-	return TimerFunctionality.IsValidTimer(*this);
+	return TheTimerFunctionality.IsValidTimer(*this);
 }
 
 STimerHandle TimerFunctionality::AddTimer(const f32 aDuration, Closure aClosure)
@@ -66,7 +66,7 @@ STimer const* TimerFunctionality::GetTimerFromHandle(const STimerHandle aHandle)
 {
 	for(auto&& timer : Get<STimerComponent>().Timers)
 	{
-		if (timer.Id == aHandle.TimerId)
+		if (timer.TimerId == aHandle.TimerId)
 		{
 			return &timer;
 		}
@@ -79,7 +79,7 @@ STimer* TimerFunctionality::GetTimerFromHandle(const STimerHandle aHandle)
 {
 	for (auto&& timer : Get<STimerComponent>().Timers)
 	{
-		if (timer.Id == aHandle.TimerId)
+		if (timer.TimerId == aHandle.TimerId)
 		{
 			return &timer;
 		}

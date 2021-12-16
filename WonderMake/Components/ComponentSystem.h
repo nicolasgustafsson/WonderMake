@@ -7,7 +7,7 @@
 
 #include "Utilities/plf_colony.h"
 
-class Object;
+class BaseObject;
 
 template<typename TData>
 class ComponentSystem
@@ -16,7 +16,7 @@ class ComponentSystem
 public:
 	ComponentSystem();
 
-	TData& AddComponent(Object& aObject, const bool aExplicitlyAdded = true);
+	TData& AddComponent(BaseObject& aObject, const bool aExplicitlyAdded = true);
 	void RemoveComponent(TData& aComponent);
 
 	bool IsEmpty() const;
@@ -30,14 +30,14 @@ private:
 
 template<typename TData>
 ComponentSystem<TData>::ComponentSystem()
-	: myDependencyDestructor([this](Object& /*aObject*/, auto* aComponent)
+	: myDependencyDestructor([this](BaseObject& /*aObject*/, auto* aComponent)
 		{
 			RemoveComponent(*static_cast<TData*>(aComponent));
 		})
 {}
 
 template<typename TData>
-typename TData& ComponentSystem<TData>::AddComponent(Object& aObject, const bool aExplicitlyAdded)
+TData& ComponentSystem<TData>::AddComponent(BaseObject& aObject, const bool aExplicitlyAdded)
 {
 	return aObject.Add<TData>([this](auto& /*aObject*/) -> auto&
 		{

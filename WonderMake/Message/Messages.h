@@ -80,8 +80,8 @@ inline static void WmDrawDebugCircle(const SCircle& aCircle, const SColor& aColo
 	for (u32 i = 0; i < aSegments; ++i)
 	{
 		positions.Add(SVector2f{});
-		positions[i].X = std::cosf(((Constants::Pi * 2.f) / (aSegments )) * i);
-		positions[i].Y = std::sinf(((Constants::Pi * 2.f) / (aSegments )) * i);
+		positions[i].X = std::cos(((Constants::Pi * 2.f) / (aSegments )) * i);
+		positions[i].Y = std::sin(((Constants::Pi * 2.f) / (aSegments )) * i);
 
 		positions[i] *= aCircle.Radius;
 		positions[i] += aCircle.Position;

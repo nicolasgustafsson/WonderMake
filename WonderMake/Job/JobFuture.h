@@ -54,10 +54,10 @@ public:
 	}
 	
 protected:
-	template<typename TOutput>
+	template<typename UOutput>
 	class JobCallbackImpl
 	{
-		static_assert(AlwaysFalse<TOutput>, "Invalid input.");
+		static_assert(AlwaysFalse<UOutput>, "Invalid input.");
 	};
 	template<typename... TArgs>
 	class JobCallbackImpl<JobOutput<TArgs...>>

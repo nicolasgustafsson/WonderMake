@@ -10,32 +10,32 @@ template
 public:
 	using TDurationRep = typename TTime::rep;
 
-	__forceinline Stopwatch() noexcept
+	inline Stopwatch() noexcept
 	{
 		Start();
 	}
 
-	__forceinline void Start() noexcept
+    inline void Start() noexcept
 	{
 		myIsRunning = true;
 		myStart = myEnd = TClock::now();
 	}
 
-	__forceinline TDurationRep Stop() noexcept
+    inline TDurationRep Stop() noexcept
 	{
 		myEnd = TClock::now();
 		myIsRunning = false;
 		return GetElapsedTime();
 	}
 
-	__forceinline TDurationRep Restart() noexcept
+    inline TDurationRep Restart() noexcept
 	{
 		TDurationRep elapsedTime = Stop();
 		Start();
 		return elapsedTime;
 	}
 
-	[[nodiscard]] __forceinline TDurationRep GetElapsedTime() const noexcept
+    [[nodiscard]] inline TDurationRep GetElapsedTime() const noexcept
 	{
 		const std::chrono::time_point<TClock> end = myIsRunning ? TClock::now() : myEnd;
 

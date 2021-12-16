@@ -3,6 +3,7 @@
 #include "DebugLine.h"
 #include "DebugLineRenderObject.h"
 #include "Utilities/TimeKeeper.h"
+#include "Universe/UniverseSystem.h"
 
 class DebugLineDrawer
 	: public UniverseSystem<DebugLineDrawer, TimeKeeper>

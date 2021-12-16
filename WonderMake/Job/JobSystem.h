@@ -49,10 +49,10 @@ public:
 		}
 
 	private:
-		template<typename TOutput>
+		template<typename UOutput>
 		class JobSystemImpl
 		{
-			static_assert(AlwaysFalse<TOutput>, "Job has invalid input.");
+			static_assert(AlwaysFalse<UOutput>, "Job has invalid input.");
 		};
 		template<typename... TArgs>
 		class JobSystemImpl<JobOutput<TArgs...>>
@@ -125,7 +125,7 @@ private:
 
 		auto&& jobAlias = EmplaceJob();
 
-		auto&& jobData = jobAlias.Emplace<JobData<TJob>>();
+		auto&& jobData = jobAlias.template Emplace<JobData<TJob>>();
 
 		jobData.Promise.SetCallbackCompleted([this, &jobAlias]()
 			{

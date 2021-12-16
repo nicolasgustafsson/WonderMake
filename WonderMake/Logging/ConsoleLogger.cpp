@@ -24,6 +24,7 @@ void ConsoleLogger::OnLogMessage(const SLogMessage& aMessage)
 
 void ConsoleLogger::SetColor(const EConsoleColor aColor) noexcept
 {
+#ifdef _MSC_VER
 	auto hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	WORD attribute = 0;
@@ -48,4 +49,5 @@ void ConsoleLogger::SetColor(const EConsoleColor aColor) noexcept
 	}
 
 	SetConsoleTextAttribute(hConsole, attribute);
+#endif
 }

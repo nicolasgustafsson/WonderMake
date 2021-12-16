@@ -34,7 +34,7 @@ public:
 	}
 	void FaceDirection(const RepVector aDirection) noexcept
 	{
-		SetRotation(aDirection.GetAngle<RepRotation>(RepVector(0, 1)));
+		SetRotation(aDirection.template GetAngle<RepRotation>(RepVector(0, 1)));
 	}
 
 	void SetRotation(const RepRotation aRotation) noexcept
@@ -72,7 +72,7 @@ public:
 	void RotateTowards(const SVector2f aPosition, const RepRotation aSpeed, const f32 aDeltaTime) noexcept
 	{
 		const auto deltaPosition = aPosition - GetPosition();
-		const auto finalRotation = deltaPosition.GetAngle<RepRotation>(RepVector(0, 1));
+		const auto finalRotation = deltaPosition.template GetAngle<RepRotation>(RepVector(0, 1));
 
 		auto deltaRotation = finalRotation - Get<STransformComponent2D>().Rotation;
 

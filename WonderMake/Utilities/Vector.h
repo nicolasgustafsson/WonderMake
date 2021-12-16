@@ -389,7 +389,7 @@ struct SVector
 	{
 		for (u32 i = 0; i < TSize; i++)
 		{
-			(*this)[i] = std::floorf((*this)[i]);
+			(*this)[i] = std::floor((*this)[i]);
 		}
 	}
 

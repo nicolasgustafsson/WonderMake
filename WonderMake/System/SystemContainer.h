@@ -27,7 +27,7 @@ public:
 	}
 
 	template<typename TSystem>
-	inline [[nodiscard]] TSystem& GetSystem()
+    [[nodiscard]] inline TSystem& GetSystem()
 	{
 		static_assert(std::is_base_of<SystemBase, TSystem>::value, "Tried to get system that does not inherit from System.");
 
@@ -35,7 +35,7 @@ public:
 
 		try
 		{
-			return myDependencyInjector.Get<TSystem>().Resolve<TSystem>();
+			return myDependencyInjector.Get<TSystem>().template Resolve<TSystem>();
 		}
 		catch (DependencyInjector::MissingDependencyException aException)
 		{

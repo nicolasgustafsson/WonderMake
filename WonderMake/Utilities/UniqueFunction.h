@@ -154,34 +154,34 @@ namespace _Impl
 
 			switch (aOperation)
 			{
-			case EOperation::Invoke:	return static_cast<void*>(&_CallableImpl::InvokeCallable<TCallable>);
-			case EOperation::Move:		return fitsLocally ? static_cast<void*>(&_CallableImpl::MoveToCallableLocal<TCallable>) : nullptr;
-			case EOperation::Destroy:	return fitsLocally ? static_cast<void*>(&_CallableImpl::DestroyCallableLocal<TCallable>) : static_cast<void*>(&_CallableImpl::DestroyCallableExternal<TCallable>);
+			case EOperation::Invoke:	return reinterpret_cast<void*>(&_CallableImpl::InvokeCallable<TCallable>);
+			case EOperation::Move:		return fitsLocally ? reinterpret_cast<void*>(&_CallableImpl::MoveToCallableLocal<TCallable>) : nullptr;
+			case EOperation::Destroy:	return fitsLocally ? reinterpret_cast<void*>(&_CallableImpl::DestroyCallableLocal<TCallable>) : reinterpret_cast<void*>(&_CallableImpl::DestroyCallableExternal<TCallable>);
 			}
 
 			return nullptr;
 		}
 
-		inline [[nodiscard]] OperationInvoke GetInvokeFunc() const noexcept
+        [[nodiscard]] inline OperationInvoke GetInvokeFunc() const noexcept
 		{
 			if (!myPointers.GetOperationFunc)
 				return nullptr;
 
-			return static_cast<OperationInvoke>(myPointers.GetOperationFunc(EOperation::Invoke));
+			return reinterpret_cast<OperationInvoke>(myPointers.GetOperationFunc(EOperation::Invoke));
 		}
-		inline [[nodiscard]] OperationMoveTo GetMoveToFunc() const noexcept
+        [[nodiscard]] inline OperationMoveTo GetMoveToFunc() const noexcept
 		{
 			if (!myPointers.GetOperationFunc)
 				return nullptr;
 
-			return static_cast<OperationMoveTo>(myPointers.GetOperationFunc(EOperation::Move));
+			return reinterpret_cast<OperationMoveTo>(myPointers.GetOperationFunc(EOperation::Move));
 		}
-		inline [[nodiscard]] OperationDestroy GetDestroyFunc() const noexcept
+        [[nodiscard]] inline OperationDestroy GetDestroyFunc() const noexcept
 		{
 			if (!myPointers.GetOperationFunc)
 				return nullptr;
 
-			return static_cast<OperationDestroy>(myPointers.GetOperationFunc(EOperation::Destroy));
+			return reinterpret_cast<OperationDestroy>(myPointers.GetOperationFunc(EOperation::Destroy));
 		}
 
 		Pointers myPointers;

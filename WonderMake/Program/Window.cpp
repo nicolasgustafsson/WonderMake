@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Window.h"
 #include <GLFW/glfw3.h>
-#include "Json/json.hpp"
+#include "json/json.hpp"
 #include <fstream>
 #include "Program/GlfwFacade.h"
 #include "Camera/CameraManager.h"

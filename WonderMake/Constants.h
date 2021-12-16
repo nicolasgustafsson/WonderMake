@@ -15,3 +15,8 @@ namespace Constants
 	constexpr f32 HalfPi = Pi / 2.f;
 	constexpr f32 Tau = Pi * 2;
 }
+
+// Compiler definitions
+// GCC  = __GNUC__
+// MSVC = _MSC_VER
+// clang = __clang__

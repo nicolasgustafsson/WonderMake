@@ -1,7 +1,6 @@
 #pragma once
 #include "Functionalities/Functionality.h"
-
-class SubobjectFunctionality;
+#include "SubobjectFunctionality.h"
 
 //[Nicos]: This kind of Level-Leveldenizen structure can probably be generalized into a more generic architecture of using some kind of object container functionality in the future.
 //[Nicos]: The basic idea is just to be able to access the level to spawn and remove objects whenever
@@ -10,12 +9,12 @@ struct SObjectContainerComponent : public SComponent
 {
 	struct SDenizen
 	{
-		SDenizen(Object&& aDenizen, SubobjectFunctionality& aDenizenFunctionality)
+		SDenizen(BaseObject&& aDenizen, SubobjectFunctionality& aDenizenFunctionality)
 			: DenizenObject(std::move(aDenizen)), DenizenFunctionality(aDenizenFunctionality)
 		{
 
 		}
-		Object DenizenObject;
+		BaseObject DenizenObject;
 		SubobjectFunctionality& DenizenFunctionality;
 	};
 
@@ -31,12 +30,12 @@ public:
 	~ObjectContainerFunctionality() override;
 	void Tick();
 
-	Object& AddDenizen();
-	Object& AddDenizen(Object&& aObject);
+	BaseObject& AddDenizen();
+	BaseObject& AddDenizen(BaseObject&& aObject);
 
-	void RemoveDenizen(Object& aObject);
+	void RemoveDenizen(BaseObject& aObject);
 
-	void AddDenizens(plf::colony<Object>&& aObjects);
+	void AddDenizens(plf::colony<BaseObject>&& aObjects);
 
 	void TransferToOtherContainer(ObjectContainerFunctionality& aNewLevel);
 };

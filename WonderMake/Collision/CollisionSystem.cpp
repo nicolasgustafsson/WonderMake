@@ -74,7 +74,7 @@ bool CollisionSystem::TestCollision(const Colliders::Shape& aColliderA, const Co
 			}
 			else
 			{
-				static_assert(std::false_type::value, "Collider not implemented!");
+				//static_assert(std::false_type::value, "Collider not implemented!");
 			}
 		}, aColliderA);
 }
@@ -95,7 +95,7 @@ bool CollisionSystem::TestSphereCollision(const Colliders::SSphere& aSphere, con
 			}
 			else
 			{
-				static_assert(std::false_type::value, "Collider not implemented!");
+				//static_assert(std::false_type::value, "Collider not implemented!");
 			}
 		}, aCollider);
 }
@@ -116,7 +116,7 @@ bool CollisionSystem::TestLineCollision(const Colliders::SCollisionLine& aLine, 
 			}
 			else
 			{
-				static_assert(std::false_type::value, "Collider not implemented!");
+				//static_assert(std::false_type::value, "Collider not implemented!");
 			}
 		}, aCollider);
 }
@@ -125,7 +125,7 @@ bool CollisionSystem::TestSphereVsSphereCollision(const Colliders::SSphere& aSph
 {
 	const auto delta = aSphereA.Position - aSphereB.Position;
 	
-	return (delta.LengthSquared() <= std::powf(aSphereA.Radius + aSphereB.Radius, 2));
+	return (delta.LengthSquared() <= std::pow(aSphereA.Radius + aSphereB.Radius, 2));
 }
 
 void CollisionSystem::OverlapAgainstFunctionalityInternal(const Colliders::Shape& aCollider, const Colliders::SReaction& aReaction)
@@ -181,7 +181,7 @@ bool CollisionSystem::IsPointWithinSphere(const Colliders::SSphere& aSphereA, co
 {
 	const auto delta = aSphereA.Position - aPoint;
 
-	return (delta.LengthSquared() <= std::powf(aSphereA.Radius, 2));
+	return (delta.LengthSquared() <= std::pow(aSphereA.Radius, 2));
 }
 
 SVector2f CollisionSystem::GetClosestPointOnLine(const Colliders::SCollisionLine& aLine, const SVector2f aPoint) noexcept

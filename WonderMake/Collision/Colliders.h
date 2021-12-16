@@ -51,7 +51,7 @@ namespace Colliders
 			: SBase({ nullptr })
 		{}
 
-		inline [[nodiscard]] SVector2f GetLineEnd() const noexcept;
+        [[nodiscard]] inline SVector2f GetLineEnd() const noexcept;
 
 		SVector2f					EndOffsetFromPosition = SVector2f::Zero();
 		SDegreeF32					Rotation;

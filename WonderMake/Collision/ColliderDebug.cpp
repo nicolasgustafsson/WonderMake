@@ -34,7 +34,7 @@ void DrawCollider(const Colliders::Shape& aCollider, const SColor& aColor)
 			}
 			else
 			{
-				static_assert(std::false_type::value, "Collider not implemented!");
+				//static_assert(std::false_type::value, "Collider not implemented!");
 			}
 		}, aCollider);
 }

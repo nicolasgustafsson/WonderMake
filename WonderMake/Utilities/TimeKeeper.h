@@ -18,11 +18,11 @@ public:
 	[[nodiscard]] f32 TimeSince(const f32 aTime) const noexcept;
 	[[nodiscard]] f64 TimeSincePrecise(const f64 aTime) const noexcept;
 
-	[[nodiscard]] __forceinline f32 GetDeltaSeconds() const noexcept;
-	[[nodiscard]] __forceinline f64 GetDeltaSecondsPrecise() const noexcept;
+	[[nodiscard]] inline f32 GetDeltaSeconds() const noexcept;
+	[[nodiscard]] inline f64 GetDeltaSecondsPrecise() const noexcept;
 
-	[[nodiscard]] __forceinline f32 GetGameTime() const noexcept;
-	[[nodiscard]] __forceinline f64 GetGameTimePrecise() const noexcept;
+	[[nodiscard]] inline f32 GetGameTime() const noexcept;
+	[[nodiscard]] inline f64 GetGameTimePrecise() const noexcept;
 
 	void SetTimeScale(f32 aTimeScale);
 protected:
@@ -40,22 +40,22 @@ protected:
 	constexpr static f64 myMaxDeltaTime = 1.0 / 10.0;
 };
 
-[[nodiscard]] __forceinline f32 TimeKeeper::GetDeltaSeconds() const noexcept
+[[nodiscard]] inline f32 TimeKeeper::GetDeltaSeconds() const noexcept
 {
 	return myPreviousDeltaSeconds;
 }
 
-[[nodiscard]] __forceinline f64 TimeKeeper::GetDeltaSecondsPrecise() const noexcept
+[[nodiscard]] inline f64 TimeKeeper::GetDeltaSecondsPrecise() const noexcept
 {
 	return myPreviousDeltaSecondsPrecise;
 }
 
-[[nodiscard]] __forceinline f32 TimeKeeper::GetGameTime() const noexcept
+[[nodiscard]] inline f32 TimeKeeper::GetGameTime() const noexcept
 {
 	return myTotalTimePassed;
 }
 
-[[nodiscard]] __forceinline f64 TimeKeeper::GetGameTimePrecise() const noexcept
+[[nodiscard]] inline f64 TimeKeeper::GetGameTimePrecise() const noexcept
 {
 	return myTotalTimePassedPrecise;
 }

@@ -7,8 +7,13 @@ namespace _Impl
 {
     template <typename T>
     consteval auto func_name() {
+#ifdef __GNUC__
+        const auto& loc = std::source_location::current();
+        return loc.function_name();
+#elif _MSC_VER
         //const auto& loc = std::source_location::current();
         return __FUNCSIG__;//loc.function_name();
+#endif
     }
 
     template <typename T>

@@ -50,7 +50,7 @@ namespace _ContainerDetail
 		template <typename TKey>
 		inline constexpr static auto KeyType(ParameterPack<TKey>)
 		{
-			return TKey::KeyType();
+			return typename TKey::KeyType();
 		}
 
 		using Key = decltype(KeyType(KeysPack()));
@@ -74,7 +74,7 @@ namespace _ContainerDetail
 		inline constexpr static auto StorageType(ParameterPack<TBackends...>)
 		{
 			static_assert(FirstSatisfyingBackend<BackendTraitsPack, TBackends...>::found, "No matching backend!");
-			return FirstSatisfyingBackend<BackendTraitsPack, TBackends...>::type();
+			return typename FirstSatisfyingBackend<BackendTraitsPack, TBackends...>::type();
 		}
 
 		using Storage = decltype(StorageType(TContainerBackends()));

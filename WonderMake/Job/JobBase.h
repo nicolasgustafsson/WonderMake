@@ -52,7 +52,7 @@ public:
 	using OutputError = TOutputError;
 
 	using Promise = JobPromise<Output, OutputError>;
-	using Dependencies = typename PolicySet::template DependenciesRef;
+	using Dependencies = typename PolicySet::DependenciesRef;
 
 	inline static void InjectDependencies(Promise& aPromise, Dependencies&& aDependencies)
 	{
@@ -70,13 +70,13 @@ protected:
 	}
 
 	template<typename TDependency> requires PolicySet::template HasPolicy_v<TDependency, PWrite>
-	__forceinline [[nodiscard]] TDependency& Get()
+    [[nodiscard]] inline TDependency& Get()
 	{
 		return std::get<std::decay_t<TDependency>&>(myDependencies);
 	}
 
 	template<typename TDependency> requires PolicySet::template HasDependency_v<TDependency>
-	__forceinline [[nodiscard]] const TDependency& Get() const
+    [[nodiscard]] inline const TDependency& Get() const
 	{
 		return std::get<std::decay_t<TDependency>&>(myDependencies);
 	}

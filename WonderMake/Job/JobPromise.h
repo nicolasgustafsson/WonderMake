@@ -12,11 +12,42 @@ template<
 	typename TOutputError>
 class JobPromise
 {
+private:
+    template<typename UOutput>
+    class JobCallbackImpl
+    {
+        static_assert(AlwaysFalse<UOutput>, "Invalid output.");
+    };
+    template<typename... TArgs>
+    class JobCallbackImpl<JobOutput<TArgs...>>
+    {
+    public:
+        template<typename... TArgsCompare>
+        inline static constexpr bool IsInvocableWith = std::is_invocable_v<std::function<void(TArgs&&...)>, TArgsCompare...>;
+        template<typename TCallable, typename... TArgsCompare>
+        inline static constexpr bool IsInvocable = std::is_invocable_v<TCallable, TArgsCompare..., TArgs...>;
+
+        template<typename TCallable> requires IsInvocable<TCallable>
+        inline void SetCallback(TCallable&& aCallable)
+        {
+            myCallback.emplace(std::forward<TCallable>(aCallable));
+        }
+
+        inline void Invoke(TArgs&&... aArgs)
+        {
+            Utility::Invoke(myCallback, std::forward<TArgs>(aArgs)...);
+        }
+
+    private:
+        std::optional<UniqueFunction<void(TArgs&&...)>> myCallback;
+
+    };
+
 public:
 	template<typename... TArgs>
-	static constexpr bool IsInvocableWithFulfill = JobCallbackImpl<TOutput>::IsInvocableWith<TArgs...>;
+	static constexpr bool IsInvocableWithFulfill = JobCallbackImpl<TOutput>::template IsInvocableWith<TArgs...>;
 	template<typename... TArgs>
-	static constexpr bool IsInvocableWithFail = JobCallbackImpl<TOutputError>::IsInvocableWith<TArgs...>;
+	static constexpr bool IsInvocableWithFail = JobCallbackImpl<TOutputError>::template IsInvocableWith<TArgs...>;
 	
 	template<typename TCallable, typename... TArgs>
 	static constexpr bool IsInvocableFulfill = JobCallbackImpl<TOutput>::template IsInvocable<TCallable, TArgs...>;
@@ -55,38 +86,7 @@ public:
 	}
 
 private:
-	template<typename TOutput>
-	class JobCallbackImpl
-	{
-		static_assert(AlwaysFalse<TOutput>, "Invalid output.");
-	};
-	template<typename... TArgs>
-	class JobCallbackImpl<JobOutput<TArgs...>>
-	{
-	public:
-		template<typename... TArgsCompare>
-		inline static constexpr bool IsInvocableWith = std::is_invocable_v<std::function<void(TArgs&&...)>, TArgsCompare...>;
-		template<typename TCallable, typename... TArgsCompare>
-		inline static constexpr bool IsInvocable = std::is_invocable_v<TCallable, TArgsCompare..., TArgs...>;
-
-		template<typename TCallable> requires IsInvocable<TCallable>
-		inline void SetCallback(TCallable&& aCallable)
-		{
-			myCallback.emplace(std::forward<TCallable>(aCallable));
-		}
-
-		inline void Invoke(TArgs&&... aArgs)
-		{
-			Utility::Invoke(myCallback, std::forward<TArgs>(aArgs)...);
-		}
-
-	private:
-		std::optional<UniqueFunction<void(TArgs&&...)>> myCallback;
-
-	};
-
 	std::optional<UniqueFunction<void()>>	myCallableCompleted;
 	JobCallbackImpl<TOutput>				myCallbackSuccess;
 	JobCallbackImpl<TOutputError>			myCallbackFailure;
-
 };

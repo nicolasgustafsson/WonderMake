@@ -107,7 +107,7 @@ void OpenGLFacade::SetUniformVariable(const u32 aLocation, TVariableType aProper
 		glUniform4f(aLocation, aProperty.X, aProperty.Y, aProperty.Z, aProperty.W);
 	else if constexpr (std::is_same_v<TVariableType, SColor>)
 		glUniform4f(aLocation, aProperty.R, aProperty.G, aProperty.B, aProperty.A);
-	else
-		static_assert(false, "Uniform variable type is not supported!");
+	//else
+	//	static_assert(false, "Uniform variable type is not supported!");
 }
 

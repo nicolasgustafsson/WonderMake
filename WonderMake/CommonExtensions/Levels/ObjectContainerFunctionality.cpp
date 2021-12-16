@@ -28,7 +28,7 @@ void ObjectContainerFunctionality::Tick()
 	}
 }
 
-Object& ObjectContainerFunctionality::AddDenizen(Object&& aObject)
+BaseObject& ObjectContainerFunctionality::AddDenizen(BaseObject&& aObject)
 {
 	 auto&& denizen = Get<SObjectContainerComponent>().Denizens.emplace(std::move(aObject), Get<FunctionalitySystemDelegate<SubobjectFunctionality>>().AddFunctionality(aObject));
 
@@ -37,16 +37,16 @@ Object& ObjectContainerFunctionality::AddDenizen(Object&& aObject)
 	 return denizen->DenizenObject;
 }
 
-Object& ObjectContainerFunctionality::AddDenizen()
+BaseObject& ObjectContainerFunctionality::AddDenizen()
 {
 	return AddDenizen({});
 }
 
-void ObjectContainerFunctionality::RemoveDenizen(Object& aObject)
+void ObjectContainerFunctionality::RemoveDenizen(BaseObject& aObject)
 {
 	auto& denizens = Get<SObjectContainerComponent>().Denizens;
 
-	Object* objectPtr = &aObject;
+	BaseObject* objectPtr = &aObject;
 
 	auto it = std::find_if(denizens.begin(), denizens.end(), [objectPtr](SObjectContainerComponent::SDenizen& aDenizen) { return &aDenizen.DenizenObject == objectPtr; });
 
@@ -54,7 +54,7 @@ void ObjectContainerFunctionality::RemoveDenizen(Object& aObject)
 		denizens.erase(it);
 }
 
-void ObjectContainerFunctionality::AddDenizens(plf::colony<Object>&& aObjects)
+void ObjectContainerFunctionality::AddDenizens(plf::colony<BaseObject>&& aObjects)
 {
 	for (auto&& object : aObjects)
 		AddDenizen(std::move(object));

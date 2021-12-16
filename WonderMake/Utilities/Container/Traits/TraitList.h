@@ -7,7 +7,7 @@ class BaseTrait {};
 class BackendTrait : public BaseTrait {};
 
 //[Nicos]: Traits that can be implemented elsewhere
-class ContainerTrait : public BaseTrait {};
+class ContainerTraitBase : public BaseTrait {};
 
 class Iterable : public BackendTrait {};
 class Indexable : public BackendTrait {};

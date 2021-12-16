@@ -17,7 +17,7 @@ public:
     using Representation = TRep;
     using Ratio = TRatio;
 
-    inline [[nodiscard]] constexpr static SRotation Full() noexcept
+    [[nodiscard]] inline constexpr static SRotation Full() noexcept
     {
         return static_cast<TRep>(TRatio::num) / static_cast<TRep>(TRatio::den);
     }
@@ -33,12 +33,12 @@ public:
     {}
     
     template<typename TRhsRep> requires WmMath::ComparableEquality<TRep, TRhsRep>
-    inline [[nodiscard]] constexpr bool operator==(const TRhsRep aRhs) const noexcept
+    [[nodiscard]] inline constexpr bool operator==(const TRhsRep aRhs) const noexcept
     {
         return Rotation == aRhs;
     }
     template<typename TRhsRep> requires WmMath::ComparableStrong<TRep, TRhsRep>
-    inline [[nodiscard]] constexpr auto operator<=>(const TRhsRep& aRhs) const noexcept
+    [[nodiscard]] inline constexpr auto operator<=>(const TRhsRep& aRhs) const noexcept
     {
         return Rotation <=> aRhs;
     }
@@ -80,12 +80,12 @@ public:
     }
     
     template<typename TRhsRep, typename TRhsRatio> requires WmMath::ComparableEquality<TRep, TRhsRep>
-    inline [[nodiscard]] constexpr bool operator==(const SRotation<TRhsRep, TRhsRatio> aRhs) const noexcept
+    [[nodiscard]] inline constexpr bool operator==(const SRotation<TRhsRep, TRhsRatio> aRhs) const noexcept
     {
         return *this == RotationCast<SRotation<TRhsRep, TRatio>>(aRhs).Rotation;
     }
     template<typename TRhsRep, typename TRhsRatio> requires WmMath::ComparableStrong<TRep, TRhsRep>
-    inline [[nodiscard]] constexpr auto operator<=>(const SRotation<TRhsRep, TRhsRatio>& aRhs) const noexcept
+    [[nodiscard]] inline constexpr auto operator<=>(const SRotation<TRhsRep, TRhsRatio>& aRhs) const noexcept
     {
         return *this <=> RotationCast<SRotation<TRhsRep, TRatio>>(aRhs).Rotation;
     }
@@ -120,49 +120,49 @@ public:
 };
 
 template<typename TRep, typename TRatio>
-inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator+(SRotation<TRep, TRatio> aLhs, const TRep aRhs) noexcept
+[[nodiscard]] inline constexpr SRotation<TRep, TRatio> operator+(SRotation<TRep, TRatio> aLhs, const TRep aRhs) noexcept
 {
     return (aLhs += aRhs);
 }
 template<typename TRep, typename TRatio>
-inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator-(SRotation<TRep, TRatio> aLhs, const TRep aRhs) noexcept
+[[nodiscard]] inline constexpr SRotation<TRep, TRatio> operator-(SRotation<TRep, TRatio> aLhs, const TRep aRhs) noexcept
 {
     return (aLhs -= aRhs);
 }
 template<typename TRep, typename TRatio>
-inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator*(SRotation<TRep, TRatio> aLhs, const TRep aRhs) noexcept
+[[nodiscard]] inline constexpr SRotation<TRep, TRatio> operator*(SRotation<TRep, TRatio> aLhs, const TRep aRhs) noexcept
 {
     return (aLhs *= aRhs);
 }
 template<typename TRep, typename TRatio>
-inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator/(SRotation<TRep, TRatio> aLhs, const TRep aRhs) noexcept
+[[nodiscard]] inline constexpr SRotation<TRep, TRatio> operator/(SRotation<TRep, TRatio> aLhs, const TRep aRhs) noexcept
 {
     return (aLhs /= aRhs);
 }
 
 template<typename TRep, typename TRatio, typename TFromRep, typename TFromRatio>
-inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator+(SRotation<TRep, TRatio> aLhs, const SRotation<TFromRep, TFromRatio> aRhs) noexcept
+[[nodiscard]] inline constexpr SRotation<TRep, TRatio> operator+(SRotation<TRep, TRatio> aLhs, const SRotation<TFromRep, TFromRatio> aRhs) noexcept
 {
     return (aLhs += aRhs);
 }
 template<typename TRep, typename TRatio, typename TFromRep, typename TFromRatio>
-inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator-(SRotation<TRep, TRatio> aLhs, const SRotation<TFromRep, TFromRatio> aRhs) noexcept
+[[nodiscard]] inline constexpr SRotation<TRep, TRatio> operator-(SRotation<TRep, TRatio> aLhs, const SRotation<TFromRep, TFromRatio> aRhs) noexcept
 {
     return (aLhs -= aRhs);
 }
 template<typename TRep, typename TRatio, typename TFromRep, typename TFromRatio>
-inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator*(SRotation<TRep, TRatio> aLhs, const SRotation<TFromRep, TFromRatio> aRhs) noexcept
+[[nodiscard]] inline constexpr SRotation<TRep, TRatio> operator*(SRotation<TRep, TRatio> aLhs, const SRotation<TFromRep, TFromRatio> aRhs) noexcept
 {
     return (aLhs *= aRhs);
 }
 template<typename TRep, typename TRatio, typename TFromRep, typename TFromRatio>
-inline [[nodiscard]] constexpr SRotation<TRep, TRatio> operator/(SRotation<TRep, TRatio> aLhs, const SRotation<TFromRep, TFromRatio> aRhs) noexcept
+[[nodiscard]] inline constexpr SRotation<TRep, TRatio> operator/(SRotation<TRep, TRatio> aLhs, const SRotation<TFromRep, TFromRatio> aRhs) noexcept
 {
     return (aLhs /= aRhs);
 }
 
-template <typename TToRotation, typename TFromRep, typename TFromRatio> requires std::_Is_specialization_v<TToRotation, SRotation>
-inline [[nodiscard]] constexpr TToRotation RotationCast(const SRotation<TFromRep, TFromRatio> aRotation) noexcept
+template <typename TToRotation, typename TFromRep, typename TFromRatio> //requires std::_Is_specialization_v<TToRotation, SRotation>
+[[nodiscard]] inline constexpr TToRotation RotationCast(const SRotation<TFromRep, TFromRatio> aRotation) noexcept
 {
     using CommonFraction = std::ratio_divide<typename TToRotation::Ratio, TFromRatio>;
     using ToRep = typename TToRotation::Representation;
@@ -209,34 +209,34 @@ using SRadianF64 = SRadian<f64>;
 namespace WmMath
 {
     template<typename TRep, typename TRatio, typename TReturnType = TRep> requires WmMath::has_floating_representation_v<TReturnType>
-	inline [[nodiscard]] typename TRep Atan(const SRotation<TRep, TRatio> aRotation) noexcept
+    [[nodiscard]] inline TRep Atan(const SRotation<TRep, TRatio> aRotation) noexcept
 	{
 		return WmMath::Atan(RotationCast<SRadian<TReturnType>>(aRotation).Rotation);
 	}
 	template<typename TRotation, typename TFromRep> requires WmMath::has_floating_representation_v<TFromRep>
-	inline [[nodiscard]] TRotation Atan2(const TFromRep aY, const TFromRep aX) noexcept
+    [[nodiscard]] inline TRotation Atan2(const TFromRep aY, const TFromRep aX) noexcept
 	{
 		return RotationCast<TRotation>(SRadian<typename TRotation::Representation>(Atan2(aY, aX)));
 	}
 
 	template<typename TRep, typename TRatio, typename TReturnType = TRep> requires WmMath::has_floating_representation_v<TReturnType>
-	inline [[nodiscard]] typename TReturnType Cos(const SRotation<TRep, TRatio> aRotation) noexcept
+    [[nodiscard]] inline TReturnType Cos(const SRotation<TRep, TRatio> aRotation) noexcept
 	{
 		return WmMath::Cos(RotationCast<SRadian<TReturnType>>(aRotation).Rotation);
 	}
     template<typename TRep, typename TRatio, typename TReturnType = TRep> requires WmMath::has_floating_representation_v<TReturnType>
-	inline [[nodiscard]] typename TReturnType Sin(const SRotation<TRep, TRatio> aRotation) noexcept
+    [[nodiscard]] inline TReturnType Sin(const SRotation<TRep, TRatio> aRotation) noexcept
 	{
 		return WmMath::Sin(RotationCast<SRadian<TReturnType>>(aRotation).Rotation);
 	}
 
     template<typename TRotation, typename TReturnType = typename TRotation::Representation>
-    inline [[nodiscard]] TReturnType Mod(const TRotation aDividend, const TRotation aDivisor) noexcept
+    [[nodiscard]] inline TReturnType Mod(const TRotation aDividend, const TRotation aDivisor) noexcept
     {
         return WmMath::Mod(static_cast<TReturnType>(aDividend.Rotation), static_cast<TReturnType>(aDivisor.Rotation));
     }
     template<typename TRotation, typename TReturnType = typename TRotation::Representation>
-    inline [[nodiscard]] TReturnType Remainder(const TRotation aDividend, const TRotation aDivisor) noexcept
+    [[nodiscard]] inline TReturnType Remainder(const TRotation aDividend, const TRotation aDivisor) noexcept
     {
         return WmMath::Remainder(static_cast<TReturnType>(aDividend.Rotation), static_cast<TReturnType>(aDivisor.Rotation));
     }

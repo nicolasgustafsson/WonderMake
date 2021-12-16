@@ -23,7 +23,7 @@ public:
 #pragma warning( disable : 4702 )
 	[[nodiscard]] TSystem& operator*() noexcept
 	{
-		if constexpr(IsTemplateInstanceOf<TSystem::Super, UniverseSystem>::value)
+		if constexpr(IsTemplateInstanceOf<typename TSystem::Super, UniverseSystem>::value)
 		{
 			TSystem& instance = SystemContainer::Get().GetSystem<TSystem>();
 
@@ -36,7 +36,7 @@ public:
 
 	[[nodiscard]] TSystem* operator->() noexcept
 	{
-		if constexpr (IsTemplateInstanceOf<TSystem::Super, UniverseSystem>::value)
+		if constexpr (IsTemplateInstanceOf<typename TSystem::Super, UniverseSystem>::value)
 		{
 			TSystem& instance = SystemContainer::Get().GetSystem<TSystem>();
 
@@ -50,7 +50,7 @@ public:
 
 	[[nodiscard]] const TSystem& operator*() const noexcept
 	{
-		if constexpr (IsTemplateInstanceOf<TSystem::Super, UniverseSystem>::value)
+		if constexpr (IsTemplateInstanceOf<typename TSystem::Super, UniverseSystem>::value)
 		{
 			TSystem& instance = SystemContainer::Get().GetSystem<TSystem>();
 
@@ -64,7 +64,7 @@ public:
 
 	[[nodiscard]] const TSystem* operator->() const noexcept
 	{
-		if constexpr (IsTemplateInstanceOf<TSystem::Super, UniverseSystem>::value)
+		if constexpr (IsTemplateInstanceOf<typename TSystem::Super, UniverseSystem>::value)
 		{
 			TSystem& instance = SystemContainer::Get().GetSystem<TSystem>();
 

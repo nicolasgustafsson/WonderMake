@@ -107,7 +107,7 @@ private:
 	template<typename TPolicy, typename TDependency>
 	[[nodiscard]] inline static constexpr bool PolicyHasDependency() noexcept
 	{
-		return std::is_same_v<TPolicy::Dependency, std::decay_t<TDependency>>;
+		return std::is_same_v<typename TPolicy::Dependency, std::decay_t<TDependency>>;
 	}
 	template<typename TPolicy, EPermission TPermission>
 	[[nodiscard]] inline static constexpr bool PolicyHasPermission() noexcept

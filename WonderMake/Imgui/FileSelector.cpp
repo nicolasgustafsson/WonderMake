@@ -1,7 +1,10 @@
 #include "pch.h"
 #include "FileSelector.h"
 #include <filesystem>
+
+#ifdef _MSC_VER
 #include <commdlg.h>
+#endif
 
 bool ImGui::FileSelector::SelectFile(std::filesystem::path& aPath)
 {
@@ -12,7 +15,9 @@ bool ImGui::FileSelector::SelectFile(std::filesystem::path& aPath)
 
 	if (ImGui::Button("Select File"))
 	{
-		char filename[MAX_PATH];
+#ifdef _MSC_VER
+
+        char filename[MAX_PATH];
 
 		std::filesystem::path originalPath = std::filesystem::current_path();
 		std::string currentPath = std::filesystem::current_path().string();
@@ -38,7 +43,9 @@ bool ImGui::FileSelector::SelectFile(std::filesystem::path& aPath)
 		std::filesystem::current_path(originalPath);
 
 		return true;
+#endif
 	}
+
 
 	return false;
 }

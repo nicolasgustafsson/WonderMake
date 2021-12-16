@@ -1,17 +1,17 @@
 #pragma once
 
-class Object;
+class BaseObject;
 
 class ObjectInterfaceFunctionality : public Functionality<>
 {
 public:
-	void OnNewObject(Object& aObjectAddedTo) override;
+	void OnNewObject(BaseObject& aObjectAddedTo) override;
 
 	template<typename TFunctionalityOrComponent>
 	TFunctionalityOrComponent* Find();
 
 private:
-	Object* myObject{};
+	BaseObject* myObject{};
 };
 
 template <typename TFunctionalityOrComponent>

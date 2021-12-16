@@ -9,7 +9,7 @@ struct STimer
 {
 	f32 TimeLeft;
 	Closure Callback;
-	Id Id;
+	Id TimerId;
 };
 
 struct STimerComponent
@@ -21,13 +21,13 @@ struct STimerComponent
 struct STimerHandle
 {
 	STimerHandle(STimer& aTimer, TimerFunctionality& aFunctionality)
-		:TimerId(aTimer.Id), TimerFunctionality(aFunctionality) {}
+		:TimerId(aTimer.TimerId), TheTimerFunctionality(aFunctionality) {}
 
 	STimerHandle(const STimerHandle& aTimerHandle)
-		:TimerId(aTimerHandle.TimerId), TimerFunctionality(aTimerHandle.TimerFunctionality) {}
+		:TimerId(aTimerHandle.TimerId), TheTimerFunctionality(aTimerHandle.TheTimerFunctionality) {}
 
 	STimerHandle(STimerHandle&& aTimerHandle) noexcept
-		:TimerId(aTimerHandle.TimerId), TimerFunctionality(aTimerHandle.TimerFunctionality) {}
+		:TimerId(aTimerHandle.TimerId), TheTimerFunctionality(aTimerHandle.TheTimerFunctionality) {}
 
 	[[nodiscard]] f32 GetTimeLeft() const;
 	void Invalidate() const;
@@ -37,7 +37,7 @@ struct STimerHandle
 	friend class TimerFunctionality;
 private:
 	Id TimerId;
-	TimerFunctionality& TimerFunctionality;
+	TimerFunctionality& TheTimerFunctionality;
 };
 
 class TimerFunctionality

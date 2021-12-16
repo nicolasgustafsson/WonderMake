@@ -2,7 +2,7 @@
 
 #include "Utilities/RestrictTypes.h"
 
-class Object;
+class BaseObject;
 
 class _BaseFunctionality
 	: public NonCopyable
@@ -10,7 +10,7 @@ class _BaseFunctionality
 public:
 	virtual ~_BaseFunctionality() = default;
 
-	virtual void OnNewObject(Object& aObjectAddedTo) { aObjectAddedTo; };
+	virtual void OnNewObject(BaseObject& aObjectAddedTo) { aObjectAddedTo; };
 
 	virtual void Tick() {}
 };

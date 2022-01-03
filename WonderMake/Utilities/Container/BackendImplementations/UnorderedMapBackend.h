@@ -58,12 +58,32 @@ public:
 		return this->myBackend[aKey];
 	}
 
+	IteratorType find()
+	{
+		return this->myBackend.find();
+	}
+
+	ConstIteratorType find() const
+	{
+		return this->myBackend.find();
+	}
+
 	IteratorType begin()
 	{
 		return this->myBackend.begin();
 	}
 
+	ConstIteratorType begin() const
+	{
+		return this->myBackend.begin();
+	}
+
 	IteratorType end()
+	{
+		return this->myBackend.end();
+	}
+
+	ConstIteratorType end() const
 	{
 		return this->myBackend.end();
 	}

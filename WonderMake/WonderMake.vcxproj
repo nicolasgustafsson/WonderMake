@@ -227,6 +227,7 @@
     <ClCompile Include="Graphics\RenderHandle.cpp" />
     <ClCompile Include="Graphics\RenderNodeGraph\RenderNodeTypes.cpp" />
     <ClCompile Include="Graphics\RenderObject.cpp" />
+    <ClCompile Include="Json\ParseJsonJob.cpp" />
     <ClCompile Include="WinPlatform\WinPlatformSystem.cpp" />
     <ClCompile Include="Utilities\Id.cpp" />
     <ClCompile Include="Imgui\Canvas.cpp" />
@@ -313,6 +314,7 @@
     <ClInclude Include="Job\JobPromise.h" />
     <ClInclude Include="Job\JobSystem.h" />
     <ClInclude Include="Object\CreateObjectJob.h" />
+    <ClInclude Include="Json\ParseJsonJob.h" />
     <ClInclude Include="WinPlatform\WinPlatform.h" />
     <ClInclude Include="WinPlatform\WinPlatformSystem.h" />
     <ClInclude Include="Scheduling\ScheduleSystem.h" />

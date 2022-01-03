@@ -86,6 +86,7 @@
     <ClCompile Include="WinPlatform\WinPlatformSystem.cpp" />
     <ClCompile Include="FileSystem\WinFileSystem.cpp" />
     <ClCompile Include="FileSystem\ReadFileJob.cpp" />
+    <ClCompile Include="Json\ParseJsonJob.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -291,6 +292,7 @@
     <ClInclude Include="FileSystem\FileTypes.h" />
     <ClInclude Include="FileSystem\WinFileSystem.h" />
     <ClInclude Include="FileSystem\ReadFileJob.h" />
+    <ClInclude Include="Json\ParseJsonJob.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

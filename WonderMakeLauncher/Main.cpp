@@ -8,7 +8,7 @@
 
 int main()
 {
-	Engine::Start([&] 
+	Engine::Start("GameName", [&]
 	{
 		Start();
 		WmLog("Game successfully setup!");

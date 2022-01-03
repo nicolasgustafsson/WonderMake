@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Engine.h"
 
+#include "FileSystem/FileSystem.h"
+
 #include "Job/JobSystem.h"
 
 #include "System/SystemContainer.h"
@@ -14,7 +16,7 @@
 
 namespace Engine
 {
-	void Start(Closure&& aCallback)
+	void Start(std::filesystem::path&& aProjectFolderNames, Closure&& aCallback)
 	{
 		Routine routine;
 		TaskManager taskManager;
@@ -28,20 +30,28 @@ namespace Engine
 			taskManager.ScheduleRepeating(std::move(aTask));
 		};
 
-		SystemContainer::Get().AddSystem<JobSystem>([]() -> JobSystem&
+		auto&& sysContainer = SystemContainer::Get();
+
+		sysContainer.AddSystem<JobSystem>([&sysContainer]() -> JobSystem&
 			{
-				static JobSystem system(SystemContainer::Get());
+				static JobSystem system(sysContainer);
 
 				return system;
 			});
-		SystemContainer::Get().AddSystem<ScheduleSystem>([&scheduleProc, &scheduleRepeatingProc]() -> ScheduleSystem&
+		sysContainer.AddSystem<ScheduleSystem>([&scheduleProc, &scheduleRepeatingProc]() -> ScheduleSystem&
 			{
 				static ScheduleSystem system(scheduleProc, scheduleRepeatingProc);
 
 				return system;
 			});
 
-		SystemContainer::Get().CreateAllSystems();
+		auto&& fileSystem = sysContainer.GetSystem<FileSystem>();
+
+		fileSystem.SetFolderSuffix(FolderLocation::Data, aProjectFolderNames);
+		fileSystem.SetFolderSuffix(FolderLocation::User, aProjectFolderNames);
+		fileSystem.SetFolderSuffix(FolderLocation::UserData, std::move(aProjectFolderNames));
+
+		sysContainer.CreateAllSystems();
 
 		aCallback();
 

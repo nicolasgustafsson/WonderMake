@@ -2,7 +2,7 @@
 
 #include <catch2/catch.hpp>
 
-#include "ParseJsonJob.h"
+#include "Json/ParseJsonJob.h"
 
 constexpr auto InlineExecutor = [](auto aCallable)
 {

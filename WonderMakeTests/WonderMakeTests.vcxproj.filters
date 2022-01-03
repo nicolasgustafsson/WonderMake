@@ -17,6 +17,7 @@
     <ClCompile Include="Guid\WinGuidGeneratorSystemTests.cpp" />
     <ClCompile Include="FileSystem\WinFileSystemTests.cpp" />
     <ClCompile Include="FileSystem\ReadFileJobTests.cpp" />
+    <ClCompile Include="ParseJsonJobTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Job\JobMock.h" />

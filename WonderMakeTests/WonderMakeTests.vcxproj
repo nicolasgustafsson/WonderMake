@@ -197,6 +197,7 @@
     <ClCompile Include="Guid\GuidTests.cpp" />
     <ClCompile Include="Guid\WinGuidGeneratorSystemTests.cpp" />
     <ClCompile Include="Job\JobTests.cpp" />
+    <ClCompile Include="ParseJsonJobTests.cpp" />
     <ClCompile Include="Utilities\AliasTests.cpp" />
     <ClCompile Include="Utilities\DependencyInjectionTests.cpp" />
     <ClCompile Include="Main.cpp" />

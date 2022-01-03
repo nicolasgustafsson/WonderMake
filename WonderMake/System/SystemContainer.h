@@ -74,7 +74,7 @@ private:
 			return createFunc();
 		};
 
-		myDependencyInjector.Add<TSystem, decltype(construct), std::decay_t<TDependencies>...>(std::move(construct));
+		myDependencyInjector.Add<TBaseSystem, decltype(construct), std::decay_t<TDependencies>...>(std::move(construct));
 	}
 };
 

@@ -5,6 +5,7 @@
 #include "Character/CharacterFunctionality.h"
 #include "UtilityFunctionalities/FactionFunctionality.h"
 
+class AudioManager;
 class CollisionSystem;
 class TimeKeeper;
 
@@ -30,6 +31,7 @@ struct SHitShapeComponent : public SComponent
 class HitShapeFunctionality
 	: public Functionality<
 		Policy::Set<
+			PAdd<AudioManager, PWrite>,
 			PAdd<CollisionSystem, PWrite>,
 			PAdd<TimeKeeper, PRead>,
 			PAdd<SHitShapeComponent, PWrite>,

@@ -44,7 +44,7 @@ void HitShapeFunctionality::Tick()
 
 	if (previousHitProgress == 0.1f)
 	{
-		SystemPtr<AudioManager>()->PlayAudio("NodeGraphs/Audio/Swing.json");
+		Get<AudioManager>().PlayAudio("NodeGraphs/Audio/Swing.json");
 	}
 
 	const SVector2f previousBezierPosition = hitShapeComponent.Bezier.GetConstantLocationAt(previousHitProgress);

@@ -51,6 +51,7 @@ namespace Engine
 		sysContainer = sysRegistry.CreateSystems();
 
 		auto&& fileSystem = sysContainer.Get<FileSystem>();
+		auto&& timeKeeper = sysContainer.Get<TimeKeeper>();
 
 		fileSystem.SetFolderSuffix(FolderLocation::Data, aProjectFolderNames);
 		fileSystem.SetFolderSuffix(FolderLocation::User, aProjectFolderNames);
@@ -61,7 +62,7 @@ namespace Engine
 		for (;;)
 		{
 			//update the timekeeper before any threads have run so that delta time can be accessed asynchronously
-			SystemPtr<TimeKeeper>()->Update();
+			timeKeeper.Update();
 
 			taskManager.Update();
 			
@@ -101,4 +102,3 @@ namespace Engine
 		}
 	}
 }
-

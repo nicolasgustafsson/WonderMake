@@ -12,11 +12,21 @@
 #include "OpenGLFacade.h"
 #include "Graphics/RenderCommandProcessor.h"
 
+template<typename TResource>
+class ResourceSystem;
+
+template class ResourceSystem<Shader<EShaderType::Vertex>>;
+template class ResourceSystem<Shader<EShaderType::Fragment>>;
+template class ResourceSystem<Shader<EShaderType::Geometry>>;
+
 class GlfwFacade;
 
 class Renderer
 	: public System<
 		Policy::Set<
+			PAdd<ResourceSystem<Shader<EShaderType::Vertex>>, PWrite>,
+			PAdd<ResourceSystem<Shader<EShaderType::Fragment>>, PWrite>,
+			PAdd<ResourceSystem<Shader<EShaderType::Geometry>>, PWrite>,
 			PAdd<EngineUniformBuffer, PWrite>,
 			PAdd<Window, PWrite>,
 			PAdd<DebugLineDrawer, PWrite>,

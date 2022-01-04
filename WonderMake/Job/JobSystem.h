@@ -5,7 +5,7 @@
 #include "Job/JobPromise.h"
 
 #include "System/System.h"
-#include "System/SystemContainer.h"
+#include "System/SystemContainer_v2.h"
 
 #include "Scheduling/ScheduleSystem.h"
 
@@ -78,7 +78,7 @@ public:
 
 	};
 
-	JobSystem(SystemContainer& aSystemContainer) noexcept;
+	JobSystem(SystemContainer_v2& aSystemContainer) noexcept;
 
 	template<typename TJob, typename... TArgs> requires std::is_base_of_v<JobBase, TJob>
 	inline auto Run(TArgs&&... aArgs)
@@ -110,7 +110,7 @@ private:
 	template<typename... TDependencies>
 	inline std::tuple<TDependencies...> GetDependenciesHelper(TupleWrapper<std::tuple<TDependencies...>>)
 	{
-		return std::tie(mySystemContainer.GetSystem<std::decay_t<TDependencies>>()...);
+		return std::tie(mySystemContainer.Get<std::decay_t<TDependencies>>()...);
 	}
 
 	template<typename TJob>
@@ -151,7 +151,7 @@ private:
 		});
 	}
 
-	SystemContainer& mySystemContainer;
+	SystemContainer_v2& mySystemContainer;
 
 	std::mutex myMutex;
 	plf::colony<JobDataAlias> myJobs;

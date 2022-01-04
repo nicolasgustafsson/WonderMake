@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "Camera.h"
 #include "Graphics/EngineUniformBuffer.h"
-#include "Program/Window.h"
 #include "Program/GlfwFacade.h"
 #include "Graphics/RenderCommandProcessor.h"
 #include <utility>
@@ -38,13 +37,14 @@ void Camera::SetPosition(const SVector2f aPosition)
 	myPosition = aPosition;
 }
 
-Camera::Camera(const std::string& aName, [[maybe_unused]] const bool aIsFirst)
+Camera::Camera(OpenGLFacade& aOpenGlFacade, ResourceSystem<RenderNodeGraph>& aRenderNodeGraphSystem, const std::string& aName, [[maybe_unused]] const bool aIsFirst)
 	: myName(aName)
+	, myCameraBuffer(aOpenGlFacade)
 {
 	std::string displayName = myName + " " + "Main Display";
 	auto&& displayIt = myDisplays.emplace(std::piecewise_construct,
 		std::forward_as_tuple(displayName),
-		std::forward_as_tuple(displayName, *this));
+		std::forward_as_tuple(aOpenGlFacade, aRenderNodeGraphSystem, displayName, *this));
 
 	if constexpr (!Constants::IsDebugging)
 	{
@@ -86,10 +86,13 @@ void Camera::Inspect()
 
 	if (ImGui::Button("Add new display"))
 	{
+		SystemPtr<OpenGLFacade> openGlFacade;
+		SystemPtr<ResourceSystem<RenderNodeGraph>> renderNodeGraphSystem;
+
 		const std::string displayName = myName + " " + std::to_string(myDisplays.size());
 		myDisplays.emplace(std::piecewise_construct,
 			std::forward_as_tuple(displayName),
-			std::forward_as_tuple(displayName, *this));
+			std::forward_as_tuple(*openGlFacade, *renderNodeGraphSystem, displayName, *this));
 	}
 	ImGui::Unindent();
 

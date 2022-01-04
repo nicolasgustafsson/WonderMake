@@ -20,8 +20,8 @@ Window::Window()
 	glfw.SetWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 	glfw.SetWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	SVector2i windowSize = { windowSettings["X"].get<i32>(), windowSettings["Y"].get<i32>() };
-	myGlfwWindow = glfw.CreateGlfwWindow(windowSize.X, windowSize.Y, "WonderMake", NULL, NULL);
+	mySize = { windowSettings["X"].get<i32>(), windowSettings["Y"].get<i32>() };
+	myGlfwWindow = glfw.CreateGlfwWindow(mySize.X, mySize.Y, "WonderMake", NULL, NULL);
 	if (!myGlfwWindow)
 	{
 		WmLog(TagError, TagOpenGL, "Failed to create GLFW window!");
@@ -35,9 +35,6 @@ Window::Window()
 	{
 		WmLog(TagError, TagOpenGL, "Failed to initialize GLAD");
 	}
-
-	if constexpr (!Constants::IsDebugging)
-		SystemPtr<CameraManager>()->SetViewportSize(windowSize);
 }
 
 void Window::Update()
@@ -58,4 +55,9 @@ void Window::Update()
 bool Window::IsValid() const
 {
 	return myGlfwWindow != nullptr;
+}
+
+SVector2i Window::GetSize() const
+{
+	return mySize;
 }

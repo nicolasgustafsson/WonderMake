@@ -18,7 +18,7 @@ REGISTER_SYSTEM(AudioManager);
 AudioManager::AudioManager()
 	: Debugged("Audio Manager")
 {
-	myAudioMixingNodeGraph = SystemPtr<ResourceSystem<AudioMixingNodeGraph>>()->GetResource(std::filesystem::path("NodeGraphs") / "Audio" / "AudioNodeGraph.json");
+	myAudioMixingNodeGraph = Get<ResourceSystem<AudioMixingNodeGraph>>().GetResource(std::filesystem::path("NodeGraphs") / "Audio" / "AudioNodeGraph.json");
 	mySoloudEngine.init(mySoloudEngine.FLAGS::CLIP_ROUNDOFF, mySoloudEngine.BACKENDS::WASAPI, SoLoud::Soloud::AUTO, 2048, 2);
 	myBusHandle = mySoloudEngine.play(myBus);
 

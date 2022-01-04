@@ -12,17 +12,20 @@ constexpr auto InlineExecutor = [](auto aCallable)
 struct JobDependencies
 {
 	JobDependencies()
-		: myScheduleSystem(InlineExecutor, InlineExecutor)
-		, myJobSystem([this]() { JobSystem::InjectDependencies(std::tie(myScheduleSystem)); return JobSystem(mySystemContainer); }())
+		: myScheduleSystem(std::make_shared<ScheduleSystem>(InlineExecutor, InlineExecutor))
 	{
-		mySystemContainer.AddSystem<ScheduleSystem>([this]() -> auto& { return myScheduleSystem; });
-		mySystemContainer.AddSystem<JobSystem>([this]() -> auto& { return myJobSystem; });
+		JobSystem::InjectDependencies(std::tie(*myScheduleSystem));
+
+		myJobSystem = std::make_shared<JobSystem>(mySystemContainer);
+
+		mySystemContainer.Add<ScheduleSystem>(myScheduleSystem);
+		mySystemContainer.Add<JobSystem>(myJobSystem);
 	};
 
-	SystemContainer mySystemContainer;
-	ScheduleSystem myScheduleSystem;
+	SystemContainer_v2 mySystemContainer;
 
-	JobSystem myJobSystem;
+	std::shared_ptr<ScheduleSystem> myScheduleSystem;
+	std::shared_ptr<JobSystem> myJobSystem;
 };
 
 TEST_CASE("Error.", "[ParseJsonJob]")
@@ -30,7 +33,7 @@ TEST_CASE("Error.", "[ParseJsonJob]")
 	JobDependencies dependencies;
 	ParseJsonJob::Promise promise;
 
-	JobFuture<ParseJsonJob::Output, ParseJsonJob::OutputError> future(promise, dependencies.myScheduleSystem);
+	JobFuture<ParseJsonJob::Output, ParseJsonJob::OutputError> future(promise, *dependencies.myScheduleSystem);
 	u32 callCountCompleted = 0;
 	u32 callCountError = 0;
 
@@ -43,7 +46,7 @@ TEST_CASE("Error.", "[ParseJsonJob]")
 			++callCountError;
 		});
 
-	ParseJsonJob::InjectDependencies(promise, std::tie(dependencies.myJobSystem));
+	ParseJsonJob::InjectDependencies(promise, std::tie(*dependencies.myJobSystem));
 
 	ParseJsonJob parseJson("{\"Hello\": \"World\"}");
 

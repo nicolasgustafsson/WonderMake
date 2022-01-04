@@ -30,7 +30,7 @@ MessageCallback([[maybe_unused]] GLenum source,
 }
 
 Renderer::Renderer() noexcept
-	: myCopyPass(std::filesystem::current_path() / "Shaders/Fragment/BackbufferCopy.frag")
+	: myCopyPass(Get<ResourceSystem<Shader<EShaderType::Vertex>>>(), Get<ResourceSystem<Shader<EShaderType::Fragment>>>(), Get<ResourceSystem<Shader<EShaderType::Geometry>>>(), std::filesystem::current_path() / "Shaders/Fragment/BackbufferCopy.frag")
 	, Debugged("Renderer")
 {
 	Get<OpenGLFacade>().Enable(GL_DEBUG_OUTPUT);

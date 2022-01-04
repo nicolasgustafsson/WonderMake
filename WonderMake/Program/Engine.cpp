@@ -5,7 +5,7 @@
 
 #include "Job/JobSystem.h"
 
-#include "System/SystemContainer.h"
+#include "System/SystemGlobal.h"
 
 #include "Scheduling/ScheduleSystem.h"
 
@@ -30,28 +30,25 @@ namespace Engine
 			taskManager.ScheduleRepeating(std::move(aTask));
 		};
 
-		auto&& sysContainer = SystemContainer::Get();
+		auto&& sysRegistry = Global::GetSystemRegistry();
+		auto&& sysContainer = Global::GetSystemContainer();
 
-		sysContainer.AddSystem<JobSystem>([&sysContainer]() -> JobSystem&
+		sysRegistry.AddSystem<JobSystem>([&sysContainer]() -> std::shared_ptr<JobSystem>
 			{
-				static JobSystem system(sysContainer);
-
-				return system;
+				return std::make_shared<JobSystem>(sysContainer);
 			});
-		sysContainer.AddSystem<ScheduleSystem>([&scheduleProc, &scheduleRepeatingProc]() -> ScheduleSystem&
+		sysRegistry.AddSystem<ScheduleSystem>([&scheduleProc, &scheduleRepeatingProc]() -> std::shared_ptr<ScheduleSystem>
 			{
-				static ScheduleSystem system(scheduleProc, scheduleRepeatingProc);
-
-				return system;
+				return std::make_shared<ScheduleSystem>(scheduleProc, scheduleRepeatingProc);
 			});
 
-		auto&& fileSystem = sysContainer.GetSystem<FileSystem>();
+		sysContainer = sysRegistry.CreateSystems();
+
+		auto&& fileSystem = sysContainer.Get<FileSystem>();
 
 		fileSystem.SetFolderSuffix(FolderLocation::Data, aProjectFolderNames);
 		fileSystem.SetFolderSuffix(FolderLocation::User, aProjectFolderNames);
 		fileSystem.SetFolderSuffix(FolderLocation::UserData, std::move(aProjectFolderNames));
-
-		sysContainer.CreateAllSystems();
 
 		aCallback();
 

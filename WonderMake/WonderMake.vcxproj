@@ -228,6 +228,8 @@
     <ClCompile Include="Graphics\RenderNodeGraph\RenderNodeTypes.cpp" />
     <ClCompile Include="Graphics\RenderObject.cpp" />
     <ClCompile Include="Json\ParseJsonJob.cpp" />
+    <ClCompile Include="System\SystemGlobal.cpp" />
+    <ClCompile Include="System\SystemRegistry.cpp" />
     <ClCompile Include="WinPlatform\WinPlatformSystem.cpp" />
     <ClCompile Include="Utilities\Id.cpp" />
     <ClCompile Include="Imgui\Canvas.cpp" />
@@ -278,7 +280,6 @@
     <ClCompile Include="Message\DispatchableBuffer.cpp" />
     <ClCompile Include="Graphics\RenderTarget.cpp" />
     <ClCompile Include="Graphics\ScreenPassRenderObject.cpp" />
-    <ClCompile Include="System\SystemContainer.cpp" />
     <ClCompile Include="Threads\Routine.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
     <ClCompile Include="Message\DispatchRouter.cpp" />
@@ -315,6 +316,10 @@
     <ClInclude Include="Job\JobSystem.h" />
     <ClInclude Include="Object\CreateObjectJob.h" />
     <ClInclude Include="Json\ParseJsonJob.h" />
+    <ClInclude Include="System\SystemContainer_v2.h" />
+    <ClInclude Include="System\SystemGlobal.h" />
+    <ClInclude Include="System\SystemRegistry.h" />
+    <ClInclude Include="System\SystemTraits.h" />
     <ClInclude Include="WinPlatform\WinPlatform.h" />
     <ClInclude Include="WinPlatform\WinPlatformSystem.h" />
     <ClInclude Include="Scheduling\ScheduleSystem.h" />
@@ -421,7 +426,6 @@
     <ClInclude Include="Graphics\RenderTarget.h" />
     <ClInclude Include="Graphics\ScreenPassRenderObject.h" />
     <ClInclude Include="System\SystemPtr.h" />
-    <ClInclude Include="System\SystemContainer.h" />
     <ClInclude Include="System\System.h" />
     <ClInclude Include="Resources\CreateResource.h" />
     <ClInclude Include="Resources\Resource.h" />

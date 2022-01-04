@@ -14,6 +14,9 @@
 //everything needed to create a renderobject
 struct SRenderObjectInfo
 {
+	ResourceSystem<Shader<EShaderType::Vertex>>& VsSystem;
+	ResourceSystem<Shader<EShaderType::Fragment>>& FsSystem;
+	ResourceSystem<Shader<EShaderType::Geometry>>& GsSystem;
 	std::filesystem::path VertexShaderPath;
 	std::filesystem::path GeometryShaderPath = "";
 	std::filesystem::path FragmentShaderPath;
@@ -172,7 +175,7 @@ void RenderObject<TAttributes...>::BindTextures()
 template<EVertexAttribute... TAttributes>
 RenderObject<TAttributes...>::RenderObject(const SRenderObjectInfo& aRenderObjectInfo)
 	: myVertexBufferArray(aRenderObjectInfo.VertexCount)
-	, myShaderProgram(aRenderObjectInfo.VertexShaderPath, aRenderObjectInfo.FragmentShaderPath, aRenderObjectInfo.GeometryShaderPath)
+	, myShaderProgram(aRenderObjectInfo.VsSystem, aRenderObjectInfo.FsSystem, aRenderObjectInfo.GsSystem, aRenderObjectInfo.VertexShaderPath, aRenderObjectInfo.FragmentShaderPath, aRenderObjectInfo.GeometryShaderPath)
 	, myGeometryType(aRenderObjectInfo.GeometryType)
 {
 	myVertexCount = aRenderObjectInfo.VertexCount;

@@ -10,7 +10,7 @@
 class Camera final : public NonCopyable, public NonMovable
 {
 public:
-	Camera(const std::string& aName, const bool aIsFirst = false);
+	Camera(OpenGLFacade& aOpenGlFacade, ResourceSystem<RenderNodeGraph>& aRenderNodeGraphSystem, const std::string& aName, const bool aIsFirst = false);
 
 	Camera(Camera&& aOther) = default;
 	void Update();

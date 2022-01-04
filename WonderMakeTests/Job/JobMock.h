@@ -13,17 +13,20 @@ constexpr auto InlineExecutor = [](auto aCallable)
 struct JobDependencies
 {
 	JobDependencies()
-		: myScheduleSystem(InlineExecutor, InlineExecutor)
-		, myJobSystem([this]() { JobSystem::InjectDependencies(std::tie(myScheduleSystem)); return JobSystem(mySystemContainer); }())
+		: myScheduleSystem(std::make_shared<ScheduleSystem>(InlineExecutor, InlineExecutor))
 	{
-		mySystemContainer.AddSystem<ScheduleSystem>([this]() -> auto& { return myScheduleSystem; });
-		mySystemContainer.AddSystem<JobSystem>([this]() -> auto& { return myJobSystem; });
+		JobSystem::InjectDependencies(std::tie(*myScheduleSystem));
+
+		myJobSystem = std::make_shared<JobSystem>(mySystemContainer);
+
+		mySystemContainer.Add<ScheduleSystem>(myScheduleSystem);
+		mySystemContainer.Add<JobSystem>(myJobSystem);
 	};
 
-	SystemContainer mySystemContainer;
-	ScheduleSystem myScheduleSystem;
+	SystemContainer_v2 mySystemContainer;
 
-	JobSystem myJobSystem;
+	std::shared_ptr<ScheduleSystem> myScheduleSystem;
+	std::shared_ptr<JobSystem> myJobSystem;
 };
 
 template<typename TJob>
@@ -31,7 +34,7 @@ class JobMock
 {
 public:
 	JobMock()
-		: myFuture(myPromise, Dependencies.myScheduleSystem)
+		: myFuture(myPromise, *Dependencies.myScheduleSystem)
 	{
 		myFuture.Then([&countOutput = myCallCountOutput, &expectedCall = myExpectedCall](auto&&)
 			{
@@ -68,7 +71,7 @@ public:
 	template<typename... TDependencies>
 	void Inject(TDependencies&... aDependencies)
 	{
-		typename TJob::InjectDependencies(myPromise, std::tie(Dependencies.myJobSystem, aDependencies...));
+		typename TJob::InjectDependencies(myPromise, std::tie(*Dependencies.myJobSystem, aDependencies...));
 	}
 
 	template<typename... TArgs>

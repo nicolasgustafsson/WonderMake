@@ -2,6 +2,6 @@
 
 #include "JobSystem.h"
 
-JobSystem::JobSystem(SystemContainer& aSystemContainer) noexcept
+JobSystem::JobSystem(SystemContainer_v2& aSystemContainer) noexcept
 	: mySystemContainer(aSystemContainer)
 {}

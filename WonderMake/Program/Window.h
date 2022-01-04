@@ -16,5 +16,10 @@ public:
 
 	bool IsValid() const;
 
+	SVector2i GetSize() const;
+
 	GLFWwindow* myGlfwWindow = nullptr;
+private:
+	SVector2i mySize;
+
 };

@@ -4,19 +4,19 @@
 REGISTER_SYSTEM(EngineUniformBuffer);
 
 EngineUniformBuffer::EngineUniformBuffer()
-	: UniformBuffer<SEngineUniformBufferData>(0)
+	: UniformBuffer<SEngineUniformBufferData>(Get<OpenGLFacade>(), 0)
 {
 
 }
 
-CameraUniformBuffer::CameraUniformBuffer()
-	: UniformBuffer<SCameraUniformBufferData>(1)
+CameraUniformBuffer::CameraUniformBuffer(OpenGLFacade& aOpenGlFacade)
+	: UniformBuffer<SCameraUniformBufferData>(aOpenGlFacade, 1)
 {
 
 }
 
-DisplayUniformBuffer::DisplayUniformBuffer()
-	: UniformBuffer<SDisplayUniformBufferData>(2)
+DisplayUniformBuffer::DisplayUniformBuffer(OpenGLFacade& aOpenGlFacade)
+	: UniformBuffer<SDisplayUniformBufferData>(aOpenGlFacade, 2)
 {
 
 }

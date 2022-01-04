@@ -20,16 +20,15 @@ public:
 	}
 
 protected:
-	UniformBuffer(const u32 aBufferBindIndex)
+	UniformBuffer(OpenGLFacade& aOpenGlFacade, const u32 aBufferBindIndex)
 	{
 		myBufferBindIndex = aBufferBindIndex;
-		SystemPtr<OpenGLFacade> openGL;
 		
-		myUniformBufferObject = openGL->GenerateBuffer();
-		openGL->BindBuffer(GL_UNIFORM_BUFFER, myUniformBufferObject);
-		openGL->AllocateBufferData(GL_UNIFORM_BUFFER, sizeof(TBuffer), &myBuffer, GL_STATIC_DRAW);
+		myUniformBufferObject = aOpenGlFacade.GenerateBuffer();
+		aOpenGlFacade.BindBuffer(GL_UNIFORM_BUFFER, myUniformBufferObject);
+		aOpenGlFacade.AllocateBufferData(GL_UNIFORM_BUFFER, sizeof(TBuffer), &myBuffer, GL_STATIC_DRAW);
 
-		openGL->BindBufferToSlot(GL_UNIFORM_BUFFER, myBufferBindIndex, myUniformBufferObject);
+		aOpenGlFacade.BindBufferToSlot(GL_UNIFORM_BUFFER, myBufferBindIndex, myUniformBufferObject);
 	}
 
 	~UniformBuffer() noexcept

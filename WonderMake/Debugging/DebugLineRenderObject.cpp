@@ -3,9 +3,12 @@
 #include "DebugLine.h"
 
 
-DebugLineRenderObject::DebugLineRenderObject(const u32 aLineCount)
+DebugLineRenderObject::DebugLineRenderObject(ResourceSystem<Shader<EShaderType::Vertex>>& aVsSystem, ResourceSystem<Shader<EShaderType::Fragment>>& aFsSystem, ResourceSystem<Shader<EShaderType::Geometry>>& aGsSystem, const u32 aLineCount)
 	: RenderObject(SRenderObjectInfo
-		{	std::filesystem::current_path() / "Shaders/Vertex/Line.vert"
+		{	aVsSystem
+		,	aFsSystem
+		,	aGsSystem
+		,	std::filesystem::current_path() / "Shaders/Vertex/Line.vert"
 		,	"" //geometry shader
 		,	std::filesystem::current_path() / "Shaders/Fragment/Line.frag"
 		,	"" //texture

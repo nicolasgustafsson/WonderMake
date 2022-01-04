@@ -7,10 +7,13 @@
 #include "Graphics/RenderTarget.h"
 #include "Camera/Camera.h"
 
-Display::Display(const std::string& aName, Camera& aCamera)
-	: myPath(std::filesystem::path("NodeGraphs") / "Render" / std::string(aName + ".json")), myName(aName), myCamera(aCamera)
+Display::Display(OpenGLFacade& aOpenGlFacade, ResourceSystem<RenderNodeGraph>& aRenderNodeGraphSystem, const std::string& aName, Camera& aCamera)
+	: myPath(std::filesystem::path("NodeGraphs") / "Render" / std::string(aName + ".json"))
+	, myName(aName)
+	, myUniformBuffer(aOpenGlFacade)
+	, myCamera(aCamera)
 {
-	myRenderGraph = SystemPtr<ResourceSystem<RenderNodeGraph>>()->GetResource(myPath);
+	myRenderGraph = aRenderNodeGraphSystem.GetResource(myPath);
 	myRenderGraph->Load();
 	myRenderGraph->myGlobalData["ViewportSize"].emplace<SVector2f>(myViewportSize);
 }

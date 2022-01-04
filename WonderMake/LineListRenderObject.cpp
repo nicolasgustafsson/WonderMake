@@ -3,7 +3,10 @@
 
 LineListRenderObject::LineListRenderObject(const std::vector<SVector2f>& aPoints, const f32 innerThickness/* = 1.0f*/, const f32 outerThickness/* = 1.0f*/, const SColor aColor /*= SColor::RaisinBlack*/)
 	:RenderObject(SRenderObjectInfo
-		{   std::filesystem::current_path() / "Shaders/Vertex/LineList.vert"
+		{	*SystemPtr<ResourceSystem<Shader<EShaderType::Vertex>>>()
+		,	*SystemPtr<ResourceSystem<Shader<EShaderType::Fragment>>>()
+		,	*SystemPtr<ResourceSystem<Shader<EShaderType::Geometry>>>()
+		,	std::filesystem::current_path() / "Shaders/Vertex/LineList.vert"
 		,	""
 		,	std::filesystem::current_path() / "Shaders/Fragment/LineList.frag"
 		,	""

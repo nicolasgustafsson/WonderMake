@@ -3,10 +3,10 @@
 #include "Job/JobBase.h"
 #include "Job/JobSystem.h"
 
-#include "System/SystemContainer.h"
+#include "System/SystemGlobal.h"
 
 template<typename TJob, typename... TArgs>
 auto RunJob(TArgs... aArgs)
 {
-	return SystemContainer::Get().GetSystem<JobSystem>().Run<TJob>(std::forward<TArgs>(aArgs)...);
+	return Global::GetSystemContainer().Get<JobSystem>().Run<TJob>(std::forward<TArgs>(aArgs)...);
 }

@@ -22,7 +22,6 @@
     <ClCompile Include="Message\DispatchableBuffer.cpp" />
     <ClCompile Include="Graphics\RenderTarget.cpp" />
     <ClCompile Include="Graphics\ScreenPassRenderObject.cpp" />
-    <ClCompile Include="System\SystemContainer.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
     <ClCompile Include="Message\DispatchRouter.cpp" />
     <ClCompile Include="Message\MessageSubscriber.cpp" />
@@ -87,6 +86,8 @@
     <ClCompile Include="FileSystem\WinFileSystem.cpp" />
     <ClCompile Include="FileSystem\ReadFileJob.cpp" />
     <ClCompile Include="Json\ParseJsonJob.cpp" />
+    <ClCompile Include="System\SystemRegistry.cpp" />
+    <ClCompile Include="System\SystemGlobal.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -128,7 +129,6 @@
     <ClInclude Include="Graphics\RenderTarget.h" />
     <ClInclude Include="Graphics\ScreenPassRenderObject.h" />
     <ClInclude Include="System\SystemPtr.h" />
-    <ClInclude Include="System\SystemContainer.h" />
     <ClInclude Include="System\System.h" />
     <ClInclude Include="Resources\CreateResource.h" />
     <ClInclude Include="Resources\Resource.h" />
@@ -167,7 +167,6 @@
     <ClInclude Include="Graphics\EngineUniformBuffer.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="System\System.h" />
-    <ClInclude Include="System\SystemContainer.h" />
     <ClInclude Include="System\SystemPtr.h" />
     <ClInclude Include="Resources\ResourceProxy.h" />
     <ClInclude Include="Job\Job.h" />
@@ -293,6 +292,10 @@
     <ClInclude Include="FileSystem\WinFileSystem.h" />
     <ClInclude Include="FileSystem\ReadFileJob.h" />
     <ClInclude Include="Json\ParseJsonJob.h" />
+    <ClInclude Include="System\SystemRegistry.h" />
+    <ClInclude Include="System\SystemContainer_v2.h" />
+    <ClInclude Include="System\SystemGlobal.h" />
+    <ClInclude Include="System\SystemTraits.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

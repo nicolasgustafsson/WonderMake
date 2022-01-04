@@ -10,17 +10,20 @@
 struct JobDependencies
 {
 	JobDependencies()
-		: myScheduleSystem([](Closure) {}, [](Closure) {})
-		, myJobSystem([this]() { JobSystem::InjectDependencies(std::tie(myScheduleSystem)); return JobSystem(mySystemContainer); }())
+		: myScheduleSystem(std::make_shared<ScheduleSystem>([](Closure) {}, [](Closure) {}))
 	{
-		mySystemContainer.AddSystem<ScheduleSystem>([this]() -> auto& { return myScheduleSystem; });
-		mySystemContainer.AddSystem<JobSystem>([this]() -> auto& { return myJobSystem; });
+		JobSystem::InjectDependencies(std::tie(*myScheduleSystem));
+
+		myJobSystem = std::make_shared<JobSystem>(mySystemContainer);
+
+		mySystemContainer.Add<ScheduleSystem>(myScheduleSystem);
+		mySystemContainer.Add<JobSystem>(myJobSystem);
 	};
 
-	SystemContainer mySystemContainer;
-	ScheduleSystem myScheduleSystem;
+	SystemContainer_v2 mySystemContainer;
 
-	JobSystem myJobSystem;
+	std::shared_ptr<ScheduleSystem> myScheduleSystem;
+	std::shared_ptr<JobSystem> myJobSystem;
 };
 
 struct JobData
@@ -92,7 +95,7 @@ TEST_CASE("Job status updates properly", "[Job]")
 	JobMock::Promise promise;
 
 	{
-		JobMock::InjectDependencies(promise, std::tie(dependencies.myJobSystem));
+		JobMock::InjectDependencies(promise, std::tie(*dependencies.myJobSystem));
 
 		JobMock jobMock(data);
 
@@ -136,7 +139,7 @@ TEST_CASE("Job injection function properly", "[Job]")
 	JobInjectionMock::Promise promise;
 
 	{
-		JobInjectionMock::InjectDependencies(promise, std::tie(dependencies.myJobSystem, data));
+		JobInjectionMock::InjectDependencies(promise, std::tie(*dependencies.myJobSystem, data));
 
 		JobInjectionMock jobMock;
 

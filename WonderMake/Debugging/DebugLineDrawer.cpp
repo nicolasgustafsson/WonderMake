@@ -5,7 +5,7 @@
 REGISTER_SYSTEM(DebugLineDrawer);
 
 DebugLineDrawer::DebugLineDrawer() noexcept
-	: myRenderObject(10000)
+	: myRenderObject(Get<ResourceSystem<Shader<EShaderType::Vertex>>>(), Get<ResourceSystem<Shader<EShaderType::Fragment>>>(), Get<ResourceSystem<Shader<EShaderType::Geometry>>>(), 10000)
 	, mySubscriber(BindHelper(&DebugLineDrawer::OnGotDebugLineMessage, this))
 {
 

@@ -2,6 +2,8 @@
 
 #include "Policies/Policy.h"
 
+#include "System/SystemTraits.h"
+
 #include "Utilities/RestrictTypes.h"
 
 #include <optional>
@@ -16,12 +18,13 @@ protected:
 	constexpr SystemBase() noexcept = default;
 };
 
-template<typename TPolicySet = Policy::Set<>>
+template<typename TPolicySet = Policy::Set<>, typename TTraitSet = SystemTraits::Set<>>
 class SystemSub
 	: public SystemBase
 {
 public:
 	using PolicySet = TPolicySet;
+	using TraitSet = TTraitSet;
 	using Dependencies = typename TPolicySet::template DependenciesRef;
 
 	inline static void InjectDependencies(Dependencies&& aDependencies)
@@ -57,8 +60,8 @@ private:
 	friend class FunctionalitySystem;
 };
 
-template<typename TPolicySet>
-thread_local std::optional<typename SystemSub<TPolicySet>::Dependencies> SystemSub<TPolicySet>::myInjectedDependencies;
+template<typename TPolicySet, typename TTraitSet>
+thread_local std::optional<typename SystemSub<TPolicySet, TTraitSet>::Dependencies> SystemSub<TPolicySet, TTraitSet>::myInjectedDependencies;
 
 class SystemAbstracted
 	: public NonCopyable
@@ -70,17 +73,17 @@ protected:
 	constexpr SystemAbstracted() noexcept = default;
 };
 
-template<typename TPolicySet = Policy::Set<>>
+template<typename TPolicySet = Policy::Set<>, typename TTraitSet = SystemTraits::Set<>>
 class System
 	: public SystemAbstracted
-	, public SystemSub<TPolicySet>
+	, public SystemSub<TPolicySet, TTraitSet>
 {
 private:
-	using Test = SystemSub<TPolicySet>;
+	using InheritedSystem = SystemSub<TPolicySet, TTraitSet>;
 
 public:
-	using Super = System<TPolicySet>;
-	using Dependencies = Test::Dependencies;
+	using Super = System<TPolicySet, TTraitSet>;
+	using Dependencies = InheritedSystem::Dependencies;
 
-	using Test::Test;
+	using InheritedSystem::InheritedSystem;
 };

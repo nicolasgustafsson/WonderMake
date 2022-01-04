@@ -1,5 +1,5 @@
 #pragma once
-#include "SystemContainer.h"
+#include "SystemGlobal.h"
 
 #include <mutex>
 
@@ -18,25 +18,25 @@ public:
 
 	[[nodiscard]] TSystem& operator*() noexcept
 	{
-		static TSystem& instance = SystemContainer::Get().GetSystem<TSystem>();
+		static TSystem& instance = Global::GetSystemContainer().Get<TSystem>();
 		return instance;
 	}
 
 	[[nodiscard]] TSystem* operator->() noexcept
 	{
-		static TSystem& instance = SystemContainer::Get().GetSystem<TSystem>();
+		static TSystem& instance = Global::GetSystemContainer().Get<TSystem>();
 		return &instance;
 	}
 
 	[[nodiscard]] const TSystem& operator*() const noexcept
 	{
-		static const TSystem& instance = SystemContainer::Get().GetSystem<TSystem>();
+		static const TSystem& instance = Global::GetSystemContainer().Get<TSystem>();
 		return instance;
 	}
 
 	[[nodiscard]] const TSystem* operator->() const noexcept
 	{
-		static const TSystem& instance = SystemContainer::Get().GetSystem<TSystem>();
+		static const TSystem& instance = Global::GetSystemContainer().Get<TSystem>();
 		return &instance;
 	}
 

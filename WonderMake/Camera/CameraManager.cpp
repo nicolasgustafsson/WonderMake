@@ -1,12 +1,19 @@
 #include "pch.h"
+
 #include "CameraManager.h"
+#include "Program/Window.h"
+
+#include "Graphics/OpenGLFacade.h"
 
 REGISTER_SYSTEM(CameraManager);
 
 CameraManager::CameraManager()
 	: Debugged("Camera Manager")
 {
-	myCameras.emplace("Main Camera", true);
+	myCameras.emplace(Get<OpenGLFacade>(), Get<ResourceSystem<RenderNodeGraph>>(), "Main Camera", true);
+
+	if constexpr (!Constants::IsDebugging)
+		SetViewportSize(Get<Window>().GetSize());
 }
 
 Camera& CameraManager::GetMainCamera()
@@ -58,7 +65,7 @@ void CameraManager::Debug()
 
 	if (ImGui::Button("Add Camera"))
 	{
-		myCameras.emplace(std::string("Camera ") + std::to_string(myCameras.size() + 1));
+		myCameras.emplace(Get<OpenGLFacade>(), Get<ResourceSystem<RenderNodeGraph>>(), std::string("Camera ") + std::to_string(myCameras.size() + 1));
 	}
 
 	ImGui::Separator();

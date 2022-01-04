@@ -5,11 +5,17 @@
 #include "Audio/AudioMixingNodeGraph.h"
 #include "Audio/SoundEffectNodeGraph.h"
 
+template<typename TResource>
+class ResourceSystem;
+class AudioMixingNodeGraph;
+
+template class ResourceSystem<AudioMixingNodeGraph>;
 class DebugSettingsSystem;
 
 class AudioManager
 	: public System<
 		Policy::Set<
+			PAdd<ResourceSystem<AudioMixingNodeGraph>, PWrite>,
 			PAdd<DebugSettingsSystem, PWrite>>
 	>, Debugged
 {

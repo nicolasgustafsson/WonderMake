@@ -10,7 +10,7 @@ class Camera;
 class Display
 {
 public:
-	Display(const std::string& aName, Camera& aCamera);
+	Display(OpenGLFacade& aOpenGlFacade, ResourceSystem<RenderNodeGraph>& aRenderNodeGraphSystem, const std::string& aName, Camera& aCamera);
 
 	void FinishDebugFrame();
 	void FinishFrame(); 

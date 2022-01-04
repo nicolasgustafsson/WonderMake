@@ -3,7 +3,10 @@
 
 SpriteRenderObject::SpriteRenderObject(const std::string_view aTextureAssetLink)
 	:RenderObject(SRenderObjectInfo
-		{ std::filesystem::current_path() / "Shaders/Vertex/Sprite.vert"
+		{	*SystemPtr<ResourceSystem<Shader<EShaderType::Vertex>>>()
+		,	*SystemPtr<ResourceSystem<Shader<EShaderType::Fragment>>>()
+		,	*SystemPtr<ResourceSystem<Shader<EShaderType::Geometry>>>()
+		,	std::filesystem::current_path() / "Shaders/Vertex/Sprite.vert"
 		,	std::filesystem::current_path() / "Shaders/Geometry/Sprite.geom"
 		,	std::filesystem::current_path() / "Shaders/Fragment/Sprite.frag"
 		,	aTextureAssetLink

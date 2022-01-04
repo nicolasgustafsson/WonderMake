@@ -2,9 +2,12 @@
 #include "ScreenPassRenderObject.h"
 #include "VertexAttributes.h"
 
-ScreenPassRenderObject::ScreenPassRenderObject(const std::filesystem::path& aFragmentShader) :
+ScreenPassRenderObject::ScreenPassRenderObject(ResourceSystem<Shader<EShaderType::Vertex>>& aVsSystem, ResourceSystem<Shader<EShaderType::Fragment>>& aFsSystem, ResourceSystem<Shader<EShaderType::Geometry>>& aGsSystem, const std::filesystem::path& aFragmentShader) :
 	RenderObject(SRenderObjectInfo
-		{ std::filesystem::current_path() / "Shaders/Vertex/Pass.vert"
+		{	aVsSystem
+		,	aFsSystem
+		,	aGsSystem
+		,	std::filesystem::current_path() / "Shaders/Vertex/Pass.vert"
 		,	"" //geometry shader
 		,	aFragmentShader
 		,	"" //texture -- we have to bind the one we want to use manually for now

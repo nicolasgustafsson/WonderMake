@@ -7,19 +7,16 @@
 #include "Texture.h"
 #include "OpenGLFacade.h"
 
-ShaderProgram::ShaderProgram(const std::filesystem::path& VertexShaderPath, const std::filesystem::path& FragmentShaderPath, const std::filesystem::path& GeometryShaderPath)
+ShaderProgram::ShaderProgram(
+	ResourceSystem<Shader<EShaderType::Vertex>>& aVsSystem, ResourceSystem<Shader<EShaderType::Fragment>>& aFsSystem, ResourceSystem<Shader<EShaderType::Geometry>>& aGsSystem,
+	const std::filesystem::path& VertexShaderPath, const std::filesystem::path& FragmentShaderPath, const std::filesystem::path& GeometryShaderPath)
 {
-	SystemPtr<ResourceSystem<Shader<EShaderType::Vertex>>> rmVertex;
-	SystemPtr<ResourceSystem<Shader<EShaderType::Fragment>>> rmFragment;
-
-	myVertexShader = rmVertex->GetResource(VertexShaderPath);
-	myFragmentShader = rmFragment->GetResource(FragmentShaderPath);
+	myVertexShader = aVsSystem.GetResource(VertexShaderPath);
+	myFragmentShader = aFsSystem.GetResource(FragmentShaderPath);
 
 	if (!GeometryShaderPath.empty())
 	{
-		SystemPtr<ResourceSystem<Shader<EShaderType::Geometry>>> rmGeometry;
-		
-		myGeometryShader.emplace(rmGeometry->GetResource(GeometryShaderPath));
+		myGeometryShader.emplace(aGsSystem.GetResource(GeometryShaderPath));
 	}
 
 	Create();

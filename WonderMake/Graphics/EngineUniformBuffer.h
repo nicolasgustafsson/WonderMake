@@ -90,7 +90,7 @@ class CameraUniformBuffer
 
 {
 public:
-	CameraUniformBuffer();
+	CameraUniformBuffer(OpenGLFacade& aOpenGlFacade);
 
 private:
 };
@@ -100,7 +100,7 @@ class DisplayUniformBuffer
 
 {
 public:
-	DisplayUniformBuffer();
+	DisplayUniformBuffer(OpenGLFacade& aOpenGlFacade);
 
 private:
 };

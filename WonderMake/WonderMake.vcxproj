@@ -24,6 +24,7 @@
     <RootNamespace>WonderMake</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
@@ -50,6 +51,7 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="Shared">
@@ -209,6 +211,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Graphics\SpriteBatchRenderObject.cpp" />
+    <ClCompile Include="Object\BaseObject.cpp" />
     <ClCompile Include="Universe\UniverseHelper.cpp" />
     <ClCompile Include="Universe\UniverseSystem.cpp" />
     <ClCompile Include="Utilities\AnimatedValue.cpp" />
@@ -251,7 +254,7 @@
     <ClCompile Include="Graphics\ShaderParser.cpp" />
     <ClCompile Include="Job\JobBase.cpp" />
     <ClCompile Include="Job\JobSystem.cpp" />
-    <ClCompile Include="BaseObject\DependencyDestructor.cpp" />
+    <ClCompile Include="Object\DependencyDestructor.cpp" />
     <ClCompile Include="Scheduling\ScheduleSystem.cpp" />
     <ClCompile Include="Utilities\DependencyInjector.cpp" />
     <ClCompile Include="Graphics\RenderCommandProcessor.cpp" />
@@ -288,7 +291,7 @@
     <ClCompile Include="Logging\ImGuiLogger.cpp" />
     <ClCompile Include="Logging\ConsoleLogger.cpp" />
     <ClCompile Include="Functionalities\SpriteRenderingFunctionality.cpp" />
-    <ClCompile Include="BaseObject\BaseObject.cpp" />
+    <ClCompile Include="Object\Object.cpp" />
     <ClCompile Include="Policies\Scheduler.cpp" />
     <ClCompile Include="Program\Engine.cpp" />
     <ClCompile Include="Message\DispatchableBuffer.cpp" />
@@ -317,6 +320,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\SpriteBatchRenderObject.h" />
+    <ClInclude Include="Object\BaseObject.h" />
     <ClInclude Include="Universe\UniverseHelper.h" />
     <ClInclude Include="Universe\UniverseSystem.h" />
     <ClInclude Include="Utilities\AnimatedValue.h" />
@@ -338,7 +342,7 @@
     <ClInclude Include="Job\JobOutput.h" />
     <ClInclude Include="Job\JobPromise.h" />
     <ClInclude Include="Job\JobSystem.h" />
-    <ClInclude Include="BaseObject\CreateObjectJob.h" />
+    <ClInclude Include="Object\CreateObjectJob.h" />
     <ClInclude Include="Graphics\RectangleRenderObject.h" />
     <ClInclude Include="Scheduling\ScheduleSystem.h" />
     <ClInclude Include="Imgui\AssetBrowser.h" />
@@ -370,7 +374,7 @@
     <ClInclude Include="Imgui\FileSelector.h" />
     <ClInclude Include="Imgui\NodeGraphGui.h" />
     <ClInclude Include="Graphics\ShaderParser.h" />
-    <ClInclude Include="BaseObject\DependencyDestructor.h" />
+    <ClInclude Include="Object\DependencyDestructor.h" />
     <ClInclude Include="Utilities\Alias.h" />
     <ClInclude Include="Utilities\AutoRegister.h" />
     <ClInclude Include="Utilities\Container\BackendImplementations\LinkedListBackend.h" />
@@ -443,7 +447,7 @@
     <ClInclude Include="Functionalities\SpriteRenderingFunctionality.h" />
     <ClInclude Include="Functionalities\Functionality.h" />
     <ClInclude Include="Functionalities\FunctionalitySystem.h" />
-    <ClInclude Include="BaseObject\BaseObject.h" />
+    <ClInclude Include="Object\Object.h" />
     <ClInclude Include="Policies\Policy.h" />
     <ClInclude Include="Policies\Scheduler.h" />
     <ClInclude Include="Program\Engine.h" />
@@ -505,6 +509,7 @@
       <Project>{f13fca88-2695-4b4f-aa6f-b7525c07155f}</Project>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>

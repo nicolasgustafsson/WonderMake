@@ -17,7 +17,6 @@
     <ClCompile Include="Logging\ImGuiLogger.cpp" />
     <ClCompile Include="Logging\ConsoleLogger.cpp" />
     <ClCompile Include="Functionalities\SpriteRenderingFunctionality.cpp" />
-    <ClCompile Include="BaseObject\BaseObject.cpp" />
     <ClCompile Include="Program\Engine.cpp" />
     <ClCompile Include="Message\DispatchableBuffer.cpp" />
     <ClCompile Include="Graphics\RenderTarget.cpp" />
@@ -61,7 +60,6 @@
     <ClCompile Include="FileSystem\FileWatcher.cpp" />
     <ClCompile Include="Graphics\ShaderParser.cpp" />
     <ClCompile Include="Utilities\DependencyInjector.cpp" />
-    <ClCompile Include="BaseObject\DependencyDestructor.cpp" />
     <ClCompile Include="Graphics\Shader.cpp" />
     <ClCompile Include="Components\Component.cpp" />
     <ClCompile Include="Collision\CollisionComponent.cpp" />
@@ -104,6 +102,9 @@
     <ClCompile Include="Graphics\SpriteBatchRenderObject.cpp" />
     <ClCompile Include="Universe\UniverseSystem.cpp" />
     <ClCompile Include="Universe\UniverseHelper.cpp" />
+    <ClCompile Include="Object\DependencyDestructor.cpp" />
+    <ClCompile Include="Object\Object.cpp" />
+    <ClCompile Include="Object\BaseObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -137,7 +138,6 @@
     <ClInclude Include="Functionalities\SpriteRenderingFunctionality.h" />
     <ClInclude Include="Functionalities\Functionality.h" />
     <ClInclude Include="Functionalities\FunctionalitySystem.h" />
-    <ClInclude Include="BaseObject\BaseObject.h" />
     <ClInclude Include="Program\Engine.h" />
     <ClInclude Include="Graphics\VertexAttributes.h" />
     <ClInclude Include="Message\DispatchableBuffer.h" />
@@ -253,7 +253,6 @@
     <ClInclude Include="Utilities\Rotation.h" />
     <ClInclude Include="Utilities\Matrix.h" />
     <ClInclude Include="Utilities\DependencyInjector.h" />
-    <ClInclude Include="BaseObject\DependencyDestructor.h" />
     <ClInclude Include="Utilities\AutoRegister.h" />
     <ClInclude Include="Graphics\RenderCommandProcessor.h" />
     <ClInclude Include="Graphics\RenderNodeGraph\RenderNodeGraph.h" />
@@ -290,7 +289,6 @@
     <ClInclude Include="EngineTools\EngineTools.h" />
     <ClInclude Include="EngineTools\EasingTester.h" />
     <ClInclude Include="Job\JobSystem.h" />
-    <ClInclude Include="BaseObject\CreateObjectJob.h" />
     <ClInclude Include="Job\JobBase.h" />
     <ClInclude Include="Job\Job.h" />
     <ClInclude Include="Job\JobFuture.h" />
@@ -326,6 +324,10 @@
     <ClInclude Include="Universe\UniverseSystem.h" />
     <ClInclude Include="Universe\UniverseHelper.h" />
     <ClInclude Include="Utilities\TypeTraits\TypeString.h" />
+    <ClInclude Include="Object\CreateObjectJob.h" />
+    <ClInclude Include="Object\DependencyDestructor.h" />
+    <ClInclude Include="Object\Object.h" />
+    <ClInclude Include="Object\BaseObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

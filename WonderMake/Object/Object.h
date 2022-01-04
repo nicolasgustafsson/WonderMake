@@ -2,10 +2,11 @@
 #include "BaseObject.h"
 #include "Functionalities/FunctionalitySystem.h"
 
-class Object : public BaseObject, public NonMovable, public NonCopyable
+class Object : public BaseObject
 {
+public:
     template<typename TType>
-    inline TType Add() {
+    inline TType& Add() {
         return SystemPtr<FunctionalitySystem < TType> > ()->AddFunctionality(*this, true);
     }
 };

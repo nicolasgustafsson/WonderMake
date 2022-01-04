@@ -52,7 +52,6 @@
     <ClCompile Include="Imgui\Canvas.cpp" />
     <ClCompile Include="Audio\AudioNodeTypes.cpp" />
     <ClCompile Include="NodeGraph\NodeTypes.cpp" />
-    <ClCompile Include="Threads\Routine.cpp" />
     <ClCompile Include="Audio\SoundEffectNodeGraph.cpp" />
     <ClCompile Include="Utilities\Platform.cpp" />
     <ClCompile Include="Functionalities\TimerFunctionality.cpp" />
@@ -223,7 +222,6 @@
     <ClInclude Include="NodeGraph\NodeTypes.h" />
     <ClInclude Include="NodeGraph\SlotCustomization\SlotColors.h" />
     <ClInclude Include="NodeGraph\SlotCustomization\SlotSerialization.h" />
-    <ClInclude Include="Threads\Routine.h" />
     <ClInclude Include="NodeGraph\SlotCustomization\SlotInputEdits.h" />
     <ClInclude Include="Audio\SoundEffectNodeGraph.h" />
     <ClInclude Include="Threads\ThreadChecker.h" />

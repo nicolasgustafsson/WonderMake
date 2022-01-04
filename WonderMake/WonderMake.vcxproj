@@ -280,7 +280,6 @@
     <ClCompile Include="Message\DispatchableBuffer.cpp" />
     <ClCompile Include="Graphics\RenderTarget.cpp" />
     <ClCompile Include="Graphics\ScreenPassRenderObject.cpp" />
-    <ClCompile Include="Threads\Routine.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
     <ClCompile Include="Message\DispatchRouter.cpp" />
     <ClCompile Include="Message\MessageSubscriber.cpp" />
@@ -430,7 +429,6 @@
     <ClInclude Include="Resources\CreateResource.h" />
     <ClInclude Include="Resources\Resource.h" />
     <ClInclude Include="Resources\ResourceProxy.h" />
-    <ClInclude Include="Threads\Routine.h" />
     <ClInclude Include="Graphics\VertexBuffer.h" />
     <ClInclude Include="Graphics\Shader.h" />
     <ClInclude Include="Graphics\Renderer.h" />

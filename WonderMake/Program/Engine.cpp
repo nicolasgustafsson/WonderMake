@@ -3,22 +3,28 @@
 
 #include "FileSystem/FileSystem.h"
 
+#include "Graphics/Renderer.h"
+
+#include "Message/DispatchRouter.h"
+
 #include "Job/JobSystem.h"
 
 #include "System/SystemGlobal.h"
 
+#include "Program/ImguiWrapper.h"
+
 #include "Scheduling/ScheduleSystem.h"
 
-#include "Threads/Routine.h"
 #include "Threads/TaskManager.h"
 
 #include "Utilities/TimeKeeper.h"
 
 namespace Engine
 {
+	void RouteMessages();
+
 	void Start(std::filesystem::path&& aProjectFolderNames, Closure&& aCallback)
 	{
-		Routine routine;
 		TaskManager taskManager;
 
 		auto scheduleProc = [&taskManager](Closure aTask)
@@ -58,7 +64,40 @@ namespace Engine
 			SystemPtr<TimeKeeper>()->Update();
 
 			taskManager.Update();
-			routine.Run();
+			
+			RouteMessages();
+
+			if constexpr (Constants::IsDebugging)
+			{
+				auto&& renderer = sysContainer.Get<Renderer>();
+				auto&& imguiWrapper = sysContainer.Get<ImguiWrapper>();
+
+				renderer.FinishFrame();
+				imguiWrapper.StartFrame();
+
+				auto&& router = DispatchRouter::Get();
+
+				router.RouteDispatchable(SDebugMessage());
+
+				router.CommitChanges();
+
+				imguiWrapper.EndFrame();
+			}
+		}
+	}
+
+	void RouteMessages()
+	{
+		std::vector<std::shared_ptr<Dispatchable>> messageList;
+
+		auto&& router = DispatchRouter::Get();
+		std::swap(DispatchableBuffer::Get().myList, messageList);
+
+		for (const auto& message : messageList)
+		{
+			router.RouteDispatchable(*message);
+
+			router.CommitChanges();
 		}
 	}
 }

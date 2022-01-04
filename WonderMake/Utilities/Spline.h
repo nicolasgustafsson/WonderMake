@@ -27,7 +27,7 @@ public:
 		return !(*this == aOther);
 	}
 
-	std::vector<SSplinePoint> Points{ {{{0.0f, 0.0f}, {0.33f, 0.33f}}, {{1.0f, 1.0f}, {0.66f, 0.66f}}, {{2.0f, 0.0f}, {1.5f, 0.66f}} } };
+	std::vector<SSplinePoint> Points{ {{{0.0f, 0.0f}, {0.33f, 0.33f}}, {{1.0f, 1.0f}, {0.66f, 0.66f}}, {{2.0f, 0.0f}, {1.5f, 0.66f}}, {{3.0f, 1.0f}, {2.5f, 0.33f}} } };
 
 
 	f32 GetValue(const f32 aX);

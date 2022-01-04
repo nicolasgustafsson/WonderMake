@@ -1,13 +1,13 @@
 #include "pch.h"
 
-#include "Utilities/Platform.h"
+#include "WindowsPlatform.h"
 
 #include <processthreadsapi.h>
 #include <string>
 #include <time.h>
 #include <windows.h>
 
-namespace Platform
+namespace WindowsPlatform
 {
 	const DWORD MS_VC_EXCEPTION = 0x406D1388;
 
@@ -61,5 +61,20 @@ namespace Platform
 
 		std::strftime(buffer, sizeof(buffer), "%Y-%m-%d-%H-%M-%S", &timeinfo);
 		return buffer;
+	}
+
+	std::filesystem::path GetApplicationRoot()
+	{
+		wchar_t pBuf[256];
+		const size_t len = sizeof(pBuf);
+		GetModuleFileNameW(nullptr, pBuf, static_cast<DWORD>(len));
+
+		const std::wstring strPath(pBuf);
+
+		std::filesystem::path path(strPath);
+
+		path.remove_filename();
+
+		return path;
 	}
 }

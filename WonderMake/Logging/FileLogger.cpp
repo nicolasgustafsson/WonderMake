@@ -2,7 +2,7 @@
 
 #include "Logging/FileLogger.h"
 
-#include "Utilities/Platform.h"
+#include "Utilities/Platform/Platform.h"
 
 #include <algorithm>
 #include <filesystem>

@@ -106,9 +106,19 @@ namespace WmEasings
 	template <WmMath::Interpolable T>
 	inline [[nodiscard]] constexpr T CubicBezier(const SRange<T>& aRange, const T& aControlFirst, const T& aControlSecond, const f32 aProgress) noexcept
 	{
+		//SRange<T> newRange = //{ QuadraticBezier<T>({ aRange.Start, aControlFirst }, aControlSecond, aProgress), QuadraticBezier<T>({ aControlSecond, aRange.End}, aControlFirst, aProgress) };
 		SRange<T> newRange = { QuadraticBezier<T>({ aRange.Start, aControlSecond }, aControlFirst, aProgress), QuadraticBezier<T>({ aControlFirst, aRange.End}, aControlSecond, aProgress) };
+		//
+		
+		//T green1 = Lerp<T>({ aRange.Start, aControlFirst }, aProgress);
+		//T green2 = Lerp<T>({ aControlFirst, aControlSecond }, aProgress);
+		//T green3 = Lerp<T>({ aControlSecond, aRange.End }, aProgress);
+		//
+		//T blue1 = Lerp<T>({ green1, green2 }, aProgress);
+		//T blue2 = Lerp<T>({ green2, green3 }, aProgress);
+		//newRange = { blue1, blue2 };
 
-		return Lerp(newRange, aProgress);
+		return Lerp<T>(newRange, aProgress);
 	}
 
 	template <WmMath::Interpolable TMotionType = f32>

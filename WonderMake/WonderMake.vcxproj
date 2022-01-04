@@ -210,7 +210,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Utilities\Filesystem\Folder.cpp" />
+    <ClCompile Include="Utilities\Filesystem\File.cpp" />
     <ClCompile Include="Graphics\SpriteBatchRenderObject.cpp" />
+    <ClCompile Include="Utilities\Platform\Platform.cpp" />
+    <ClCompile Include="Utilities\String\Path.cpp" />
+    <ClCompile Include="Utilities\String\Name.cpp" />
+    <ClCompile Include="Utilities\String\String.cpp" />
+    <ClCompile Include="Utilities\String\Text.cpp" />
     <ClCompile Include="Universe\UniverseHelper.cpp" />
     <ClCompile Include="Universe\UniverseSystem.cpp" />
     <ClCompile Include="Utilities\AnimatedValue.cpp" />
@@ -315,10 +322,17 @@
     <ClCompile Include="Utilities\Color.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Program\Window.cpp" />
-    <ClCompile Include="Utilities\Platform.cpp" />
+    <ClCompile Include="Utilities\Platform\WindowsPlatform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Utilities\Filesystem\Folder.h" />
+    <ClInclude Include="Utilities\Filesystem\File.h" />
     <ClInclude Include="Graphics\SpriteBatchRenderObject.h" />
+    <ClInclude Include="Utilities\Platform\Platform.h" />
+    <ClInclude Include="Utilities\String\Path.h" />
+    <ClInclude Include="Utilities\String\Name.h" />
+    <ClInclude Include="Utilities\String\String.h" />
+    <ClInclude Include="Utilities\String\Text.h" />
     <ClInclude Include="Universe\UniverseHelper.h" />
     <ClInclude Include="Universe\UniverseSystem.h" />
     <ClInclude Include="Utilities\AnimatedValue.h" />
@@ -474,7 +488,7 @@
     <ClInclude Include="Resources\ResourceSystem.h" />
     <ClInclude Include="Graphics\SpriteRenderObject.h" />
     <ClInclude Include="Graphics\UniformBuffer.h" />
-    <ClInclude Include="Utilities\Platform.h" />
+    <ClInclude Include="Utilities\Platform\WindowsPlatform.h" />
     <ClInclude Include="Utilities\plf_colony.h" />
     <ClInclude Include="Utilities\Singleton.h" />
     <ClInclude Include="pch.h" />

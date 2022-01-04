@@ -5,7 +5,7 @@
 
 #include "Debugging/DebugLine.h"
 
-#include "Utilities/Platform.h"
+#include "Utilities/Platform/Platform.h"
 
 #include <sstream>
 #include <memory>

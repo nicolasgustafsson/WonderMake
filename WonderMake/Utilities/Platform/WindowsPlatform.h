@@ -3,9 +3,11 @@
 #include <string>
 #include <thread>
 
-namespace Platform
+namespace WindowsPlatform
 {
 	std::string GetDateTime();
+
+	std::filesystem::path GetApplicationRoot();
 
 	void SetThreadName(const std::string& aThreadName);
 

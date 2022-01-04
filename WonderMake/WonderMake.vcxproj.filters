@@ -55,7 +55,7 @@
     <ClCompile Include="NodeGraph\NodeTypes.cpp" />
     <ClCompile Include="Threads\Routine.cpp" />
     <ClCompile Include="Audio\SoundEffectNodeGraph.cpp" />
-    <ClCompile Include="Utilities\Platform.cpp" />
+    <ClCompile Include="Utilities\Platform\WindowsPlatform.cpp" />
     <ClCompile Include="Functionalities\TimerFunctionality.cpp" />
     <ClCompile Include="Utilities\WmMath.cpp" />
     <ClCompile Include="FileSystem\FileWatcher.cpp" />
@@ -104,6 +104,13 @@
     <ClCompile Include="Graphics\SpriteBatchRenderObject.cpp" />
     <ClCompile Include="Universe\UniverseSystem.cpp" />
     <ClCompile Include="Universe\UniverseHelper.cpp" />
+    <ClCompile Include="Utilities\String\Text.cpp" />
+    <ClCompile Include="Utilities\String\String.cpp" />
+    <ClCompile Include="Utilities\String\Name.cpp" />
+    <ClCompile Include="Utilities\String\Path.cpp" />
+    <ClCompile Include="Utilities\Filesystem\File.cpp" />
+    <ClCompile Include="Utilities\Filesystem\Folder.cpp" />
+    <ClCompile Include="Utilities\Platform\Platform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -245,7 +252,7 @@
     <ClInclude Include="NodeGraph\SlotCustomization\SlotInputEdits.h" />
     <ClInclude Include="Audio\SoundEffectNodeGraph.h" />
     <ClInclude Include="Threads\ThreadChecker.h" />
-    <ClInclude Include="Utilities\Platform.h" />
+    <ClInclude Include="Utilities\Platform\WindowsPlatform.h" />
     <ClInclude Include="Functionalities\TimerFunctionality.h" />
     <ClInclude Include="Utilities\WmMath.h" />
     <ClInclude Include="FileSystem\FileWatcher.h" />
@@ -326,6 +333,13 @@
     <ClInclude Include="Universe\UniverseSystem.h" />
     <ClInclude Include="Universe\UniverseHelper.h" />
     <ClInclude Include="Utilities\TypeTraits\TypeString.h" />
+    <ClInclude Include="Utilities\String\Text.h" />
+    <ClInclude Include="Utilities\String\String.h" />
+    <ClInclude Include="Utilities\String\Name.h" />
+    <ClInclude Include="Utilities\String\Path.h" />
+    <ClInclude Include="Utilities\Filesystem\File.h" />
+    <ClInclude Include="Utilities\Filesystem\Folder.h" />
+    <ClInclude Include="Utilities\Platform\Platform.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

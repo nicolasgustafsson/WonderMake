@@ -137,7 +137,7 @@ EAlterStatus FloatSpline::Inspect()
 	{
 
 		point.ControlInverse = point.Point - (point.Control - point.Point);
-		WmGui::DrawCirleOnCanvas(&canvasState, point.Point, SColor::BlueBell(), 8.f, true);
+		//WmGui::DrawCirleOnCanvas(&canvasState, point.Point, SColor::BlueBell(), 8.f, true);
 		WmGui::DrawCirleOnCanvas(&canvasState, point.Control, SColor::ImperialRed(), 8.f, true);
 		//WmGui::DrawCirleOnCanvas(&canvasState, point.ControlInverse, SColor::ImperialRed(), 8.f, true);
 	}
@@ -154,7 +154,6 @@ EAlterStatus FloatSpline::Inspect()
 	{
 		WmGui::DrawCirleOnCanvas(&canvasState, *SelectedPoint, SColor::White(), 5.f, true);
 		WmGui::DrawTextOnCanvas(&canvasState, *SelectedPoint, (std::string("\n  X: ") + std::to_string(SelectedPoint->X) + std::string("\n  Y: ") + std::to_string(SelectedPoint->Y)).c_str(), SColor::White(), { true, true });
-
 	}
 
 	{

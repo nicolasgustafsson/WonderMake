@@ -23,7 +23,7 @@ namespace Engine
 {
 	void RouteMessages();
 
-	void Start(std::filesystem::path&& aProjectFolderNames, Closure&& aCallback)
+	void Start(Info&& aInfo, Callbacks&& aCallbacks)
 	{
 		TaskManager taskManager;
 
@@ -48,16 +48,21 @@ namespace Engine
 				return std::make_shared<ScheduleSystem>(scheduleProc, scheduleRepeatingProc);
 			});
 
-		sysContainer = sysRegistry.CreateSystems();
+		STrait::SetList notFilter;
+
+		if (aInfo.Headless)
+			notFilter.emplace(STrait::ToObject<STGraphical>());
+
+		sysContainer = sysRegistry.CreateSystems(notFilter);
 
 		auto&& fileSystem = sysContainer.Get<FileSystem>();
 		auto&& timeKeeper = sysContainer.Get<TimeKeeper>();
 
-		fileSystem.SetFolderSuffix(FolderLocation::Data, aProjectFolderNames);
-		fileSystem.SetFolderSuffix(FolderLocation::User, aProjectFolderNames);
-		fileSystem.SetFolderSuffix(FolderLocation::UserData, std::move(aProjectFolderNames));
+		fileSystem.SetFolderSuffix(FolderLocation::Data,		aInfo.ProjectFolderNames);
+		fileSystem.SetFolderSuffix(FolderLocation::User,		aInfo.ProjectFolderNames);
+		fileSystem.SetFolderSuffix(FolderLocation::UserData,	aInfo.ProjectFolderNames);
 
-		aCallback();
+		std::move(aCallbacks.OnSetup)();
 
 		for (;;)
 		{
@@ -69,21 +74,22 @@ namespace Engine
 			RouteMessages();
 
 			if constexpr (Constants::IsDebugging)
-			{
-				auto&& renderer = sysContainer.Get<Renderer>();
-				auto&& imguiWrapper = sysContainer.Get<ImguiWrapper>();
+				if (!aInfo.Headless)
+				{
+					auto&& renderer = sysContainer.Get<Renderer>();
+					auto&& imguiWrapper = sysContainer.Get<ImguiWrapper>();
 
-				renderer.FinishFrame();
-				imguiWrapper.StartFrame();
+					renderer.FinishFrame();
+					imguiWrapper.StartFrame();
 
-				auto&& router = DispatchRouter::Get();
+					auto&& router = DispatchRouter::Get();
 
-				router.RouteDispatchable(SDebugMessage());
+					router.RouteDispatchable(SDebugMessage());
 
-				router.CommitChanges();
+					router.CommitChanges();
 
-				imguiWrapper.EndFrame();
-			}
+					imguiWrapper.EndFrame();
+				}
 		}
 	}
 

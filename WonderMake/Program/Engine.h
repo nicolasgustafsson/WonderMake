@@ -1,14 +1,26 @@
 #pragma once
 
-#include <filesystem>
+#include "Utilities/UniqueFunction.h"
 
 #include "Typedefs.h"
 
-#include "Utilities/UniqueFunction.h"
+#include <filesystem>
+#include <string>
 
 namespace Engine
 {
+	struct Info
+	{
+		bool Headless = true;
+		std::filesystem::path ProjectFolderNames;
+	};
+
+	struct Callbacks
+	{
+		Closure OnSetup;
+	};
+
 	//wroom wroom
-	void Start(std::filesystem::path&& aProjectFolderNames, Closure&& aCallback);
+	void Start(Info&& aInfo, Callbacks&& aCallbacks);
 };
 

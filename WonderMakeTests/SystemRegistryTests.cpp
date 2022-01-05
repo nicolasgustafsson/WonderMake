@@ -67,7 +67,7 @@ TEST_CASE("Create System in registry", "[SystemRegistry]")
 			return testSystem;
 		});
 
-	registry.CreateSystems();
+	registry.CreateSystems({});
 
 	REQUIRE(callCounter == 1);
 }
@@ -86,8 +86,8 @@ TEST_CASE("Create System in registry twice", "[SystemRegistry]")
 			return testSystem;
 		});
 
-	registry.CreateSystems();
-	registry.CreateSystems();
+	registry.CreateSystems({});
+	registry.CreateSystems({});
 
 	REQUIRE(callCounter == 2);
 }

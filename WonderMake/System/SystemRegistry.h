@@ -10,6 +10,7 @@
 #include <cassert>
 #include <functional>
 #include <memory>
+#include <ranges>
 #include <typeindex>
 #include <vector>
 
@@ -24,13 +25,22 @@ public:
 		AddSystemHelper<TSystem, TBaseSystem>(std::forward<TCreateFunc>(aCreateFunc), TupleWrapper<typename TSystem::Dependencies>());
 	}
 
-	inline SystemContainer_v2 CreateSystems()
+	inline SystemContainer_v2 CreateSystems(SystemTraits::SetList aTraitNotFilter)
 	{
 		myDependencyInjector = DependencyInjector();
 
-		for (auto&& injectFunc : myInjectFuncList)
+		const auto notFilter = [&aTraitNotFilter](auto&& aSystemInfo)
 		{
-			injectFunc();
+			for (auto&& trait : aSystemInfo.TraitSet)
+				if (aTraitNotFilter.find(trait) != aTraitNotFilter.cend())
+					return false;
+
+			return true;
+		};
+
+		for (auto&& system : std::views::all(mySystemList) | std::views::filter(notFilter))
+		{
+			system.InjectFunc();
 		}
 
 		try
@@ -41,7 +51,7 @@ public:
 		{
 			WmLog("Missing dependency: ", aException.myMissingType, ".");
 
-			assert(false && "Missing dependency");
+			assert(false && "Missing dependency.");
 
 			return SystemContainer_v2();
 		}
@@ -57,31 +67,41 @@ private:
 	template<typename TDependencyTuple>
 	struct TupleWrapper {};
 
+	struct SystemElement
+	{
+		SystemTraits::SetList TraitSet;
+		std::function<void()> InjectFunc;
+	};
+
 	template<typename TSystem, typename TBaseSystem, typename TCreateFunc, typename ...TDependencies>
 	inline void AddSystemHelper(TCreateFunc&& aCreateFunc, TupleWrapper<std::tuple<TDependencies...>>&&)
 	{
-		myInjectFuncList.emplace_back([this, createFunc = std::move(aCreateFunc)]() // myInjectFuncList is reset, probably something to do with extern
-			{
-				auto construct = [this, createFunc = std::move(createFunc)](std::decay_t<TDependencies>&... aDependencies) -> TBaseSystem&
+		mySystemList.emplace_back(
+			SystemElement {
+				TSystem::template TraitSet::ToObject(),
+				[this, createFunc = std::move(aCreateFunc)] ()
 				{
-					TSystem::InjectDependencies(std::tie(aDependencies...));
+					auto construct = [this, createFunc = std::move(createFunc)](std::decay_t<TDependencies>&... aDependencies)->TBaseSystem&
+					{
+						TSystem::InjectDependencies(std::tie(aDependencies...));
 
-					auto ptr = createFunc();
+						auto ptr = createFunc();
 
-					auto&& system = *ptr;
+						auto&& system = *ptr;
 
-					myConstructingContainer.emplace(std::make_pair<std::type_index, std::shared_ptr<SystemAbstracted>>(typeid(TBaseSystem), std::move(ptr)));
+						myConstructingContainer.emplace(std::make_pair<std::type_index, std::shared_ptr<SystemAbstracted>>(typeid(TBaseSystem), std::move(ptr)));
 
-					return system;
-				};
+						return system;
+					};
 
-				myDependencyInjector.Add<TSystem, decltype(construct), std::decay_t<TDependencies>...>(std::move(construct));
+					myDependencyInjector.Add<TSystem, decltype(construct), std::decay_t<TDependencies>...>(std::move(construct));
+				}
 			});
 	}
 
 	static thread_local SystemContainer_v2::InternalRep myConstructingContainer;
 
 	DependencyInjector myDependencyInjector;
-	std::vector<std::function<void()>> myInjectFuncList;
+	std::vector<SystemElement> mySystemList;
 
 };

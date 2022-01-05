@@ -4,9 +4,10 @@
 
 #include <algorithm>
 
-#include "Policies/Policy.h"
+#include "WonderMakeEngine/SystemId.h"
+#include "WonderMakeEngine/SystemPolicy.h"
+
 #include "Policies/Scheduler.h"
-#include "Policies/SystemId.h"
 
 class SystemA;
 class SystemB;

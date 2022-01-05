@@ -81,8 +81,6 @@
     <ClCompile Include="FileSystem\WinFileSystem.cpp" />
     <ClCompile Include="FileSystem\ReadFileJob.cpp" />
     <ClCompile Include="Json\ParseJsonJob.cpp" />
-    <ClCompile Include="System\SystemRegistry.cpp" />
-    <ClCompile Include="System\SystemGlobal.cpp" />
     <ClCompile Include="Utilities\Id.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -123,8 +121,6 @@
     <ClInclude Include="Message\Messages.h" />
     <ClInclude Include="Graphics\RenderTarget.h" />
     <ClInclude Include="Graphics\ScreenPassRenderObject.h" />
-    <ClInclude Include="System\SystemPtr.h" />
-    <ClInclude Include="System\System.h" />
     <ClInclude Include="Resources\CreateResource.h" />
     <ClInclude Include="Resources\Resource.h" />
     <ClInclude Include="Resources\ResourceProxy.h" />
@@ -191,9 +187,7 @@
     <ClInclude Include="Debugging\DebugSettingsSystem.h" />
     <ClInclude Include="Functionalities\BaseFunctionality.h" />
     <ClInclude Include="Imgui\JsonInspector.h" />
-    <ClInclude Include="Policies\Policy.h" />
     <ClInclude Include="Policies\Scheduler.h" />
-    <ClInclude Include="Policies\SystemId.h" />
     <ClInclude Include="Graphics\OpenGLFacade.h" />
     <ClInclude Include="Utilities\TimeKeeper.h" />
     <ClInclude Include="Imgui\FileSelector.h" />
@@ -267,10 +261,6 @@
     <ClInclude Include="FileSystem\WinFileSystem.h" />
     <ClInclude Include="FileSystem\ReadFileJob.h" />
     <ClInclude Include="Json\ParseJsonJob.h" />
-    <ClInclude Include="System\SystemRegistry.h" />
-    <ClInclude Include="System\SystemContainer_v2.h" />
-    <ClInclude Include="System\SystemGlobal.h" />
-    <ClInclude Include="System\SystemTraits.h" />
     <ClInclude Include="Utilities\Id.h" />
   </ItemGroup>
   <ItemGroup>

@@ -2,7 +2,7 @@
 
 #include "WinPlatform/WinPlatform.h"
 
-#include "System/System.h"
+#include "WonderMakeEngine/System.h"
 
 class WinPlatformSystem
 	: public System<>

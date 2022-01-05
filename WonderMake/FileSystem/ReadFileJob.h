@@ -4,6 +4,8 @@
 #include "Job/Job.h"
 #include "Utilities/Container/Container.h"
 
+#include <filesystem>
+
 class FileSystem;
 
 enum class ReadFileError

@@ -1,9 +1,7 @@
 #pragma once
 
-#include "Message/Messages.h"
-
-#include "System/System.h"
-#include "System/SystemContainer_v2.h"
+#include "System.h"
+#include "SystemContainer.h"
 
 #include "WonderMakeBase/DependencyInjector.h"
 
@@ -25,7 +23,7 @@ public:
 		AddSystemHelper<TSystem, TBaseSystem>(std::forward<TCreateFunc>(aCreateFunc), TupleWrapper<typename TSystem::Dependencies>());
 	}
 
-	inline SystemContainer_v2 CreateSystems(SystemTraits::SetList aTraitNotFilter)
+	inline SystemContainer CreateSystems(SystemTraits::SetList aTraitNotFilter)
 	{
 		myDependencyInjector = DependencyInjector();
 
@@ -49,14 +47,14 @@ public:
 		}
 		catch (DependencyInjector::MissingDependencyException aException)
 		{
-			WmLog("Missing dependency: ", aException.myMissingType, ".");
+			// WmLog("Missing dependency: ", aException.myMissingType, "."); TODO: Logging
 
 			assert(false && "Missing dependency.");
 
-			return SystemContainer_v2();
+			return SystemContainer();
 		}
 
-		SystemContainer_v2::InternalRep internalRep;
+		SystemContainer::InternalRep internalRep;
 
 		std::swap(internalRep, myConstructingContainer);
 
@@ -99,7 +97,7 @@ private:
 			});
 	}
 
-	static thread_local SystemContainer_v2::InternalRep myConstructingContainer;
+	static thread_local SystemContainer::InternalRep myConstructingContainer;
 
 	DependencyInjector myDependencyInjector;
 	std::vector<SystemElement> mySystemList;

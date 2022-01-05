@@ -73,7 +73,7 @@
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <OutDir>$(ProjectDir)../Lib/</OutDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir)../$(ProjectName);$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../External/CTPL/Inc;$(ProjectDir)../External/glad/Inc;$(ProjectDir)../External/glfw-3.3/Inc;$(ProjectDir)../External/json-3.5.0/Inc;$(ProjectDir)../External/KHR/Inc;$(ProjectDir)../External/SoLoud/Inc;$(ProjectDir)../External/stb/Inc;$(ProjectDir)../Imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../$(ProjectName);$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../WonderMakeEngine/Include/;$(ProjectDir)../External/CTPL/Inc;$(ProjectDir)../External/glad/Inc;$(ProjectDir)../External/glfw-3.3/Inc;$(ProjectDir)../External/json-3.5.0/Inc;$(ProjectDir)../External/KHR/Inc;$(ProjectDir)../External/SoLoud/Inc;$(ProjectDir)../External/stb/Inc;$(ProjectDir)../Imgui;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -83,7 +83,7 @@
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <OutDir>$(ProjectDir)../Lib/</OutDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir)../$(ProjectName);$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../External/CTPL/Inc;$(ProjectDir)../External/glad/Inc;$(ProjectDir)../External/glfw-3.3/Inc;$(ProjectDir)../External/json-3.5.0/Inc;$(ProjectDir)../External/KHR/Inc;$(ProjectDir)../External/SoLoud/Inc;$(ProjectDir)../External/stb/Inc;$(ProjectDir)../Imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../$(ProjectName);$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../WonderMakeEngine/Include/;$(ProjectDir)../External/CTPL/Inc;$(ProjectDir)../External/glad/Inc;$(ProjectDir)../External/glfw-3.3/Inc;$(ProjectDir)../External/json-3.5.0/Inc;$(ProjectDir)../External/KHR/Inc;$(ProjectDir)../External/SoLoud/Inc;$(ProjectDir)../External/stb/Inc;$(ProjectDir)../Imgui;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -93,7 +93,7 @@
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <OutDir>$(ProjectDir)../Lib/</OutDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir)../$(ProjectName);$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../External/CTPL/Inc;$(ProjectDir)../External/glad/Inc;$(ProjectDir)../External/glfw-3.3/Inc;$(ProjectDir)../External/json-3.5.0/Inc;$(ProjectDir)../External/KHR/Inc;$(ProjectDir)../External/SoLoud/Inc;$(ProjectDir)../External/stb/Inc;$(ProjectDir)../Imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../$(ProjectName);$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../WonderMakeEngine/Include/;$(ProjectDir)../External/CTPL/Inc;$(ProjectDir)../External/glad/Inc;$(ProjectDir)../External/glfw-3.3/Inc;$(ProjectDir)../External/json-3.5.0/Inc;$(ProjectDir)../External/KHR/Inc;$(ProjectDir)../External/SoLoud/Inc;$(ProjectDir)../External/stb/Inc;$(ProjectDir)../Imgui;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -103,7 +103,7 @@
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <OutDir>$(ProjectDir)../Lib/</OutDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir)../$(ProjectName);$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../External/CTPL/Inc;$(ProjectDir)../External/glad/Inc;$(ProjectDir)../External/glfw-3.3/Inc;$(ProjectDir)../External/json-3.5.0/Inc;$(ProjectDir)../External/KHR/Inc;$(ProjectDir)../External/SoLoud/Inc;$(ProjectDir)../External/stb/Inc;$(ProjectDir)../Imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../$(ProjectName);$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../WonderMakeEngine/Include/;$(ProjectDir)../External/CTPL/Inc;$(ProjectDir)../External/glad/Inc;$(ProjectDir)../External/glfw-3.3/Inc;$(ProjectDir)../External/json-3.5.0/Inc;$(ProjectDir)../External/KHR/Inc;$(ProjectDir)../External/SoLoud/Inc;$(ProjectDir)../External/stb/Inc;$(ProjectDir)../Imgui;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -228,8 +228,6 @@
     <ClCompile Include="Graphics\RenderNodeGraph\RenderNodeTypes.cpp" />
     <ClCompile Include="Graphics\RenderObject.cpp" />
     <ClCompile Include="Json\ParseJsonJob.cpp" />
-    <ClCompile Include="System\SystemGlobal.cpp" />
-    <ClCompile Include="System\SystemRegistry.cpp" />
     <ClCompile Include="Utilities\Id.cpp" />
     <ClCompile Include="WinPlatform\WinPlatformSystem.cpp" />
     <ClCompile Include="Imgui\Canvas.cpp" />
@@ -312,10 +310,6 @@
     <ClInclude Include="Job\JobSystem.h" />
     <ClInclude Include="Object\CreateObjectJob.h" />
     <ClInclude Include="Json\ParseJsonJob.h" />
-    <ClInclude Include="System\SystemContainer_v2.h" />
-    <ClInclude Include="System\SystemGlobal.h" />
-    <ClInclude Include="System\SystemRegistry.h" />
-    <ClInclude Include="System\SystemTraits.h" />
     <ClInclude Include="Utilities\Id.h" />
     <ClInclude Include="WinPlatform\WinPlatform.h" />
     <ClInclude Include="WinPlatform\WinPlatformSystem.h" />
@@ -365,7 +359,6 @@
     <ClInclude Include="Graphics\OpenGLFacade.h" />
     <ClInclude Include="Debugging\DebugSettingsSystem.h" />
     <ClInclude Include="Imgui\JsonInspector.h" />
-    <ClInclude Include="Policies\SystemId.h" />
     <ClInclude Include="NodeGraph\SlotCustomization\SlotColors.h" />
     <ClInclude Include="Audio\SoundEffectNodeGraph.h" />
     <ClInclude Include="Threads\TaskManager.h" />
@@ -405,7 +398,6 @@
     <ClInclude Include="Functionalities\Functionality.h" />
     <ClInclude Include="Functionalities\FunctionalitySystem.h" />
     <ClInclude Include="Object\Object.h" />
-    <ClInclude Include="Policies\Policy.h" />
     <ClInclude Include="Policies\Scheduler.h" />
     <ClInclude Include="Program\Engine.h" />
     <ClInclude Include="Graphics\VertexAttributes.h" />
@@ -413,8 +405,6 @@
     <ClInclude Include="Message\Messages.h" />
     <ClInclude Include="Graphics\RenderTarget.h" />
     <ClInclude Include="Graphics\ScreenPassRenderObject.h" />
-    <ClInclude Include="System\SystemPtr.h" />
-    <ClInclude Include="System\System.h" />
     <ClInclude Include="Resources\CreateResource.h" />
     <ClInclude Include="Resources\Resource.h" />
     <ClInclude Include="Resources\ResourceProxy.h" />
@@ -457,6 +447,9 @@
     </ProjectReference>
     <ProjectReference Include="..\WonderMakeBase\WonderMakeBase.vcxproj">
       <Project>{2c3d64fa-1626-4e0a-9f7a-1c2f2cbd72a6}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\WonderMakeEngine\WonderMakeEngine.vcxproj">
+      <Project>{62c4244a-20d5-418c-8a14-dc44beb005ae}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

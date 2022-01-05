@@ -4,7 +4,7 @@
 
 #include "WonderMakeBase/Typedefs.h"
 
-#include "System/SystemRegistry.h"
+#include "WonderMakeEngine/SystemRegistry.h"
 
 class RegistryTestSystem
 	: public System<>

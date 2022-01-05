@@ -20,7 +20,7 @@ struct JobDependencies
 		mySystemContainer.Add<JobSystem>(myJobSystem);
 	};
 
-	SystemContainer_v2 mySystemContainer;
+	SystemContainer mySystemContainer;
 
 	std::shared_ptr<ScheduleSystem> myScheduleSystem;
 	std::shared_ptr<JobSystem> myJobSystem;

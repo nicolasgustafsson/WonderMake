@@ -4,8 +4,8 @@
 #include "Job/JobOutput.h"
 #include "Job/JobPromise.h"
 
-#include "System/System.h"
-#include "System/SystemContainer_v2.h"
+#include "WonderMakeEngine/System.h"
+#include "WonderMakeEngine/SystemContainer.h"
 
 #include "Scheduling/ScheduleSystem.h"
 
@@ -78,7 +78,7 @@ public:
 
 	};
 
-	JobSystem(SystemContainer_v2& aSystemContainer) noexcept;
+	JobSystem(SystemContainer& aSystemContainer) noexcept;
 
 	template<typename TJob, typename... TArgs> requires std::is_base_of_v<JobBase, TJob>
 	inline auto Run(TArgs&&... aArgs)
@@ -151,7 +151,7 @@ private:
 		});
 	}
 
-	SystemContainer_v2& mySystemContainer;
+	SystemContainer& mySystemContainer;
 
 	std::mutex myMutex;
 	plf::colony<JobDataAlias> myJobs;

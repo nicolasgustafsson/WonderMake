@@ -7,7 +7,7 @@
 class SystemAbstracted;
 class SystemRegistry;
 
-class SystemContainer_v2
+class SystemContainer
 {
 private:
 	// So both can use InternalRep
@@ -16,8 +16,8 @@ private:
 	using InternalRep = std::unordered_map<std::type_index, std::shared_ptr<SystemAbstracted>>;
 
 public:
-	SystemContainer_v2() noexcept = default;
-	inline SystemContainer_v2(InternalRep&& aMap)
+	SystemContainer() noexcept = default;
+	inline SystemContainer(InternalRep&& aMap)
 		: myMap(std::move(aMap))
 	{}
 

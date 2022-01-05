@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Policies/Policy.h"
-
-#include "System/SystemTraits.h"
+#include "SystemPolicy.h"
+#include "SystemTraits.h"
 
 #include "WonderMakeBase/RestrictTypes.h"
 

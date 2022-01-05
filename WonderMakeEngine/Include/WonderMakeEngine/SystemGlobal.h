@@ -1,14 +1,14 @@
 #pragma once
 
-#include "System/SystemContainer_v2.h"
-#include "System/SystemRegistry.h"
+#include "SystemContainer.h"
+#include "SystemRegistry.h"
 
 #include "WonderMakeBase/AutoRegister.h"
 
 class Global
 {
 public:
-	static SystemContainer_v2& GetSystemContainer();
+	static SystemContainer& GetSystemContainer();
 	static SystemRegistry& GetSystemRegistry();
 };
 

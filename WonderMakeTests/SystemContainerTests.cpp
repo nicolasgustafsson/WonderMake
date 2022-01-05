@@ -4,8 +4,8 @@
 
 #include "WonderMakeBase/Typedefs.h"
 
-#include "System/System.h"
-#include "System/SystemContainer_v2.h"
+#include "WonderMakeEngine/System.h"
+#include "WonderMakeEngine/SystemContainer.h"
 
 class ContainerTestSystemA
 	: public System<>
@@ -17,7 +17,7 @@ class ContainerTestSystemB
 
 TEST_CASE("Empty system container", "[SystemContainer]")
 {
-	SystemContainer_v2 container;
+	SystemContainer container;
 
 	auto optA = container.TryGet<ContainerTestSystemA>();
 	auto optB = container.TryGet<ContainerTestSystemB>();
@@ -31,7 +31,7 @@ TEST_CASE("Construct container with Systems", "[SystemContainer]")
 	auto testSystemA = std::make_shared<ContainerTestSystemA>();
 	auto testSystemB = std::make_shared<ContainerTestSystemB>();
 
-	SystemContainer_v2 container(
+	SystemContainer container(
 		{
 			std::make_pair<std::type_index, std::shared_ptr<SystemAbstracted>>(typeid(ContainerTestSystemA), testSystemA),
 			std::make_pair<std::type_index, std::shared_ptr<SystemAbstracted>>(typeid(ContainerTestSystemB), testSystemB),
@@ -51,7 +51,7 @@ TEST_CASE("Construct container with Systems", "[SystemContainer]")
 
 TEST_CASE("Add System to container", "[SystemContainer]")
 {
-	SystemContainer_v2 container;
+	SystemContainer container;
 
 	auto testSystem = std::make_shared<ContainerTestSystemA>();
 

@@ -7,7 +7,7 @@
 
 #include "Resources/AssetDatabase.h"
 
-#include "System/SystemPtr.h"
+#include "WonderMakeEngine/SystemPtr.h"
 #include "OpenGLFacade.h"
 #include "Graphics/RenderHandle.h"
 

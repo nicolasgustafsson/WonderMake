@@ -7,7 +7,9 @@ struct GLFWwindow;
 class Window
 	: public System<
 		Policy::Set<
-			PAdd<GlfwFacade, PWrite>>>
+			PAdd<GlfwFacade, PWrite>>,
+		STrait::Set<
+			STGui>>
 {
 public:
 	Window();

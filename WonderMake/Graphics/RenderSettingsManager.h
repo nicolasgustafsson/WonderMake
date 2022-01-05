@@ -37,7 +37,9 @@ struct SRenderSettings final
 class RenderSettingsManager
 	: public System<
 		Policy::Set<
-			PAdd<OpenGLFacade, PWrite>>>
+			PAdd<OpenGLFacade, PWrite>>,
+		STrait::Set<
+			STGui>>
 {
 public:
 	RenderSettingsManager();

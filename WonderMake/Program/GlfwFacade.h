@@ -4,7 +4,11 @@ struct GLFWwindow;
 
 typedef void (*GLFWframebuffersizefun)(GLFWwindow*, int, int);
 
-class GlfwFacade : public System<>
+class GlfwFacade
+	: public System<
+		Policy::Set<>,
+		STrait::Set<
+			STGui>>
 {
 public:
 	GlfwFacade();

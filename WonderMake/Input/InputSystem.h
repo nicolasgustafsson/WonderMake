@@ -16,7 +16,9 @@ class InputSystem
 			PAdd<GlfwFacade, PWrite>,
 			PAdd<Renderer, PWrite>,
 			PAdd<CameraManager, PWrite>,
-			PAdd<Window, PWrite>>>
+			PAdd<Window, PWrite>>,
+		STrait::Set<
+			STGui>>
 	, public Debugged
 {
 public:

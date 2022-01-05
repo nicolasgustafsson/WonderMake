@@ -18,7 +18,11 @@ private:
 	u64 _myRenderId = 0;
 };
 
-class RenderCommandProcessor : public System<>
+class RenderCommandProcessor
+	: public System<
+		Policy::Set<>,
+		STrait::Set<
+			STGui>>
 {
 public:
 	RenderLayer& GetRenderLayer(std::string_view aRenderLayerName);

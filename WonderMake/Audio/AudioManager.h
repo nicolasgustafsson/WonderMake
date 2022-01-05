@@ -16,8 +16,10 @@ class AudioManager
 	: public System<
 		Policy::Set<
 			PAdd<ResourceSystem<AudioMixingNodeGraph>, PWrite>,
-			PAdd<DebugSettingsSystem, PWrite>>
-	>, Debugged
+			PAdd<DebugSettingsSystem, PWrite>>,
+		STrait::Set<
+			STGui>>,
+		Debugged
 {
 public:
 	AudioManager();

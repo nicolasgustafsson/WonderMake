@@ -4,7 +4,6 @@
 #include "Json/json.hpp"
 #include <fstream>
 #include "Program/GlfwFacade.h"
-#include "Camera/CameraManager.h"
 
 REGISTER_SYSTEM(Window);
 

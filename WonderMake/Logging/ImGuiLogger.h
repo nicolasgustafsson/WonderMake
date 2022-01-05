@@ -13,7 +13,10 @@ struct SImGuiLogMessage
 
 class ImGuiLogger
 	: public Debugged
-	, public System<>
+	, public System<
+		Policy::Set<>,
+		STrait::Set<
+			STGui>>
 {
 public:
 	ImGuiLogger();

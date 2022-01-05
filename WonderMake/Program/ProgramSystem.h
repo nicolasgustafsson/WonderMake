@@ -25,7 +25,9 @@ class ProgramSystem
 			PAdd<ScheduleSystem, PWrite>,
 			PAdd<TimeKeeper, PRead>,
 			PAdd<Renderer, PWrite>,
-			PAdd<Window, PWrite>>>
+			PAdd<Window, PWrite>>,
+		STrait::Set<
+			STGui>>
 {
 public:
 	ProgramSystem();

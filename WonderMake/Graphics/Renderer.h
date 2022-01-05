@@ -33,7 +33,9 @@ class Renderer
 			PAdd<GlfwFacade, PWrite>,
 			PAdd<CameraManager, PWrite>,
 			PAdd<RenderCommandProcessor, PWrite>,
-			PAdd<OpenGLFacade, PWrite>>>
+			PAdd<OpenGLFacade, PWrite>>,
+		STrait::Set<
+			STGui>>
 	, public Debugged
 {
 public:

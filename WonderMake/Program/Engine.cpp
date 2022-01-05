@@ -51,7 +51,7 @@ namespace Engine
 		STrait::SetList notFilter;
 
 		if (aInfo.Headless)
-			notFilter.emplace(STrait::ToObject<STGraphical>());
+			notFilter.emplace(STrait::ToObject<STGui>());
 
 		sysContainer = sysRegistry.CreateSystems(notFilter);
 

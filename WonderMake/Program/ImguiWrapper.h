@@ -9,7 +9,9 @@ class ImguiWrapper
 	: public System<
 		Policy::Set<
 			PAdd<GlfwFacade, PWrite>,
-			PAdd<Window, PRead>>>
+			PAdd<Window, PRead>>,
+		STrait::Set<
+			STGui>>
 {
 public:
 	ImguiWrapper();

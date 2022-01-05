@@ -16,7 +16,9 @@ class CameraManager
 		Policy::Set<
 			PAdd<OpenGLFacade, PWrite>,
 			PAdd<ResourceSystem<RenderNodeGraph>, PWrite>,
-			PAdd<Window, PRead>>>
+			PAdd<Window, PRead>>,
+		STrait::Set<
+			STGui>>
 	, public Debugged
 {
 public:

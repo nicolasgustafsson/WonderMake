@@ -32,11 +32,11 @@ namespace SystemTraits
 
 	struct Singleton : public Trait {};
 	struct Threadsafe : public Trait {};
-	struct Graphical : public Trait {};
+	struct Gui : public Trait {};
 }
 
 namespace STrait = SystemTraits;
 
 using STSingleton	= SystemTraits::Singleton;
 using STThreadsafe	= SystemTraits::Threadsafe;
-using STGraphical	= SystemTraits::Graphical;
+using STGui	= SystemTraits::Gui;

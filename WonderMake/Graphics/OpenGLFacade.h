@@ -4,7 +4,10 @@
 
 //[Nicos]: Note that this is not a complete facade for openGL; you may need to create your own wrapped functions.
 class OpenGLFacade
-	: public System<>
+	: public System<
+		Policy::Set<>,
+		STrait::Set<
+			STGui>>
 {
 public:
 	using Super::Super;

@@ -76,7 +76,9 @@ class EngineUniformBuffer
 	, public System<
 		Policy::Set<
 			PAdd<Window, PWrite>,
-			PAdd<OpenGLFacade, PWrite>>>
+			PAdd<OpenGLFacade, PWrite>>,
+		STrait::Set<
+			STGui>>
 	
 {
 public:

@@ -1,7 +1,12 @@
 #pragma once
 #include "Utilities/Debugging/Debugged.h"
 
-class EngineTools : public System<>, public Debugged
+class EngineTools
+	: public System<
+		Policy::Set<>,
+		STrait::Set<
+			STGui>>
+	, public Debugged
 {
 public:
 	EngineTools()

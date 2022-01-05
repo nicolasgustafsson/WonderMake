@@ -18,7 +18,9 @@ class DebugLineDrawer
 			PAdd<ResourceSystem<Shader<EShaderType::Vertex>>, PWrite>,
 			PAdd<ResourceSystem<Shader<EShaderType::Fragment>>, PWrite>,
 			PAdd<ResourceSystem<Shader<EShaderType::Geometry>>, PWrite>,
-			PAdd<TimeKeeper, PRead>>>
+			PAdd<TimeKeeper, PRead>>,
+		STrait::Set<
+			STGui>>
 {
 public:
 	DebugLineDrawer() noexcept;

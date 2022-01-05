@@ -7,7 +7,6 @@
 class AudioManager;
 class CameraManager;
 class EngineUniformBuffer;
-class FileWatcher;
 class GlfwFacade;
 class InputSystem;
 class ScheduleSystem;
@@ -21,7 +20,6 @@ class ProgramSystem
 			PAdd<AudioManager, PWrite>,
 			PAdd<CameraManager, PWrite>,
 			PAdd<EngineUniformBuffer, PWrite>,
-			PAdd<FileWatcher, PWrite>,
 			PAdd<GlfwFacade, PWrite>,
 			PAdd<InputSystem, PWrite>,
 			PAdd<ScheduleSystem, PWrite>,

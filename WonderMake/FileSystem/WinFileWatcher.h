@@ -1,4 +1,7 @@
 #pragma once
+
+#include "System/System.h"
+
 #include <queue>
 
 //[Nicos]: Basically stolen from my TGA engine project :P
@@ -6,11 +9,15 @@
 
 //[Nicos]: Also it's windows specific, so we will have to turn it off on linux :(
 
-class FileWatcher 
-	: public System<>
+class ScheduleSystem;
+
+class WinFileWatcher
+	: public System<
+		Policy::Set<
+			PAdd<ScheduleSystem, PWrite>>>
 {
 public:
-	FileWatcher();
+	WinFileWatcher();
 
 	void UpdateFileChanges();
 

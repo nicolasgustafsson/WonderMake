@@ -222,7 +222,7 @@
     <ClCompile Include="Camera\CameraManager.cpp" />
     <ClCompile Include="Camera\Display.cpp" />
     <ClCompile Include="EngineTools\EngineTools.cpp" />
-    <ClCompile Include="FileSystem\FileWatcher.cpp" />
+    <ClCompile Include="FileSystem\WinFileWatcher.cpp" />
     <ClCompile Include="Graphics\Shader.cpp" />
     <ClCompile Include="Graphics\RenderHandle.cpp" />
     <ClCompile Include="Graphics\RenderNodeGraph\RenderNodeTypes.cpp" />
@@ -336,7 +336,7 @@
     <ClInclude Include="Audio\AudioNodeTypes.h" />
     <ClInclude Include="Camera\CameraManager.h" />
     <ClInclude Include="Camera\Display.h" />
-    <ClInclude Include="FileSystem\FileWatcher.h" />
+    <ClInclude Include="FileSystem\WinFileWatcher.h" />
     <ClInclude Include="Graphics\RenderHandle.h" />
     <ClInclude Include="Graphics\RenderNodeGraph\RenderNodeTypes.h" />
     <ClInclude Include="Imgui\Canvas.h" />

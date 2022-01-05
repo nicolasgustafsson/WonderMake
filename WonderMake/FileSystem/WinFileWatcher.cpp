@@ -1,18 +1,23 @@
 #include "pch.h"
-#include "FileWatcher.h"
+#include "WinFileWatcher.h"
 
 #include <Windows.h>
 
-REGISTER_SYSTEM(FileWatcher);
+REGISTER_SYSTEM(WinFileWatcher);
 
-FileWatcher::FileWatcher()
+WinFileWatcher::WinFileWatcher()
 {
-	myShouldStop.store(false);
+	if constexpr (Constants::EnableAssetHotReload)
+	{
+		Get<ScheduleSystem>().ScheduleRepeating<>([this]() { UpdateFileChanges(); });
 
-	myThread = std::thread([&]() { Watch(); });
+		myShouldStop.store(false);
+
+		myThread = std::thread([&]() { Watch(); });
+	}
 }
 
-void FileWatcher::UpdateFileChanges()
+void WinFileWatcher::UpdateFileChanges()
 {
 	std::lock_guard<std::mutex> lock(myMutex);
 	while (!myQueuedChanges.empty())
@@ -29,7 +34,7 @@ void FileWatcher::UpdateFileChanges()
 	}
 }
 
-void FileWatcher::Watch()
+void WinFileWatcher::Watch()
 {
 	auto path = std::filesystem::current_path();
 	HANDLE directory = CreateFile(path.string().c_str(), FILE_LIST_DIRECTORY, FILE_SHARE_WRITE | FILE_SHARE_READ | FILE_SHARE_DELETE, nullptr,

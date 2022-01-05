@@ -56,7 +56,7 @@
     <ClCompile Include="Utilities\Platform.cpp" />
     <ClCompile Include="Functionalities\TimerFunctionality.cpp" />
     <ClCompile Include="Utilities\Math.cpp" />
-    <ClCompile Include="FileSystem\FileWatcher.cpp" />
+    <ClCompile Include="FileSystem\WinFileWatcher.cpp" />
     <ClCompile Include="Graphics\ShaderParser.cpp" />
     <ClCompile Include="Utilities\DependencyInjector.cpp" />
     <ClCompile Include="Object\DependencyDestructor.cpp" />
@@ -228,7 +228,7 @@
     <ClInclude Include="Utilities\Platform.h" />
     <ClInclude Include="Functionalities\TimerFunctionality.h" />
     <ClInclude Include="Utilities\Math.h" />
-    <ClInclude Include="FileSystem\FileWatcher.h" />
+    <ClInclude Include="FileSystem\WinFileWatcher.h" />
     <ClInclude Include="Graphics\ShaderParser.h" />
     <ClInclude Include="Utilities\Rotation.h" />
     <ClInclude Include="Utilities\Matrix.h" />

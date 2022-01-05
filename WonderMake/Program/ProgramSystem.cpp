@@ -3,7 +3,6 @@
 
 #include "Audio/AudioManager.h"
 #include "Camera/CameraManager.h"
-#include "FileSystem/FileWatcher.h"
 #include "Graphics/EngineUniformBuffer.h"
 #include "Graphics/Renderer.h"
 #include "Input/InputSystem.h"
@@ -47,11 +46,6 @@ void ProgramSystem::Tick()
 
 	Get<InputSystem>().Update();
 	Get<AudioManager>().Update();
-
-	if constexpr (Constants::EnableAssetHotReload)
-	{
-		Get<FileWatcher>().UpdateFileChanges();
-	}
 
 	StartNewFrame();
 }

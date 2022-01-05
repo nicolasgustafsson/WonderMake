@@ -1,10 +1,7 @@
-#define _ITERATOR_DEBUG_LEVEL 0
 
-#include <catch2/catch.hpp>
+#include "gtest/gtest.h"
 
 #include "WonderMakeBase/Alias.h"
-
-#include <string>
 
 template<typename TType>
 struct AliasMock
@@ -29,7 +26,7 @@ void StaticTest_Alias()
 	static_assert(!Alias<AliasMock<int>>::IsValidAlias<std::string>);
 }
 
-TEST_CASE("Alias can be constructed and destroyed", "[Alias]")
+TEST(AliasTest, can_be_constructed_and_destroyed)
 {
 	Alias<AliasMock<int>> mock = AliasMock<float>();
 

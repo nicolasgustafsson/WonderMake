@@ -5,14 +5,12 @@
     <ClCompile Include="Utilities\VectorTests.cpp" />
     <ClCompile Include="Utilities\RotationTests.cpp" />
     <ClCompile Include="Utilities\MatrixTests.cpp" />
-    <ClCompile Include="Utilities\DependencyInjectionTests.cpp" />
     <ClCompile Include="ObjectsAndPolicies\PolicyTests.cpp" />
     <ClCompile Include="ObjectsAndPolicies\ObjectTests.cpp" />
     <ClCompile Include="Functionalities\TransformFunctionalityTests.cpp" />
     <ClCompile Include="Job\JobTests.cpp" />
     <ClCompile Include="ContainerTests.cpp" />
     <ClCompile Include="Utilities\UniqueFunctionTests.cpp" />
-    <ClCompile Include="Utilities\AliasTests.cpp" />
     <ClCompile Include="Guid\GuidTests.cpp" />
     <ClCompile Include="Guid\WinGuidGeneratorSystemTests.cpp" />
     <ClCompile Include="FileSystem\WinFileSystemTests.cpp" />

@@ -200,8 +200,6 @@
     <ClCompile Include="ParseJsonJobTests.cpp" />
     <ClCompile Include="SystemContainerTests.cpp" />
     <ClCompile Include="SystemRegistryTests.cpp" />
-    <ClCompile Include="Utilities\AliasTests.cpp" />
-    <ClCompile Include="Utilities\DependencyInjectionTests.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Utilities\MatrixTests.cpp" />
     <ClCompile Include="ObjectsAndPolicies\ObjectTests.cpp" />

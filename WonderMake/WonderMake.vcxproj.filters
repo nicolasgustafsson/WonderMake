@@ -162,7 +162,6 @@
     <ClInclude Include="Resources\Resource.h" />
     <ClInclude Include="Resources\ResourceSystem.h" />
     <ClInclude Include="Logging\FileLogger.h" />
-    <ClInclude Include="Utilities\plf_colony.h" />
     <ClInclude Include="Object\Object.h" />
     <ClInclude Include="Components\SpriteComponent.h" />
     <ClInclude Include="Components\TransformComponent.h" />
@@ -172,7 +171,6 @@
     <ClInclude Include="Components\ComponentSystem.h" />
     <ClInclude Include="Components\Component.h" />
     <ClInclude Include="Utilities\Debugging\Debugged.h" />
-    <ClInclude Include="Utilities\Stopwatch.h" />
     <ClInclude Include="Debugging\DebugLineDrawer.h" />
     <ClInclude Include="Debugging\DebugLine.h" />
     <ClInclude Include="Debugging\DebugLineRenderObject.h" />

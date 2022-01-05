@@ -1,10 +1,9 @@
 #pragma once
 
+#include "Math.h"
+#include "Rotation.h"
 #include "Typedefs.h"
-
-#include "Utilities/Math.h"
-#include "Utilities/Rotation.h"
-#include "Utilities/Vector.h"
+#include "Vector.h"
 
 #include <algorithm>
 #include <array>

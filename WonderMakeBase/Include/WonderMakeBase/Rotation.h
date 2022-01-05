@@ -6,8 +6,7 @@
 #include <ratio>
 #include <type_traits>
 
-#include "Utilities/Math.h"
-
+#include "Math.h"
 #include "Typedefs.h"
 
 template<typename TRep, typename TRatio>

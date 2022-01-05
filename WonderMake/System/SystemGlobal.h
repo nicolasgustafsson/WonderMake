@@ -3,7 +3,7 @@
 #include "System/SystemContainer_v2.h"
 #include "System/SystemRegistry.h"
 
-#include "Utilities/AutoRegister.h"
+#include "WonderMakeBase/AutoRegister.h"
 
 class Global
 {

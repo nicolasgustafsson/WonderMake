@@ -1,7 +1,7 @@
 #pragma once
 #include <json/json.hpp>
 #include <array>
-#include "Utilities/Vector.h"
+#include "WonderMakeBase/Vector.h"
 
 namespace InputSlotSerialization
 {

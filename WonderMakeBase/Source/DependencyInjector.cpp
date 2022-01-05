@@ -1,5 +1,4 @@
-#include "pch.h"
-#include "DependencyInjector.h"
+#include "WonderMakeBase/DependencyInjector.h"
 
 void DependencyInjector::CreateAll()
 {

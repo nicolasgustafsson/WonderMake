@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Imgui/ImguiInclude.h"
-#include "Typedefs.h"
+#include "WonderMakeBase/Typedefs.h"
 
 struct SColor
 {

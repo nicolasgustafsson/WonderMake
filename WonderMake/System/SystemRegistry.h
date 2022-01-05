@@ -5,7 +5,7 @@
 #include "System/System.h"
 #include "System/SystemContainer_v2.h"
 
-#include "Utilities/DependencyInjector.h"
+#include "WonderMakeBase/DependencyInjector.h"
 
 #include <cassert>
 #include <functional>

@@ -1,4 +1,9 @@
 #pragma once
+
+#include "Rotation.h"
+#include "Typedefs.h"
+#include "Vector.h"
+
 struct SLine
 {
 	bool operator==(const SLine& aOther) const { return (aOther.First == First && aOther.Second == Second) || (aOther.First == Second && aOther.Second == First); };

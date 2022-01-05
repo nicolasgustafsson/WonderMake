@@ -73,7 +73,7 @@
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <OutDir>$(ProjectDir)../Lib/</OutDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir)../$(ProjectName);$(ProjectDir)../External/CTPL/Inc;$(ProjectDir)../External/glad/Inc;$(ProjectDir)../External/glfw-3.3/Inc;$(ProjectDir)../External/json-3.5.0/Inc;$(ProjectDir)../External/KHR/Inc;$(ProjectDir)../External/SoLoud/Inc;$(ProjectDir)../External/stb/Inc;$(ProjectDir)../Imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../$(ProjectName);$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../External/CTPL/Inc;$(ProjectDir)../External/glad/Inc;$(ProjectDir)../External/glfw-3.3/Inc;$(ProjectDir)../External/json-3.5.0/Inc;$(ProjectDir)../External/KHR/Inc;$(ProjectDir)../External/SoLoud/Inc;$(ProjectDir)../External/stb/Inc;$(ProjectDir)../Imgui;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -83,7 +83,7 @@
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <OutDir>$(ProjectDir)../Lib/</OutDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir)../$(ProjectName);$(ProjectDir)../External/CTPL/Inc;$(ProjectDir)../External/glad/Inc;$(ProjectDir)../External/glfw-3.3/Inc;$(ProjectDir)../External/json-3.5.0/Inc;$(ProjectDir)../External/KHR/Inc;$(ProjectDir)../External/SoLoud/Inc;$(ProjectDir)../External/stb/Inc;$(ProjectDir)../Imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../$(ProjectName);$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../External/CTPL/Inc;$(ProjectDir)../External/glad/Inc;$(ProjectDir)../External/glfw-3.3/Inc;$(ProjectDir)../External/json-3.5.0/Inc;$(ProjectDir)../External/KHR/Inc;$(ProjectDir)../External/SoLoud/Inc;$(ProjectDir)../External/stb/Inc;$(ProjectDir)../Imgui;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -93,7 +93,7 @@
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <OutDir>$(ProjectDir)../Lib/</OutDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir)../$(ProjectName);$(ProjectDir)../External/CTPL/Inc;$(ProjectDir)../External/glad/Inc;$(ProjectDir)../External/glfw-3.3/Inc;$(ProjectDir)../External/json-3.5.0/Inc;$(ProjectDir)../External/KHR/Inc;$(ProjectDir)../External/SoLoud/Inc;$(ProjectDir)../External/stb/Inc;$(ProjectDir)../Imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../$(ProjectName);$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../External/CTPL/Inc;$(ProjectDir)../External/glad/Inc;$(ProjectDir)../External/glfw-3.3/Inc;$(ProjectDir)../External/json-3.5.0/Inc;$(ProjectDir)../External/KHR/Inc;$(ProjectDir)../External/SoLoud/Inc;$(ProjectDir)../External/stb/Inc;$(ProjectDir)../Imgui;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -103,7 +103,7 @@
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <OutDir>$(ProjectDir)../Lib/</OutDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir)../$(ProjectName);$(ProjectDir)../External/CTPL/Inc;$(ProjectDir)../External/glad/Inc;$(ProjectDir)../External/glfw-3.3/Inc;$(ProjectDir)../External/json-3.5.0/Inc;$(ProjectDir)../External/KHR/Inc;$(ProjectDir)../External/SoLoud/Inc;$(ProjectDir)../External/stb/Inc;$(ProjectDir)../Imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../$(ProjectName);$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../External/CTPL/Inc;$(ProjectDir)../External/glad/Inc;$(ProjectDir)../External/glfw-3.3/Inc;$(ProjectDir)../External/json-3.5.0/Inc;$(ProjectDir)../External/KHR/Inc;$(ProjectDir)../External/SoLoud/Inc;$(ProjectDir)../External/stb/Inc;$(ProjectDir)../Imgui;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>..\BasicallyEverything.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -230,8 +230,8 @@
     <ClCompile Include="Json\ParseJsonJob.cpp" />
     <ClCompile Include="System\SystemGlobal.cpp" />
     <ClCompile Include="System\SystemRegistry.cpp" />
-    <ClCompile Include="WinPlatform\WinPlatformSystem.cpp" />
     <ClCompile Include="Utilities\Id.cpp" />
+    <ClCompile Include="WinPlatform\WinPlatformSystem.cpp" />
     <ClCompile Include="Imgui\Canvas.cpp" />
     <ClCompile Include="Imgui\FileSelector.cpp" />
     <ClCompile Include="Imgui\NodeGraphGui.cpp" />
@@ -240,13 +240,11 @@
     <ClCompile Include="Job\JobSystem.cpp" />
     <ClCompile Include="Object\DependencyDestructor.cpp" />
     <ClCompile Include="Scheduling\ScheduleSystem.cpp" />
-    <ClCompile Include="Utilities\DependencyInjector.cpp" />
     <ClCompile Include="Graphics\RenderCommandProcessor.cpp" />
     <ClCompile Include="Graphics\RenderNodeGraph\RenderNodeGraph.cpp" />
     <ClCompile Include="Graphics\RenderSettingsManager.cpp" />
     <ClCompile Include="Graphics\LineListRenderObject.cpp" />
     <ClCompile Include="EngineTools\EasingTester.cpp" />
-    <ClCompile Include="Utilities\Math.cpp" />
     <ClCompile Include="NodeGraph\NodeGraph.cpp" />
     <ClCompile Include="NodeGraph\NodeTypes.cpp" />
     <ClCompile Include="Program\GlfwFacade.cpp" />
@@ -294,7 +292,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Graphics\Texture.cpp" />
-    <ClCompile Include="Utilities\Color.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Program\Window.cpp" />
     <ClCompile Include="Utilities\Platform.cpp" />
@@ -319,6 +316,7 @@
     <ClInclude Include="System\SystemGlobal.h" />
     <ClInclude Include="System\SystemRegistry.h" />
     <ClInclude Include="System\SystemTraits.h" />
+    <ClInclude Include="Utilities\Id.h" />
     <ClInclude Include="WinPlatform\WinPlatform.h" />
     <ClInclude Include="WinPlatform\WinPlatformSystem.h" />
     <ClInclude Include="Scheduling\ScheduleSystem.h" />
@@ -326,7 +324,6 @@
     <ClInclude Include="Resources\AssetLink.h" />
     <ClInclude Include="Guid\Guid.h" />
     <ClInclude Include="Guid\GuidGeneratorSystem.h" />
-    <ClInclude Include="Utilities\Id.h" />
     <ClInclude Include="Utilities\Container\BackendImplementations\ColonyBackend.h" />
     <ClInclude Include="Resources\Asset.h" />
     <ClInclude Include="Resources\AssetDatabase.h" />
@@ -345,8 +342,6 @@
     <ClInclude Include="Imgui\NodeGraphGui.h" />
     <ClInclude Include="Graphics\ShaderParser.h" />
     <ClInclude Include="Object\DependencyDestructor.h" />
-    <ClInclude Include="Utilities\Alias.h" />
-    <ClInclude Include="Utilities\AutoRegister.h" />
     <ClInclude Include="Utilities\Container\BackendImplementations\LinkedListBackend.h" />
     <ClInclude Include="Utilities\Container\BackendImplementations\UnorderedMapBackend.h" />
     <ClInclude Include="Utilities\Container\BackendImplementations\VectorBackend.h" />
@@ -355,15 +350,12 @@
     <ClInclude Include="Utilities\Container\Traits\ContainerTraits.h" />
     <ClInclude Include="Utilities\Container\Traits\Implications.h" />
     <ClInclude Include="Utilities\Container\Traits\TraitList.h" />
-    <ClInclude Include="Utilities\DependencyInjector.h" />
     <ClInclude Include="Graphics\RenderCommandProcessor.h" />
     <ClInclude Include="Graphics\RenderNodeGraph\RenderNodeGraph.h" />
     <ClInclude Include="Graphics\RenderSettingsManager.h" />
     <ClInclude Include="Graphics\LineListRenderObject.h" />
     <ClInclude Include="Utilities\Easing\EasingFunctions.h" />
     <ClInclude Include="Utilities\Json\JsonExtensions.h" />
-    <ClInclude Include="Utilities\Line.h" />
-    <ClInclude Include="Utilities\Math.h" />
     <ClInclude Include="NodeGraph\SlotCustomization\SlotInputEdits.h" />
     <ClInclude Include="NodeGraph\NodeGraph.h" />
     <ClInclude Include="NodeGraph\NodeTypes.h" />
@@ -395,11 +387,8 @@
     <ClInclude Include="Input\InputItems.h" />
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="Randomizer\Randomizer.h" />
-    <ClInclude Include="Utilities\Matrix.h" />
-    <ClInclude Include="Utilities\Rotation.h" />
     <ClInclude Include="Utilities\TimeKeeper.h" />
     <ClInclude Include="Utilities\MathUtility.h" />
-    <ClInclude Include="Utilities\Stopwatch.h" />
     <ClInclude Include="Utilities\Debugging\Debugged.h" />
     <ClInclude Include="Graphics\EngineUniformBuffer.h" />
     <ClInclude Include="Imgui\DockSpace.h" />
@@ -443,24 +432,15 @@
     <ClInclude Include="Graphics\SpriteRenderObject.h" />
     <ClInclude Include="Graphics\UniformBuffer.h" />
     <ClInclude Include="Utilities\Platform.h" />
-    <ClInclude Include="Utilities\plf_colony.h" />
-    <ClInclude Include="Utilities\Singleton.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Graphics\Texture.h" />
-    <ClInclude Include="Typedefs.h" />
     <ClInclude Include="Utilities\Color.h" />
-    <ClInclude Include="Utilities\RestrictTypes.h" />
-    <ClInclude Include="Utilities\Result.h" />
     <ClInclude Include="Program\Window.h" />
     <ClInclude Include="Utilities\TypeTraits\Concepts.h" />
     <ClInclude Include="Utilities\TypeTraits\ContainsType.h" />
     <ClInclude Include="Utilities\TypeTraits\ReturnType.h" />
     <ClInclude Include="Utilities\TypeTraits\ParameterPack.h" />
     <ClInclude Include="Utilities\TypeTraits\TypeTraits.h" />
-    <ClInclude Include="Utilities\UniqueFunction.h" />
-    <ClInclude Include="Utilities\UniqueValue.h" />
-    <ClInclude Include="Utilities\Utility.h" />
-    <ClInclude Include="Utilities\Vector.h" />
     <ClInclude Include="Graphics\VertexTypes.h" />
     <ClInclude Include="Graphics\VertexBufferArray.h" />
     <ClInclude Include="Audio\AudioStructs.h" />
@@ -474,6 +454,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Imgui\Imgui.vcxproj">
       <Project>{f13fca88-2695-4b4f-aa6f-b7525c07155f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\WonderMakeBase\WonderMakeBase.vcxproj">
+      <Project>{2c3d64fa-1626-4e0a-9f7a-1c2f2cbd72a6}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

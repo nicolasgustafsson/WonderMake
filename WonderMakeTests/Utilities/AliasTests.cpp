@@ -2,7 +2,7 @@
 
 #include <catch2/catch.hpp>
 
-#include "Utilities/Alias.h"
+#include "WonderMakeBase/Alias.h"
 
 #include <string>
 

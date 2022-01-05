@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Utilities/RestrictTypes.h"
-#include "Utilities/Utility.h"
+#include "RestrictTypes.h"
+#include "Utility.h"
 
 #include <type_traits>
 

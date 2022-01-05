@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Include">
+      <UniqueIdentifier>{cb3ca9e3-b111-4db6-93a0-f848ad32028f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{4f5c1cf3-7cb5-4335-bad4-16ead06a8434}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Include\WonderMakeBase\Rotation.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\WonderMakeBase\Singleton.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\WonderMakeBase\Stopwatch.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\WonderMakeBase\UniqueFunction.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\WonderMakeBase\UniqueValue.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\WonderMakeBase\Utility.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\WonderMakeBase\Vector.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\WonderMakeBase\Alias.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\WonderMakeBase\AutoRegister.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\WonderMakeBase\DependencyInjector.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\WonderMakeBase\Line.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\WonderMakeBase\Math.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\WonderMakeBase\Matrix.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\WonderMakeBase\plf_colony.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\WonderMakeBase\RestrictTypes.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\WonderMakeBase\Typedefs.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\DependencyInjector.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

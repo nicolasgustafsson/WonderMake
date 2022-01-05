@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Typedefs.h"
+#include "WonderMakeBase/Typedefs.h"
 
 #include "Job/JobOutput.h"
 #include "Job/JobPromise.h"
 
 #include "Policies/Policy.h"
 
-#include "Utilities/RestrictTypes.h"
+#include "WonderMakeBase/RestrictTypes.h"
 
 #include <optional>
 #include <type_traits>

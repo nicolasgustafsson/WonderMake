@@ -31,7 +31,6 @@
     <ClCompile Include="Graphics\SpriteRenderObject.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Graphics\Texture.cpp" />
-    <ClCompile Include="Utilities\Color.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Program\Window.cpp" />
     <ClCompile Include="Object\Object.cpp" />
@@ -55,10 +54,8 @@
     <ClCompile Include="Audio\SoundEffectNodeGraph.cpp" />
     <ClCompile Include="Utilities\Platform.cpp" />
     <ClCompile Include="Functionalities\TimerFunctionality.cpp" />
-    <ClCompile Include="Utilities\Math.cpp" />
     <ClCompile Include="FileSystem\WinFileWatcher.cpp" />
     <ClCompile Include="Graphics\ShaderParser.cpp" />
-    <ClCompile Include="Utilities\DependencyInjector.cpp" />
     <ClCompile Include="Object\DependencyDestructor.cpp" />
     <ClCompile Include="Graphics\Shader.cpp" />
     <ClCompile Include="Components\Component.cpp" />
@@ -72,7 +69,6 @@
     <ClCompile Include="Camera\CameraManager.cpp" />
     <ClCompile Include="Graphics\RenderSettingsManager.cpp" />
     <ClCompile Include="Graphics\LineListRenderObject.cpp" />
-    <ClCompile Include="Utilities\Id.cpp" />
     <ClCompile Include="Threads\TaskManager.cpp" />
     <ClCompile Include="Scheduling\ScheduleSystem.cpp" />
     <ClCompile Include="EngineTools\EngineTools.cpp" />
@@ -87,6 +83,7 @@
     <ClCompile Include="Json\ParseJsonJob.cpp" />
     <ClCompile Include="System\SystemRegistry.cpp" />
     <ClCompile Include="System\SystemGlobal.cpp" />
+    <ClCompile Include="Utilities\Id.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities\BezierCurve.h" />
@@ -105,7 +102,6 @@
     <ClInclude Include="Input\InputItems.h" />
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="Utilities\MathUtility.h" />
-    <ClInclude Include="Utilities\Stopwatch.h" />
     <ClInclude Include="Utilities\Debugging\Debugged.h" />
     <ClInclude Include="Graphics\EngineUniformBuffer.h" />
     <ClInclude Include="Imgui\DockSpace.h" />
@@ -145,17 +141,10 @@
     <ClInclude Include="Resources\ResourceSystem.h" />
     <ClInclude Include="Graphics\SpriteRenderObject.h" />
     <ClInclude Include="Graphics\UniformBuffer.h" />
-    <ClInclude Include="Utilities\plf_colony.h" />
-    <ClInclude Include="Utilities\Singleton.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Graphics\Texture.h" />
-    <ClInclude Include="Typedefs.h" />
     <ClInclude Include="Utilities\Color.h" />
-    <ClInclude Include="Utilities\RestrictTypes.h" />
-    <ClInclude Include="Utilities\Result.h" />
     <ClInclude Include="Program\Window.h" />
-    <ClInclude Include="Utilities\Utility.h" />
-    <ClInclude Include="Utilities\Vector.h" />
     <ClInclude Include="Graphics\VertexTypes.h" />
     <ClInclude Include="Graphics\VertexBufferArray.h" />
     <ClInclude Include="Graphics\RenderTarget.h" />
@@ -227,14 +216,9 @@
     <ClInclude Include="Threads\ThreadChecker.h" />
     <ClInclude Include="Utilities\Platform.h" />
     <ClInclude Include="Functionalities\TimerFunctionality.h" />
-    <ClInclude Include="Utilities\Math.h" />
     <ClInclude Include="FileSystem\WinFileWatcher.h" />
     <ClInclude Include="Graphics\ShaderParser.h" />
-    <ClInclude Include="Utilities\Rotation.h" />
-    <ClInclude Include="Utilities\Matrix.h" />
-    <ClInclude Include="Utilities\DependencyInjector.h" />
     <ClInclude Include="Object\DependencyDestructor.h" />
-    <ClInclude Include="Utilities\AutoRegister.h" />
     <ClInclude Include="Graphics\RenderCommandProcessor.h" />
     <ClInclude Include="Graphics\RenderNodeGraph\RenderNodeGraph.h" />
     <ClInclude Include="Graphics\RenderNodeGraph\RenderNodeTypes.h" />
@@ -242,7 +226,6 @@
     <ClInclude Include="Graphics\RenderHandle.h" />
     <ClInclude Include="Camera\CameraManager.h" />
     <ClInclude Include="Graphics\RenderSettingsManager.h" />
-    <ClInclude Include="Utilities\Line.h" />
     <ClInclude Include="Graphics\LineListRenderObject.h" />
     <ClInclude Include="Resources\AssetDatabase.h" />
     <ClInclude Include="Resources\Asset.h" />
@@ -261,7 +244,6 @@
     <ClInclude Include="Utilities\TypeTraits\Concepts.h" />
     <ClInclude Include="Utilities\TypeTraits\TypeTraits.h" />
     <ClInclude Include="Utilities\Container\BackendImplementations\UnorderedMapBackend.h" />
-    <ClInclude Include="Utilities\Id.h" />
     <ClInclude Include="Imgui\AssetBrowser.h" />
     <ClInclude Include="Resources\AssetLink.h" />
     <ClInclude Include="Threads\TaskManager.h" />
@@ -276,10 +258,7 @@
     <ClInclude Include="Job\JobFuture.h" />
     <ClInclude Include="Job\JobPromise.h" />
     <ClInclude Include="Job\Cargo.h" />
-    <ClInclude Include="Utilities\UniqueFunction.h" />
-    <ClInclude Include="Utilities\Alias.h" />
     <ClInclude Include="Job\JobOutput.h" />
-    <ClInclude Include="Utilities\UniqueValue.h" />
     <ClInclude Include="Guid\Guid.h" />
     <ClInclude Include="Guid\GuidGeneratorSystem.h" />
     <ClInclude Include="Guid\WinGuidGeneratorSystem.h" />
@@ -294,6 +273,7 @@
     <ClInclude Include="System\SystemContainer_v2.h" />
     <ClInclude Include="System\SystemGlobal.h" />
     <ClInclude Include="System\SystemTraits.h" />
+    <ClInclude Include="Utilities\Id.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

@@ -1,7 +1,7 @@
 #pragma once
-#include "Typedefs.h"
 
-#include "Utilities/Rotation.h"
+#include "Rotation.h"
+#include "Typedefs.h"
 
 #include <array>
 

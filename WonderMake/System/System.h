@@ -4,7 +4,7 @@
 
 #include "System/SystemTraits.h"
 
-#include "Utilities/RestrictTypes.h"
+#include "WonderMakeBase/RestrictTypes.h"
 
 #include <optional>
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Utilities/RestrictTypes.h"
-#include "Utilities/Singleton.h"
-#include "Utilities/UniqueFunction.h"
+#include "WonderMakeBase/RestrictTypes.h"
+#include "WonderMakeBase/Singleton.h"
+#include "WonderMakeBase/UniqueFunction.h"
 
 #include <mutex>
 #include <unordered_map>

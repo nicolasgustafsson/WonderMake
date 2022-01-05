@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Utilities/RestrictTypes.h"
+#include "RestrictTypes.h"
 
 #include <type_traits>
 

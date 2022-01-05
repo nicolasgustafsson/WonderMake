@@ -2,7 +2,7 @@
 
 #include <catch2/catch.hpp>
 
-#include "Utilities/DependencyInjector.h"
+#include "WonderMakeBase/DependencyInjector.h"
 
 struct Kalle {};
 

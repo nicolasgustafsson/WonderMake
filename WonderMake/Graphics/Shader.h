@@ -4,7 +4,7 @@
 #include "Resources/Resource.h"
 #include "Resources/ResourceSystem.h"
 
-#include "Utilities/RestrictTypes.h"
+#include "WonderMakeBase/RestrictTypes.h"
 
 #include <glad/glad.h>
 #include "OpenGLFacade.h"

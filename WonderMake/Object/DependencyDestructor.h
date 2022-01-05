@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Utilities/RestrictTypes.h"
-#include "Utilities/UniqueFunction.h"
+#include "WonderMakeBase/RestrictTypes.h"
+#include "WonderMakeBase/UniqueFunction.h"
 
 class Object;
 struct SComponent;

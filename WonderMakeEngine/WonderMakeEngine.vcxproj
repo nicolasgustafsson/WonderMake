@@ -19,6 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\WonderMakeBase\WonderMakeBase.vcxproj">
+      <Project>{2c3d64fa-1626-4e0a-9f7a-1c2f2cbd72a6}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\SystemGlobal.cpp" />
+    <ClCompile Include="Source\SystemRegistry.cpp" />
+    <ClCompile Include="Source\WinPlatformSystem.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="Include\WonderMakeEngine\System.h" />
     <ClInclude Include="Include\WonderMakeEngine\SystemContainer.h" />
     <ClInclude Include="Include\WonderMakeEngine\SystemGlobal.h" />
@@ -27,15 +37,8 @@
     <ClInclude Include="Include\WonderMakeEngine\SystemPtr.h" />
     <ClInclude Include="Include\WonderMakeEngine\SystemRegistry.h" />
     <ClInclude Include="Include\WonderMakeEngine\SystemTraits.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Source\SystemGlobal.cpp" />
-    <ClCompile Include="Source\SystemRegistry.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WonderMakeBase\WonderMakeBase.vcxproj">
-      <Project>{2c3d64fa-1626-4e0a-9f7a-1c2f2cbd72a6}</Project>
-    </ProjectReference>
+    <ClInclude Include="Include\WonderMakeEngine\WinPlatform.h" />
+    <ClInclude Include="Include\WonderMakeEngine\WinPlatformSystem.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

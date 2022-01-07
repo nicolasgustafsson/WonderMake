@@ -9,6 +9,23 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\SystemGlobal.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SystemRegistry.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\WinPlatformSystem.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Include\WonderMakeEngine\SystemGlobal.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\WonderMakeEngine\SystemId.h">
+      <Filter>Include</Filter>
+    </ClInclude>
     <ClInclude Include="Include\WonderMakeEngine\SystemPolicy.h">
       <Filter>Include</Filter>
     </ClInclude>
@@ -27,19 +44,11 @@
     <ClInclude Include="Include\WonderMakeEngine\SystemContainer.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeEngine\SystemGlobal.h">
+    <ClInclude Include="Include\WonderMakeEngine\WinPlatformSystem.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeEngine\SystemId.h">
+    <ClInclude Include="Include\WonderMakeEngine\WinPlatform.h">
       <Filter>Include</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Source\SystemGlobal.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\SystemRegistry.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

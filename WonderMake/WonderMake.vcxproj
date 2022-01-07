@@ -229,7 +229,6 @@
     <ClCompile Include="Graphics\RenderObject.cpp" />
     <ClCompile Include="Json\ParseJsonJob.cpp" />
     <ClCompile Include="Utilities\Id.cpp" />
-    <ClCompile Include="WinPlatform\WinPlatformSystem.cpp" />
     <ClCompile Include="Imgui\Canvas.cpp" />
     <ClCompile Include="Imgui\FileSelector.cpp" />
     <ClCompile Include="Imgui\NodeGraphGui.cpp" />
@@ -311,8 +310,6 @@
     <ClInclude Include="Object\CreateObjectJob.h" />
     <ClInclude Include="Json\ParseJsonJob.h" />
     <ClInclude Include="Utilities\Id.h" />
-    <ClInclude Include="WinPlatform\WinPlatform.h" />
-    <ClInclude Include="WinPlatform\WinPlatformSystem.h" />
     <ClInclude Include="Scheduling\ScheduleSystem.h" />
     <ClInclude Include="Imgui\AssetBrowser.h" />
     <ClInclude Include="Resources\AssetLink.h" />

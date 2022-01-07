@@ -1,6 +1,6 @@
-#include "pch.h"
+#include "WonderMakeEngine/WinPlatformSystem.h"
 
-#include "WinPlatform/WinPlatformSystem.h"
+#include "WonderMakeEngine/SystemGlobal.h"
 
 REGISTER_SYSTEM(WinPlatformSystem);
 

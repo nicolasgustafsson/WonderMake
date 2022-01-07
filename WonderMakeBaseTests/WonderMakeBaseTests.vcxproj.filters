@@ -10,6 +10,15 @@
     <ClCompile Include="..\WonderMakeBase\Source\DependencyInjector.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\External\gtest-1.11.0\Src\src\gtest-all.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\External\gmock-1.11.0\Src\src\gmock-all.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\External\gtest-1.11.0\Src\src\gtest_main.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Tests">
@@ -21,9 +30,6 @@
     <Filter Include="Include">
       <UniqueIdentifier>{6cda30de-81e4-4239-8349-1244a17f955c}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\DependencyInjector.h">

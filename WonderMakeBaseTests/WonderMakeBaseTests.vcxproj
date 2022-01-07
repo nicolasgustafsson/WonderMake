@@ -36,33 +36,33 @@
     <OutDir>$(ProjectDir)../Tests/</OutDir>
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir)../WonderMakeBase/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../External/gtest-1.11.0/Src/;$(ProjectDir)../External/gtest-1.11.0/Inc/;$(ProjectDir)../External/gmock-1.11.0/Src/;$(ProjectDir)../External/gmock-1.11.0/Inc/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(ProjectDir)../Tests/</OutDir>
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir)../WonderMakeBase/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../External/gtest-1.11.0/Src/;$(ProjectDir)../External/gtest-1.11.0/Inc/;$(ProjectDir)../External/gmock-1.11.0/Src/;$(ProjectDir)../External/gmock-1.11.0/Inc/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(ProjectDir)../Tests/</OutDir>
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir)../WonderMakeBase/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../External/gtest-1.11.0/Src/;$(ProjectDir)../External/gtest-1.11.0/Inc/;$(ProjectDir)../External/gmock-1.11.0/Src/;$(ProjectDir)../External/gmock-1.11.0/Inc/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(ProjectDir)../Tests/</OutDir>
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir)../WonderMakeBase/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../External/gtest-1.11.0/Src/;$(ProjectDir)../External/gtest-1.11.0/Inc/;$(ProjectDir)../External/gmock-1.11.0/Src/;$(ProjectDir)../External/gmock-1.11.0/Inc/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemGroup>
+    <ClCompile Include="..\External\gmock-1.11.0\Src\src\gmock-all.cc" />
+    <ClCompile Include="..\External\gtest-1.11.0\Src\src\gtest-all.cc" />
+    <ClCompile Include="..\External\gtest-1.11.0\Src\src\gtest_main.cc" />
     <ClCompile Include="..\WonderMakeBase\Source\DependencyInjector.cpp" />
     <ClCompile Include="AliasTests.cpp" />
     <ClCompile Include="DependencyInjectionTests.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\Alias.h" />
@@ -70,9 +70,7 @@
   </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\..\..\packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1.4\build\native\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.targets" Condition="Exists('..\..\..\packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1.4\build\native\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.targets')" />
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -163,10 +161,4 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
   </ItemDefinitionGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\..\packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1.4\build\native\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1.4\build\native\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.targets'))" />
-  </Target>
 </Project>

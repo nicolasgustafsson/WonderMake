@@ -14,6 +14,17 @@ public:
 		: myValue(std::forward<TArgs>(aArgs)...)
 	{}
 
+	template<typename T>
+	inline auto operator==(UniqueValue<T>&& aRhs) const noexcept requires(TType == T)
+	{
+		return myValue == aRhs.myValue;
+	}
+
+	inline auto operator==(auto&& aRhs) const noexcept
+	{
+		return myValue == aRhs;
+	}
+
 	inline constexpr [[nodiscard]] TType& operator->() noexcept
 	{
 		return myValue;

@@ -9,5 +9,8 @@
     <ClInclude Include="Include\WonderMakeTestsCommon\GTestInclude.h">
       <Filter>Include</Filter>
     </ClInclude>
+    <ClInclude Include="Include\WonderMakeTestsCommon\WinEventSystemMock.h">
+      <Filter>Include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

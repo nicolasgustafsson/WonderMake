@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\External\gtest-1.11.0\Src\src\gtest-all.cc">
@@ -9,6 +9,12 @@
     </ClCompile>
     <ClCompile Include="..\External\gtest-1.11.0\Src\src\gtest_main.cc">
       <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\WonderMakeEngine\Source\WinEventSystemImpl.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="WinEventSystemImplTests.cpp">
+      <Filter>Tests</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -23,5 +29,14 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\WinEventSystem.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\WinPlatformSystem.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\SystemGlobal.h">
+      <Filter>Include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

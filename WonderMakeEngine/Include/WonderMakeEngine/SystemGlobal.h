@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef WM_SUPRESS_SYSTEM_GLOBAL
+
 #include "SystemContainer.h"
 #include "SystemRegistry.h"
 
@@ -30,3 +32,10 @@ static void _RegisterSystem()
 
 #define REGISTER_SYSTEM_MASKED(aSystem, aBaseSystem) _REGISTER_SYSTEM_MASKED_IMPL(aSystem, aBaseSystem, aSystem)
 #define REGISTER_SYSTEM(aSystem) _REGISTER_SYSTEM_IMPL(aSystem, aSystem)
+
+#else
+
+#define REGISTER_SYSTEM_MASKED(aSystem, aBaseSystem)
+#define REGISTER_SYSTEM(aSystem)
+
+#endif

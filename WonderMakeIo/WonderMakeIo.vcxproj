@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\WonderMakeIo\IpcConnection.h" />
+    <ClInclude Include="Include\WonderMakeIo\IpcSystem.h" />
     <ClInclude Include="Include\WonderMakeIo\Socket.h" />
     <ClInclude Include="Include\WonderMakeIo\IpcAcceptor.h" />
   </ItemGroup>

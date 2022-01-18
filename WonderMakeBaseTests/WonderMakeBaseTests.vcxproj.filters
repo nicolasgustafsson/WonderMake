@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="AliasTests.cpp">
@@ -22,6 +22,9 @@
     <ClCompile Include="BindableTests.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="MemoryUnitTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Tests">
@@ -42,6 +45,9 @@
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\Bindable.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\MemoryUnit.h">
       <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>

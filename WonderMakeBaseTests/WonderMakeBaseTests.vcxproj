@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -64,11 +64,13 @@
     <ClCompile Include="AliasTests.cpp" />
     <ClCompile Include="BindableTests.cpp" />
     <ClCompile Include="DependencyInjectionTests.cpp" />
+    <ClCompile Include="MemoryUnitTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\Alias.h" />
     <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\Bindable.h" />
     <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\DependencyInjector.h" />
+    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\MemoryUnit.h" />
   </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
@@ -89,6 +91,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ConformanceMode>true</ConformanceMode>
       <EnableModules>false</EnableModules>
+      <AdditionalOptions>/w44062 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -111,6 +114,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ConformanceMode>true</ConformanceMode>
       <EnableModules>false</EnableModules>
+      <AdditionalOptions>/w44062 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -132,6 +136,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ConformanceMode>true</ConformanceMode>
       <EnableModules>false</EnableModules>
+      <AdditionalOptions>/w44062 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -155,6 +160,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ConformanceMode>true</ConformanceMode>
       <EnableModules>false</EnableModules>
+      <AdditionalOptions>/w44062 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

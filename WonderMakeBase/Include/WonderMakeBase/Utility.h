@@ -54,15 +54,21 @@ namespace Utility
 	}
 
 	template<typename TCallable, typename... TArgs> requires std::is_invocable_v<TCallable, TArgs...>
+	static void Invoke(std::optional<TCallable>& aCallable, TArgs&&... aArgs)
+	{
+		if (aCallable)
+			(void)(*aCallable)(std::forward<TArgs>(aArgs)...);
+	}
+	template<typename TCallable, typename... TArgs> requires std::is_invocable_v<TCallable, TArgs...>
 	static void Invoke(const std::optional<TCallable>& aCallable, TArgs&&... aArgs)
 	{
 		if (aCallable)
 			(void)(*aCallable)(std::forward<TArgs>(aArgs)...);
 	}
 	template<typename TCallable, typename... TArgs> requires std::is_invocable_v<TCallable, TArgs...>
-	static void Invoke(std::optional<TCallable>& aCallable, TArgs&&... aArgs)
+	static void Invoke(std::optional<TCallable>&& aCallable, TArgs&&... aArgs)
 	{
 		if (aCallable)
-			(void)(*aCallable)(std::forward<TArgs>(aArgs)...);
+			(void)std::move(*aCallable)(std::forward<TArgs>(aArgs)...);
 	}
 }

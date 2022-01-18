@@ -19,6 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\WonderMakeIo\Socket.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\WonderMakeEngine\WonderMakeEngine.vcxproj">
       <Project>{62c4244a-20d5-418c-8a14-dc44beb005ae}</Project>
     </ProjectReference>

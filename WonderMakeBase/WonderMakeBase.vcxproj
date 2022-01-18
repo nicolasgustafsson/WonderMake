@@ -26,6 +26,7 @@
     <ClInclude Include="Include\WonderMakeBase\Line.h" />
     <ClInclude Include="Include\WonderMakeBase\Math.h" />
     <ClInclude Include="Include\WonderMakeBase\Matrix.h" />
+    <ClInclude Include="Include\WonderMakeBase\MemoryUnit.h" />
     <ClInclude Include="Include\WonderMakeBase\plf_colony.h" />
     <ClInclude Include="Include\WonderMakeBase\RestrictTypes.h" />
     <ClInclude Include="Include\WonderMakeBase\Result.h" />
@@ -140,6 +141,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableModules>false</EnableModules>
       <CompileAs>CompileAsCpp</CompileAs>
+      <AdditionalOptions>/w44062 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -163,6 +165,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableModules>false</EnableModules>
       <CompileAs>CompileAsCpp</CompileAs>
+      <AdditionalOptions>/w44062 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -187,6 +190,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableModules>false</EnableModules>
       <CompileAs>CompileAsCpp</CompileAs>
+      <AdditionalOptions>/w44062 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -210,6 +214,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableModules>false</EnableModules>
       <CompileAs>CompileAsCpp</CompileAs>
+      <AdditionalOptions>/w44062 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>

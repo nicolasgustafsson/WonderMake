@@ -23,9 +23,11 @@
     <ClInclude Include="Include\WonderMakeIo\IpcSystem.h" />
     <ClInclude Include="Include\WonderMakeIo\Socket.h" />
     <ClInclude Include="Include\WonderMakeIo\IpcAcceptor.h" />
+    <ClInclude Include="Source\WinIpcAcceptor.h" />
     <ClInclude Include="Source\WinIpcConnection.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\WinIpcAcceptor.cpp" />
     <ClCompile Include="Source\WinIpcConnection.cpp" />
   </ItemGroup>
   <ItemGroup>

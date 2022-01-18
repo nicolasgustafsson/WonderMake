@@ -1,5 +1,7 @@
 #include "WonderMakeBase/DependencyInjector.h"
 
+#include "WonderMakeBase/Utility.h"
+
 void DependencyInjector::CreateAll()
 {
 	for (auto& [key, createFunc] : myCreateFuncs)
@@ -11,6 +13,6 @@ void DependencyInjector::CreateAll()
 			continue;
 		}
 
-		createFunc(*this);
+		Utility::Invoke(createFunc, *this);
 	}
 }

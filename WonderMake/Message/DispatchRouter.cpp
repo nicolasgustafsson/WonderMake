@@ -50,7 +50,7 @@ void DispatchRouter::CommitChanges()
 	myNewUnsubscriptions.clear();
 }
 
-void DispatchRouter::SubscribeToType(const size_t aTypeHash, const MessageSubscriber& aSubscriber, UniqueFunction<void(const Dispatchable&)> aCallback)
+void DispatchRouter::SubscribeToType(const size_t aTypeHash, const MessageSubscriber& aSubscriber, std::function<void(const Dispatchable&)> aCallback)
 {
 	std::lock_guard<decltype(myLock)> lock(myLock);
 	myNewSubscriptions.emplace_back(SSubscriptionOrder{ std::move(aCallback), { &aSubscriber, aTypeHash } });

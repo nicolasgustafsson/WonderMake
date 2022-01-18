@@ -6,6 +6,7 @@
 
 #include "Threads/ThreadChecker.h"
 
+#include <functional>
 #include <vector>
 
 class TaskManager
@@ -16,7 +17,7 @@ public:
 
 	// Threadsafe
 	void Schedule(Closure aTask);
-	void ScheduleRepeating(Closure aTask);
+	void ScheduleRepeating(std::function<void()> aTask);
 
 private:
 	void ProcessTasks();
@@ -27,6 +28,6 @@ private:
 	std::vector<Closure> myTasksScheduled;
 	std::vector<Closure> myTasksBuffer;
 
-	std::vector<Closure> myTasksRepeatingScheduled;
-	std::vector<Closure> myTasksRepeatingBuffer;
+	std::vector<std::function<void()>> myTasksRepeatingScheduled;
+	std::vector<std::function<void()>> myTasksRepeatingBuffer;
 };

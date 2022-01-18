@@ -31,7 +31,7 @@ namespace Engine
 		{
 			taskManager.Schedule(std::move(aTask));
 		};
-		auto scheduleRepeatingProc = [&taskManager](Closure aTask)
+		auto scheduleRepeatingProc = [&taskManager](std::function<void()> aTask)
 		{
 			taskManager.ScheduleRepeating(std::move(aTask));
 		};

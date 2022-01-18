@@ -11,8 +11,9 @@ class ScheduleSystem
 {
 public:
 	using ScheduleProc = std::function<void(Closure)>;
+	using ScheduleRepeatingProc = std::function<void(std::function<void()>)>;
 
-	ScheduleSystem(ScheduleProc aScheduleProc, ScheduleProc aScheduleRepeatingProc) noexcept;
+	ScheduleSystem(ScheduleProc aScheduleProc, ScheduleRepeatingProc aScheduleRepeatingProc) noexcept;
 
 	// TODO(Kevin): Take policies into consideration.
 	template<typename TPolicySet = Policy::Set<>>
@@ -21,13 +22,13 @@ public:
 		myScheduleProc(std::move(aTask));
 	}
 	template<typename TPolicySet = Policy::Set<>>
-	inline void ScheduleRepeating(Closure&& aTask)
+	inline void ScheduleRepeating(std::function<void()>&& aTask)
 	{
 		myScheduleRepeatingProc(std::move(aTask));
 	}
 
 private:
 	ScheduleProc myScheduleProc;
-	ScheduleProc myScheduleRepeatingProc;
+	ScheduleRepeatingProc myScheduleRepeatingProc;
 
 };

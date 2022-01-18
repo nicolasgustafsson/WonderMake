@@ -1,14 +1,14 @@
 #pragma once
 
 #include "WonderMakeBase/RestrictTypes.h"
-#include "WonderMakeBase/UniqueFunction.h"
 
+#include <functional>
 #include <unordered_set>
 
 class Dispatchable;
 
 template<typename TMessage, typename TThis, typename ...TArgs>
-static UniqueFunction<void(const TMessage&)> BindHelper(void (TThis::*aFunctionPtr)(const TMessage&, TArgs&&...), TThis* aThis, TArgs... aArgs)
+static std::function<void(const TMessage&)> BindHelper(void (TThis::*aFunctionPtr)(const TMessage&, TArgs&&...), TThis* aThis, TArgs... aArgs)
 {
 	return [aFunctionPtr, aThis, ...args = std::forward<TArgs>(aArgs)](const TMessage& aMessage)
 	{
@@ -17,7 +17,7 @@ static UniqueFunction<void(const TMessage&)> BindHelper(void (TThis::*aFunctionP
 };
 
 template<typename TMessage, typename TThis, typename ...TArgs>
-static UniqueFunction<void(const TMessage&)> BindHelper(void (TThis::*aFunctionPtr)(const TMessage&, TArgs&&...) const, TThis* aThis, TArgs... aArgs)
+static std::function<void(const TMessage&)> BindHelper(void (TThis::*aFunctionPtr)(const TMessage&, TArgs&&...) const, TThis* aThis, TArgs... aArgs)
 {
 	return [aFunctionPtr, aThis, ...args = std::forward<TArgs>(aArgs)](const TMessage& aMessage)
 	{
@@ -26,7 +26,7 @@ static UniqueFunction<void(const TMessage&)> BindHelper(void (TThis::*aFunctionP
 };
 
 template<typename TMessage, typename ...TArgs>
-static UniqueFunction<void(const TMessage&)> BindHelper(void (*aFunctionPtr)(const TMessage&, TArgs&&...), TArgs... aArgs)
+static std::function<void(const TMessage&)> BindHelper(void (*aFunctionPtr)(const TMessage&, TArgs&&...), TArgs... aArgs)
 {
 	return[aFunctionPtr, ...args = std::forward<TArgs>(aArgs)](const TMessage& aMessage)
 	{
@@ -48,7 +48,7 @@ public:
 	~MessageSubscriber();
 
 	template<typename TMessage>
-	void AddRoute(UniqueFunction<void(const TMessage&)> aCallback)
+	void AddRoute(std::function<void(const TMessage&)> aCallback)
 	{
 		Subscribe(TMessage::GetTypeHash(), [callback = std::move(aCallback)](const Dispatchable& aMessage) mutable
 		{
@@ -71,7 +71,7 @@ private:
 		aCallback(static_cast<const TMessage&>(aMessage));
 	}
 
-	void Subscribe(const size_t aTypeHash, UniqueFunction<void(const Dispatchable&)> aCallback);
+	void Subscribe(const size_t aTypeHash, std::function<void(const Dispatchable&)> aCallback);
 
 	std::unordered_set<size_t> mySubscribedMessages;
 };

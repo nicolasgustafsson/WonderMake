@@ -15,7 +15,7 @@ void TaskManager::Schedule(Closure aTask)
 	myTasksScheduled.emplace_back(std::move(aTask));
 }
 
-void TaskManager::ScheduleRepeating(Closure aTask)
+void TaskManager::ScheduleRepeating(std::function<void()> aTask)
 {
 	std::lock_guard<decltype(myMutex)> lock(myMutex);
 
@@ -37,7 +37,7 @@ void TaskManager::ProcessTasks()
 	}
 
 	for (auto&& task : myTasksBuffer)
-		task();
+		std::move(task)();
 
 	for (auto&& task : myTasksRepeatingBuffer)
 		task();

@@ -153,7 +153,7 @@ TEST_CASE("UniqueFunction can be constructed and invoked", "[UniqueFunction]")
 
 				CHECK(counter == 0);
 
-				func();
+				std::move(func)();
 
 				CHECK(counter == 1);
 			}
@@ -166,7 +166,7 @@ TEST_CASE("UniqueFunction can be constructed and invoked", "[UniqueFunction]")
 
 				CHECK(counter == 0);
 
-				func(4);
+				std::move(func)(4);
 
 				CHECK(counter == 4);
 			}
@@ -180,7 +180,7 @@ TEST_CASE("UniqueFunction can be constructed and invoked", "[UniqueFunction]")
 
 				CHECK(counter == 0);
 
-				func();
+				std::move(func)();
 
 				CHECK(counter == 1);
 			}
@@ -193,7 +193,7 @@ TEST_CASE("UniqueFunction can be constructed and invoked", "[UniqueFunction]")
 
 				CHECK(counter == 0);
 
-				func(4);
+				std::move(func)(4);
 
 				CHECK(counter == 4);
 			}
@@ -209,7 +209,7 @@ TEST_CASE("UniqueFunction can be constructed and invoked", "[UniqueFunction]")
 
 				CHECK(counter == 0);
 
-				func();
+				std::move(func)();
 
 				CHECK(counter == 1);
 			}
@@ -219,7 +219,7 @@ TEST_CASE("UniqueFunction can be constructed and invoked", "[UniqueFunction]")
 
 				CHECK(counter == 0);
 
-				func(4);
+				std::move(func)(4);
 
 				CHECK(counter == 4);
 			}
@@ -230,7 +230,7 @@ TEST_CASE("UniqueFunction can be constructed and invoked", "[UniqueFunction]")
 
 				CHECK(counter == 0);
 
-				func();
+				std::move(func)();
 
 				CHECK(counter == 1);
 			}
@@ -240,7 +240,7 @@ TEST_CASE("UniqueFunction can be constructed and invoked", "[UniqueFunction]")
 
 				CHECK(counter == 0);
 
-				func(4);
+				std::move(func)(4);
 
 				CHECK(counter == 4);
 			}
@@ -268,7 +268,7 @@ TEST_CASE("UniqueFunction arguments and return values are forwarded properly", "
 				TestUniqueFunction<void(SematicsCounter&)> func([](auto&&) {});
 				SematicsCounter counter(data);
 
-				func(counter);
+				std::move(func)(counter);
 			}
 
 			CHECK(data.CounterConstruct == 1);
@@ -284,7 +284,7 @@ TEST_CASE("UniqueFunction arguments and return values are forwarded properly", "
 				TestUniqueFunction<void(SematicsCounter)> func([](auto&&) {});
 				SematicsCounter counter(data);
 
-				func(std::move(counter));
+				std::move(func)(std::move(counter));
 			}
 
 			CHECK(data.CounterConstruct == 1);
@@ -301,7 +301,7 @@ TEST_CASE("UniqueFunction arguments and return values are forwarded properly", "
 				SematicsCounter counterA(data);
 				SematicsCounter counterB(data);
 
-				func(counterA, std::move(counterB));
+				std::move(func)(counterA, std::move(counterB));
 			}
 
 			CHECK(data.CounterConstruct == 2);
@@ -317,7 +317,7 @@ TEST_CASE("UniqueFunction arguments and return values are forwarded properly", "
 			{
 				TestUniqueFunction<SematicsCounter()> func([&data]() { return SematicsCounter(data); });
 
-				SematicsCounter counter = func();
+				SematicsCounter counter = std::move(func)();
 			}
 
 			CHECK(data.CounterConstruct == 1);
@@ -410,7 +410,7 @@ TEST_CASE("UniqueFunction is able to pass exceptions without side-effects", "[Un
 						throw std::exception();
 					});
 
-				REQUIRE_THROWS(func());
+				REQUIRE_THROWS(std::move(func)());
 			}
 
 			CHECK(data.CounterConstruct == 1);

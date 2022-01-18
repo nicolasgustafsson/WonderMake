@@ -2,6 +2,7 @@
 
 #include "UniqueFunction.h"
 
+#include <functional>
 #include <typeindex>
 #include <unordered_map>
 
@@ -46,7 +47,7 @@ private:
 	template<typename TDependency>
 	struct Key {};
 
-	using CreateFunc = UniqueFunction<void* (DependencyInjector&)>;
+	using CreateFunc = std::function<void* (DependencyInjector&)>;
 
 	std::unordered_map<std::type_index, CreateFunc>	myCreateFuncs;
 	std::unordered_map<std::type_index, void*>		myDependencies;

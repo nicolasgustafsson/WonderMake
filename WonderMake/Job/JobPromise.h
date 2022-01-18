@@ -44,14 +44,14 @@ public:
 	{
 		myCallbackSuccess.Invoke(std::forward<TArgs>(aArgs)...);
 
-		Utility::Invoke(myCallableCompleted);
+		Utility::Invoke(std::move(myCallableCompleted));
 	}
 	template<typename... TArgs> requires IsInvocableWithFail<TArgs...>
 	inline void Fail(TArgs&&... aArgs)
 	{
 		myCallbackFailure.Invoke(std::forward<TArgs>(aArgs)...);
 
-		Utility::Invoke(myCallableCompleted);
+		Utility::Invoke(std::move(myCallableCompleted));
 	}
 
 private:
@@ -77,7 +77,7 @@ private:
 
 		inline void Invoke(TArgs&&... aArgs)
 		{
-			Utility::Invoke(myCallback, std::forward<TArgs>(aArgs)...);
+			Utility::Invoke(std::move(myCallback), std::forward<TArgs>(aArgs)...);
 		}
 
 	private:

@@ -7,7 +7,7 @@
 
 constexpr auto InlineExecutor = [](auto aCallable)
 {
-	aCallable();
+	std::move(aCallable)();
 };
 
 struct JobDependencies

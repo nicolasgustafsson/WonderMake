@@ -13,7 +13,7 @@
 
 REGISTER_SYSTEM(ProgramSystem);
 
-using WindowSizeCallback = UniqueFunction<void(GLFWwindow*, int, int)>;
+using WindowSizeCallback = std::function<void(GLFWwindow*, int, int)>;
 
 ProgramSystem::ProgramSystem()
 {

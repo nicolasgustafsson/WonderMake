@@ -11,10 +11,10 @@ MessageSubscriber::~MessageSubscriber()
 	}
 }
 
-void MessageSubscriber::Subscribe(const size_t aTypeHash, UniqueFunction<void(const Dispatchable&)> aCallback)
+void MessageSubscriber::Subscribe(const size_t aTypeHash, std::function<void(const Dispatchable&)> aCallback)
 {
 	mySubscribedMessages.insert(aTypeHash);
-	DispatchRouter::Get().SubscribeToType(aTypeHash, *this, std::move(aCallback));
+	DispatchRouter::Get().SubscribeToType(aTypeHash, *this, aCallback);
 }
 
 void MessageSubscriber::RemoveRoute(const size_t aTypeHash)

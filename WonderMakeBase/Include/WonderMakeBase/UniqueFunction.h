@@ -52,7 +52,7 @@ namespace _Impl
 			return *this;
 		}
 
-		inline TReturnValue operator()(TArgs... aArgs)
+		inline TReturnValue operator()(TArgs... aArgs) &&
 		{
 			return GetInvokeFunc()(*this, std::forward<TArgs>(aArgs)...);
 		}
@@ -107,7 +107,7 @@ namespace _Impl
 
 			Type* const data = static_cast<Type*>(aThis.myPointers.Data);
 
-			return (*data)(std::forward<TArgs>(aArgs)...);
+			return std::move(*data)(std::forward<TArgs>(aArgs)...);
 		}
 
 		template<typename TCallable>

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "DependencyDestructor.h"
 
-DependencyDestructor::DependencyDestructor(UniqueFunction<void(Object&, void*)> aDestroyFunc) noexcept
+DependencyDestructor::DependencyDestructor(std::function<void(Object&, void*)> aDestroyFunc) noexcept
 	: myDestroyFunc(std::move(aDestroyFunc))
 {}
 

@@ -23,7 +23,7 @@ void TimerFunctionality::Tick()
 		timer.TimeLeft -= deltaTime;
 
 		if (timer.TimeLeft < 0.f)
-			timer.Callback();
+			std::move(timer).Callback();
 	}
 
 	auto&& it = timerComponent.Timers.begin();

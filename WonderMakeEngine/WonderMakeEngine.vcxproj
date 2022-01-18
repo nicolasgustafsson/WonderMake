@@ -139,6 +139,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableModules>false</EnableModules>
       <CompileAs>CompileAsCpp</CompileAs>
+      <AdditionalOptions>/w44062 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -162,6 +163,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableModules>false</EnableModules>
       <CompileAs>CompileAsCpp</CompileAs>
+      <AdditionalOptions>/w44062 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -186,6 +188,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableModules>false</EnableModules>
       <CompileAs>CompileAsCpp</CompileAs>
+      <AdditionalOptions>/w44062 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -209,6 +212,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableModules>false</EnableModules>
       <CompileAs>CompileAsCpp</CompileAs>
+      <AdditionalOptions>/w44062 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>

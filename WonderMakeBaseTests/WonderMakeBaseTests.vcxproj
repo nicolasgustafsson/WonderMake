@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -36,25 +36,25 @@
     <OutDir>$(ProjectDir)../Tests/</OutDir>
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../External/gtest-1.11.0/Src/;$(ProjectDir)../External/gtest-1.11.0/Inc/;$(ProjectDir)../External/gmock-1.11.0/Src/;$(ProjectDir)../External/gmock-1.11.0/Inc/;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../WonderMakeTestsCommon/Include/;$(ProjectDir)../External/gtest-1.11.0/Src/;$(ProjectDir)../External/gtest-1.11.0/Inc/;$(ProjectDir)../External/gmock-1.11.0/Src/;$(ProjectDir)../External/gmock-1.11.0/Inc/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(ProjectDir)../Tests/</OutDir>
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../External/gtest-1.11.0/Src/;$(ProjectDir)../External/gtest-1.11.0/Inc/;$(ProjectDir)../External/gmock-1.11.0/Src/;$(ProjectDir)../External/gmock-1.11.0/Inc/;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../WonderMakeTestsCommon/Include/;$(ProjectDir)../External/gtest-1.11.0/Src/;$(ProjectDir)../External/gtest-1.11.0/Inc/;$(ProjectDir)../External/gmock-1.11.0/Src/;$(ProjectDir)../External/gmock-1.11.0/Inc/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(ProjectDir)../Tests/</OutDir>
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../External/gtest-1.11.0/Src/;$(ProjectDir)../External/gtest-1.11.0/Inc/;$(ProjectDir)../External/gmock-1.11.0/Src/;$(ProjectDir)../External/gmock-1.11.0/Inc/;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../WonderMakeTestsCommon/Include/;$(ProjectDir)../External/gtest-1.11.0/Src/;$(ProjectDir)../External/gtest-1.11.0/Inc/;$(ProjectDir)../External/gmock-1.11.0/Src/;$(ProjectDir)../External/gmock-1.11.0/Inc/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(ProjectDir)../Tests/</OutDir>
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../External/gtest-1.11.0/Src/;$(ProjectDir)../External/gtest-1.11.0/Inc/;$(ProjectDir)../External/gmock-1.11.0/Src/;$(ProjectDir)../External/gmock-1.11.0/Inc/;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../WonderMakeTestsCommon/Include/;$(ProjectDir)../External/gtest-1.11.0/Src/;$(ProjectDir)../External/gtest-1.11.0/Inc/;$(ProjectDir)../External/gmock-1.11.0/Src/;$(ProjectDir)../External/gmock-1.11.0/Inc/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemGroup>
     <ClCompile Include="..\External\gmock-1.11.0\Src\src\gmock-all.cc" />
@@ -62,10 +62,12 @@
     <ClCompile Include="..\External\gtest-1.11.0\Src\src\gtest_main.cc" />
     <ClCompile Include="..\WonderMakeBase\Source\DependencyInjector.cpp" />
     <ClCompile Include="AliasTests.cpp" />
+    <ClCompile Include="BindableTests.cpp" />
     <ClCompile Include="DependencyInjectionTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\Alias.h" />
+    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\Bindable.h" />
     <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\DependencyInjector.h" />
   </ItemGroup>
   <ItemDefinitionGroup />

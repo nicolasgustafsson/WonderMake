@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\External\gtest-1.11.0\Src\src\gtest-all.cc">
@@ -8,6 +8,21 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="..\External\gtest-1.11.0\Src\src\gtest_main.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="WinIpcConnectionManualTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\WonderMakeIo\Source\WinIpcConnection.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\WonderMakeEngine\Source\WinPlatformSystemImpl.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\WonderMakeEngine\Source\WinEventSystemImpl.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\WonderMakeIo\Source\WinIpcAcceptor.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -21,5 +36,49 @@
     <Filter Include="Source">
       <UniqueIdentifier>{5603e959-1679-4ab9-920e-1d2ed8b83d7a}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\WonderMakeIo\Source\WinIpcConnection.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\WinPlatformSystem.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WonderMakeEngine\Source\WinPlatformSystemImpl.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WonderMakeEngine\Source\WinEventSystemImpl.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\WinPlatform.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\WinEventSystem.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\System.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\UniqueFunction.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\SystemPolicy.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\SystemTraits.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\RestrictTypes.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\SystemId.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\Utility.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WonderMakeIo\Source\WinIpcAcceptor.h">
+      <Filter>Include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

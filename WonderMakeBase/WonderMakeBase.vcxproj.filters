@@ -57,6 +57,9 @@
     <ClInclude Include="Include\WonderMakeBase\Typedefs.h">
       <Filter>Include</Filter>
     </ClInclude>
+    <ClInclude Include="Include\WonderMakeBase\Bindable.h">
+      <Filter>Include</Filter>
+    </ClInclude>
     <ClInclude Include="Include\WonderMakeBase\Result.h">
       <Filter>Include</Filter>
     </ClInclude>

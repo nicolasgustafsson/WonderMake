@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="Include\WonderMakeBase\Alias.h" />
     <ClInclude Include="Include\WonderMakeBase\AutoRegister.h" />
+    <ClInclude Include="Include\WonderMakeBase\Bindable.h" />
     <ClInclude Include="Include\WonderMakeBase\DependencyInjector.h" />
     <ClInclude Include="Include\WonderMakeBase\Line.h" />
     <ClInclude Include="Include\WonderMakeBase\Math.h" />

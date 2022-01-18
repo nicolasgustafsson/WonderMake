@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -60,6 +60,20 @@
     <ClCompile Include="..\External\gmock-1.11.0\Src\src\gmock-all.cc" />
     <ClCompile Include="..\External\gtest-1.11.0\Src\src\gtest-all.cc" />
     <ClCompile Include="..\External\gtest-1.11.0\Src\src\gtest_main.cc" />
+    <ClCompile Include="..\WonderMakeIo\Source\WinIpcConnection.cpp" />
+    <ClCompile Include="WinIpcConnectionTests.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\RestrictTypes.h" />
+    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\UniqueFunction.h" />
+    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\Utility.h" />
+    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\System.h" />
+    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\SystemId.h" />
+    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\SystemPolicy.h" />
+    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\SystemTraits.h" />
+    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\WinPlatform.h" />
+    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\WinPlatformSystem.h" />
+    <ClInclude Include="..\WonderMakeIo\Source\WinIpcConnection.h" />
   </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

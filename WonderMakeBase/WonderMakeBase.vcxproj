@@ -27,6 +27,7 @@
     <ClInclude Include="Include\WonderMakeBase\Matrix.h" />
     <ClInclude Include="Include\WonderMakeBase\plf_colony.h" />
     <ClInclude Include="Include\WonderMakeBase\RestrictTypes.h" />
+    <ClInclude Include="Include\WonderMakeBase\Result.h" />
     <ClInclude Include="Include\WonderMakeBase\Rotation.h" />
     <ClInclude Include="Include\WonderMakeBase\Singleton.h" />
     <ClInclude Include="Include\WonderMakeBase\Stopwatch.h" />

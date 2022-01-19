@@ -33,6 +33,7 @@ private:
 	WinPlatformSystem& myWinPlatform;
 
 	State myState = State::Closed;
+	bool myIsListening = false;
 
 	std::wstring myPipeName;
 

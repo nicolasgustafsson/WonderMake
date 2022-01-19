@@ -77,6 +77,14 @@ Result<IpcAcceptor::OpenError> WinIpcAcceptor::ListenForConnection()
 	constexpr	DWORD					nDefaultTimeOut = NMPWAIT_USE_DEFAULT_WAIT;
 	constexpr	LPSECURITY_ATTRIBUTES	lpSecurityAttributes = NULL;
 
+	if (myState != State::Open)
+		return IpcAcceptor::OpenError::InvalidState;
+
+	if (myIsListening)
+		return IpcAcceptor::OpenError::InternalError;
+
+	myIsListening = true;
+
 	myPipeHandle = myWinPlatform.CreateNamedPipeW(
 		lpName,
 		dwOpenMode,
@@ -136,7 +144,7 @@ void WinIpcAcceptor::OnConnection()
 		return;
 	}
 
-	connection->ConnectHandle(myPipeHandle, { [](auto&&) {} });
+	connection->ConnectHandle(myPipeHandle);
 
 	myPipeHandle = INVALID_HANDLE_VALUE;
 
@@ -163,6 +171,7 @@ void WinIpcAcceptor::Reset(Result<CloseReason> aResult)
 
 	myCallbackInfo = {};
 	myState = State::Closed;
+	myIsListening = false;
 	myPipeHandle = INVALID_HANDLE_VALUE;
 	myPipeOverlapped = {};
 

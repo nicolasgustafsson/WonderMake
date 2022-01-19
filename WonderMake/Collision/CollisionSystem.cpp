@@ -4,7 +4,7 @@
 #include "CollisionFunctionality.h"
 #include "Collision/Colliders.h"
 
-#include "Scheduling/ScheduleSystem.h"
+#include "WonderMakeEngine/ScheduleSystem.h"
 
 REGISTER_SYSTEM(CollisionSystem);
 

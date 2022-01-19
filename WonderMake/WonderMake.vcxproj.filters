@@ -70,7 +70,6 @@
     <ClCompile Include="Graphics\RenderSettingsManager.cpp" />
     <ClCompile Include="Graphics\LineListRenderObject.cpp" />
     <ClCompile Include="Threads\TaskManager.cpp" />
-    <ClCompile Include="Scheduling\ScheduleSystem.cpp" />
     <ClCompile Include="EngineTools\EngineTools.cpp" />
     <ClCompile Include="EngineTools\EasingTester.cpp" />
     <ClCompile Include="Job\JobSystem.cpp" />
@@ -236,7 +235,6 @@
     <ClInclude Include="Imgui\AssetBrowser.h" />
     <ClInclude Include="Resources\AssetLink.h" />
     <ClInclude Include="Threads\TaskManager.h" />
-    <ClInclude Include="Scheduling\ScheduleSystem.h" />
     <ClInclude Include="Utilities\Easing\EasingFunctions.h" />
     <ClInclude Include="EngineTools\EngineTools.h" />
     <ClInclude Include="EngineTools\EasingTester.h" />

@@ -236,7 +236,6 @@
     <ClCompile Include="Job\JobBase.cpp" />
     <ClCompile Include="Job\JobSystem.cpp" />
     <ClCompile Include="Object\DependencyDestructor.cpp" />
-    <ClCompile Include="Scheduling\ScheduleSystem.cpp" />
     <ClCompile Include="Graphics\RenderCommandProcessor.cpp" />
     <ClCompile Include="Graphics\RenderNodeGraph\RenderNodeGraph.cpp" />
     <ClCompile Include="Graphics\RenderSettingsManager.cpp" />
@@ -310,7 +309,6 @@
     <ClInclude Include="Object\CreateObjectJob.h" />
     <ClInclude Include="Json\ParseJsonJob.h" />
     <ClInclude Include="Utilities\Id.h" />
-    <ClInclude Include="Scheduling\ScheduleSystem.h" />
     <ClInclude Include="Imgui\AssetBrowser.h" />
     <ClInclude Include="Resources\AssetLink.h" />
     <ClInclude Include="Guid\Guid.h" />

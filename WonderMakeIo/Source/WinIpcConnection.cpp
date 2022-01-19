@@ -42,15 +42,13 @@ WinIpcConnection::~WinIpcConnection() noexcept
 	Close();
 }
 
-Result<IpcConnection::ConnectionError> WinIpcConnection::Connect(std::string aConnectionName, CallbackInfo&& aCallbackInfo)
+Result<IpcConnection::ConnectionError> WinIpcConnection::Connect(std::string aConnectionName)
 {
 	if (aConnectionName.empty())
 		return ConnectionError::InvalidArgs;
 
 	if (myState != EState::Closed)
 		return ConnectionError::InvalidState;
-
-	myCallbackInfo = std::move(aCallbackInfo);
 
 	const std::wstring wideConnectionName = locPipePrefix + std::wstring(aConnectionName.begin(), aConnectionName.end());
 	
@@ -90,15 +88,14 @@ Result<IpcConnection::ConnectionError> WinIpcConnection::Connect(std::string aCo
 	return Setup();
 }
 
-Result<IpcConnection::ConnectionError> WinIpcConnection::ConnectHandle(HANDLE aPipeHandle, CallbackInfo&& aCallbackInfo)
+Result<IpcConnection::ConnectionError> WinIpcConnection::ConnectHandle(HANDLE aPipeHandle)
 {
 	myFileHandle = aPipeHandle;
-	myCallbackInfo = std::move(aCallbackInfo);
 
 	return Setup();
 }
 
-Result<Socket::EWriteError, Socket::EAsynchronicity> WinIpcConnection::Write(std::vector<u8> aBuffer, OnWriteCallback&& aOnWrite)
+Result<Socket::EWriteError, Socket::EAsynchronicity> WinIpcConnection::Write(std::vector<u8> aBuffer, OnWriteCallback aOnWrite)
 {
 	if (aBuffer.empty())
 		return EWriteError::InvalidArgs;
@@ -170,7 +167,7 @@ Result<Socket::EWriteError, Socket::EAsynchronicity> WinIpcConnection::Write(std
 	return { writeErr, err };
 }
 
-Result<Socket::EReadError, Socket::EAsynchronicity> WinIpcConnection::Read(OnReadCallback&& aOnRead)
+Result<Socket::EReadError, Socket::EAsynchronicity> WinIpcConnection::Read(OnReadCallback aOnRead)
 {
 	if (myState != EState::Open)
 		return EReadError::InvalidState;
@@ -241,6 +238,11 @@ Result<Socket::EReadError, Socket::EAsynchronicity> WinIpcConnection::Read(OnRea
 	std::move(aOnRead)(readErr);
 
 	return { readErr, err };
+}
+
+void WinIpcConnection::OnClose(OnCloseCallback aOnClose)
+{
+	myCloseCallbacks.emplace_back(std::move(aOnClose));
 }
 
 void WinIpcConnection::Close()
@@ -417,12 +419,13 @@ void WinIpcConnection::Reset(Result<CloseError, CloseReason> aResult)
 {
 	auto currentOnWrite = std::move(myCurrentWriteCallback);
 	auto currentOnRead = std::move(myCurrentReadCallback);
-	auto onClose = std::move(myCallbackInfo.OnClosed);
 	std::queue<WriteData> writeQueue;
 	std::queue<OnReadCallback> readQueue;
+	std::vector<OnCloseCallback> closeCallbacks;
 
 	std::swap(myWriteQueue, writeQueue);
 	std::swap(myReadQueue, readQueue);
+	std::swap(myCloseCallbacks, closeCallbacks);
 
 	if (myFileHandle != INVALID_HANDLE_VALUE)
 		(void)myWinPlatform.CloseHandle(myFileHandle);
@@ -441,8 +444,6 @@ void WinIpcConnection::Reset(Result<CloseError, CloseReason> aResult)
 		(void)myWinPlatform.CloseHandle(myWriteOverlapped.hEvent);
 	}
 
-	myCallbackInfo = {};
-	
 	myState = EState::Closed;
 	myFileHandle = INVALID_HANDLE_VALUE;
 
@@ -470,5 +471,6 @@ void WinIpcConnection::Reset(Result<CloseError, CloseReason> aResult)
 		readQueue.pop();
 	}
 
-	std::move(onClose)(aResult);
+	for (auto&& onClose : closeCallbacks)
+		std::move(onClose)(aResult);
 }

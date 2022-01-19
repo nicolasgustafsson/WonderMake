@@ -18,11 +18,12 @@ public:
 	WinIpcConnection(WinEventSystem& aWinEvent, WinPlatformSystem& aWinPlatform) noexcept;
 	~WinIpcConnection() noexcept;
 
-	Result<ConnectionError> Connect(std::string aConnectionName, CallbackInfo&& aCallbackInfo) override;
-	Result<ConnectionError> ConnectHandle(HANDLE aPipeHandle, CallbackInfo&& aCallbackInfo);
+	Result<ConnectionError> Connect(std::string aConnectionName) override;
+	Result<ConnectionError> ConnectHandle(HANDLE aPipeHandle);
 
-	Result<EWriteError, EAsynchronicity> Write(std::vector<u8> aBuffer, OnWriteCallback&& aOnWrite) override;
-	Result<EReadError, EAsynchronicity> Read(OnReadCallback&& aOnRead) override;
+	Result<EWriteError, EAsynchronicity> Write(std::vector<u8> aBuffer, OnWriteCallback aOnWrite) override;
+	Result<EReadError, EAsynchronicity> Read(OnReadCallback aOnRead) override;
+	void OnClose(OnCloseCallback aOnClose) override;
 	void Close() override;
 
 	EState GetState() const noexcept override;
@@ -46,8 +47,6 @@ private:
 	WinEventSystem& myWinEvent;
 	WinPlatformSystem& myWinPlatform;
 	
-	CallbackInfo myCallbackInfo;
-
 	EState myState = EState::Closed;
 	HANDLE myFileHandle = INVALID_HANDLE_VALUE;
 
@@ -60,5 +59,7 @@ private:
 	OnReadCallback myCurrentReadCallback = [](auto&&) {};
 	OVERLAPPED myReadOverlapped = {};
 	std::queue<OnReadCallback> myReadQueue;
+
+	std::vector<OnCloseCallback> myCloseCallbacks;
 
 };

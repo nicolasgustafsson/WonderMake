@@ -18,23 +18,6 @@ public:
 		OutOfMemory,
 		InternalError
 	};
-	enum class CloseReason
-	{
-		ClosedLocally,
-		ClosedRemotely
-	};
-	enum class CloseError
-	{
-		OutOfMemory,
-		InternalError
-	};
 
-	using OnCloseCallback = UniqueFunction<void(Result<CloseError, CloseReason>)>;
-
-	struct CallbackInfo
-	{
-		OnCloseCallback	OnClosed = [](auto) {};
-	};
-
-	virtual Result<ConnectionError> Connect(std::string aConnectionName, CallbackInfo&& aCallbackInfo) = 0;
+	virtual Result<ConnectionError> Connect(std::string aConnectionName) = 0;
 };

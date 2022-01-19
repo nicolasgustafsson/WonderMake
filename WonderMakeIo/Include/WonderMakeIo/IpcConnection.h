@@ -6,9 +6,6 @@
 
 #include "WonderMakeIo/Socket.h"
 
-#include <functional>
-#include <vector>
-
 class IpcConnection
 	: public Socket
 {

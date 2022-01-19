@@ -24,12 +24,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\ScheduleSystem.cpp" />
     <ClCompile Include="Source\SystemGlobal.cpp" />
     <ClCompile Include="Source\SystemRegistry.cpp" />
     <ClCompile Include="Source\WinEventSystemImpl.cpp" />
     <ClCompile Include="Source\WinPlatformSystemImpl.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\WonderMakeEngine\ScheduleSystem.h" />
     <ClInclude Include="Include\WonderMakeEngine\System.h" />
     <ClInclude Include="Include\WonderMakeEngine\SystemContainer.h" />
     <ClInclude Include="Include\WonderMakeEngine\SystemGlobal.h" />

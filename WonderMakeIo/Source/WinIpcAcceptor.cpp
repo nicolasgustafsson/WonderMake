@@ -24,13 +24,13 @@ WinIpcAcceptor::~WinIpcAcceptor() noexcept
 	Close();
 }
 
-Result<IpcAcceptor::OpenError> WinIpcAcceptor::Open(std::string aName, CallbackInfo&& aCallbackInfo)
+Result<IpcAcceptor::EOpenError> WinIpcAcceptor::Open(std::string aName, CallbackInfo&& aCallbackInfo)
 {
 	if (aName.empty())
-		return Result(IpcAcceptor::OpenError::InvalidArgs);
+		return Result(IpcAcceptor::EOpenError::InvalidArgs);
 
-	if (myState == State::Open)
-		return Result(IpcAcceptor::OpenError::InvalidState);
+	if (myState == EState::Open)
+		return Result(IpcAcceptor::EOpenError::InvalidState);
 
 	myPipeName = locPipePrefix + std::wstring(aName.begin(), aName.end());
 	myCallbackInfo = std::move(aCallbackInfo);
@@ -46,12 +46,12 @@ Result<IpcAcceptor::OpenError> WinIpcAcceptor::Open(std::string aName, CallbackI
 	{
 		const DWORD err = myWinPlatform.GetLastError();
 
-		Reset(Result(CloseReason::InternalError, err));
+		Reset(Result(ECloseReason::InternalError, err));
 
-		return Result(OpenError::InternalError, err);
+		return Result(EOpenError::InternalError, err);
 	}
 
-	myState = State::Open;
+	myState = EState::Open;
 
 	return ListenForConnection();
 }
@@ -61,12 +61,12 @@ void WinIpcAcceptor::Close()
 	Reset(Success);
 }
 
-WinIpcAcceptor::State WinIpcAcceptor::GetState() const noexcept
+WinIpcAcceptor::EState WinIpcAcceptor::GetState() const noexcept
 {
 	return myState;
 }
 
-Result<IpcAcceptor::OpenError> WinIpcAcceptor::ListenForConnection()
+Result<IpcAcceptor::EOpenError> WinIpcAcceptor::ListenForConnection()
 {
 	const		LPCWSTR					lpName = myPipeName.c_str();
 	constexpr	DWORD					dwOpenMode = PIPE_ACCESS_DUPLEX | FILE_FLAG_OVERLAPPED;
@@ -77,11 +77,11 @@ Result<IpcAcceptor::OpenError> WinIpcAcceptor::ListenForConnection()
 	constexpr	DWORD					nDefaultTimeOut = NMPWAIT_USE_DEFAULT_WAIT;
 	constexpr	LPSECURITY_ATTRIBUTES	lpSecurityAttributes = NULL;
 
-	if (myState != State::Open)
-		return IpcAcceptor::OpenError::InvalidState;
+	if (myState != EState::Open)
+		return IpcAcceptor::EOpenError::InvalidState;
 
 	if (myIsListening)
-		return IpcAcceptor::OpenError::InternalError;
+		return IpcAcceptor::EOpenError::InternalError;
 
 	myIsListening = true;
 
@@ -99,9 +99,9 @@ Result<IpcAcceptor::OpenError> WinIpcAcceptor::ListenForConnection()
 	{
 		const DWORD err = myWinPlatform.GetLastError();
 
-		Reset(Result(CloseReason::InternalError, err));
+		Reset(Result(ECloseReason::InternalError, err));
 
-		return Result(OpenError::InternalError, err);
+		return Result(EOpenError::InternalError, err);
 	}
 
 	myWinEvent.RegisterEvent(myPipeOverlapped.hEvent, Bind(&WinIpcAcceptor::OnConnection, weak_from_this()));
@@ -112,18 +112,18 @@ Result<IpcAcceptor::OpenError> WinIpcAcceptor::ListenForConnection()
 	{
 		const DWORD err = myWinPlatform.GetLastError();
 
-		Reset(Result(CloseReason::InternalError, err));
+		Reset(Result(ECloseReason::InternalError, err));
 
-		return Result(OpenError::InternalError, err);
+		return Result(EOpenError::InternalError, err);
 	}
 
 	const DWORD err = myWinPlatform.GetLastError();
 
 	if (err != ERROR_IO_PENDING)
 	{
-		Reset(Result(CloseReason::InternalError, err));
+		Reset(Result(ECloseReason::InternalError, err));
 
-		return Result(IpcAcceptor::OpenError::InternalError, err);
+		return Result(IpcAcceptor::EOpenError::InternalError, err);
 	}
 
 	return Success;
@@ -139,7 +139,7 @@ void WinIpcAcceptor::OnConnection()
 	}
 	catch (const std::bad_alloc&)
 	{
-		Reset(CloseReason::OutOfMemory);
+		Reset(ECloseReason::OutOfMemory);
 
 		return;
 	}
@@ -155,7 +155,7 @@ void WinIpcAcceptor::OnConnection()
 	(void)ListenForConnection();
 }
 
-void WinIpcAcceptor::Reset(Result<CloseReason> aResult)
+void WinIpcAcceptor::Reset(Result<ECloseReason> aResult)
 {
 	auto onClose = std::move(myCallbackInfo.OnClose);
 	if (myPipeHandle != INVALID_HANDLE_VALUE)
@@ -170,7 +170,7 @@ void WinIpcAcceptor::Reset(Result<CloseReason> aResult)
 	}
 
 	myCallbackInfo = {};
-	myState = State::Closed;
+	myState = EState::Closed;
 	myIsListening = false;
 	myPipeHandle = INVALID_HANDLE_VALUE;
 	myPipeOverlapped = {};

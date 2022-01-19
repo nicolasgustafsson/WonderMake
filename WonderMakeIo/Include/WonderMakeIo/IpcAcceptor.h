@@ -11,27 +11,27 @@ class IpcConnection;
 class IpcAcceptor
 {
 public:
-	enum class State
+	enum class EState
 	{
 		Open,
 		Closed
 	};
 
-	enum class OpenError
+	enum class EOpenError
 	{
 		InvalidArgs,
 		InvalidState,
 		InternalError
 	};
 
-	enum class CloseReason
+	enum class ECloseReason
 	{
 		OutOfMemory,
 		InternalError
 	};
 
 	using OnConnectionCallback = std::function<void(std::shared_ptr<IpcConnection>&&)>;
-	using OnCloseCallback = UniqueFunction<void(Result<CloseReason>)>;
+	using OnCloseCallback = UniqueFunction<void(Result<ECloseReason>)>;
 
 	struct CallbackInfo
 	{
@@ -41,10 +41,10 @@ public:
 
 	virtual ~IpcAcceptor() noexcept = default;
 
-	virtual Result<OpenError> Open(std::string aName, CallbackInfo&& aCallbackInfo) = 0;
+	virtual Result<EOpenError> Open(std::string aName, CallbackInfo&& aCallbackInfo) = 0;
 	virtual void Close() = 0;
 
-	virtual State GetState() const noexcept = 0;
+	virtual EState GetState() const noexcept = 0;
 
 protected:
 	IpcAcceptor() noexcept = default;

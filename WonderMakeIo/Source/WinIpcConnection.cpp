@@ -152,12 +152,12 @@ Result<Socket::EWriteError, Socket::EAsynchronicity> WinIpcConnection::Write(std
 	case EWriteError::InvalidArgs:	break;
 	case EWriteError::InvalidState:	break;
 	case EWriteError::StateChanged:
-		Reset({ CloseReason::ClosedRemotely, err });
+		Reset({ ECloseReason::ClosedRemotely, err });
 
 		break;
 	case EWriteError::OutOfMemory:	break;
 	case EWriteError::InternalError:
-		Reset({ CloseError::InternalError , err });
+		Reset({ ECloseError::InternalError , err });
 
 		break;
 	}
@@ -225,12 +225,12 @@ Result<Socket::EReadError, Socket::EAsynchronicity> WinIpcConnection::Read(OnRea
 	{
 	case EReadError::InvalidState:	break;
 	case EReadError::StateChanged:
-		Reset({ CloseReason::ClosedRemotely, err });
+		Reset({ ECloseReason::ClosedRemotely, err });
 
 		break;
 	case EReadError::OutOfMemory:	break;
 	case EReadError::InternalError:
-		Reset({ CloseError::InternalError , err });
+		Reset({ ECloseError::InternalError , err });
 		
 		break;
 	}
@@ -247,7 +247,7 @@ void WinIpcConnection::OnClose(OnCloseCallback aOnClose)
 
 void WinIpcConnection::Close()
 {
-	Reset(CloseReason::ClosedLocally);
+	Reset(ECloseReason::ClosedLocally);
 }
 
 Socket::EState WinIpcConnection::GetState() const noexcept
@@ -268,7 +268,7 @@ Result<IpcConnection::ConnectionError> WinIpcConnection::Setup()
 	{
 		const DWORD err = myWinPlatform.GetLastError();
 
-		Reset({ err == ERROR_NOT_ENOUGH_MEMORY ? CloseError::OutOfMemory : CloseError::InternalError, err });
+		Reset({ err == ERROR_NOT_ENOUGH_MEMORY ? ECloseError::OutOfMemory : ECloseError::InternalError, err });
 
 		return Result(err == ERROR_NOT_ENOUGH_MEMORY ? ConnectionError::OutOfMemory : ConnectionError::InternalError, err);
 	}
@@ -279,7 +279,7 @@ Result<IpcConnection::ConnectionError> WinIpcConnection::Setup()
 	{
 		const DWORD err = myWinPlatform.GetLastError();
 
-		Reset({ err == ERROR_NOT_ENOUGH_MEMORY ? CloseError::OutOfMemory : CloseError::InternalError, err });
+		Reset({ err == ERROR_NOT_ENOUGH_MEMORY ? ECloseError::OutOfMemory : ECloseError::InternalError, err });
 
 		return Result(err == ERROR_NOT_ENOUGH_MEMORY ? ConnectionError::OutOfMemory : ConnectionError::InternalError, err);
 	}
@@ -313,12 +313,12 @@ void WinIpcConnection::OnWrite(std::vector<u8> aBuffer)
 		case EWriteError::InvalidArgs:	break;
 		case EWriteError::InvalidState:	break;
 		case EWriteError::StateChanged:
-			Reset({ CloseReason::ClosedRemotely, err });
+			Reset({ ECloseReason::ClosedRemotely, err });
 
 			break;
 		case EWriteError::OutOfMemory:	break;
 		case EWriteError::InternalError:
-			Reset({ CloseError::InternalError , err });
+			Reset({ ECloseError::InternalError , err });
 
 			break;
 		}
@@ -379,12 +379,12 @@ void WinIpcConnection::OnRead(std::vector<u8> aBuffer)
 		{
 		case EReadError::InvalidState:	break;
 		case EReadError::StateChanged:
-			Reset({ CloseReason::ClosedRemotely, err });
+			Reset({ ECloseReason::ClosedRemotely, err });
 
 			break;
 		case EReadError::OutOfMemory:	break;
 		case EReadError::InternalError:
-			Reset({ CloseError::InternalError , err });
+			Reset({ ECloseError::InternalError , err });
 
 			break;
 		}
@@ -415,7 +415,7 @@ void WinIpcConnection::NextRead()
 	(void)WinIpcConnection::Read(std::move(readData));
 }
 
-void WinIpcConnection::Reset(Result<CloseError, CloseReason> aResult)
+void WinIpcConnection::Reset(Result<ECloseError, ECloseReason> aResult)
 {
 	auto currentOnWrite = std::move(myCurrentWriteCallback);
 	auto currentOnRead = std::move(myCurrentReadCallback);

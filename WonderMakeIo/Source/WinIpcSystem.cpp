@@ -1,10 +1,13 @@
 #include "WinIpcSystem.h"
 
+#include "WonderMakeEngine/SystemGlobal.h"
 #include "WonderMakeEngine/WinPlatformSystem.h"
 #include "WonderMakeEngine/WinEventSystem.h"
 
 #include "WinIpcAcceptor.h"
 #include "WinIpcConnection.h"
+
+REGISTER_SYSTEM_MASKED(WinIpcSystem, IpcSystem);
 
 std::shared_ptr<IpcAcceptor> WinIpcSystem::CreateAcceptor()
 {

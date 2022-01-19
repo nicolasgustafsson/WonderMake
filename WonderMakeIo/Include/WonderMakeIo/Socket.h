@@ -38,12 +38,12 @@ public:
 		InternalError
 	};
 
-	enum class CloseReason
+	enum class ECloseReason
 	{
 		ClosedLocally,
 		ClosedRemotely
 	};
-	enum class CloseError
+	enum class ECloseError
 	{
 		OutOfMemory,
 		InternalError
@@ -51,7 +51,7 @@ public:
 
 	using OnWriteCallback = UniqueFunction<void(Result<EWriteError>)>;
 	using OnReadCallback = UniqueFunction<void(Result<EReadError, std::vector<u8>>&&)>;
-	using OnCloseCallback = UniqueFunction<void(Result<CloseError, CloseReason>)>;
+	using OnCloseCallback = UniqueFunction<void(Result<ECloseError, ECloseReason>)>;
 
 	virtual ~Socket() noexcept = default;
 

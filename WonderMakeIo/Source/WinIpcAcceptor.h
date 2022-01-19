@@ -18,21 +18,21 @@ public:
 	WinIpcAcceptor(WinEventSystem& aWinEvent, WinPlatformSystem& aWinPlatform) noexcept;
 	~WinIpcAcceptor() noexcept;
 
-	Result<OpenError> Open(std::string aName, CallbackInfo&& aCallbackInfo) override;
+	Result<EOpenError> Open(std::string aName, CallbackInfo&& aCallbackInfo) override;
 	void Close() override;
 
-	State GetState() const noexcept override;
+	EState GetState() const noexcept override;
 
 private:
-	Result<OpenError> ListenForConnection();
+	Result<EOpenError> ListenForConnection();
 	void OnConnection();
 
-	void Reset(Result<CloseReason> aResult);
+	void Reset(Result<ECloseReason> aResult);
 
 	WinEventSystem& myWinEvent;
 	WinPlatformSystem& myWinPlatform;
 
-	State myState = State::Closed;
+	EState myState = EState::Closed;
 	bool myIsListening = false;
 
 	std::wstring myPipeName;

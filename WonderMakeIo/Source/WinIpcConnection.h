@@ -42,7 +42,7 @@ private:
 	void OnRead(std::vector<u8> aBuffer);
 	void NextRead();
 
-	void Reset(Result<CloseError, CloseReason> aResult);
+	void Reset(Result<ECloseError, ECloseReason> aResult);
 
 	WinEventSystem& myWinEvent;
 	WinPlatformSystem& myWinPlatform;

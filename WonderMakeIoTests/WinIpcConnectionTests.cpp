@@ -36,7 +36,7 @@ TEST_F(WinIpcConnectionTest, connect_returns_error_when_passing_empty_name)
 	auto ipcConnection = std::make_shared<WinIpcConnection>(myWinEventSystem, myWinPlatformSystem);
 	constexpr auto emptyName = "";
 
-	const auto result = ipcConnection->Connect(emptyName, {});
+	const auto result = ipcConnection->Connect(emptyName);
 
 	ASSERT_FALSE(result);
 	EXPECT_EQ(result, IpcConnection::ConnectionError::InvalidArgs);
@@ -61,7 +61,7 @@ TEST_F(WinIpcConnectionTest, connect_call_create_file)
 		.WillOnce(Return(INVALID_HANDLE_VALUE));
 	EXPECT_CALL(myWinPlatformSystem, GetLastError);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 }
 
 TEST_F(WinIpcConnectionTest, connect_returns_error_when_unable_to_open_pipe)
@@ -74,7 +74,7 @@ TEST_F(WinIpcConnectionTest, connect_returns_error_when_unable_to_open_pipe)
 	EXPECT_CALL(myWinPlatformSystem, GetLastError)
 		.WillOnce(Return(ERROR_FILE_NOT_FOUND));
 
-	const auto result = ipcConnection->Connect(pipeName, {});
+	const auto result = ipcConnection->Connect(pipeName);
 
 	ASSERT_FALSE(result);
 	EXPECT_EQ(result, IpcConnection::ConnectionError::NoConnection);
@@ -98,7 +98,7 @@ TEST_F(WinIpcConnectionTest, connect_calls_create_event)
 	EXPECT_CALL(myWinPlatformSystem, GetLastError);
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle(dummyFileHandle));
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 }
 
 TEST_F(WinIpcConnectionTest, connect_file_handle_is_closed)
@@ -119,7 +119,7 @@ TEST_F(WinIpcConnectionTest, connect_file_handle_is_closed)
 	EXPECT_CALL(myWinPlatformSystem, GetLastError);
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle(dummyFileHandle));
 
-	ipcConnection->Connect(pipeName, {});
+	ipcConnection->Connect(pipeName);
 }
 
 TEST_F(WinIpcConnectionTest, connect_returns_error_when_unable_to_create_read_event)
@@ -135,7 +135,7 @@ TEST_F(WinIpcConnectionTest, connect_returns_error_when_unable_to_create_read_ev
 	EXPECT_CALL(myWinPlatformSystem, GetLastError);
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle);
 
-	const auto result = ipcConnection->Connect(pipeName, {});
+	const auto result = ipcConnection->Connect(pipeName);
 
 	ASSERT_FALSE(result);
 	EXPECT_EQ(result, IpcConnection::ConnectionError::InternalError);
@@ -157,7 +157,7 @@ TEST_F(WinIpcConnectionTest, connect_returns_error_when_unable_to_create_write_e
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(2);
 
-	const auto result = ipcConnection->Connect(pipeName, {});
+	const auto result = ipcConnection->Connect(pipeName);
 
 	ASSERT_FALSE(result);
 	EXPECT_EQ(result, IpcConnection::ConnectionError::InternalError);
@@ -177,7 +177,7 @@ TEST_F(WinIpcConnectionTest, connect_returns_success)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle(dummyHandle))
 		.Times(3);
 
-	const auto result = ipcConnection->Connect(pipeName, {});
+	const auto result = ipcConnection->Connect(pipeName);
 
 	ASSERT_TRUE(result);
 }
@@ -211,7 +211,7 @@ TEST_F(WinIpcConnectionTest, read_passes_file_handle)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, ReadFile(dummyFileHandle, _, _, _, _))
 		.WillOnce(Return(FALSE));
@@ -234,7 +234,7 @@ TEST_F(WinIpcConnectionTest, read_returns_synchronous)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, ReadFile)
 		.WillOnce(Return(TRUE));
@@ -261,7 +261,7 @@ TEST_F(WinIpcConnectionTest, synchronous_read_closes_on_internal_error)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, ReadFile)
 		.WillOnce(Return(FALSE));
@@ -292,7 +292,7 @@ TEST_F(WinIpcConnectionTest, synchronous_read_closes_on_state_change)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, ReadFile)
 		.WillOnce(Return(FALSE));
@@ -324,7 +324,7 @@ TEST_F(WinIpcConnectionTest, synchronous_read_remains_open_on_out_of_memory)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, ReadFile)
 		.WillOnce(Return(FALSE));
@@ -356,7 +356,7 @@ TEST_F(WinIpcConnectionTest, synchronous_read_calls_onread_with_data)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, ReadFile(_, _, Ge(locDummyData.size()), _, _))
 		.WillOnce([&dummyData = locDummyData](auto&&, LPVOID lpBuffer, auto&&, LPDWORD lpNumberOfBytesRead, auto&&)
@@ -390,7 +390,7 @@ TEST_F(WinIpcConnectionTest, read_returns_asynchronous)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, ReadFile)
 		.WillOnce(Return(FALSE));
@@ -422,7 +422,7 @@ TEST_F(WinIpcConnectionTest, asynchronous_read_calls_onread)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, ReadFile)
 		.WillOnce(Return(FALSE));
@@ -468,7 +468,7 @@ TEST_F(WinIpcConnectionTest, asynchronous_read_closes_on_internal_error)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, ReadFile)
 		.WillOnce(Return(FALSE));
@@ -516,7 +516,7 @@ TEST_F(WinIpcConnectionTest, asynchronous_read_closes_on_state_changed)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, ReadFile)
 		.WillOnce(Return(FALSE));
@@ -565,7 +565,7 @@ TEST_F(WinIpcConnectionTest, asynchronous_read_remains_open_on_out_of_memory)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, ReadFile)
 		.WillOnce(Return(FALSE));
@@ -614,7 +614,7 @@ TEST_F(WinIpcConnectionTest, asynchronous_read_calls_onread_with_data)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 	
 	EXPECT_CALL(myWinPlatformSystem, ReadFile(_, _, Ge(locDummyData.size()), _, _))
 		.WillOnce([&dummyData = locDummyData](auto&&, LPVOID lpBuffer, auto&&, auto&&, auto&&)
@@ -670,7 +670,7 @@ TEST_F(WinIpcConnectionTest, asynchronous_queue_reads)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, ReadFile)
 		.WillOnce(Return(FALSE));
@@ -712,7 +712,7 @@ TEST_F(WinIpcConnectionTest, asynchronous_dequeues_read)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, ReadFile)
 		.WillOnce(Return(FALSE));
@@ -779,7 +779,7 @@ TEST_F(WinIpcConnectionTest, write_passes_file_handle)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, WriteFile(dummyFileHandle, _, _, _, _))
 		.WillOnce(Return(FALSE));
@@ -802,7 +802,7 @@ TEST_F(WinIpcConnectionTest, write_returns_synchronous)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, WriteFile)
 		.WillOnce([&dummyData = locDummyData](auto&&, auto&&, auto&&, LPDWORD lpNumberOfBytesWritten, auto&&)
@@ -834,7 +834,7 @@ TEST_F(WinIpcConnectionTest, synchronous_write_closes_on_internal_error)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, WriteFile)
 		.WillOnce(Return(FALSE));
@@ -865,7 +865,7 @@ TEST_F(WinIpcConnectionTest, synchronous_write_closes_on_state_change)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, WriteFile)
 		.WillOnce(Return(FALSE));
@@ -897,7 +897,7 @@ TEST_F(WinIpcConnectionTest, synchronous_write_remains_open_on_out_of_memory)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, WriteFile)
 		.WillOnce(Return(FALSE));
@@ -929,7 +929,7 @@ TEST_F(WinIpcConnectionTest, synchronous_write_calls_onwrite_with_data)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, WriteFile(_, _, Ge(locDummyData.size()), _, _))
 		.With(Args<1, 2>(ElementsAreArrayVoidPointer(locDummyData.data(), locDummyData.size())))
@@ -963,7 +963,7 @@ TEST_F(WinIpcConnectionTest, write_returns_asynchronous)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, WriteFile)
 		.WillOnce(Return(FALSE));
@@ -996,7 +996,7 @@ TEST_F(WinIpcConnectionTest, synchronous_write_splits_buffer_if_not_all_bytes_we
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, WriteFile)
 		.WillOnce([](auto&&, auto&&, auto&&, LPDWORD lpNumberOfBytesWritten, auto&&)
@@ -1038,7 +1038,7 @@ TEST_F(WinIpcConnectionTest, asynchronous_write_calls_onwrite)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, WriteFile)
 		.WillOnce(Return(FALSE));
@@ -1084,7 +1084,7 @@ TEST_F(WinIpcConnectionTest, asynchronous_write_closes_on_internal_error)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, WriteFile)
 		.WillOnce(Return(FALSE));
@@ -1132,7 +1132,7 @@ TEST_F(WinIpcConnectionTest, asynchronous_write_closes_on_state_changed)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, WriteFile)
 		.WillOnce(Return(FALSE));
@@ -1181,7 +1181,7 @@ TEST_F(WinIpcConnectionTest, asynchronous_write_remains_open_on_out_of_memory)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, WriteFile)
 		.WillOnce(Return(FALSE));
@@ -1230,7 +1230,7 @@ TEST_F(WinIpcConnectionTest, asynchronous_write_calls_onwrite_on_success)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, WriteFile);
 	EXPECT_CALL(myWinPlatformSystem, GetLastError)
@@ -1280,7 +1280,7 @@ TEST_F(WinIpcConnectionTest, asynchronous_write_splits_buffer_if_not_all_bytes_w
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, WriteFile);
 	EXPECT_CALL(myWinPlatformSystem, GetLastError)
@@ -1338,7 +1338,7 @@ TEST_F(WinIpcConnectionTest, asynchronous_queue_writes)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, WriteFile)
 		.WillOnce(Return(FALSE));
@@ -1380,7 +1380,7 @@ TEST_F(WinIpcConnectionTest, asynchronous_dequeues_write)
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
 		.Times(3);
 
-	(void)ipcConnection->Connect(pipeName, {});
+	(void)ipcConnection->Connect(pipeName);
 
 	EXPECT_CALL(myWinPlatformSystem, WriteFile)
 		.WillOnce(Return(FALSE));

@@ -38,13 +38,26 @@ public:
 		InternalError
 	};
 
+	enum class CloseReason
+	{
+		ClosedLocally,
+		ClosedRemotely
+	};
+	enum class CloseError
+	{
+		OutOfMemory,
+		InternalError
+	};
+
 	using OnWriteCallback = UniqueFunction<void(Result<EWriteError>)>;
 	using OnReadCallback = UniqueFunction<void(Result<EReadError, std::vector<u8>>&&)>;
+	using OnCloseCallback = UniqueFunction<void(Result<CloseError, CloseReason>)>;
 
 	virtual ~Socket() noexcept = default;
 
-	virtual Result<EWriteError, EAsynchronicity> Write(std::vector<u8> aBuffer, OnWriteCallback&& aOnWrite) = 0;
-	virtual Result<EReadError, EAsynchronicity> Read(OnReadCallback&& aOnRead) = 0;
+	virtual Result<EWriteError, EAsynchronicity> Write(std::vector<u8> aBuffer, OnWriteCallback aOnWrite) = 0;
+	virtual Result<EReadError, EAsynchronicity> Read(OnReadCallback aOnRead) = 0;
+	virtual void OnClose(OnCloseCallback aOnClose) = 0;
 	virtual void Close() = 0;
 
 	virtual EState GetState() const noexcept = 0;

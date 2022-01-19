@@ -24,6 +24,9 @@ void WinEventSystemImpl::RegisterEvent(
 	HANDLE aEventHandle,
 	Closure&& aCallback)
 {
+	if (aEventHandle == NULL)
+		return;
+
 	{
 		std::lock_guard<std::mutex> lock(myMutex);
 

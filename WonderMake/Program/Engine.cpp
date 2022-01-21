@@ -102,9 +102,9 @@ namespace Engine
 
 		for (const auto& message : messageList)
 		{
-			router.RouteDispatchable(*message);
-
 			router.CommitChanges();
+
+			router.RouteDispatchable(*message);
 		}
 	}
 }

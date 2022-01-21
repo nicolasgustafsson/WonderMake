@@ -96,6 +96,9 @@ public:
 		LPCWSTR lpCurrentDirectory,
 		LPSTARTUPINFOW lpStartupInfo,
 		LPPROCESS_INFORMATION lpProcessInformation) override;
+	BOOL TerminateProcess(
+		HANDLE hProcess,
+		UINT uExitCode) override;
 	BOOL GetExitCodeProcess(
 		HANDLE hProcess,
 		LPDWORD lpExitCode) override;

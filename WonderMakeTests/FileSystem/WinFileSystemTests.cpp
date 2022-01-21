@@ -161,6 +161,13 @@ public:
 		return FALSE;
 	}
 
+	BOOL TerminateProcess(
+		HANDLE /*hProcess*/,
+		UINT /*uExitCode*/)
+	{
+		return FALSE;
+	}
+
 	BOOL GetExitCodeProcess(
 		HANDLE /*hProcess*/,
 		LPDWORD /*lpExitCode*/)

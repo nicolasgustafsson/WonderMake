@@ -21,7 +21,11 @@ static void _RegisterSystem()
 
 	Global::GetSystemRegistry().AddSystem<TSystem, TBaseSystem>([]() -> std::shared_ptr<TSystem>
 		{
-			return std::make_shared<TSystem>();
+			auto ptr = std::make_shared<TSystem>();
+
+			ptr->Initialize();
+
+			return ptr;
 		});
 }
 

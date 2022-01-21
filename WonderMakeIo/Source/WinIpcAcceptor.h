@@ -33,7 +33,6 @@ private:
 	WinPlatformSystem& myWinPlatform;
 
 	EState myState = EState::Closed;
-	bool myIsListening = false;
 
 	std::wstring myPipeName;
 

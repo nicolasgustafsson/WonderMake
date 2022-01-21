@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Include">
@@ -66,12 +66,18 @@
     <ClInclude Include="Include\WonderMakeBase\Result.h">
       <Filter>Include</Filter>
     </ClInclude>
+    <ClInclude Include="Include\WonderMakeBase\StringUtility.h">
+      <Filter>Include</Filter>
+    </ClInclude>
     <ClInclude Include="Include\WonderMakeBase\WinPlatform.h">
       <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DependencyInjector.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\WinStringUtility.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

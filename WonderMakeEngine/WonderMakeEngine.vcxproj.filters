@@ -30,6 +30,9 @@
     <ClCompile Include="Source\CmdLineArgsSystem.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\WinProcess.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\WonderMakeEngine\SystemGlobal.h">
@@ -79,6 +82,9 @@
     </ClInclude>
     <ClInclude Include="Include\WonderMakeEngine\Process.h">
       <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\WinProcess.h">
+      <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

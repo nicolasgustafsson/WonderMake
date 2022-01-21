@@ -30,6 +30,7 @@
     <ClCompile Include="Source\SystemRegistry.cpp" />
     <ClCompile Include="Source\WinEventSystemImpl.cpp" />
     <ClCompile Include="Source\WinPlatformSystemImpl.cpp" />
+    <ClCompile Include="Source\WinProcess.cpp" />
     <ClCompile Include="Source\WinProgram.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -48,6 +49,7 @@
     <ClInclude Include="Include\WonderMakeEngine\WinPlatformSystem.h" />
     <ClInclude Include="Source\WinEventSystemImpl.h" />
     <ClInclude Include="Source\WinPlatformSystemImpl.h" />
+    <ClInclude Include="Source\WinProcess.h" />
     <ClInclude Include="Source\WinProgram.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

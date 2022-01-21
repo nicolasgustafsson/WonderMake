@@ -33,6 +33,7 @@
     <ClInclude Include="Include\WonderMakeBase\Rotation.h" />
     <ClInclude Include="Include\WonderMakeBase\Singleton.h" />
     <ClInclude Include="Include\WonderMakeBase\Stopwatch.h" />
+    <ClInclude Include="Include\WonderMakeBase\StringUtility.h" />
     <ClInclude Include="Include\WonderMakeBase\Typedefs.h" />
     <ClInclude Include="Include\WonderMakeBase\UniqueFunction.h" />
     <ClInclude Include="Include\WonderMakeBase\UniqueValue.h" />
@@ -42,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DependencyInjector.cpp" />
+    <ClCompile Include="Source\WinStringUtility.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

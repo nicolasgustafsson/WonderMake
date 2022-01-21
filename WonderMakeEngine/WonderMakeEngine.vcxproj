@@ -24,6 +24,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\CmdLineArgsSystem.cpp" />
     <ClCompile Include="Source\ScheduleSystem.cpp" />
     <ClCompile Include="Source\SystemGlobal.cpp" />
     <ClCompile Include="Source\SystemRegistry.cpp" />
@@ -32,6 +33,7 @@
     <ClCompile Include="Source\WinProgram.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\WonderMakeEngine\CmdLineArgsSystem.h" />
     <ClInclude Include="Include\WonderMakeEngine\ScheduleSystem.h" />
     <ClInclude Include="Include\WonderMakeEngine\System.h" />
     <ClInclude Include="Include\WonderMakeEngine\SystemContainer.h" />

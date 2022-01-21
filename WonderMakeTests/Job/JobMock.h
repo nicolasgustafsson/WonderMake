@@ -77,7 +77,8 @@ public:
 	template<typename... TArgs>
 	void Run(TArgs&&... aArgs)
 	{
-		TJob job(std::forward<TArgs>(aArgs)...);
+		TJob job;
+		job.Run(std::forward<TArgs>(aArgs)...);
 	}
 
 	template<typename... TArgs>

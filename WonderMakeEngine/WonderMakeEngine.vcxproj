@@ -42,7 +42,6 @@
     <ClInclude Include="Include\WonderMakeEngine\SystemRegistry.h" />
     <ClInclude Include="Include\WonderMakeEngine\SystemTraits.h" />
     <ClInclude Include="Include\WonderMakeEngine\WinEventSystem.h" />
-    <ClInclude Include="Include\WonderMakeEngine\WinPlatform.h" />
     <ClInclude Include="Include\WonderMakeEngine\WinPlatformSystem.h" />
     <ClInclude Include="Source\WinEventSystemImpl.h" />
     <ClInclude Include="Source\WinPlatformSystemImpl.h" />

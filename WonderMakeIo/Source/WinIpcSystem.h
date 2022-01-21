@@ -1,8 +1,8 @@
 #pragma once
 
-#include "WonderMakeIo/IpcSystem.h"
+#include "WonderMakeBase/WinPlatform.h"
 
-#include "WonderMakeEngine/WinPlatform.h"
+#include "WonderMakeIo/IpcSystem.h"
 
 class WinEventSystem;
 class WinPlatformSystem;

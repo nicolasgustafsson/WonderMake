@@ -1,8 +1,8 @@
 #pragma once
 
 #include "WonderMakeBase/UniqueFunction.h"
+#include "WonderMakeBase/WinPlatform.h"
 
-#include "WonderMakeEngine/WinPlatform.h"
 #include "WonderMakeEngine/System.h"
 
 class WinEventSystem

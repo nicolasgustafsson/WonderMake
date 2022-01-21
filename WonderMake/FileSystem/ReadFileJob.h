@@ -24,6 +24,6 @@ class ReadFileJob
 		JobOutputError<ReadFileError>>
 {
 public:
-	ReadFileJob(const FolderLocation aLocation, const std::filesystem::path& aFilePath);
+	void Run(const FolderLocation aLocation, const std::filesystem::path& aFilePath);
 
 };

@@ -13,7 +13,7 @@ class CreateResource
 public:
 	using Callback = std::function<void()>;
 
-	inline CreateResource(const std::filesystem::path& aFilePath, Callback&& aCallback)
+	inline void Run(const std::filesystem::path& aFilePath, Callback&& aCallback)
 	{
 		myCallback = std::move(aCallback);
 		myFilePath = aFilePath;

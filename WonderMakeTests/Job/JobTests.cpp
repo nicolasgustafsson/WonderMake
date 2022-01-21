@@ -40,6 +40,8 @@ public:
 		: myData(aData)
 	{}
 
+	void Run() {}
+
 	void Success()
 	{
 		CompleteSuccess();
@@ -65,6 +67,8 @@ class JobInjectionMock
 			PAdd<JobData, PWrite>>>
 {
 public:
+	void Run() {}
+
 	void Success()
 	{
 		CompleteSuccess();

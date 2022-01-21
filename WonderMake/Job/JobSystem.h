@@ -147,7 +147,9 @@ private:
 		{
 			TJob::InjectDependencies(aJobData.Promise, GetDependenciesHelper(TupleWrapper<typename TJob::Dependencies>()));
 
-			aJobData.Job = std::make_shared<TJob>(std::move(args)...);
+			aJobData.Job = std::make_shared<TJob>();
+
+			aJobData.Job->Run(std::move(args)...);
 		});
 	}
 

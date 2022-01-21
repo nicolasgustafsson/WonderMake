@@ -5,7 +5,7 @@
 
 #include <fstream>
 
-ReadFileJob::ReadFileJob(const FolderLocation aLocation, const std::filesystem::path& aFilePath)
+void ReadFileJob::Run(const FolderLocation aLocation, const std::filesystem::path& aFilePath)
 {
 	const auto dirPath = Get<FileSystem>().GetFolderLocation(aLocation);
 

@@ -83,7 +83,18 @@ public:
 		LPDWORD lpNumberOfBytesWritten,
 		LPOVERLAPPED lpOverlapped) = 0;
 
-protected:
-	WinPlatformSystem() noexcept = default;
-
+	virtual BOOL CreateProcessW(
+		LPCWSTR lpApplicationName,
+		LPWSTR lpCommandLine,
+		LPSECURITY_ATTRIBUTES lpProcessAttributes,
+		LPSECURITY_ATTRIBUTES lpThreadAttributes,
+		BOOL bInheritHandles,
+		DWORD dwCreationFlags,
+		LPVOID lpEnvironment,
+		LPCWSTR lpCurrentDirectory,
+		LPSTARTUPINFOW lpStartupInfo,
+		LPPROCESS_INFORMATION lpProcessInformation) = 0;
+	virtual BOOL GetExitCodeProcess(
+		HANDLE hProcess,
+		LPDWORD lpExitCode) = 0;
 };

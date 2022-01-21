@@ -85,4 +85,18 @@ public:
 		LPDWORD lpNumberOfBytesWritten,
 		LPOVERLAPPED lpOverlapped) override;
 
+	BOOL CreateProcessW(
+		LPCWSTR lpApplicationName,
+		LPWSTR lpCommandLine,
+		LPSECURITY_ATTRIBUTES lpProcessAttributes,
+		LPSECURITY_ATTRIBUTES lpThreadAttributes,
+		BOOL bInheritHandles,
+		DWORD dwCreationFlags,
+		LPVOID lpEnvironment,
+		LPCWSTR lpCurrentDirectory,
+		LPSTARTUPINFOW lpStartupInfo,
+		LPPROCESS_INFORMATION lpProcessInformation) override;
+	BOOL GetExitCodeProcess(
+		HANDLE hProcess,
+		LPDWORD lpExitCode) override;
 };

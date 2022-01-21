@@ -146,6 +146,28 @@ public:
 		return FALSE;
 	}
 
+	BOOL CreateProcessW(
+		LPCWSTR /*lpApplicationName*/,
+		LPWSTR /*lpCommandLine*/,
+		LPSECURITY_ATTRIBUTES /*lpProcessAttributes*/,
+		LPSECURITY_ATTRIBUTES /*lpThreadAttributes*/,
+		BOOL /*bInheritHandles*/,
+		DWORD /*dwCreationFlags*/,
+		LPVOID /*lpEnvironment*/,
+		LPCWSTR /*lpCurrentDirectory*/,
+		LPSTARTUPINFOW /*lpStartupInfo*/,
+		LPPROCESS_INFORMATION /*lpProcessInformation*/)
+	{
+		return FALSE;
+	}
+
+	BOOL GetExitCodeProcess(
+		HANDLE /*hProcess*/,
+		LPDWORD /*lpExitCode*/)
+	{
+		return FALSE;
+	}
+
 	void SetExpectedArgs(REFKNOWNFOLDERID rfid, DWORD dwFlags, HANDLE hToken)
 	{
 		myRfid = &rfid;

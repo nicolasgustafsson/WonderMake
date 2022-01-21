@@ -21,6 +21,7 @@ public:
 	{
 		InvalidArgs,
 		InvalidState,
+		OutOfMemory,
 		InternalError
 	};
 

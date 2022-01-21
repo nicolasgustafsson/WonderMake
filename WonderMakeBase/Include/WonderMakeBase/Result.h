@@ -16,15 +16,15 @@ struct _SuccessType
 
 constexpr _SuccessType Success;
 
-template<typename TErrorType, typename TSuccessType = _SuccessType>
+template<typename TErrorType, typename TSuccessType = _SuccessType, typename TMeta = u32>
 class Result
 {
 public:
-	constexpr Result(TSuccessType aSuccess, u32 aMetaValue = 0) noexcept(std::is_nothrow_move_constructible_v<TSuccessType>)
+	constexpr Result(TSuccessType aSuccess, TMeta aMetaValue = 0) noexcept(std::is_nothrow_move_constructible_v<TSuccessType>)
 		: myResult(std::move(aSuccess))
 		, myMetaValue(aMetaValue)
 	{}
-	constexpr Result(TErrorType aError, u32 aMetaValue = 0) noexcept(std::is_nothrow_move_constructible_v<TErrorType>)
+	constexpr Result(TErrorType aError, TMeta aMetaValue = 0) noexcept(std::is_nothrow_move_constructible_v<TErrorType>)
 		: myResult(std::move(aError))
 		, myMetaValue(aMetaValue)
 	{}
@@ -63,13 +63,13 @@ public:
 		return std::move(std::get<TSuccessType>(myResult));
 	}
 
-	constexpr [[nodiscard]] u32 Meta() const
+	constexpr [[nodiscard]] TMeta Meta() const
 	{
 		return myMetaValue;
 	}
 
 private:
 	std::variant<TErrorType, TSuccessType> myResult;
-	u32 myMetaValue = 0;
+	TMeta myMetaValue = 0;
 
 };

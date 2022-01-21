@@ -77,5 +77,8 @@
     <ClInclude Include="Include\WonderMakeEngine\CmdLineArgsSystem.h">
       <Filter>Include</Filter>
     </ClInclude>
+    <ClInclude Include="Include\WonderMakeEngine\Process.h">
+      <Filter>Include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

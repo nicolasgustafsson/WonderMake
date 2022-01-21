@@ -6,11 +6,13 @@
 
 #include <filesystem>
 #include <string>
+#include <vector>
 
 namespace Engine
 {
 	struct Info
 	{
+		std::vector<std::wstring> CommandLineArguments;
 		bool Headless = true;
 		std::filesystem::path ProjectFolderNames;
 	};

@@ -83,4 +83,18 @@ public:
 		LPDWORD lpNumberOfBytesWritten,
 		LPOVERLAPPED lpOverlapped), (override));
 
+	MOCK_METHOD(BOOL, CreateProcessW, (
+		LPCWSTR lpApplicationName,
+		LPWSTR lpCommandLine,
+		LPSECURITY_ATTRIBUTES lpProcessAttributes,
+		LPSECURITY_ATTRIBUTES lpThreadAttributes,
+		BOOL bInheritHandles,
+		DWORD dwCreationFlags,
+		LPVOID lpEnvironment,
+		LPCWSTR lpCurrentDirectory,
+		LPSTARTUPINFOW lpStartupInfo,
+		LPPROCESS_INFORMATION lpProcessInformation), (override));
+	MOCK_METHOD(BOOL, GetExitCodeProcess, (
+		HANDLE hProcess,
+		LPDWORD lpExitCode), (override));
 };

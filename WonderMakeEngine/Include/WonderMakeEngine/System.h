@@ -31,6 +31,8 @@ public:
 		myInjectedDependencies.emplace(std::move(aDependencies));
 	}
 
+	virtual void Initialize() {};
+
 protected:
 	inline SystemSub() noexcept
 		: myDependencies(std::move(*myInjectedDependencies))

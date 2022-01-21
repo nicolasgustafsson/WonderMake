@@ -9,6 +9,7 @@
 
 #include "Job/JobSystem.h"
 
+#include "WonderMakeEngine/CmdLineArgsSystem.h"
 #include "WonderMakeEngine/SystemGlobal.h"
 
 #include "Program/ImguiWrapper.h"
@@ -39,6 +40,10 @@ namespace Engine
 		auto&& sysRegistry = Global::GetSystemRegistry();
 		auto&& sysContainer = Global::GetSystemContainer();
 
+		sysRegistry.AddSystem<CmdLineArgsSystem>([&cmdLineArgs = aInfo.CommandLineArguments]() -> std::shared_ptr<CmdLineArgsSystem>
+			{
+				return std::make_shared<CmdLineArgsSystem>(cmdLineArgs);
+			});
 		sysRegistry.AddSystem<JobSystem>([&sysContainer]() -> std::shared_ptr<JobSystem>
 			{
 				return std::make_shared<JobSystem>(sysContainer);

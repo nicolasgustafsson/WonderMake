@@ -1,6 +1,6 @@
 #pragma once
 
-#include "WonderMakeEngine/WinPlatform.h"
+#include "WonderMakeBase/WinPlatform.h"
 
 #include "WonderMakeIo/IpcAcceptor.h"
 
@@ -25,7 +25,7 @@ public:
 
 private:
 	Result<EOpenError> ListenForConnection();
-	void OnConnection();
+	Result<EOpenError> OnConnection();
 
 	void Reset(Result<ECloseReason> aResult);
 

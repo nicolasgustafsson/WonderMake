@@ -104,8 +104,6 @@ Result<IpcAcceptor::EOpenError> WinIpcAcceptor::ListenForConnection()
 		return Result(EOpenError::InternalError, err);
 	}
 
-	myWinEvent.RegisterEvent(myPipeOverlapped.hEvent, Bind(&WinIpcAcceptor::OnConnection, weak_from_this()));
-
 	const BOOL result = myWinPlatform.ConnectNamedPipe(myPipeHandle, &myPipeOverlapped);
 
 	if (result == TRUE)
@@ -119,6 +117,13 @@ Result<IpcAcceptor::EOpenError> WinIpcAcceptor::ListenForConnection()
 
 	const DWORD err = myWinPlatform.GetLastError();
 
+	if (err == ERROR_PIPE_CONNECTED)
+	{
+		return OnConnection();
+	}
+	
+	myWinEvent.RegisterEvent(myPipeOverlapped.hEvent, Bind(&WinIpcAcceptor::OnConnection, weak_from_this()));
+
 	if (err != ERROR_IO_PENDING)
 	{
 		Reset(Result(ECloseReason::InternalError, err));
@@ -129,7 +134,7 @@ Result<IpcAcceptor::EOpenError> WinIpcAcceptor::ListenForConnection()
 	return Success;
 }
 
-void WinIpcAcceptor::OnConnection()
+Result<IpcAcceptor::EOpenError> WinIpcAcceptor::OnConnection()
 {
 	std::shared_ptr<WinIpcConnection> connection;
 
@@ -141,18 +146,30 @@ void WinIpcAcceptor::OnConnection()
 	{
 		Reset(ECloseReason::OutOfMemory);
 
-		return;
+		return EOpenError::OutOfMemory;
 	}
 
 	connection->ConnectHandle(myPipeHandle);
+	myWinPlatform.ResetEvent(myPipeOverlapped.hEvent);
 
 	myPipeHandle = INVALID_HANDLE_VALUE;
 
 	Utility::Invoke(myCallbackInfo.OnConnection, std::move(connection));
 
-	myWinPlatform.ResetEvent(myPipeOverlapped.hEvent);
+	const auto result = ListenForConnection();
 
-	(void)ListenForConnection();
+	if (result)
+		return Success;
+
+	switch (static_cast<EOpenError>(result))
+	{
+	case EOpenError::InvalidArgs:		break;
+	case EOpenError::InvalidState:		return Success;
+	case EOpenError::OutOfMemory:		break;
+	case EOpenError::InternalError:		break;
+	}
+
+	return result;
 }
 
 void WinIpcAcceptor::Reset(Result<ECloseReason> aResult)

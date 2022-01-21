@@ -94,7 +94,57 @@ public:
 		LPCWSTR lpCurrentDirectory,
 		LPSTARTUPINFOW lpStartupInfo,
 		LPPROCESS_INFORMATION lpProcessInformation), (override));
+	MOCK_METHOD(BOOL, TerminateProcess, (
+		HANDLE hProcess,
+		UINT uExitCode), (override));
 	MOCK_METHOD(BOOL, GetExitCodeProcess, (
 		HANDLE hProcess,
 		LPDWORD lpExitCode), (override));
+
+	void DelegateToFake()
+	{
+		const auto createHandle = [this]() -> HANDLE
+		{
+			const HANDLE handle = myNextHandle;
+
+			EXPECT_CALL(*this, CloseHandle(handle));
+
+			myNextHandle = (HANDLE)(((std::uintptr_t)myNextHandle) + 1);
+
+			return handle;
+		};
+
+		ON_CALL(*this, CreateEventW)
+			.WillByDefault([createHandle](auto&&, auto&&, auto&&, auto&&) { return createHandle(); });
+		ON_CALL(*this, SetEvent)
+			.WillByDefault(Return(TRUE));
+		ON_CALL(*this, ResetEvent)
+			.WillByDefault(Return(TRUE));
+
+		ON_CALL(*this, CloseHandle)
+			.WillByDefault(Return(TRUE));
+
+		ON_CALL(*this, CreateNamedPipeW)
+			.WillByDefault([createHandle](auto&&, auto&&, auto&&, auto&&, auto&&, auto&&, auto&&, auto&&) { return createHandle(); });
+
+		ON_CALL(*this, CreateFileW)
+			.WillByDefault([createHandle](auto&&, auto&&, auto&&, auto&&, auto&&, auto&&, auto&&) { return createHandle(); });
+
+		ON_CALL(*this, CreateProcessW)
+			.WillByDefault([createHandle](auto&&, auto&&, auto&&, auto&&, auto&&, auto&&, auto&&, auto&&, auto&&, LPPROCESS_INFORMATION lpProcessInformation)
+				{
+					lpProcessInformation->hProcess = createHandle();
+					lpProcessInformation->hThread = createHandle();
+
+					return TRUE;
+				});
+		ON_CALL(*this, TerminateProcess)
+			.WillByDefault(Return(TRUE));
+		ON_CALL(*this, GetExitCodeProcess)
+			.WillByDefault(Return(TRUE));
+	}
+
+private:
+	HANDLE myNextHandle = (HANDLE)0x100;
+
 };

@@ -157,6 +157,13 @@ TEST_CASE("GenerateNew returns a valid Guid.", "[WinGuidGeneratorSystem]")
 			return FALSE;
 		}
 
+		BOOL TerminateProcess(
+			HANDLE /*hProcess*/,
+			UINT /*uExitCode*/)
+		{
+			return FALSE;
+		}
+
 		BOOL GetExitCodeProcess(
 			HANDLE /*hProcess*/,
 			LPDWORD /*lpExitCode*/)
@@ -321,6 +328,13 @@ TEST_CASE("GenerateNew returns nullopt on error.", "[WinGuidGeneratorSystem]")
 			LPCWSTR /*lpCurrentDirectory*/,
 			LPSTARTUPINFOW /*lpStartupInfo*/,
 			LPPROCESS_INFORMATION /*lpProcessInformation*/)
+		{
+			return FALSE;
+		}
+
+		BOOL TerminateProcess(
+			HANDLE /*hProcess*/,
+			UINT /*uExitCode*/)
 		{
 			return FALSE;
 		}

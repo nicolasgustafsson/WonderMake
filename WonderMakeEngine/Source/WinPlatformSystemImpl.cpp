@@ -149,6 +149,13 @@ BOOL WinPlatformSystemImpl::CreateProcessW(
 	return ::CreateProcessW(lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles, dwCreationFlags, lpEnvironment, lpCurrentDirectory, lpStartupInfo, lpProcessInformation);
 }
 
+BOOL WinPlatformSystemImpl::TerminateProcess(
+	HANDLE hProcess,
+	UINT uExitCode)
+{
+	return ::TerminateProcess(hProcess, uExitCode);
+}
+
 BOOL WinPlatformSystemImpl::GetExitCodeProcess(
 	HANDLE hProcess,
 	LPDWORD lpExitCode)

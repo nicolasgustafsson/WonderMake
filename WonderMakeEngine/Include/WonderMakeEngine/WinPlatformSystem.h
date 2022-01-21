@@ -94,6 +94,9 @@ public:
 		LPCWSTR lpCurrentDirectory,
 		LPSTARTUPINFOW lpStartupInfo,
 		LPPROCESS_INFORMATION lpProcessInformation) = 0;
+	virtual BOOL TerminateProcess(
+		HANDLE hProcess,
+		UINT uExitCode) = 0;
 	virtual BOOL GetExitCodeProcess(
 		HANDLE hProcess,
 		LPDWORD lpExitCode) = 0;

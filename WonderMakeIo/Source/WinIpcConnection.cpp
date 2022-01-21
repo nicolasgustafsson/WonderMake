@@ -80,7 +80,7 @@ Result<IpcConnection::ConnectionError> WinIpcConnection::Connect(std::string aCo
 		case ERROR_NOT_ENOUGH_MEMORY:	connectionErr = ConnectionError::OutOfMemory;	break;
 		}
 
-		return Result(connectionErr, err);
+		return { connectionErr, err };
 	}
 
 	myFileHandle = handle;
@@ -277,7 +277,7 @@ Result<IpcConnection::ConnectionError> WinIpcConnection::Setup()
 
 		Reset({ err == ERROR_NOT_ENOUGH_MEMORY ? ECloseError::OutOfMemory : ECloseError::InternalError, err });
 
-		return Result(err == ERROR_NOT_ENOUGH_MEMORY ? ConnectionError::OutOfMemory : ConnectionError::InternalError, err);
+		return { err == ERROR_NOT_ENOUGH_MEMORY ? ConnectionError::OutOfMemory : ConnectionError::InternalError, err };
 	}
 
 	myReadOverlapped.hEvent = myWinPlatform.CreateEventW(lpEventAttributes, bManualReset, bInitialState, lpName);
@@ -288,7 +288,7 @@ Result<IpcConnection::ConnectionError> WinIpcConnection::Setup()
 
 		Reset({ err == ERROR_NOT_ENOUGH_MEMORY ? ECloseError::OutOfMemory : ECloseError::InternalError, err });
 
-		return Result(err == ERROR_NOT_ENOUGH_MEMORY ? ConnectionError::OutOfMemory : ConnectionError::InternalError, err);
+		return { err == ERROR_NOT_ENOUGH_MEMORY ? ConnectionError::OutOfMemory : ConnectionError::InternalError, err };
 	}
 
 	myState = EState::Open;

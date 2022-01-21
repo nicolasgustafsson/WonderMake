@@ -46,9 +46,9 @@ Result<IpcAcceptor::EOpenError> WinIpcAcceptor::Open(std::string aName, Callback
 	{
 		const DWORD err = myWinPlatform.GetLastError();
 
-		Reset(Result(ECloseReason::InternalError, err));
+		Reset({ ECloseReason::InternalError, err });
 
-		return Result(EOpenError::InternalError, err);
+		return { EOpenError::InternalError, err };
 	}
 
 	myState = EState::Open;
@@ -94,9 +94,9 @@ Result<IpcAcceptor::EOpenError> WinIpcAcceptor::ListenForConnection()
 	{
 		const DWORD err = myWinPlatform.GetLastError();
 
-		Reset(Result(ECloseReason::InternalError, err));
+		Reset({ ECloseReason::InternalError, err });
 
-		return Result(EOpenError::InternalError, err);
+		return { EOpenError::InternalError, err };
 	}
 
 	const BOOL result = myWinPlatform.ConnectNamedPipe(myPipeHandle, &myPipeOverlapped);
@@ -105,9 +105,9 @@ Result<IpcAcceptor::EOpenError> WinIpcAcceptor::ListenForConnection()
 	{
 		const DWORD err = myWinPlatform.GetLastError();
 
-		Reset(Result(ECloseReason::InternalError, err));
+		Reset({ ECloseReason::InternalError, err });
 
-		return Result(EOpenError::InternalError, err);
+		return { EOpenError::InternalError, err };
 	}
 
 	const DWORD err = myWinPlatform.GetLastError();
@@ -121,9 +121,9 @@ Result<IpcAcceptor::EOpenError> WinIpcAcceptor::ListenForConnection()
 
 	if (err != ERROR_IO_PENDING)
 	{
-		Reset(Result(ECloseReason::InternalError, err));
+		Reset({ ECloseReason::InternalError, err });
 
-		return Result(IpcAcceptor::EOpenError::InternalError, err);
+		return { IpcAcceptor::EOpenError::InternalError, err };
 	}
 
 	return Success;

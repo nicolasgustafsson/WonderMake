@@ -80,11 +80,6 @@ Result<IpcAcceptor::EOpenError> WinIpcAcceptor::ListenForConnection()
 	if (myState != EState::Open)
 		return IpcAcceptor::EOpenError::InvalidState;
 
-	if (myIsListening)
-		return IpcAcceptor::EOpenError::InternalError;
-
-	myIsListening = true;
-
 	myPipeHandle = myWinPlatform.CreateNamedPipeW(
 		lpName,
 		dwOpenMode,
@@ -188,7 +183,6 @@ void WinIpcAcceptor::Reset(Result<ECloseReason> aResult)
 
 	myCallbackInfo = {};
 	myState = EState::Closed;
-	myIsListening = false;
 	myPipeHandle = INVALID_HANDLE_VALUE;
 	myPipeOverlapped = {};
 

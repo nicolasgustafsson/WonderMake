@@ -1,6 +1,7 @@
 #pragma once
 
-#include "WonderMakeEngine/WinPlatform.h"
+#include "WonderMakeBase/WinPlatform.h"
+
 #include "WonderMakeEngine/System.h"
 
 class WinPlatformSystem

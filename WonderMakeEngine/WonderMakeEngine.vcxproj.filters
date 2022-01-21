@@ -53,9 +53,6 @@
     <ClInclude Include="Include\WonderMakeEngine\SystemContainer.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeEngine\WinPlatform.h">
-      <Filter>Include</Filter>
-    </ClInclude>
     <ClInclude Include="Include\WonderMakeEngine\WinPlatformSystem.h">
       <Filter>Include</Filter>
     </ClInclude>

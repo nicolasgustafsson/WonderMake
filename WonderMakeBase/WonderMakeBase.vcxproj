@@ -38,6 +38,7 @@
     <ClInclude Include="Include\WonderMakeBase\UniqueValue.h" />
     <ClInclude Include="Include\WonderMakeBase\Utility.h" />
     <ClInclude Include="Include\WonderMakeBase\Vector.h" />
+    <ClInclude Include="Include\WonderMakeBase\WinPlatform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DependencyInjector.cpp" />

@@ -49,40 +49,40 @@ auto Bind(TCallable&& aCallable, TArgs&&... aArgs)
 }
 
 template<typename TFunc, typename TSelf, typename... TArgs>
-auto Bind(TFunc aFunction, TSelf& aSelf, TArgs&&... aArgs) requires(std::is_member_function_pointer_v<TFunc>)
+auto Bind(TFunc aFunction, TSelf& aSelf, TArgs... aArgs) requires(std::is_member_function_pointer_v<TFunc>)
 {
 	return Bindable([aFunction, &self = aSelf](auto&&... aAllArgs)
 		{
 			return (self.*aFunction)(std::forward<decltype(aAllArgs)>(aAllArgs)...);
-		}, std::forward<TArgs>(aArgs)...);
+		}, std::move(aArgs)...);
 }
 
 template<typename TFunc, typename TSelf, typename... TArgs>
-auto Bind(TFunc aFunction, TSelf* aSelf, TArgs&&... aArgs) requires(std::is_member_function_pointer_v<TFunc>)
+auto Bind(TFunc aFunction, TSelf* aSelf, TArgs... aArgs) requires(std::is_member_function_pointer_v<TFunc>)
 {
 	return Bindable([aFunction, self = aSelf](auto&&... aAllArgs)
 		{
 			return (self->*aFunction)(std::forward<decltype(aAllArgs)>(aAllArgs)...);
-		}, std::forward<TArgs>(aArgs)...);
+		}, std::move(aArgs)...);
 }
 
 template<typename TFunc, typename TSelf, typename... TArgs>
-auto Bind(TFunc aFunction, std::shared_ptr<TSelf> aSelf, TArgs&&... aArgs) requires(std::is_member_function_pointer_v<TFunc>)
+auto Bind(TFunc aFunction, std::shared_ptr<TSelf> aSelf, TArgs... aArgs) requires(std::is_member_function_pointer_v<TFunc>)
 {
 	return Bindable([aFunction, self = std::move(aSelf)](auto&&... aAllArgs)
 	{
 		return (self.get()->*aFunction)(std::forward<decltype(aAllArgs)>(aAllArgs)...);
-	}, std::forward<TArgs>(aArgs)...);
+	}, std::move(aArgs)...);
 }
 
 template<typename TFunc, typename TSelf, typename... TArgs>
-auto Bind(TFunc aFunction, std::weak_ptr<TSelf> aSelf, TArgs&&... aArgs) requires(std::is_member_function_pointer_v<TFunc>)
+auto Bind(TFunc aFunction, std::weak_ptr<TSelf> aSelf, TArgs... aArgs) requires(std::is_member_function_pointer_v<TFunc>)
 {
 	return Bindable([aFunction, self = std::move(aSelf)](auto&&... aAllArgs)
 	{
 		auto ptr = self.lock();
 
 		if (ptr)
-			(ptr.get()->*aFunction)(std::forward<decltype(aAllArgs)>(aAllArgs)...);
-	}, std::forward<TArgs>(aArgs)...);
+			(void)(ptr.get()->*aFunction)(std::forward<decltype(aAllArgs)>(aAllArgs)...);
+	}, std::move(aArgs)...);
 }

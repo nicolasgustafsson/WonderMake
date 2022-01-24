@@ -36,6 +36,7 @@
   <ItemGroup>
     <ClInclude Include="Include\WonderMakeEngine\CmdLineArgsSystem.h" />
     <ClInclude Include="Include\WonderMakeEngine\Process.h" />
+    <ClInclude Include="Include\WonderMakeEngine\ProcessSystem.h" />
     <ClInclude Include="Include\WonderMakeEngine\ScheduleSystem.h" />
     <ClInclude Include="Include\WonderMakeEngine\System.h" />
     <ClInclude Include="Include\WonderMakeEngine\SystemContainer.h" />

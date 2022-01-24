@@ -86,5 +86,8 @@
     <ClInclude Include="Source\WinProcess.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Include\WonderMakeEngine\ProcessSystem.h">
+      <Filter>Include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

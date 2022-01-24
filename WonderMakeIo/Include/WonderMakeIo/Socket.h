@@ -45,6 +45,7 @@ public:
 	};
 	enum class ECloseError
 	{
+		AlreadyClosed,
 		OutOfMemory,
 		InternalError
 	};

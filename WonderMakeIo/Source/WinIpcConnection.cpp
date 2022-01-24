@@ -242,6 +242,13 @@ Result<Socket::EReadError, Socket::EAsynchronicity> WinIpcConnection::Read(OnRea
 
 void WinIpcConnection::OnClose(OnCloseCallback aOnClose)
 {
+	if (myState == EState::Closed)
+	{
+		std::move(aOnClose)(ECloseError::AlreadyClosed);
+
+		return;
+	}
+
 	myCloseCallbacks.emplace_back(std::move(aOnClose));
 }
 

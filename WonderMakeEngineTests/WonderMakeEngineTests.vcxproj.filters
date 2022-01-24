@@ -16,6 +16,12 @@
     <ClCompile Include="WinEventSystemImplTests.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="..\WonderMakeEngine\Source\WinProcess.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="WinProcessTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Include">
@@ -36,6 +42,9 @@
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\SystemGlobal.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\Process.h">
       <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>

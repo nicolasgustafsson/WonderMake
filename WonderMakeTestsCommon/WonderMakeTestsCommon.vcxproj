@@ -22,6 +22,7 @@
     <ClInclude Include="Include\WonderMakeTestsCommon\GTestInclude.h" />
     <ClInclude Include="Include\WonderMakeTestsCommon\WinEventSystemMock.h" />
     <ClInclude Include="Include\WonderMakeTestsCommon\WinPlatformSystemMock.h" />
+    <ClInclude Include="Include\WonderMakeTestsCommon\ProcessMock.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

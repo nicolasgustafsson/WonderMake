@@ -22,6 +22,12 @@
     <ClCompile Include="WinProcessTests.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="WinProcessSystemTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\WonderMakeEngine\Source\WinProcessSystem.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Include">
@@ -45,6 +51,9 @@
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\Process.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WonderMakeEngine\Source\WinProcessSystem.h">
       <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>

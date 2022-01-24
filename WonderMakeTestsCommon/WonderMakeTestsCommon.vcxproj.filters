@@ -15,5 +15,8 @@
     <ClInclude Include="Include\WonderMakeTestsCommon\WinEventSystemMock.h">
       <Filter>Include</Filter>
     </ClInclude>
+    <ClInclude Include="Include\WonderMakeTestsCommon\ProcessMock.h">
+      <Filter>Include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

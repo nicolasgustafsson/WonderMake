@@ -95,5 +95,8 @@
     <ClInclude Include="Source\WinProcessSystem.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Include\WonderMakeEngine\LoggerTypes.h">
+      <Filter>Include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -31,6 +31,7 @@
     <ClCompile Include="Source\WinEventSystemImpl.cpp" />
     <ClCompile Include="Source\WinPlatformSystemImpl.cpp" />
     <ClCompile Include="Source\WinProcess.cpp" />
+    <ClCompile Include="Source\WinProcessSystem.cpp" />
     <ClCompile Include="Source\WinProgram.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -51,6 +52,7 @@
     <ClInclude Include="Source\WinEventSystemImpl.h" />
     <ClInclude Include="Source\WinPlatformSystemImpl.h" />
     <ClInclude Include="Source\WinProcess.h" />
+    <ClInclude Include="Source\WinProcessSystem.h" />
     <ClInclude Include="Source\WinProgram.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

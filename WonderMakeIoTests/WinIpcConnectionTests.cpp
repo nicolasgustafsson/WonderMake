@@ -6,6 +6,23 @@
 
 #include "WinIpcConnection.h"
 
+class CloseCallbackMock
+{
+public:
+	using ArgType = Result<Socket::ECloseError, Socket::ECloseReason>;
+
+	MOCK_METHOD(void, OnClose, (ArgType));
+
+	auto CreateOnClose(auto& aMock)
+	{
+		return [&mock = aMock](ArgType aResult)
+		{
+			mock.OnClose(aResult);
+		};
+	}
+
+};
+
 constexpr auto locDummyOnRead = [](auto&&) {};
 constexpr auto locDummyOnWrite = [](auto&&) {};
 const std::vector<u8> locDummyData = { 0, 2, 65, 23 };
@@ -180,6 +197,128 @@ TEST_F(WinIpcConnectionTest, connect_returns_success)
 	const auto result = ipcConnection->Connect(pipeName);
 
 	ASSERT_TRUE(result);
+}
+
+// --------------------------
+//         Close tests
+// --------------------------
+
+TEST(WinIpcConnectionTests, onclose_is_called_when_a_connection_is_already_closed)
+{
+	NiceMock<WinEventSystemMock> winEventSystem;
+	NiceMock<WinPlatformSystemMock> winPlatformSystem;
+	StrictMock<CloseCallbackMock> callbackMock;
+
+	auto ipcConnection = std::make_shared<WinIpcConnection>(winEventSystem, winPlatformSystem);
+
+	EXPECT_CALL(callbackMock, OnClose(Eq(Socket::ECloseError::AlreadyClosed)));
+
+	ipcConnection->OnClose(callbackMock.CreateOnClose(callbackMock));
+}
+
+TEST(WinIpcConnectionTests, onclose_is_call_when_an_open_connection_is_closed)
+{
+	NiceMock<WinEventSystemMock> winEventSystem;
+	NiceMock<WinPlatformSystemMock> winPlatformSystem;
+	StrictMock<CloseCallbackMock> callbackMock;
+
+	winPlatformSystem.DelegateToFake();
+
+	auto ipcConnection = std::make_shared<WinIpcConnection>(winEventSystem, winPlatformSystem);
+	constexpr auto pipeName = "test";
+
+	ipcConnection->Connect(pipeName);
+
+	ipcConnection->OnClose(callbackMock.CreateOnClose(callbackMock));
+
+	EXPECT_CALL(callbackMock, OnClose(Eq(Socket::ECloseReason::ClosedLocally)));
+}
+
+TEST(WinIpcConnectionTests, onclose_is_called_when_a_connection_is_closed_locally)
+{
+	NiceMock<WinEventSystemMock> winEventSystem;
+	NiceMock<WinPlatformSystemMock> winPlatformSystem;
+	StrictMock<CloseCallbackMock> callbackMock;
+
+	winPlatformSystem.DelegateToFake();
+
+	auto ipcConnection = std::make_shared<WinIpcConnection>(winEventSystem, winPlatformSystem);
+	constexpr auto pipeName = "test";
+
+	ipcConnection->Connect(pipeName);
+
+	ipcConnection->OnClose(callbackMock.CreateOnClose(callbackMock));
+
+	EXPECT_CALL(callbackMock, OnClose(Eq(Socket::ECloseReason::ClosedLocally)));
+
+	ipcConnection->Close();
+}
+
+TEST(WinIpcConnectionTests, onclose_is_called_when_a_connection_is_closed_remotely)
+{
+	NiceMock<WinEventSystemMock> winEventSystem;
+	NiceMock<WinPlatformSystemMock> winPlatformSystem;
+	StrictMock<CloseCallbackMock> callbackMock;
+
+	winPlatformSystem.DelegateToFake();
+
+	auto ipcConnection = std::make_shared<WinIpcConnection>(winEventSystem, winPlatformSystem);
+	constexpr auto pipeName = "test";
+
+	(void)ipcConnection->Connect(pipeName);
+
+	ipcConnection->OnClose(callbackMock.CreateOnClose(callbackMock));
+
+	auto [callback, registerAction] = WinEventSystemMock::CreateRegisterEvent();
+
+	EXPECT_CALL(winEventSystem, RegisterEvent)
+		.WillOnce(registerAction);
+	EXPECT_CALL(winPlatformSystem, GetLastError())
+		.WillOnce(Return(ERROR_IO_PENDING));
+
+	(void)ipcConnection->Read(locDummyOnRead);
+
+	EXPECT_CALL(winPlatformSystem, GetOverlappedResult)
+		.WillOnce(Return(FALSE));
+	EXPECT_CALL(winPlatformSystem, GetLastError())
+		.WillOnce(Return(ERROR_BROKEN_PIPE));
+
+	EXPECT_CALL(callbackMock, OnClose(Eq(Socket::ECloseReason::ClosedRemotely)));
+
+	std::move(callback)();
+}
+
+TEST(WinIpcConnectionTests, onclose_is_called_when_a_connection_is_closed_due_to_error)
+{
+	NiceMock<WinEventSystemMock> winEventSystem;
+	NiceMock<WinPlatformSystemMock> winPlatformSystem;
+	StrictMock<CloseCallbackMock> callbackMock;
+
+	winPlatformSystem.DelegateToFake();
+
+	auto ipcConnection = std::make_shared<WinIpcConnection>(winEventSystem, winPlatformSystem);
+	constexpr auto pipeName = "test";
+
+	(void)ipcConnection->Connect(pipeName);
+
+	ipcConnection->OnClose(callbackMock.CreateOnClose(callbackMock));
+
+	auto [callback, registerAction] = WinEventSystemMock::CreateRegisterEvent();
+
+	EXPECT_CALL(winEventSystem, RegisterEvent)
+		.WillOnce(registerAction);
+	EXPECT_CALL(winPlatformSystem, GetLastError)
+		.WillOnce(Return(ERROR_IO_PENDING));
+
+	(void)ipcConnection->Read(locDummyOnRead);
+
+	EXPECT_CALL(winPlatformSystem, GetOverlappedResult)
+		.WillOnce(Return(FALSE));
+	EXPECT_CALL(winPlatformSystem, GetLastError);
+
+	EXPECT_CALL(callbackMock, OnClose(Eq(Socket::ECloseError::InternalError)));
+
+	std::move(callback)();
 }
 
 // --------------------------

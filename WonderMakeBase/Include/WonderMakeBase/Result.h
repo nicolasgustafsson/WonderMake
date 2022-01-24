@@ -29,6 +29,11 @@ public:
 		, myMetaValue(aMetaValue)
 	{}
 
+	constexpr [[nodiscard]] bool operator==(const Result& aRhs) const noexcept
+	{
+		return (std::holds_alternative<TErrorType>(myResult) && std::holds_alternative<TErrorType>(aRhs.myResult) && std::get<TErrorType>(myResult) == std::get<TErrorType>(aRhs.myResult))
+			|| (std::holds_alternative<TSuccessType>(myResult) && std::holds_alternative<TSuccessType>(aRhs.myResult) && std::get<TSuccessType>(myResult) == std::get<TSuccessType>(aRhs.myResult));
+	}
 	constexpr [[nodiscard]] bool operator==(const TSuccessType& aRhs) const noexcept
 	{
 		return std::holds_alternative<TSuccessType>(myResult)

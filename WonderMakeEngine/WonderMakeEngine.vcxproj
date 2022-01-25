@@ -25,6 +25,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\CmdLineArgsSystem.cpp" />
+    <ClCompile Include="Source\Logger.cpp" />
     <ClCompile Include="Source\ScheduleSystem.cpp" />
     <ClCompile Include="Source\SystemGlobal.cpp" />
     <ClCompile Include="Source\SystemRegistry.cpp" />
@@ -36,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\WonderMakeEngine\CmdLineArgsSystem.h" />
+    <ClInclude Include="Include\WonderMakeEngine\Logger.h" />
     <ClInclude Include="Include\WonderMakeEngine\LoggerTypes.h" />
     <ClInclude Include="Include\WonderMakeEngine\Process.h" />
     <ClInclude Include="Include\WonderMakeEngine\ProcessSystem.h" />

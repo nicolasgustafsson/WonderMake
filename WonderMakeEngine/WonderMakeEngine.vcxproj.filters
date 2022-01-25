@@ -36,6 +36,9 @@
     <ClCompile Include="Source\WinProcessSystem.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Logger.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\WonderMakeEngine\SystemGlobal.h">
@@ -96,6 +99,9 @@
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Include\WonderMakeEngine\LoggerTypes.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\WonderMakeEngine\Logger.h">
       <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>

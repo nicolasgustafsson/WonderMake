@@ -1,59 +1,74 @@
 #pragma once
 
+#include "Result.h"
 #include "UniqueFunction.h"
+#include "Utility.h"
 
 #include <functional>
+#include <optional>
 #include <typeindex>
 #include <unordered_map>
 
 class DependencyInjector
 {
 public:
-	class MissingDependencyException
-		: public std::exception
+	enum class ECreateError
 	{
-	public:
-		MissingDependencyException(const char* const aType) noexcept
-			: myMissingType(aType)
-		{}
-
-		const char* const myMissingType;
+		MissingDependency
 	};
 
 	template<typename TType, typename TCreateFunc, typename... TDependencies>
 	inline void Add(TCreateFunc aCreateFunc)
-	{
-		myCreateFuncs.emplace(typeid(Key<std::decay_t<TType>>), [createFunc = std::move(aCreateFunc)]([[maybe_unused]] DependencyInjector& aThis)
+	{	
+		myCreateFuncs.emplace(typeid(Key<std::decay_t<TType>>), [createFunc = std::move(aCreateFunc)]([[maybe_unused]] DependencyInjector& aThis) mutable -> Result<ECreateError, void*, std::string>
 		{
-			void* const dependency = (void*)&createFunc(aThis.GetDependency<TDependencies>()...);
+			std::optional<Result<ECreateError, void*, std::string>> errResult;
 
-			aThis.myDependencies.emplace(typeid(Key<std::decay_t<TType>>), dependency);
+			auto parseResult = [&errResult](auto aResult)
+			{
+				if (!aResult)
+					errResult = { static_cast<ECreateError>(aResult), std::move(aResult.Meta()) };
 
-			return dependency;
+				return aResult;
+			};
+
+			auto results = std::make_tuple(parseResult(aThis.GetDependency<TDependencies>())...);
+
+			if (errResult)
+				return *errResult;
+
+			auto&& dependency = std::apply([createFunc = std::move(createFunc)](auto... aResults) -> TType&
+			{
+				return CreateDependencyHelper<TType>(createFunc, aResults...);
+			}, results);
+
+			void* const dependencyPtr = (void*)&dependency;
+
+			aThis.myDependencies.emplace(typeid(Key<std::decay_t<TType>>), dependencyPtr);
+
+			return dependencyPtr;
 		});
 	}
 
-	// Note: This function may throw MissingDependencyException if the type or one of its dependencies were not added to the DependencyInjector. If it throws, no guarantees are given on which dependencies were constructed.
 	template<typename TType>
-	inline TType& Get()
+	inline Result<ECreateError, std::reference_wrapper<TType>, std::string> Get()
 	{
 		return GetDependency<TType>();
 	}
 
-	// Note: This function may throw MissingDependencyException if a dependency is missing. If it throws, no guarantees are given on which dependencies were constructed.
-	void CreateAll();
+	Result<ECreateError, decltype(Success), std::string> CreateAll();
 
 private:
 	template<typename TDependency>
 	struct Key {};
 
-	using CreateFunc = std::function<void* (DependencyInjector&)>;
+	using CreateFunc = UniqueFunction<Result<ECreateError, void*, std::string> (DependencyInjector&)>;
 
 	std::unordered_map<std::type_index, CreateFunc>	myCreateFuncs;
 	std::unordered_map<std::type_index, void*>		myDependencies;
 
 	template<typename TType>
-	TType& GetDependency()
+	Result<ECreateError, std::reference_wrapper<TType>, std::string> GetDependency()
 	{
 		const auto& typeIndex = typeid(Key<std::decay_t<TType>>);
 
@@ -61,16 +76,27 @@ private:
 
 		if (depIt != myDependencies.cend())
 		{
-			return *((TType*)depIt->second);
+			return std::ref(*((TType*)depIt->second));
 		}
 
 		const auto createIt = myCreateFuncs.find(typeIndex);
 
 		if (createIt == myCreateFuncs.cend())
 		{
-			throw MissingDependencyException(typeIndex.name());
+			return { ECreateError::MissingDependency, typeIndex.name() };
 		}
 
-		return *((TType*)createIt->second(*this));
+		auto result = std::move(createIt->second)(*this);
+
+		if (result)
+			return std::ref(*((TType*)static_cast<void*>(result)));
+
+		return { static_cast<ECreateError>(result), result.Meta() };
+	}
+
+	template<typename TDependency, typename TCreateFunc, typename... TDependencies>
+	static TDependency& CreateDependencyHelper(TCreateFunc&& aCreateFunc, Result<ECreateError, std::reference_wrapper<TDependencies>, std::string>... aDependencies)
+	{
+		return std::move(aCreateFunc)(static_cast<TDependencies&>(static_cast<std::reference_wrapper<TDependencies>>(aDependencies))...);
 	}
 };

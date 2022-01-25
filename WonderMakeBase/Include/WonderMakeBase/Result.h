@@ -20,11 +20,11 @@ template<typename TErrorType, typename TSuccessType = _SuccessType, typename TMe
 class Result
 {
 public:
-	constexpr Result(TSuccessType aSuccess, TMeta aMetaValue = 0) noexcept(std::is_nothrow_move_constructible_v<TSuccessType>)
+	constexpr Result(TSuccessType aSuccess, TMeta aMetaValue = TMeta()) noexcept(std::is_nothrow_move_constructible_v<TSuccessType>)
 		: myResult(std::move(aSuccess))
 		, myMetaValue(aMetaValue)
 	{}
-	constexpr Result(TErrorType aError, TMeta aMetaValue = 0) noexcept(std::is_nothrow_move_constructible_v<TErrorType>)
+	constexpr Result(TErrorType aError, TMeta aMetaValue = TMeta()) noexcept(std::is_nothrow_move_constructible_v<TErrorType>)
 		: myResult(std::move(aError))
 		, myMetaValue(aMetaValue)
 	{}
@@ -75,6 +75,6 @@ public:
 
 private:
 	std::variant<TErrorType, TSuccessType> myResult;
-	TMeta myMetaValue = 0;
+	TMeta myMetaValue;
 
 };

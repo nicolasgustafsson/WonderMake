@@ -15,6 +15,12 @@
 class SystemRegistry
 {
 public:
+	enum class ECreateError
+	{
+		MissingSystemDependency,
+		InternalError
+	};
+
 	template<typename TSystem, typename TBaseSystem = TSystem, typename TCreateFunc>
 	inline void AddSystem(TCreateFunc&& aCreateFunc)
 	{
@@ -23,43 +29,7 @@ public:
 		AddSystemHelper<TSystem, TBaseSystem>(std::forward<TCreateFunc>(aCreateFunc), TupleWrapper<typename TSystem::Dependencies>());
 	}
 
-	inline SystemContainer CreateSystems(SystemTraits::SetList aTraitNotFilter)
-	{
-		myDependencyInjector = DependencyInjector();
-
-		const auto notFilter = [&aTraitNotFilter](auto&& aSystemInfo)
-		{
-			for (auto&& trait : aSystemInfo.TraitSet)
-				if (aTraitNotFilter.find(trait) != aTraitNotFilter.cend())
-					return false;
-
-			return true;
-		};
-
-		for (auto&& system : std::views::all(mySystemList) | std::views::filter(notFilter))
-		{
-			system.InjectFunc();
-		}
-
-		try
-		{
-			myDependencyInjector.CreateAll();
-		}
-		catch (DependencyInjector::MissingDependencyException aException)
-		{
-			// WmLog("Missing dependency: ", aException.myMissingType, "."); TODO: Logging
-
-			assert(false && "Missing dependency.");
-
-			return SystemContainer();
-		}
-
-		SystemContainer::InternalRep internalRep;
-
-		std::swap(internalRep, myConstructingContainer);
-
-		return internalRep;
-	}
+	Result<ECreateError, SystemContainer, std::string> CreateSystems(SystemTraits::SetList aTraitNotFilter);
 
 private:
 	template<typename TDependencyTuple>
@@ -79,7 +49,7 @@ private:
 				TSystem::template TraitSet::ToObject(),
 				[this, createFunc = std::move(aCreateFunc)] ()
 				{
-					auto construct = [this, createFunc = std::move(createFunc)](std::decay_t<TDependencies>&... aDependencies)->TBaseSystem&
+					auto construct = [this, createFunc = std::move(createFunc)](std::reference_wrapper<std::decay_t<TDependencies>>... aDependencies) -> TBaseSystem&
 					{
 						TSystem::InjectDependencies(std::tie(aDependencies...));
 

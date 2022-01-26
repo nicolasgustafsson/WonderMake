@@ -3,8 +3,8 @@
 #include "WonderMakeUtility/Bindable.h"
 #include "WonderMakeUtility/MemoryUnit.h"
 
-#include "WonderMakeEngine/WinEventSystem.h"
-#include "WonderMakeEngine/WinPlatformSystem.h"
+#include "WonderMakeBase/WinEventSystem.h"
+#include "WonderMakeBase/WinPlatformSystem.h"
 
 using namespace MemoryUnitLiterals;
 

@@ -5,7 +5,7 @@
 #include "Job/JobOutput.h"
 #include "Job/JobPromise.h"
 
-#include "WonderMakeEngine/SystemPolicy.h"
+#include "WonderMakeBase/SystemPolicy.h"
 
 #include "WonderMakeUtility/RestrictTypes.h"
 

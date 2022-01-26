@@ -6,9 +6,9 @@
 #include "Object/DependencyDestructor.h"
 #include "Object/Object.h"
 
-#include "WonderMakeEngine/ScheduleSystem.h"
+#include "WonderMakeBase/ScheduleSystem.h"
 
-#include "WonderMakeEngine/System.h"
+#include "WonderMakeBase/System.h"
 
 #include "WonderMakeUtility/plf_colony.h"
 

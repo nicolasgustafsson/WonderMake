@@ -38,19 +38,19 @@
     <ClInclude Include="..\WonderMakeIo\Source\WinIpcConnection.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\WinPlatformSystem.h">
+    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\WinPlatformSystem.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\WinPlatform.h">
+    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\WinPlatform.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\System.h">
+    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\System.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\SystemPolicy.h">
+    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\SystemPolicy.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\SystemTraits.h">
+    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\SystemTraits.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\UniqueFunction.h">
@@ -59,7 +59,7 @@
     <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\RestrictTypes.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\SystemId.h">
+    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\SystemId.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\Utility.h">

@@ -19,12 +19,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\LoggerFileSystem.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\WonderMakeBase\WonderMakeBase.vcxproj">
       <Project>{62c4244a-20d5-418c-8a14-dc44beb005ae}</Project>
     </ProjectReference>
     <ProjectReference Include="..\WonderMakeIo\WonderMakeIo.vcxproj">
       <Project>{61de8cce-dc9b-4629-8a00-6fcc9a43d32a}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Include\WonderMakeEngine\LoggerFileSystem.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

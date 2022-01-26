@@ -1,7 +1,7 @@
 #pragma once
-#include "WonderMakeBase/Typedefs.h"
+#include "WonderMakeUtility/Typedefs.h"
 
-#include "WonderMakeBase/Singleton.h"
+#include "WonderMakeUtility/Singleton.h"
 
 #include <vector>
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "WonderMakeBase/Math.h"
+#include "WonderMakeUtility/Math.h"
 #include <concepts>
 
 template<typename T>

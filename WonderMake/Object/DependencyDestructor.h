@@ -1,7 +1,7 @@
 #pragma once
 
-#include "WonderMakeBase/RestrictTypes.h"
-#include "WonderMakeBase/UniqueFunction.h"
+#include "WonderMakeUtility/RestrictTypes.h"
+#include "WonderMakeUtility/UniqueFunction.h"
 
 #include <functional>
 

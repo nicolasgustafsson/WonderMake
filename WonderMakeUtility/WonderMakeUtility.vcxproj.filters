@@ -9,67 +9,67 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Include\WonderMakeBase\Rotation.h">
+    <ClInclude Include="Include\WonderMakeUtility\Rotation.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeBase\Singleton.h">
+    <ClInclude Include="Include\WonderMakeUtility\Singleton.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeBase\Stopwatch.h">
+    <ClInclude Include="Include\WonderMakeUtility\Stopwatch.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeBase\UniqueFunction.h">
+    <ClInclude Include="Include\WonderMakeUtility\UniqueFunction.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeBase\UniqueValue.h">
+    <ClInclude Include="Include\WonderMakeUtility\UniqueValue.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeBase\Utility.h">
+    <ClInclude Include="Include\WonderMakeUtility\Utility.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeBase\Vector.h">
+    <ClInclude Include="Include\WonderMakeUtility\Vector.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeBase\Alias.h">
+    <ClInclude Include="Include\WonderMakeUtility\Alias.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeBase\AutoRegister.h">
+    <ClInclude Include="Include\WonderMakeUtility\AutoRegister.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeBase\DependencyInjector.h">
+    <ClInclude Include="Include\WonderMakeUtility\DependencyInjector.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeBase\Line.h">
+    <ClInclude Include="Include\WonderMakeUtility\Line.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeBase\Math.h">
+    <ClInclude Include="Include\WonderMakeUtility\Math.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeBase\Matrix.h">
+    <ClInclude Include="Include\WonderMakeUtility\Matrix.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeBase\plf_colony.h">
+    <ClInclude Include="Include\WonderMakeUtility\plf_colony.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeBase\RestrictTypes.h">
+    <ClInclude Include="Include\WonderMakeUtility\RestrictTypes.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeBase\Typedefs.h">
+    <ClInclude Include="Include\WonderMakeUtility\Typedefs.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeBase\Bindable.h">
+    <ClInclude Include="Include\WonderMakeUtility\Bindable.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeBase\MemoryUnit.h">
+    <ClInclude Include="Include\WonderMakeUtility\MemoryUnit.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeBase\Result.h">
+    <ClInclude Include="Include\WonderMakeUtility\Result.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeBase\StringUtility.h">
+    <ClInclude Include="Include\WonderMakeUtility\StringUtility.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeBase\WinPlatform.h">
+    <ClInclude Include="Include\WonderMakeUtility\WinPlatform.h">
       <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>

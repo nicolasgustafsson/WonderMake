@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WonderMakeBase\WonderMakeBase.vcxproj">
+    <ProjectReference Include="..\WonderMakeUtility\WonderMakeUtility.vcxproj">
       <Project>{2c3d64fa-1626-4e0a-9f7a-1c2f2cbd72a6}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -117,28 +117,28 @@
     <OutDir>$(ProjectDir)../Lib/</OutDir>
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir)Include/;$(ProjectDir)../WonderMakeBase/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Include/;$(ProjectDir)../WonderMakeUtility/Include/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectDir)../Lib/</OutDir>
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir)Include/;$(ProjectDir)../WonderMakeBase/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Include/;$(ProjectDir)../WonderMakeUtility/Include/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectDir)../Lib/</OutDir>
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir)Include/;$(ProjectDir)../WonderMakeBase/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Include/;$(ProjectDir)../WonderMakeUtility/Include/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectDir)../Lib/</OutDir>
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir)Include/;$(ProjectDir)../WonderMakeBase/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Include/;$(ProjectDir)../WonderMakeUtility/Include/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

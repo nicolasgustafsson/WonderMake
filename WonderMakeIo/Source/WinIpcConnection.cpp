@@ -1,7 +1,7 @@
 #include "WinIpcConnection.h"
 
-#include "WonderMakeBase/Bindable.h"
-#include "WonderMakeBase/MemoryUnit.h"
+#include "WonderMakeUtility/Bindable.h"
+#include "WonderMakeUtility/MemoryUnit.h"
 
 #include "WonderMakeEngine/WinEventSystem.h"
 #include "WonderMakeEngine/WinPlatformSystem.h"

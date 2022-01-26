@@ -1,6 +1,6 @@
 #pragma once
 
-#include "WonderMakeBase/RestrictTypes.h"
+#include "WonderMakeUtility/RestrictTypes.h"
 
 #include <functional>
 #include <unordered_set>

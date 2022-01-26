@@ -53,16 +53,16 @@
     <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\SystemTraits.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\UniqueFunction.h">
+    <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\UniqueFunction.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\RestrictTypes.h">
+    <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\RestrictTypes.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\SystemId.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\Utility.h">
+    <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\Utility.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\WonderMakeIo\Source\WinFileSystem.h">

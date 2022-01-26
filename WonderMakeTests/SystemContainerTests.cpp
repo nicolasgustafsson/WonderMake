@@ -2,7 +2,7 @@
 
 #include <catch2/catch.hpp>
 
-#include "WonderMakeBase/Typedefs.h"
+#include "WonderMakeUtility/Typedefs.h"
 
 #include "WonderMakeEngine/System.h"
 #include "WonderMakeEngine/SystemContainer.h"

@@ -2,7 +2,7 @@
 
 #include <catch2/catch.hpp>
 
-#include "WonderMakeBase/UniqueFunction.h"
+#include "WonderMakeUtility/UniqueFunction.h"
 
 #include <functional>
 

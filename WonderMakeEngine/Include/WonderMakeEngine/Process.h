@@ -1,7 +1,7 @@
 #pragma once
 
-#include "WonderMakeBase/Result.h"
-#include "WonderMakeBase/UniqueFunction.h"
+#include "WonderMakeUtility/Result.h"
+#include "WonderMakeUtility/UniqueFunction.h"
 
 class Process
 {

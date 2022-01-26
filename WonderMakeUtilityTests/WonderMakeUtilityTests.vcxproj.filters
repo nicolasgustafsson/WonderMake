@@ -7,7 +7,7 @@
     <ClCompile Include="DependencyInjectionTests.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\WonderMakeBase\Source\DependencyInjector.cpp">
+    <ClCompile Include="..\WonderMakeUtility\Source\DependencyInjector.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="..\External\gtest-1.11.0\Src\src\gtest-all.cc">
@@ -38,16 +38,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\DependencyInjector.h">
+    <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\DependencyInjector.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\Alias.h">
+    <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\Alias.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\Bindable.h">
+    <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\Bindable.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\MemoryUnit.h">
+    <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\MemoryUnit.h">
       <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>

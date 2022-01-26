@@ -1,5 +1,5 @@
 #pragma once
-#include "WonderMakeBase/Typedefs.h"
+#include "WonderMakeUtility/Typedefs.h"
 
 struct SRenderTargetSettings
 {

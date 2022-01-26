@@ -19,27 +19,27 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Include\WonderMakeBase\Alias.h" />
-    <ClInclude Include="Include\WonderMakeBase\AutoRegister.h" />
-    <ClInclude Include="Include\WonderMakeBase\Bindable.h" />
-    <ClInclude Include="Include\WonderMakeBase\DependencyInjector.h" />
-    <ClInclude Include="Include\WonderMakeBase\Line.h" />
-    <ClInclude Include="Include\WonderMakeBase\Math.h" />
-    <ClInclude Include="Include\WonderMakeBase\Matrix.h" />
-    <ClInclude Include="Include\WonderMakeBase\MemoryUnit.h" />
-    <ClInclude Include="Include\WonderMakeBase\plf_colony.h" />
-    <ClInclude Include="Include\WonderMakeBase\RestrictTypes.h" />
-    <ClInclude Include="Include\WonderMakeBase\Result.h" />
-    <ClInclude Include="Include\WonderMakeBase\Rotation.h" />
-    <ClInclude Include="Include\WonderMakeBase\Singleton.h" />
-    <ClInclude Include="Include\WonderMakeBase\Stopwatch.h" />
-    <ClInclude Include="Include\WonderMakeBase\StringUtility.h" />
-    <ClInclude Include="Include\WonderMakeBase\Typedefs.h" />
-    <ClInclude Include="Include\WonderMakeBase\UniqueFunction.h" />
-    <ClInclude Include="Include\WonderMakeBase\UniqueValue.h" />
-    <ClInclude Include="Include\WonderMakeBase\Utility.h" />
-    <ClInclude Include="Include\WonderMakeBase\Vector.h" />
-    <ClInclude Include="Include\WonderMakeBase\WinPlatform.h" />
+    <ClInclude Include="Include\WonderMakeUtility\Alias.h" />
+    <ClInclude Include="Include\WonderMakeUtility\AutoRegister.h" />
+    <ClInclude Include="Include\WonderMakeUtility\Bindable.h" />
+    <ClInclude Include="Include\WonderMakeUtility\DependencyInjector.h" />
+    <ClInclude Include="Include\WonderMakeUtility\Line.h" />
+    <ClInclude Include="Include\WonderMakeUtility\Math.h" />
+    <ClInclude Include="Include\WonderMakeUtility\Matrix.h" />
+    <ClInclude Include="Include\WonderMakeUtility\MemoryUnit.h" />
+    <ClInclude Include="Include\WonderMakeUtility\plf_colony.h" />
+    <ClInclude Include="Include\WonderMakeUtility\RestrictTypes.h" />
+    <ClInclude Include="Include\WonderMakeUtility\Result.h" />
+    <ClInclude Include="Include\WonderMakeUtility\Rotation.h" />
+    <ClInclude Include="Include\WonderMakeUtility\Singleton.h" />
+    <ClInclude Include="Include\WonderMakeUtility\Stopwatch.h" />
+    <ClInclude Include="Include\WonderMakeUtility\StringUtility.h" />
+    <ClInclude Include="Include\WonderMakeUtility\Typedefs.h" />
+    <ClInclude Include="Include\WonderMakeUtility\UniqueFunction.h" />
+    <ClInclude Include="Include\WonderMakeUtility\UniqueValue.h" />
+    <ClInclude Include="Include\WonderMakeUtility\Utility.h" />
+    <ClInclude Include="Include\WonderMakeUtility\Vector.h" />
+    <ClInclude Include="Include\WonderMakeUtility\WinPlatform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DependencyInjector.cpp" />
@@ -49,7 +49,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{2c3d64fa-1626-4e0a-9f7a-1c2f2cbd72a6}</ProjectGuid>
-    <RootNamespace>WonderMakeBase</RootNamespace>
+    <RootNamespace>WonderMakeUtility</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

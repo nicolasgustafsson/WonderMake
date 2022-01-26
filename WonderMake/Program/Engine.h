@@ -1,8 +1,8 @@
 #pragma once
 
-#include "WonderMakeBase/UniqueFunction.h"
+#include "WonderMakeUtility/UniqueFunction.h"
 
-#include "WonderMakeBase/Typedefs.h"
+#include "WonderMakeUtility/Typedefs.h"
 
 #include <filesystem>
 #include <string>

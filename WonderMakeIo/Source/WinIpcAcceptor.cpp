@@ -3,9 +3,9 @@
 #include "WonderMakeEngine/WinEventSystem.h"
 #include "WonderMakeEngine/WinPlatformSystem.h"
 
-#include "WonderMakeBase/Bindable.h"
-#include "WonderMakeBase/MemoryUnit.h"
-#include "WonderMakeBase/Utility.h"
+#include "WonderMakeUtility/Bindable.h"
+#include "WonderMakeUtility/MemoryUnit.h"
+#include "WonderMakeUtility/Utility.h"
 
 #include "WinIpcConnection.h"
 

@@ -8,7 +8,7 @@
 #include "WonderMakeEngine/WinEventSystem.h"
 #include "WonderMakeEngine/WinPlatformSystem.h"
 
-#include "WonderMakeBase/Bindable.h"
+#include "WonderMakeUtility/Bindable.h"
 
 REGISTER_SYSTEM_MASKED(WinProcessSystem, ProcessSystem);
 

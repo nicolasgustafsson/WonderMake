@@ -1,7 +1,7 @@
 #pragma once
 
-#include "WonderMakeBase/UniqueFunction.h"
-#include "WonderMakeBase/WinPlatform.h"
+#include "WonderMakeUtility/UniqueFunction.h"
+#include "WonderMakeUtility/WinPlatform.h"
 
 #include "WonderMakeEngine/System.h"
 

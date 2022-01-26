@@ -6,13 +6,13 @@
 #include <functional>
 #include "WonderMakeEngine/SystemPtr.h"
 #include "Utilities/Color.h"
-#include "WonderMakeBase/RestrictTypes.h"
+#include "WonderMakeUtility/RestrictTypes.h"
 #include <glad/glad.h>
-#include "WonderMakeBase/Vector.h"
-#include "WonderMakeBase/Typedefs.h"
+#include "WonderMakeUtility/Vector.h"
+#include "WonderMakeUtility/Typedefs.h"
 #include "Message/Messages.h"
 #include "Constants.h"
-#include "WonderMakeBase/Matrix.h"
+#include "WonderMakeUtility/Matrix.h"
 #include "Object/Object.h"
 #include "Functionalities/Functionality.h"
 #include "Components/TransformComponent.h"

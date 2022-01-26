@@ -1,6 +1,6 @@
-#include "WonderMakeBase/DependencyInjector.h"
+#include "WonderMakeUtility/DependencyInjector.h"
 
-#include "WonderMakeBase/Utility.h"
+#include "WonderMakeUtility/Utility.h"
 
 Result<DependencyInjector::ECreateError, decltype(Success), std::string> DependencyInjector::CreateAll()
 {

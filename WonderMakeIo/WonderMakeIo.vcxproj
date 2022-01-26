@@ -95,28 +95,28 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)Include;$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../WonderMakeEngine/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Include;$(ProjectDir)../WonderMakeUtility/Include/;$(ProjectDir)../WonderMakeEngine/Include/;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)../Lib/</OutDir>
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)Include;$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../WonderMakeEngine/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Include;$(ProjectDir)../WonderMakeUtility/Include/;$(ProjectDir)../WonderMakeEngine/Include/;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)../Lib/</OutDir>
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)Include;$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../WonderMakeEngine/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Include;$(ProjectDir)../WonderMakeUtility/Include/;$(ProjectDir)../WonderMakeEngine/Include/;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)../Lib/</OutDir>
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)Include;$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../WonderMakeEngine/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Include;$(ProjectDir)../WonderMakeUtility/Include/;$(ProjectDir)../WonderMakeEngine/Include/;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)../Lib/</OutDir>
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>

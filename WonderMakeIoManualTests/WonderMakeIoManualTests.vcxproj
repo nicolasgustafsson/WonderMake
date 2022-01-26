@@ -37,25 +37,25 @@
     <OutDir>$(ProjectDir)../Tests/</OutDir>
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../WonderMakeEngine/Include/;$(ProjectDir)../WonderMakeEngine/Source/;$(ProjectDir)../WonderMakeIo/Include/;$(ProjectDir)../WonderMakeIo/Source/;$(ProjectDir)../WonderMakeTestsCommon/Include/;$(ProjectDir)../External/gtest-1.11.0/Src/;$(ProjectDir)../External/gtest-1.11.0/Inc/;$(ProjectDir)../External/gmock-1.11.0/Src/;$(ProjectDir)../External/gmock-1.11.0/Inc/;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../WonderMakeUtility/Include/;$(ProjectDir)../WonderMakeEngine/Include/;$(ProjectDir)../WonderMakeEngine/Source/;$(ProjectDir)../WonderMakeIo/Include/;$(ProjectDir)../WonderMakeIo/Source/;$(ProjectDir)../WonderMakeTestsCommon/Include/;$(ProjectDir)../External/gtest-1.11.0/Src/;$(ProjectDir)../External/gtest-1.11.0/Inc/;$(ProjectDir)../External/gmock-1.11.0/Src/;$(ProjectDir)../External/gmock-1.11.0/Inc/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(ProjectDir)../Tests/</OutDir>
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../WonderMakeEngine/Include/;$(ProjectDir)../WonderMakeEngine/Source/;$(ProjectDir)../WonderMakeIo/Include/;$(ProjectDir)../WonderMakeIo/Source/;$(ProjectDir)../WonderMakeTestsCommon/Include/;$(ProjectDir)../External/gtest-1.11.0/Src/;$(ProjectDir)../External/gtest-1.11.0/Inc/;$(ProjectDir)../External/gmock-1.11.0/Src/;$(ProjectDir)../External/gmock-1.11.0/Inc/;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../WonderMakeUtility/Include/;$(ProjectDir)../WonderMakeEngine/Include/;$(ProjectDir)../WonderMakeEngine/Source/;$(ProjectDir)../WonderMakeIo/Include/;$(ProjectDir)../WonderMakeIo/Source/;$(ProjectDir)../WonderMakeTestsCommon/Include/;$(ProjectDir)../External/gtest-1.11.0/Src/;$(ProjectDir)../External/gtest-1.11.0/Inc/;$(ProjectDir)../External/gmock-1.11.0/Src/;$(ProjectDir)../External/gmock-1.11.0/Inc/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(ProjectDir)../Tests/</OutDir>
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../WonderMakeEngine/Include/;$(ProjectDir)../WonderMakeEngine/Source/;$(ProjectDir)../WonderMakeIo/Include/;$(ProjectDir)../WonderMakeIo/Source/;$(ProjectDir)../WonderMakeTestsCommon/Include/;$(ProjectDir)../External/gtest-1.11.0/Src/;$(ProjectDir)../External/gtest-1.11.0/Inc/;$(ProjectDir)../External/gmock-1.11.0/Src/;$(ProjectDir)../External/gmock-1.11.0/Inc/;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../WonderMakeUtility/Include/;$(ProjectDir)../WonderMakeEngine/Include/;$(ProjectDir)../WonderMakeEngine/Source/;$(ProjectDir)../WonderMakeIo/Include/;$(ProjectDir)../WonderMakeIo/Source/;$(ProjectDir)../WonderMakeTestsCommon/Include/;$(ProjectDir)../External/gtest-1.11.0/Src/;$(ProjectDir)../External/gtest-1.11.0/Inc/;$(ProjectDir)../External/gmock-1.11.0/Src/;$(ProjectDir)../External/gmock-1.11.0/Inc/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(ProjectDir)../Tests/</OutDir>
     <IntDir>$(ProjectDir)../Intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir)../WonderMakeBase/Include/;$(ProjectDir)../WonderMakeEngine/Include/;$(ProjectDir)../WonderMakeEngine/Source/;$(ProjectDir)../WonderMakeIo/Include/;$(ProjectDir)../WonderMakeIo/Source/;$(ProjectDir)../WonderMakeTestsCommon/Include/;$(ProjectDir)../External/gtest-1.11.0/Src/;$(ProjectDir)../External/gtest-1.11.0/Inc/;$(ProjectDir)../External/gmock-1.11.0/Src/;$(ProjectDir)../External/gmock-1.11.0/Inc/;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../WonderMakeUtility/Include/;$(ProjectDir)../WonderMakeEngine/Include/;$(ProjectDir)../WonderMakeEngine/Source/;$(ProjectDir)../WonderMakeIo/Include/;$(ProjectDir)../WonderMakeIo/Source/;$(ProjectDir)../WonderMakeTestsCommon/Include/;$(ProjectDir)../External/gtest-1.11.0/Src/;$(ProjectDir)../External/gtest-1.11.0/Inc/;$(ProjectDir)../External/gmock-1.11.0/Src/;$(ProjectDir)../External/gmock-1.11.0/Inc/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemGroup>
     <ClCompile Include="..\External\gmock-1.11.0\Src\src\gmock-all.cc" />
@@ -68,9 +68,9 @@
     <ClCompile Include="WinIpcConnectionManualTests.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\RestrictTypes.h" />
-    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\UniqueFunction.h" />
-    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\Utility.h" />
+    <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\RestrictTypes.h" />
+    <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\UniqueFunction.h" />
+    <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\Utility.h" />
     <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\System.h" />
     <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\SystemId.h" />
     <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\SystemPolicy.h" />

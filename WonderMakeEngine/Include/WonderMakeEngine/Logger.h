@@ -3,8 +3,8 @@
 #include "WonderMakeEngine/LoggerTypes.h"
 #include "WonderMakeEngine/System.h"
 
-#include "WonderMakeBase/Singleton.h"
-#include "WonderMakeBase/Typedefs.h"
+#include "WonderMakeUtility/Singleton.h"
+#include "WonderMakeUtility/Typedefs.h"
 
 #include <chrono>
 #include <memory>

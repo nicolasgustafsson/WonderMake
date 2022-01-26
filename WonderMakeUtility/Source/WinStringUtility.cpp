@@ -1,6 +1,6 @@
-#include "WonderMakeBase/StringUtility.h"
+#include "WonderMakeUtility/StringUtility.h"
 
-#include "WonderMakeBase/WinPlatform.h"
+#include "WonderMakeUtility/WinPlatform.h"
 
 namespace Utility
 {

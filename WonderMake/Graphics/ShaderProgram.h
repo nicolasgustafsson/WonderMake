@@ -1,7 +1,7 @@
 #pragma once
 #include "Graphics/Shader.h"
 #include "Resources/ResourceProxy.h"
-#include "WonderMakeBase/Vector.h"
+#include "WonderMakeUtility/Vector.h"
 
 #include <filesystem>
 #include <optional>

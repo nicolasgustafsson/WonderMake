@@ -3,7 +3,7 @@
 #include "SystemPolicy.h"
 #include "SystemTraits.h"
 
-#include "WonderMakeBase/RestrictTypes.h"
+#include "WonderMakeUtility/RestrictTypes.h"
 
 #include <optional>
 

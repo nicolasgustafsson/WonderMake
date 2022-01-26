@@ -26,6 +26,7 @@
   <ItemGroup>
     <ClCompile Include="Source\CmdLineArgsSystem.cpp" />
     <ClCompile Include="Source\Logger.cpp" />
+    <ClCompile Include="Source\WinLoggerConsoleSystem.cpp" />
     <ClCompile Include="Source\ScheduleSystem.cpp" />
     <ClCompile Include="Source\SystemGlobal.cpp" />
     <ClCompile Include="Source\SystemRegistry.cpp" />
@@ -53,6 +54,7 @@
     <ClInclude Include="Include\WonderMakeEngine\WinEventSystem.h" />
     <ClInclude Include="Include\WonderMakeEngine\WinPlatformSystem.h" />
     <ClInclude Include="Source\WinEventSystemImpl.h" />
+    <ClInclude Include="Source\WinLoggerConsoleSystem.h" />
     <ClInclude Include="Source\WinPlatformSystemImpl.h" />
     <ClInclude Include="Source\WinProcess.h" />
     <ClInclude Include="Source\WinProcessSystem.h" />

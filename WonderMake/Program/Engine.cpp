@@ -7,8 +7,8 @@
 
 #include "Job/JobSystem.h"
 
-#include "WonderMakeEngine/CmdLineArgsSystem.h"
-#include "WonderMakeEngine/SystemGlobal.h"
+#include "WonderMakeBase/CmdLineArgsSystem.h"
+#include "WonderMakeBase/SystemGlobal.h"
 
 #include "Program/ImguiWrapper.h"
 
@@ -16,8 +16,8 @@
 
 #include "Utilities/TimeKeeper.h"
 
-#include "WonderMakeEngine/Logger.h"
-#include "WonderMakeEngine/ScheduleSystem.h"
+#include "WonderMakeBase/Logger.h"
+#include "WonderMakeBase/ScheduleSystem.h"
 
 #include "WonderMakeIo/FileSystem.h"
 

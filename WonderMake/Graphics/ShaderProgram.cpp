@@ -3,7 +3,7 @@
 #include <type_traits>
 #include "VertexBuffer.h"
 #include "Resources/ResourceSystem.h"
-#include "WonderMakeEngine/SystemPtr.h"
+#include "WonderMakeBase/SystemPtr.h"
 #include "Texture.h"
 #include "OpenGLFacade.h"
 

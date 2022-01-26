@@ -2,7 +2,7 @@
 
 #include "GTestInclude.h"
 
-#include "WonderMakeEngine/Process.h"
+#include "WonderMakeBase/Process.h"
 
 class ProcessMock
 	: public Process

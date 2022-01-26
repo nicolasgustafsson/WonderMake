@@ -16,10 +16,10 @@
     <ClCompile Include="..\WonderMakeIo\Source\WinIpcConnection.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\WonderMakeEngine\Source\WinPlatformSystemImpl.cpp">
+    <ClCompile Include="..\WonderMakeBase\Source\WinPlatformSystemImpl.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\WonderMakeEngine\Source\WinEventSystemImpl.cpp">
+    <ClCompile Include="..\WonderMakeBase\Source\WinEventSystemImpl.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="..\WonderMakeIo\Source\WinIpcAcceptor.cpp">
@@ -41,37 +41,37 @@
     <ClInclude Include="..\WonderMakeIo\Source\WinIpcConnection.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\WinPlatformSystem.h">
+    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\WinPlatformSystem.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\WonderMakeEngine\Source\WinPlatformSystemImpl.h">
+    <ClInclude Include="..\WonderMakeBase\Source\WinPlatformSystemImpl.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\WonderMakeEngine\Source\WinEventSystemImpl.h">
+    <ClInclude Include="..\WonderMakeBase\Source\WinEventSystemImpl.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\WinPlatform.h">
+    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\WinPlatform.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\WinEventSystem.h">
+    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\WinEventSystem.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\System.h">
+    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\System.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\UniqueFunction.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\SystemPolicy.h">
+    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\SystemPolicy.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\SystemTraits.h">
+    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\SystemTraits.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\RestrictTypes.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\SystemId.h">
+    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\SystemId.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\Utility.h">

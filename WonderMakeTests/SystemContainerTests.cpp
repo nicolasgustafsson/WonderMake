@@ -4,8 +4,8 @@
 
 #include "WonderMakeUtility/Typedefs.h"
 
-#include "WonderMakeEngine/System.h"
-#include "WonderMakeEngine/SystemContainer.h"
+#include "WonderMakeBase/System.h"
+#include "WonderMakeBase/SystemContainer.h"
 
 class ContainerTestSystemA
 	: public System<>

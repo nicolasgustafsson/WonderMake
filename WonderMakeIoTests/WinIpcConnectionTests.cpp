@@ -2,7 +2,7 @@
 #include "WonderMakeTestsCommon/WinEventSystemMock.h"
 #include "WonderMakeTestsCommon/WinPlatformSystemMock.h"
 
-#include "WonderMakeEngine/WinPlatformSystem.h"
+#include "WonderMakeBase/WinPlatformSystem.h"
 
 #include "WinIpcConnection.h"
 

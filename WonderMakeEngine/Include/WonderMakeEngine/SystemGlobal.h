@@ -21,11 +21,23 @@ static void _RegisterSystem()
 
 	Global::GetSystemRegistry().AddSystem<TSystem, TBaseSystem>([]() -> std::shared_ptr<TSystem>
 		{
-			auto ptr = std::make_shared<TSystem>();
+			constexpr auto createSystem = []()
+			{
+				auto ptr = std::make_shared<TSystem>();
 
-			ptr->Initialize();
+				ptr->Initialize();
 
-			return ptr;
+				return ptr;
+			};
+
+			if constexpr (TSystem::TraitSet::template HasTrait<STSingleton>)
+			{
+				static auto ptr = createSystem();
+
+				return ptr;
+			}
+			else
+				return createSystem();
 		});
 }
 

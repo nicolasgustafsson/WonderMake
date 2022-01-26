@@ -2,7 +2,9 @@
 
 #include <catch2/catch.hpp>
 
-#include "FileSystem/WinFileSystem.h"
+#include "WonderMakeBase/Typedefs.h"
+
+#include "WinFileSystem.h"
 
 class PlatformWindowsSystemMock
 	: public WinPlatformSystem
@@ -221,6 +223,8 @@ TEST_CASE("GetFolderLocation returns bin folder.", "[WinFileSystem]")
 
 	WinFileSystem fileSystem;
 
+	fileSystem.Initialize();
+
 	CHECK(fileSystem.GetFolderLocation(FolderLocation::Bin) == (std::filesystem::current_path() / ""));
 
 	CHECK(mock.CallCountGet() == 0);
@@ -238,6 +242,8 @@ TEST_CASE("GetFolderLocation returns data folder.", "[WinFileSystem]")
 	WinFileSystem::InjectDependencies(std::tie(mock));
 
 	WinFileSystem fileSystem;
+
+	fileSystem.Initialize();
 
 	CHECK(fileSystem.GetFolderLocation(FolderLocation::Data) == L"TEST//");
 
@@ -257,6 +263,8 @@ TEST_CASE("GetFolderLocation returns user folder.", "[WinFileSystem]")
 
 	WinFileSystem fileSystem;
 
+	fileSystem.Initialize();
+
 	CHECK(fileSystem.GetFolderLocation(FolderLocation::User) == L"TEST//");
 
 	CHECK(mock.CallCountGet() == 1);
@@ -275,6 +283,8 @@ TEST_CASE("GetFolderLocation returns user data folder.", "[WinFileSystem]")
 
 	WinFileSystem fileSystem;
 
+	fileSystem.Initialize();
+
 	CHECK(fileSystem.GetFolderLocation(FolderLocation::UserData) == L"TEST//");
 
 	CHECK(mock.CallCountGet() == 1);
@@ -288,6 +298,8 @@ TEST_CASE("GetFolderLocation returns bin folder with suffix.", "[WinFileSystem]"
 	WinFileSystem::InjectDependencies(std::tie(mock));
 
 	WinFileSystem fileSystem;
+
+	fileSystem.Initialize();
 
 	fileSystem.SetFolderSuffix(FolderLocation::Bin, "suffix");
 
@@ -309,6 +321,8 @@ TEST_CASE("GetFolderLocation returns data folder with suffix.", "[WinFileSystem]
 
 	WinFileSystem fileSystem;
 
+	fileSystem.Initialize();
+
 	fileSystem.SetFolderSuffix(FolderLocation::Data, "suffix");
 
 	CHECK(fileSystem.GetFolderLocation(FolderLocation::Data) == L"TEST//suffix");
@@ -328,6 +342,8 @@ TEST_CASE("GetFolderLocation returns user folder with suffix.", "[WinFileSystem]
 	WinFileSystem::InjectDependencies(std::tie(mock));
 
 	WinFileSystem fileSystem;
+
+	fileSystem.Initialize();
 
 	fileSystem.SetFolderSuffix(FolderLocation::User, "suffix");
 
@@ -349,6 +365,8 @@ TEST_CASE("GetFolderLocation returns user data folder with suffix.", "[WinFileSy
 
 	WinFileSystem fileSystem;
 
+	fileSystem.Initialize();
+
 	fileSystem.SetFolderSuffix(FolderLocation::UserData, "suffix");
 
 	CHECK(fileSystem.GetFolderLocation(FolderLocation::UserData) == L"TEST//suffix");
@@ -368,6 +386,8 @@ TEST_CASE("GetFolderLocation returns nullopt on failure when getting data folder
 
 	WinFileSystem fileSystem;
 
+	fileSystem.Initialize();
+
 	CHECK(!fileSystem.GetFolderLocation(FolderLocation::Data));
 
 	CHECK(mock.CallCountGet() == 1);
@@ -385,6 +405,8 @@ TEST_CASE("GetFolderLocation returns nullopt on failure when getting user folder
 
 	WinFileSystem fileSystem;
 
+	fileSystem.Initialize();
+
 	CHECK(!fileSystem.GetFolderLocation(FolderLocation::User));
 
 	CHECK(mock.CallCountGet() == 1);
@@ -401,6 +423,8 @@ TEST_CASE("GetFolderLocation returns nullopt on failure when getting user data f
 	WinFileSystem::InjectDependencies(std::tie(mock));
 
 	WinFileSystem fileSystem;
+
+	fileSystem.Initialize();
 
 	CHECK(!fileSystem.GetFolderLocation(FolderLocation::UserData));
 

@@ -19,15 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\WonderMakeIo\FileSystem.h" />
+    <ClInclude Include="Include\WonderMakeIo\FileTypes.h" />
     <ClInclude Include="Include\WonderMakeIo\IpcConnection.h" />
     <ClInclude Include="Include\WonderMakeIo\IpcSystem.h" />
     <ClInclude Include="Include\WonderMakeIo\Socket.h" />
     <ClInclude Include="Include\WonderMakeIo\IpcAcceptor.h" />
+    <ClInclude Include="Source\WinFileSystem.h" />
     <ClInclude Include="Source\WinIpcAcceptor.h" />
     <ClInclude Include="Source\WinIpcConnection.h" />
     <ClInclude Include="Source\WinIpcSystem.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\WinFileSystem.cpp" />
     <ClCompile Include="Source\WinIpcAcceptor.cpp" />
     <ClCompile Include="Source\WinIpcConnection.cpp" />
     <ClCompile Include="Source\WinIpcSystem.cpp" />

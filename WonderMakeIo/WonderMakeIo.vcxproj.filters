@@ -30,6 +30,15 @@
     <ClInclude Include="Source\WinIpcAcceptor.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Source\WinFileSystem.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\WonderMakeIo\FileSystem.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\WonderMakeIo\FileTypes.h">
+      <Filter>Include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\WinIpcSystem.cpp">
@@ -39,6 +48,9 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\WinIpcAcceptor.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\WinFileSystem.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

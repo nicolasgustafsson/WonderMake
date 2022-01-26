@@ -39,6 +39,9 @@
     <ClCompile Include="Source\Logger.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\WinLoggerConsoleSystem.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\WonderMakeEngine\SystemGlobal.h">
@@ -103,6 +106,12 @@
     </ClInclude>
     <ClInclude Include="Include\WonderMakeEngine\Logger.h">
       <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\WonderMakeBase\WinLoggerConsoleSystem.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\WinLoggerConsoleSystem.h">
+      <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

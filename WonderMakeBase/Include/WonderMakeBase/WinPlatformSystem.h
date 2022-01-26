@@ -100,4 +100,10 @@ public:
 	virtual BOOL GetExitCodeProcess(
 		HANDLE hProcess,
 		LPDWORD lpExitCode) = 0;
+
+	virtual HANDLE GetStdHandle(
+		DWORD nStdHandle) = 0;
+	virtual BOOL SetConsoleTextAttribute(
+		HANDLE hConsoleOutput,
+		WORD wAttributes) = 0;
 };

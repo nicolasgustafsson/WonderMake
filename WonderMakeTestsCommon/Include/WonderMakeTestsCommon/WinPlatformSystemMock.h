@@ -101,6 +101,12 @@ public:
 		HANDLE hProcess,
 		LPDWORD lpExitCode), (override));
 
+	MOCK_METHOD(HANDLE, GetStdHandle, (
+		DWORD nStdHandle), (override));
+	MOCK_METHOD(BOOL, SetConsoleTextAttribute, (
+		HANDLE hConsoleOutput,
+		WORD wAttributes), (override));
+
 	void DelegateToFake()
 	{
 		const auto createHandle = [this]() -> HANDLE

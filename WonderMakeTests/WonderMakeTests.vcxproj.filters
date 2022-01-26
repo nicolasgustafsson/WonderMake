@@ -13,7 +13,6 @@
     <ClCompile Include="Utilities\UniqueFunctionTests.cpp" />
     <ClCompile Include="Guid\GuidTests.cpp" />
     <ClCompile Include="Guid\WinGuidGeneratorSystemTests.cpp" />
-    <ClCompile Include="FileSystem\WinFileSystemTests.cpp" />
     <ClCompile Include="FileSystem\ReadFileJobTests.cpp" />
     <ClCompile Include="ParseJsonJobTests.cpp" />
     <ClCompile Include="SystemRegistryTests.cpp" />

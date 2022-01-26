@@ -192,7 +192,6 @@
   <ItemGroup>
     <ClCompile Include="ContainerTests.cpp" />
     <ClCompile Include="FileSystem\ReadFileJobTests.cpp" />
-    <ClCompile Include="FileSystem\WinFileSystemTests.cpp" />
     <ClCompile Include="Functionalities\TransformFunctionalityTests.cpp" />
     <ClCompile Include="Guid\GuidTests.cpp" />
     <ClCompile Include="Guid\WinGuidGeneratorSystemTests.cpp" />

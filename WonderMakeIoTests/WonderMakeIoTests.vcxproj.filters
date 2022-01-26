@@ -16,6 +16,12 @@
     <ClCompile Include="..\WonderMakeIo\Source\WinIpcConnection.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="WinFileSystemTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\WonderMakeIo\Source\WinFileSystem.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Include">
@@ -57,6 +63,9 @@
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\Utility.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WonderMakeIo\Source\WinFileSystem.h">
       <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>

@@ -162,3 +162,16 @@ BOOL WinPlatformSystemImpl::GetExitCodeProcess(
 {
 	return ::GetExitCodeProcess(hProcess, lpExitCode);
 }
+
+HANDLE WinPlatformSystemImpl::GetStdHandle(
+	DWORD nStdHandle)
+{
+	return ::GetStdHandle(nStdHandle);
+}
+
+BOOL WinPlatformSystemImpl::SetConsoleTextAttribute(
+	HANDLE hConsoleOutput,
+	WORD wAttributes)
+{
+	return ::SetConsoleTextAttribute(hConsoleOutput, wAttributes);
+}

@@ -104,4 +104,10 @@ public:
 	BOOL GetExitCodeProcess(
 		HANDLE hProcess,
 		LPDWORD lpExitCode) override;
+
+	HANDLE GetStdHandle(
+		DWORD nStdHandle) override;
+	BOOL SetConsoleTextAttribute(
+		HANDLE hConsoleOutput,
+		WORD wAttributes) override;
 };

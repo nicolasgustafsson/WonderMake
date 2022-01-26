@@ -171,6 +171,19 @@ TEST_CASE("GenerateNew returns a valid Guid.", "[WinGuidGeneratorSystem]")
 			return FALSE;
 		}
 
+		HANDLE GetStdHandle(
+			DWORD /*nStdHandle*/)
+		{
+			return INVALID_HANDLE_VALUE;
+		}
+
+		BOOL SetConsoleTextAttribute(
+			HANDLE /*hConsoleOutput*/,
+			WORD /*wAttributes*/)
+		{
+			return FALSE;
+		}
+
 	};
 
 	PlatformWindowsSystemMock mock;
@@ -342,6 +355,19 @@ TEST_CASE("GenerateNew returns nullopt on error.", "[WinGuidGeneratorSystem]")
 		BOOL GetExitCodeProcess(
 			HANDLE /*hProcess*/,
 			LPDWORD /*lpExitCode*/)
+		{
+			return FALSE;
+		}
+
+		HANDLE GetStdHandle(
+			DWORD /*nStdHandle*/)
+		{
+			return INVALID_HANDLE_VALUE;
+		}
+
+		BOOL SetConsoleTextAttribute(
+			HANDLE /*hConsoleOutput*/,
+			WORD /*wAttributes*/)
 		{
 			return FALSE;
 		}

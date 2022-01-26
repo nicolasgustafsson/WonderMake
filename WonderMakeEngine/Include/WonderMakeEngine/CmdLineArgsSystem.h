@@ -7,10 +7,7 @@
 #include <unordered_map>
 
 class CmdLineArgsSystem
-	: public System<
-		Policy::Set<>,
-		SystemTraits::Set<
-			STSingleton>>
+	: public System<>
 {
 public:
 	CmdLineArgsSystem(std::vector<std::wstring> aWords);

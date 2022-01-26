@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "Engine.h"
 
-#include "WonderMakeIo/FileSystem.h"
-
 #include "Graphics/Renderer.h"
 
 #include "Message/DispatchRouter.h"
@@ -14,11 +12,14 @@
 
 #include "Program/ImguiWrapper.h"
 
-#include "WonderMakeEngine/ScheduleSystem.h"
-
 #include "Threads/TaskManager.h"
 
 #include "Utilities/TimeKeeper.h"
+
+#include "WonderMakeEngine/Logger.h"
+#include "WonderMakeEngine/ScheduleSystem.h"
+
+#include "WonderMakeIo/FileSystem.h"
 
 namespace Engine
 {
@@ -26,78 +27,124 @@ namespace Engine
 
 	void Start(Info&& aInfo, Callbacks&& aCallbacks)
 	{
-		TaskManager taskManager;
-
-		auto scheduleProc = [&taskManager](Closure aTask)
-		{
-			taskManager.Schedule(std::move(aTask));
-		};
-		auto scheduleRepeatingProc = [&taskManager](std::function<void()> aTask)
-		{
-			taskManager.ScheduleRepeating(std::move(aTask));
-		};
+		Logger::Get().SetFilters(
+			{ ELogSeverity::Success, ELogSeverity::Info, ELogSeverity::Warning, ELogSeverity::Error },
+			{ ELogLevel::Debug, ELogLevel::Verbose, ELogLevel::Normal, ELogLevel::Priority });
 
 		auto&& sysRegistry = Global::GetSystemRegistry();
-		auto&& sysContainer = Global::GetSystemContainer();
 
-		sysRegistry.AddSystem<CmdLineArgsSystem>([&cmdLineArgs = aInfo.CommandLineArguments]() -> std::shared_ptr<CmdLineArgsSystem>
+		SystemContainer loggerContainer;
+
+		{
+			SystemRegistry::Filter filter;
+
+			filter.RequiredAnyTraits = { STrait::Set<STPlatformInterface, STLogger>::ToObject() };
+
+			auto result = sysRegistry.CreateSystems(filter);
+
+			if (!result)
+				return;
+
+			loggerContainer = std::move(result);
+		}
+
+		{
+			SystemRegistry::Filter filter;
+
+			filter.RequiredAnyTraits = { STrait::ToObject<STSingleton>() };
+
+			auto result = sysRegistry.CreateSystems(filter);
+
+			if (!result)
+			{
+				WM_LOG_ERROR("Failed to create singleton systems; error: " << static_cast<SystemRegistry::ECreateError>(result) << ", meta: " << result.Meta() << ".");
+
+				return;
+			}
+
+			SystemContainer singletonContainer = result;
+
+			auto&& fileSystem = singletonContainer.Get<FileSystem>();
+
+			fileSystem.SetFolderSuffix(FolderLocation::Data, aInfo.ProjectFolderNames);
+			fileSystem.SetFolderSuffix(FolderLocation::User, aInfo.ProjectFolderNames);
+			fileSystem.SetFolderSuffix(FolderLocation::UserData, aInfo.ProjectFolderNames);
+		}
+
+		{
+			auto&& sysContainer = Global::GetSystemContainer();
+
+			TaskManager taskManager;
+
+			auto scheduleProc = [&taskManager](Closure aTask)
+			{
+				taskManager.Schedule(std::move(aTask));
+			};
+			auto scheduleRepeatingProc = [&taskManager](std::function<void()> aTask)
+			{
+				taskManager.ScheduleRepeating(std::move(aTask));
+			};
+
+			sysRegistry.AddSystem<CmdLineArgsSystem>([&cmdLineArgs = aInfo.CommandLineArguments]() -> std::shared_ptr<CmdLineArgsSystem>
 			{
 				return std::make_shared<CmdLineArgsSystem>(cmdLineArgs);
 			});
-		sysRegistry.AddSystem<JobSystem>([&sysContainer]() -> std::shared_ptr<JobSystem>
-			{
-				return std::make_shared<JobSystem>(sysContainer);
-			});
-		sysRegistry.AddSystem<ScheduleSystem>([&scheduleProc, &scheduleRepeatingProc]() -> std::shared_ptr<ScheduleSystem>
-			{
-				return std::make_shared<ScheduleSystem>(scheduleProc, scheduleRepeatingProc);
-			});
-
-		STrait::SetList notFilter;
-
-		if (aInfo.Headless)
-			filter.DisallowedTraits = { STrait::ToObject<STGui>() };
-
-		auto result = sysRegistry.CreateSystems(filter);
-
-
-		sysContainer = std::move(result);
-
-		auto&& fileSystem = sysContainer.Get<FileSystem>();
-		auto&& timeKeeper = sysContainer.Get<TimeKeeper>();
-
-		fileSystem.SetFolderSuffix(FolderLocation::Data, aInfo.ProjectFolderNames);
-		fileSystem.SetFolderSuffix(FolderLocation::User, aInfo.ProjectFolderNames);
-		fileSystem.SetFolderSuffix(FolderLocation::UserData, aInfo.ProjectFolderNames);
-
-		std::move(aCallbacks.OnSetup)();
-
-		for (;;)
-		{
-			//update the timekeeper before any threads have run so that delta time can be accessed asynchronously
-			timeKeeper.Update();
-
-			taskManager.Update();
-			
-			RouteMessages();
-
-			if constexpr (Constants::IsDebugging)
-				if (!aInfo.Headless)
+			sysRegistry.AddSystem<JobSystem>([&sysContainer]() -> std::shared_ptr<JobSystem>
 				{
-					auto&& renderer = sysContainer.Get<Renderer>();
-					auto&& imguiWrapper = sysContainer.Get<ImguiWrapper>();
+					return std::make_shared<JobSystem>(sysContainer);
+				});
+			sysRegistry.AddSystem<ScheduleSystem>([&scheduleProc, &scheduleRepeatingProc]() -> std::shared_ptr<ScheduleSystem>
+				{
+					return std::make_shared<ScheduleSystem>(scheduleProc, scheduleRepeatingProc);
+				});
 
-					renderer.FinishFrame();
-					imguiWrapper.StartFrame();
+			SystemRegistry::Filter filter;
 
-					auto&& router = DispatchRouter::Get();
+			if (aInfo.Headless)
+				filter.DisallowedTraits = { STrait::ToObject<STGui>() };
 
-					router.RouteDispatchable(SDebugMessage());
+			auto result = sysRegistry.CreateSystems(filter);
 
-					router.CommitChanges();
+			if (!result)
+			{
+				WM_LOG_ERROR("Failed to create systems; error: " << static_cast<SystemRegistry::ECreateError>(result) << ", meta: " << result.Meta() << ".");
 
-					imguiWrapper.EndFrame();
-				}
+				return;
+			}
+
+			sysContainer = std::move(result);
+
+			auto&& timeKeeper = sysContainer.Get<TimeKeeper>();
+
+			std::move(aCallbacks.OnSetup)();
+
+			for (;;)
+			{
+				//update the timekeeper before any threads have run so that delta time can be accessed asynchronously
+				timeKeeper.Update();
+
+				taskManager.Update();
+
+				RouteMessages();
+
+				if constexpr (Constants::IsDebugging)
+					if (!aInfo.Headless)
+					{
+						auto&& renderer = sysContainer.Get<Renderer>();
+						auto&& imguiWrapper = sysContainer.Get<ImguiWrapper>();
+
+						renderer.FinishFrame();
+						imguiWrapper.StartFrame();
+
+						auto&& router = DispatchRouter::Get();
+
+						router.RouteDispatchable(SDebugMessage());
+
+						router.CommitChanges();
+
+						imguiWrapper.EndFrame();
+					}
+			}
 		}
 	}
 

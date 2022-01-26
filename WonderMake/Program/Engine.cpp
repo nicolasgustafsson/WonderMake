@@ -56,16 +56,19 @@ namespace Engine
 		STrait::SetList notFilter;
 
 		if (aInfo.Headless)
-			notFilter.emplace(STrait::ToObject<STGui>());
+			filter.DisallowedTraits = { STrait::ToObject<STGui>() };
 
-		sysContainer = sysRegistry.CreateSystems(notFilter);
+		auto result = sysRegistry.CreateSystems(filter);
+
+
+		sysContainer = std::move(result);
 
 		auto&& fileSystem = sysContainer.Get<FileSystem>();
 		auto&& timeKeeper = sysContainer.Get<TimeKeeper>();
 
-		fileSystem.SetFolderSuffix(FolderLocation::Data,		aInfo.ProjectFolderNames);
-		fileSystem.SetFolderSuffix(FolderLocation::User,		aInfo.ProjectFolderNames);
-		fileSystem.SetFolderSuffix(FolderLocation::UserData,	aInfo.ProjectFolderNames);
+		fileSystem.SetFolderSuffix(FolderLocation::Data, aInfo.ProjectFolderNames);
+		fileSystem.SetFolderSuffix(FolderLocation::User, aInfo.ProjectFolderNames);
+		fileSystem.SetFolderSuffix(FolderLocation::UserData, aInfo.ProjectFolderNames);
 
 		std::move(aCallbacks.OnSetup)();
 

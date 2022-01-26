@@ -2,20 +2,36 @@
 
 thread_local SystemContainer::InternalRep SystemRegistry::myConstructingContainer;
 
-Result<SystemRegistry::ECreateError, SystemContainer, std::string> SystemRegistry::CreateSystems(SystemTraits::SetList aTraitNotFilter)
+Result<SystemRegistry::ECreateError, SystemContainer, std::string> SystemRegistry::CreateSystems(const Filter& aFilter)
 {
 	myDependencyInjector = DependencyInjector();
 
-	const auto notFilter = [&aTraitNotFilter](auto&& aSystemInfo)
+	const auto requiredFilter = [&filter = aFilter.RequiredAnyTraits](auto&& aSystemInfo)
 	{
+		if (!filter)
+			return true;
+
+		for (auto&& trait : *filter)
+			if (aSystemInfo.TraitSet.find(trait) != aSystemInfo.TraitSet.cend())
+				return true;
+
+		return false;
+	};
+	const auto disallowedFilter = [&filter = aFilter.DisallowedTraits](auto&& aSystemInfo)
+	{
+		if (!filter)
+			return true;
+
 		for (auto&& trait : aSystemInfo.TraitSet)
-			if (aTraitNotFilter.find(trait) != aTraitNotFilter.cend())
+			if (filter->find(trait) != filter->cend())
 				return false;
 
 		return true;
 	};
 
-	for (auto&& system : std::views::all(mySystemList) | std::views::filter(notFilter))
+	for (auto&& system : std::views::all(mySystemList)
+		| std::views::filter(requiredFilter)
+		| std::views::filter(disallowedFilter))
 	{
 		system.InjectFunc();
 	}

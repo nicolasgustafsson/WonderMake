@@ -8,6 +8,7 @@
 #include <cassert>
 #include <functional>
 #include <memory>
+#include <optional>
 #include <ranges>
 #include <typeindex>
 #include <vector>
@@ -21,6 +22,12 @@ public:
 		InternalError
 	};
 
+	struct Filter
+	{
+		std::optional<SystemTraits::SetList> RequiredAnyTraits;
+		std::optional<SystemTraits::SetList> DisallowedTraits;
+	};
+
 	template<typename TSystem, typename TBaseSystem = TSystem, typename TCreateFunc>
 	inline void AddSystem(TCreateFunc&& aCreateFunc)
 	{
@@ -29,7 +36,7 @@ public:
 		AddSystemHelper<TSystem, TBaseSystem>(std::forward<TCreateFunc>(aCreateFunc), TupleWrapper<typename TSystem::Dependencies>());
 	}
 
-	Result<ECreateError, SystemContainer, std::string> CreateSystems(SystemTraits::SetList aTraitNotFilter);
+	Result<ECreateError, SystemContainer, std::string> CreateSystems(const Filter& aFilter);
 
 private:
 	template<typename TDependencyTuple>

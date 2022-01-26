@@ -5,7 +5,8 @@
 #include "Job/JobMock.h"
 
 #include "FileSystem/ReadFileJob.h"
-#include "FileSystem/WinFileSystem.h"
+
+#include "WinFileSystem.h"
 
 class FileSystemMock
 	: public FileSystem

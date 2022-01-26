@@ -1,15 +1,17 @@
-#include "pch.h"
-#include "FileSystem/WinFileSystem.h"
+#include "WinFileSystem.h"
+
+#include "WonderMakeEngine/SystemGlobal.h"
 
 REGISTER_SYSTEM_MASKED(WinFileSystem, FileSystem);
 
-WinFileSystem::WinFileSystem()
-	: myBinPath(std::filesystem::current_path())
-{}
+void WinFileSystem::Initialize()
+{
+	myBinPath = std::filesystem::current_path();
+}
 
 void WinFileSystem::SetFolderSuffix(const FolderLocation aLocation, std::filesystem::path aSuffix)
 {
-	mySuffixes.Add(aLocation, std::move(aSuffix));
+	mySuffixes.emplace(aLocation, std::move(aSuffix));
 }
 
 std::optional<std::filesystem::path> WinFileSystem::GetFolderLocation(const FolderLocation aLocation)

@@ -60,7 +60,9 @@
     <ClCompile Include="..\External\gmock-1.11.0\Src\src\gmock-all.cc" />
     <ClCompile Include="..\External\gtest-1.11.0\Src\src\gtest-all.cc" />
     <ClCompile Include="..\External\gtest-1.11.0\Src\src\gtest_main.cc" />
+    <ClCompile Include="..\WonderMakeIo\Source\WinFileSystem.cpp" />
     <ClCompile Include="..\WonderMakeIo\Source\WinIpcConnection.cpp" />
+    <ClCompile Include="WinFileSystemTests.cpp" />
     <ClCompile Include="WinIpcConnectionTests.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +75,7 @@
     <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\SystemTraits.h" />
     <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\WinPlatform.h" />
     <ClInclude Include="..\WonderMakeEngine\Include\WonderMakeEngine\WinPlatformSystem.h" />
+    <ClInclude Include="..\WonderMakeIo\Source\WinFileSystem.h" />
     <ClInclude Include="..\WonderMakeIo\Source\WinIpcConnection.h" />
   </ItemGroup>
   <ItemDefinitionGroup />
@@ -84,7 +87,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WM_SUPRESS_SYSTEM_GLOBAL;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
@@ -107,7 +110,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>X64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WM_SUPRESS_SYSTEM_GLOBAL;X64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
@@ -129,7 +132,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WM_SUPRESS_SYSTEM_GLOBAL;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -153,7 +156,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <PreprocessorDefinitions>X64;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WM_SUPRESS_SYSTEM_GLOBAL;X64;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>

@@ -23,18 +23,6 @@ inline static void WmDispatchMessage(TMessage&& aMessage) noexcept
 	DispatchableBuffer::Get().Dispatch(std::move(aMessage));
 }
 
-template<typename ... TMessageArgs>
-inline static void WmLog(TMessageArgs... aMessageArgs)
-{
-	std::stringstream MessageStream;
-
-	MessageStream << '[' << Platform::GetDateTime() << ']';
-
-	(MessageStream << ... << aMessageArgs);
-
-	WmDispatchMessage(SLogMessage(MessageStream.str()));
-}
-
 inline static void WmDrawDebugLine(const SDebugLine& aDebugLine)
 {
 	WmDispatchMessage(SDebugLineMessage(aDebugLine));

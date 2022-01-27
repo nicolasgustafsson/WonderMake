@@ -72,12 +72,18 @@
     <ClInclude Include="Include\WonderMakeUtility\WinPlatform.h">
       <Filter>Include</Filter>
     </ClInclude>
+    <ClInclude Include="Include\WonderMakeUtility\Time.h">
+      <Filter>Include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DependencyInjector.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\WinStringUtility.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Time.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

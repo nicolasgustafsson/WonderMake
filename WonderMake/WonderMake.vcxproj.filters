@@ -13,9 +13,7 @@
     <ClCompile Include="Utilities\Debugging\Debugged.cpp" />
     <ClCompile Include="Graphics\EngineUniformBuffer.cpp" />
     <ClCompile Include="Imgui\DockSpace.cpp" />
-    <ClCompile Include="Logging\FileLogger.cpp" />
     <ClCompile Include="Logging\ImGuiLogger.cpp" />
-    <ClCompile Include="Logging\ConsoleLogger.cpp" />
     <ClCompile Include="Functionalities\SpriteRenderingFunctionality.cpp" />
     <ClCompile Include="Object\Object.cpp" />
     <ClCompile Include="Program\Engine.cpp" />
@@ -100,9 +98,7 @@
     <ClInclude Include="Utilities\Debugging\Debugged.h" />
     <ClInclude Include="Graphics\EngineUniformBuffer.h" />
     <ClInclude Include="Imgui\DockSpace.h" />
-    <ClInclude Include="Logging\FileLogger.h" />
     <ClInclude Include="Logging\ImGuiLogger.h" />
-    <ClInclude Include="Logging\ConsoleLogger.h" />
     <ClInclude Include="Logging\LogMessageTags.h" />
     <ClInclude Include="Components\Component.h" />
     <ClInclude Include="Components\ComponentSystem.h" />

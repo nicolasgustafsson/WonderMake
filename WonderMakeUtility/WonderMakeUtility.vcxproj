@@ -34,6 +34,7 @@
     <ClInclude Include="Include\WonderMakeUtility\Singleton.h" />
     <ClInclude Include="Include\WonderMakeUtility\Stopwatch.h" />
     <ClInclude Include="Include\WonderMakeUtility\StringUtility.h" />
+    <ClInclude Include="Include\WonderMakeUtility\Time.h" />
     <ClInclude Include="Include\WonderMakeUtility\Typedefs.h" />
     <ClInclude Include="Include\WonderMakeUtility\UniqueFunction.h" />
     <ClInclude Include="Include\WonderMakeUtility\UniqueValue.h" />
@@ -43,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DependencyInjector.cpp" />
+    <ClCompile Include="Source\Time.cpp" />
     <ClCompile Include="Source\WinStringUtility.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

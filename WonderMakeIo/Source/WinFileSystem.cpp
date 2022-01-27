@@ -21,8 +21,8 @@ std::optional<std::filesystem::path> WinFileSystem::GetFolderLocation(const Fold
 	switch (aLocation)
 	{
 	case FolderLocation::Bin:		retVal = myBinPath; break;
-	case FolderLocation::Data:		retVal = GetFolder(FOLDERID_AppDataProgramData); break;
-	case FolderLocation::User:		retVal = GetFolder(FOLDERID_AppDataDocuments); break;
+	case FolderLocation::Data:		retVal = GetFolder(FOLDERID_ProgramData); break;
+	case FolderLocation::User:		retVal = GetFolder(FOLDERID_Documents); break;
 	case FolderLocation::UserData:	retVal = GetFolder(FOLDERID_UserProgramFiles); break;
 	}
 
@@ -48,7 +48,9 @@ std::optional<std::filesystem::path> WinFileSystem::GetFolder(REFKNOWNFOLDERID a
 
 	PwStrWrapper pathWrapper{ Get<WinPlatformSystem>() };
 
-	if (FAILED(Get<WinPlatformSystem>().SHGetKnownFolderPath(aFolderId, 0, NULL, &pathWrapper.Path)))
+	const auto result = Get<WinPlatformSystem>().SHGetKnownFolderPath(aFolderId, 0, NULL, &pathWrapper.Path);
+
+	if (FAILED(result))
 		return std::nullopt;
 
 	return std::filesystem::path(pathWrapper.Path);

@@ -31,7 +31,7 @@ TEST(WinFileSystemTests, getfolderlocation_returns_data_folder)
 	constexpr FolderLocation	folderLocation	= FolderLocation::Data;
 
 	std::wstring				dummyPath		= L"TEST";
-	constexpr REFKNOWNFOLDERID	dummyFolderId	= FOLDERID_AppDataProgramData;
+	constexpr REFKNOWNFOLDERID	dummyFolderId	= FOLDERID_ProgramData;
 	constexpr DWORD				dummyFlags		= 0;
 	constexpr HANDLE			dummyToken		= NULL;
 
@@ -57,7 +57,7 @@ TEST(WinFileSystemTests, getfolderlocation_returns_user_folder)
 	constexpr FolderLocation	folderLocation	= FolderLocation::User;
 
 	std::wstring				dummyPath		= L"TEST";
-	constexpr REFKNOWNFOLDERID	dummyFolderId	= FOLDERID_AppDataDocuments;
+	constexpr REFKNOWNFOLDERID	dummyFolderId	= FOLDERID_Documents;
 	constexpr DWORD				dummyFlags		= 0;
 	constexpr HANDLE			dummyToken		= NULL;
 

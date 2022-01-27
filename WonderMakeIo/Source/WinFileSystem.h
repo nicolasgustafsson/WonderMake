@@ -14,6 +14,7 @@ class WinFileSystem final
 		Policy::Set<
 			PAdd<WinPlatformSystem, PWrite>>,
 		STrait::Set<
+			STPlatformInterface,
 			STSingleton>>
 {
 public:

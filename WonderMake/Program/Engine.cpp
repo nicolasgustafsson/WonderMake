@@ -16,10 +16,14 @@
 
 #include "Utilities/TimeKeeper.h"
 
+#include "WonderMakeEngine/LoggerFileSystem.h"
+
+#include "WonderMakeIo/FileSystem.h"
+
 #include "WonderMakeBase/Logger.h"
 #include "WonderMakeBase/ScheduleSystem.h"
 
-#include "WonderMakeIo/FileSystem.h"
+using namespace MemoryUnitLiterals;
 
 namespace Engine
 {
@@ -27,9 +31,7 @@ namespace Engine
 
 	void Start(Info&& aInfo, Callbacks&& aCallbacks)
 	{
-		Logger::Get().SetFilters(
-			{ ELogSeverity::Success, ELogSeverity::Info, ELogSeverity::Warning, ELogSeverity::Error },
-			{ ELogLevel::Debug, ELogLevel::Verbose, ELogLevel::Normal, ELogLevel::Priority });
+		Logger::Get().SetFilters(aInfo.Logging.AllowedSeverities, aInfo.Logging.Level);
 
 		auto&& sysRegistry = Global::GetSystemRegistry();
 
@@ -51,11 +53,13 @@ namespace Engine
 			{
 				auto&& fileInfo = *aInfo.Logging.File;
 
-				auto&& loggerFile = loggerContainer.Get<LoggerFileSystem>();
+				loggerContainer = std::move(result);
 
-				loggerFile.SetLogSizeLimits(fileInfo.TrimSize, fileInfo.MaxSize);
+				auto&& fileLogger = loggerContainer.Get<LoggerFileSystem>();
 
-				logFileError = !loggerFile.OpenLogFile(aInfo.ProjectFolderNames / fileInfo.Path, fileInfo.Filename);
+				fileLogger.SetLogSizeLimits(fileInfo.TrimSize, fileInfo.MaxSize);
+
+				logFileError = !fileLogger.OpenLogFile(aInfo.ProjectFolderNames / fileInfo.Path, fileInfo.Filename);
 			}
 
 			WM_LOG_INFO("");
@@ -69,6 +73,8 @@ namespace Engine
 		}
 
 		{
+			WM_LOG_INFO("Creating single instance systems...");
+
 			SystemRegistry::Filter filter;
 
 			filter.RequiredAnyTraits = { STrait::ToObject<STSingleton>() };
@@ -89,6 +95,8 @@ namespace Engine
 			fileSystem.SetFolderSuffix(FolderLocation::Data, aInfo.ProjectFolderNames);
 			fileSystem.SetFolderSuffix(FolderLocation::User, aInfo.ProjectFolderNames);
 			fileSystem.SetFolderSuffix(FolderLocation::UserData, aInfo.ProjectFolderNames);
+
+			WM_LOG_INFO("Single instance systems created.");
 		}
 
 		{

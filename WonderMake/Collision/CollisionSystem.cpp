@@ -4,6 +4,7 @@
 #include "CollisionFunctionality.h"
 #include "Collision/Colliders.h"
 
+#include "WonderMakeBase/Logger.h"
 #include "WonderMakeBase/ScheduleSystem.h"
 
 REGISTER_SYSTEM(CollisionSystem);
@@ -162,7 +163,7 @@ bool CollisionSystem::TestSphereVsLineCollision(const Colliders::SSphere& aSpher
 
 bool CollisionSystem::TestLineVsLineCollision(const Colliders::SCollisionLine& /*aLineA*/, const Colliders::SCollisionLine& /*aLineB*/) noexcept
 {
-	WmLog(TagError, "Line-line collision not implemented yet!");
+	WM_LOG_ERROR("Line-line collision not implemented yet.");
 	return false;
 }
 

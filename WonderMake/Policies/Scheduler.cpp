@@ -2,6 +2,8 @@
 
 #include "Policies/Scheduler.h"
 
+#include "WonderMakeBase/Logger.h"
+
 #include <algorithm>
 
 void Scheduler::AddToSchedule(const SystemId aSystemId, std::vector<Policy> aPolicyList)
@@ -87,7 +89,7 @@ void Scheduler::AddSystem(const SystemId aSystemId)
 			if (systemIt == systemsInfo.cend())
 			{
 				// TODO(Kevin): Assert, something has gone terribly wrong.
-				WmLog(TagError, "Unknown system id found.");
+				WM_LOG_ERROR("Unknown system id found.");
 
 				return false;
 			}
@@ -116,7 +118,7 @@ void Scheduler::AddSystem(const SystemId aSystemId)
 	if (systemIt == mySystemsInfo.cend())
 	{
 		// TODO(Kevin): Assert, something has gone terribly wrong.
-		WmLog(TagError, "Unknown system id found.");
+		WM_LOG_ERROR("Unknown system id found.");
 
 		return std::optional<SystemId>();
 	}
@@ -152,7 +154,7 @@ void Scheduler::MarkSystemAsDone(const SystemId aSystemId)
 		if (it == mySystemsInfo.cend())
 		{
 			// TODO(Kevin): Assert, something has gone terribly wrong.
-			WmLog(TagError, "Unknown system id found.");
+			WM_LOG_ERROR("Unknown system id found.");
 
 			return false;
 		}
@@ -212,7 +214,7 @@ void Scheduler::ConstructSystemParallels(SSchedulingInfo& aSystemInfo)
 		{
 			if (dependencyId == rootSystemInfo.Id)
 			{
-				WmLog(TagError, "Circular System dependency!");
+				WM_LOG_ERROR("Circular System dependency.");
 				return false;
 			}
 

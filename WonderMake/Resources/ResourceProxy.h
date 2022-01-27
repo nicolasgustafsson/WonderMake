@@ -2,6 +2,8 @@
 
 #include "Constants.h"
 
+#include "WonderMakeBase/Logger.h"
+
 #include <cassert>
 #include <memory>
 #include <mutex>
@@ -106,7 +108,7 @@ inline void ResourceProxy<TResource>::Validate() const
 	if (myResource == nullptr
 		|| myResource->myPointer == nullptr)
 	{
-		WmLog(TagError, "Resource proxy validation failed.");
+		WM_LOG_ERROR("Resource proxy validation failed.");
 		assert(false);
 	}
 }

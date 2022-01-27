@@ -4,6 +4,7 @@
 #include "Json/json.hpp"
 #include <fstream>
 #include "Program/GlfwFacade.h"
+#include "WonderMakeBase/Logger.h"
 
 REGISTER_SYSTEM(Window);
 
@@ -23,7 +24,7 @@ Window::Window()
 	myGlfwWindow = glfw.CreateGlfwWindow(mySize.X, mySize.Y, "WonderMake", NULL, NULL);
 	if (!myGlfwWindow)
 	{
-		WmLog(TagError, TagOpenGL, "Failed to create GLFW window!");
+		WM_LOG_ERROR(TagOpenGL, "Failed to create GLFW window.");
 		glfw.Terminate();
 		return;
 	}
@@ -32,7 +33,7 @@ Window::Window()
 
 	if (!glfw.InitializeGlad())
 	{
-		WmLog(TagError, TagOpenGL, "Failed to initialize GLAD");
+		WM_LOG_ERROR(TagOpenGL, "Failed to initialize GLAD.");
 	}
 }
 

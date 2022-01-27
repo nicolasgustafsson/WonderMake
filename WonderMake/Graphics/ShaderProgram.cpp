@@ -3,9 +3,11 @@
 #include <type_traits>
 #include "VertexBuffer.h"
 #include "Resources/ResourceSystem.h"
-#include "WonderMakeBase/SystemPtr.h"
 #include "Texture.h"
 #include "OpenGLFacade.h"
+
+#include "WonderMakeBase/Logger.h"
+#include "WonderMakeBase/SystemPtr.h"
 
 ShaderProgram::ShaderProgram(
 	ResourceSystem<Shader<EShaderType::Vertex>>& aVsSystem, ResourceSystem<Shader<EShaderType::Fragment>>& aFsSystem, ResourceSystem<Shader<EShaderType::Geometry>>& aGsSystem,
@@ -43,7 +45,7 @@ void ShaderProgram::Create()
 	{
 		const std::string errorMessage = openGL->GetShaderProgramInfoLog(*myProgramHandle);
 
-		WmLog(TagError, "Error: Shader program linking failed: ", errorMessage);
+		WM_LOG_ERROR("Shader program linking failed: {", errorMessage, "}.");
 
 		openGL->DeleteShaderProgram(*myProgramHandle);
 		myProgramHandle.reset();

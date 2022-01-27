@@ -16,6 +16,8 @@
 
 #include "AssetLink.h"
 
+#include "WonderMakeBase/Logger.h"
+
 template<typename TAssetType>
 class AssetDatabase 
 	: public System<
@@ -134,7 +136,7 @@ public:
 		if (ImGui::Button("Scan assets"))
 		{
 			SweepAssetDirectories();
-			WmLog(TagSuccess, assetDatabaseName + " scanned assets!");
+			WM_LOG_SUCCESS(assetDatabaseName, " scanned assets.");
 		}
 
 		static std::string buffer = myRootPath.string();

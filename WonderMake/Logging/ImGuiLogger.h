@@ -1,9 +1,9 @@
 #pragma once
-#include "Message/MessageSubscriber.h"
-
-#include "WonderMakeBase/System.h"
 
 #include "Utilities/Debugging/Debugged.h"
+
+#include "WonderMakeBase/Logger.h"
+#include "WonderMakeBase/System.h"
 
 struct SImGuiLogMessage
 {
@@ -13,24 +13,28 @@ struct SImGuiLogMessage
 
 class ImGuiLogger
 	: public Debugged
+	, public LoggerBase
 	, public System<
 		Policy::Set<>,
 		STrait::Set<
-			STGui>>
+			STGui,
+			STLogger,
+			STSingleton>>
+	, public std::enable_shared_from_this<ImGuiLogger>
 {
 public:
 	ImGuiLogger();
-	~ImGuiLogger() = default;
+
+	void Initialize() override;
 
 private:
-	virtual void Debug() override;
-	void OnLogMessage(const SLogMessage& aMessage);
+	void Debug() override;
+
+	void Print(ELogSeverity aSeverity, ELogLevel aLevel, std::string aLogMessage) override;
 
 	std::vector<SImGuiLogMessage> myLogMessages;
 
 	std::string myFilterText;
-
-	MessageSubscriber mySubscriber;
 
 	bool myIsAtBottom = true;
 	std::optional<f32> myPreviousScrollY;

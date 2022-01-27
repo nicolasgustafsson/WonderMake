@@ -1,15 +1,23 @@
 #include "pch.h"
+
 #include "ImGuiLogger.h"
+
 #include "Imgui/ImguiInclude.h"
-#include <cctype>
-#include <iostream>
+
+#include "WonderMakeUtility/Time.h"
+
+#include <sstream>
 
 REGISTER_SYSTEM(ImGuiLogger);
 
 ImGuiLogger::ImGuiLogger()
-	: mySubscriber(BindHelper(&ImGuiLogger::OnLogMessage, this))
-	, Debugged("Output Log")
+	: Debugged("Output Log")
 {
+}
+
+void ImGuiLogger::Initialize()
+{
+	Logger::Get().AddLogger(shared_from_this());
 }
 
 void ImGuiLogger::Debug()
@@ -75,16 +83,18 @@ void ImGuiLogger::Debug()
 	ImGui::End();
 }
 
-void ImGuiLogger::OnLogMessage(const SLogMessage& aMessage)
+void ImGuiLogger::Print(ELogSeverity aSeverity, ELogLevel /*aLevel*/, std::string aLogMessage)
 {
 	SColor color = SColor::White();
-	if (aMessage.HasTag(TagError))
-		color = SColor::Red();
-	if (aMessage.HasTag(TagWarning))
-		color = SColor::Yellow();
-	if (aMessage.HasTag(TagSuccess))
-		color = SColor::Green();
 
-	myLogMessages.push_back({ color, std::move(aMessage.LogText) });
+	switch (aSeverity)
+	{
+	case ELogSeverity::Success:	color = SColor::Green(); break;
+	case ELogSeverity::Info:	color = SColor::White(); break;
+	case ELogSeverity::Warning:	color = SColor::Yellow(); break;
+	case ELogSeverity::Error:	color = SColor::Red(); break;
+	}
+
+	myLogMessages.push_back({ color, std::move(aLogMessage) });
 }
 

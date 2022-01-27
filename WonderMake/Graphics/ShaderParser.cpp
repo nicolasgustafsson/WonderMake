@@ -18,7 +18,7 @@ namespace ShaderParser
 		std::optional<std::string> parseResult = ParseShaderFileRecursive(aShaderPath, std::move(shaderString), true, includedFiles);
 
 		if (!parseResult)
-			WmLog(TagError, "Failed to parse shader file with path: ", aShaderPath.string());
+			WM_LOG_ERROR("Failed to parse shader file with path: ", aShaderPath.string(), ".");
 
 		return parseResult;
 	}
@@ -61,7 +61,7 @@ namespace ShaderParser
 
 		if (root_include_directory.empty())
 		{
-			WmLog(TagError, "Failed to parse shader, could not find root directory of shader with path:", aShaderPath.string());
+			WM_LOG_ERROR("Failed to parse shader, could not find root directory of shader with path:", aShaderPath.string(), ".");
 			return {};
 		}
 
@@ -85,7 +85,7 @@ namespace ShaderParser
 
 						if (!std::filesystem::exists(includePath))
 						{
-							WmLog(TagError, "Failed to parse shader, could not find file to include with path: ", includePath);
+							WM_LOG_ERROR("Failed to parse shader, could not find file to include with path: ", includePath, ".");
 							return {};
 						}
 						std::ifstream includedFileStream{ includePath };
@@ -100,7 +100,7 @@ namespace ShaderParser
 
 						if (!includedResult)
 						{
-							WmLog(TagError, "Failed to parse shader, could not parse included file with path: ", includePath);
+							WM_LOG_ERROR("Failed to parse shader, could not parse included file with path: ", includePath, ".");
 							return {};
 						}
 

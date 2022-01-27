@@ -4,6 +4,8 @@
 #include "Resources/Resource.h"
 #include "Resources/ResourceSystem.h"
 
+#include "WonderMakeBase/Logger.h"
+
 #include "WonderMakeUtility/RestrictTypes.h"
 
 #include <glad/glad.h>
@@ -31,7 +33,7 @@ public:
 
 		if (!shaderString)
 		{
-			WmLog(TagError, "Shader preprocessing failed: ", aPath.string());
+			WM_LOG_ERROR(TagOpenGL, "Shader preprocessing failed: ", aPath.string(), ".");
 			return;
 		}
 
@@ -51,7 +53,7 @@ public:
 		if (!compileWasSuccessful)
 		{
 			const std::string errorMessage = openGL->GetShaderInfoLog(myShaderHandle);
-			WmLog(TagError, TagOpenGL, "Shader compilation failed: ", errorMessage);
+			WM_LOG_ERROR(TagOpenGL, "Shader compilation failed: {", errorMessage, "}.");
 		}
 	}
 

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "NodeGraph.h"
 #include "Debugging/DebugSettingsSystem.h"
+#include "WonderMakeBase/Logger.h"
 
 NodeGraph::NodeGraph(std::filesystem::path aFilePath)
 	: myPath(aFilePath)
@@ -37,7 +38,7 @@ void NodeGraph::Save()
 
 	file << std::setw(4) << json.dump();
 
-	WmLog(TagSuccess, TagNodeGraph, "Saved node graph [", myPath.string(), "]");
+	WM_LOG_SUCCESS(TagNodeGraph, "Saved node graph [", myPath.string(), "].");
 }
 
 void NodeGraph::ExecuteExternal()
@@ -57,7 +58,7 @@ void NodeGraph::Load()
 	RegisterNodes();
 
 	if (myRootNodeType == nullptr)
-		WmLog(TagError, TagNodeGraph, "No root node type registered! Things may break.");
+		WM_LOG_ERROR(TagNodeGraph, "No root node type registered! Things may break.");
 
 	std::ifstream file(myPath, std::fstream::app);
 
@@ -231,7 +232,7 @@ void NodeGraph::Deserialize(const nlohmann::json& aJsonFile)
 
 		if (!myRootNode)
 		{
-			WmLog(TagError, TagNodeGraph, "No root node detected on load! Adding one...");
+			WM_LOG_ERROR(TagNodeGraph, "No root node detected on load! Adding one...");
 			SetupRootNode();
 		}
 	}
@@ -336,7 +337,7 @@ void NodeGraph::CompileNodeGraph(SNode& aRoot, std::vector<SCompiledNode>& aNode
 	}
 
 	if (aIsFirstCompileCall)
-		WmLog(TagSuccess, TagNodeGraph, "Compiled node graph [", myPath.string(), "]!");
+		WM_LOG_SUCCESS(TagNodeGraph, "Compiled node graph [", myPath.string(), "].");
 }
 
 void NodeGraph::SerializeInlineInputs(SNode& aNode, json& aInputArray)

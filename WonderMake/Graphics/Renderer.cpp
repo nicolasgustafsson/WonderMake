@@ -10,6 +10,8 @@
 #include <any>
 #include "Graphics/RenderTarget.h"
 
+#include "WonderMakeBase/Logger.h"
+
 REGISTER_SYSTEM(Renderer);
 
 void GLAPIENTRY
@@ -24,9 +26,9 @@ MessageCallback([[maybe_unused]] GLenum source,
 	if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
 		return;
 
-	auto severityTag = severity == GL_DEBUG_SEVERITY_HIGH ? TagError : (severity == GL_DEBUG_SEVERITY_MEDIUM) ? TagWarning : "";
+	const auto logSeverity = severity == GL_DEBUG_SEVERITY_HIGH ? ELogSeverity::Error : (severity == GL_DEBUG_SEVERITY_MEDIUM) ? ELogSeverity::Warning : ELogSeverity::Info;
 
-	WmLog(severityTag, TagOpenGL, " type = ", type, " severity: ", severity, "\n", message);
+	WM_LOG(logSeverity, ELogLevel::Normal, TagOpenGL, " type: ", type, ", severity: ", severity, ", message: {", message, "}.");
 }
 
 Renderer::Renderer() noexcept

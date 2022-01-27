@@ -2,6 +2,7 @@
 #include "RenderTarget.h"
 #include "OpenGLFacade.h"
 
+#include "WonderMakeBase/Logger.h"
 
 RenderTarget::RenderTarget(const SRenderTargetSettings& aSettings)
 {
@@ -42,7 +43,7 @@ void RenderTarget::BindAsTarget()
 	SystemPtr<OpenGLFacade> openGL;
 	if (openGL->CheckNamedFramebufferStatus(GL_FRAMEBUFFER, myFrameBufferObject) != GL_FRAMEBUFFER_COMPLETE)
 	{
-		WmLog(TagWarning, "Could not bind RenderTarget as Frame buffer object is incomplete!");
+		WM_LOG_WARNING("Could not bind RenderTarget as Frame buffer object is incomplete.");
 		return;
 	}
 	openGL->BindFramebuffer(GL_FRAMEBUFFER, myFrameBufferObject);
@@ -93,7 +94,7 @@ void RenderTarget::Initialize(const SRenderTargetSettings& aSettings)
 
 	auto status = openGL->CheckFramebufferStatus(GL_FRAMEBUFFER);
 	if (status != GL_FRAMEBUFFER_COMPLETE)
-		WmLog(TagWarning, "Frame buffer object is incomplete!");
+		WM_LOG_WARNING("Frame buffer object is incomplete.");
 
 	//reset framebuffer
 	openGL->BindFramebuffer(GL_FRAMEBUFFER, 0);

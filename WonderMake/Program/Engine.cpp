@@ -45,7 +45,27 @@ namespace Engine
 			if (!result)
 				return;
 
-			loggerContainer = std::move(result);
+			bool logFileError = false;
+
+			if (aInfo.Logging.File)
+			{
+				auto&& fileInfo = *aInfo.Logging.File;
+
+				auto&& loggerFile = loggerContainer.Get<LoggerFileSystem>();
+
+				loggerFile.SetLogSizeLimits(fileInfo.TrimSize, fileInfo.MaxSize);
+
+				logFileError = !loggerFile.OpenLogFile(aInfo.ProjectFolderNames / fileInfo.Path, fileInfo.Filename);
+			}
+
+			WM_LOG_INFO("");
+			WM_LOG_INFO("");
+			WM_LOG_INFO("");
+			WM_LOG_INFO("---------------- WonderMake ----------------");
+			WM_LOG_INFO("Started logging.");
+
+			if (logFileError)
+				WM_LOG_ERROR("Failed to open log file.");
 		}
 
 		{
@@ -57,7 +77,7 @@ namespace Engine
 
 			if (!result)
 			{
-				WM_LOG_ERROR("Failed to create singleton systems; error: " << static_cast<SystemRegistry::ECreateError>(result) << ", meta: " << result.Meta() << ".");
+				WM_LOG_ERROR("Failed to create singleton systems; error: ", static_cast<SystemRegistry::ECreateError>(result), ", meta: ", result.Meta(), ".");
 
 				return;
 			}
@@ -72,6 +92,8 @@ namespace Engine
 		}
 
 		{
+			WM_LOG_INFO("Registering core systems...");
+
 			auto&& sysContainer = Global::GetSystemContainer();
 
 			TaskManager taskManager;
@@ -98,16 +120,20 @@ namespace Engine
 					return std::make_shared<ScheduleSystem>(scheduleProc, scheduleRepeatingProc);
 				});
 
+			WM_LOG_INFO("Setting up filters...");
+
 			SystemRegistry::Filter filter;
 
 			if (aInfo.Headless)
 				filter.DisallowedTraits = { STrait::ToObject<STGui>() };
 
+			WM_LOG_INFO("Creating systems...");
+
 			auto result = sysRegistry.CreateSystems(filter);
 
 			if (!result)
 			{
-				WM_LOG_ERROR("Failed to create systems; error: " << static_cast<SystemRegistry::ECreateError>(result) << ", meta: " << result.Meta() << ".");
+				WM_LOG_ERROR("Failed to create systems; error: ", static_cast<SystemRegistry::ECreateError>(result), ", meta: ", result.Meta(), ".");
 
 				return;
 			}
@@ -116,7 +142,11 @@ namespace Engine
 
 			auto&& timeKeeper = sysContainer.Get<TimeKeeper>();
 
+			WM_LOG_SUCCESS("Engine is up and running.");
+
 			std::move(aCallbacks.OnSetup)();
+
+			WM_LOG_INFO("Starting main loop.");
 
 			for (;;)
 			{

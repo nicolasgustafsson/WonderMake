@@ -3,6 +3,7 @@
 #include "Resources/Resource.h"
 #include "Resources/ResourceProxy.h"
 
+#include "WonderMakeBase/Logger.h"
 #include "WonderMakeBase/System.h"
 
 #include <filesystem>
@@ -86,7 +87,7 @@ void ResourceSystem<TResource>::OnFileChange(const SFileChangedMessage& aFileCha
 
 				strongResource->myGeneration++;
 
-				WmLog(TagSuccess, "Reloaded asset: ", aFileChangedMessage.FilePath.string());
+				WM_LOG_SUCCESS("Reloaded asset: ", aFileChangedMessage.FilePath.string(), ".");
 			}
 		}
 	}
@@ -152,7 +153,7 @@ inline void ResourceSystem<TResource>::ResourceDeleter(std::filesystem::path aPa
 	const auto resourceIt = myResources.find(aPath.string());
 	if (resourceIt == myResources.cend())
 	{
-		WmLog(TagError, '[', typeid(TResource).name(), "]Unknown resource deletion requested: ", aResource);
+		WM_LOG_ERROR('[', typeid(TResource).name(), "]Unknown resource deletion requested: ", aResource, ".");
 		return;
 	}
 	myResources.erase(resourceIt);

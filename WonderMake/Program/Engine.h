@@ -25,11 +25,26 @@ namespace Engine
 		MemoryUnit<EMemoryRatio::Bytes, uintmax_t> TrimSize = MemoryUnit<EMemoryRatio::MiB, uintmax_t>(1);
 
 		// The maximum allowed size of the log file. If the file exceeds this amount it will be trimmed.
-		MemoryUnit<EMemoryRatio::Bytes, uintmax_t> MaxSize = MemoryUnit<EMemoryRatio::MiB, uintmax_t>(2);;
+		MemoryUnit<EMemoryRatio::Bytes, uintmax_t> MaxSize = MemoryUnit<EMemoryRatio::MiB, uintmax_t>(2);
+	};
+
+	struct LogIpcConnectionInfo
+	{
+		// Name of the IPC socket the engine should connect to.
+		std::string Name = "wondermake_logging_connection";
+	};
+
+	struct LogIpcSocketInfo
+	{
+		// Name of the IPC socket that other instances of the engine can connect to.
+		std::string Name = "wondermake_logging_connection";
 	};
 
 	struct LoggingInfo
 	{
+		// Name that will appear infront of formatted log messages.
+		std::string LoggerName = "WonderMake";
+
 		// Defines the file all logging will be writting to. If not set, no log file will be made.
 		std::optional<LogFileInfo> File;
 
@@ -38,10 +53,19 @@ namespace Engine
 
 		// The lowest level allowed to be logged.
 		ELogLevel Level = ELogLevel::Normal;
+
+		// This tells the engine to connect to another instance of the engine, and then send all logging to that instance.
+		std::optional<LogIpcConnectionInfo> IpcConnection;
+
+		// This is used to open an IPC socket that other instances of the engine can connect to and send its logging, which will be repeated in this instance.
+		std::optional<LogIpcSocketInfo> IpcSocket;
 	};
 
 	struct Info
 	{
+		// Human readable name intended to be the name of the application.
+		std::string ApplicationName = "WonderMake";
+
 		std::vector<std::wstring> CommandLineArguments;
 		bool Headless = true;
 		std::filesystem::path ProjectFolderNames;

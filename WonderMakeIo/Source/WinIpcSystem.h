@@ -12,7 +12,10 @@ class WinIpcSystem
 	, public SystemSub<
 		Policy::Set<
 			PAdd<WinEventSystem, PWrite>,
-			PAdd<WinPlatformSystem, PWrite>>>
+			PAdd<WinPlatformSystem, PWrite>>,
+		STrait::Set<
+			STPlatformInterface,
+			STSingleton>>
 {
 public:
 	std::shared_ptr<IpcAcceptor> CreateAcceptor() override;

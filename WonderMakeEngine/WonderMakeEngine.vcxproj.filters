@@ -12,6 +12,9 @@
     <ClCompile Include="Source\LoggerFileSystem.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\LoggerRemoteSocketSystem.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
     <ClCompile Include="Source\LoggerRemoteMessageType.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -22,6 +25,9 @@
     </ClInclude>
     <ClInclude Include="Source\LoggerRemoteMessageType.h">
       <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\WonderMakeEngine\LoggerRemoteSocketSystem.h">
+      <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

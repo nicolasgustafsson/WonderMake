@@ -17,6 +17,8 @@
 #include "Utilities/TimeKeeper.h"
 
 #include "WonderMakeEngine/LoggerFileSystem.h"
+#include "WonderMakeEngine/LoggerRemoteConnectionSystem.h"
+#include "WonderMakeEngine/LoggerRemoteSocketSystem.h"
 
 #include "WonderMakeIo/FileSystem.h"
 
@@ -31,6 +33,7 @@ namespace Engine
 
 	void Start(Info&& aInfo, Callbacks&& aCallbacks)
 	{
+		Logger::Get().SetLoggerName(aInfo.Logging.LoggerName);
 		Logger::Get().SetFilters(aInfo.Logging.AllowedSeverities, aInfo.Logging.Level);
 
 		auto&& sysRegistry = Global::GetSystemRegistry();
@@ -49,11 +52,11 @@ namespace Engine
 
 			bool logFileError = false;
 
+			loggerContainer = std::move(result);
+
 			if (aInfo.Logging.File)
 			{
 				auto&& fileInfo = *aInfo.Logging.File;
-
-				loggerContainer = std::move(result);
 
 				auto&& fileLogger = loggerContainer.Get<LoggerFileSystem>();
 
@@ -65,8 +68,39 @@ namespace Engine
 			WM_LOG_INFO("");
 			WM_LOG_INFO("");
 			WM_LOG_INFO("");
-			WM_LOG_INFO("---------------- WonderMake ----------------");
-			WM_LOG_INFO("Started logging.");
+			WM_LOG_INFO("---------------- ", aInfo.ApplicationName, " ----------------");
+			WM_LOG_SUCCESS("Started logging.");
+
+			if (aInfo.Logging.IpcConnection)
+			{
+				auto&& connectionInfo = *aInfo.Logging.IpcConnection;
+
+				WM_LOG_INFO("Opening IPC logging connection, name: ", connectionInfo.Name, ".");
+
+				auto&& loggerConnection = loggerContainer.Get<LoggerRemoteConnectionSystem>();
+
+				auto connectionResult = loggerConnection.ConnectIpc(connectionInfo.Name);
+
+				if (connectionResult)
+					WM_LOG_INFO("IPC log connection opened, name: ", connectionInfo.Name, ".");
+				else
+					WM_LOG_ERROR("Failed to open IPC log connection, error: ", static_cast<IpcConnection::ConnectionError>(connectionResult), ".");
+			}
+			if (aInfo.Logging.IpcSocket)
+			{
+				auto&& socketInfo = *aInfo.Logging.IpcSocket;
+
+				WM_LOG_INFO("Opening IPC logging socket, name: ", socketInfo.Name, ".");
+
+				auto&& loggerSocket = loggerContainer.Get<LoggerRemoteSocketSystem>();
+
+				auto socketResult = loggerSocket.OpenIpc(socketInfo.Name);
+
+				if (socketResult)
+					WM_LOG_INFO("IPC log socket opened, name: ", socketInfo.Name, ".");
+				else
+					WM_LOG_ERROR("Failed to open IPC log socket, error: ", static_cast<IpcAcceptor::EOpenError>(socketResult), ".");
+			}
 
 			if (logFileError)
 				WM_LOG_ERROR("Failed to open log file.");
@@ -95,8 +129,6 @@ namespace Engine
 			fileSystem.SetFolderSuffix(FolderLocation::Data, aInfo.ProjectFolderNames);
 			fileSystem.SetFolderSuffix(FolderLocation::User, aInfo.ProjectFolderNames);
 			fileSystem.SetFolderSuffix(FolderLocation::UserData, aInfo.ProjectFolderNames);
-
-			WM_LOG_INFO("Single instance systems created.");
 		}
 
 		{

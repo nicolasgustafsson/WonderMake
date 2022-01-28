@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\LoggerFileSystem.cpp" />
+    <ClCompile Include="Source\LoggerRemoteMessageType.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WonderMakeBase\WonderMakeBase.vcxproj">
@@ -31,6 +32,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\WonderMakeEngine\LoggerFileSystem.h" />
+    <ClInclude Include="Source\LoggerRemoteMessageType.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

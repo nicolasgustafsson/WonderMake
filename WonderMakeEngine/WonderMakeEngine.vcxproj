@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\LoggerFileSystem.cpp" />
+    <ClCompile Include="Source\LoggerRemoteConnectionSystem.cpp" />
     <ClCompile Include="Source\LoggerRemoteMessageType.cpp" />
     <ClCompile Include="Source\LoggerRemoteSocketSystem.cpp" />
   </ItemGroup>
@@ -33,6 +34,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\WonderMakeEngine\LoggerFileSystem.h" />
+    <ClInclude Include="Include\WonderMakeEngine\LoggerRemoteConnectionSystem.h" />
     <ClInclude Include="Include\WonderMakeEngine\LoggerRemoteSocketSystem.h" />
     <ClInclude Include="Source\LoggerRemoteMessageType.h" />
   </ItemGroup>

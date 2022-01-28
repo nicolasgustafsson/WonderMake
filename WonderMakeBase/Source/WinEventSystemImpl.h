@@ -15,6 +15,8 @@ class WinEventSystemImpl
 		Policy::Set<
 			PAdd<WinPlatformSystem, PWrite>>,
 		STrait::Set<
+			STPlatformInterface,
+			STSingleton,
 			STThreadsafe>>
 	, public WinEventSystem
 {

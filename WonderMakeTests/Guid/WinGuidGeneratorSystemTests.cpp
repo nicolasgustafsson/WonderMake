@@ -184,6 +184,10 @@ TEST_CASE("GenerateNew returns a valid Guid.", "[WinGuidGeneratorSystem]")
 			return FALSE;
 		}
 
+		VOID OutputDebugStringW(
+			LPCWSTR /*lpOutputString*/)
+		{}
+
 	};
 
 	PlatformWindowsSystemMock mock;
@@ -371,6 +375,10 @@ TEST_CASE("GenerateNew returns nullopt on error.", "[WinGuidGeneratorSystem]")
 		{
 			return FALSE;
 		}
+
+		VOID OutputDebugStringW(
+			LPCWSTR /*lpOutputString*/)
+		{}
 
 	};
 

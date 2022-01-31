@@ -25,6 +25,9 @@
     <ClCompile Include="MemoryUnitTests.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="GuidTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Tests">

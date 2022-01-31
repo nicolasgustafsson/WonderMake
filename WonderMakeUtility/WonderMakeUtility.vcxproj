@@ -23,6 +23,7 @@
     <ClInclude Include="Include\WonderMakeUtility\AutoRegister.h" />
     <ClInclude Include="Include\WonderMakeUtility\Bindable.h" />
     <ClInclude Include="Include\WonderMakeUtility\DependencyInjector.h" />
+    <ClInclude Include="Include\WonderMakeUtility\Guid.h" />
     <ClInclude Include="Include\WonderMakeUtility\Line.h" />
     <ClInclude Include="Include\WonderMakeUtility\Math.h" />
     <ClInclude Include="Include\WonderMakeUtility\Matrix.h" />

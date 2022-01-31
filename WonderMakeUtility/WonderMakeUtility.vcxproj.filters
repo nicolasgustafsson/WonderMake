@@ -78,6 +78,9 @@
     <ClInclude Include="Include\WonderMakeUtility\Guid.h">
       <Filter>Include</Filter>
     </ClInclude>
+    <ClInclude Include="Include\WonderMakeUtility\SharedReference.h">
+      <Filter>Include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DependencyInjector.cpp">

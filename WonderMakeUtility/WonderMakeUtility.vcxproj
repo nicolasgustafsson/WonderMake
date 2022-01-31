@@ -32,6 +32,7 @@
     <ClInclude Include="Include\WonderMakeUtility\RestrictTypes.h" />
     <ClInclude Include="Include\WonderMakeUtility\Result.h" />
     <ClInclude Include="Include\WonderMakeUtility\Rotation.h" />
+    <ClInclude Include="Include\WonderMakeUtility\SharedReference.h" />
     <ClInclude Include="Include\WonderMakeUtility\Singleton.h" />
     <ClInclude Include="Include\WonderMakeUtility\Stopwatch.h" />
     <ClInclude Include="Include\WonderMakeUtility\StringUtility.h" />

@@ -288,7 +288,6 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="Program\Window.cpp" />
     <ClCompile Include="Utilities\Platform.cpp" />
-    <ClCompile Include="Guid\WinGuidGeneratorSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineTools\EngineTools.h" />
@@ -305,7 +304,6 @@
     <ClInclude Include="Utilities\Id.h" />
     <ClInclude Include="Imgui\AssetBrowser.h" />
     <ClInclude Include="Resources\AssetLink.h" />
-    <ClInclude Include="Guid\GuidGeneratorSystem.h" />
     <ClInclude Include="Utilities\Container\BackendImplementations\ColonyBackend.h" />
     <ClInclude Include="Resources\Asset.h" />
     <ClInclude Include="Resources\AssetDatabase.h" />
@@ -420,7 +418,6 @@
     <ClInclude Include="Graphics\VertexTypes.h" />
     <ClInclude Include="Graphics\VertexBufferArray.h" />
     <ClInclude Include="Audio\AudioStructs.h" />
-    <ClInclude Include="Guid\WinGuidGeneratorSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

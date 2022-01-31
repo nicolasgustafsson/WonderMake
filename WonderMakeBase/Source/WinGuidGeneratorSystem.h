@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Guid/GuidGeneratorSystem.h"
+#include "WonderMakeBase/GuidGeneratorSystem.h"
 
 class WinPlatformSystem;
 

@@ -26,6 +26,7 @@
   <ItemGroup>
     <ClCompile Include="Source\CmdLineArgsSystem.cpp" />
     <ClCompile Include="Source\Logger.cpp" />
+    <ClCompile Include="Source\WinGuidGeneratorSystem.cpp" />
     <ClCompile Include="Source\WinLoggerConsoleSystem.cpp" />
     <ClCompile Include="Source\ScheduleSystem.cpp" />
     <ClCompile Include="Source\SystemGlobal.cpp" />
@@ -39,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\WonderMakeBase\CmdLineArgsSystem.h" />
+    <ClInclude Include="Include\WonderMakeBase\GuidGeneratorSystem.h" />
     <ClInclude Include="Include\WonderMakeBase\Logger.h" />
     <ClInclude Include="Include\WonderMakeBase\LoggerTypes.h" />
     <ClInclude Include="Include\WonderMakeBase\Process.h" />
@@ -55,6 +57,7 @@
     <ClInclude Include="Include\WonderMakeBase\WinEventSystem.h" />
     <ClInclude Include="Include\WonderMakeBase\WinPlatformSystem.h" />
     <ClInclude Include="Source\WinEventSystemImpl.h" />
+    <ClInclude Include="Source\WinGuidGeneratorSystem.h" />
     <ClInclude Include="Source\WinLoggerConsoleSystem.h" />
     <ClInclude Include="Source\WinLoggerDebugSystem.h" />
     <ClInclude Include="Source\WinPlatformSystemImpl.h" />

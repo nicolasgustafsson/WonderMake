@@ -45,6 +45,9 @@
     <ClCompile Include="Source\WinLoggerDebugSystem.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\WinGuidGeneratorSystem.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\WonderMakeBase\SystemGlobal.h">
@@ -115,6 +118,12 @@
     </ClInclude>
     <ClInclude Include="Source\WinLoggerDebugSystem.h">
       <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\WinGuidGeneratorSystem.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\WonderMakeBase\GuidGeneratorSystem.h">
+      <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

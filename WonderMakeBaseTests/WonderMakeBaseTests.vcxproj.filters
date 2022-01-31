@@ -34,7 +34,13 @@
     <ClCompile Include="LoggerTests.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\WonderMakeBase\Source\Time.cpp">
+    <ClCompile Include="..\WonderMakeUtility\Source\Time.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="WinGuidGeneratorSystemTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\WonderMakeBase\Source\WinGuidGeneratorSystem.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,7 +71,10 @@
     <ClInclude Include="..\WonderMakeBase\Source\WinProcessSystem.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\Time.h">
+    <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\Time.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WonderMakeBase\Source\WinGuidGeneratorSystem.h">
       <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>

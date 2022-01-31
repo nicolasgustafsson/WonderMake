@@ -73,7 +73,6 @@
     <ClCompile Include="Job\JobSystem.cpp" />
     <ClCompile Include="Job\JobBase.cpp" />
     <ClCompile Include="Imgui\AssetBrowser.cpp" />
-    <ClCompile Include="Guid\WinGuidGeneratorSystem.cpp" />
     <ClCompile Include="FileSystem\ReadFileJob.cpp" />
     <ClCompile Include="Json\ParseJsonJob.cpp" />
     <ClCompile Include="Utilities\Id.cpp" />
@@ -148,7 +147,6 @@
     <ClInclude Include="Resources\CreateResource.h" />
     <ClInclude Include="Resources\Resource.h" />
     <ClInclude Include="Resources\ResourceSystem.h" />
-    <ClInclude Include="Logging\FileLogger.h" />
     <ClInclude Include="Object\Object.h" />
     <ClInclude Include="Components\SpriteComponent.h" />
     <ClInclude Include="Components\TransformComponent.h" />
@@ -241,8 +239,6 @@
     <ClInclude Include="Job\JobPromise.h" />
     <ClInclude Include="Job\Cargo.h" />
     <ClInclude Include="Job\JobOutput.h" />
-    <ClInclude Include="Guid\GuidGeneratorSystem.h" />
-    <ClInclude Include="Guid\WinGuidGeneratorSystem.h" />
     <ClInclude Include="FileSystem\ReadFileJob.h" />
     <ClInclude Include="Json\ParseJsonJob.h" />
     <ClInclude Include="Utilities\Id.h" />

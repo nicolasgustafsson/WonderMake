@@ -1,6 +1,6 @@
-#include "pch.h"
-#include "Guid/WinGuidGeneratorSystem.h"
+#include "WinGuidGeneratorSystem.h"
 
+#include "WonderMakeBase/SystemGlobal.h"
 #include "WonderMakeBase/WinPlatformSystem.h"
 
 REGISTER_SYSTEM_MASKED(WinGuidGeneratorSystem, GuidGeneratorSystem);

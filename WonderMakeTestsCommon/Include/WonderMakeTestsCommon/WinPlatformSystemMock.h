@@ -107,6 +107,9 @@ public:
 		HANDLE hConsoleOutput,
 		WORD wAttributes), (override));
 
+	MOCK_METHOD(VOID, OutputDebugStringW, (
+		LPCWSTR lpOutputString), (override));
+
 	void DelegateToFake()
 	{
 		const auto createHandle = [this]() -> HANDLE

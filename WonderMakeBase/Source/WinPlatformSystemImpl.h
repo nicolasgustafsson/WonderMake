@@ -110,4 +110,7 @@ public:
 	BOOL SetConsoleTextAttribute(
 		HANDLE hConsoleOutput,
 		WORD wAttributes) override;
+
+	VOID OutputDebugStringW(
+		LPCWSTR lpOutputString) override;
 };

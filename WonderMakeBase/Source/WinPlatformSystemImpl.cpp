@@ -175,3 +175,9 @@ BOOL WinPlatformSystemImpl::SetConsoleTextAttribute(
 {
 	return ::SetConsoleTextAttribute(hConsoleOutput, wAttributes);
 }
+
+VOID WinPlatformSystemImpl::OutputDebugStringW(
+	LPCWSTR lpOutputString)
+{
+	return ::OutputDebugStringW(lpOutputString);
+}

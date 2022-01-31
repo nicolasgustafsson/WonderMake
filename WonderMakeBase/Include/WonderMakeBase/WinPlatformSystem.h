@@ -106,4 +106,7 @@ public:
 	virtual BOOL SetConsoleTextAttribute(
 		HANDLE hConsoleOutput,
 		WORD wAttributes) = 0;
+
+	virtual VOID OutputDebugStringW(
+			LPCWSTR lpOutputString) = 0;
 };

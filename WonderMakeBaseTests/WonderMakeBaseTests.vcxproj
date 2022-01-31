@@ -62,10 +62,12 @@
     <ClCompile Include="..\External\gtest-1.11.0\Src\src\gtest_main.cc" />
     <ClCompile Include="..\WonderMakeBase\Source\Logger.cpp" />
     <ClCompile Include="..\WonderMakeBase\Source\WinEventSystemImpl.cpp" />
+    <ClCompile Include="..\WonderMakeBase\Source\WinGuidGeneratorSystem.cpp" />
     <ClCompile Include="..\WonderMakeBase\Source\WinProcess.cpp" />
     <ClCompile Include="..\WonderMakeBase\Source\WinProcessSystem.cpp" />
     <ClCompile Include="LoggerTests.cpp" />
     <ClCompile Include="WinEventSystemImplTests.cpp" />
+    <ClCompile Include="WinGuidGeneratorSystemTests.cpp" />
     <ClCompile Include="WinProcessTests.cpp" />
     <ClCompile Include="WinProcessSystemTests.cpp" />
     <ClCompile Include="..\WonderMakeUtility\Source\Time.cpp" />
@@ -75,6 +77,7 @@
     <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\SystemGlobal.h" />
     <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\WinEventSystem.h" />
     <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\WinPlatformSystem.h" />
+    <ClInclude Include="..\WonderMakeBase\Source\WinGuidGeneratorSystem.h" />
     <ClInclude Include="..\WonderMakeBase\Source\WinProcessSystem.h" />
     <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\Time.h" />
   </ItemGroup>

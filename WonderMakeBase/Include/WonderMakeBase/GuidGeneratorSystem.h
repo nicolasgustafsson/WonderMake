@@ -2,7 +2,7 @@
 
 #include "WonderMakeBase/System.h"
 
-#include "Guid/Guid.h"
+#include "WonderMakeUtility/Guid.h"
 
 class GuidGeneratorSystem
 	: public SystemAbstracted

@@ -133,6 +133,9 @@ public:
 		ON_CALL(*this, CloseHandle)
 			.WillByDefault(Return(TRUE));
 
+		ON_CALL(*this, CoCreateGuid)
+			.WillByDefault(Return(S_FALSE));
+
 		ON_CALL(*this, CreateNamedPipeW)
 			.WillByDefault([createHandle](auto&&, auto&&, auto&&, auto&&, auto&&, auto&&, auto&&, auto&&) { return createHandle(); });
 

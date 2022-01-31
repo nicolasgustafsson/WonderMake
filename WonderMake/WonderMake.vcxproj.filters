@@ -241,7 +241,6 @@
     <ClInclude Include="Job\JobPromise.h" />
     <ClInclude Include="Job\Cargo.h" />
     <ClInclude Include="Job\JobOutput.h" />
-    <ClInclude Include="Guid\Guid.h" />
     <ClInclude Include="Guid\GuidGeneratorSystem.h" />
     <ClInclude Include="Guid\WinGuidGeneratorSystem.h" />
     <ClInclude Include="FileSystem\ReadFileJob.h" />

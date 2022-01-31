@@ -305,7 +305,6 @@
     <ClInclude Include="Utilities\Id.h" />
     <ClInclude Include="Imgui\AssetBrowser.h" />
     <ClInclude Include="Resources\AssetLink.h" />
-    <ClInclude Include="Guid\Guid.h" />
     <ClInclude Include="Guid\GuidGeneratorSystem.h" />
     <ClInclude Include="Utilities\Container\BackendImplementations\ColonyBackend.h" />
     <ClInclude Include="Resources\Asset.h" />

@@ -64,6 +64,7 @@
     <ClCompile Include="AliasTests.cpp" />
     <ClCompile Include="BindableTests.cpp" />
     <ClCompile Include="DependencyInjectionTests.cpp" />
+    <ClCompile Include="GuidTests.cpp" />
     <ClCompile Include="MemoryUnitTests.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -13,8 +13,16 @@ struct _SuccessType
 		return true;
 	}
 };
+struct _FailureType
+{
+	constexpr [[nodiscard]] bool operator==(const _SuccessType&) const noexcept
+	{
+		return true;
+	}
+};
 
 constexpr _SuccessType Success;
+constexpr _FailureType Failure;
 
 template<typename TErrorType, typename TSuccessType = _SuccessType, typename TMeta = u32>
 class Result

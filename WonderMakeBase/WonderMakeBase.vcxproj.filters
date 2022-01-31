@@ -42,6 +42,9 @@
     <ClCompile Include="Source\WinLoggerConsoleSystem.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\WinLoggerDebugSystem.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\WonderMakeBase\SystemGlobal.h">
@@ -101,16 +104,16 @@
     <ClInclude Include="Source\WinProcessSystem.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeEngine\LoggerTypes.h">
-      <Filter>Include</Filter>
-    </ClInclude>
     <ClInclude Include="Include\WonderMakeBase\Logger.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WonderMakeBase\WinLoggerConsoleSystem.h">
+    <ClInclude Include="Source\WinLoggerConsoleSystem.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\WonderMakeBase\LoggerTypes.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Source\WinLoggerConsoleSystem.h">
+    <ClInclude Include="Source\WinLoggerDebugSystem.h">
       <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>

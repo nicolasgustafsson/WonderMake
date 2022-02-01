@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -60,12 +60,16 @@
     <ClCompile Include="..\External\gmock-1.11.0\Src\src\gmock-all.cc" />
     <ClCompile Include="..\External\gtest-1.11.0\Src\src\gtest-all.cc" />
     <ClCompile Include="..\External\gtest-1.11.0\Src\src\gtest_main.cc" />
+    <ClCompile Include="..\WonderMakeIo\Source\SocketDecorator.cpp" />
     <ClCompile Include="..\WonderMakeIo\Source\WinFileSystem.cpp" />
     <ClCompile Include="..\WonderMakeIo\Source\WinIpcConnection.cpp" />
+    <ClCompile Include="SocketDecoratorTests.cpp" />
     <ClCompile Include="WinFileSystemTests.cpp" />
     <ClCompile Include="WinIpcConnectionTests.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\WonderMakeIo\Include\WonderMakeIo\Socket.h" />
+    <ClInclude Include="..\WonderMakeIo\Include\WonderMakeIo\SocketDecorator.h" />
     <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\RestrictTypes.h" />
     <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\UniqueFunction.h" />
     <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\Utility.h" />

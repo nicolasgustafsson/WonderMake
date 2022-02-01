@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\External\gtest-1.11.0\Src\src\gtest-all.cc">
@@ -20,6 +20,12 @@
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="..\WonderMakeIo\Source\WinFileSystem.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketDecoratorTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\WonderMakeIo\Source\SocketDecorator.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -66,6 +72,12 @@
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\WonderMakeIo\Source\WinFileSystem.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WonderMakeIo\Include\WonderMakeIo\SocketDecorator.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WonderMakeIo\Include\WonderMakeIo\Socket.h">
       <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>

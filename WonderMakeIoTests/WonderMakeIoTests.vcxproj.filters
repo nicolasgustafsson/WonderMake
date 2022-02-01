@@ -80,5 +80,8 @@
     <ClInclude Include="..\WonderMakeIo\Include\WonderMakeIo\Socket.h">
       <Filter>Include</Filter>
     </ClInclude>
+    <ClInclude Include="SocketMock.h">
+      <Filter>Include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

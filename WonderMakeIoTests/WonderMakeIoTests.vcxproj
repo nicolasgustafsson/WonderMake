@@ -81,6 +81,7 @@
     <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\WinPlatformSystem.h" />
     <ClInclude Include="..\WonderMakeIo\Source\WinFileSystem.h" />
     <ClInclude Include="..\WonderMakeIo\Source\WinIpcConnection.h" />
+    <ClInclude Include="SocketMock.h" />
   </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

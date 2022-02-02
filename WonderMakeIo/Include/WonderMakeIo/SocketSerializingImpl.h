@@ -66,10 +66,21 @@ private:
 			return Success;
 		}
 
-		auto result = myDeserialize(myReadBuffer);
+		const auto maxBytes = myBufferMaxSize.To<EMemoryRatio::Bytes>();
+
+		const auto endIt = myReadBuffer.size() <= maxBytes ? myReadBuffer.end() : myReadBuffer.begin() + maxBytes;
+
+		auto result = myDeserialize(std::span(myReadBuffer.begin(), endIt));
 
 		if (!result)
 		{
+			if (myReadBuffer.size() >= maxBytes)
+			{
+				std::move(aOnRead)(Socket::EReadError::MessageToBig);
+
+				return Socket::EReadError::MessageToBig;
+			}
+
 			auto readResult = mySocket->Read(Bind(&SocketSerializingImpl<TSerializable>::OnRead, this->weak_from_this(), std::move(aOnRead)));
 
 			if (!readResult)
@@ -96,13 +107,6 @@ private:
 		}
 
 		std::vector<u8> buffer = std::move(aResult);
-
-		if (buffer.size() + myReadBuffer.size() > myBufferMaxSize.To<EMemoryRatio::Bytes>())
-		{
-			std::move(aOnRead)(Socket::EReadError::OutOfMemory);
-
-			return;
-		}
 
 		myReadBuffer.insert(myReadBuffer.end(), buffer.begin(), buffer.end());
 

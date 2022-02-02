@@ -35,6 +35,7 @@ public:
 		InvalidState,
 		StateChanged,
 		OutOfMemory,
+		MessageToBig,
 		InternalError
 	};
 

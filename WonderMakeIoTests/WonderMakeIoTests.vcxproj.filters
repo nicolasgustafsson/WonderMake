@@ -83,5 +83,8 @@
     <ClInclude Include="SocketMock.h">
       <Filter>Include</Filter>
     </ClInclude>
+    <ClInclude Include="SocketSerializingMock.h">
+      <Filter>Include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

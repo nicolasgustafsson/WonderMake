@@ -182,6 +182,30 @@ TEST(SocketSerializingImplTests, readmessage_is_able_to_deserialize_two_messages
 	(void)socketSerializing->ReadMessage(socketSerializingCallbackMock.CreateOnReadMessage());
 }
 
+TEST(SocketSerializingImplTests, readmessage_calls_onreadmessage_with_outofmemory_error_when_buffer_is_full)
+{
+	const std::vector<u8> dummyBuffer = { 4, 2, 3, 1, 5, 9, 8, 6, 0, 7 };
+	constexpr auto maxBufferSize = 5_B;
+
+	StrictMock<SocketSerializingCallbackMock> socketSerializingCallbackMock;
+	auto socketMock = MakeSharedReference<NiceMock<SocketMock>>();
+
+	socketMock->DelegateToFake();
+
+	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(maxBufferSize, locDummySerializable, locDummyDeserializable, socketMock);
+
+	EXPECT_CALL(*socketMock, Read)
+		.WillOnce([&dummyBuffer](auto&& aCallback)
+			{
+				std::move(aCallback)(dummyBuffer);
+
+				return Socket::EAsynchronicity::Synchronous;
+			});
+	EXPECT_CALL(socketSerializingCallbackMock, OnReadMessage(Eq(Socket::EReadError::MessageToBig)));
+
+	(void)socketSerializing->ReadMessage(socketSerializingCallbackMock.CreateOnReadMessage());
+}
+
 TEST(SocketSerializingImplTests, writemessage_returns_error_when_socket_returns_error_result)
 {
 	SerializableMock serializableMock;

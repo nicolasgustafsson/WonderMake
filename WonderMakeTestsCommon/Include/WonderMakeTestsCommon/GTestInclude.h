@@ -3,6 +3,8 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 
+#include <ranges>
+
 using ::testing::NiceMock;
 using ::testing::StrictMock;
 
@@ -32,4 +34,11 @@ testing::Matcher<std::tuple<const void*, size_t>> ElementsAreArrayVoidPointer(co
         testing::SafeMatcherCast<TupleConverter>(
             testing::SafeMatcherCast<std::tuple<const T*, size_t>>(
                 testing::ElementsAreArray(ptr, size))));
+}
+
+ // Using ElementsAre when providing a std::span causes compilation issues. This is already fixed in gmock, but it's not been released yet as of v1.11.0.
+ // Issue: https://github.com/google/googletest/issues/3194
+MATCHER_P(ElementsAreSpan, aSpan, "")
+{
+    return std::ranges::equal(arg, aSpan);
 }

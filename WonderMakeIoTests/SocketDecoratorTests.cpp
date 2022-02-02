@@ -2,7 +2,7 @@
 
 #include "WonderMakeIo/SocketDecorator.h"
 
-#include "SocketMock.h"
+#include "WonderMakeIoTests/SocketMock.h"
 
 class SocketDecoratorTestImplementation
 	: public SocketDecorator

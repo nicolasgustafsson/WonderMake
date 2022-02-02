@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GTestInclude.h"
+#include "WonderMakeTestsCommon/GTestInclude.h"
 
 #include "WonderMakeBase/WinPlatformSystem.h"
 

@@ -1,15 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\External\gtest-1.11.0\Src\src\gtest-all.cc">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\External\gmock-1.11.0\Src\src\gmock-all.cc">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\External\gtest-1.11.0\Src\src\gtest_main.cc">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="WinIpcConnectionTests.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
@@ -31,6 +22,15 @@
     <ClCompile Include="SocketSerializingImplTests.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="..\External\gtest-1.11.0\Src\src\gtest-all.cc">
+      <Filter>GTest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\External\gmock-1.11.0\Src\src\gmock-all.cc">
+      <Filter>GTest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\External\gtest-1.11.0\Src\src\gtest_main.cc">
+      <Filter>GTest</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Include">
@@ -42,51 +42,15 @@
     <Filter Include="Source">
       <UniqueIdentifier>{5603e959-1679-4ab9-920e-1d2ed8b83d7a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GTest">
+      <UniqueIdentifier>{fce4fd6f-0a2d-422a-938e-d5dd8db32f52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\WonderMakeIo\Source\WinIpcConnection.h">
+    <ClInclude Include="Include\WonderMakeIoTests\SocketMock.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\WinPlatformSystem.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\WinPlatform.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\System.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\SystemPolicy.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\SystemTraits.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\UniqueFunction.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\RestrictTypes.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\WonderMakeBase\Include\WonderMakeBase\SystemId.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\Utility.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\WonderMakeIo\Source\WinFileSystem.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\WonderMakeIo\Include\WonderMakeIo\SocketDecorator.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\WonderMakeIo\Include\WonderMakeIo\Socket.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="SocketMock.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="SocketSerializingMock.h">
+    <ClInclude Include="Include\WonderMakeIoTests\SocketSerializingMock.h">
       <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>

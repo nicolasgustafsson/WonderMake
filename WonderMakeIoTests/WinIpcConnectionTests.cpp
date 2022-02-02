@@ -1,8 +1,9 @@
 #include "WonderMakeTestsCommon/GTestInclude.h"
-#include "WonderMakeTestsCommon/WinEventSystemMock.h"
-#include "WonderMakeTestsCommon/WinPlatformSystemMock.h"
 
 #include "WonderMakeBase/WinPlatformSystem.h"
+
+#include "WonderMakeBaseTests/WinEventSystemMock.h"
+#include "WonderMakeBaseTests/WinPlatformSystemMock.h"
 
 #include "WinIpcConnection.h"
 

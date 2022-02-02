@@ -229,6 +229,7 @@ Result<Socket::EReadError, Socket::EAsynchronicity> WinIpcConnection::Read(OnRea
 
 		break;
 	case EReadError::OutOfMemory:	break;
+	case EReadError::MessageToBig:	break;
 	case EReadError::InternalError:
 		Reset({ ECloseError::InternalError , err });
 		
@@ -390,6 +391,7 @@ void WinIpcConnection::OnRead(std::vector<u8> aBuffer)
 
 			break;
 		case EReadError::OutOfMemory:	break;
+		case EReadError::MessageToBig:	break;
 		case EReadError::InternalError:
 			Reset({ ECloseError::InternalError , err });
 

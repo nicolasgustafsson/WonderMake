@@ -42,6 +42,9 @@
     <ClInclude Include="Include\WonderMakeIo\SocketDecorator.h">
       <Filter>Include</Filter>
     </ClInclude>
+    <ClInclude Include="Include\WonderMakeIo\SocketSerializing.h">
+      <Filter>Include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\WinIpcSystem.cpp">

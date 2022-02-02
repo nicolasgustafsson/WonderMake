@@ -26,6 +26,7 @@
     <ClInclude Include="Include\WonderMakeIo\Socket.h" />
     <ClInclude Include="Include\WonderMakeIo\IpcAcceptor.h" />
     <ClInclude Include="Include\WonderMakeIo\SocketDecorator.h" />
+    <ClInclude Include="Include\WonderMakeIo\SocketSerializing.h" />
     <ClInclude Include="Source\WinFileSystem.h" />
     <ClInclude Include="Source\WinIpcAcceptor.h" />
     <ClInclude Include="Source\WinIpcConnection.h" />

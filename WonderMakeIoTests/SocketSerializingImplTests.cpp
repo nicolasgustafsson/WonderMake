@@ -2,8 +2,8 @@
 
 #include "WonderMakeIo/SocketSerializingImpl.h"
 
-#include "SocketMock.h"
-#include "SocketSerializingMock.h"
+#include "WonderMakeIoTests/SocketMock.h"
+#include "WonderMakeIoTests/SocketSerializingMock.h"
 
 using namespace MemoryUnitLiterals;
 

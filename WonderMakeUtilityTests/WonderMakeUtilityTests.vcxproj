@@ -67,12 +67,6 @@
     <ClCompile Include="GuidTests.cpp" />
     <ClCompile Include="MemoryUnitTests.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\Alias.h" />
-    <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\Bindable.h" />
-    <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\DependencyInjector.h" />
-    <ClInclude Include="..\WonderMakeUtility\Include\WonderMakeUtility\MemoryUnit.h" />
-  </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

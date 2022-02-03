@@ -2,34 +2,34 @@
 
 #include "LoggerRemoteMessageType.h"
 
-std::vector<u8> LoggerRemoteMessageType::Serialize() const noexcept
+std::vector<u8> LoggerRemoteMessageType::Serialize(const LoggerRemoteMessageType& aMessage) noexcept
 {
 	const size_t serializedSize =
-		sizeof(Severity) +
-		sizeof(Level) +
-		sizeof(size_t) + Message.length();
+		sizeof(aMessage.Severity) +
+		sizeof(aMessage.Level) +
+		sizeof(size_t) + aMessage.Message.length();
 
 	std::vector<u8> data(serializedSize, 0);
 
 	u8* ptr = data.data();
 
-	memcpy(ptr, &Severity, sizeof(Severity));
-	ptr += sizeof(Severity);
+	memcpy(ptr, &aMessage.Severity, sizeof(aMessage.Severity));
+	ptr += sizeof(aMessage.Severity);
 
-	memcpy(ptr, &Level, sizeof(Level));
-	ptr += sizeof(Level);
+	memcpy(ptr, &aMessage.Level, sizeof(aMessage.Level));
+	ptr += sizeof(aMessage.Level);
 
-	size_t size = Message.length();
+	size_t size = aMessage.Message.length();
 	memcpy(ptr, &size, sizeof(size));
 	ptr += sizeof(size);
 
-	memcpy(ptr, Message.data(), Message.length());
-	ptr += Message.length();
+	memcpy(ptr, aMessage.Message.data(), aMessage.Message.length());
+	ptr += aMessage.Message.length();
 
 	return data;
 }
 
-size_t LoggerRemoteMessageType::Deserialize(const std::span<u8>& aData) noexcept
+Result<decltype(Failure), std::pair<LoggerRemoteMessageType, size_t>> LoggerRemoteMessageType::Deserialize(std::span<const u8> aData) noexcept
 {
 	constexpr size_t minSerializedSize =
 		sizeof(Severity) +
@@ -37,31 +37,33 @@ size_t LoggerRemoteMessageType::Deserialize(const std::span<u8>& aData) noexcept
 		sizeof(size_t);
 
 	if (aData.size() < minSerializedSize)
-		return 0;
+		return Failure;
+
+	LoggerRemoteMessageType message;
 
 	size_t sizeMessage = 0;
 	const u8* ptr = aData.data();
 
-	memcpy(&Severity, ptr, sizeof(Severity));
-	ptr += sizeof(Severity);
+	memcpy(&message.Severity, ptr, sizeof(message.Severity));
+	ptr += sizeof(message.Severity);
 
-	memcpy(&Level, ptr, sizeof(Level));
-	ptr += sizeof(Level);
+	memcpy(&message.Level, ptr, sizeof(message.Level));
+	ptr += sizeof(message.Level);
 
 	memcpy(&sizeMessage, ptr, sizeof(sizeMessage));
 	ptr += sizeof(sizeMessage);
 
 	if (aData.size() < minSerializedSize + sizeMessage)
-		return 0;
+		return Failure;
 
-	Message.clear();
+	message.Message.clear();
 
 	if (sizeMessage == 0)
-		return minSerializedSize;
+		return std::make_pair(message, minSerializedSize);
 
-	Message.resize(sizeMessage, '\0');
+	message.Message.resize(sizeMessage, '\0');
 
-	memcpy(Message.data(), ptr, sizeMessage);
+	memcpy(message.Message.data(), ptr, sizeMessage);
 
-	return minSerializedSize + sizeMessage;
+	return std::make_pair(message, minSerializedSize + sizeMessage);
 }

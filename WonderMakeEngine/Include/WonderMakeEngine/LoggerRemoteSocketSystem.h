@@ -7,9 +7,12 @@
 #include "WonderMakeBase/System.h"
 
 #include <memory>
-#include <unordered_set>
+#include <unordered_map>
 
 class IpcSystem;
+struct LoggerRemoteMessageType;
+template<typename TSerializable>
+class SocketSerializing;
 
 class LoggerRemoteSocketSystem
 	: public System<
@@ -28,11 +31,10 @@ private:
 
 	void OnIpcClosed(Result<IpcAcceptor::ECloseReason> aResult);
 
-	void OnConnectionMessage(std::weak_ptr<Socket> aConnection, Result<Socket::EReadError, std::vector<u8>>&& aResult);
+	void OnConnectionMessage(std::weak_ptr<Socket> aConnection, Result<Socket::EReadError, LoggerRemoteMessageType>&& aResult);
 	void OnConnectionClosed(std::weak_ptr<Socket> aConnection, Result<Socket::ECloseError, Socket::ECloseReason> aResult);
 
 	std::shared_ptr<IpcAcceptor> myAcceptor;
-	std::unordered_set<std::shared_ptr<Socket>> myConnections;
-	std::vector<u8> myBuffer;
+	std::unordered_map<std::shared_ptr<Socket>, std::shared_ptr<SocketSerializing<LoggerRemoteMessageType>>> myConnections;
 
 };

@@ -4,17 +4,8 @@
     <ClCompile Include="..\WonderMakeBase\Source\WinEventSystemImpl.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="WinEventSystemImplTests.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
     <ClCompile Include="..\WonderMakeBase\Source\WinProcess.cpp">
       <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="WinProcessTests.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="WinProcessSystemTests.cpp">
-      <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="..\WonderMakeBase\Source\WinProcessSystem.cpp">
       <Filter>Source</Filter>
@@ -22,14 +13,8 @@
     <ClCompile Include="..\WonderMakeBase\Source\Logger.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="LoggerTests.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
     <ClCompile Include="..\WonderMakeUtility\Source\Time.cpp">
       <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="WinGuidGeneratorSystemTests.cpp">
-      <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="..\WonderMakeBase\Source\WinGuidGeneratorSystem.cpp">
       <Filter>Source</Filter>
@@ -42,6 +27,21 @@
     </ClCompile>
     <ClCompile Include="..\External\gtest-1.11.0\Src\src\gtest-all.cc">
       <Filter>GTest</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\WinGuidGeneratorSystemTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\WinProcessSystemTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\WinProcessTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\LoggerTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\WinEventSystemImplTests.cpp">
+      <Filter>Tests</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

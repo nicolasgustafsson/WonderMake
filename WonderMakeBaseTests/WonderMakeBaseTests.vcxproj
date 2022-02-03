@@ -65,12 +65,12 @@
     <ClCompile Include="..\WonderMakeBase\Source\WinGuidGeneratorSystem.cpp" />
     <ClCompile Include="..\WonderMakeBase\Source\WinProcess.cpp" />
     <ClCompile Include="..\WonderMakeBase\Source\WinProcessSystem.cpp" />
-    <ClCompile Include="LoggerTests.cpp" />
-    <ClCompile Include="WinEventSystemImplTests.cpp" />
-    <ClCompile Include="WinGuidGeneratorSystemTests.cpp" />
-    <ClCompile Include="WinProcessTests.cpp" />
-    <ClCompile Include="WinProcessSystemTests.cpp" />
     <ClCompile Include="..\WonderMakeUtility\Source\Time.cpp" />
+    <ClCompile Include="Tests\LoggerTests.cpp" />
+    <ClCompile Include="Tests\WinEventSystemImplTests.cpp" />
+    <ClCompile Include="Tests\WinGuidGeneratorSystemTests.cpp" />
+    <ClCompile Include="Tests\WinProcessSystemTests.cpp" />
+    <ClCompile Include="Tests\WinProcessTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\WonderMakeBaseTests\ProcessMock.h" />

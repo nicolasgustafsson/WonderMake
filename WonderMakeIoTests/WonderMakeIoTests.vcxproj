@@ -63,10 +63,10 @@
     <ClCompile Include="..\WonderMakeIo\Source\SocketDecorator.cpp" />
     <ClCompile Include="..\WonderMakeIo\Source\WinFileSystem.cpp" />
     <ClCompile Include="..\WonderMakeIo\Source\WinIpcConnection.cpp" />
-    <ClCompile Include="SocketDecoratorTests.cpp" />
-    <ClCompile Include="SocketSerializingImplTests.cpp" />
-    <ClCompile Include="WinFileSystemTests.cpp" />
-    <ClCompile Include="WinIpcConnectionTests.cpp" />
+    <ClCompile Include="Tests\SocketDecoratorTests.cpp" />
+    <ClCompile Include="Tests\SocketSerializingImplTests.cpp" />
+    <ClCompile Include="Tests\WinFileSystemTests.cpp" />
+    <ClCompile Include="Tests\WinIpcConnectionTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\WonderMakeIoTests\SocketMock.h" />

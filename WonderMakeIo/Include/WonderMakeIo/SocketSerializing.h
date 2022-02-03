@@ -11,6 +11,8 @@ public:
 	using OnWriteCallback	= UniqueFunction<void(Result<Socket::EWriteError>)>;
 	using OnReadCallback	= UniqueFunction<void(Result<Socket::EReadError, TSerializable>&&)>;
 
+	virtual ~SocketSerializing() noexcept = default;
+
 	virtual Result<Socket::EWriteError>	WriteMessage(const TSerializable& aMessage, OnWriteCallback aOnWrite) = 0;
 	virtual Result<Socket::EReadError>	ReadMessage(OnReadCallback aOnRead) = 0;
 

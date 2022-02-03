@@ -3,10 +3,13 @@
 #include "LoggerRemoteMessageType.h"
 
 #include "WonderMakeIo/IpcSystem.h"
+#include "WonderMakeIo/SocketSerializingImpl.h"
 
 #include "WonderMakeBase/SystemGlobal.h"
 
 #include "WonderMakeUtility/Bindable.h"
+
+using namespace MemoryUnitLiterals;
 
 REGISTER_SYSTEM(LoggerRemoteConnectionSystem);
 
@@ -21,7 +24,7 @@ Result<IpcConnection::ConnectionError> LoggerRemoteConnectionSystem::ConnectIpc(
 	if (!result)
 		return result;
 
-	myConnection = std::move(connection);
+	myConnection = std::make_shared<SocketSerializingImpl<LoggerRemoteMessageType>>(4_KiB, &LoggerRemoteMessageType::Serialize, &LoggerRemoteMessageType::Deserialize, SharedReference<Socket>::FromPointer(std::move(connection)));
 
 	myConnection->OnClose(Bind(&LoggerRemoteConnectionSystem::OnClosed, weak_from_this()));
 
@@ -44,9 +47,7 @@ void LoggerRemoteConnectionSystem::Print(ELogSeverity aSeverity, ELogLevel aLeve
 	data.Level = aLevel;
 	data.Message = std::move(aLogMessage);
 
-	auto serializedData = data.Serialize();
-
-	myConnection->Write(std::move(serializedData), [](auto aResult)
+	myConnection->WriteMessage(data, [](auto aResult)
 		{
 			if (aResult)
 				return;

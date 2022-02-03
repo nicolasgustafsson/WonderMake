@@ -11,6 +11,9 @@
 #include <mutex>
 
 class IpcSystem;
+struct LoggerRemoteMessageType;
+template<typename TSerializable>
+class SocketSerializing;
 
 class LoggerRemoteConnectionSystem
 	: public System<
@@ -31,6 +34,6 @@ private:
 	void OnClosed(Result<Socket::ECloseError, Socket::ECloseReason> aResult);
 
 	std::recursive_mutex myMutex;
-	std::shared_ptr<Socket> myConnection;
+	std::shared_ptr<SocketSerializing<LoggerRemoteMessageType>> myConnection;
 
 };

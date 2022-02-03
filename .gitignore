@@ -35,21 +35,20 @@
 *.lastcodeanalysissucceeded
 
 # WonderMake Files
-Bin/*.exe
-Bin/*.lib
-Bin/imgui.ini
-Bin/Logs/
+/out
 
-Tests/
+/Bin/*.exe
+/Bin/*.lib
+/Bin/imgui.ini
+/Bin/Logs/
+/Bin/debugSettings.json
 
-Lib/
+/Tests/
 
-Intermediate/
+/Lib/
 
-WonderMakeLauncher/Registry/*.cpp
-WonderMakeLauncher/Registry/*.h
-WonderMakeLauncher/Logs/
-imgui.ini
-Bin/debugSettings.json
-PlaceholderLibrary/
-nicostodo*
+/Intermediate/
+
+/imgui.ini
+/PlaceholderLibrary/
+/nicostodo*

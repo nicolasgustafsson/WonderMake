@@ -52,7 +52,7 @@ TEST_F(WinProcessSystemTest, returns_file_not_found_when_createprocess_fails_wit
 {
 	CreateWinProcessSystem();
 
-	EXPECT_CALL(myWinPlatformSystem, CreateProcess)
+	EXPECT_CALL(myWinPlatformSystem, CreateProcessW)
 		.WillOnce(Return(FALSE));
 	EXPECT_CALL(myWinPlatformSystem, GetLastError)
 		.WillOnce(Return(ERROR_FILE_NOT_FOUND));
@@ -69,7 +69,7 @@ TEST_F(WinProcessSystemTest, returns_internal_error_when_createprocess_fails_wit
 {
 	CreateWinProcessSystem();
 	
-	EXPECT_CALL(myWinPlatformSystem, CreateProcess)
+	EXPECT_CALL(myWinPlatformSystem, CreateProcessW)
 		.WillOnce(Return(FALSE));
 	EXPECT_CALL(myWinPlatformSystem, GetLastError)
 		.WillOnce(Return(ERROR_INVALID_FUNCTION));

@@ -1,5 +1,3 @@
-#define _ITERATOR_DEBUG_LEVEL 0
-
 #include <catch2/catch.hpp>
 
 #include <algorithm>

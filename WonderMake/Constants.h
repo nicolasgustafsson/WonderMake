@@ -1,7 +1,7 @@
 #pragma once
 namespace Constants
 {
-#ifdef CONFIGURATION_Release
+#ifdef NDEBUG
 	constexpr bool IsDebugging = false;
 #else
 	constexpr bool IsDebugging = true;

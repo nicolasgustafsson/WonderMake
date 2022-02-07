@@ -32,8 +32,7 @@ MessageCallback([[maybe_unused]] GLenum source,
 }
 
 Renderer::Renderer() noexcept
-	: myCopyPass(Get<ResourceSystem<Shader<EShaderType::Vertex>>>(), Get<ResourceSystem<Shader<EShaderType::Fragment>>>(), Get<ResourceSystem<Shader<EShaderType::Geometry>>>(), std::filesystem::current_path() / "Shaders/Fragment/BackbufferCopy.frag")
-	, Debugged("Renderer")
+	: Debugged("Renderer")
 {
 	Get<OpenGLFacade>().Enable(GL_DEBUG_OUTPUT);
 	Get<OpenGLFacade>().Enable(GL_BLEND);
@@ -78,7 +77,10 @@ void Renderer::FinishFrame()
 		//second pass - copy directly to backbuffer if we are not debugging
 		//myCameraManagerPtr->GetMainCamera().BindAsTexture();
 
-		myCopyPass.RenderImmediate();
+		if (!myCopyPass)
+			myCopyPass.emplace(Get<ResourceSystem<Shader<EShaderType::Vertex>>>(), Get<ResourceSystem<Shader<EShaderType::Fragment>>>(), Get<ResourceSystem<Shader<EShaderType::Geometry>>>(), std::filesystem::current_path() / "Shaders/Fragment/BackbufferCopy.frag");
+
+		myCopyPass->RenderImmediate();
 
 		Get<GlfwFacade>().SwapBuffers(Get<Window>().myGlfwWindow);
 	}

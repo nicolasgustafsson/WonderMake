@@ -52,7 +52,7 @@ public:
 private:
 	virtual void Debug() override;
 
-	ScreenPassRenderObject myCopyPass;
+	std::optional<ScreenPassRenderObject> myCopyPass;
 
 	bool myDebugWindowHasFocus = true;
 };

@@ -139,7 +139,7 @@ struct SMatrix final
 
 		for (auto i = 0; i < lastIndex; ++i)
 			position[0][i] = -retMat[lastIndex][i];
-		position[lastIndex][0] = 1;
+		position[0][lastIndex] = 1;
 
 		for (auto i = 0; i < TRows; ++i)
 			retMat[lastIndex][i] = {};

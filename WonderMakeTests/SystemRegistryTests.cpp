@@ -22,6 +22,9 @@ class RegistryTestSystemChild
 TEST_CASE("Add System to registry", "[SystemRegistry]")
 {
 	SystemRegistry registry;
+
+	RegistryTestSystem::InjectDependencies(std::tie());
+
 	auto testSystem = std::make_shared<RegistryTestSystem>();
 
 	u32 callCounter = 0;
@@ -39,11 +42,14 @@ TEST_CASE("Add System to registry", "[SystemRegistry]")
 TEST_CASE("Add derived System to registry", "[SystemRegistry]")
 {
 	SystemRegistry registry;
+
+	RegistryTestSystemChild::InjectDependencies(std::tie());
+
 	auto testSystem = std::make_shared<RegistryTestSystemChild>();
 
 	u32 callCounter = 0;
 
-	registry.AddSystem<RegistryTestSystemChild, RegistryTestSystemBase>([&callCounter, &testSystem]() ->std::shared_ptr<RegistryTestSystemBase>
+	registry.AddSystem<RegistryTestSystemChild, RegistryTestSystemBase>([&callCounter, &testSystem]() -> std::shared_ptr<RegistryTestSystemBase>
 		{
 			++callCounter;
 
@@ -56,6 +62,9 @@ TEST_CASE("Add derived System to registry", "[SystemRegistry]")
 TEST_CASE("Create System in registry", "[SystemRegistry]")
 {
 	SystemRegistry registry;
+
+	RegistryTestSystem::InjectDependencies(std::tie());
+
 	auto testSystem = std::make_shared<RegistryTestSystem>();
 
 	u32 callCounter = 0;
@@ -75,6 +84,9 @@ TEST_CASE("Create System in registry", "[SystemRegistry]")
 TEST_CASE("Create System in registry twice", "[SystemRegistry]")
 {
 	SystemRegistry registry;
+
+	RegistryTestSystem::InjectDependencies(std::tie());
+
 	auto testSystem = std::make_shared<RegistryTestSystem>();
 
 	u32 callCounter = 0;

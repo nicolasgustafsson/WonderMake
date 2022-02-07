@@ -59,6 +59,9 @@ const auto MockDir = std::filesystem::current_path() / "FileSystem/MockFiles";
 TEST_CASE("Passes Location correctly to FileSystem.", "[ReadFileJob]")
 {
 	JobMock<ReadFileJob> jobMock;
+
+	FileSystemMock::InjectDependencies(std::tie());
+
 	FileSystemMock fsMock;
 
 	jobMock.Inject(fsMock);
@@ -93,6 +96,9 @@ TEST_CASE("Passes Location correctly to FileSystem.", "[ReadFileJob]")
 TEST_CASE("Completes with error if the location is unable to be found.", "[ReadFileJob]")
 {
 	JobMock<ReadFileJob> jobMock;
+
+	FileSystemMock::InjectDependencies(std::tie());
+
 	FileSystemMock fsMock;
 
 	fsMock.SetExpectedArgs(FolderLocation::Bin);
@@ -105,6 +111,9 @@ TEST_CASE("Completes with error if the location is unable to be found.", "[ReadF
 TEST_CASE("Completes with error if file does not exist.", "[ReadFileJob]")
 {
 	JobMock<ReadFileJob> jobMock;
+
+	FileSystemMock::InjectDependencies(std::tie());
+
 	FileSystemMock fsMock;
 
 	fsMock.SetExpectedArgs(FolderLocation::Bin);
@@ -118,6 +127,9 @@ TEST_CASE("Completes with error if file does not exist.", "[ReadFileJob]")
 TEST_CASE("Completes with error if path is folder.", "[ReadFileJob]")
 {
 	JobMock<ReadFileJob> jobMock;
+
+	FileSystemMock::InjectDependencies(std::tie());
+
 	FileSystemMock fsMock;
 
 	fsMock.SetExpectedArgs(FolderLocation::Bin);
@@ -133,6 +145,9 @@ TEST_CASE("Successfully reads a file.", "[ReadFileJob]")
 	constexpr std::string_view dataInFile = "Hello World!";
 
 	JobMock<ReadFileJob> jobMock;
+
+	FileSystemMock::InjectDependencies(std::tie());
+
 	FileSystemMock fsMock;
 
 	fsMock.SetExpectedArgs(FolderLocation::Bin);

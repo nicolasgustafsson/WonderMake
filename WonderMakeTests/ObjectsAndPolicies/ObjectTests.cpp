@@ -69,15 +69,19 @@ TEST_CASE("Objects can be created and have dependencies added and removed", "[Ob
 	ScheduleSystem scheduleSystem(mockScheduleProc, mockScheduleProc);
 
 	ComponentSystem<SCatComponent>::InjectDependencies(std::tie());
-	ComponentSystem<SBagComponent>::InjectDependencies(std::tie());
 
 	ComponentSystem<SCatComponent> sysCompCat;
+
+	ComponentSystem<SBagComponent>::InjectDependencies(std::tie());
+
 	ComponentSystem<SBagComponent> sysCompBag;
 
 	FunctionalitySystem<CatFunctionality>::InjectDependencies(std::tie(scheduleSystem, sysCompCat));
-	FunctionalitySystem<BagFunctionality>::InjectDependencies(std::tie(scheduleSystem, sysCompBag));
 
 	FunctionalitySystem<CatFunctionality> sysFuncCat;
+
+	FunctionalitySystem<BagFunctionality>::InjectDependencies(std::tie(scheduleSystem, sysCompBag));
+
 	FunctionalitySystem<BagFunctionality> sysFuncBag;
 
 	Object object;
@@ -121,15 +125,19 @@ TEST_CASE("Objects keep track of when a dependency no longer have any references
 	ScheduleSystem scheduleSystem(mockScheduleProc, mockScheduleProc);
 
 	ComponentSystem<SCatComponent>::InjectDependencies(std::tie());
-	ComponentSystem<SBagComponent>::InjectDependencies(std::tie());
 
 	ComponentSystem<SCatComponent> sysCompCat;
+
+	ComponentSystem<SBagComponent>::InjectDependencies(std::tie());
+
 	ComponentSystem<SBagComponent> sysCompBag;
 
 	FunctionalitySystem<CatFunctionality>::InjectDependencies(std::tie(scheduleSystem, sysCompCat));
-	FunctionalitySystem<BagFunctionality>::InjectDependencies(std::tie(scheduleSystem, sysCompBag));
 
 	FunctionalitySystem<CatFunctionality> sysFuncCat;
+
+	FunctionalitySystem<BagFunctionality>::InjectDependencies(std::tie(scheduleSystem, sysCompBag));
+
 	FunctionalitySystem<BagFunctionality> sysFuncBag;
 
 	Object object;
@@ -186,15 +194,19 @@ TEST_CASE("Objects can be visited", "[Object]")
 	ScheduleSystem scheduleSystem(mockScheduleProc, mockScheduleProc);
 
 	ComponentSystem<SCatComponent>::InjectDependencies(std::tie());
-	ComponentSystem<SBagComponent>::InjectDependencies(std::tie());
 
 	ComponentSystem<SCatComponent> sysCompCat;
+
+	ComponentSystem<SBagComponent>::InjectDependencies(std::tie());
+
 	ComponentSystem<SBagComponent> sysCompBag;
 
 	FunctionalitySystem<CatFunctionality>::InjectDependencies(std::tie(scheduleSystem, sysCompCat));
-	FunctionalitySystem<BagFunctionality>::InjectDependencies(std::tie(scheduleSystem, sysCompBag));
 
 	FunctionalitySystem<CatFunctionality> sysFuncCat;
+
+	FunctionalitySystem<BagFunctionality>::InjectDependencies(std::tie(scheduleSystem, sysCompBag));
+
 	FunctionalitySystem<BagFunctionality> sysFuncBag;
 
 	Object object;

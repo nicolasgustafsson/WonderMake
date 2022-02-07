@@ -33,6 +33,6 @@ private:
 	void OnGotDebugLineMessage(const SDebugLineMessage& aDebugLineMessage);
 
 	MessageSubscriber mySubscriber;
-	DebugLineRenderObject myRenderObject;
+	std::optional<DebugLineRenderObject> myRenderObject;
 	std::vector<SDebugLine> myDebugLines;
 };

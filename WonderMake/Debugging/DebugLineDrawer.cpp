@@ -5,22 +5,20 @@
 REGISTER_SYSTEM(DebugLineDrawer);
 
 DebugLineDrawer::DebugLineDrawer() noexcept
-	: myRenderObject(Get<ResourceSystem<Shader<EShaderType::Vertex>>>(), Get<ResourceSystem<Shader<EShaderType::Fragment>>>(), Get<ResourceSystem<Shader<EShaderType::Geometry>>>(), 10000)
-	, mySubscriber(BindHelper(&DebugLineDrawer::OnGotDebugLineMessage, this))
-{
-
-}
+	: mySubscriber(BindHelper(&DebugLineDrawer::OnGotDebugLineMessage, this))
+{}
 
 void DebugLineDrawer::Render()
 {
+	if (!myRenderObject)
+		myRenderObject.emplace(Get<ResourceSystem<Shader<EShaderType::Vertex>>>(), Get<ResourceSystem<Shader<EShaderType::Fragment>>>(), Get<ResourceSystem<Shader<EShaderType::Geometry>>>(), 10000);
+
 	for (auto [i, line] : Utility::Enumerate(myDebugLines))
-	{
-		myRenderObject.SetLine(static_cast<u32>(i), line);
-	}
+		myRenderObject->SetLine(static_cast<u32>(i), line);
 
-	myRenderObject.SetLineCount(static_cast<u32>(myDebugLines.size()));
+	myRenderObject->SetLineCount(static_cast<u32>(myDebugLines.size()));
 
-	myRenderObject.RenderImmediate();
+	myRenderObject->RenderImmediate();
 }
 
 void DebugLineDrawer::Update()

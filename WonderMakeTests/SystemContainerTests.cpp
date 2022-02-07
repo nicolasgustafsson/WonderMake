@@ -28,7 +28,12 @@ TEST_CASE("Empty system container", "[SystemContainer]")
 
 TEST_CASE("Construct container with Systems", "[SystemContainer]")
 {
+	ContainerTestSystemA::InjectDependencies(std::tie());
+
 	auto testSystemA = std::make_shared<ContainerTestSystemA>();
+
+	ContainerTestSystemB::InjectDependencies(std::tie());
+
 	auto testSystemB = std::make_shared<ContainerTestSystemB>();
 
 	SystemContainer container(
@@ -52,6 +57,8 @@ TEST_CASE("Construct container with Systems", "[SystemContainer]")
 TEST_CASE("Add System to container", "[SystemContainer]")
 {
 	SystemContainer container;
+
+	ContainerTestSystemA::InjectDependencies(std::tie());
 
 	auto testSystem = std::make_shared<ContainerTestSystemA>();
 

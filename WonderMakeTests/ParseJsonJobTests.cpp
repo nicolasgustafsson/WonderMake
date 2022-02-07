@@ -12,8 +12,11 @@ constexpr auto InlineExecutor = [](auto aCallable)
 struct JobDependencies
 {
 	JobDependencies()
-		: myScheduleSystem(std::make_shared<ScheduleSystem>(InlineExecutor, InlineExecutor))
 	{
+		ScheduleSystem::InjectDependencies(std::tie());
+
+		myScheduleSystem = std::make_shared<ScheduleSystem>(InlineExecutor, InlineExecutor);
+
 		JobSystem::InjectDependencies(std::tie(*myScheduleSystem));
 
 		myJobSystem = std::make_shared<JobSystem>(mySystemContainer);

@@ -10,8 +10,11 @@
 struct JobDependencies
 {
 	JobDependencies()
-		: myScheduleSystem(std::make_shared<ScheduleSystem>([](Closure) {}, [](Closure) {}))
 	{
+		ScheduleSystem::InjectDependencies(std::tie());
+
+		myScheduleSystem = std::make_shared<ScheduleSystem>([](Closure) {}, [](Closure) {});
+
 		JobSystem::InjectDependencies(std::tie(*myScheduleSystem));
 
 		myJobSystem = std::make_shared<JobSystem>(mySystemContainer);

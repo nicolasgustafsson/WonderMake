@@ -6,7 +6,6 @@
 
 #ifndef STDAFX_H
 #define STDAFX_H
-#define _ITERATOR_DEBUG_LEVEL 0
 // add headers that you want to pre-compile here
 #include "framework.h"
 

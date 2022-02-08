@@ -2,7 +2,7 @@
 
 #include "wondermake-utility/WinPlatform.h"
 
-#include "WonderMakeIo/IpcConnection.h"
+#include "wondermake-io/IpcConnection.h"
 
 #include <queue>
 #include <vector>

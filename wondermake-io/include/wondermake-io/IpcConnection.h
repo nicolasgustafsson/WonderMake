@@ -4,7 +4,7 @@
 #include "wondermake-utility/Typedefs.h"
 #include "wondermake-utility/UniqueFunction.h"
 
-#include "WonderMakeIo/Socket.h"
+#include "wondermake-io/Socket.h"
 
 class IpcConnection
 	: public Socket

@@ -2,7 +2,7 @@
 
 #include "wondermake-utility/WinPlatform.h"
 
-#include "WonderMakeIo/IpcSystem.h"
+#include "wondermake-io/IpcSystem.h"
 
 class WinEventSystem;
 class WinPlatformSystem;

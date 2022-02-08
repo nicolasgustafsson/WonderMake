@@ -1,6 +1,6 @@
 #pragma once
 
-#include "WonderMakeIo/IpcConnection.h"
+#include "wondermake-io/IpcConnection.h"
 
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/System.h"

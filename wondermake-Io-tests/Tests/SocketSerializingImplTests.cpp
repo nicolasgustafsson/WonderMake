@@ -1,6 +1,6 @@
 #include "wondermake-tests-common/GTestInclude.h"
 
-#include "WonderMakeIo/SocketSerializingImpl.h"
+#include "wondermake-io/SocketSerializingImpl.h"
 
 #include "WonderMakeIoTests/SocketMock.h"
 #include "WonderMakeIoTests/SocketSerializingMock.h"

@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
 #include "Utilities/Container/Container.h"
-#include "WonderMakeUtility/Typedefs.h"
+#include "wondermake-utility/Typedefs.h"
 #include <iostream>
 #include <filesystem>
 

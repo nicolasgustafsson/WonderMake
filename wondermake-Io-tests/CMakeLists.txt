@@ -9,9 +9,9 @@ list(APPEND SourceFiles
     "Tests/WinIpcConnectionTests.cpp")
     
 list(APPEND SourceFiles
-    "../WonderMakeIo/Source/SocketDecorator.cpp"
-    "../WonderMakeIo/Source/WinFileSystem.cpp"
-    "../WonderMakeIo/Source/WinIpcConnection.cpp")
+    "../wondermake-io/source/SocketDecorator.cpp"
+    "../wondermake-io/source/WinFileSystem.cpp"
+    "../wondermake-io/source/WinIpcConnection.cpp")
     
 add_executable(WonderMakeIoTests ${SourceFiles})
 
@@ -22,13 +22,13 @@ add_test(WonderMakeIoTests WonderMakeIoTests)
 target_link_libraries(WonderMakeIoTests gtest_main gmock WonderMakeTestsCommon)
 target_include_directories(WonderMakeIoTests
     PUBLIC
-        "Include"
-        "../WonderMakeBase/Include"
-        "../WonderMakeBaseTests/Include"
-        "../WonderMakeIo/Include"
-        "../WonderMakeUtility/Include"
+        "include"
+        "../wondermake-base/include"
+        "../wondermake-base-tests/include"
+        "../wondermake-io/include"
+        "../wondermake-utility/include"
     PRIVATE
-        "../WonderMakeIo/Source")
+        "../wondermake-io/source")
 
 target_compile_definitions(WonderMakeIoTests PUBLIC "WM_SUPRESS_SYSTEM_GLOBAL")
 

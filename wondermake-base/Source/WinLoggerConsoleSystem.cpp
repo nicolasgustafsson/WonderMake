@@ -3,7 +3,7 @@
 #include "WonderMakeBase/SystemGlobal.h"
 #include "WonderMakeBase/WinPlatformSystem.h"
 
-#include "WonderMakeUtility/WinPlatform.h"
+#include "wondermake-utility/WinPlatform.h"
 
 #include <iostream>
 #include <sstream>

@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
 
-#include "WonderMakeUtility/Vector.h"
+#include "wondermake-utility/Vector.h"
 
 #include <numbers>
 

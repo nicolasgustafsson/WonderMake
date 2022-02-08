@@ -2,8 +2,8 @@
 
 #include "WonderMakeBase/System.h"
 
-#include "WonderMakeUtility/Result.h"
-#include "WonderMakeUtility/UniqueFunction.h"
+#include "wondermake-utility/Result.h"
+#include "wondermake-utility/UniqueFunction.h"
 
 #include <filesystem>
 #include <memory>

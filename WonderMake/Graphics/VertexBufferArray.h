@@ -2,7 +2,7 @@
 #include "VertexAttributes.h"
 #include "VertexBuffer.h"
 
-#include "WonderMakeUtility/Utility.h"
+#include "wondermake-utility/Utility.h"
 #include "OpenGLFacade.h"
 #include "Utilities/Container/Container.h"
 

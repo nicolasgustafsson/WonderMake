@@ -1,8 +1,8 @@
 #include "WonderMakeBase/SystemGlobal.h"
 #include "WonderMakeBase/WinPlatformSystem.h"
 
-#include "WonderMakeUtility/Bindable.h"
-#include "WonderMakeUtility/Utility.h"
+#include "wondermake-utility/Bindable.h"
+#include "wondermake-utility/Utility.h"
 
 #include "WinEventSystemImpl.h"
 

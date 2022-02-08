@@ -9,8 +9,8 @@
 
 #include "WonderMakeBase/ScheduleSystem.h"
 
-#include "WonderMakeUtility/Alias.h"
-#include "WonderMakeUtility/plf_colony.h"
+#include "wondermake-utility/Alias.h"
+#include "wondermake-utility/plf_colony.h"
 
 #include <any>
 #include <optional>

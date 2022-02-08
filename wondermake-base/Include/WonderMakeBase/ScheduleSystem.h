@@ -2,8 +2,8 @@
 
 #include "WonderMakeBase/System.h"
 
-#include "WonderMakeUtility/Typedefs.h"
-#include "WonderMakeUtility/UniqueFunction.h"
+#include "wondermake-utility/Typedefs.h"
+#include "wondermake-utility/UniqueFunction.h"
 
 #include <functional>
 

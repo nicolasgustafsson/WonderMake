@@ -1,6 +1,6 @@
 #pragma once
 #include "UniformBuffer.h"
-#include "WonderMakeUtility/Matrix.h"
+#include "wondermake-utility/Matrix.h"
 #include "WonderMakeBase/System.h"
 #include "Message/MessageSubscriber.h"
 #include "Utilities/Debugging/Debugged.h"

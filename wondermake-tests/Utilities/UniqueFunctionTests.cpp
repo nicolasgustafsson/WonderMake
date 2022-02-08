@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
 
-#include "WonderMakeUtility/UniqueFunction.h"
+#include "wondermake-utility/UniqueFunction.h"
 
 #include <functional>
 

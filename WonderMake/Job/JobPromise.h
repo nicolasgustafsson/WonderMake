@@ -2,8 +2,8 @@
 
 #include "Job/JobOutput.h"
 
-#include "WonderMakeUtility/UniqueFunction.h"
-#include "WonderMakeUtility/Utility.h"
+#include "wondermake-utility/UniqueFunction.h"
+#include "wondermake-utility/Utility.h"
 
 #include <functional>
 

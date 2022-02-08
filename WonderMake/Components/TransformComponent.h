@@ -1,6 +1,6 @@
 #pragma once
 #include "Component.h"
-#include "WonderMakeUtility/Vector.h"
+#include "wondermake-utility/Vector.h"
 
 template<typename TRepPosition, typename TRepRotation>
 struct _STransformComponent2D

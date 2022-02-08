@@ -6,7 +6,7 @@
 #include <string>
 #include <list>
 
-#include "WonderMakeUtility/plf_colony.h"
+#include "wondermake-utility/plf_colony.h"
 
 #include "Traits/ContainerTraits.h"
 #include "BackendImplementations/ColonyBackend.h"

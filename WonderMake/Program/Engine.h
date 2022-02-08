@@ -2,9 +2,9 @@
 
 #include "WonderMakeBase/LoggerTypes.h"
 
-#include "WonderMakeUtility/MemoryUnit.h"
-#include "WonderMakeUtility/UniqueFunction.h"
-#include "WonderMakeUtility/Typedefs.h"
+#include "wondermake-utility/MemoryUnit.h"
+#include "wondermake-utility/UniqueFunction.h"
+#include "wondermake-utility/Typedefs.h"
 
 #include <filesystem>
 #include <optional>

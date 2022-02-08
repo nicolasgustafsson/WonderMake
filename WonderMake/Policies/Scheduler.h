@@ -1,6 +1,6 @@
 #pragma once
 
-#include "WonderMakeUtility/Typedefs.h"
+#include "wondermake-utility/Typedefs.h"
 
 #include "WonderMakeBase/SystemId.h"
 #include "WonderMakeBase/SystemPolicy.h"

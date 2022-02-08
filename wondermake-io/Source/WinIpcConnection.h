@@ -1,6 +1,6 @@
 #pragma once
 
-#include "WonderMakeUtility/WinPlatform.h"
+#include "wondermake-utility/WinPlatform.h"
 
 #include "WonderMakeIo/IpcConnection.h"
 

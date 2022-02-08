@@ -4,8 +4,8 @@
 
 #include "WonderMakeBase/SystemGlobal.h"
 
-#include "WonderMakeUtility/MemoryUnit.h"
-#include "WonderMakeUtility/Time.h"
+#include "wondermake-utility/MemoryUnit.h"
+#include "wondermake-utility/Time.h"
 
 #include <chrono>
 #include <thread>

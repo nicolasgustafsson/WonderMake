@@ -1,5 +1,5 @@
 #pragma once
-#include "WonderMakeUtility/Typedefs.h"
+#include "wondermake-utility/Typedefs.h"
 
 //this assumes that the buffer uses an optimal memory alignment
 template< typename TBuffer>

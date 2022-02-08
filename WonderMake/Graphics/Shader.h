@@ -6,7 +6,7 @@
 
 #include "WonderMakeBase/Logger.h"
 
-#include "WonderMakeUtility/RestrictTypes.h"
+#include "wondermake-utility/RestrictTypes.h"
 
 #include <glad/glad.h>
 #include "OpenGLFacade.h"

@@ -1,6 +1,6 @@
 #include "WonderMakeTestsCommon/GTestInclude.h"
 
-#include "WonderMakeUtility/MemoryUnit.h"
+#include "wondermake-utility/MemoryUnit.h"
 
 TEST(MemoryUnitTest, is_converts_between_ratios)
 {

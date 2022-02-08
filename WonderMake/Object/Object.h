@@ -1,5 +1,5 @@
 #pragma once
-#include "WonderMakeUtility/Typedefs.h"
+#include "wondermake-utility/Typedefs.h"
 
 #include "Object/DependencyDestructor.h"
 

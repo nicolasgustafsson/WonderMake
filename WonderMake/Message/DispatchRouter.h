@@ -1,7 +1,7 @@
 #pragma once
 
-#include "WonderMakeUtility/RestrictTypes.h"
-#include "WonderMakeUtility/Singleton.h"
+#include "wondermake-utility/RestrictTypes.h"
+#include "wondermake-utility/Singleton.h"
 
 #include <functional>
 #include <mutex>

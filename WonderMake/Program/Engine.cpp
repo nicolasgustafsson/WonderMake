@@ -16,9 +16,9 @@
 
 #include "Utilities/TimeKeeper.h"
 
-#include "WonderMakeEngine/LoggerFileSystem.h"
-#include "WonderMakeEngine/LoggerRemoteConnectionSystem.h"
-#include "WonderMakeEngine/LoggerRemoteSocketSystem.h"
+#include "wondermake-engine/LoggerFileSystem.h"
+#include "wondermake-engine/LoggerRemoteConnectionSystem.h"
+#include "wondermake-engine/LoggerRemoteSocketSystem.h"
 
 #include "wondermake-io/FileSystem.h"
 

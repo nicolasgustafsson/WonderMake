@@ -216,7 +216,7 @@ target_link_options(WonderMake PUBLIC "/WHOLEARCHIVE:WonderMake")
 add_compile_definitions("IMGUI_DEFINE_MATH_OPERATORS")
 
 #Temporary until GLFW include is fixed.
-target_link_libraries(WonderMake "${CMAKE_CURRENT_LIST_DIR}/../External/glfw-3.3/Lib/glfw3_x64_${CMAKE_BUILD_TYPE}.lib")
+target_link_libraries(WonderMake "${CMAKE_CURRENT_LIST_DIR}/../../External/glfw-3.3/Lib/glfw3_x64_${CMAKE_BUILD_TYPE}.lib")
 
 #Temporary until SoLoud include is fixed.
-target_link_libraries(WonderMake "${CMAKE_CURRENT_LIST_DIR}/../External/SoLoud/Lib/soloud_x64_${CMAKE_BUILD_TYPE}.lib")
+target_link_libraries(WonderMake "${CMAKE_CURRENT_LIST_DIR}/../../External/SoLoud/Lib/soloud_x64_${CMAKE_BUILD_TYPE}.lib")

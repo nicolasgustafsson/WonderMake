@@ -4,10 +4,10 @@ list(APPEND SourceFiles
     "Tests/WinIpcConnectionManualTests.cpp")
     
 list(APPEND SourceFiles
-    "../wondermake-base/source/WinEventSystemImpl.cpp"
-    "../wondermake-base/source/WinPlatformSystemImpl.cpp"
-    "../wondermake-io/source/WinIpcAcceptor.cpp"
-    "../wondermake-io/source/WinIpcConnection.cpp")
+    "../../../lib/wondermake-base/source/WinEventSystemImpl.cpp"
+    "../../../lib/wondermake-base/source/WinPlatformSystemImpl.cpp"
+    "../../../lib/wondermake-io/source/WinIpcAcceptor.cpp"
+    "../../../lib/wondermake-io/source/WinIpcConnection.cpp")
     
 add_executable(WonderMakeIoManualTests ${SourceFiles})
 
@@ -19,13 +19,13 @@ target_link_libraries(WonderMakeIoManualTests gtest_main gmock WonderMakeTestsCo
 target_include_directories(WonderMakeIoManualTests
     PUBLIC
         "include"
-        "../wondermake-base/include"
         "../wondermake-base-tests/include"
-        "../wondermake-io/include"
-        "../wondermake-utility/include"
+        "../../../lib/wondermake-base/include"
+        "../../../lib/wondermake-io/include"
+        "../../../lib/wondermake-utility/include"
     PRIVATE
-        "../wondermake-base/source"
-        "../wondermake-io/source")
+        "../../../lib/wondermake-base/source"
+        "../../../lib/wondermake-io/source")
 
 target_compile_definitions(WonderMakeIoManualTests PUBLIC "WM_SUPRESS_SYSTEM_GLOBAL")
 

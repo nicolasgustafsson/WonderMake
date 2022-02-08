@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
 
 list(APPEND SourceFiles
-    "Include/WonderMakeEngine/LoggerFileSystem.h"
-    "Include/WonderMakeEngine/LoggerRemoteConnectionSystem.h"
-    "Include/WonderMakeEngine/LoggerRemoteSocketSystem.h"
-    "Source/LoggerFileSystem.cpp"
-    "Source/LoggerRemoteConnectionSystem.cpp"
-    "Source/LoggerRemoteMessageType.cpp"
-    "Source/LoggerRemoteMessageType.h"
-    "Source/LoggerRemoteSocketSystem.cpp")
+    "include/wondermake-engine/LoggerFileSystem.h"
+    "include/wondermake-engine/LoggerRemoteConnectionSystem.h"
+    "include/wondermake-engine/LoggerRemoteSocketSystem.h"
+    "source/LoggerFileSystem.cpp"
+    "source/LoggerRemoteConnectionSystem.cpp"
+    "source/LoggerRemoteMessageType.cpp"
+    "source/LoggerRemoteMessageType.h"
+    "source/LoggerRemoteSocketSystem.cpp")
 
 add_library(WonderMakeEngine STATIC ${SourceFiles})
 

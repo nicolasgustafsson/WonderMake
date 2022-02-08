@@ -3,7 +3,7 @@
 #include "System.h"
 #include "SystemContainer.h"
 
-#include "WonderMakeUtility/DependencyInjector.h"
+#include "wondermake-utility/DependencyInjector.h"
 
 #include <cassert>
 #include <functional>

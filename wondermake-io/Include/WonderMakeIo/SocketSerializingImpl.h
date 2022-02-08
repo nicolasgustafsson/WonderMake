@@ -2,9 +2,9 @@
 
 #include "WonderMakeIo/SocketSerializing.h"
 
-#include "WonderMakeUtility/Bindable.h"
-#include "WonderMakeUtility/MemoryUnit.h"
-#include "WonderMakeUtility/SharedReference.h"
+#include "wondermake-utility/Bindable.h"
+#include "wondermake-utility/MemoryUnit.h"
+#include "wondermake-utility/SharedReference.h"
 
 #include <functional>
 

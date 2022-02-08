@@ -3,7 +3,7 @@
 #include "WonderMakeBase/WinEventSystem.h"
 #include "WonderMakeBase/WinPlatformSystem.h"
 
-#include "WonderMakeUtility/Bindable.h"
+#include "wondermake-utility/Bindable.h"
 
 WinProcess::WinProcess(WinEventSystem& aWinEvent, WinPlatformSystem& aWinPlatform, HANDLE aProcessHandle, HANDLE aThreadHandle) noexcept
 	: myWinEvent(aWinEvent)

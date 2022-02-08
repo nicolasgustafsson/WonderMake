@@ -6,7 +6,7 @@
 #include <string>
 #include <string_view>
 
-#include "WonderMakeUtility/Typedefs.h"
+#include "wondermake-utility/Typedefs.h"
 
 class Guid
 	: public std::array<u8, 16>

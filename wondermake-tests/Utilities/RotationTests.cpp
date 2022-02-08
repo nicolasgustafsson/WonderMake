@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
 
-#include "WonderMakeUtility/Rotation.h"
+#include "wondermake-utility/Rotation.h"
 
 static constexpr auto deg32_n360	= SDegreeF32(-360);
 static constexpr auto deg32_n270	= SDegreeF32(-270);

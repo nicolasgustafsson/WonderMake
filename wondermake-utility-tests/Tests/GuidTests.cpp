@@ -1,6 +1,6 @@
 #include "WonderMakeTestsCommon/GTestInclude.h"
 
-#include "WonderMakeUtility/Guid.h"
+#include "wondermake-utility/Guid.h"
 
 void StaticTest_Guid_Parse()
 {

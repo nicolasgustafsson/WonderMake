@@ -5,7 +5,7 @@
 
 #include "WonderMakeBase/ScheduleSystem.h"
 
-#include "WonderMakeUtility/Typedefs.h"
+#include "wondermake-utility/Typedefs.h"
 
 template<typename TOutput, typename TOutputError>
 class JobFuture

@@ -7,7 +7,7 @@
 
 #include "WonderMakeBase/SystemGlobal.h"
 
-#include "WonderMakeUtility/Bindable.h"
+#include "wondermake-utility/Bindable.h"
 
 using namespace MemoryUnitLiterals;
 

@@ -1,6 +1,6 @@
 #pragma once
 #include "Functionalities/Functionality.h"
-#include "WonderMakeUtility/Typedefs.h"
+#include "wondermake-utility/Typedefs.h"
 
 class TimeKeeper;
 

@@ -5,7 +5,7 @@
 #include "SystemContainer.h"
 #include "SystemRegistry.h"
 
-#include "WonderMakeUtility/AutoRegister.h"
+#include "wondermake-utility/AutoRegister.h"
 
 class Global
 {

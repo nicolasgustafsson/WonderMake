@@ -1,6 +1,6 @@
 #pragma once
 
-#include "WonderMakeUtility/RestrictTypes.h"
+#include "wondermake-utility/RestrictTypes.h"
 
 class Object;
 

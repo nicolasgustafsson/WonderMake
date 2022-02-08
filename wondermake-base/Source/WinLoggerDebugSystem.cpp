@@ -3,7 +3,7 @@
 #include "WonderMakeBase/SystemGlobal.h"
 #include "WonderMakeBase/WinPlatformSystem.h"
 
-#include "WonderMakeUtility/StringUtility.h"
+#include "wondermake-utility/StringUtility.h"
 
 REGISTER_SYSTEM(WinLoggerDebugSystem);
 

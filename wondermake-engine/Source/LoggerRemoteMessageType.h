@@ -2,8 +2,8 @@
 
 #include "WonderMakeBase/LoggerTypes.h"
 
-#include "WonderMakeUtility/Result.h"
-#include "WonderMakeUtility/Typedefs.h"
+#include "wondermake-utility/Result.h"
+#include "wondermake-utility/Typedefs.h"
 
 #include <span>
 #include <vector>

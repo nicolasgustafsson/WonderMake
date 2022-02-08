@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "WonderMakeUtility/Bindable.h"
-#include "WonderMakeUtility/UniqueValue.h"
+#include "wondermake-utility/Bindable.h"
+#include "wondermake-utility/UniqueValue.h"
 
 using ::testing::Eq;
 using ::testing::Return;

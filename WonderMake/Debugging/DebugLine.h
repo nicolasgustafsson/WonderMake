@@ -2,7 +2,7 @@
 #include "Message/MessageTypes.h"
 
 #include "Utilities/Color.h"
-#include "WonderMakeUtility/Vector.h"
+#include "wondermake-utility/Vector.h"
 
 struct SDebugLine
 {

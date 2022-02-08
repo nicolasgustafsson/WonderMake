@@ -2,7 +2,7 @@
 
 #include "Components/ComponentSystem.h"
 
-#include "WonderMakeUtility/RestrictTypes.h"
+#include "wondermake-utility/RestrictTypes.h"
 
 #define REGISTER_COMPONENT(aComponent) REGISTER_COMPONENT_SYSTEM(aComponent)
 

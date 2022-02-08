@@ -1,6 +1,6 @@
 #pragma once
 #include "Utilities/Container/ContainerBackend.h"
-#include "WonderMakeUtility/Typedefs.h"
+#include "wondermake-utility/Typedefs.h"
 
 template <typename TObjectType>
 class VectorBackend

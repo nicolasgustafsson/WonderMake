@@ -1,6 +1,6 @@
 #include "WonderMakeTestsCommon/GTestInclude.h"
 
-#include "WonderMakeUtility/DependencyInjector.h"
+#include "wondermake-utility/DependencyInjector.h"
 
 struct TestMockWithNoDependencies
 {

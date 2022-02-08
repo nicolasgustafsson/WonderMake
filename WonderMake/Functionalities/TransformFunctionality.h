@@ -2,7 +2,7 @@
 #include "Functionalities/Functionality.h"
 #include "Components/TransformComponent.h"
 
-#include "WonderMakeUtility/Matrix.h"
+#include "wondermake-utility/Matrix.h"
 
 #include "Imgui/ImguiInclude.h"
 

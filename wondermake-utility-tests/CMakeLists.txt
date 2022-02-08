@@ -8,7 +8,7 @@ list(APPEND SourceFiles
     "Tests/MemoryUnitTests.cpp")
     
 list(APPEND SourceFiles
-    "../WonderMakeUtility/Source/DependencyInjector.cpp")
+    "../wondermake-utility/source/DependencyInjector.cpp")
     
 add_executable(WonderMakeUtilityTests ${SourceFiles})
 
@@ -17,6 +17,6 @@ set_target_properties(WonderMakeUtilityTests PROPERTIES FOLDER "wondermake/test"
 add_test(WonderMakeUtilityTests WonderMakeUtilityTests)
 
 target_link_libraries(WonderMakeUtilityTests gtest_main gmock WonderMakeTestsCommon)
-target_include_directories(WonderMakeUtilityTests PUBLIC "../WonderMakeUtility/Include")
+target_include_directories(WonderMakeUtilityTests PUBLIC "../wondermake-utility/include")
 
 gtest_discover_tests(WonderMakeUtilityTests)

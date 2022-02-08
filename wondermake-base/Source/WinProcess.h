@@ -2,7 +2,7 @@
 
 #include "WonderMakeBase/Process.h"
 
-#include "WonderMakeUtility/WinPlatform.h"
+#include "wondermake-utility/WinPlatform.h"
 
 #include <memory>
 

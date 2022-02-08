@@ -1,7 +1,7 @@
 
 #include <gtest/gtest.h>
 
-#include "WonderMakeUtility/Alias.h"
+#include "wondermake-utility/Alias.h"
 
 template<typename TType>
 struct AliasMock

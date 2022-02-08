@@ -1,6 +1,6 @@
 #include "wondermake-tests-common/GTestInclude.h"
 
-#include "WonderMakeBase/Logger.h"
+#include "wondermake-base/Logger.h"
 
 class LoggerMock
 	: public LoggerBase

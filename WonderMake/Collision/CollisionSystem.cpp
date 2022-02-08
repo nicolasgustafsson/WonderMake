@@ -4,8 +4,8 @@
 #include "CollisionFunctionality.h"
 #include "Collision/Colliders.h"
 
-#include "WonderMakeBase/Logger.h"
-#include "WonderMakeBase/ScheduleSystem.h"
+#include "wondermake-base/Logger.h"
+#include "wondermake-base/ScheduleSystem.h"
 
 REGISTER_SYSTEM(CollisionSystem);
 

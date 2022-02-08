@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "NodeGraph.h"
 #include "Debugging/DebugSettingsSystem.h"
-#include "WonderMakeBase/Logger.h"
+#include "wondermake-base/Logger.h"
 
 NodeGraph::NodeGraph(std::filesystem::path aFilePath)
 	: myPath(aFilePath)

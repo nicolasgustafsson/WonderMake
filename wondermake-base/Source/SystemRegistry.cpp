@@ -1,4 +1,4 @@
-#include "WonderMakeBase/SystemRegistry.h"
+#include "wondermake-base/SystemRegistry.h"
 
 thread_local SystemContainer::InternalRep SystemRegistry::myConstructingContainer;
 

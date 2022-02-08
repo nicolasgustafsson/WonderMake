@@ -4,7 +4,7 @@
 #include <optional>
 #include <array>
 #include <functional>
-#include "WonderMakeBase/SystemPtr.h"
+#include "wondermake-base/SystemPtr.h"
 #include "Utilities/Color.h"
 #include "wondermake-utility/RestrictTypes.h"
 #include <glad/glad.h>

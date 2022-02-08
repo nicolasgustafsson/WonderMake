@@ -2,7 +2,7 @@
 #include "RenderTarget.h"
 #include "OpenGLFacade.h"
 
-#include "WonderMakeBase/Logger.h"
+#include "wondermake-base/Logger.h"
 
 RenderTarget::RenderTarget(const SRenderTargetSettings& aSettings)
 {

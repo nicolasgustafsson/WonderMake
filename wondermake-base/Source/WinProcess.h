@@ -1,6 +1,6 @@
 #pragma once
 
-#include "WonderMakeBase/Process.h"
+#include "wondermake-base/Process.h"
 
 #include "wondermake-utility/WinPlatform.h"
 

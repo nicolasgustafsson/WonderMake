@@ -2,7 +2,7 @@
 
 #include "Policies/Scheduler.h"
 
-#include "WonderMakeBase/Logger.h"
+#include "wondermake-base/Logger.h"
 
 #include <algorithm>
 

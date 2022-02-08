@@ -2,8 +2,8 @@
 
 #include "Utilities/Debugging/Debugged.h"
 
-#include "WonderMakeBase/Logger.h"
-#include "WonderMakeBase/System.h"
+#include "wondermake-base/Logger.h"
+#include "wondermake-base/System.h"
 
 struct SImGuiLogMessage
 {

@@ -2,8 +2,8 @@
 
 #include "WonderMakeIo/IpcConnection.h"
 
-#include "WonderMakeBase/Logger.h"
-#include "WonderMakeBase/System.h"
+#include "wondermake-base/Logger.h"
+#include "wondermake-base/System.h"
 
 #include "wondermake-utility/MemoryUnit.h"
 

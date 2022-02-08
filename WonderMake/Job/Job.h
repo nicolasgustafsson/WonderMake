@@ -3,7 +3,7 @@
 #include "Job/JobBase.h"
 #include "Job/JobSystem.h"
 
-#include "WonderMakeBase/SystemGlobal.h"
+#include "wondermake-base/SystemGlobal.h"
 
 template<typename TJob, typename... TArgs>
 auto RunJob(TArgs... aArgs)

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "WonderMakeBase/SystemPolicy.h"
+#include "wondermake-base/SystemPolicy.h"
 
 #include <tuple>
 #include <type_traits>

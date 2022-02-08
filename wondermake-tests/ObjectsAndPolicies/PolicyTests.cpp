@@ -2,8 +2,8 @@
 
 #include <algorithm>
 
-#include "WonderMakeBase/SystemId.h"
-#include "WonderMakeBase/SystemPolicy.h"
+#include "wondermake-base/SystemId.h"
+#include "wondermake-base/SystemPolicy.h"
 
 #include "Policies/Scheduler.h"
 

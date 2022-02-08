@@ -7,8 +7,8 @@
 
 #include "Job/JobSystem.h"
 
-#include "WonderMakeBase/CmdLineArgsSystem.h"
-#include "WonderMakeBase/SystemGlobal.h"
+#include "wondermake-base/CmdLineArgsSystem.h"
+#include "wondermake-base/SystemGlobal.h"
 
 #include "Program/ImguiWrapper.h"
 
@@ -22,8 +22,8 @@
 
 #include "WonderMakeIo/FileSystem.h"
 
-#include "WonderMakeBase/Logger.h"
-#include "WonderMakeBase/ScheduleSystem.h"
+#include "wondermake-base/Logger.h"
+#include "wondermake-base/ScheduleSystem.h"
 
 using namespace MemoryUnitLiterals;
 

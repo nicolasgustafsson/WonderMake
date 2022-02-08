@@ -4,7 +4,7 @@
 #include "Json/json.hpp"
 #include <fstream>
 #include "Program/GlfwFacade.h"
-#include "WonderMakeBase/Logger.h"
+#include "wondermake-base/Logger.h"
 
 REGISTER_SYSTEM(Window);
 

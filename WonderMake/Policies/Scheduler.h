@@ -2,8 +2,8 @@
 
 #include "wondermake-utility/Typedefs.h"
 
-#include "WonderMakeBase/SystemId.h"
-#include "WonderMakeBase/SystemPolicy.h"
+#include "wondermake-base/SystemId.h"
+#include "wondermake-base/SystemPolicy.h"
 
 #include <optional>
 #include <vector>

@@ -8,7 +8,7 @@
 #include "Input/InputSystem.h"
 #include "Program/GlfwFacade.h"
 #include "Program/Window.h"
-#include "WonderMakeBase/SystemPtr.h"
+#include "wondermake-base/SystemPtr.h"
 #include "Utilities/TimeKeeper.h"
 
 REGISTER_SYSTEM(ProgramSystem);

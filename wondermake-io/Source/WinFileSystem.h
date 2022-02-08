@@ -2,7 +2,7 @@
 
 #include "WonderMakeIo/FileSystem.h"
 
-#include "WonderMakeBase/WinPlatformSystem.h"
+#include "wondermake-base/WinPlatformSystem.h"
 
 #include <unordered_map>
 

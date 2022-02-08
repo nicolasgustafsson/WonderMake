@@ -1,6 +1,6 @@
 #pragma once
 
-#include "WonderMakeBase/LoggerTypes.h"
+#include "wondermake-base/LoggerTypes.h"
 
 #include "wondermake-utility/Result.h"
 #include "wondermake-utility/Typedefs.h"

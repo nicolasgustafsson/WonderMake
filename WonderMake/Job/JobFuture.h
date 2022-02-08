@@ -3,7 +3,7 @@
 #include "Job/JobOutput.h"
 #include "Job/JobPromise.h"
 
-#include "WonderMakeBase/ScheduleSystem.h"
+#include "wondermake-base/ScheduleSystem.h"
 
 #include "wondermake-utility/Typedefs.h"
 

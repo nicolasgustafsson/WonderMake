@@ -3,8 +3,8 @@
 #include "Resources/Resource.h"
 #include "Resources/ResourceProxy.h"
 
-#include "WonderMakeBase/Logger.h"
-#include "WonderMakeBase/System.h"
+#include "wondermake-base/Logger.h"
+#include "wondermake-base/System.h"
 
 #include <filesystem>
 #include <functional>

@@ -2,7 +2,7 @@
 
 #include "Constants.h"
 
-#include "WonderMakeBase/Logger.h"
+#include "wondermake-base/Logger.h"
 
 #include <cassert>
 #include <memory>

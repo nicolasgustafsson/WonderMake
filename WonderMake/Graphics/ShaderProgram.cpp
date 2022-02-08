@@ -6,8 +6,8 @@
 #include "Texture.h"
 #include "OpenGLFacade.h"
 
-#include "WonderMakeBase/Logger.h"
-#include "WonderMakeBase/SystemPtr.h"
+#include "wondermake-base/Logger.h"
+#include "wondermake-base/SystemPtr.h"
 
 ShaderProgram::ShaderProgram(
 	ResourceSystem<Shader<EShaderType::Vertex>>& aVsSystem, ResourceSystem<Shader<EShaderType::Fragment>>& aFsSystem, ResourceSystem<Shader<EShaderType::Geometry>>& aGsSystem,

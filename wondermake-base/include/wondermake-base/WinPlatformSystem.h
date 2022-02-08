@@ -2,7 +2,7 @@
 
 #include "wondermake-utility/WinPlatform.h"
 
-#include "WonderMakeBase/System.h"
+#include "wondermake-base/System.h"
 
 class WinPlatformSystem
 	: public SystemAbstracted

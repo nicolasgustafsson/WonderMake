@@ -1,7 +1,7 @@
 #pragma once
 
-#include "WonderMakeBase/LoggerTypes.h"
-#include "WonderMakeBase/System.h"
+#include "wondermake-base/LoggerTypes.h"
+#include "wondermake-base/System.h"
 
 #include "wondermake-utility/Singleton.h"
 #include "wondermake-utility/Typedefs.h"

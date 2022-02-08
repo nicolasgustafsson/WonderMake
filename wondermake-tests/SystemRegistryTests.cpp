@@ -2,7 +2,7 @@
 
 #include "wondermake-utility/Typedefs.h"
 
-#include "WonderMakeBase/SystemRegistry.h"
+#include "wondermake-base/SystemRegistry.h"
 
 class RegistryTestSystem
 	: public System<>

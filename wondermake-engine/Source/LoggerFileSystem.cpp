@@ -2,7 +2,7 @@
 
 #include "WonderMakeIo/FileSystem.h"
 
-#include "WonderMakeBase/SystemGlobal.h"
+#include "wondermake-base/SystemGlobal.h"
 
 #include "wondermake-utility/MemoryUnit.h"
 #include "wondermake-utility/Time.h"

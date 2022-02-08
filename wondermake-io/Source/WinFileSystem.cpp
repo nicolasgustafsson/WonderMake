@@ -1,6 +1,6 @@
 #include "WinFileSystem.h"
 
-#include "WonderMakeBase/SystemGlobal.h"
+#include "wondermake-base/SystemGlobal.h"
 
 REGISTER_SYSTEM_MASKED(WinFileSystem, FileSystem);
 

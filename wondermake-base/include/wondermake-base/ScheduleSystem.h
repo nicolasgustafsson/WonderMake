@@ -1,6 +1,6 @@
 #pragma once
 
-#include "WonderMakeBase/System.h"
+#include "wondermake-base/System.h"
 
 #include "wondermake-utility/Typedefs.h"
 #include "wondermake-utility/UniqueFunction.h"

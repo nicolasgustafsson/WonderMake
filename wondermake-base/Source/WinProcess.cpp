@@ -1,7 +1,7 @@
 #include "WinProcess.h"
 
-#include "WonderMakeBase/WinEventSystem.h"
-#include "WonderMakeBase/WinPlatformSystem.h"
+#include "wondermake-base/WinEventSystem.h"
+#include "wondermake-base/WinPlatformSystem.h"
 
 #include "wondermake-utility/Bindable.h"
 

@@ -2,7 +2,7 @@
 
 #include "wondermake-tests-common/GTestInclude.h"
 
-#include "WonderMakeBase/WinPlatformSystem.h"
+#include "wondermake-base/WinPlatformSystem.h"
 
 class WinPlatformSystemMock
 	: public WinPlatformSystem

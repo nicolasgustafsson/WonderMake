@@ -5,7 +5,7 @@
 #include "WonderMakeIo/IpcSystem.h"
 #include "WonderMakeIo/SocketSerializingImpl.h"
 
-#include "WonderMakeBase/SystemGlobal.h"
+#include "wondermake-base/SystemGlobal.h"
 
 #include "wondermake-utility/Bindable.h"
 

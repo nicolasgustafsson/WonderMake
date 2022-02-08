@@ -1,4 +1,4 @@
-#include "WonderMakeBase/ScheduleSystem.h"
+#include "wondermake-base/ScheduleSystem.h"
 
 ScheduleSystem::ScheduleSystem(ScheduleProc aScheduleProc, ScheduleRepeatingProc aScheduleRepeatingProc) noexcept
 	: myScheduleProc(std::move(aScheduleProc))

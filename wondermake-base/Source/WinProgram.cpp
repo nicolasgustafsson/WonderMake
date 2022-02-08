@@ -1,8 +1,8 @@
 #include "WinProgram.h"
 
-#include "WonderMakeBase/SystemGlobal.h"
-#include "WonderMakeBase/ScheduleSystem.h"
-#include "WonderMakeBase/WinEventSystem.h"
+#include "wondermake-base/SystemGlobal.h"
+#include "wondermake-base/ScheduleSystem.h"
+#include "wondermake-base/WinEventSystem.h"
 
 REGISTER_SYSTEM(WinProgram);
 

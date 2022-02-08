@@ -16,7 +16,7 @@
 
 #include "AssetLink.h"
 
-#include "WonderMakeBase/Logger.h"
+#include "wondermake-base/Logger.h"
 
 template<typename TAssetType>
 class AssetDatabase 

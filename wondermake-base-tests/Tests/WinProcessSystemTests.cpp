@@ -1,4 +1,4 @@
-#include "WonderMakeBase/Process.h"
+#include "wondermake-base/Process.h"
 
 #include "wondermake-tests-common/GTestInclude.h"
 

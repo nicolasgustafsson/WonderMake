@@ -4,7 +4,7 @@
 #include "Resources/Resource.h"
 #include "Resources/ResourceSystem.h"
 
-#include "WonderMakeBase/Logger.h"
+#include "wondermake-base/Logger.h"
 
 #include "wondermake-utility/RestrictTypes.h"
 

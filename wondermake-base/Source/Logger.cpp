@@ -1,6 +1,6 @@
-#include "WonderMakeBase/Logger.h"
+#include "wondermake-base/Logger.h"
 
-#include "WonderMakeBase/SystemGlobal.h"
+#include "wondermake-base/SystemGlobal.h"
 
 #include "wondermake-utility/Time.h"
 

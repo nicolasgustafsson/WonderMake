@@ -1,8 +1,8 @@
 #include "WinIpcSystem.h"
 
-#include "WonderMakeBase/SystemGlobal.h"
-#include "WonderMakeBase/WinPlatformSystem.h"
-#include "WonderMakeBase/WinEventSystem.h"
+#include "wondermake-base/SystemGlobal.h"
+#include "wondermake-base/WinPlatformSystem.h"
+#include "wondermake-base/WinEventSystem.h"
 
 #include "WinIpcAcceptor.h"
 #include "WinIpcConnection.h"

@@ -1,7 +1,7 @@
 #include "WinLoggerDebugSystem.h"
 
-#include "WonderMakeBase/SystemGlobal.h"
-#include "WonderMakeBase/WinPlatformSystem.h"
+#include "wondermake-base/SystemGlobal.h"
+#include "wondermake-base/WinPlatformSystem.h"
 
 #include "wondermake-utility/StringUtility.h"
 

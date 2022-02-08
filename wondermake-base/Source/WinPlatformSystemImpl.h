@@ -1,6 +1,6 @@
 #pragma once
 
-#include "WonderMakeBase/WinPlatformSystem.h"
+#include "wondermake-base/WinPlatformSystem.h"
 
 class WinPlatformSystemImpl
 	: public SystemSub<

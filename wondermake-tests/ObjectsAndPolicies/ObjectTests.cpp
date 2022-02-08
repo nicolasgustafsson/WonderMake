@@ -6,7 +6,7 @@
 
 #include "Object/Object.h"
 
-#include "WonderMakeBase/ScheduleSystem.h"
+#include "wondermake-base/ScheduleSystem.h"
 
 struct SCatComponent
 	: public SComponent

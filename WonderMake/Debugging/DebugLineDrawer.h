@@ -2,7 +2,7 @@
 #include "DebugLine.h"
 #include "DebugLineRenderObject.h"
 #include "Graphics/Shader.h"
-#include "WonderMakeBase/System.h"
+#include "wondermake-base/System.h"
 #include "Utilities/TimeKeeper.h"
 
 template<typename TResource>

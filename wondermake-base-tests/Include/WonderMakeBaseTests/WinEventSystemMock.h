@@ -2,7 +2,7 @@
 
 #include "wondermake-tests-common/GTestInclude.h"
 
-#include "WonderMakeBase/WinEventSystem.h"
+#include "wondermake-base/WinEventSystem.h"
 
 class WinEventSystemMock
 	: public WinEventSystem

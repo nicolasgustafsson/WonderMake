@@ -1,5 +1,5 @@
 #pragma once
-#include "WonderMakeBase/System.h"
+#include "wondermake-base/System.h"
 
 class GlfwFacade;
 struct GLFWwindow;

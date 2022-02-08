@@ -1,6 +1,6 @@
 #include "wondermake-tests-common/GTestInclude.h"
 
-#include "WonderMakeBase/Process.h"
+#include "wondermake-base/Process.h"
 
 #include "WonderMakeBaseTests/WinEventSystemMock.h"
 #include "WonderMakeBaseTests/WinPlatformSystemMock.h"

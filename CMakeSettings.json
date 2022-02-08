@@ -7,7 +7,7 @@
       "inheritEnvironments": [ "msvc_x64_x64" ],
       "buildRoot": "${projectDir}\\out\\build\\${name}",
       "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeCommandArgs": "-DWonderMake_Testing=ON -DWonderMake_Testing_Manual=ON -DWonderMake_SetCxxStandard=ON -DWonderMake_SetConfigurationTypes=ON",
+      "cmakeCommandArgs": "-DWonderMake_Testing=ON -DWonderMake_TestingManual=ON -DWonderMake_SetCxxStandard=ON -DWonderMake_SetConfigurationTypes=ON",
       "buildCommandArgs": "",
       "ctestCommandArgs": ""
     },
@@ -18,7 +18,7 @@
       "inheritEnvironments": [ "msvc_x64_x64" ],
       "buildRoot": "${projectDir}\\out\\build\\${name}",
       "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeCommandArgs": "-DWonderMake_Testing=ON -DWonderMake_Testing_Manual=ON -DWonderMake_SetCxxStandard=ON -DWonderMake_SetConfigurationTypes=ON",
+      "cmakeCommandArgs": "-DWonderMake_Testing=ON -DWonderMake_TestingManual=ON -DWonderMake_SetCxxStandard=ON -DWonderMake_SetConfigurationTypes=ON",
       "buildCommandArgs": "",
       "ctestCommandArgs": ""
     },
@@ -29,7 +29,7 @@
       "inheritEnvironments": [ "msvc_x64" ],
       "buildRoot": "${projectDir}\\out\\build\\${name}",
       "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeCommandArgs": "-DWonderMake_Testing=ON -DWonderMake_Testing_Manual=ON -DWonderMake_SetCxxStandard=ON -DWonderMake_SetConfigurationTypes=ON",
+      "cmakeCommandArgs": "-DWonderMake_Testing=ON -DWonderMake_TestingManual=ON -DWonderMake_SetCxxStandard=ON -DWonderMake_SetConfigurationTypes=ON",
       "buildCommandArgs": "",
       "ctestCommandArgs": ""
     },
@@ -40,7 +40,7 @@
       "inheritEnvironments": [ "msvc_x64" ],
       "buildRoot": "${projectDir}\\out\\build\\${name}",
       "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeCommandArgs": "-DWonderMake_Testing=ON -DWonderMake_Testing_Manual=ON -DWonderMake_SetCxxStandard=ON -DWonderMake_SetConfigurationTypes=ON",
+      "cmakeCommandArgs": "-DWonderMake_Testing=ON -DWonderMake_TestingManual=ON -DWonderMake_SetCxxStandard=ON -DWonderMake_SetConfigurationTypes=ON",
       "buildCommandArgs": "",
       "ctestCommandArgs": ""
     }

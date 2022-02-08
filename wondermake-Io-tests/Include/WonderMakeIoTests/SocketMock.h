@@ -1,4 +1,4 @@
-#include "WonderMakeTestsCommon/GTestInclude.h"
+#include "wondermake-tests-common/GTestInclude.h"
 
 #include "WonderMakeIo/Socket.h"
 

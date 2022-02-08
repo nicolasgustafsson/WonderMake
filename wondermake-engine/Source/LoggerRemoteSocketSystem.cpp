@@ -2,9 +2,9 @@
 
 #include "LoggerRemoteMessageType.h"
 
-#include "WonderMakeIo/IpcConnection.h"
-#include "WonderMakeIo/IpcSystem.h"
-#include "WonderMakeIo/SocketSerializingImpl.h"
+#include "wondermake-io/IpcConnection.h"
+#include "wondermake-io/IpcSystem.h"
+#include "wondermake-io/SocketSerializingImpl.h"
 
 #include "wondermake-base/SystemGlobal.h"
 

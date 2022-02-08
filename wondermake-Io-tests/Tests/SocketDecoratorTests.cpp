@@ -1,6 +1,6 @@
 #include "wondermake-tests-common/GTestInclude.h"
 
-#include "WonderMakeIo/SocketDecorator.h"
+#include "wondermake-io/SocketDecorator.h"
 
 #include "WonderMakeIoTests/SocketMock.h"
 

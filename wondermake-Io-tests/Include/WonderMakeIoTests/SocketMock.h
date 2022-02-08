@@ -1,6 +1,6 @@
 #include "wondermake-tests-common/GTestInclude.h"
 
-#include "WonderMakeIo/Socket.h"
+#include "wondermake-io/Socket.h"
 
 class SocketMock
 	: public Socket

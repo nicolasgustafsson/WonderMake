@@ -1,24 +1,47 @@
 #pragma once
+#include "Constants.h"
 
+#ifdef COMPILER_GCC
 #include <source_location>
+#endif
+
 #include <string_view>
 
 namespace _Impl
 {
     template <typename T>
     consteval auto func_name() {
-#ifdef __GNUC__
-        const auto& loc = std::source_location::current();
-        return loc.function_name();
-#elif _MSC_VER
-        //const auto& loc = std::source_location::current();
-        return __FUNCSIG__;//loc.function_name();
-#endif
+        if constexpr(Compiler::Clang)
+        {
+            return "Clang not supported";
+        }
+        else if constexpr (Compiler::Gcc)
+        {
+            #if COMPILER_GCC && !COMPILER_clang
+            const auto& loc = std::source_location::current();
+            return loc.function_name();
+            #endif
+        }
+        else if constexpr (Compiler::Msvc)
+        {
+            #if COMPILER_MSVC
+            return __FUNCSIG__;
+            #endif
+        }
     }
 
     template <typename T>
     consteval std::string_view type_of_impl_() {
         constexpr std::string_view func_name_ = func_name<T>();
+
+#ifdef __GNUC__
+        constexpr std::string_view func_name_without_trash{ func_name_.begin() + 44, func_name_.end() - 1 };
+        return func_name_without_trash;
+#elif _MSC_VER
+        //const auto& loc = std::source_location::current();
+        return __FUNCSIG__;//loc.function_name();
+
+
         // since func_name_ is 'consteval auto func_name() [with T = ...]'
         // we can simply get the subrange
         // because the position after the equal will never change since 
@@ -35,6 +58,7 @@ namespace _Impl
 
         // another notice: these may not work on other compilers;
         return { func_name_without_trash.begin() + offset, func_name_without_trash.end()};
+#endif
     }
 }
 

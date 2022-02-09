@@ -1,4 +1,8 @@
 #pragma once
+#include "Constants.h"
+#include "Imgui/imgui.h"
+#include "Utilities/Color.h"
+#include <string>
 namespace SlotColors
 {
 	template<typename TSlotType>

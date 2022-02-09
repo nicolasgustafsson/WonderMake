@@ -10,8 +10,7 @@ class _BaseFunctionality;
 class SystemBase;
 
 class BaseObject
-        : public NonMovable
-                , public NonCopyable
+        : public NonCopyable
 {
 public:
     BaseObject(BaseObject&& aOther);

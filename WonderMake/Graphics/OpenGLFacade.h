@@ -1,5 +1,8 @@
 #pragma once
 #include "System/System.h"
+#include "Utilities/Color.h"
+#include "Utilities/Vector.h"
+#include "glad/glad.h"
 
 
 //[Nicos]: Note that this is not a complete facade for openGL; you may need to create your own wrapped functions.

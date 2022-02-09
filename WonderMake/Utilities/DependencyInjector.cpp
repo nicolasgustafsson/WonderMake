@@ -3,6 +3,7 @@
 
 void DependencyInjector::CreateAll()
 {
+    return;
 	for (auto& [key, createFunc] : myCreateFuncs)
 	{
 		const auto depIt = myDependencies.find(key);

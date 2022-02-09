@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include "Utilities/UniqueFunction.h"
 
 #include <typeindex>
@@ -45,7 +46,7 @@ private:
 template<typename TType, typename TCreateFunc, typename... TDependencies>
 inline void DependencyInjector::Add(TCreateFunc aCreateFunc)
 {
-	myCreateFuncs.emplace(typeid(Key<std::decay_t<TType>>), [createFunc = std::move(aCreateFunc)]([[maybe_unused]] DependencyInjector& aThis)
+	myCreateFuncs.emplace(typeid(DependencyInjector::Key<std::decay_t<TType>>), [createFunc = std::move(aCreateFunc)]([[maybe_unused]] DependencyInjector& aThis)
 		{
 			void* const dependency = (void*)&createFunc(aThis.GetDependency<TDependencies>()...);
 
@@ -64,7 +65,7 @@ inline TType& DependencyInjector::Get()
 template<typename TType>
 TType& DependencyInjector::GetDependency()
 {
-	const auto& typeIndex = typeid(Key<std::decay_t<TType>>);
+	const auto& typeIndex = typeid(DependencyInjector::Key<std::decay_t<TType>>);
 
 	const auto depIt = myDependencies.find(typeIndex);
 
@@ -76,8 +77,10 @@ TType& DependencyInjector::GetDependency()
 	const auto createIt = myCreateFuncs.find(typeIndex);
 
 	if (createIt == myCreateFuncs.cend())
-	{
-		throw MissingDependencyException(typeIndex.name());
+    {
+        std::string bla = typeIndex.name();
+        std::cout << bla;
+		assert(false);
 	}
 
 	return *((TType*)createIt->second(*this));

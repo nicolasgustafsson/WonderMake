@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Typedefs.h"
 #include "Utilities/RestrictTypes.h"
 #include "Utilities/Utility.h"
 
@@ -206,7 +207,7 @@ template<typename TType>
 struct DefaultUniqueFunctionAllocator
 {
 	template<typename... TArgs>
-	inline static [[nodiscard]] TType* Allocate(TArgs&&... aArgs)
+	[[nodiscard]] inline static TType* Allocate(TArgs&&... aArgs)
 	{
 		return new TType(std::forward<TArgs>(aArgs)...);
 	}

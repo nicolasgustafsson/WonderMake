@@ -1,13 +1,27 @@
 #pragma once
+#include "Utilities/UniqueFunction.h"
 
 class _AutoRegister
 {
 public:
-	template<typename TRegisterFunc>
+
+//template<typename TRegisterFunc>
+//constexpr static auto RegisterFunction = []()
+//{
+
+//    StaticInitializationTimeFunction<VariableGetterFunc<T, Name, TDefaultValue>> itNeedsAName;
+//};
+
+    template<typename TRegisterFunc>
 	inline _AutoRegister(TRegisterFunc aRegFunc)
 	{
-		aRegFunc();
+        //StaticInitializationTimeFunction<aRegFunc> itNeedsAName;
+        aRegFunc();
 	}
 };
+
+//template<typename T, SFixedString Name, T TDefaultValue>
+//T GetVariable(Effect& aEffect)
+//{
 
 #define WM_AUTO_REGISTER(aRegisterFunction, aUniqueName) _AutoRegister _AutoReg##aUniqueName (aRegisterFunction);

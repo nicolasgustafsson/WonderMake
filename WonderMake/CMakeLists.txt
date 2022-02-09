@@ -4,6 +4,14 @@ set(PROJECT_NAME WonderMake)
 # Source groups
 ################################################################################
 set(no_group_source_files
+    "Universe/UniverseDenizen.cpp"
+    "Universe/UniverseDenizen.h"
+    "Universe/UniverseHelper.cpp"
+    "Universe/UniverseHelper.h"
+    "Universe/UniverseManagerSystem.cpp"
+    "Universe/UniverseManagerSystem.h"
+    "Universe/UniverseSystem.cpp"
+    "Universe/UniverseSystem.h"
     "Audio/AudioFile.cpp"
     "Audio/AudioFile.h"
     "Audio/AudioManager.cpp"
@@ -217,14 +225,6 @@ set(no_group_source_files
     "TweakableValues/TweakableValueDatabase.cpp"
     "TweakableValues/TweakableValueDatabase.h"
     "Typedefs.h"
-    "Universe/UniverseDenizen.cpp"
-    "Universe/UniverseDenizen.h"
-    "Universe/UniverseHelper.cpp"
-    "Universe/UniverseHelper.h"
-    "Universe/UniverseManagerSystem.cpp"
-    "Universe/UniverseManagerSystem.h"
-    "Universe/UniverseSystem.cpp"
-    "Universe/UniverseSystem.h"
     "Utilities/Alias.h"
     "Utilities/AnimatedValue.cpp"
     "Utilities/AnimatedValue.h"
@@ -319,6 +319,23 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/../External/stb/Inc/;"
 )
 
+
+link_directories(${PROJECT_NAME} PUBLIC
+"${CMAKE_CURRENT_SOURCE_DIR}/;"
+"${CMAKE_CURRENT_SOURCE_DIR}/../Fletcherette;"
+"${CMAKE_CURRENT_SOURCE_DIR}/../WonderMake;"
+"${CMAKE_CURRENT_SOURCE_DIR}/../External/glfw-3.3/Lib/;"
+"${CMAKE_CURRENT_SOURCE_DIR}/../External/stb/Lib/;"
+"${CMAKE_CURRENT_SOURCE_DIR}/../External/glad/Lib/;"
+"${CMAKE_CURRENT_SOURCE_DIR}/../External/Imgui/Lib/;"
+"${CMAKE_CURRENT_SOURCE_DIR}/../External/json-3.5.0/Lib/;"
+"${CMAKE_CURRENT_SOURCE_DIR}/../External/SoLoud/Lib/;"
+)
+
+
+target_link_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR})
+
+#add_link_options(--whole-archive)
 ################################################################################
 # Target name
 ################################################################################
@@ -377,89 +394,24 @@ elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x86")
     )
 endif()
 
-################################################################################
-# Compile and link options
-################################################################################
-if(MSVC)
-    if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
-        target_compile_options(${PROJECT_NAME} PRIVATE
-            $<$<CONFIG:Debug>:
-                /Od
-            >
-            $<$<CONFIG:Release>:
-                /O2;
-                /Oi;
-                /Gy
-            >
-            /permissive-;
-            /MP;
-            /std:c++latest;
-            /Gm-;
-            /sdl;
-            /W4;
-            /WX;
-            ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
-            /TP;
-            /w44062;
-            ${DEFAULT_CXX_EXCEPTION_HANDLING}
-        )
-    elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x86")
-        target_compile_options(${PROJECT_NAME} PRIVATE
-            $<$<CONFIG:Debug>:
-                /Od
-            >
-            $<$<CONFIG:Release>:
-                /O2;
-                /Oi;
-                /Gy
-            >
-            /permissive-;
-            /MP;
-            /std:c++latest;
-            /sdl;
-            /W4;
-            /WX;
-            ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
-            /TP;
-            /w44062;
-            ${DEFAULT_CXX_EXCEPTION_HANDLING}
-        )
-    endif()
-    if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
-        target_link_options(${PROJECT_NAME} PRIVATE
-            $<$<CONFIG:Release>:
-                /OPT:REF;
-                /OPT:ICF
-            >
-        )
-    elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x86")
-        target_link_options(${PROJECT_NAME} PRIVATE
-            $<$<CONFIG:Release>:
-                /OPT:REF;
-                /OPT:ICF
-            >
-        )
-    endif()
-endif()
 
 ################################################################################
 # Dependencies
 ################################################################################
-# Link with other targets.
-target_link_libraries(${PROJECT_NAME} PUBLIC
-    Imgui
+add_dependencies(${PROJECT_NAME}
+        Imgui
 )
 
-if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
-    set(ADDITIONAL_LIBRARY_DEPENDENCIES
-        "glfw3;"
-        "opengl32"
-    )
-elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x86")
-    set(ADDITIONAL_LIBRARY_DEPENDENCIES
-        "glfw3;"
-        "opengl32"
-    )
-endif()
+
+# Link with other targets.
+target_link_libraries(${PROJECT_NAME} PUBLIC
+    glfw3
+    pthread
+    dl
+    Imgui
+    soloud
+    asound
+)
+
 target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
 

@@ -14,7 +14,7 @@ struct SObjectContainerComponent : public SComponent
 		{
 
 		}
-		BaseObject DenizenObject;
+		Object DenizenObject;
 		SubobjectFunctionality& DenizenFunctionality;
 	};
 
@@ -30,12 +30,12 @@ public:
 	~ObjectContainerFunctionality() override;
 	void Tick();
 
-	BaseObject& AddDenizen();
-	BaseObject& AddDenizen(BaseObject&& aObject);
+	Object& AddDenizen();
+	Object& AddDenizen(Object&& aObject);
 
-	void RemoveDenizen(BaseObject& aObject);
+	void RemoveDenizen(Object& aObject);
 
-	void AddDenizens(plf::colony<BaseObject>&& aObjects);
+	void AddDenizens(plf::colony<Object>&& aObjects);
 
 	void TransferToOtherContainer(ObjectContainerFunctionality& aNewLevel);
 };

@@ -1,9 +1,12 @@
 #pragma once
+#include "Graphics/OpenGLFacade.h"
 #include "UniformBuffer.h"
 #include "Utilities/Matrix.h"
 #include "System/System.h"
 #include "Message/MessageSubscriber.h"
 #include "Utilities/Debugging/Debugged.h"
+#include "Utilities/Vector.h"
+#include "Utilities/Matrix.h"
 
 struct SPaddedMatrix33
 {
@@ -74,11 +77,8 @@ class Window;
 
 class EngineUniformBuffer 
 	: public UniformBuffer<SEngineUniformBufferData>
-	, public System<
-		Policy::Set<
-			PAdd<Window, PWrite>,
-			PAdd<OpenGLFacade, PWrite>>>
-	
+	, public System< Window, OpenGLFacade>
+
 {
 public:
 	EngineUniformBuffer();

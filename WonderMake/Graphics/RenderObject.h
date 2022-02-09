@@ -59,15 +59,15 @@ public:
 	void Execute();
 
 	inline void SetRenderId(const u64 aRenderId) noexcept { myRenderId = aRenderId; }
-	inline [[nodiscard]] u64 GetRenderId() const noexcept { return myRenderId; }
+	[[nodiscard]] inline u64 GetRenderId() const noexcept { return myRenderId; }
 
-	inline [[nodiscard]] auto operator<=>(const RenderCommand& aRhs) const noexcept
+	[[nodiscard]] inline auto operator<=>(const RenderCommand& aRhs) const noexcept
 	{
 		return myRenderOrder <=> aRhs.myRenderOrder;
 	}
 
 
-	inline [[nodiscard]] bool operator==(const RenderCommand& aRhs) const noexcept = default;
+	[[nodiscard]] inline bool operator==(const RenderCommand& aRhs) const noexcept = default;
 
 private:
 	std::reference_wrapper<BaseRenderObject> myRenderObject;

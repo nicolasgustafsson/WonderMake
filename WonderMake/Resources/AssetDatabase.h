@@ -2,9 +2,11 @@
 
 #include <filesystem>
 #include <json/json.hpp>
+#include <Imgui/imgui.h>
 #include <Imgui/imgui_stdlib.h>
 
 #include "Asset.h"
+#include "Graphics/Shader.h"
 #include "ResourceSystem.h"
 
 #include "Utilities/Debugging/Debugged.h"
@@ -32,7 +34,7 @@ public:
 
 	void Load()
 	{
-		std::ifstream file("AssetDatabases\\" + GetAssetTypeName() + ".json", std::fstream::app);
+		std::ifstream file("AssetDatabases/" + GetAssetTypeName() + ".json", std::fstream::app);
 
 		std::string fileContents((std::istreambuf_iterator<char>(file)),
 			(std::istreambuf_iterator<char>()));
@@ -126,7 +128,7 @@ public:
 	{
 		nlohmann::json serialized = Serialize();
 
-		std::ofstream file("AssetDatabases\\" + GetAssetTypeName() + ".json");
+		std::ofstream file("AssetDatabases/" + GetAssetTypeName() + ".json");
 
 		file << serialized.dump(4);
 	}
@@ -227,15 +229,16 @@ private:
 			return "Geometry Shader";
 		else
 		{
-			std::string assetTypeName = typeid(TAssetType).name();
+            return std::string(TypeString<TAssetType>());
+            //std::string assetTypeName = typeid(TAssetType).name();
 
-			if (assetTypeName.starts_with("class "))
-				assetTypeName.erase(assetTypeName.begin(), assetTypeName.begin() + 6);
+			//if (assetTypeName.starts_with("class "))
+			//	assetTypeName.erase(assetTypeName.begin(), assetTypeName.begin() + 6);
 
-			if (assetTypeName.starts_with("struct "))
-				assetTypeName.erase(assetTypeName.begin(), assetTypeName.begin() + 7);
+			//if (assetTypeName.starts_with("struct "))
+			//	assetTypeName.erase(assetTypeName.begin(), assetTypeName.begin() + 7);
 
-			return assetTypeName;
+			//return assetTypeName;
 		}
 	}
 	

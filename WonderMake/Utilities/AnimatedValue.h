@@ -3,7 +3,7 @@
 #include "Utilities/Easing/EasingFunctions.h"
 
 //quick and dirty class for making simple animations over values
-template<typename T, f32 Time, decltype(WmEasings::Lerp<T>) TFunction = WmEasings::Lerp<T>> requires (WmMath::Interpolable<T> && Time > 0.f)
+template<typename T, f32 Time, decltype(&WmEasings::Lerp<T>) TFunction = WmEasings::Lerp<T>> requires (WmMath::Interpolable<T> && Time > 0.f)
 class AnimatedValue
 {
 public:

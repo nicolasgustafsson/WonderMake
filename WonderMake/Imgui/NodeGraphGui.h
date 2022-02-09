@@ -1,6 +1,7 @@
 #pragma once
 #include "NodeGraph/NodeTypes.h"
 #include "Canvas.h"
+#include "Utilities/plf_colony.h"
 
 class NodeGraph;
 struct SNode;

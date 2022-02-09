@@ -2,6 +2,9 @@
 #include <optional>
 #include <tuple>
 #include <variant>
+#include <string>
+#include <sstream>
+#include <vector>
 
 namespace Utility
 {

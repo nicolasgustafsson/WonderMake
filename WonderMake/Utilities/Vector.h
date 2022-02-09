@@ -4,6 +4,7 @@
 #include "Utilities/Rotation.h"
 
 #include <array>
+#include <cassert>
 
 #include "TypeTraits/TypeString.h"
 

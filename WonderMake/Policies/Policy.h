@@ -7,6 +7,7 @@
 #include "Policy.h"
 #include "Policies/SystemId.h"
 #include "Utilities/TypeTraits/TypeTraits.h"
+#include "Constants.h"
 
 struct Policy final
 {
@@ -47,6 +48,7 @@ struct Policy final
 		using ExtractDependency = typename TPolicy::Dependency;
 
 	public:
+
 		using Dependencies = std::tuple<ExtractDependency<TPolicies>...>;
 		using DependenciesRef = std::tuple<ExtractDependency<TPolicies>&...>;
 
@@ -139,8 +141,18 @@ constexpr auto ConvertToPolicy()
 template <typename T>
 constexpr auto ConvertSingleToPolicySet()
 {
-	if constexpr (IsTemplateInstanceOf<T, Policy::Set>::value)
+	#if COMPILER_clang
+	if constexpr (std::is_const_v<T>)
 	{
+		return Policy::Set<Policy::Add<std::remove_const_t<T>, PRead>>();
+	}
+	else
+	{
+		return Policy::Set<Policy::Add<std::remove_const_t<T>, PWrite>>();
+	}
+	#else
+	if constexpr (IsTemplateInstanceOf<T, Policy::Set>::value)
+	{ 
 		return T{};
 	}
 	else if constexpr (std::is_const_v<T>)
@@ -151,6 +163,7 @@ constexpr auto ConvertSingleToPolicySet()
 	{
 		return Policy::Set<Policy::Add<std::remove_const_t<T>, PWrite>>();
 	}
+	#endif
 }
 
 template<typename T>
@@ -164,6 +177,9 @@ constexpr auto ConvertToPolicySet()
 {
 	if constexpr (sizeof...(TPolicies) == 1)
 	{
+		#if COMPILER_clang
+		return Policy::Set<>();
+		#else
 		if constexpr (IsTemplateInstanceOf<TPolicies..., Policy::Set>::value)
 		{
 			return ConvertFromVariadicToSingleType<TPolicies...>();
@@ -173,6 +189,7 @@ constexpr auto ConvertToPolicySet()
 			using TPolicySet = Policy::Set<decltype(ConvertToPolicy<TPolicies>())...>;
 			return TPolicySet();
 		}
+		#endif
 	}
 	else
 	{

@@ -2,9 +2,10 @@
 
 class NonCopyable
 {
-protected:
+public:
 	NonCopyable() = default;
 	~NonCopyable() = default;
+protected:
 
 	NonCopyable(const NonCopyable&) = delete;
 	NonCopyable& operator=(const NonCopyable&) = delete;
@@ -15,9 +16,10 @@ protected:
 
 class NonMovable
 {
-protected:
+public:
 	NonMovable() = default;
 	~NonMovable() = default;
+protected:
 
 	NonMovable(const NonMovable&) = default;
 	NonMovable& operator=(const NonMovable&) = default;

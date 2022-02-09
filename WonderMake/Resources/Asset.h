@@ -1,5 +1,8 @@
 #pragma once
 #include <filesystem>
+#include "Imgui/imgui.h"
+#include "Resources/ResourceProxy.h"
+#include "Resources/ResourceSystem.h"
 #include "Utilities/Id.h"
 
 struct SAssetMetadata

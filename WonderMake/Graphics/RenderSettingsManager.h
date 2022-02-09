@@ -1,5 +1,8 @@
 #pragma once
 
+#include "System/System.h"
+#include <optional>
+
 enum class EBlendMode
 {
 	Alpha,

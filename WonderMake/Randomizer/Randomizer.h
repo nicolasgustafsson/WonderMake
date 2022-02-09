@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Utilities/WmMath.h"
+#include "Utilities/Geometry.h"
 #include "System/System.h"
 
 #include <random>

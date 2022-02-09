@@ -1,5 +1,7 @@
 #pragma once
 
+#include <tuple>
+
 template <class, template <class, class...> class>
 struct IsTemplateInstanceOf : public std::false_type {};
 

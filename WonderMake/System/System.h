@@ -37,11 +37,7 @@ public:
 	using Super = System<TPolicySet>;
 	using PolicySet = TPolicySet;
 
-#ifdef __GNUC__
 	using Dependencies = typename TPolicySet::DependenciesRef;
-#else
-    using Dependencies = typename TPolicySet::template DependenciesRef;
-#endif
 
 	inline static void InjectDependencies(Dependencies&& aDependencies)
 	{
@@ -56,7 +52,7 @@ protected:
 		myInjectedDependencies.reset();
 	}
 
-	template<typename TDependency> requires TPolicySet::template HasPolicy_v<TDependency, PWrite>
+	template<typename TDependency>// requires TPolicySet::template HasPolicy_v<TDependency, PWrite>
     [[nodiscard]] constexpr inline TDependency& Get()
 	{
 		TDependency& ref = std::get<std::decay_t<TDependency>&>(myDependencies);
@@ -64,7 +60,7 @@ protected:
 		return ref.template Resolve<TDependency>();
 	}
 
-	template<typename TDependency> requires TPolicySet::template HasDependency_v<TDependency>
+	template<typename TDependency> //requires TPolicySet::template HasDependency_v<TDependency>
     [[nodiscard]] constexpr inline const TDependency& Get() const
 	{
 		TDependency& ref = std::get<std::decay_t<TDependency>&>(myDependencies);

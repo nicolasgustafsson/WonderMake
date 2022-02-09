@@ -5,6 +5,7 @@
 #include <fstream>
 #include "Program/GlfwFacade.h"
 #include "Camera/CameraManager.h"
+#include <iostream>
 
 REGISTER_SYSTEM(Window);
 
@@ -12,7 +13,8 @@ Window::Window()
 {
 	std::ifstream windowSettingsFile("windowSettings.json");
 	json windowSettings;
-
+    std::cout << "hello";
+    std::string windowSettingsString;
 	windowSettingsFile >> windowSettings;
 
 	auto& glfw = Get<GlfwFacade>();

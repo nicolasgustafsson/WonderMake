@@ -4,6 +4,8 @@
 #include <stack>
 #include <json/json.hpp>
 #include <filesystem>
+#include "Resources/Resource.h"
+#include "Utilities/plf_colony.h"
 
 struct SRegisteredNode
 {

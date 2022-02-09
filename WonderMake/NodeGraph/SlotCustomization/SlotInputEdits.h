@@ -1,6 +1,9 @@
 #pragma once
 #include "Imgui/FileSelector.h"
 #include "Graphics/RenderSettingsManager.h"
+#include "Imgui/imgui.h"
+#include "Utilities/Color.h"
+#include "Utilities/Vector.h"
 
 class NodeGraph;
 

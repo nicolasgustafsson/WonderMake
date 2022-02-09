@@ -2,6 +2,7 @@
 #include <string>
 #include <set>
 #include "FixedString.h"
+#include <unordered_map>
 
 class StaticRegistry
 {

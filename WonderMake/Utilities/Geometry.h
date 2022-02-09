@@ -1,5 +1,7 @@
 #pragma once
 #include "TypeTraits/TypeTraits.h"
+#include "Typedefs.h"
+#include "Utilities/Vector.h"
 
 struct SRectangle
 {

@@ -1,5 +1,6 @@
 #pragma once
 #include "Message/MessageSubscriber.h"
+#include "Message/MessageTypes.h"
 
 class Debugged
 {

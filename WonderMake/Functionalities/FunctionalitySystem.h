@@ -13,6 +13,8 @@
 #include "Utilities/plf_colony.h"
 #include "Universe/UniverseSystem.h"
 
+#include "Debugging/DebugSettingsSystem.h"
+
 #include <type_traits>
 
 struct SComponent;

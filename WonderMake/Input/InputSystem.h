@@ -9,9 +9,10 @@ class CameraManager;
 class GlfwFacade;
 class Renderer;
 class Window;
+class ImguiWrapper;
 
 class InputSystem
-	: public System<GlfwFacade, Renderer, CameraManager, Window>
+	: public System<GlfwFacade, Renderer, CameraManager, Window, ImguiWrapper>
 	, public Debugged
 {
 public:

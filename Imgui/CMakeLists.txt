@@ -51,6 +51,11 @@ set(ROOT_NAMESPACE Imgui)
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_GLOBAL_KEYWORD "Win32Proj"
 )
+
+target_include_directories(${PROJECT_NAME} PUBLIC
+        "${CMAKE_CURRENT_SOURCE_DIR}/.;"
+        )
+
 ################################################################################
 # Target name
 ################################################################################

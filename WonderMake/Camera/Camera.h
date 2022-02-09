@@ -6,6 +6,7 @@
 #include "Graphics/RenderTarget.h"
 #include "Graphics/RenderNodeGraph/RenderNodeGraph.h"
 #include "Camera/Display.h"
+#include "Utilities/Color.h"
 
 class Camera final : public NonCopyable, public NonMovable
 {

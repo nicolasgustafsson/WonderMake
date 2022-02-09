@@ -2,6 +2,7 @@
 #include "AudioNodeTypes.h"
 #include "Audio/AudioManager.h"
 #include <soloud_echofilter.h>
+#include <soloud_bus.h>
 
 namespace NodeTypes
 {

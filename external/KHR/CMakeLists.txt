@@ -5,6 +5,4 @@ list(APPEND SourceFiles
 
 add_library(Khr INTERFACE ${SourceFiles})
 
-set_target_properties(Khr PROPERTIES FOLDER "wondermake/external")
-
 target_include_directories(Khr INTERFACE "Inc")

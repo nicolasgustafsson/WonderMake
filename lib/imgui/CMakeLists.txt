@@ -23,8 +23,6 @@ list(APPEND SourceFiles
 
 add_library(Imgui STATIC ${SourceFiles})
 
-set_target_properties(Imgui PROPERTIES FOLDER "wondermake/external")
-
 target_include_directories(Imgui
     PUBLIC
         "Include"

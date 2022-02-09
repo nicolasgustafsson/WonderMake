@@ -11,8 +11,6 @@ list(APPEND SourceFiles
     
 add_executable(WonderMakeIoManualTests ${SourceFiles})
 
-set_target_properties(WonderMakeIoManualTests PROPERTIES FOLDER "wondermake/test/manual")
-
 add_test(WonderMakeIoManualTests WonderMakeIoManualTests)
 
 target_link_libraries(WonderMakeIoManualTests gtest_main gmock WonderMakeTestsCommon)

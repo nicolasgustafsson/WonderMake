@@ -20,8 +20,6 @@ list(APPEND SourceFiles
     
 add_executable(WonderMakeTests ${SourceFiles})
 
-set_target_properties(WonderMakeTests PROPERTIES FOLDER "wondermake/test/manual")
-
 add_test(WonderMakeTests WonderMakeTests)
 
 target_include_directories(WonderMakeTests

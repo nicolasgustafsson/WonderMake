@@ -22,8 +22,6 @@ list(APPEND SourceFiles
 
 add_library(WonderMakeIo STATIC ${SourceFiles})
 
-set_target_properties(WonderMakeIo PROPERTIES FOLDER "wondermake/lib")
-
 target_include_directories(WonderMakeIo PUBLIC "include")
 if(MSVC)
     target_link_options(WonderMakeIo PUBLIC "/WHOLEARCHIVE:WonderMakeIo")

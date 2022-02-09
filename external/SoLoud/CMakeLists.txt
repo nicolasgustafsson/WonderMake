@@ -5,6 +5,4 @@ list(APPEND SourceFiles
 
 add_library(SoLoud INTERFACE ${SourceFiles})
 
-set_target_properties(SoLoud PROPERTIES FOLDER "wondermake/external")
-
 target_include_directories(SoLoud INTERFACE "Inc")

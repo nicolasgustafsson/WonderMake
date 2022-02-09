@@ -22,25 +22,8 @@ endif()
 add_subdirectory("cmake" EXCLUDE_FROM_ALL)
 
 add_subdirectory("external")
-
-add_subdirectory("lib/imgui")
-add_subdirectory("lib/wondermake-utility")
-add_subdirectory("lib/wondermake-base")
-add_subdirectory("lib/wondermake-io")
-add_subdirectory("lib/wondermake-engine")
-add_subdirectory("lib/wondermake")
+add_subdirectory("lib")
 
 if(WonderMake_Testing OR WonderMake_TestingManual)
-	add_subdirectory("test/wondermake-tests-common")
-endif()
-
-if(WonderMake_Testing)
-	add_subdirectory("test/wondermake-utility-tests")
-	add_subdirectory("test/wondermake-base-tests")
-	add_subdirectory("test/wondermake-io-tests")
-endif()
-
-if(WonderMake_TestingManual)
-	add_subdirectory("test/manual/wondermake-tests")
-	add_subdirectory("test/manual/wondermake-io-tests-manual")
+	add_subdirectory("test")
 endif()

@@ -5,6 +5,4 @@ list(APPEND SourceFiles
 
 add_library(Stb INTERFACE ${SourceFiles})
 
-set_target_properties(Stb PROPERTIES FOLDER "wondermake/external")
-
 target_include_directories(Stb INTERFACE "Inc")

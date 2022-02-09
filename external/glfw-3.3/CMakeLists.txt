@@ -6,6 +6,4 @@ list(APPEND SourceFiles
 
 add_library(Glfw INTERFACE ${SourceFiles})
 
-set_target_properties(Glfw PROPERTIES FOLDER "wondermake/external")
-
 target_include_directories(Glfw INTERFACE "Inc")

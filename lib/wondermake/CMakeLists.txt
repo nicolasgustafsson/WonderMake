@@ -207,8 +207,6 @@ set_source_files_properties("glad.c" PROPERTIES LANGUAGE CXX)
 
 add_library(WonderMake STATIC ${SourceFiles})
 
-set_target_properties(WonderMake PROPERTIES FOLDER "wondermake/lib")
-
 target_include_directories(WonderMake PUBLIC ".")
 target_link_libraries(WonderMake Imgui NlohmannJson SoLoud Stb WonderMakeBase WonderMakeUtility WonderMakeIo WonderMakeEngine)
 target_link_options(WonderMake PUBLIC "/WHOLEARCHIVE:WonderMake")

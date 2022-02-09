@@ -31,6 +31,4 @@ list(APPEND SourceFiles
 
 add_library(WonderMakeUtility STATIC ${SourceFiles})
 
-set_target_properties(WonderMakeUtility PROPERTIES FOLDER "wondermake/lib")
-
 target_include_directories(WonderMakeUtility PUBLIC "Include")

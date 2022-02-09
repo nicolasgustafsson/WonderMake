@@ -20,8 +20,6 @@ list(APPEND SourceFiles
     
 add_executable(WonderMakeBaseTests ${SourceFiles})
 
-set_target_properties(WonderMakeBaseTests PROPERTIES FOLDER "wondermake/test")
-
 add_test(WonderMakeBaseTests WonderMakeBaseTests)
 
 target_link_libraries(WonderMakeBaseTests gtest_main gmock WonderMakeTestsCommon)

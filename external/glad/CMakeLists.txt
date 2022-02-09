@@ -5,6 +5,4 @@ list(APPEND SourceFiles
 
 add_library(Glad INTERFACE ${SourceFiles})
 
-set_target_properties(Glad PROPERTIES FOLDER "wondermake/external")
-
 target_include_directories(Glad INTERFACE "Inc")

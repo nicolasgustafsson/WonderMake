@@ -6,3 +6,4 @@ WonderMake is a game engine written using c++ 20. It's main design point is that
 ## Dependencies
 - [CMake 3.10](https://cmake.org/)
 - [Python 3.7](https://www.python.org/)
+- [Conan](https://conan.io/)

@@ -5,11 +5,13 @@ add_subdirectory("proto")
 list(APPEND SourceFiles
     "include/wondermake-engine/LoggerFileSystem.h"
     "include/wondermake-engine/LoggerRemoteConnectionSystem.h"
+    "include/wondermake-engine/LoggerRemoteSocket.h"
     "include/wondermake-engine/LoggerRemoteSocketSystem.h"
     "source/LoggerFileSystem.cpp"
     "source/LoggerRemoteConnectionSystem.cpp"
     "source/LoggerRemoteMessage.cpp"
     "source/LoggerRemoteMessage.h"
+    "source/LoggerRemoteSocket.cpp"
     "source/LoggerRemoteSocketSystem.cpp")
 
 add_library(WonderMakeEngine STATIC ${SourceFiles})

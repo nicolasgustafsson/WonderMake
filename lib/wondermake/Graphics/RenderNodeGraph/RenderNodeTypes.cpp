@@ -26,6 +26,9 @@ namespace NodeTypes
 
 		viewportSize *= renderScale;
 
+		if (viewportSize.X <= 0 || viewportSize.Y <= 0)
+			return;
+
 		const SRenderTargetSettings settings{ SVector2u(std::lroundf(viewportSize.X), std::lroundf(viewportSize.Y)), aNode.GetInput<bool>(1) };
 
 		if (!renderTargetAny.has_value())

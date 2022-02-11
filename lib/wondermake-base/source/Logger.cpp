@@ -73,7 +73,7 @@ void Logger::SetFilters(std::unordered_set<ELogSeverity> aAllowedSeverities, ELo
 	myMinLevel = aMinLevel;
 }
 
-void Logger::AddLogger(std::shared_ptr<LoggerBase> aLogger)
+void Logger::AddLogger(std::weak_ptr<LoggerBase> aLogger)
 {
 	myLoggers.emplace_back(std::move(aLogger));
 }
@@ -87,5 +87,19 @@ void Logger::Print(ELogSeverity aSeverity, ELogLevel aLevel, std::string aLogMes
 		return;
 
 	for (auto&& logger : myLoggers)
-		logger->Print(aSeverity, aLevel, aLogMessage);
+	{
+		auto ptr = logger.lock();
+
+		if (!ptr)
+			continue;
+
+		ptr->Print(aSeverity, aLevel, aLogMessage);
+	}
+
+	const auto it = std::partition(myLoggers.begin(), myLoggers.end(), [](const auto& aWeakPtr)
+		{
+			return aWeakPtr.lock() != nullptr;
+		});
+
+	myLoggers.erase(it, myLoggers.end());
 }

@@ -85,7 +85,7 @@ public:
 
 	void SetFilters(std::unordered_set<ELogSeverity> aAllowedSeverities, ELogLevel aMinLevel);
 	
-	void AddLogger(std::shared_ptr<LoggerBase> aLogger);
+	void AddLogger(std::weak_ptr<LoggerBase> aLogger);
 
 	void Print(ELogSeverity aSeverity, ELogLevel aLevel, std::string aLogMessage);
 
@@ -94,7 +94,7 @@ private:
 	std::unordered_set<ELogSeverity> myAllowedSeverities;
 	ELogLevel myMinLevel = ELogLevel::Normal;
 
-	std::vector<std::shared_ptr<LoggerBase>> myLoggers;
+	std::vector<std::weak_ptr<LoggerBase>> myLoggers;
 
 };
 

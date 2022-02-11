@@ -17,7 +17,7 @@ ImGuiLogger::ImGuiLogger()
 
 void ImGuiLogger::Initialize()
 {
-	Logger::Get().AddLogger(shared_from_this());
+	Logger::Get().AddLogger(weak_from_this());
 }
 
 void ImGuiLogger::Debug()

@@ -22,7 +22,7 @@ bool LoggerFileSystem::OpenLogFile(std::filesystem::path aRelativeFolder, std::f
 {
 	std::lock_guard<decltype(myMutex)> lock(myMutex);
 
-	Logger::Get().AddLogger(shared_from_this());
+	Logger::Get().AddLogger(weak_from_this());
 
 	auto&& fileSystem = Get<FileSystem>();
 

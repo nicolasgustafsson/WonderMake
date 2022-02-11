@@ -2,6 +2,7 @@
 
 #include "wondermake-base/LoggerTypes.h"
 
+#include "wondermake-utility/CmdLineArgs.h"
 #include "wondermake-utility/MemoryUnit.h"
 #include "wondermake-utility/UniqueFunction.h"
 #include "wondermake-utility/Typedefs.h"
@@ -66,9 +67,16 @@ namespace Engine
 		// Human readable name intended to be the name of the application.
 		std::string ApplicationName = "WonderMake";
 
-		std::vector<std::wstring> CommandLineArguments;
+		// Command line args to be passed to the CmdLineArgsSystem, allowing them to be easily accessed by the application. WonderMake itself does not make use of them.
+		CmdLineArgs CommandLineArguments = CmdLineArgs(std::vector<std::string>());
+
+		// If true, this will turn off all UI elements, such as the Window itself. Intended for applications that is supposed to run in the background.
 		bool Headless = true;
+
+		// Directory path that all files and folders used by the engine will be placed in. Consider using name of the creators followed by the application name. Example: "FantasticGamesCorp/SuperJumperTheGame/"
 		std::filesystem::path ProjectFolderNames;
+
+		// All options regarding logging.
 		LoggingInfo Logging;
 	};
 

@@ -147,7 +147,7 @@ namespace Engine
 				taskManager.ScheduleRepeating(std::move(aTask));
 			};
 
-			sysRegistry.AddSystem<CmdLineArgsSystem>([&cmdLineArgs = aInfo.CommandLineArguments]() -> std::shared_ptr<CmdLineArgsSystem>
+			sysRegistry.AddSystem<CmdLineArgsSystem>([cmdLineArgs = aInfo.CommandLineArguments]() -> std::shared_ptr<CmdLineArgsSystem>
 			{
 				return std::make_shared<CmdLineArgsSystem>(cmdLineArgs);
 			});

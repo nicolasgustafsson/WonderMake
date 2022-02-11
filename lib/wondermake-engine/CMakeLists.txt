@@ -12,7 +12,6 @@ list(APPEND SourceFiles
     "source/LoggerRemoteMessage.cpp"
     "source/LoggerRemoteMessage.h"
     "source/LoggerRemoteSocket.cpp"
-    "source/LoggerRemoteSocketSystem.cpp"
     "source/LoggerRemoteSystem.cpp")
 
 add_library(WonderMakeEngine STATIC ${SourceFiles})

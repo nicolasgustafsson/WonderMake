@@ -14,7 +14,7 @@ FetchContent_MakeAvailable(googletest)
 
 include(GoogleTest)
 
-set_target_properties(gtest_main PROPERTIES FOLDER "wondermake/external")
-set_target_properties(gtest PROPERTIES FOLDER "wondermake/external")
-set_target_properties(gmock_main PROPERTIES FOLDER "wondermake/external")
-set_target_properties(gmock PROPERTIES FOLDER "wondermake/external")
+set_target_properties(gtest_main PROPERTIES FOLDER "external")
+set_target_properties(gtest PROPERTIES FOLDER "external")
+set_target_properties(gmock_main PROPERTIES FOLDER "external")
+set_target_properties(gmock PROPERTIES FOLDER "external")

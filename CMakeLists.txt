@@ -27,3 +27,5 @@ add_subdirectory("lib")
 if(WonderMake_Testing OR WonderMake_TestingManual)
 	add_subdirectory("test")
 endif()
+
+set_buildsystem_targets_folder("." "wondermake")

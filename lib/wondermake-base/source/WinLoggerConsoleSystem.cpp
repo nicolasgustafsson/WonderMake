@@ -12,7 +12,7 @@ REGISTER_SYSTEM(WinLoggerConsoleSystem);
 
 void WinLoggerConsoleSystem::Initialize()
 {
-	Logger::Get().AddLogger(shared_from_this());
+	Logger::Get().AddLogger(weak_from_this());
 }
 
 void WinLoggerConsoleSystem::Print(ELogSeverity aSeverity, ELogLevel /*aLevel*/, std::string aLogMessage)

@@ -9,7 +9,7 @@ REGISTER_SYSTEM(WinLoggerDebugSystem);
 
 void WinLoggerDebugSystem::Initialize()
 {
-	Logger::Get().AddLogger(shared_from_this());
+	Logger::Get().AddLogger(weak_from_this());
 }
 
 void WinLoggerDebugSystem::Print(ELogSeverity /*aSeverity*/, ELogLevel /*aLevel*/, std::string aLogMessage)

@@ -9,8 +9,12 @@
 #include <memory>
 #include <unordered_map>
 
+namespace ProtoLoggerRemote
+{
+	class LogLine;
+}
+
 class IpcSystem;
-struct LoggerRemoteMessageType;
 template<typename TSerializable>
 class SocketSerializing;
 
@@ -31,10 +35,10 @@ private:
 
 	void OnIpcClosed(Result<IpcAcceptor::ECloseReason> aResult);
 
-	void OnConnectionMessage(std::weak_ptr<Socket> aConnection, Result<Socket::EReadError, LoggerRemoteMessageType>&& aResult);
+	void OnConnectionMessage(std::weak_ptr<Socket> aConnection, Result<Socket::EReadError, ProtoLoggerRemote::LogLine>&& aResult);
 	void OnConnectionClosed(std::weak_ptr<Socket> aConnection, Result<Socket::ECloseError, Socket::ECloseReason> aResult);
 
 	std::shared_ptr<IpcAcceptor> myAcceptor;
-	std::unordered_map<std::shared_ptr<Socket>, std::shared_ptr<SocketSerializing<LoggerRemoteMessageType>>> myConnections;
+	std::unordered_map<std::shared_ptr<Socket>, std::shared_ptr<SocketSerializing<ProtoLoggerRemote::LogLine>>> myConnections;
 
 };

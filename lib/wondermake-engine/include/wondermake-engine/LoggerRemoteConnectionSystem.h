@@ -10,8 +10,12 @@
 #include <memory>
 #include <mutex>
 
+namespace ProtoLoggerRemote
+{
+	class LogLine;
+}
+
 class IpcSystem;
-struct LoggerRemoteMessageType;
 template<typename TSerializable>
 class SocketSerializing;
 
@@ -34,6 +38,6 @@ private:
 	void OnClosed(Result<Socket::ECloseError, Socket::ECloseReason> aResult);
 
 	std::recursive_mutex myMutex;
-	std::shared_ptr<SocketSerializing<LoggerRemoteMessageType>> myConnection;
+	std::shared_ptr<SocketSerializing<ProtoLoggerRemote::LogLine>> myConnection;
 
 };

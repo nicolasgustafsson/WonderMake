@@ -5,6 +5,7 @@ list(APPEND SourceFiles
     "include/wondermake-utility/AutoRegister.h"
     "include/wondermake-utility/Bindable.h"
     "include/wondermake-utility/DependencyInjector.h"
+    "include/wondermake-utility/Endian.h"
     "include/wondermake-utility/Guid.h"
     "include/wondermake-utility/Line.h"
     "include/wondermake-utility/Math.h"

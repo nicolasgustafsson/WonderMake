@@ -17,8 +17,7 @@
 #include "Utilities/TimeKeeper.h"
 
 #include "wondermake-engine/LoggerFileSystem.h"
-#include "wondermake-engine/LoggerRemoteConnectionSystem.h"
-#include "wondermake-engine/LoggerRemoteSocketSystem.h"
+#include "wondermake-engine/LoggerRemoteSystem.h"
 
 #include "wondermake-io/FileSystem.h"
 
@@ -39,6 +38,8 @@ namespace Engine
 		auto&& sysRegistry = Global::GetSystemRegistry();
 
 		SystemContainer loggerContainer;
+		std::shared_ptr<LoggerRemoteConnection> loggerRemoteConnection;
+		std::shared_ptr<LoggerRemoteSocket> loggerRemoteSocket;
 
 		{
 			SystemRegistry::Filter filter;
@@ -77,12 +78,15 @@ namespace Engine
 
 				WM_LOG_INFO("Opening IPC logging connection, name: ", connectionInfo.Name, ".");
 
-				auto&& loggerConnection = loggerContainer.Get<LoggerRemoteConnectionSystem>();
+				auto&& loggerRemote = loggerContainer.Get<LoggerRemoteSystem>();
 
-				auto connectionResult = loggerConnection.ConnectIpc(connectionInfo.Name);
+				auto connectionResult = loggerRemote.ConnectIpc(connectionInfo.Name);
 
 				if (connectionResult)
+				{
 					WM_LOG_INFO("IPC log connection opened, name: ", connectionInfo.Name, ".");
+					loggerRemoteConnection = connectionResult;
+				}
 				else
 					WM_LOG_ERROR("Failed to open IPC log connection, error: ", static_cast<IpcConnection::ConnectionError>(connectionResult), ".");
 			}
@@ -92,12 +96,15 @@ namespace Engine
 
 				WM_LOG_INFO("Opening IPC logging socket, name: ", socketInfo.Name, ".");
 
-				auto&& loggerSocket = loggerContainer.Get<LoggerRemoteSocketSystem>();
+				auto&& loggerRemote = loggerContainer.Get<LoggerRemoteSystem>();
 
-				auto socketResult = loggerSocket.OpenIpc(socketInfo.Name);
+				auto socketResult = loggerRemote.OpenSocketIpc(socketInfo.Name);
 
 				if (socketResult)
+				{
 					WM_LOG_INFO("IPC log socket opened, name: ", socketInfo.Name, ".");
+					loggerRemoteSocket = socketResult;
+				}
 				else
 					WM_LOG_ERROR("Failed to open IPC log socket, error: ", static_cast<IpcAcceptor::EOpenError>(socketResult), ".");
 			}

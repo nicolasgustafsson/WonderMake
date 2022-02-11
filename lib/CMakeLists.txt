@@ -7,4 +7,4 @@ add_subdirectory("wondermake-engine")
 add_subdirectory("wondermake-io")
 add_subdirectory("wondermake-utility")
 
-set_buildsystem_targets_folder("." "wondermake/lib")
+set_buildsystem_targets_folder("." "lib")

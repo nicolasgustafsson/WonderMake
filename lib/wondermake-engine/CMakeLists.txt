@@ -8,13 +8,15 @@ list(APPEND SourceFiles
     "include/wondermake-engine/LoggerRemoteConnectionSystem.h"
     "include/wondermake-engine/LoggerRemoteSocket.h"
     "include/wondermake-engine/LoggerRemoteSocketSystem.h"
+    "include/wondermake-engine/LoggerRemoteSystem.h"
     "source/LoggerFileSystem.cpp"
     "source/LoggerRemoteConnection.cpp"
     "source/LoggerRemoteConnectionSystem.cpp"
     "source/LoggerRemoteMessage.cpp"
     "source/LoggerRemoteMessage.h"
     "source/LoggerRemoteSocket.cpp"
-    "source/LoggerRemoteSocketSystem.cpp")
+    "source/LoggerRemoteSocketSystem.cpp"
+    "source/LoggerRemoteSystem.cpp")
 
 add_library(WonderMakeEngine STATIC ${SourceFiles})
 

@@ -1,11 +1,12 @@
 #include "wondermake-engine/LoggerRemoteSocketSystem.h"
 
-#include "LoggerRemoteMessageType.h"
+#include "LoggerRemoteMessage.h"
 
 #include "wondermake-io/IpcConnection.h"
 #include "wondermake-io/IpcSystem.h"
 #include "wondermake-io/SocketSerializingImpl.h"
 
+#include "wondermake-base/LoggerTypes.h"
 #include "wondermake-base/SystemGlobal.h"
 
 #include "wondermake-utility/Bindable.h"
@@ -27,7 +28,7 @@ Result<IpcAcceptor::EOpenError> LoggerRemoteSocketSystem::OpenIpc(std::string aI
 
 void LoggerRemoteSocketSystem::OnConnection(std::shared_ptr<Socket>&& aConnection)
 {
-	auto socket = std::make_shared<SocketSerializingImpl<LoggerRemoteMessageType>>(4_KiB, &LoggerRemoteMessageType::Serialize, &LoggerRemoteMessageType::Deserialize, SharedReference<Socket>::FromPointer(aConnection));
+	auto socket = std::make_shared<SocketSerializingImpl<ProtoLoggerRemote::LogLine>>(4_KiB, &SerializeLogline, &DeserializeLogline, SharedReference<Socket>::FromPointer(aConnection));
 
 	myConnections.emplace(aConnection, socket);
 
@@ -48,7 +49,7 @@ void LoggerRemoteSocketSystem::OnIpcClosed(Result<IpcAcceptor::ECloseReason> aRe
 }
 
 
-void LoggerRemoteSocketSystem::OnConnectionMessage(std::weak_ptr<Socket> aConnection, Result<Socket::EReadError, LoggerRemoteMessageType>&& aResult)
+void LoggerRemoteSocketSystem::OnConnectionMessage(std::weak_ptr<Socket> aConnection, Result<Socket::EReadError, ProtoLoggerRemote::LogLine>&& aResult)
 {
 	auto connection = aConnection.lock();
 
@@ -73,9 +74,9 @@ void LoggerRemoteSocketSystem::OnConnectionMessage(std::weak_ptr<Socket> aConnec
 		return;
 	}
 
-	LoggerRemoteMessageType message = std::move(aResult);
+	ProtoLoggerRemote::LogLine message = std::move(aResult);
 
-	Logger::Get().Print(message.Severity, message.Level, message.Message);
+	Logger::Get().Print(static_cast<ELogSeverity>(message.severity()), static_cast<ELogLevel>(message.level()), message.log());
 	
 	const auto result = it->second->ReadMessage(Bind(&LoggerRemoteSocketSystem::OnConnectionMessage, weak_from_this(), std::weak_ptr(aConnection)));
 

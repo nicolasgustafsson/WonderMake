@@ -1,10 +1,11 @@
 #include "wondermake-engine/LoggerRemoteConnectionSystem.h"
 
-#include "LoggerRemoteMessageType.h"
+#include "LoggerRemoteMessage.h"
 
 #include "wondermake-io/IpcSystem.h"
 #include "wondermake-io/SocketSerializingImpl.h"
 
+#include "wondermake-base/LoggerTypes.h"
 #include "wondermake-base/SystemGlobal.h"
 
 #include "wondermake-utility/Bindable.h"
@@ -12,6 +13,8 @@
 using namespace MemoryUnitLiterals;
 
 REGISTER_SYSTEM(LoggerRemoteConnectionSystem);
+
+using ProtoLoggerRemote::LogLine;
 
 Result<IpcConnection::ConnectionError> LoggerRemoteConnectionSystem::ConnectIpc(std::string aIpcName)
 {
@@ -24,7 +27,7 @@ Result<IpcConnection::ConnectionError> LoggerRemoteConnectionSystem::ConnectIpc(
 	if (!result)
 		return result;
 
-	myConnection = std::make_shared<SocketSerializingImpl<LoggerRemoteMessageType>>(4_KiB, &LoggerRemoteMessageType::Serialize, &LoggerRemoteMessageType::Deserialize, SharedReference<Socket>::FromPointer(std::move(connection)));
+	myConnection = std::make_shared<SocketSerializingImpl<ProtoLoggerRemote::LogLine>>(4_KiB, &SerializeLogline, &DeserializeLogline, SharedReference<Socket>::FromPointer(std::move(connection)));
 
 	myConnection->OnClose(Bind(&LoggerRemoteConnectionSystem::OnClosed, weak_from_this()));
 
@@ -41,13 +44,13 @@ void LoggerRemoteConnectionSystem::Print(ELogSeverity aSeverity, ELogLevel aLeve
 		|| myConnection->GetState() != Socket::EState::Open)
 		return;
 
-	LoggerRemoteMessageType data;
+	LogLine logline;
 
-	data.Severity = aSeverity;
-	data.Level = aLevel;
-	data.Message = std::move(aLogMessage);
+	logline.set_log(std::move(aLogMessage));
+	logline.set_level(static_cast<LogLine::ELogLevel>(aLevel));
+	logline.set_severity(static_cast<LogLine::ELogSeverity>(aSeverity));
 
-	myConnection->WriteMessage(data, [](auto aResult)
+	myConnection->WriteMessage(logline, [](auto aResult)
 		{
 			if (aResult)
 				return;

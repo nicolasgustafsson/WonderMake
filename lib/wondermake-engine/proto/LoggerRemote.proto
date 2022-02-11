@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package ProtoLoggerRemote;
+
+message LogLine
+{
+    enum ELogSeverity
+    {
+        Success     = 0;
+        Info        = 1;
+        Warning     = 2;
+        Error       = 3;
+    }
+    enum ELogLevel
+    {
+        Debug       = 0;
+        Verbose     = 1;
+        Normal      = 2;
+        Priority    = 3;
+    };
+
+    string          log         = 1;
+    ELogSeverity    severity    = 2;
+    ELogLevel       level       = 3;
+  }
+  

@@ -4,33 +4,27 @@
 
 #include "wondermake-base/Logger.h"
 
+std::string ToString(const SRenderTargetSettings& aSettings)
+{
+	return "{ \"Size\": { \"X\": " + std::to_string(aSettings.Size.X) + ", \"Y\": " + std::to_string(aSettings.Size.Y) + " }, \"UseDepthStencilBuffer\": " + std::to_string(aSettings.UseDepthStencilBuffer) + " }";
+}
+
 RenderTarget::RenderTarget(const SRenderTargetSettings& aSettings)
 {
 	Initialize(aSettings);
 }
 
-RenderTarget::RenderTarget(RenderTarget&& aOther)
+RenderTarget::RenderTarget(RenderTarget&& aOther) noexcept
 {
-	myFrameBufferObject = aOther.myFrameBufferObject;
-	myRenderTexture = aOther.myRenderTexture;
-	myDepthStencilRbo = aOther.myDepthStencilRbo;
+	mySettings			= aOther.mySettings;
+	myFrameBufferObject	= aOther.myFrameBufferObject;
+	myRenderTexture		= aOther.myRenderTexture;
+	myDepthStencilRbo	= aOther.myDepthStencilRbo;
 
-	aOther.myFrameBufferObject = std::numeric_limits<u32>::max();
-	aOther.myRenderTexture     = std::numeric_limits<u32>::max();
-	aOther.myDepthStencilRbo   = std::numeric_limits<u32>::max();
-}
-
-RenderTarget& RenderTarget::operator=(RenderTarget&& aOther)
-{
-	myFrameBufferObject = aOther.myFrameBufferObject;
-	myRenderTexture = aOther.myRenderTexture;
-	myDepthStencilRbo = aOther.myDepthStencilRbo;
-
-	aOther.myFrameBufferObject = std::numeric_limits<u32>::max();
-	aOther.myRenderTexture = std::numeric_limits<u32>::max();
-	aOther.myDepthStencilRbo = std::numeric_limits<u32>::max();
-
-	return *this;
+	aOther.mySettings			= SRenderTargetSettings();
+	aOther.myFrameBufferObject	= std::numeric_limits<u32>::max();
+	aOther.myRenderTexture		= std::numeric_limits<u32>::max();
+	aOther.myDepthStencilRbo	= std::numeric_limits<u32>::max();
 }
 
 RenderTarget::~RenderTarget()
@@ -38,14 +32,43 @@ RenderTarget::~RenderTarget()
 	Destroy();
 }
 
+RenderTarget& RenderTarget::operator=(RenderTarget&& aOther) noexcept
+{
+	Destroy();
+	
+	mySettings			= aOther.mySettings;
+	myFrameBufferObject	= aOther.myFrameBufferObject;
+	myRenderTexture		= aOther.myRenderTexture;
+	myDepthStencilRbo	= aOther.myDepthStencilRbo;
+
+	aOther.mySettings			= SRenderTargetSettings();
+	aOther.myFrameBufferObject	= std::numeric_limits<u32>::max();
+	aOther.myRenderTexture		= std::numeric_limits<u32>::max();
+	aOther.myDepthStencilRbo	= std::numeric_limits<u32>::max();
+
+	return *this;
+}
+
 void RenderTarget::BindAsTarget()
 {
-	SystemPtr<OpenGLFacade> openGL;
-	if (openGL->CheckNamedFramebufferStatus(GL_FRAMEBUFFER, myFrameBufferObject) != GL_FRAMEBUFFER_COMPLETE)
+	if (myFrameBufferObject == std::numeric_limits<u32>::max())
 	{
-		WM_LOG_WARNING("Could not bind RenderTarget as Frame buffer object is incomplete.");
+		WM_LOG_ERROR("Tried to bind uninitialized RenderTarget.");
+
 		return;
 	}
+
+	SystemPtr<OpenGLFacade> openGL;
+
+	const auto status = openGL->CheckNamedFramebufferStatus(GL_FRAMEBUFFER, myFrameBufferObject);
+
+	if (status != GL_FRAMEBUFFER_COMPLETE)
+	{
+		WM_LOG_WARNING("Could not bind RenderTarget as Frame buffer object is incomplete, status: ", status, ".");
+
+		return;
+	}
+
 	openGL->BindFramebuffer(GL_FRAMEBUFFER, myFrameBufferObject);
 	openGL->SetViewportSize(SVector2i(static_cast<i32>(mySettings.Size.X), static_cast<i32>(mySettings.Size.Y)));
 }
@@ -66,6 +89,13 @@ void RenderTarget::Reinitialize(const SRenderTargetSettings& aSettings)
 
 void RenderTarget::Initialize(const SRenderTargetSettings& aSettings)
 {
+	if (aSettings.Size == SVector2u::Zero())
+	{
+		WM_LOG_ERROR("Tried to create RenderTarget with zero size, settings: ", ToString(aSettings), ".");
+
+		return;
+	}
+
 	SystemPtr<OpenGLFacade> openGL;
 
 	myFrameBufferObject = openGL->GenerateFramebuffer();
@@ -94,7 +124,7 @@ void RenderTarget::Initialize(const SRenderTargetSettings& aSettings)
 
 	auto status = openGL->CheckFramebufferStatus(GL_FRAMEBUFFER);
 	if (status != GL_FRAMEBUFFER_COMPLETE)
-		WM_LOG_WARNING("Frame buffer object is incomplete.");
+		WM_LOG_WARNING("Frame buffer object is incomplete, status: ", status, ", settings: ", ToString(aSettings), ".");
 
 	//reset framebuffer
 	openGL->BindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -104,8 +134,17 @@ void RenderTarget::Initialize(const SRenderTargetSettings& aSettings)
 void RenderTarget::Destroy()
 {
 	SystemPtr<OpenGLFacade> openGL;
-	openGL->DeleteFramebuffer(myFrameBufferObject);
-	openGL->DeleteTexture(myRenderTexture);
-	openGL->DeleteRenderbuffer(myDepthStencilRbo);
+	
+	if(myFrameBufferObject != std::numeric_limits<u32>::max())
+		openGL->DeleteFramebuffer(myFrameBufferObject);
+	if (myRenderTexture != std::numeric_limits<u32>::max())
+		openGL->DeleteTexture(myRenderTexture);
+	if (myDepthStencilRbo != std::numeric_limits<u32>::max())
+		openGL->DeleteRenderbuffer(myDepthStencilRbo);
+
+	mySettings			= SRenderTargetSettings();
+	myFrameBufferObject	= std::numeric_limits<u32>::max();
+	myRenderTexture		= std::numeric_limits<u32>::max();
+	myDepthStencilRbo	= std::numeric_limits<u32>::max();
 }
 

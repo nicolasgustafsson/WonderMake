@@ -7,21 +7,18 @@ struct SRenderTargetSettings
 
 	bool UseDepthStencilBuffer = false;
 
-	bool operator==(const SRenderTargetSettings& aOther) const { return Size == aOther.Size && UseDepthStencilBuffer == aOther.UseDepthStencilBuffer; }
-
-	bool operator!=(const SRenderTargetSettings& aOther) const { return !(*this == aOther); }
+	constexpr bool operator==(const SRenderTargetSettings&) const noexcept = default;
+	constexpr bool operator!=(const SRenderTargetSettings&) const noexcept = default;
 };
 
 class RenderTarget : NonCopyable
 {
 public:
 	RenderTarget(const SRenderTargetSettings& Settings);
-
-	RenderTarget(RenderTarget&&);
-	
-	RenderTarget& operator=(RenderTarget&&);
-
+	RenderTarget(RenderTarget&&) noexcept;
 	~RenderTarget();
+
+	RenderTarget& operator=(RenderTarget&&) noexcept;
 
 	void BindAsTarget();
 	void BindAsTexture(const u32 aIndex = 0);

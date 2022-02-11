@@ -4,6 +4,7 @@ list(APPEND SourceFiles
     "include/wondermake-utility/Alias.h"
     "include/wondermake-utility/AutoRegister.h"
     "include/wondermake-utility/Bindable.h"
+    "include/wondermake-utility/CmdLineArgs.h"
     "include/wondermake-utility/DependencyInjector.h"
     "include/wondermake-utility/Endian.h"
     "include/wondermake-utility/Guid.h"
@@ -26,6 +27,7 @@ list(APPEND SourceFiles
     "include/wondermake-utility/Utility.h"
     "include/wondermake-utility/Vector.h"
     "include/wondermake-utility/WinPlatform.h"
+    "source/CmdLineArgs.cpp"
     "source/DependencyInjector.cpp"
     "source/Time.cpp"
     "source/WinStringUtility.cpp")

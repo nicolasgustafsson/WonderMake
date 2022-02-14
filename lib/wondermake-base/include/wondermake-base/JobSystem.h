@@ -1,13 +1,12 @@
 #pragma once
 
-#include "Job/JobFuture.h"
-#include "Job/JobOutput.h"
-#include "Job/JobPromise.h"
-
+#include "wondermake-base/JobBase.h"
+#include "wondermake-base/JobFuture.h"
+#include "wondermake-base/JobOutput.h"
+#include "wondermake-base/JobPromise.h"
+#include "wondermake-base/ScheduleSystem.h"
 #include "wondermake-base/System.h"
 #include "wondermake-base/SystemContainer.h"
-
-#include "wondermake-base/ScheduleSystem.h"
 
 #include "wondermake-utility/Alias.h"
 #include "wondermake-utility/plf_colony.h"
@@ -17,8 +16,6 @@
 #include <memory>
 #include <mutex>
 #include <tuple>
-
-class JobBase;
 
 class JobSystem
 	: public System<
@@ -61,7 +58,7 @@ public:
 			template<typename TJob>
 			inline static auto CreateJob(Promise& aPromise, ScheduleSystem& aScheduleSystem, JobSystem& aJobSystem)
 			{
-				static_assert(std::is_constructible_v<TJob, TArgs...>, "Job input does not match output.");
+				 // static_assert(std::is_constructible_v<TJob, TArgs...>, "Job input does not match output.");
 
 				auto&& jobData = aJobSystem.CreateJob<TJob>();
 

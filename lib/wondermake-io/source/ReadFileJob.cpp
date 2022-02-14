@@ -1,5 +1,4 @@
-#include "pch.h"
-#include "ReadFileJob.h"
+#include "wondermake-io/ReadFileJob.h"
 
 #include "wondermake-io/FileSystem.h"
 
@@ -41,7 +40,7 @@ void ReadFileJob::Run(const FolderLocation aLocation, const std::filesystem::pat
 		return;
 	}
 
-	Container<u8, Iterable, Indexable, ContiguousElements, EqualityComparable> buffer(std::istreambuf_iterator<char>(file), {});
+	std::vector<u8> buffer(std::istreambuf_iterator<char>(file), {});
 	
 	CompleteSuccess(std::move(buffer));
 }

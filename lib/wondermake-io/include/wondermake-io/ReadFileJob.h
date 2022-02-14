@@ -1,12 +1,12 @@
 #pragma once
 
+#include "wondermake-io/FileSystem.h"
 #include "wondermake-io/FileTypes.h"
+
 #include "wondermake-base/Job.h"
-#include "Utilities/Container/Container.h"
 
 #include <filesystem>
-
-class FileSystem;
+#include <vector>
 
 enum class ReadFileError
 {
@@ -20,7 +20,7 @@ class ReadFileJob
 	: public Job<
 		Policy::Set<
 			PAdd<FileSystem, PWrite>>,
-		JobOutput<Container<u8, Iterable, Indexable, ContiguousElements, EqualityComparable>>,
+		JobOutput<std::vector<u8>>,
 		JobOutputError<ReadFileError>>
 {
 public:

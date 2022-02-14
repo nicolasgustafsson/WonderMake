@@ -43,8 +43,6 @@ list(APPEND SourceFiles
     "EngineTools/EasingTester.h"
     "EngineTools/EngineTools.cpp"
     "EngineTools/EngineTools.h"
-    "FileSystem/ReadFileJob.cpp"
-    "FileSystem/ReadFileJob.h"
     "FileSystem/WinFileWatcher.cpp"
     "FileSystem/WinFileWatcher.h"
     "Functionalities/BaseFunctionality.h"

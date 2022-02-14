@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Job/JobOutput.h"
-#include "Job/JobPromise.h"
-
+#include "wondermake-base/JobOutput.h"
+#include "wondermake-base/JobPromise.h"
 #include "wondermake-base/ScheduleSystem.h"
 
 #include "wondermake-utility/Typedefs.h"

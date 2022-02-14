@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Job/JobOutput.h"
+#include "wondermake-base/JobOutput.h"
 
 #include "wondermake-utility/UniqueFunction.h"
 #include "wondermake-utility/Utility.h"

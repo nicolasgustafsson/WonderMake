@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
 
-#include "Job/JobMock.h"
+#include "wondermake-base/JobMock.h"
 
 #include "FileSystem/ReadFileJob.h"
 

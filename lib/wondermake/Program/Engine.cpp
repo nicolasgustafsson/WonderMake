@@ -5,9 +5,8 @@
 
 #include "Message/DispatchRouter.h"
 
-#include "Job/JobSystem.h"
-
 #include "wondermake-base/CmdLineArgsSystem.h"
+#include "wondermake-base/JobSystem.h"
 #include "wondermake-base/SystemGlobal.h"
 
 #include "Program/ImguiWrapper.h"

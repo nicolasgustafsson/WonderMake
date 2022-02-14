@@ -1,8 +1,7 @@
 #include <catch2/catch.hpp>
 
-#include "Job/Job.h"
-#include "Job/JobSystem.h"
-
+#include "wondermake-base/Job.h"
+#include "wondermake-base/JobSystem.h"
 #include "wondermake-base/ScheduleSystem.h"
 
 struct JobDependencies

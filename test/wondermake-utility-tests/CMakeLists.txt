@@ -4,6 +4,7 @@ list(APPEND SourceFiles
     "Tests/AliasTests.cpp"
     "Tests/BindableTests.cpp"
     "Tests/DependencyInjectionTests.cpp"
+    "Tests/FutureTests.cpp"
     "Tests/GuidTests.cpp"
     "Tests/MemoryUnitTests.cpp")
     

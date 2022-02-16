@@ -5,6 +5,7 @@ list(APPEND SourceFiles
     "Include/WonderMakeBaseTests/ProcessMock.h"
     "Include/WonderMakeBaseTests/WinEventSystemMock.h"
     "Include/WonderMakeBaseTests/WinPlatformSystemMock.h"
+    "Tests/JobRegistryTests.cpp"
     "Tests/LoggerTests.cpp"
     "Tests/WinEventSystemImplTests.cpp"
     "Tests/WinGuidGeneratorSystemTests.cpp"

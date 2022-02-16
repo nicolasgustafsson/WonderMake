@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 list(APPEND SourceFiles
     "include/wondermake-base/jobs/JobBase.h"
+    "include/wondermake-base/jobs/JobRegistry.h"
     "include/wondermake-base/Cargo.h"
     "include/wondermake-base/CmdLineArgsSystem.h"
     "include/wondermake-base/GuidGeneratorSystem.h"

@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 list(APPEND SourceFiles
     "Tests/AliasTests.cpp"
+    "Tests/AnyExecutorTests.cpp"
     "Tests/BindableTests.cpp"
     "Tests/DependencyInjectionTests.cpp"
     "Tests/FutureTests.cpp"
@@ -9,6 +10,7 @@ list(APPEND SourceFiles
     "Tests/MemoryUnitTests.cpp")
     
 list(APPEND SourceFiles
+    "../../lib/wondermake-utility/source/AnyExecutor.cpp"
     "../../lib/wondermake-utility/source/DependencyInjector.cpp")
     
 add_executable(WonderMakeUtilityTests ${SourceFiles})

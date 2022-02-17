@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 list(APPEND SourceFiles
     "include/wondermake-utility/Alias.h"
+    "include/wondermake-utility/AnyExecutor.h"
     "include/wondermake-utility/AutoRegister.h"
     "include/wondermake-utility/Bindable.h"
     "include/wondermake-utility/CmdLineArgs.h"
@@ -29,6 +30,7 @@ list(APPEND SourceFiles
     "include/wondermake-utility/Utility.h"
     "include/wondermake-utility/Vector.h"
     "include/wondermake-utility/WinPlatform.h"
+    "source/AnyExecutor.cpp"
     "source/CmdLineArgs.cpp"
     "source/DependencyInjector.cpp"
     "source/Time.cpp"

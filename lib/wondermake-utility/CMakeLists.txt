@@ -7,6 +7,7 @@ list(APPEND SourceFiles
     "include/wondermake-utility/CmdLineArgs.h"
     "include/wondermake-utility/DependencyInjector.h"
     "include/wondermake-utility/Endian.h"
+    "include/wondermake-utility/Executor.h"
     "include/wondermake-utility/Guid.h"
     "include/wondermake-utility/Line.h"
     "include/wondermake-utility/Math.h"

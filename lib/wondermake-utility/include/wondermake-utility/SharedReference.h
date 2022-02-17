@@ -43,14 +43,24 @@ public:
 	}
 
 	template<typename TToType>
-	inline [[nodiscard]] operator std::shared_ptr<TToType>() const noexcept requires(std::is_constructible_v<std::shared_ptr<TToType>, std::shared_ptr<TType>>)
+	inline [[nodiscard]] operator std::shared_ptr<TToType>() const& noexcept requires(std::is_constructible_v<std::shared_ptr<TToType>, std::shared_ptr<TType>>)
 	{
 		return myPointer;
 	}
+	template<typename TToType>
+	inline [[nodiscard]] operator std::shared_ptr<TToType>() const&& noexcept requires(std::is_constructible_v<std::shared_ptr<TToType>, std::shared_ptr<TType>>)
+	{
+		return std::move(myPointer);
+	}
 	template<typename TParent>
-	inline [[nodiscard]] operator SharedReference<TParent>() const noexcept requires(std::is_constructible_v<std::shared_ptr<TParent>, std::shared_ptr<TType>>)
+	inline [[nodiscard]] operator SharedReference<TParent>() const& noexcept requires(std::is_constructible_v<std::shared_ptr<TParent>, std::shared_ptr<TType>>)
 	{
 		return SharedReference<TParent>(myPointer);
+	}
+	template<typename TParent>
+	inline [[nodiscard]] operator SharedReference<TParent>() const&& noexcept requires(std::is_constructible_v<std::shared_ptr<TParent>, std::shared_ptr<TType>>)
+	{
+		return SharedReference<TParent>(std::move(myPointer));
 	}
 
 private:
@@ -69,4 +79,10 @@ template<typename TType, typename... TArgs>
 inline [[nodiscard]] SharedReference<TType> MakeSharedReference(TArgs&&... aArgs)
 {
 	return SharedReference<TType>::FromPointer(std::make_shared<TType>(std::forward<TArgs>(aArgs)...));
+}
+
+template<typename TTo, typename TFrom>
+inline [[nodiscard]] SharedReference<TTo> StaticReferenceCast(SharedReference<TFrom> aReference)
+{
+	return SharedReference<TTo>::FromPointer(std::static_pointer_cast<TTo>(static_cast<std::shared_ptr<TFrom>>(std::move(aReference))));
 }

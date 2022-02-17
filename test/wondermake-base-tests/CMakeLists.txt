@@ -6,6 +6,7 @@ list(APPEND SourceFiles
     "Include/WonderMakeBaseTests/WinEventSystemMock.h"
     "Include/WonderMakeBaseTests/WinPlatformSystemMock.h"
     "Tests/JobRegistryTests.cpp"
+    "Tests/JobSystemTests.cpp"
     "Tests/LoggerTests.cpp"
     "Tests/WinEventSystemImplTests.cpp"
     "Tests/WinGuidGeneratorSystemTests.cpp"
@@ -13,10 +14,12 @@ list(APPEND SourceFiles
     "Tests/WinProcessTests.cpp")
     
 list(APPEND SourceFiles
+    "../../lib/wondermake-base/source/jobs/JobSystem.cpp"
     "../../lib/wondermake-base/source/WinEventSystemImpl.cpp"
     "../../lib/wondermake-base/source/WinGuidGeneratorSystem.cpp"
     "../../lib/wondermake-base/source/WinProcess.cpp"
     "../../lib/wondermake-base/source/WinProcessSystem.cpp"
+    "../../lib/wondermake-utility/source/AnyExecutor.cpp"
     "../../lib/wondermake-utility/source/Time.cpp")
     
 add_executable(WonderMakeBaseTests ${SourceFiles})

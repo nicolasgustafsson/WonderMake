@@ -17,6 +17,8 @@ struct Policy final
 	SystemId		myDependencyId;
 	EPermission		myPermission = EPermission::Read;
 
+	inline [[nodiscard]] bool operator==(const Policy&) const noexcept = default;
+
 	template<typename TDependency>
 	[[nodiscard]] inline static Policy Create(const EPermission aPermission) noexcept
 	{

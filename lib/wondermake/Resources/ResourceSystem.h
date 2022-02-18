@@ -1,5 +1,4 @@
 #pragma once
-#include "Resources/CreateResource.h"
 #include "Resources/Resource.h"
 #include "Resources/ResourceProxy.h"
 
@@ -23,13 +22,8 @@ public:
 	ResourceProxy<TResource> GetResource(const std::filesystem::path& aPath);
 	plf::colony<ResourceProxy<TResource>> GetAllResources() const;
 
-	template<typename TJob>
-	inline void SetCreateResourceJob();
-
 protected:
 	inline void ResourceDeleter(std::filesystem::path aPath, SResource<TResource>* const aResource);
-
-	inline void OnCreateResourceComplete(const std::filesystem::path aPath);
 
 	inline void OnFileChange(const SFileChangedMessage& aFileChangedMessage);
 
@@ -38,7 +32,6 @@ protected:
 	MessageSubscriber mySubscriber;
 	std::mutex myLock;
 	std::unordered_map<std::string, std::weak_ptr<SResource<TResource>>> myResources;
-	std::unordered_map<std::string, std::shared_ptr<CreateResource<TResource>>> myCreateResourceJobs;
 };
 
 #define REGISTER_RESOURCE_SYSTEM(aResource) _REGISTER_SYSTEM_IMPL(ResourceSystem<aResource>, aResource)
@@ -132,20 +125,6 @@ ResourceProxy<TResource> ResourceSystem<TResource>::GetResource(const std::files
 }
 
 template<typename TResource>
-template<typename TJob>
-inline void ResourceSystem<TResource>::SetCreateResourceJob()
-{
-	std::lock_guard<decltype(myLock)> lock(myLock);
-	myStartCreateJob = [&](const std::filesystem::path& aPath)
-	{
-		auto job = std::make_shared<TJob>();
-		job->Setup(aPath, [&, aPath] { OnCreateResourceComplete(aPath); });
-		myCreateResourceJobs[aPath.string()] = job;
-		job->Start();
-	};
-}
-
-template<typename TResource>
 inline void ResourceSystem<TResource>::ResourceDeleter(std::filesystem::path aPath, SResource<TResource>* const aResource)
 {
 	std::lock_guard<decltype(myLock)> lock(myLock);
@@ -158,40 +137,5 @@ inline void ResourceSystem<TResource>::ResourceDeleter(std::filesystem::path aPa
 	}
 	myResources.erase(resourceIt);
 
-	const auto jobIt = myCreateResourceJobs.find(aPath.string());
-	if (jobIt != myCreateResourceJobs.cend())
-	{
-		myCreateResourceJobs.erase(jobIt);
-	}
-
 	delete aResource;
-}
-
-template<typename TResource>
-inline void ResourceSystem<TResource>::OnCreateResourceComplete(const std::filesystem::path aPath)
-{
-	std::shared_ptr<SResource<TResource>> resourceStruct;
-	std::shared_ptr<CreateResource<TResource>> resourceJob;
-
-	{
-		std::lock_guard<decltype(myLock)> lock(myLock);
-
-		auto jobIt = myCreateResourceJobs.find(aPath.string());
-		if (jobIt == myCreateResourceJobs.cend())
-		{
-			return;
-		}
-		resourceJob = std::move(jobIt->second);
-		myCreateResourceJobs.erase(jobIt);
-
-		const auto resourceIt = myResources.find(aPath.string());
-		if (resourceIt != myResources.cend())
-		{
-			return;
-		}
-		resourceStruct = resourceIt->second.lock();
-	}
-
-	std::lock_guard<decltype(resourceStruct->myLock)> lock(resourceStruct->myLock);
-	resourceStruct->myPointer = std::move(resourceJob->myResource);
 }

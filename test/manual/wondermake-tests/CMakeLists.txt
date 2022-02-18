@@ -1,11 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
-# Inproper Unit-Tests has been disabled.
 list(APPEND SourceFiles
-#    "FileSystem/ReadFileJobTests.cpp"
     "Functionalities/TransformFunctionalityTests.cpp"
-    "Job/JobMock.h"
-    "Job/JobTests.cpp"
     "ObjectsAndPolicies/ObjectTests.cpp"
     "ObjectsAndPolicies/PolicyTests.cpp"
     "Utilities/MatrixTests.cpp"
@@ -14,7 +10,6 @@ list(APPEND SourceFiles
     "Utilities/VectorTests.cpp"
     "ContainerTests.cpp"
     "Main.cpp"
-#    "ParseJsonJobTests.cpp"
     "SystemContainerTests.cpp"
     "SystemRegistryTests.cpp")
     

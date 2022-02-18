@@ -2,7 +2,7 @@
 
 #include "wondermake-io/FileTypes.h"
 
-#include "wondermake-base/jobs/JobBase.h"
+#include "wondermake-base/JobBase.h"
 
 #include "wondermake-utility/Result.h"
 

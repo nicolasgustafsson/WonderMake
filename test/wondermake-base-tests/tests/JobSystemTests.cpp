@@ -1,7 +1,7 @@
 #include "wondermake-tests-common/GTestInclude.h"
 
-#include "wondermake-base/Jobs/JobBase.h"
-#include "wondermake-base/Jobs/JobSystem.h"
+#include "wondermake-base/JobBase.h"
+#include "wondermake-base/JobSystem.h"
 
 #include "WonderMakeBaseTests/JobMock.h"
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "wondermake-base/jobs/JobBase.h"
-#include "wondermake-base/jobs/JobRegistry.h"
+#include "wondermake-base/JobBase.h"
+#include "wondermake-base/JobRegistry.h"
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/System.h"
 #include "wondermake-base/SystemContainer.h"

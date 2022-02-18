@@ -1,7 +1,7 @@
 #pragma once
 
 #include "wondermake-base/Cargo.h"
-#include "wondermake-base/jobs/JobBase.h"
+#include "wondermake-base/JobBase.h"
 
 #include "Object/Object.h"
 

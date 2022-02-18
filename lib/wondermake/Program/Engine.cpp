@@ -5,8 +5,9 @@
 
 #include "Message/DispatchRouter.h"
 
+#include "wondermake-base/jobs/JobSystem.h"
+#include "wondermake-base/jobs/JobGlobal.h"
 #include "wondermake-base/CmdLineArgsSystem.h"
-#include "wondermake-base/JobSystem.h"
 #include "wondermake-base/SystemGlobal.h"
 
 #include "Program/ImguiWrapper.h"
@@ -142,24 +143,24 @@ namespace Engine
 
 			auto&& sysContainer = Global::GetSystemContainer();
 
-			TaskManager taskManager;
+			auto taskManager = std::make_shared<TaskManager>();
 
 			auto scheduleProc = [&taskManager](Closure aTask)
 			{
-				taskManager.Schedule(std::move(aTask));
+				taskManager->Schedule(std::move(aTask));
 			};
 			auto scheduleRepeatingProc = [&taskManager](std::function<void()> aTask)
 			{
-				taskManager.ScheduleRepeating(std::move(aTask));
+				taskManager->ScheduleRepeating(std::move(aTask));
 			};
 
 			sysRegistry.AddSystem<CmdLineArgsSystem>([cmdLineArgs = aInfo.CommandLineArguments]() -> std::shared_ptr<CmdLineArgsSystem>
 			{
 				return std::make_shared<CmdLineArgsSystem>(cmdLineArgs);
 			});
-			sysRegistry.AddSystem<JobSystem>([&sysContainer]() -> std::shared_ptr<JobSystem>
+			sysRegistry.AddSystem<jobs_refactor::JobSystem>([&sysContainer, executor = taskManager->GetExecutor()]() -> std::shared_ptr<jobs_refactor::JobSystem>
 				{
-					return std::make_shared<JobSystem>(sysContainer);
+					return std::make_shared<jobs_refactor::JobSystem>(JobGlobal::GetRegistry(), sysContainer, executor);
 				});
 			sysRegistry.AddSystem<ScheduleSystem>([&scheduleProc, &scheduleRepeatingProc]() -> std::shared_ptr<ScheduleSystem>
 				{
@@ -199,7 +200,7 @@ namespace Engine
 				//update the timekeeper before any threads have run so that delta time can be accessed asynchronously
 				timeKeeper.Update();
 
-				taskManager.Update();
+				taskManager->Update();
 
 				RouteMessages();
 

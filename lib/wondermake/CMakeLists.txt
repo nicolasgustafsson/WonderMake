@@ -152,7 +152,6 @@ list(APPEND SourceFiles
     "Resources/Asset.h"
     "Resources/AssetDatabase.h"
     "Resources/AssetLink.h"
-    "Resources/CreateResource.h"
     "Resources/Resource.h"
     "Resources/ResourceProxy.h"
     "Resources/ResourceSystem.h"

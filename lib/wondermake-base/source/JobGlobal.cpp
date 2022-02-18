@@ -1,4 +1,4 @@
-#include "wondermake-base/jobs/JobGlobal.h"
+#include "wondermake-base/JobGlobal.h"
 
 JobRegistry& JobGlobal::GetRegistry()
 {

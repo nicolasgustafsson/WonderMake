@@ -2,7 +2,7 @@
 
 #include "wondermake-io/FileSystem.h"
 
-#include "wondermake-base/jobs/JobGlobal.h"
+#include "wondermake-base/JobGlobal.h"
 
 #include <fstream>
 

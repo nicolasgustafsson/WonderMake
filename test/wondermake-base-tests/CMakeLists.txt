@@ -14,7 +14,7 @@ list(APPEND SourceFiles
     "Tests/WinProcessTests.cpp")
     
 list(APPEND SourceFiles
-    "../../lib/wondermake-base/source/jobs/JobSystem.cpp"
+    "../../lib/wondermake-base/source/JobSystem.cpp"
     "../../lib/wondermake-base/source/WinEventSystemImpl.cpp"
     "../../lib/wondermake-base/source/WinGuidGeneratorSystem.cpp"
     "../../lib/wondermake-base/source/WinProcess.cpp"

@@ -1,6 +1,6 @@
 #include "wondermake-tests-common/GTestInclude.h"
 
-#include "wondermake-base/Jobs/JobRegistry.h"
+#include "wondermake-base/JobRegistry.h"
 #include "wondermake-base/System.h"
 
 #include "wondermake-utility/Typedefs.h"

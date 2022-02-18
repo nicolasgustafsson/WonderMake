@@ -1,4 +1,4 @@
-#include "wondermake-base/jobs/JobSystem.h"
+#include "wondermake-base/JobSystem.h"
 
 namespace jobs_refactor // Temporary until refactor is done.
 {

@@ -2,7 +2,7 @@
 
 #ifndef WM_SUPPRESS_JOB_GLOBAL
 
-#include "wondermake-base/jobs/JobRegistry.h"
+#include "wondermake-base/JobRegistry.h"
 
 #include "wondermake-utility/AutoRegister.h"
 

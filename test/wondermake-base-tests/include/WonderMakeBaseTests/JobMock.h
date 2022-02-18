@@ -2,8 +2,8 @@
 
 #include "wondermake-tests-common/GTestInclude.h"
 
-#include "wondermake-base/jobs/JobBase.h"
-#include "wondermake-base/jobs/JobRegistry.h"
+#include "wondermake-base/JobBase.h"
+#include "wondermake-base/JobRegistry.h"
 
 template<jobs_refactor::CJob TJob>
 class JobMock

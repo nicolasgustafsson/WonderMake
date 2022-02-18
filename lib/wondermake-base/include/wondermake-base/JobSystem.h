@@ -13,9 +13,6 @@
 
 #include <memory>
 
-namespace jobs_refactor // Temporary until refactor is done.
-{
-
 class JobSystem
 	: public System<>
 	, public std::enable_shared_from_this<JobSystem>
@@ -75,5 +72,3 @@ private:
 	AnyExecutor myExecutor;
 
 };
-
-}

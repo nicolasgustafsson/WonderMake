@@ -10,9 +10,6 @@
 #include <tuple>
 #include <type_traits>
 
-namespace jobs_refactor // Temporary until refactor is done.
-{
-
 class JobBase
 	: NonCopyable
 	, NonMovable
@@ -155,5 +152,3 @@ public:
 
 template<typename TJob>
 concept CJob = std::is_base_of_v<JobBase, TJob>;
-
-}

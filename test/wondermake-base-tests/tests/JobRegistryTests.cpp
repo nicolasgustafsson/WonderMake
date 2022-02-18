@@ -8,17 +8,17 @@
 #include "WonderMakeBaseTests/JobMock.h"
 
 class TestJobAMock
-	: public jobs_refactor::Job<>
+	: public Job<>
 {
 public:
 	MOCK_METHOD(void, Run, (Promise<void>), (override));
 };
 
 class TestJobB
-	: public jobs_refactor::JobAbstracted<
-		jobs_refactor::JobInputSet<
-			jobs_refactor::JobInput<void>,
-			jobs_refactor::JobInput<u32>>>
+	: public JobAbstracted<
+		JobInputSet<
+			JobInput<void>,
+			JobInput<u32>>>
 {};
 
 class TestJobBMock
@@ -34,9 +34,9 @@ class TestSystemDepedency
 {};
 
 class TestJobCMock
-	: public jobs_refactor::Job<
-		jobs_refactor::NoJobInput,
-		jobs_refactor::NoJobOutput,
+	: public Job<
+		NoJobInput,
+		NoJobOutput,
 		Policy::Set<
 			PAdd<TestSystemDepedency, PRead>>>
 {
@@ -46,7 +46,7 @@ public:
 
 class TestJobDMock
 	: public TestJobB
-	, public jobs_refactor::JobSub<
+	, public JobSub<
 		Policy::Set<
 			PAdd<TestSystemDepedency, PWrite>>>
 {

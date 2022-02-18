@@ -12,8 +12,8 @@
 namespace _Impl
 {
 	template<typename... TFunctionalities>
-	using _CreateObjectJobType = jobs_refactor::Job<
-		jobs_refactor::NoJobInput,
+	using _CreateObjectJobType = Job<
+		NoJobInput,
 		std::pair<Object, Cargo<TFunctionalities...>>
 		Policy::Set<
 			PAdd<FunctionalitySystemDelegate<std::decay_t<TFunctionalities>>, PWrite>...>>;

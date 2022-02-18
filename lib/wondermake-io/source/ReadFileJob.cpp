@@ -2,15 +2,19 @@
 
 #include "wondermake-io/FileSystem.h"
 
+#include "wondermake-base/jobs/JobGlobal.h"
+
 #include <fstream>
 
-void ReadFileJob::Run(const FolderLocation aLocation, const std::filesystem::path& aFilePath)
+WM_REGISTER_JOB(ReadFileJob);
+
+void ReadFileJob::Run(Promise<Result<ReadFileError, std::vector<u8>>> aPromise, FolderLocation aLocation, std::filesystem::path aFilePath)
 {
 	const auto dirPath = Get<FileSystem>().GetFolderLocation(aLocation);
 
 	if (!dirPath)
 	{
-		CompleteFailure(ReadFileError::InvalidArguments);
+		aPromise.Complete(ReadFileError::InvalidArguments);
 
 		return;
 	}
@@ -19,14 +23,14 @@ void ReadFileJob::Run(const FolderLocation aLocation, const std::filesystem::pat
 
 	if (!std::filesystem::exists(path))
 	{
-		CompleteFailure(ReadFileError::FileNotFound);
+		aPromise.Complete(ReadFileError::FileNotFound);
 
 		return;
 	}
 
 	if (!std::filesystem::is_regular_file(path))
 	{
-		CompleteFailure(ReadFileError::NotAFile);
+		aPromise.Complete(ReadFileError::NotAFile);
 
 		return;
 	}
@@ -35,12 +39,12 @@ void ReadFileJob::Run(const FolderLocation aLocation, const std::filesystem::pat
 
 	if (!file)
 	{
-		CompleteFailure(ReadFileError::FailedToOpen);
+		aPromise.Complete(ReadFileError::FailedToOpen);
 
 		return;
 	}
 
 	std::vector<u8> buffer(std::istreambuf_iterator<char>(file), {});
 	
-	CompleteSuccess(std::move(buffer));
+	aPromise.Complete(std::move(buffer));
 }

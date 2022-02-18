@@ -1,12 +1,15 @@
 #pragma once
 
-#include "wondermake-io/FileSystem.h"
 #include "wondermake-io/FileTypes.h"
 
-#include "wondermake-base/Job.h"
+#include "wondermake-base/jobs/JobBase.h"
+
+#include "wondermake-utility/Result.h"
 
 #include <filesystem>
 #include <vector>
+
+class FileSystem;
 
 enum class ReadFileError
 {
@@ -17,13 +20,14 @@ enum class ReadFileError
 };
 
 class ReadFileJob
-	: public Job<
+	: public jobs_refactor::Job<
+		jobs_refactor::JobInputSet<
+			jobs_refactor::JobInput<FolderLocation, std::filesystem::path>>,
+		Result<ReadFileError, std::vector<u8>>,
 		Policy::Set<
-			PAdd<FileSystem, PWrite>>,
-		JobOutput<std::vector<u8>>,
-		JobOutputError<ReadFileError>>
+			PAdd<FileSystem, PWrite>>>
 {
 public:
-	void Run(const FolderLocation aLocation, const std::filesystem::path& aFilePath);
+	void Run(Promise<Result<ReadFileError, std::vector<u8>>> aPromise, FolderLocation aLocation, std::filesystem::path aFilePath) override;
 
 };

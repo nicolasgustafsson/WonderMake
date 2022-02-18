@@ -10,7 +10,7 @@ class SystemDepdenency
 {};
 
 class JobTestBase
-	: public jobs_refactor::JobAbstracted<>
+	: public JobAbstracted<>
 {};
 
 class JobTestSub
@@ -22,7 +22,7 @@ public:
 
 class JobTestSubWithDependencies
 	: public JobTestBase
-	, public jobs_refactor::JobSub<
+	, public JobSub<
 		Policy::Set<
 			PAdd<SystemDepdenency, PRead>>>
 {
@@ -31,10 +31,10 @@ public:
 };
 
 class JobTestBaseWithInput
-	: public jobs_refactor::JobAbstracted<
-		jobs_refactor::JobInputSet<
-			jobs_refactor::JobInput<u32>,
-			jobs_refactor::JobInput<f32>>>
+	: public JobAbstracted<
+		JobInputSet<
+			JobInput<u32>,
+			JobInput<f32>>>
 {};
 
 class JobTestSubWithInput
@@ -54,7 +54,7 @@ public:
 	MOCK_METHOD(void, MockedRunF32, (Promise<void>, f32));
 };
 
-template<jobs_refactor::CJob TJob>
+template<CJob TJob>
 inline constexpr auto JobCreator()
 {
 	return [](auto&& aDependencies)
@@ -71,9 +71,9 @@ TEST(JobSystemTests, starting_an_unregistered_job_returns_a_canceled_future)
 	SystemContainer systemContainer;
 	AnyExecutor executor = InlineExecutor();
 	
-	jobs_refactor::JobSystem::InjectDependencies(std::tie());
+	JobSystem::InjectDependencies(std::tie());
 
-	auto jobSystem = std::make_shared<jobs_refactor::JobSystem>(jobRegistry, systemContainer, executor);
+	auto jobSystem = std::make_shared<JobSystem>(jobRegistry, systemContainer, executor);
 
 	auto future = jobSystem->StartJob<JobTestBase>();
 
@@ -88,9 +88,9 @@ TEST(JobSystemTests, starting_a_job_with_missing_dependencies_returns_a_canceled
 	
 	jobRegistry.AddJob<StrictMock<JobTestSubWithDependencies>, JobTestBase>(JobCreator<StrictMock<JobTestSubWithDependencies>>());
 
-	jobs_refactor::JobSystem::InjectDependencies(std::tie());
+	JobSystem::InjectDependencies(std::tie());
 
-	auto jobSystem = std::make_shared<jobs_refactor::JobSystem>(jobRegistry, systemContainer, executor);
+	auto jobSystem = std::make_shared<JobSystem>(jobRegistry, systemContainer, executor);
 
 	auto future = jobSystem->StartJob<JobTestBase>();
 
@@ -106,9 +106,9 @@ TEST(JobSystemTests, starting_a_job_should_call_the_run_function)
 
 	jobMock->AddToRegistry(jobRegistry);
 
-	jobs_refactor::JobSystem::InjectDependencies(std::tie());
+	JobSystem::InjectDependencies(std::tie());
 
-	auto jobSystem = std::make_shared<jobs_refactor::JobSystem>(jobRegistry, systemContainer, executor);
+	auto jobSystem = std::make_shared<JobSystem>(jobRegistry, systemContainer, executor);
 
 	EXPECT_CALL(*jobMock, Run);
 
@@ -135,9 +135,9 @@ TEST(JobSystemTests, starting_a_job_with_dependencies_should_call_the_run_functi
 			return mock;
 		});
 
-	jobs_refactor::JobSystem::InjectDependencies(std::tie());
+	JobSystem::InjectDependencies(std::tie());
 
-	auto jobSystem = std::make_shared<jobs_refactor::JobSystem>(jobRegistry, systemContainer, executor);
+	auto jobSystem = std::make_shared<JobSystem>(jobRegistry, systemContainer, executor);
 
 	(void)jobSystem->StartJob<JobTestBase>();
 }
@@ -151,9 +151,9 @@ TEST(JobSystemTests, promise_passed_to_run_controls_the_returned_future)
 
 	jobMock->AddToRegistry(jobRegistry);
 
-	jobs_refactor::JobSystem::InjectDependencies(std::tie());
+	JobSystem::InjectDependencies(std::tie());
 
-	auto jobSystem = std::make_shared<jobs_refactor::JobSystem>(jobRegistry, systemContainer, executor);
+	auto jobSystem = std::make_shared<JobSystem>(jobRegistry, systemContainer, executor);
 
 	EXPECT_CALL(*jobMock, Run)
 		.WillOnce([](auto&& aPromise)
@@ -178,9 +178,9 @@ TEST(JobSystemTests, args_passed_to_startjob_is_passed_to_the_run_function)
 
 	jobMock->AddToRegistry(jobRegistry);
 
-	jobs_refactor::JobSystem::InjectDependencies(std::tie());
+	JobSystem::InjectDependencies(std::tie());
 
-	auto jobSystem = std::make_shared<jobs_refactor::JobSystem>(jobRegistry, systemContainer, executor);
+	auto jobSystem = std::make_shared<JobSystem>(jobRegistry, systemContainer, executor);
 
 	EXPECT_CALL(*jobMock, MockedRunU32(_, dummyArgU32));
 

@@ -28,7 +28,7 @@ public:
 	};
 
 	template<
-		jobs_refactor::CJob TJob,
+		CJob TJob,
 		typename TBaseJob = TJob,
 		typename TCreateFunc>
 	inline void AddJob(TCreateFunc&& aCreateFunc)
@@ -62,7 +62,7 @@ public:
 		if (!result)
 			return { static_cast<ECreateError>(result), result.Meta() };
 
-		return StaticReferenceCast<TJob>(static_cast<SharedReference<jobs_refactor::JobBase>>(result));
+		return StaticReferenceCast<TJob>(static_cast<SharedReference<JobBase>>(result));
 	}
 
 private:
@@ -72,7 +72,7 @@ private:
 
 	struct JobData
 	{
-		std::function<Result<ECreateError, SharedReference<jobs_refactor::JobBase>, std::string>(SystemContainer&)> CreateFunc;
+		std::function<Result<ECreateError, SharedReference<JobBase>, std::string>(SystemContainer&)> CreateFunc;
 		std::vector<Policy> Policies;
 	};
 
@@ -83,9 +83,9 @@ private:
 		typename... TDependencies>
 	inline void AddJobHelper(TCreateFunc&& aCreateFunc, TupleWrapper<std::tuple<TDependencies...>>&&) requires(std::is_invocable_r_v<SharedReference<TJob>, TCreateFunc, std::tuple<std::decay_t<TDependencies>&...>>)
 	{
-		auto construct = [createFunc = std::forward<TCreateFunc>(aCreateFunc)](SystemContainer& aSystemContainer) -> Result<ECreateError, SharedReference<jobs_refactor::JobBase>, std::string>
+		auto construct = [createFunc = std::forward<TCreateFunc>(aCreateFunc)](SystemContainer& aSystemContainer) -> Result<ECreateError, SharedReference<JobBase>, std::string>
 		{
-			std::optional<Result<ECreateError, SharedReference<jobs_refactor::JobBase>, std::string>> errResult;
+			std::optional<Result<ECreateError, SharedReference<JobBase>, std::string>> errResult;
 
 			auto sanitizeDependency = [&errResult](auto aDependencyPtr)
 			{
@@ -105,7 +105,7 @@ private:
 					return createFunc(std::tie((*aDependenyPointers)...));
 				}, dependenyPointers);
 
-			SharedReference<jobs_refactor::JobBase> refBase = std::move(ref);
+			SharedReference<JobBase> refBase = std::move(ref);
 
 			return refBase;
 		};

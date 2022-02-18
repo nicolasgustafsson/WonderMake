@@ -5,10 +5,10 @@
 #include "wondermake-base/JobBase.h"
 #include "wondermake-base/JobRegistry.h"
 
-template<jobs_refactor::CJob TJob>
+template<CJob TJob>
 class JobMock
 	: public TJob
-	, public jobs_refactor::JobSub<>
+	, public JobSub<>
 	, public std::enable_shared_from_this<JobMock<TJob>>
 {
 public:

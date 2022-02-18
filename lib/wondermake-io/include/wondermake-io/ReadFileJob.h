@@ -20,9 +20,9 @@ enum class ReadFileError
 };
 
 class ReadFileJob
-	: public jobs_refactor::Job<
-		jobs_refactor::JobInputSet<
-			jobs_refactor::JobInput<FolderLocation, std::filesystem::path>>,
+	: public Job<
+		JobInputSet<
+			JobInput<FolderLocation, std::filesystem::path>>,
 		Result<ReadFileError, std::vector<u8>>,
 		Policy::Set<
 			PAdd<FileSystem, PWrite>>>

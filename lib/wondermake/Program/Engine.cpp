@@ -158,9 +158,9 @@ namespace Engine
 			{
 				return std::make_shared<CmdLineArgsSystem>(cmdLineArgs);
 			});
-			sysRegistry.AddSystem<jobs_refactor::JobSystem>([&sysContainer, executor = taskManager->GetExecutor()]() -> std::shared_ptr<jobs_refactor::JobSystem>
+			sysRegistry.AddSystem<JobSystem>([&sysContainer, executor = taskManager->GetExecutor()]() -> std::shared_ptr<JobSystem>
 				{
-					return std::make_shared<jobs_refactor::JobSystem>(JobGlobal::GetRegistry(), sysContainer, executor);
+					return std::make_shared<JobSystem>(JobGlobal::GetRegistry(), sysContainer, executor);
 				});
 			sysRegistry.AddSystem<ScheduleSystem>([&scheduleProc, &scheduleRepeatingProc]() -> std::shared_ptr<ScheduleSystem>
 				{

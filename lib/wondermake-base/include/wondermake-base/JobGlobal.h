@@ -12,7 +12,7 @@ public:
 	static JobRegistry& GetRegistry();
 };
 
-template<jobs_refactor::CJob TJob, jobs_refactor::CJob TJobBase>
+template<CJob TJob, CJob TJobBase>
 static void _RegisterJob() requires(std::is_same_v<TJobBase, TJob> || std::is_base_of_v<TJobBase, TJob>)
 {
 	JobGlobal::GetRegistry().AddJob<TJob, TJobBase>([](auto&& aDependencies) -> SharedReference<TJob>

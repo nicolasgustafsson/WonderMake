@@ -8,6 +8,11 @@ void TaskManager::Update()
 	ProcessTasks();
 }
 
+AnyExecutor TaskManager::GetExecutor()
+{
+	return Executor(weak_from_this());
+}
+
 void TaskManager::Schedule(Closure aTask)
 {
 	std::lock_guard<decltype(myMutex)> lock(myMutex);
@@ -20,6 +25,26 @@ void TaskManager::ScheduleRepeating(std::function<void()> aTask)
 	std::lock_guard<decltype(myMutex)> lock(myMutex);
 
 	myTasksRepeatingScheduled.emplace_back(std::move(aTask));
+}
+
+TaskManager::Executor::Executor(std::weak_ptr<TaskManager> aTaskManager)
+	: myTaskManager(std::move(aTaskManager))
+{}
+
+void TaskManager::Executor::Execute(Closure&& aClosure) const
+{
+	auto ptr = myTaskManager.lock();
+
+	if (!ptr)
+		return;
+
+	ptr->Schedule(std::move(aClosure));
+}
+
+void TaskManager::Executor::Execute(Closure&& aClosure, std::vector<Policy>&& /*aPolicies*/) const
+{
+	// TODO(Kevin): Take policies into consideration.
+	Execute(std::move(aClosure));
 }
 
 void TaskManager::ProcessTasks()

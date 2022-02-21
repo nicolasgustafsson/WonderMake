@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 list(APPEND SourceFiles
+    "Include/WonderMakeIoTests/ReadFileJobMock.h"
     "Include/WonderMakeIoTests/SocketMock.h"
     "Include/WonderMakeIoTests/SocketSerializingMock.h"
     "Tests/SocketDecoratorTests.cpp"

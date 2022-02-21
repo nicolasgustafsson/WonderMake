@@ -20,14 +20,8 @@ enum class ReadFileError
 };
 
 class ReadFileJob
-	: public Job<
+	: public JobAbstracted<
 		JobInputSet<
 			JobInput<FolderLocation, std::filesystem::path>>,
-		Result<ReadFileError, std::vector<u8>>,
-		Policy::Set<
-			PAdd<FileSystem, PWrite>>>
-{
-public:
-	void Run(Promise<Result<ReadFileError, std::vector<u8>>> aPromise, FolderLocation aLocation, std::filesystem::path aFilePath) override;
-
-};
+		Result<ReadFileError, std::vector<u8>>>
+{};

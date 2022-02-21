@@ -6,45 +6,54 @@
 
 #include <fstream>
 
-WM_REGISTER_JOB(ReadFileJob);
-
-void ReadFileJob::Run(Promise<Result<ReadFileError, std::vector<u8>>> aPromise, FolderLocation aLocation, std::filesystem::path aFilePath)
+class ReadFileJobImpl
+	: public JobSub<
+		Policy::Set<
+			PAdd<FileSystem, PWrite>>>
+	, public ReadFileJob
 {
-	const auto dirPath = Get<FileSystem>().GetFolderLocation(aLocation);
-
-	if (!dirPath)
+public:
+	void Run(Promise<Result<ReadFileError, std::vector<u8>>> aPromise, FolderLocation aLocation, std::filesystem::path aFilePath) override
 	{
-		aPromise.Complete(ReadFileError::InvalidArguments);
+		const auto dirPath = Get<FileSystem>().GetFolderLocation(aLocation);
 
-		return;
-	}
+		if (!dirPath)
+		{
+			aPromise.Complete(ReadFileError::InvalidArguments);
 
-	const auto path = *dirPath / aFilePath;
+			return;
+		}
 
-	if (!std::filesystem::exists(path))
-	{
-		aPromise.Complete(ReadFileError::FileNotFound);
+		const auto path = *dirPath / aFilePath;
 
-		return;
-	}
+		if (!std::filesystem::exists(path))
+		{
+			aPromise.Complete(ReadFileError::FileNotFound);
 
-	if (!std::filesystem::is_regular_file(path))
-	{
-		aPromise.Complete(ReadFileError::NotAFile);
+			return;
+		}
 
-		return;
-	}
+		if (!std::filesystem::is_regular_file(path))
+		{
+			aPromise.Complete(ReadFileError::NotAFile);
 
-	std::ifstream file(path, std::ios_base::binary);
+			return;
+		}
 
-	if (!file)
-	{
-		aPromise.Complete(ReadFileError::FailedToOpen);
+		std::ifstream file(path, std::ios_base::binary);
 
-		return;
-	}
+		if (!file)
+		{
+			aPromise.Complete(ReadFileError::FailedToOpen);
 
-	std::vector<u8> buffer(std::istreambuf_iterator<char>(file), {});
+			return;
+		}
+
+		std::vector<u8> buffer(std::istreambuf_iterator<char>(file), {});
 	
-	aPromise.Complete(std::move(buffer));
-}
+		aPromise.Complete(std::move(buffer));
+	}
+
+};
+
+WM_REGISTER_JOB_MASKED(ReadFileJobImpl, ReadFileJob);

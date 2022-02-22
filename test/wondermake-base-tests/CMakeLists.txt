@@ -31,6 +31,6 @@ target_include_directories(WonderMakeBaseTests
     PRIVATE
         "../../lib/wondermake-base/source")
 
-target_compile_definitions(WonderMakeBaseTests PUBLIC "WM_SUPRESS_SYSTEM_GLOBAL")
+target_compile_definitions(WonderMakeBaseTests PUBLIC "WM_SUPPRESS_SYSTEM_GLOBAL")
 
 gtest_discover_tests(WonderMakeBaseTests)

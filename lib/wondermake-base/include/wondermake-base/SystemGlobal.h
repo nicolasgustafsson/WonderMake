@@ -1,6 +1,6 @@
 #pragma once
 
-#ifndef WM_SUPRESS_SYSTEM_GLOBAL
+#ifndef WM_SUPPRESS_SYSTEM_GLOBAL
 
 #include "SystemContainer.h"
 #include "SystemRegistry.h"

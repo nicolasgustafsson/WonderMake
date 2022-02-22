@@ -25,6 +25,6 @@ target_include_directories(WonderMakeIoManualTests
         "../../../lib/wondermake-base/source"
         "../../../lib/wondermake-io/source")
 
-target_compile_definitions(WonderMakeIoManualTests PUBLIC "WM_SUPRESS_SYSTEM_GLOBAL")
+target_compile_definitions(WonderMakeIoManualTests PUBLIC "WM_SUPPRESS_SYSTEM_GLOBAL")
 
 gtest_discover_tests(WonderMakeIoManualTests)

@@ -4,6 +4,7 @@ list(APPEND SourceFiles
     "Include/WonderMakeIoTests/ReadFileJobMock.h"
     "Include/WonderMakeIoTests/SocketMock.h"
     "Include/WonderMakeIoTests/SocketSerializingMock.h"
+    "Include/WonderMakeIoTests/WriteFileJobMock.h"
     "Tests/SocketDecoratorTests.cpp"
     "Tests/SocketSerializingImplTests.cpp"
     "Tests/WinFileSystemTests.cpp"

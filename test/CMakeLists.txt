@@ -6,6 +6,7 @@ if(WonderMake_Testing)
 	add_subdirectory("wondermake-utility-tests")
 	add_subdirectory("wondermake-base-tests")
 	add_subdirectory("wondermake-io-tests")
+	add_subdirectory("wondermake-engine-tests")
 endif()
 
 if(WonderMake_TestingManual)

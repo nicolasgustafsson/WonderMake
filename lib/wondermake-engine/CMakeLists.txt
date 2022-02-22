@@ -3,10 +3,12 @@ cmake_minimum_required(VERSION 3.10)
 add_subdirectory("proto")
 
 list(APPEND SourceFiles
+    "include/wondermake-engine/DeserializeConfigurationJob.h"
     "include/wondermake-engine/LoggerFileSystem.h"
     "include/wondermake-engine/LoggerRemoteConnection.h"
     "include/wondermake-engine/LoggerRemoteSocket.h"
     "include/wondermake-engine/LoggerRemoteSystem.h"
+    "source/DeserializeConfigurationJob.cpp"
     "source/LoggerFileSystem.cpp"
     "source/LoggerRemoteConnection.cpp"
     "source/LoggerRemoteMessage.cpp"
@@ -21,4 +23,4 @@ if(MSVC)
     target_link_options(WonderMakeEngine PUBLIC "/WHOLEARCHIVE:WonderMakeEngine")
 endif()
 
-target_link_libraries(WonderMakeEngine WonderMakeEngineProto WonderMakeBase WonderMakeUtility WonderMakeIo)
+target_link_libraries(WonderMakeEngine WonderMakeEngineProto WonderMakeBase WonderMakeUtility WonderMakeIo NlohmannJson)

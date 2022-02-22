@@ -11,6 +11,7 @@ list(APPEND SourceFiles
     "include/wondermake-io/SocketDecorator.h"
     "include/wondermake-io/SocketSerializing.h"
     "include/wondermake-io/SocketSerializingImpl.h"
+    "include/wondermake-io/WriteFileJob.h"
     "source/ReadFileJob.cpp"
     "source/SocketDecorator.cpp"
     "source/WinFileSystem.cpp"
@@ -20,7 +21,8 @@ list(APPEND SourceFiles
     "source/WinIpcConnection.cpp"
     "source/WinIpcConnection.h"
     "source/WinIpcSystem.cpp"
-    "source/WinIpcSystem.h")
+    "source/WinIpcSystem.h"
+    "source/WriteFileJob.cpp")
 
 add_library(WonderMakeIo STATIC ${SourceFiles})
 

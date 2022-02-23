@@ -11,7 +11,6 @@ list(APPEND SourceFiles
     "Tests/WinProcessTests.cpp")
     
 list(APPEND SourceFiles
-    "../../lib/wondermake-base/source/Logger.cpp"
     "../../lib/wondermake-base/source/WinEventSystemImpl.cpp"
     "../../lib/wondermake-base/source/WinGuidGeneratorSystem.cpp"
     "../../lib/wondermake-base/source/WinProcess.cpp"
@@ -31,6 +30,6 @@ target_include_directories(WonderMakeBaseTests
     PRIVATE
         "../../lib/wondermake-base/source")
 
-target_compile_definitions(WonderMakeBaseTests PUBLIC "WM_SUPPRESS_SYSTEM_GLOBAL")
+target_compile_definitions(WonderMakeBaseTests PUBLIC "WM_SUPPRESS_SYSTEM_GLOBAL" "WM_SUPPRESS_LOGGER")
 
 gtest_discover_tests(WonderMakeBaseTests)

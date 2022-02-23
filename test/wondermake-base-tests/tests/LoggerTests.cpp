@@ -1,6 +1,10 @@
 #include "wondermake-tests-common/GTestInclude.h"
 
+#undef WM_SUPPRESS_LOGGER
+
 #include "wondermake-base/Logger.h"
+
+#include "Logger.cpp"
 
 class LoggerMock
 	: public LoggerBase

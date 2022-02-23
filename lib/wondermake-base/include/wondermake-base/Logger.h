@@ -129,31 +129,31 @@ private:
 
 #else
 
-#define WM_LOG(...)
+#define WM_LOG(...) (__VA_ARGS__)
 
-#define WM_LOG_DEBUG_SUCCESS(...)
-#define WM_LOG_DEBUG_INFO(...)
-#define WM_LOG_DEBUG_WARNING(...)
-#define WM_LOG_DEBUG_ERROR(...)
+#define WM_LOG_DEBUG_SUCCESS(...) (__VA_ARGS__)
+#define WM_LOG_DEBUG_INFO(...) (__VA_ARGS__)
+#define WM_LOG_DEBUG_WARNING(...) (__VA_ARGS__)
+#define WM_LOG_DEBUG_ERROR(...) (__VA_ARGS__)
 
-#define WM_LOG_VERBOSE_SUCCESS(...)
-#define WM_LOG_VERBOSE_INFO(...)
-#define WM_LOG_VERBOSE_WARNING(...)
-#define WM_LOG_VERBOSE_ERROR(...)
+#define WM_LOG_VERBOSE_SUCCESS(...) (__VA_ARGS__)
+#define WM_LOG_VERBOSE_INFO(...) (__VA_ARGS__)
+#define WM_LOG_VERBOSE_WARNING(...) (__VA_ARGS__)
+#define WM_LOG_VERBOSE_ERROR(...) (__VA_ARGS__)
 
-#define WM_LOG_NORMAL_SUCCESS(...)
-#define WM_LOG_NORMAL_INFO(...)
-#define WM_LOG_NORMAL_WARNING(...)
-#define WM_LOG_NORMAL_ERROR(...)
+#define WM_LOG_NORMAL_SUCCESS(...) (__VA_ARGS__)
+#define WM_LOG_NORMAL_INFO(...) (__VA_ARGS__)
+#define WM_LOG_NORMAL_WARNING(...) (__VA_ARGS__)
+#define WM_LOG_NORMAL_ERROR(...) (__VA_ARGS__)
 
-#define WM_LOG_PRIORITY_SUCCESS(...)
-#define WM_LOG_PRIORITY_INFO(...)
-#define WM_LOG_PRIORITY_WARNING(...)
-#define WM_LOG_PRIORITY_ERROR(...)
+#define WM_LOG_PRIORITY_SUCCESS(...) (__VA_ARGS__)
+#define WM_LOG_PRIORITY_INFO(...) (__VA_ARGS__)
+#define WM_LOG_PRIORITY_WARNING(...) (__VA_ARGS__)
+#define WM_LOG_PRIORITY_ERROR(...) (__VA_ARGS__)
 
-#define WM_LOG_SUCCESS(...)
-#define WM_LOG_INFO(...)
-#define WM_LOG_WARNING(...)
-#define WM_LOG_ERROR(...)
+#define WM_LOG_SUCCESS(...) (__VA_ARGS__)
+#define WM_LOG_INFO(...) (__VA_ARGS__)
+#define WM_LOG_WARNING(...) (__VA_ARGS__)
+#define WM_LOG_ERROR(...) (__VA_ARGS__)
 
 #endif

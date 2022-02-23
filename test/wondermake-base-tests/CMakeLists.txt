@@ -6,6 +6,7 @@ list(APPEND SourceFiles
     "Include/WonderMakeBaseTests/ProcessSystemMock.h"
     "Include/WonderMakeBaseTests/WinEventSystemMock.h"
     "Include/WonderMakeBaseTests/WinPlatformSystemMock.h"
+    "Tests/ConfigurationTests.cpp"
     "Tests/JobRegistryTests.cpp"
     "Tests/JobSystemTests.cpp"
     "Tests/LoggerTests.cpp"
@@ -15,6 +16,7 @@ list(APPEND SourceFiles
     "Tests/WinProcessTests.cpp")
     
 list(APPEND SourceFiles
+    "../../lib/wondermake-base/source/Configuration.cpp"
     "../../lib/wondermake-base/source/JobSystem.cpp"
     "../../lib/wondermake-base/source/WinEventSystemImpl.cpp"
     "../../lib/wondermake-base/source/WinGuidGeneratorSystem.cpp"

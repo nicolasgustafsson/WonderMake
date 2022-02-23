@@ -109,8 +109,6 @@ list(APPEND SourceFiles
     "Input/InputItems.h"
     "Input/InputSystem.cpp"
     "Input/InputSystem.h"
-    "Json/ParseJsonJob.cpp"
-    "Json/ParseJsonJob.h"
     "Logging/ImGuiLogger.cpp"
     "Logging/ImGuiLogger.h"
     "Logging/LogMessageTags.h"

@@ -11,6 +11,8 @@ list(APPEND SourceFiles
     "Tests/WinIpcConnectionTests.cpp")
     
 list(APPEND SourceFiles
+    "../../lib/wondermake-base/source/Configuration.cpp"
+    "../../lib/wondermake-base/source/ConfigurationSystem.cpp"
     "../../lib/wondermake-io/source/SocketDecorator.cpp"
     "../../lib/wondermake-io/source/WinFileSystem.cpp"
     "../../lib/wondermake-io/source/WinIpcConnection.cpp")
@@ -30,6 +32,6 @@ target_include_directories(WonderMakeIoTests
     PRIVATE
         "../../lib/wondermake-io/source")
 
-target_compile_definitions(WonderMakeIoTests PUBLIC "WM_SUPPRESS_SYSTEM_GLOBAL")
+target_compile_definitions(WonderMakeIoTests PUBLIC "WM_SUPPRESS_SYSTEM_GLOBAL" "WM_SUPPRESS_LOGGER")
 
 gtest_discover_tests(WonderMakeIoTests)

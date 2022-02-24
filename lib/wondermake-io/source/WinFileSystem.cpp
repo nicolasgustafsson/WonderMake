@@ -1,5 +1,8 @@
 #include "WinFileSystem.h"
 
+#include "wondermake-io/ConfigurationIo.h"
+
+#include "wondermake-base/ConfigurationSystem.h"
 #include "wondermake-base/SystemGlobal.h"
 
 REGISTER_SYSTEM_MASKED(WinFileSystem, FileSystem);
@@ -18,18 +21,30 @@ std::optional<std::filesystem::path> WinFileSystem::GetFolderLocation(const Fold
 {
 	std::optional<std::filesystem::path> retVal;
 
+	const auto getPath = [this, aLocation](const auto& aConfigName, const auto& aFolderId) -> std::optional<std::filesystem::path>
+	{
+		auto config = Get<ConfigurationSystem>().Get<std::string>(static_cast<std::string>(aConfigName), "");
+
+		if (!config.empty())
+			return config;
+
+		auto retVal = GetFolder(aFolderId);
+
+		if (!retVal)
+			return std::nullopt;
+
+		return *retVal / mySuffixes[aLocation];
+	};
+
 	switch (aLocation)
 	{
-	case FolderLocation::Bin:		retVal = myBinPath; break;
-	case FolderLocation::Data:		retVal = GetFolder(FOLDERID_ProgramData); break;
-	case FolderLocation::User:		retVal = GetFolder(FOLDERID_Documents); break;
-	case FolderLocation::UserData:	retVal = GetFolder(FOLDERID_UserProgramFiles); break;
+	case FolderLocation::Bin:		return myBinPath / mySuffixes[aLocation];
+	case FolderLocation::Data:		return getPath(ConfigurationIo::ConfigDirectoryData,		FOLDERID_ProgramData);
+	case FolderLocation::User:		return getPath(ConfigurationIo::ConfigDirectoryUser,		FOLDERID_Documents);
+	case FolderLocation::UserData:	return getPath(ConfigurationIo::ConfigDirectoryUserData,	FOLDERID_UserProgramFiles);
 	}
 
-	if (retVal)
-		*retVal /= mySuffixes[aLocation];
-
-	return retVal;
+	return std::nullopt;
 }
 
 std::optional<std::filesystem::path> WinFileSystem::GetFolder(REFKNOWNFOLDERID aFolderId)

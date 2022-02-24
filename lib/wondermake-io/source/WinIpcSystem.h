@@ -14,7 +14,7 @@ class WinIpcSystem
 			PAdd<WinEventSystem, PWrite>,
 			PAdd<WinPlatformSystem, PWrite>>,
 		STrait::Set<
-			STPlatformInterface,
+			STFoundational,
 			STSingleton>>
 {
 public:

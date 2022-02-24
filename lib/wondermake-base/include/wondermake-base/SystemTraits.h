@@ -30,15 +30,15 @@ namespace SystemTraits
 		}
 	};
 
+	struct Foundational : public Trait {};
 	struct Singleton : public Trait {};
 	struct Threadsafe : public Trait {};
-	struct PlatformInterface : public Trait {};
 	struct Gui : public Trait {};
 }
 
 namespace STrait = SystemTraits;
 
+using STFoundational		= SystemTraits::Foundational;
+using STGui					= SystemTraits::Gui;
 using STSingleton			= SystemTraits::Singleton;
 using STThreadsafe			= SystemTraits::Threadsafe;
-using STPlatformInterface	= SystemTraits::PlatformInterface;
-using STGui					= SystemTraits::Gui;

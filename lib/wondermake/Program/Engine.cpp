@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Engine.h"
 
+#include "Debugging/DebugSettingsSystem.h"
+
 #include "Graphics/Renderer.h"
 
 #include "Message/DispatchRouter.h"
@@ -352,9 +354,12 @@ namespace Engine
 					{
 						auto&& renderer = sysContainer.Get<Renderer>();
 						auto&& imguiWrapper = sysContainer.Get<ImguiWrapper>();
+						auto&& debugSettings = sysContainer.Get<DebugSettingsSystem>();
 
 						renderer.FinishFrame();
 						imguiWrapper.StartFrame();
+
+						debugSettings.TickAllWindows();
 
 						auto&& router = DispatchRouter::Get();
 

@@ -1,12 +1,17 @@
 #include "pch.h"
+
 #include "DebugSettingsSystem.h"
+
 #include "Imgui/JsonInspector.h"
+
+#include "wondermake-utility/Bindable.h"
 
 REGISTER_SYSTEM(DebugSettingsSystem);
 
 DebugSettingsSystem::DebugSettingsSystem()
-	: Debugged("Debug Settings")
 {
+	AddDebugWindowTick("Debug Settings", Bind(&DebugSettingsSystem::Tick, this));
+
 	std::ifstream debugSettingsFile("debugSettings.json", std::fstream::app);
 
 	std::string fileContents((std::istreambuf_iterator<char>(debugSettingsFile)),
@@ -18,11 +23,41 @@ DebugSettingsSystem::DebugSettingsSystem()
 	SetDebugValue<bool>("Debug Windows/Debug Settings", true);
 }
 
+void DebugSettingsSystem::TickAllWindows()
+{
+	for (auto& [name, callback] : myTickCallbacks)
+	{
+		if (!GetOrCreateDebugValue<bool>(name, false))
+			continue;
+
+		Utility::Invoke(callback);
+	}
+}
+
+void DebugSettingsSystem::AddDebugWindowTick(const std::string& aWindowName, std::function<void()> aTickCallback)
+{
+	myTickCallbacks.insert(std::make_pair("Debug Windows/" + aWindowName, std::move(aTickCallback)));
+}
+
 void DebugSettingsSystem::SaveSettings()
 {
 	std::ofstream debugSettingsFile("debugSettings.json");
 
 	debugSettingsFile << mySettings.dump();
+}
+
+void DebugSettingsSystem::Tick()
+{
+	std::hash<json> hasher;
+
+	std::size_t hash = hasher(mySettings);
+
+	ImGui::JsonInspector::Inspect(mySettings, "Debug Settings");
+
+	const bool changed = hash != hasher(mySettings);
+
+	if (changed)
+		SaveSettings();
 }
 
 std::pair<nlohmann::json&, std::string> DebugSettingsSystem::GetLeaf(const std::string aSettingName)
@@ -40,18 +75,4 @@ std::pair<nlohmann::json&, std::string> DebugSettingsSystem::GetLeaf(const std::
 	} 
 	
 	return { *currentJson, aSettingName.substr(last) };
-}
-
-void DebugSettingsSystem::Debug()
-{
-	std::hash<json> hasher;
-
-	std::size_t hash = hasher(mySettings);
-
-	ImGui::JsonInspector::Inspect(mySettings, "Debug Settings");
-
-	const bool changed = hash != hasher(mySettings);
-
-	if (changed)
-		SaveSettings();
 }

@@ -8,10 +8,13 @@
 
 class WinPlatformSystem;
 
+class ConfigurationSystem;
+
 class WinFileSystem final
 	: public FileSystem
 	, public SystemSub<
 		Policy::Set<
+			PAdd<ConfigurationSystem, PRead>,
 			PAdd<WinPlatformSystem, PWrite>>,
 		STrait::Set<
 			STFoundational,

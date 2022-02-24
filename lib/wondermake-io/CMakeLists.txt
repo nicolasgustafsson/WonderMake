@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 list(APPEND SourceFiles
+    "include/wondermake-io/ConfigurationIo.h"
     "include/wondermake-io/FileSystem.h"
     "include/wondermake-io/FileTypes.h"
     "include/wondermake-io/IpcAcceptor.h"
@@ -12,6 +13,7 @@ list(APPEND SourceFiles
     "include/wondermake-io/SocketSerializing.h"
     "include/wondermake-io/SocketSerializingImpl.h"
     "include/wondermake-io/WriteFileJob.h"
+    "source/ConfigurationIo.cpp"
     "source/ReadFileJob.cpp"
     "source/SocketDecorator.cpp"
     "source/WinFileSystem.cpp"

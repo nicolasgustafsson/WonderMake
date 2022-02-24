@@ -1,15 +1,25 @@
 #pragma once
-#include "wondermake-base/System.h"
-#include "Utilities/Debugging/Debugged.h"
-#include <json/json.hpp>
-#include <string>
 
-class DebugSettingsSystem 
-	: public System<>
-	, public Debugged
+#include "wondermake-base/System.h"
+
+#include "json/json.hpp"
+
+#include <functional>
+#include <string>
+#include <unordered_map>
+
+class DebugSettingsSystem
+	: public System<
+		Policy::Set<>,
+		STrait::Set<
+			STSingleton>>
 {
 public:
 	DebugSettingsSystem();
+
+	void TickAllWindows();
+
+	void AddDebugWindowTick(const std::string& aWindowName, std::function<void()> aTickCallback);
 
 	void SaveSettings();
 
@@ -20,9 +30,11 @@ public:
 	void SetDebugValue(const std::string aSettingName, TSettingType aSettingValue);
 
 protected:
-	std::pair<nlohmann::json&, std::string> GetLeaf(const std::string aSettingName);
-	virtual void Debug() override;
+	void Tick();
 
+	std::pair<nlohmann::json&, std::string> GetLeaf(const std::string aSettingName);
+
+	std::unordered_map<std::string, std::function<void()>> myTickCallbacks;
 	nlohmann::json mySettings;
 };
 

@@ -3,7 +3,8 @@
 #include "CollisionFunctionality.h"
 #include "CollisionSystem.h"
 #include "ColliderDebug.h"
-#include "Debugging/DebugSettingsSystem.h"
+
+#include "wondermake-debug-ui/DebugSettingsSystem.h"
 
 REGISTER_FUNCTIONALITY(CollisionFunctionality);
 

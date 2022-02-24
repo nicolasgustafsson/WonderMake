@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Debugged.h"
-#include "Debugging/DebugSettingsSystem.h"
 
+#include "wondermake-debug-ui/DebugSettingsSystem.h"
 
 Debugged::Debugged(const std::string aName) noexcept
 	: myDebugSubscriber(BindHelper(&Debugged::OnDebugMessage, this))

@@ -37,8 +37,6 @@ list(APPEND SourceFiles
     "Debugging/DebugLineDrawer.h"
     "Debugging/DebugLineRenderObject.cpp"
     "Debugging/DebugLineRenderObject.h"
-    "Debugging/DebugSettingsSystem.cpp"
-    "Debugging/DebugSettingsSystem.h"
     "EngineTools/EasingTester.cpp"
     "EngineTools/EasingTester.h"
     "EngineTools/EngineTools.cpp"
@@ -101,9 +99,6 @@ list(APPEND SourceFiles
     "Imgui/DockSpace.h"
     "Imgui/FileSelector.cpp"
     "Imgui/FileSelector.h"
-    "Imgui/ImguiInclude.h"
-    "Imgui/JsonInspector.cpp"
-    "Imgui/JsonInspector.h"
     "Imgui/NodeGraphGui.cpp"
     "Imgui/NodeGraphGui.h"
     "Input/InputItems.h"
@@ -195,7 +190,7 @@ add_library(WonderMake STATIC ${SourceFiles})
 set_pedantic_warning_level(WonderMake)
 set_whole_archive(WonderMake)
 target_include_directories(WonderMake PUBLIC ".")
-target_link_libraries(WonderMake Imgui NlohmannJson SoLoud Stb WonderMakeBase WonderMakeUtility WonderMakeIo WonderMakeEngine)
+target_link_libraries(WonderMake Imgui NlohmannJson SoLoud Stb WonderMakeBase WonderMakeDebugUi WonderMakeUtility WonderMakeIo WonderMakeEngine)
 
 add_compile_definitions("IMGUI_DEFINE_MATH_OPERATORS")
 

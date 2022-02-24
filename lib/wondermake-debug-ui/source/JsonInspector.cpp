@@ -1,6 +1,8 @@
-#include "pch.h"
 #include "JsonInspector.h"
-#include <json/json.hpp>
+
+#include "wondermake-debug-ui/ImguiInclude.h"
+
+#include "wondermake-utility/Typedefs.h"
 
 void ImGui::JsonInspector::Inspect(nlohmann::json& aJsonDocumentToInspect, const std::string aDocumentName)
 {

@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "Engine.h"
 
-#include "Debugging/DebugSettingsSystem.h"
-
 #include "Graphics/Renderer.h"
 
 #include "Message/DispatchRouter.h"
@@ -18,6 +16,8 @@
 #include "wondermake-engine/LoggerFileSystem.h"
 #include "wondermake-engine/LoggerRemoteSystem.h"
 #include "wondermake-engine/SerializeConfigurationJob.h"
+
+#include "wondermake-debug-ui/DebugSettingsSystem.h"
 
 #include "wondermake-io/ConfigurationIo.h"
 #include "wondermake-io/FileSystem.h"

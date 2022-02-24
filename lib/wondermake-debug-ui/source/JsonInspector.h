@@ -1,6 +1,6 @@
 #pragma once
-#include <json/json.hpp>
 
+#include "json/json.hpp"
 
 namespace ImGui::JsonInspector
 {

@@ -6,8 +6,8 @@ class WinPlatformSystemImpl
 	: public SystemSub<
 		Policy::Set<>,
 		STrait::Set<
+			STFoundational,
 			STThreadsafe,
-			STPlatformInterface,
 			STSingleton>>
 	, public WinPlatformSystem
 {

@@ -44,7 +44,7 @@ namespace Engine
 		{
 			SystemRegistry::Filter filter;
 
-			filter.RequiredAnyTraits = { STrait::Set<STPlatformInterface, STLogger>::ToObject() };
+			filter.RequiredAnyTraits = { STrait::Set<STFoundational, STLogger>::ToObject() };
 
 			auto result = sysRegistry.CreateSystems(filter);
 

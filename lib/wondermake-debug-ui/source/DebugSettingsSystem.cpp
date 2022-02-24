@@ -1,10 +1,14 @@
-#include "pch.h"
+#include "wondermake-debug-ui/DebugSettingsSystem.h"
 
-#include "DebugSettingsSystem.h"
+#include "JsonInspector.h"
 
-#include "Imgui/JsonInspector.h"
+#include "wondermake-debug-ui/ImguiInclude.h"
+
+#include "wondermake-base/SystemGlobal.h"
 
 #include "wondermake-utility/Bindable.h"
+
+#include <fstream>
 
 REGISTER_SYSTEM(DebugSettingsSystem);
 

@@ -2,9 +2,9 @@
 #include "Functionalities/Functionality.h"
 #include "Components/TransformComponent.h"
 
-#include "wondermake-utility/Matrix.h"
+#include "wondermake-debug-ui/ImguiInclude.h"
 
-#include "Imgui/ImguiInclude.h"
+#include "wondermake-utility/Matrix.h"
 
 template<typename TRepVector, typename TRepRotation>
 class _TransformFunctionality2D

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "TimeKeeper.h"
-#include "Debugging/DebugSettingsSystem.h"
+
+#include "wondermake-debug-ui/DebugSettingsSystem.h"
 
 REGISTER_SYSTEM(TimeKeeper);
 

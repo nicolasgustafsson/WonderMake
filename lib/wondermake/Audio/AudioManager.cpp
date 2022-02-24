@@ -5,13 +5,14 @@
 #include <filesystem>
 #include "Imgui/FileSelector.h"
 #include <soloud_wav.h>
-#include "Debugging/DebugSettingsSystem.h"
 #include "Audio/AudioFile.h"
 #include "Resources/ResourceSystem.h"
 #include "Audio/AudioStructs.h"
 #include <soloud_speech.h>
 #include "Imgui/NodeGraphGui.h"
 #include "Audio/AudioMixingNodeGraph.h"
+
+#include "wondermake-debug-ui/DebugSettingsSystem.h"
 
 REGISTER_SYSTEM(AudioManager);
 

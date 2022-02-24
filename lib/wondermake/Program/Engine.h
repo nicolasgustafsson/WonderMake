@@ -61,6 +61,30 @@ namespace Engine
 		// This is used to open an IPC socket that other instances of the engine can connect to and send its logging, which will be repeated in this instance.
 		std::optional<LogIpcSocketInfo> IpcSocket;
 	};
+	
+	// EOverrideFileUserLocation represents the directory location that can be used by the ConfigurationInfo.OverrideFileUser field.
+	enum class EOverrideFileUserLocation
+	{
+		// The user directory. On Windows this is usually inside the documents folder.
+		User,
+		// The userdata directory. On Windows this is usually inside the appdata folder.
+		UserData
+	};
+
+	struct ConfigurationInfo
+	{
+		// Path to the json file containing the application configuration overrides. If the path is not absolute, it will be relative to the working directory.
+		std::filesystem::path OverrideFileApplication = "overrides.json";
+
+		// Path to the json file containing the device configuration overrides. If the path is not absolute, it will be relative to the data directory.
+		std::filesystem::path OverrideFileDevice = "device_settings.json";
+
+		// Path to the json file containing the user configuration overrides. If the path is not absolute, it will be relative to the directory set by UserOverrideFileLocation.
+		std::filesystem::path OverrideFileUser = "user_settings.json";
+
+		// This sets the directory location of OverrideFileUser. Is ignored if OverrideFileUser is set to an absolute path.
+		EOverrideFileUserLocation OverrideFileUserLocation = EOverrideFileUserLocation::UserData;
+	};
 
 	struct Info
 	{
@@ -78,6 +102,9 @@ namespace Engine
 
 		// All options regarding logging.
 		LoggingInfo Logging;
+
+		// All options regarding configuration.
+		ConfigurationInfo Configuration;
 	};
 
 	struct Callbacks

@@ -5,24 +5,28 @@
 
 #include "Message/DispatchRouter.h"
 
-#include "wondermake-base/CmdLineArgsSystem.h"
-#include "wondermake-base/JobSystem.h"
-#include "wondermake-base/JobGlobal.h"
-#include "wondermake-base/SystemGlobal.h"
-
 #include "Program/ImguiWrapper.h"
 
 #include "Threads/TaskManager.h"
 
 #include "Utilities/TimeKeeper.h"
 
+#include "wondermake-engine/ConfigurationEngine.h"
+#include "wondermake-engine/DeserializeConfigurationJob.h"
 #include "wondermake-engine/LoggerFileSystem.h"
 #include "wondermake-engine/LoggerRemoteSystem.h"
 
+#include "wondermake-io/ConfigurationIo.h"
 #include "wondermake-io/FileSystem.h"
+#include "wondermake-io/ReadFileJob.h"
 
+#include "wondermake-base/CmdLineArgsSystem.h"
+#include "wondermake-base/ConfigurationSystem.h"
+#include "wondermake-base/JobSystem.h"
+#include "wondermake-base/JobGlobal.h"
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/ScheduleSystem.h"
+#include "wondermake-base/SystemGlobal.h"
 
 using namespace MemoryUnitLiterals;
 
@@ -36,6 +40,105 @@ namespace Engine
 		Logger::Get().SetFilters(aInfo.Logging.AllowedSeverities, aInfo.Logging.Level);
 
 		auto&& sysRegistry = Global::GetSystemRegistry();
+
+		sysRegistry.AddSystem<ConfigurationSystem>([configurationInfo = aInfo.Configuration]()
+			{
+				const auto create = [&configurationInfo]()
+				{
+					auto config = std::make_shared<ConfigurationSystem>();
+
+					config->Initialize();
+
+					ConfigurationIo::Configure(*config);
+					ConfigurationEngine::Configure(
+						*config,
+						configurationInfo.OverrideFileApplication.string(),
+						configurationInfo.OverrideFileDevice.string(),
+						configurationInfo.OverrideFileUser.string(),
+						configurationInfo.OverrideFileUserLocation == EOverrideFileUserLocation::User ? ConfigurationEngine::EOverrideFileUserLocation::User : ConfigurationEngine::EOverrideFileUserLocation::UserData);
+
+					return config;
+				};
+
+				static auto config = create();
+
+				return config;
+			});
+
+		{
+			SystemRegistry::Filter filter;
+
+			filter.RequiredAnyTraits = { STrait::Set<STFoundational>::ToObject() };
+
+			auto result = sysRegistry.CreateSystems(filter);
+
+			if (!result)
+				return;
+
+			SystemContainer foundationalContainer = std::move(result);
+
+			auto&& fileSystem = foundationalContainer.Get<FileSystem>();
+ 
+ 			fileSystem.SetFolderSuffix(FolderLocation::Data,		aInfo.ProjectFolderNames);
+ 			fileSystem.SetFolderSuffix(FolderLocation::User,		aInfo.ProjectFolderNames);
+ 			fileSystem.SetFolderSuffix(FolderLocation::UserData,	aInfo.ProjectFolderNames);
+
+			JobSystem::InjectDependencies(std::tie());
+
+			auto jobSystem = std::make_shared<JobSystem>(JobGlobal::GetRegistry(), foundationalContainer, InlineExecutor());
+			auto&& configurationSystem = foundationalContainer.Get<ConfigurationSystem>();
+
+			jobSystem->StartJob<ReadFileJob>(FolderLocation::Bin, configurationSystem.Get<std::string>(ConfigurationEngine::OverrideFileApplication, aInfo.Configuration.OverrideFileApplication.string()))
+				.ThenApply(InlineExecutor(), MoveFutureResult([jobSystem, &configurationSystem](auto aResult)
+					{
+						if (!aResult)
+							return Future<DeserializeConfigurationJob::Output>();
+
+						std::vector<u8> jsonBlob = std::move(aResult);
+
+						return jobSystem->StartJob<DeserializeConfigurationJob>(EConfigGroup::Application, std::string(jsonBlob.begin(), jsonBlob.end()));
+					}))
+				.ThenApply(InlineExecutor(), MoveFutureResult([jobSystem, &configurationSystem, &aInfo](auto aResult)
+					{
+						if (!aResult)
+							return Future<ReadFileJob::Output>();
+
+						auto path = configurationSystem.Get<std::string>(ConfigurationEngine::OverrideFileDevice, aInfo.Configuration.OverrideFileDevice.string());
+
+						return jobSystem->StartJob<ReadFileJob>(FolderLocation::Data, std::move(path));
+					}))
+				.ThenApply(InlineExecutor(), MoveFutureResult([jobSystem](auto aResult)
+					{
+						if (!aResult)
+							return Future<DeserializeConfigurationJob::Output>();
+
+						std::vector<u8> jsonBlob = std::move(aResult);
+
+						return jobSystem->StartJob<DeserializeConfigurationJob>(EConfigGroup::Device, std::string(jsonBlob.begin(), jsonBlob.end()));
+					}))
+				.ThenApply(InlineExecutor(), MoveFutureResult([jobSystem, &configurationSystem, &aInfo](auto aResult)
+					{
+						if (!aResult)
+							return Future<ReadFileJob::Output>();
+
+						const auto userLocation = configurationSystem.Get<ConfigurationEngine::EOverrideFileUserLocation>(ConfigurationEngine::OverrideFileUserLocation, ConfigurationEngine::EOverrideFileUserLocation::UserData);
+
+						const auto folderLocation = userLocation == ConfigurationEngine::EOverrideFileUserLocation::User ? FolderLocation::User : FolderLocation::UserData;
+						auto path = configurationSystem.Get<std::string>(ConfigurationEngine::OverrideFileUser, aInfo.Configuration.OverrideFileUser.string());
+
+						return jobSystem->StartJob<ReadFileJob>(folderLocation, std::move(path));
+					}))
+				.ThenApply(InlineExecutor(), MoveFutureResult([jobSystem](auto aResult)
+					{
+						if (!aResult)
+							return Future<DeserializeConfigurationJob::Output>();
+
+						std::vector<u8> jsonBlob = std::move(aResult);
+
+						return jobSystem->StartJob<DeserializeConfigurationJob>(EConfigGroup::User, std::string(jsonBlob.begin(), jsonBlob.end()));
+					}))
+				.Detach();
+		}
 
 		SystemContainer loggerContainer;
 		std::shared_ptr<LoggerRemoteConnection> loggerRemoteConnection;
@@ -57,13 +160,12 @@ namespace Engine
 
 			if (aInfo.Logging.File)
 			{
-				auto&& fileInfo = *aInfo.Logging.File;
-
+				auto&& logFileInfo = *aInfo.Logging.File;
 				auto&& fileLogger = loggerContainer.Get<LoggerFileSystem>();
 
-				fileLogger.SetLogSizeLimits(fileInfo.TrimSize, fileInfo.MaxSize);
+				fileLogger.SetLogSizeLimits(logFileInfo.TrimSize, logFileInfo.MaxSize);
 
-				logFileError = !fileLogger.OpenLogFile(aInfo.ProjectFolderNames / fileInfo.Path, fileInfo.Filename);
+				logFileError = !fileLogger.OpenLogFile(logFileInfo.Path, logFileInfo.Filename);
 			}
 
 			WM_LOG_INFO("");
@@ -128,14 +230,6 @@ namespace Engine
 
 				return;
 			}
-
-			SystemContainer singletonContainer = result;
-
-			auto&& fileSystem = singletonContainer.Get<FileSystem>();
-
-			fileSystem.SetFolderSuffix(FolderLocation::Data, aInfo.ProjectFolderNames);
-			fileSystem.SetFolderSuffix(FolderLocation::User, aInfo.ProjectFolderNames);
-			fileSystem.SetFolderSuffix(FolderLocation::UserData, aInfo.ProjectFolderNames);
 		}
 
 		{

@@ -6,7 +6,6 @@
 #include "wondermake-base/System.h"
 #include "Camera/CameraManager.h"
 #include "Program/Window.h"
-#include "Message/MessageSubscriber.h"
 #include "Utilities/Debugging/Debugged.h"
 #include "Debugging/DebugLineDrawer.h"
 #include "OpenGLFacade.h"

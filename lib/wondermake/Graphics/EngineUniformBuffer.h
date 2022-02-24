@@ -2,7 +2,6 @@
 #include "UniformBuffer.h"
 #include "wondermake-utility/Matrix.h"
 #include "wondermake-base/System.h"
-#include "Message/MessageSubscriber.h"
 #include "Utilities/Debugging/Debugged.h"
 
 struct SPaddedMatrix33

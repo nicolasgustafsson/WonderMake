@@ -3,12 +3,14 @@ cmake_minimum_required(VERSION 3.10)
 add_subdirectory("proto")
 
 list(APPEND SourceFiles
+    "include/wondermake-engine/ConfigurationEngine.h"
     "include/wondermake-engine/DeserializeConfigurationJob.h"
     "include/wondermake-engine/LoggerFileSystem.h"
     "include/wondermake-engine/LoggerRemoteConnection.h"
     "include/wondermake-engine/LoggerRemoteSocket.h"
     "include/wondermake-engine/LoggerRemoteSystem.h"
     "include/wondermake-engine/SerializeConfigurationJob.h"
+    "source/ConfigurationEngine.cpp"
     "source/DeserializeConfigurationJob.cpp"
     "source/LoggerFileSystem.cpp"
     "source/LoggerRemoteConnection.cpp"

@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 list(APPEND SourceFiles
     "include/wondermake-base/Cargo.h"
     "include/wondermake-base/CmdLineArgsSystem.h"
+    "include/wondermake-base/Configuration.h"
     "include/wondermake-base/GuidGeneratorSystem.h"
     "include/wondermake-base/JobBase.h"
     "include/wondermake-base/JobGlobal.h"
@@ -25,6 +26,7 @@ list(APPEND SourceFiles
     "include/wondermake-base/WinEventSystem.h"
     "include/wondermake-base/WinPlatformSystem.h"
     "source/CmdLineArgsSystem.cpp"
+    "source/Configuration.cpp"
     "source/JobGlobal.cpp"
     "source/JobSystem.cpp"
     "source/Logger.cpp"

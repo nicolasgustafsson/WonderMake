@@ -1,0 +1,186 @@
+syntax = "proto3";
+
+package ProtoConfigurationRemote;
+
+enum EDataType
+{
+    Bool	= 0;
+	F32		= 1;
+	F64		= 2;
+	U8		= 3;
+	U16		= 4;
+	U32		= 5;
+	U64		= 6;
+	I8		= 7;
+	I16		= 8;
+	I32		= 9;
+	I64		= 10;
+	String	= 11;
+}
+
+enum EConfigGroup
+{
+    Application	= 0;
+	User		= 1;
+	Device		= 2;
+}
+
+message RestrictionAllowedValue
+{
+	oneof value_type
+	{
+		bool	value_bool		= 1;
+		double	value_f64		= 2;
+		uint64	value_u64		= 3;
+		int64	value_i64		= 4;
+		string	value_string	= 5;
+	}
+}
+
+message RestrictionAllowedValueList
+{
+	map<string, RestrictionAllowedValue> allowed_values = 1;
+}
+
+message TypeDataMemoryUnit
+{
+	uint64 ratio = 1;
+}
+
+message Config
+{
+	string							id							= 1;
+	EDataType						value_data_type				= 2;
+	EConfigGroup					config_group				= 3;
+
+	oneof config_type
+	{
+		bool						config_bool					= 4;
+		double						config_f64					= 5;
+		uint64						config_u64					= 6;
+		int64						config_i64					= 7;
+		string						config_string				= 8;
+	}
+	oneof override_type
+	{
+		bool						override_bool				= 9;
+		double						override_f64				= 10;
+		uint64						override_u64				= 11;
+		int64						override_i64				= 12;
+		string						override_string				= 13;
+	}
+
+	oneof restriction
+	{
+		RestrictionAllowedValueList	restriction_allowed_values	= 14;
+	}
+
+	oneof type_data
+	{
+		TypeDataMemoryUnit			type_data_memory_unit		= 15;
+	}
+}
+
+message InstanceConfig
+{
+	string				name	= 1;
+	map<string, Config>	configs	= 2;
+}
+
+message PushUpSetOverride
+{
+	string		instanceId		= 1;
+	string		id				= 2;
+	
+	oneof config_type
+	{
+		bool	config_bool		= 3;
+		uint64	config_f64		= 4;
+		uint64	config_u64		= 5;
+		int64	config_i64		= 6;
+		string	config_string	= 7;
+	}
+}
+
+message PushUpInstancesAdded
+{
+	map<string, InstanceConfig>	instances	= 1;
+}
+
+message PushUpInstancesRemoved
+{
+	repeated string				instanceIds	= 1;
+}
+
+message PushDownSetOverride
+{
+	string		instanceId		= 1;
+	string		id				= 2;
+	
+	oneof config_type
+	{
+		bool	config_bool		= 3;
+		uint64	config_f64		= 4;
+		uint64	config_u64		= 5;
+		int64	config_i64		= 6;
+		string	config_string	= 7;
+	}
+}
+
+message ReqUp
+{
+	
+}
+
+message RspUp
+{
+	
+}
+
+message PushUp
+{
+	oneof push
+	{
+		PushUpSetOverride		set_override		= 1;
+		PushUpInstancesAdded	instance_added		= 2;
+		PushUpInstancesRemoved	instance_removed	= 3;
+	}
+}
+
+message ReqDown
+{
+	
+}
+
+message RspDown
+{
+	
+}
+
+message PushDown
+{
+	oneof push
+	{
+		PushDownSetOverride set_override = 1;
+	}
+}
+
+message Upstream
+{
+	oneof msg
+	{
+		ReqUp		req		= 1;
+		RspUp		rsp		= 2;
+		PushUp		push	= 3;
+	}
+}
+
+message Downstream
+{
+	oneof msg
+	{
+		ReqDown		req		= 1;
+		RspDown		rsp		= 2;
+		PushDown	push	= 3;
+	}
+}

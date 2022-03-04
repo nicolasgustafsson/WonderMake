@@ -14,8 +14,6 @@ list(APPEND SourceFiles
     "source/DeserializeConfigurationJob.cpp"
     "source/LoggerFileSystem.cpp"
     "source/LoggerRemoteConnection.cpp"
-    "source/LoggerRemoteMessage.cpp"
-    "source/LoggerRemoteMessage.h"
     "source/LoggerRemoteSocket.cpp"
     "source/LoggerRemoteSystem.cpp"
     "source/SerializeConfigurationJob.cpp")

@@ -11,6 +11,7 @@ list(APPEND SourceFiles
     "include/wondermake-io/Socket.h"
     "include/wondermake-io/SocketDecorator.h"
     "include/wondermake-io/SocketProtobuf.h"
+    "include/wondermake-io/SocketProtobufImpl.h"
     "include/wondermake-io/SocketSerializing.h"
     "include/wondermake-io/SocketSerializingImpl.h"
     "include/wondermake-io/WriteFileJob.h"

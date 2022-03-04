@@ -1,13 +1,16 @@
 #include "wondermake-engine/LoggerRemoteConnection.h"
 
-#include "LoggerRemoteMessage.h"
-
-#include "wondermake-io/SocketSerializingImpl.h"
+#include "wondermake-io/SocketProtobufImpl.h"
 
 #include "wondermake-base/LoggerTypes.h"
 #include "wondermake-base/WmLogTags.h"
 
 #include "wondermake-utility/Bindable.h"
+
+#pragma warning(push)
+#pragma warning(disable: 5054)
+#include "wondermake-engine-proto/LoggerRemote.pb.h"
+#pragma warning(pop)
 
 using namespace MemoryUnitLiterals;
 
@@ -26,7 +29,7 @@ Result<void, IpcConnection::SConnectionError> LoggerRemoteConnection::ConnectIpc
 	if (!result)
 		return result;
 
-	myConnection = std::make_shared<SocketSerializingImpl<ProtoLoggerRemote::LogLine>>(myExecutor, 4_KiB, &SerializeLogline, &DeserializeLogline, std::move(aConnection));
+	myConnection = std::make_shared<SocketProtobufImpl<Upstream, Downstream>>(myExecutor, 4_KiB, std::move(aConnection));
 
 	myConnection->OnClose()
 		.ThenRun(myExecutor, FutureRunResult(Bind(&LoggerRemoteConnection::OnClosed, weak_from_this())))
@@ -62,7 +65,7 @@ void LoggerRemoteConnection::Print(ELogSeverity aSeverity, ELogLevel aLevel, std
 		.Detach();
 }
 
-void LoggerRemoteConnection::OnClosed(Result<Socket::SCloseLocation, Socket::SCloseError> aResult)
+void LoggerRemoteConnection::OnClosed(SocketType::ResultTypeClose aResult)
 {
 	std::lock_guard lock(myMutex);
 

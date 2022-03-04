@@ -1,6 +1,7 @@
 #pragma once
 
 #include "wondermake-io/IpcConnection.h"
+#include "wondermake-io/SocketProtobuf.h"
 
 #include "wondermake-base/Logger.h"
 
@@ -15,8 +16,8 @@ namespace ProtoLoggerRemote
 	class LogLine;
 }
 
-template<typename TSerializable>
-class SocketSerializing;
+template<typename TProtobufWriteMessage, typename TProtobufReadMessage>
+class SocketProtobuf;
 
 class LoggerRemoteConnection
 	: public LoggerBase
@@ -30,10 +31,12 @@ public:
 	void Print(ELogSeverity aSeverity, ELogLevel aLevel, std::string aLogMessage) override;
 
 private:
-	void OnClosed(Result<Socket::SCloseLocation, Socket::SCloseError> aResult);
+	using SocketType = SocketProtobuf<ProtoLoggerRemote::Upstream, ProtoLoggerRemote::Downstream>;
+
+	void OnClosed(SocketType::ResultTypeClose aResult);
 
 	std::recursive_mutex myMutex;
 	AnyExecutor myExecutor;
-	std::shared_ptr<SocketSerializing<ProtoLoggerRemote::LogLine>> myConnection;
+	std::shared_ptr<SocketProtobuf<ProtoLoggerRemote::LogLine, ProtoLoggerRemote::LogLine>> myConnection;
 
 };

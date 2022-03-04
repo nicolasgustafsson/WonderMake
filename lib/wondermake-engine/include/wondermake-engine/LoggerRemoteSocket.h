@@ -16,7 +16,8 @@
 
 namespace ProtoLoggerRemote
 {
-	class LogLine;
+	class Downstream;
+	class Upstream;
 }
 
 class LoggerRemoteSocket

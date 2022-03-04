@@ -14,7 +14,9 @@
 
 using namespace MemoryUnitLiterals;
 
+using ProtoLoggerRemote::Downstream;
 using ProtoLoggerRemote::LogLine;
+using ProtoLoggerRemote::Upstream;
 
 LoggerRemoteConnection::LoggerRemoteConnection(AnyExecutor aExecutor) noexcept
 	: myExecutor(std::move(aExecutor))
@@ -48,7 +50,11 @@ void LoggerRemoteConnection::Print(ELogSeverity aSeverity, ELogLevel aLevel, std
 		|| myConnection->GetState() != Socket::EState::Open)
 		return;
 
-	LogLine logline;
+	Upstream upstream;
+
+	auto& push = *upstream.mutable_push();
+
+	auto& logline = *push.mutable_logline();
 
 	logline.set_log(std::move(aLogMessage));
 	logline.set_level(static_cast<LogLine::ELogLevel>(aLevel));

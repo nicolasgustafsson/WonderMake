@@ -22,5 +22,22 @@ message LogLine
     string          log         = 1;
     ELogSeverity    severity    = 2;
     ELogLevel       level       = 3;
-  }
-  
+}
+
+message PushUp
+{
+	oneof push
+	{
+        LogLine logLine = 1;
+    }
+}
+
+message Upstream
+{
+	oneof msg
+	{
+		PushUp	push	= 2;
+	}
+}
+
+message Downstream {}

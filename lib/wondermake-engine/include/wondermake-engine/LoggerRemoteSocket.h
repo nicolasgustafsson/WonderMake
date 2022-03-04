@@ -2,6 +2,7 @@
 
 #include "wondermake-io/IpcAcceptor.h"
 #include "wondermake-io/Socket.h"
+#include "wondermake-io/SocketProtobuf.h"
 
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/System.h"
@@ -18,9 +19,6 @@ namespace ProtoLoggerRemote
 	class LogLine;
 }
 
-template<typename TSerializable>
-class SocketSerializing;
-
 class LoggerRemoteSocket
 	: public std::enable_shared_from_this<LoggerRemoteSocket>
 {
@@ -30,16 +28,18 @@ public:
 	IpcAcceptor::ResultTypeOpen OpenIpc(SharedReference<IpcAcceptor> aAcceptor, std::string aIpcName);
 
 private:
+	using SocketType = SocketProtobuf<ProtoLoggerRemote::Downstream, ProtoLoggerRemote::Upstream>;
+
 	void OnConnection(IpcAcceptor::ResultTypeConnection&& aResult);
 	void OnIpcClosed(const IpcAcceptor::FutureTypeClose&);
 
-	void OnConnectionMessage(std::weak_ptr<Socket> aConnection, Result<ProtoLoggerRemote::LogLine, Socket::SReadError>&& aResult);
-	void OnConnectionClosed(std::weak_ptr<Socket> aConnection, Result<Socket::SCloseLocation, Socket::SCloseError> aResult);
+	void OnConnectionMessage(std::weak_ptr<Socket> aConnection, SocketType::ResultTypeRead aResult);
+	void OnConnectionClosed(std::weak_ptr<Socket> aConnection, SocketType::ResultTypeClose aResult);
 
 	std::mutex myMutex;
 
 	AnyExecutor myExecutor;
 	std::shared_ptr<IpcAcceptor> myAcceptor;
-	std::unordered_map<SharedReference<Socket>, std::shared_ptr<SocketSerializing<ProtoLoggerRemote::LogLine>>> myConnections;
+	std::unordered_map<SharedReference<Socket>, SharedReference<SocketType>> myConnections;
 
 };

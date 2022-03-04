@@ -1,14 +1,18 @@
 #include "wondermake-engine/LoggerRemoteSocket.h"
 
-#include "LoggerRemoteMessage.h"
-
 #include "wondermake-io/IpcConnection.h"
-#include "wondermake-io/SocketSerializingImpl.h"
+#include "wondermake-io/IpcSystem.h"
+#include "wondermake-io/SocketProtobufImpl.h"
 
 #include "wondermake-base/LoggerTypes.h"
 #include "wondermake-base/WmLogTags.h"
 
 #include "wondermake-utility/Bindable.h"
+
+#pragma warning(push)
+#pragma warning(disable: 5054)
+#include "wondermake-engine-proto/LoggerRemote.pb.h"
+#pragma warning(pop)
 
 using namespace MemoryUnitLiterals;
 
@@ -55,7 +59,7 @@ void LoggerRemoteSocket::OnConnection(IpcAcceptor::ResultTypeConnection&& aResul
 
 	auto& connection = aResult.Unwrap();
 
-	auto socket = std::make_shared<SocketSerializingImpl<ProtoLoggerRemote::LogLine>>(myExecutor, 4_KiB, &SerializeLogline, &DeserializeLogline, connection);
+	auto socket = MakeSharedReference<SocketProtobufImpl<ProtoLoggerRemote::Downstream, ProtoLoggerRemote::Upstream>>(myExecutor, 4_KiB, connection);
 
 	myConnections.emplace(connection, socket);
 
@@ -77,7 +81,7 @@ void LoggerRemoteSocket::OnIpcClosed(const IpcAcceptor::FutureTypeClose&)
 	WmLogInfo(TagWonderMake << TagWmLoggerRemote << "Remote IPC log socket closed.");
 }
 
-void LoggerRemoteSocket::OnConnectionMessage(std::weak_ptr<Socket> aConnection, Result<ProtoLoggerRemote::LogLine, Socket::SReadError>&& aResult)
+void LoggerRemoteSocket::OnConnectionMessage(std::weak_ptr<Socket> aConnection, SocketType::ResultTypeRead aResult)
 {
 	auto connectionResult = SharedReference<Socket>::FromPointer(aConnection.lock());
 
@@ -118,7 +122,7 @@ void LoggerRemoteSocket::OnConnectionMessage(std::weak_ptr<Socket> aConnection, 
 		.Detach();
 }
 
-void LoggerRemoteSocket::OnConnectionClosed(std::weak_ptr<Socket> aConnection, Result<Socket::SCloseLocation, Socket::SCloseError> aResult)
+void LoggerRemoteSocket::OnConnectionClosed(std::weak_ptr<Socket> aConnection, SocketType::ResultTypeClose aResult)
 {
 	std::lock_guard lock(myMutex);
 

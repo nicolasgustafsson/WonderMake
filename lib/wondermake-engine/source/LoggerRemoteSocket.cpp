@@ -16,6 +16,9 @@
 
 using namespace MemoryUnitLiterals;
 
+using ProtoLoggerRemote::Downstream;
+using ProtoLoggerRemote::Upstream;
+
 LoggerRemoteSocket::LoggerRemoteSocket(AnyExecutor aExecutor) noexcept
 	: myExecutor(std::move(aExecutor))
 {}
@@ -110,9 +113,15 @@ void LoggerRemoteSocket::OnConnectionMessage(std::weak_ptr<Socket> aConnection, 
 		return;
 	}
 
-	ProtoLoggerRemote::LogLine message = std::move(aResult).Unwrap();
+	const auto& upstream = aResult.Unwrap();
 
-	Logger::Get().Print(static_cast<ELogSeverity>(message.severity()), static_cast<ELogLevel>(message.level()), message.log());
+	if (!upstream.has_push()
+		|| !upstream.push().has_logline())
+		return;
+
+	auto&& logline = upstream.push().logline();
+
+	Logger::Get().Print(static_cast<ELogSeverity>(logline.severity()), static_cast<ELogLevel>(logline.level()), logline.log());
 	
 	auto future = it->second->ReadMessage();
 

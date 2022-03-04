@@ -13,7 +13,8 @@
 
 namespace ProtoLoggerRemote
 {
-	class LogLine;
+	class Downstream;
+	class Upstream;
 }
 
 template<typename TProtobufWriteMessage, typename TProtobufReadMessage>
@@ -37,6 +38,6 @@ private:
 
 	std::recursive_mutex myMutex;
 	AnyExecutor myExecutor;
-	std::shared_ptr<SocketProtobuf<ProtoLoggerRemote::LogLine, ProtoLoggerRemote::LogLine>> myConnection;
+	std::shared_ptr<SocketProtobuf<ProtoLoggerRemote::Upstream, ProtoLoggerRemote::Downstream>> myConnection;
 
 };

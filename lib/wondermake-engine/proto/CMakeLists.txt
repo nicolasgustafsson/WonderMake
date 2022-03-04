@@ -5,6 +5,6 @@ find_package(Protobuf REQUIRED)
 list(APPEND ProtoFiles
     "LoggerRemote.proto")
 
-add_protobuf_library(WonderMakeEngineProto "wondermake-engine-proto" ${ProtoFiles})
+add_protobuf_library(TARGET WonderMakeEngineProto FOLDER_NAME "wondermake-engine-proto" PROTOS ${ProtoFiles})
 
 set_target_properties(WonderMakeEngineProto PROPERTIES FOLDER "proto")

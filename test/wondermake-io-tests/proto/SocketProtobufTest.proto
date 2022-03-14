@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package ProtoSocketProtobufTest;
+
+message SocketProtobufTestRead
+{
+    string test_string = 1;
+}
+
+message SocketProtobufTestWrite
+{
+    string test_string = 1;
+}

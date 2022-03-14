@@ -1,11 +1,14 @@
 cmake_minimum_required(VERSION 3.19)
 
+add_subdirectory("proto")
+
 list(APPEND SourceFiles
     "Include/WonderMakeIoTests/ReadFileJobMock.h"
     "Include/WonderMakeIoTests/SocketMock.h"
     "Include/WonderMakeIoTests/SocketSerializingMock.h"
     "Include/WonderMakeIoTests/WriteFileJobMock.h"
     "Tests/SocketDecoratorTests.cpp"
+    "Tests/SocketProtobufImplTests.cpp"
     "Tests/SocketSerializingImplTests.cpp"
     "Tests/WinFileSystemTests.cpp"
     "Tests/WinIpcAcceptorTests.cpp"
@@ -23,7 +26,7 @@ list(APPEND SourceFiles
     
 add_executable(WonderMakeIoTests ${SourceFiles})
 
-target_link_libraries(WonderMakeIoTests gtest_main gmock WonderMakeTestsCommon)
+target_link_libraries(WonderMakeIoTests gtest_main gmock WonderMakeTestsCommon WonderMakeIoTestsProto)
 target_include_directories(WonderMakeIoTests
     PUBLIC
         "include"

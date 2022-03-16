@@ -18,8 +18,8 @@ AudioManager::AudioManager()
 	: Debugged("Audio Manager")
 {
 	myAudioMixingNodeGraph = SystemPtr<ResourceSystem<AudioMixingNodeGraph>>()->GetResource(std::filesystem::path("NodeGraphs") / "Audio" / "AudioNodeGraph.json");
-	mySoloudEngine.init(mySoloudEngine.FLAGS::CLIP_ROUNDOFF, mySoloudEngine.BACKENDS::WASAPI, SoLoud::Soloud::AUTO, 2048, 2);
-	myBusHandle = mySoloudEngine.play(myBus);
+	mySoloudEngine.init(mySoloudEngine.FLAGS::CLIP_ROUNDOFF, mySoloudEngine.BACKENDS::MINIAUDIO, SoLoud::Soloud::AUTO, SoLoud::Soloud::AUTO, 2);
+    myBusHandle = mySoloudEngine.play(myBus);
 
 	mySoloudEngine.setMaxActiveVoiceCount(255);
 	mySoloudEngine.mGlobalVolume = 0.1f;

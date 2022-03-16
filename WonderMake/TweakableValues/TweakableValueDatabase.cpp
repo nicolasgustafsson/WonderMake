@@ -33,7 +33,7 @@ void TweakableValueDatabase::InspectValue(nlohmann::json& aValue, std::string_vi
 
 	bool changed = false;
 
-	if (aValue[0].get<std::string>() == typeid(i32).name())
+	if (aValue[0].get<std::string>() == TypeString<i32>())
 	{
 		auto&& ref = aValue[1].get<i32>();
 		auto first = ref;
@@ -41,7 +41,7 @@ void TweakableValueDatabase::InspectValue(nlohmann::json& aValue, std::string_vi
 		aValue[1] = ref;
 		changed = first != ref;
 	}
-	else if (aValue[0].get<std::string>() == typeid(f32).name())
+	else if (aValue[0].get<std::string>() == TypeString<f32>())
 	{
 		auto&& ref = aValue[1].get<f32>();
 		auto first = ref;
@@ -49,14 +49,14 @@ void TweakableValueDatabase::InspectValue(nlohmann::json& aValue, std::string_vi
 		aValue[1] = ref;
 		changed = first != ref;
 	}
-	else if (aValue[0].get<std::string>() == typeid(SVector2f).name())
+	else if (aValue[0].get<std::string>() == TypeString<SVector2f>())
 	{
 		auto&& ref = aValue[1].get<SVector2f>();
 		auto first = ref;
 		SlotInputEdits::EditInputSlot(ref);
 		aValue[1] = ref;
 	}
-	else if (aValue[0].get<std::string>() == typeid(SColor).name())
+	else if (aValue[0].get<std::string>() == TypeString<SColor>())
 	{
 		auto&& ref = aValue[1].get<SColor>();
 		auto first = ref;
@@ -64,7 +64,7 @@ void TweakableValueDatabase::InspectValue(nlohmann::json& aValue, std::string_vi
 		aValue[1] = ref;
 		changed = first != ref;
 	}
-	else if (aValue[0].get<std::string>() == typeid(bool).name())
+	else if (aValue[0].get<std::string>() == TypeString<bool>())
 	{
 		auto&& ref = aValue[1].get<bool>();
 		auto first = ref;
@@ -72,7 +72,7 @@ void TweakableValueDatabase::InspectValue(nlohmann::json& aValue, std::string_vi
 		aValue[1] = ref;
 		changed = first != ref;
 	}
-	else if (aValue[0].get<std::string>() == typeid(std::string).name())
+	else if (aValue[0].get<std::string>() == TypeString<std::string>())
 	{
 		auto&& ref = aValue[1].get<std::string>();
 		auto first = ref;

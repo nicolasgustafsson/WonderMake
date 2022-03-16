@@ -82,7 +82,12 @@ const DWORD MS_VC_EXCEPTION = 0x406D1388;
 		std::strftime(buffer, sizeof(buffer), "%Y-%m-%d-%H-%M-%S", &timeinfo);
 		return buffer;
 #else
-        return "";
+        std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+
+        std::string s(10, ' ');
+        std::strftime(&s[0], s.size(), "%H:%M:%S", std::localtime(&now));
+        s.resize(strlen(s.data()));
+        return s;
 #endif
 	}
 }

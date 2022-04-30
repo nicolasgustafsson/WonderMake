@@ -55,7 +55,7 @@ namespace _Impl
 			return *this;
 		}
 
-		inline TReturnValue operator()(TArgs... aArgs)
+		inline TReturnValue operator()(TArgs... aArgs) const
 		{
 			return GetInvokeFunc()(*this, std::forward<TArgs>(aArgs)...);
 		}

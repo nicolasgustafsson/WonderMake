@@ -19,9 +19,4 @@ public:
         aRegFunc();
 	}
 };
-
-//template<typename T, SFixedString Name, T TDefaultValue>
-//T GetVariable(Effect& aEffect)
-//{
-
-#define WM_AUTO_REGISTER(aRegisterFunction, aUniqueName) _AutoRegister _AutoReg##aUniqueName (aRegisterFunction);
+#define WM_AUTO_REGISTER(aRegisterFunction, aUniqueName) _AutoRegister _AutoReg##aUniqueName(aRegisterFunction);

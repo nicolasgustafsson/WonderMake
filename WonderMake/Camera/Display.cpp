@@ -201,7 +201,7 @@ void Display::Inspect()
 	ImGui::PushID(this);
 	ImGui::Text(myName.c_str());
 
-	if (ImGui::FileSelector::SelectFile(myPath))
+	if (WmGui::FileSelector::SelectFile(myPath))
 		myRenderGraph = SystemPtr<ResourceSystem<RenderNodeGraph>>()->GetResource(myPath);
 
 	ImGui::SameLine();

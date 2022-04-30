@@ -1,17 +1,10 @@
 #pragma once
 #include "Utilities/WmMath.h"
 #include <concepts>
-
-template<typename T>
-struct SRange
-{
-	T Start;
-	T End;
-};
+#include "Utilities/Range.h"
 
 namespace WmEasings
 {
-
 	inline [[nodiscard]] constexpr f32 Flip(const f32 aProgress) noexcept
 	{
 		return 1.f - aProgress;

@@ -1,6 +1,5 @@
 #pragma once
 #define _ITERATOR_DEBUG_LEVEL 0
-#include <string>
 #include <filesystem>
 #include <optional>
 #include <array>
@@ -22,5 +21,5 @@
 #include "Components/Component.h"
 #include "Utilities/TimeKeeper.h"
 #include "Utilities/Json/JsonExtensions.h"
-#include "Utilities/Geometry.h"
+#include "Utilities/Geometry/Geometry.h"
 #include "Utilities/Easing/EasingFunctions.h"

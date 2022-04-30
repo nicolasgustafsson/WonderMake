@@ -24,7 +24,7 @@ void DebugLineDrawer::Render()
 
 void DebugLineDrawer::Update()
 {
-	const float deltaTime = Get<TimeKeeper>().GetDeltaSeconds();
+	const float deltaTime = Get<Wm::TimeKeeper>().GetDeltaSeconds();
 
 	for (i32 i = static_cast<i32>(myDebugLines.size()) - 1; i >= 0; i--)
 	{

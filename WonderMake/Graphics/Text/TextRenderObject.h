@@ -24,6 +24,8 @@ private:
 	f32 myMaxWidth{};
 	void UpdateVertices();
 
+    bool myShouldFollowCamera = true;
+
 	SRectangle CalculateBoundingBox() const;
 	f32 GetAscent() const;
 

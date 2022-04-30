@@ -229,8 +229,8 @@ set(no_group_source_files
     "Utilities/AnimatedValue.cpp"
     "Utilities/AnimatedValue.h"
     "Utilities/AutoRegister.h"
-    "Utilities/BezierCurve.cpp"
-    "Utilities/BezierCurve.h"
+    "Utilities/Geometry/BezierCurve.cpp"
+    "Utilities/Geometry/BezierCurve.h"
     "Utilities/Color.cpp"
     "Utilities/Color.h"
     "Utilities/Container/BackendImplementations/ColonyBackend.h"
@@ -247,13 +247,13 @@ set(no_group_source_files
     "Utilities/DependencyInjector.cpp"
     "Utilities/DependencyInjector.h"
     "Utilities/Easing/EasingFunctions.h"
-    "Utilities/Geometry.h"
+    "Utilities/Geometry/Geometry.h"
     "Utilities/Id.cpp"
     "Utilities/Id.h"
     "Utilities/Json/JsonExtensions.h"
     "Utilities/Json/JsonUtility.cpp"
     "Utilities/Json/JsonUtility.h"
-    "Utilities/Line.h"
+    "Utilities/Geometry/Line.h"
     "Utilities/Matrix.h"
     "Utilities/Platform.cpp"
     "Utilities/Platform.h"
@@ -285,12 +285,13 @@ set(no_group_source_files
     "Utilities/WmMath.h"
     "Object/BaseObject.cpp"
     "Object/BaseObject.h"
-)
+    "Utilities/Range.h"
+    "Utilities/Geometry/Intersections.h"
+    "Utilities/Geometry/Rectangle.h" Utilities/Geometry/Circle.h Utilities/ToString.h Debugging/CommandPalette.cpp Debugging/CommandPalette.h)
 source_group("" FILES ${no_group_source_files})
 
 set(ALL_FILES
-    ${no_group_source_files}
-        )
+    ${no_group_source_files})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
 ################################################################################

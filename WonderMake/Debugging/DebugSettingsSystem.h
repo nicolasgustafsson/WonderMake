@@ -4,8 +4,13 @@
 #include <json/json.hpp>
 #include <string>
 
-class DebugSettingsSystem 
-	: public System<>
+namespace Wm
+{
+    class CommandPalette;
+}
+
+class DebugSettingsSystem
+: public System<Wm::CommandPalette>
 	, public Debugged
 {
 public:

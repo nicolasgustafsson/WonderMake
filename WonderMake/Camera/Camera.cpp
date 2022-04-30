@@ -147,3 +147,8 @@ const Display* Camera::GetFocusedDisplay() const
 
 	return nullptr;
 }
+
+SVector2f Camera::GetPosition() const
+{
+    return myPosition;
+}

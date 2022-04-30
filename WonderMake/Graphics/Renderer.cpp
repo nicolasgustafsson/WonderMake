@@ -1,14 +1,14 @@
-﻿#include "pch.h"
+﻿#include "Graphics/OpenGLFacade.h"
+#include "Utilities/Container/Traits/TraitList.h"
+#include "pch.h"
 #include "Renderer.h"
-
-#include "VertexAttributes.h"
 #include "EngineUniformBuffer.h"
-#include "Camera/Camera.h"
 #include <GLFW/glfw3.h>
 #include "Program/GlfwFacade.h"
 #include "Graphics/RenderCommandProcessor.h"
-#include <any>
-#include "Graphics/RenderTarget.h"
+#include "Camera/CameraManager.h"
+#include "Program/Window.h"
+#include "Debugging/DebugLineDrawer.h"
 
 REGISTER_SYSTEM(Renderer);
 
@@ -50,7 +50,6 @@ Renderer::Renderer() noexcept
 void Renderer::SetViewportSize(const SVector2<int> WindowSize)
 {
 	Get<OpenGLFacade>().SetViewportSize(WindowSize);
-	//myCameraManagerPtr->GetMainCamera().SetViewportSize(WindowSize);
 }
 
 void Renderer::StartFrame()
@@ -64,7 +63,6 @@ void Renderer::StartFrame()
 void Renderer::FinishFrame()
 {
 	WmDispatchMessage(RenderPassMessage{});
-
 	Get<CameraManager>().FinishFrame();
 
 	Get<DebugLineDrawer>().Update();

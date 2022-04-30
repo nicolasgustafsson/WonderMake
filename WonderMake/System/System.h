@@ -3,7 +3,7 @@
 #include "Policies/Policy.h"
 
 #include "Utilities/RestrictTypes.h"
-
+#include "Utilities/AutoRegister.h"
 #include <optional>
 
 class SystemBase

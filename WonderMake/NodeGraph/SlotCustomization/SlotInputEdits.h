@@ -115,7 +115,7 @@ namespace SlotInputEdits
 	template<>
 	inline EAlterStatus EditInputSlot<std::filesystem::path>(std::filesystem::path& aInput)
 	{
-		return ImGui::FileSelector::SelectFile(aInput) ? EAlterStatus::Changed : EAlterStatus::Same;
+		return WmGui::FileSelector::SelectFile(aInput) ? EAlterStatus::Changed : EAlterStatus::Same;
 	}
 
 	template<>

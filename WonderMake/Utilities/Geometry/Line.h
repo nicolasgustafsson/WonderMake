@@ -47,3 +47,8 @@ struct SLine
 	SVector2f Second;
 };
 
+struct SSurface : public SLine
+{
+    f32 Width = 0.f;
+};
+

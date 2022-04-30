@@ -6,7 +6,7 @@
 #include "Universe/UniverseSystem.h"
 
 class DebugLineDrawer
-	: public UniverseSystem<DebugLineDrawer, TimeKeeper>
+: public UniverseSystem<DebugLineDrawer, Wm::TimeKeeper>
 {
 public:
 	DebugLineDrawer() noexcept;

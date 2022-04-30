@@ -9,7 +9,7 @@
 #if COMPILER_GCC
 static std::filesystem::path CurrentPath = std::filesystem::current_path();
 #endif
-bool ImGui::FileSelector::SelectFile(std::filesystem::path &aPath) {
+bool WmGui::FileSelector::SelectFile(std::filesystem::path &aPath) {
     if (aPath.empty())
         ImGui::Text("Please select a file");
     else
@@ -130,7 +130,7 @@ bool ImGui::FileSelector::SelectFile(std::filesystem::path &aPath) {
     return false;
 }
 
-void ImGui::FileSelector::Implementation::FinishSelecting()
+void WmGui::FileSelector::Implementation::FinishSelecting()
 {
     ImGui::CloseCurrentPopup();
     ImGui::EndPopup();

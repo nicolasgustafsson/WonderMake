@@ -1,7 +1,7 @@
 #pragma once
 #include "Designers/LevelDesigner/Geometry/PolygonOperators/PolygonPointOperator.h"
 #include "Designers/LevelDesigner/Geometry/Polygon.h"
-#include "Utilities/Line.h"
+#include "Utilities/Geometry/Line.h"
 
 struct SNavmeshLine;
 

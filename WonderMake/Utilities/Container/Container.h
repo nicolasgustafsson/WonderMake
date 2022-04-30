@@ -84,12 +84,22 @@ namespace _ContainerDetail
 template<typename TObjectType, typename TContainerBackends, ContainerTrait ... TContainerTraits>
 class ContainerBase : public _ContainerDetail::ResolvedBackend<TObjectType, TContainerBackends, TContainerTraits...>::Storage //[Nicos]: Derive from the selected storage
 {
+    template <typename T>
+    constexpr static bool HasTraitFunc()
+    {
+        return Super::template SatisfiesTraits<T>();
+    }
+
 public:
+
 	using ResolvedTypes = typename _ContainerDetail::ResolvedTypes<TObjectType, TContainerTraits...>;
 	using TraitsPack = typename ResolvedTypes::TraitsPack;
 	using Key = typename ResolvedTypes::Key;
 
-	using Super = typename _ContainerDetail::ResolvedBackend<TObjectType, TContainerBackends, TContainerTraits...>::Storage;
+    using Super = typename _ContainerDetail::ResolvedBackend<TObjectType, TContainerBackends, TContainerTraits...>::Storage;
+
+    ContainerBase() = default;
+    ContainerBase(std::initializer_list<TObjectType> aObjects) : Super(aObjects) {}
 
 	template<typename TBackend>
 	inline constexpr bool HasBackend() const
@@ -98,9 +108,9 @@ public:
 	}
 
 	template <typename T>
-	constexpr static bool HasTrait = IsSubsetOf<ParameterPack<T>, TraitsPack>::value;
+	constexpr static bool HasTrait = HasTraitFunc<T>();
 
-	bool Contains(const TObjectType& aObject) const requires HasTrait<Iterable>
+    [[nodiscard]] bool Contains(const TObjectType& aObject) const requires HasTrait<Iterable>
 	{
 		for (auto&& object : this->myBackend)
 		{
@@ -109,6 +119,31 @@ public:
 		}
 		return false;
 	}
+
+    [[nodiscard]] bool IsEmpty() const
+    {
+        return Super::Count() == 0;
+    }
+
+    TObjectType& GetFirst() requires HasTrait<Indexable>
+    {
+        return Super::operator[](0);
+    }
+
+    TObjectType& GetLast() requires HasTrait<Indexable>
+    {
+        return Super::operator[](Super::Count() - 1);
+    }
+
+    const TObjectType& GetFirst() const requires HasTrait<Indexable>
+    {
+        return Super::operator[](0);
+    }
+
+    const TObjectType& GetLast() const requires HasTrait<Indexable>
+    {
+        return Super::operator[](Super::Count() - 1);
+    }
 
 	TObjectType& operator[](const Key& aKey)
 	{

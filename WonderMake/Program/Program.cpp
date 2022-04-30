@@ -31,7 +31,7 @@ void Program::Update()
 
 void Program::StartNewFrame()
 {
-	SystemPtr<EngineUniformBuffer>()->GetBuffer().Time = SystemPtr<TimeKeeper>()->GetGameTime();
+	SystemPtr<EngineUniformBuffer>()->GetBuffer().Time = SystemPtr<Wm::TimeKeeper>()->GetGameTime();
 
 	SystemPtr<EngineUniformBuffer>()->Update();
 

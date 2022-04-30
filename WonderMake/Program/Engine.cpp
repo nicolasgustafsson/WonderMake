@@ -57,7 +57,7 @@ namespace Engine
 		for (;;)
 		{
 			//update the timekeeper before any threads have run so that delta time can be accessed asynchronously
-			SystemPtr<TimeKeeper>()->Update();
+			SystemPtr<Wm::TimeKeeper>()->Update();
 			SystemPtr<GlfwFacade>()->PollEvents();
 
 			routine.Run();

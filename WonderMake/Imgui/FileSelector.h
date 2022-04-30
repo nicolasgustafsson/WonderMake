@@ -1,7 +1,7 @@
 #pragma once
 #include <filesystem>
 
-namespace ImGui::FileSelector
+namespace WmGui::FileSelector
 {
     namespace Implementation
     {

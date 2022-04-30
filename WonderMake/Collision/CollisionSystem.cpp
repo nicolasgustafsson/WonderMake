@@ -3,7 +3,7 @@
 #include "CollisionSystem.h"
 #include "CollisionFunctionality.h"
 #include "Collision/Colliders.h"
-
+#include "Utilities/Geometry/Intersections.h"
 #include "Scheduling/ScheduleSystem.h"
 
 REGISTER_UNIVERSE_SYSTEM(CollisionSystem);
@@ -123,9 +123,7 @@ bool CollisionSystem::TestLineCollision(const Colliders::SCollisionLine& aLine, 
 
 bool CollisionSystem::TestSphereVsSphereCollision(const Colliders::SSphere& aSphereA, const Colliders::SSphere& aSphereB) noexcept
 {
-	const auto delta = aSphereA.Position - aSphereB.Position;
-	
-	return (delta.LengthSquared() <= std::pow(aSphereA.Radius + aSphereB.Radius, 2));
+    return WmIntersections2D::CircleVsCircle({aSphereA.Position, aSphereA.Radius}, {aSphereB.Position, aSphereB.Radius});
 }
 
 void CollisionSystem::OverlapAgainstFunctionalityInternal(const Colliders::Shape& aCollider, const Colliders::SReaction& aReaction)
@@ -152,23 +150,7 @@ void CollisionSystem::OverlapAgainstFunctionalityInternal(const Colliders::Shape
 
 bool CollisionSystem::TestSphereVsLineCollision(const Colliders::SSphere& aSphereA, const Colliders::SCollisionLine& aLineB) noexcept
 {
-	SVector2f closestPoint = GetClosestPointOnLine(aLineB, aSphereA.Position);
-
-	const SVector2f lineDelta = aLineB.GetLineEnd() - aLineB.Position;
-
-	const SVector2f lineNormal = lineDelta.GetPerpendicularClockWise().GetNormalized();
-	
-	//[Nicos]: create a newline that is perpendicular to the one line we have to simulate width
-	Colliders::SCollisionLine newLine;
-	newLine.Position = closestPoint - lineNormal * aLineB.Width;
-	newLine.EndOffsetFromPosition = lineNormal * aLineB.Width * 2.f;
-
-	closestPoint = GetClosestPointOnLine(newLine, aSphereA.Position);
-
-	if (closestPoint.DistanceTo(aSphereA.Position) < aSphereA.Radius)
-		return true;
-
-	return false;
+    return WmIntersections2D::CircleVsSurface({aSphereA.Position, aSphereA.Radius}, {aLineB.Position, aLineB.GetLineEnd(), aLineB.Width});
 }
 
 bool CollisionSystem::TestLineVsLineCollision(const Colliders::SCollisionLine& /*aLineA*/, const Colliders::SCollisionLine& /*aLineB*/) noexcept
@@ -176,37 +158,3 @@ bool CollisionSystem::TestLineVsLineCollision(const Colliders::SCollisionLine& /
 	WmLog(TagError, "Line-line collision not implemented yet!");
 	return false;
 }
-
-bool CollisionSystem::IsPointWithinSphere(const Colliders::SSphere& aSphereA, const SVector2f aPoint) noexcept
-{
-	const auto delta = aSphereA.Position - aPoint;
-
-	return (delta.LengthSquared() <= std::pow(aSphereA.Radius, 2));
-}
-
-SVector2f CollisionSystem::GetClosestPointOnLine(const Colliders::SCollisionLine& aLine, const SVector2f aPoint) noexcept
-{
-	//alghorithm based on one found here: https://stackoverflow.com/questions/3120357/get-closest-point-to-a-line
-	const SVector2f lineStart = aLine.Position;
-	const SVector2f lineEnd = aLine.GetLineEnd();
-
-	if (lineStart == lineEnd)
-		return lineStart;
-
-	const SVector2f lineDelta = lineEnd - lineStart;
-	const SVector2f sphereDeltaFromLineStart = aPoint - lineStart;
-
-	const f32 lineDeltaMagnitude = lineDelta.LengthSquared();
-	const f32 lineDeltaProduct = lineDelta.Dot(sphereDeltaFromLineStart);
-
-	const f32 normalizedDistance = lineDeltaProduct / lineDeltaMagnitude; //distance on line to the closest point on it, from start to end
-
-	if (normalizedDistance < 0.f)
-		return lineStart; //clamp on line ends
-
-	if (normalizedDistance > 1.f)
-		return lineEnd;
-
-	return lineStart + lineDelta * normalizedDistance;
-}
-

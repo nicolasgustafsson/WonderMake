@@ -41,7 +41,7 @@ private:
 };
 
 class TimerFunctionality
-	: public Functionality<TimeKeeper, STimerComponent>
+: public Functionality<Wm::TimeKeeper, STimerComponent>
 {
 public:
 	STimerHandle AddTimer(const f32 aDuration, Closure aClosure = [](){});

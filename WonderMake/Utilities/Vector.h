@@ -151,6 +151,13 @@ struct SVector
 		return GetAngle(aOtherVector.GetAngle<TReturnRotation>(0));
 	}
 
+    [[nodiscard]] constexpr static SVector FromRotation(const auto aRotation)
+    {
+        SVector returnVector{0.0f, 1.0f};
+        returnVector.RotateClockwise(aRotation);
+        return returnVector;
+    }
+
 	// Lowers or raises the dimension of the vector by one
 	[[nodiscard]] constexpr TRep Demote() const noexcept
 		requires (TSize == 2)

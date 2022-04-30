@@ -40,10 +40,6 @@ public:
 	template<typename TFunctionalityToReactAgainst>
 	void OverlapLineAgainstFunctionality(const SVector2f aStart, const SVector2f aEnd, const f32 aWidth, std::function<void(TFunctionalityToReactAgainst&, Colliders::SCollisionInfo)> aCallback);
 
-
-	[[nodiscard]] static bool IsPointWithinSphere(const Colliders::SSphere& aSphere, const SVector2f aPoint) noexcept;
-	[[nodiscard]] static SVector2f GetClosestPointOnLine(const Colliders::SCollisionLine& aLine, const SVector2f aPoint) noexcept;
-
 private:
 
 	void OverlapAgainstFunctionalityInternal(const Colliders::Shape& aCollider, const Colliders::SReaction& aReaction);

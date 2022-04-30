@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include "BezierCurve.h"
-#include "WmMath.h"
-#include "Easing/EasingFunctions.h"
+#include "Utilities/WmMath.h"
+#include "Utilities/Easing/EasingFunctions.h"
 
 BezierCurve::BezierCurve(const SVector2f aStart, const SVector2f aEnd, const SVector2f aFirstControl, const SVector2f aSecondControl) noexcept
 	: myStart(aStart), myEnd(aEnd), myFirstControl(aFirstControl), mySecondControl(aSecondControl)

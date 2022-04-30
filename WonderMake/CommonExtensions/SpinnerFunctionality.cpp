@@ -9,7 +9,7 @@ void SpinnerFunctionality::Tick() noexcept
 	auto& transform = Get<TransformFunctionality2D>();
 	auto& spinner = Get<SSpinnerComponent>();
 
-	const f32 deltaTime = Get<TimeKeeper>().GetDeltaSeconds();
+	const f32 deltaTime = Get<Wm::TimeKeeper>().GetDeltaSeconds();
 	const auto oldRotation = transform.GetRotation();
 
 	const auto newRotation = oldRotation + spinner.myRotationSpeed * deltaTime;

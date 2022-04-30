@@ -2,7 +2,7 @@
 #include <json/json.hpp>
 
 
-namespace ImGui::JsonInspector
+namespace WmGui::JsonInspector
 {
 	void Inspect(nlohmann::json& aJsonDocumentToInspect, const std::string aDocumentName);
 

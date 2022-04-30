@@ -2,6 +2,7 @@
 #include "TextRenderObject.h"
 #include "Font.h"
 #include "Resources/ResourceSystem.h"
+#include "Camera/CameraManager.h"
 
 TextRenderObject::TextRenderObject(const std::filesystem::path& aFontPath) :
 	RenderObject(SRenderObjectInfo
@@ -65,7 +66,9 @@ void TextRenderObject::UpdateVertices()
 	myBoundingBox = CalculateBoundingBox();
 	const SFontMetrics fontMetrics = myFont->GetFontMetrics();
 
-	SVector2f cursorPosition = myPosition;
+    SVector2f position = myPosition;
+
+	SVector2f cursorPosition = position;
 	cursorPosition.Y -= GetAscent() * mySize;
 
 	cursorPosition.X -= myOrigin.X * myBoundingBox.GetWidth();
@@ -74,13 +77,13 @@ void TextRenderObject::UpdateVertices()
 	{
 		const SGlyphMetrics glyph = myFont->GetGlyphMetrics(myText[i]);
 		
-		if (myText[i] == '\n' || ((cursorPosition.X - myPosition.X) > myMaxWidth && myMaxWidth > 0.f))
+		if (myText[i] == '\n' || ((cursorPosition.X - position.X) > myMaxWidth && myMaxWidth > 0.f))
 		{
 			cursorPosition.Y -= fontMetrics.LineHeight * mySize;
-			cursorPosition.X = myPosition.X;
+			cursorPosition.X = position.X;
 		}
 
-		if (i > 0 && cursorPosition.X != myPosition.X)
+		if (i > 0 && cursorPosition.X != position.X)
 		{
 			cursorPosition.X += myFont->GetKerning(myText[i - 1], myText[i]) * mySize;
 		}

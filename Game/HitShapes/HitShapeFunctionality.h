@@ -1,5 +1,5 @@
 #pragma once
-#include "Utilities/BezierCurve.h"
+#include "Utilities/Geometry/BezierCurve.h"
 #include "HitShapeRenderObject.h"
 #include "Character/CharacterFunctionality.h"
 #include "UtilityFunctionalities/FactionFunctionality.h"

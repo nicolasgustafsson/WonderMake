@@ -12,13 +12,15 @@ class ColonyBackend
 	, public ImplementTraits<ColonyBackend<TObjectType>, Iterable, Indexable, StableElements>
 {
 public:
+
 	using RawBackend = plf::colony<TObjectType>;
 	using Backend = ContainerBackend<plf::colony<TObjectType>>;
 	using IteratorType = typename Backend::IteratorType;
 	using ConstIteratorType = typename Backend::ConstIteratorType;
 	using ElementType = typename Backend::ElementType;
 
-	TObjectType& operator[](const size_t aIndex)
+
+    TObjectType& operator[](const size_t aIndex)
 	{
 		return *(this->myBackend.get_iterator_from_index(aIndex));
 	}

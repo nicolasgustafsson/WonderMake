@@ -134,7 +134,7 @@ void AudioManager::Debug()
 	ImGui::Separator();
 
 	ImGui::Text("Audio File tester");
-	if (ImGui::FileSelector::SelectFile(path))
+	if (WmGui::FileSelector::SelectFile(path))
 	{
 		PlayAudio(path);
 	}

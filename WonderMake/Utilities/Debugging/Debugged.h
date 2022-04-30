@@ -11,6 +11,7 @@ public:
 protected:
 	virtual void Debug() = 0;
 
+    void HideDebugWindow();
 private:
 	void OnDebugMessage(const SDebugMessage&);
 

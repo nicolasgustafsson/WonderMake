@@ -2,7 +2,7 @@
 #include "JsonInspector.h"
 #include <json/json.hpp>
 
-void ImGui::JsonInspector::Inspect(nlohmann::json& aJsonDocumentToInspect, const std::string aDocumentName)
+void WmGui::JsonInspector::Inspect(nlohmann::json& aJsonDocumentToInspect, const std::string aDocumentName)
 {
 	ImGui::Begin(aDocumentName.c_str());
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 2));
@@ -20,7 +20,7 @@ void ImGui::JsonInspector::Inspect(nlohmann::json& aJsonDocumentToInspect, const
 	ImGui::End();
 }
 
-void ImGui::JsonInspector::InspectElement(nlohmann::json::iterator aElementIterator)
+void WmGui::JsonInspector::InspectElement(nlohmann::json::iterator aElementIterator)
 {
 	nlohmann::json& element = *aElementIterator;
 	
@@ -59,7 +59,7 @@ void ImGui::JsonInspector::InspectElement(nlohmann::json::iterator aElementItera
 	ImGui::NextColumn();
 }
 
-void ImGui::JsonInspector::InspectFloat(nlohmann::json::iterator aElementIterator)
+void WmGui::JsonInspector::InspectFloat(nlohmann::json::iterator aElementIterator)
 {
 	nlohmann::json& element = *aElementIterator;
 
@@ -67,7 +67,7 @@ void ImGui::JsonInspector::InspectFloat(nlohmann::json::iterator aElementIterato
 	ImGui::InputDouble("##value", &ref, 1.0f);
 }
 
-void ImGui::JsonInspector::InspectObject(nlohmann::json::iterator aElementIterator)
+void WmGui::JsonInspector::InspectObject(nlohmann::json::iterator aElementIterator)
 {
 	nlohmann::json& element = *aElementIterator;
 
@@ -87,7 +87,7 @@ void ImGui::JsonInspector::InspectObject(nlohmann::json::iterator aElementIterat
 	ImGui::PopID();
 }
 
-void ImGui::JsonInspector::InspectInteger(nlohmann::json::iterator aElementIterator)
+void WmGui::JsonInspector::InspectInteger(nlohmann::json::iterator aElementIterator)
 {
 	nlohmann::json& element = *aElementIterator;
 
@@ -98,7 +98,7 @@ void ImGui::JsonInspector::InspectInteger(nlohmann::json::iterator aElementItera
 	ref = integer;
 }
 
-void ImGui::JsonInspector::InspectString(nlohmann::json::iterator aElementIterator)
+void WmGui::JsonInspector::InspectString(nlohmann::json::iterator aElementIterator)
 {
 	nlohmann::json& element = *aElementIterator;
 
@@ -107,12 +107,12 @@ void ImGui::JsonInspector::InspectString(nlohmann::json::iterator aElementIterat
 	ImGui::InputText("##value", &ref[0], ref.capacity());
 }
 
-void ImGui::JsonInspector::InspectTheUninspectable(nlohmann::json::iterator /*aElementIterator*/)
+void WmGui::JsonInspector::InspectTheUninspectable(nlohmann::json::iterator /*aElementIterator*/)
 {
 	ImGui::Text("Uninspectable");
 }
 
-void ImGui::JsonInspector::InspectBool(nlohmann::json::iterator aElementIterator)
+void WmGui::JsonInspector::InspectBool(nlohmann::json::iterator aElementIterator)
 {
 	nlohmann::json& element = *aElementIterator;
 

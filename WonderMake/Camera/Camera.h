@@ -17,6 +17,7 @@ public:
 	void Update();
 
 	void SetPosition(const SVector2f aPosition);
+    SVector2f GetPosition() const;
 
 	void FinishFrame();
 	void FinishDebugFrame();

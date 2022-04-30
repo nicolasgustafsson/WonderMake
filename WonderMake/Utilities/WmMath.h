@@ -30,7 +30,7 @@ namespace WmMath
 	using FloatingRepresentation = decltype(_Impl::_FloatingRepresentation<T>());
 
 	template<typename T>
-	concept has_floating_representation_v = !std::is_same_v<FloatingRepresentation<T>, void>;
+	concept HasFloatingRepresentation = !std::is_same_v<FloatingRepresentation<T>, void>;
 
 	template <class T>
 	concept Addable = requires (T x) { x + x; };
@@ -139,28 +139,28 @@ namespace WmMath
 	}
 
 	template<typename T>
-	requires has_floating_representation_v<T>
+	requires HasFloatingRepresentation<T>
 	[[nodiscard]] inline FloatingRepresentation<T> Atan(const T aRotation) noexcept
 	{
 		return std::atan(static_cast<FloatingRepresentation<T>>(aRotation));
 	}
 
 	template<typename T>
-	requires has_floating_representation_v<T>
+	requires HasFloatingRepresentation<T>
 	[[nodiscard]] inline FloatingRepresentation<T> Atan2(const T aY, const T aX) noexcept
 	{
 		return std::atan2(static_cast<FloatingRepresentation<T>>(aY), static_cast<FloatingRepresentation<T>>(aX));
 	}
 
 	template<typename T>
-	requires has_floating_representation_v<T>
+	requires HasFloatingRepresentation<T>
 	[[nodiscard]] inline FloatingRepresentation<T> Cos(const T aRotation) noexcept
 	{
 		return std::cos(static_cast<FloatingRepresentation<T>>(aRotation));
 	}
 
 	template<typename T>
-	requires has_floating_representation_v<T>
+	requires HasFloatingRepresentation<T>
 	[[nodiscard]] inline FloatingRepresentation<T> Sin(const T aRotation) noexcept
 	{
 		return std::sin(static_cast<FloatingRepresentation<T>>(aRotation));

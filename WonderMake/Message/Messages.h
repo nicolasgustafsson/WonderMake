@@ -13,9 +13,10 @@
 #include "Constants.h"
 #include "Universe/UniverseHelper.h"
 #include "Universe/UniverseManagerSystem.h"
-#include "Utilities/BezierCurve.h"
-#include "Utilities/Geometry.h"
+#include "Utilities/Geometry/BezierCurve.h"
+#include "Utilities/Geometry/Geometry.h"
 #include "Utilities/Container/Container.h"
+#include "Utilities/ToString.h"
 
 
 template<typename TMessage>
@@ -30,7 +31,7 @@ inline static void WmDispatchMessage(TMessage&& aMessage) noexcept
 	DispatchableBuffer::Get().Dispatch(std::move(aMessage));
 }
 
-template<typename ... TMessageArgs>
+template <typename ... TMessageArgs>
 inline static void WmLog(TMessageArgs... aMessageArgs)
 {
 	std::stringstream MessageStream;

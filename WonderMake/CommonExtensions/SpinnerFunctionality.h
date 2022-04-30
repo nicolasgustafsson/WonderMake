@@ -14,11 +14,7 @@ struct SSpinnerComponent
 };
 
 class SpinnerFunctionality
-	: public Functionality<
-		Policy::Set<
-			PAdd<TimeKeeper, PRead>,
-			PAdd<SSpinnerComponent, PWrite>,
-			PAdd<TransformFunctionality2D, PWrite>>>
+: public Functionality<Wm::TimeKeeper, SSpinnerComponent, TransformFunctionality2D>
 {
 public:
 	void Tick() noexcept;

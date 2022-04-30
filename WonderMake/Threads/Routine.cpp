@@ -29,7 +29,9 @@ void Routine::Run()
 void Routine::RouteMessages()
 {
 	auto&& router = DispatchRouter::Get();
-	
+
+    router.CommitChanges();
+
 	const auto messageList = std::move(DispatchableBuffer::Get().myList);
 
 	for (const auto& message : messageList)

@@ -6,7 +6,6 @@
 #include "Message/MessageSubscriber.h"
 #include "Utilities/Debugging/Debugged.h"
 #include "Utilities/Vector.h"
-#include "Utilities/Matrix.h"
 
 struct SPaddedMatrix33
 {

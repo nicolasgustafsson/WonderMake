@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Utilities/Vector.h"
-
+#include "Utilities/Geometry/Geometry.h"
 #include <variant>
 
 class _BaseFunctionality;
@@ -40,11 +40,16 @@ namespace Colliders
 		SSphere() noexcept
 			: SBase({ nullptr })
 		{}
-
+        [[nodiscard]] inline SCircle GetCircle() const noexcept;
 		f32							Radius = 0.f;
 	};
 
-	struct SCollisionLine
+    SCircle SSphere::GetCircle() const noexcept
+    {
+        return {Position, Radius};
+    }
+
+    struct SCollisionLine
 		: public SBase
 	{
 		SCollisionLine() noexcept
@@ -52,6 +57,7 @@ namespace Colliders
 		{}
 
         [[nodiscard]] inline SVector2f GetLineEnd() const noexcept;
+        [[nodiscard]] inline SSurface GetSurface() const noexcept;
 
 		SVector2f					EndOffsetFromPosition = SVector2f::Zero();
 		SDegreeF32					Rotation;
@@ -64,7 +70,12 @@ namespace Colliders
 		return Position + temp.RotateCounterClockwise(Rotation);
 	}
 
-	typedef std::variant<SSphere, SCollisionLine>	Shape;
+    SSurface SCollisionLine::GetSurface() const noexcept
+    {
+        return {Position, GetLineEnd(), Width};
+    }
+
+    typedef std::variant<SSphere, SCollisionLine>	Shape;
 
 	struct SCollisionInfo
 	{

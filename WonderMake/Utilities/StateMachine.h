@@ -26,7 +26,7 @@ public:
 
 	f32 GetTimeInState() const
 	{
-		SystemPtr<TimeKeeper> timeKeeper;
+		SystemPtr<Wm::TimeKeeper> timeKeeper;
 		return timeKeeper->TimeSince(myStateSwitchTime);
 	}
 
@@ -38,7 +38,7 @@ public:
 private:
 	void SwitchState(const TEnumState aNewState)
 	{
-		SystemPtr<TimeKeeper> timeKeeper;
+		SystemPtr<Wm::TimeKeeper> timeKeeper;
 
 		myCurrentState = aNewState;
 		myStateSwitchTime = timeKeeper->GetGameTime();

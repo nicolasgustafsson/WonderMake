@@ -50,6 +50,7 @@ public:
 
         return *this;
     }
+
     template<typename TFromRep> requires std::is_constructible_v<TRep, TFromRep>
     inline constexpr SRotation& operator+=(const TFromRep aRhs) noexcept
     {
@@ -115,6 +116,8 @@ public:
     {
         return *this /= RotationCast<SRotation<TFromRep, TRatio>>(aRhs).Rotation;
     }
+
+
 
     TRep Rotation = {};
 };
@@ -208,23 +211,23 @@ using SRadianF64 = SRadian<f64>;
 
 namespace WmMath
 {
-    template<typename TRep, typename TRatio, typename TReturnType = TRep> requires WmMath::has_floating_representation_v<TReturnType>
+    template<typename TRep, typename TRatio, typename TReturnType = TRep> requires WmMath::HasFloatingRepresentation<TReturnType>
     [[nodiscard]] inline TRep Atan(const SRotation<TRep, TRatio> aRotation) noexcept
 	{
 		return WmMath::Atan(RotationCast<SRadian<TReturnType>>(aRotation).Rotation);
 	}
-	template<typename TRotation, typename TFromRep> requires WmMath::has_floating_representation_v<TFromRep>
+	template<typename TRotation, typename TFromRep> requires WmMath::HasFloatingRepresentation<TFromRep>
     [[nodiscard]] inline TRotation Atan2(const TFromRep aY, const TFromRep aX) noexcept
 	{
 		return RotationCast<TRotation>(SRadian<typename TRotation::Representation>(Atan2(aY, aX)));
 	}
 
-	template<typename TRep, typename TRatio, typename TReturnType = TRep> requires WmMath::has_floating_representation_v<TReturnType>
+	template<typename TRep, typename TRatio, typename TReturnType = TRep> requires WmMath::HasFloatingRepresentation<TReturnType>
     [[nodiscard]] inline TReturnType Cos(const SRotation<TRep, TRatio> aRotation) noexcept
 	{
 		return WmMath::Cos(RotationCast<SRadian<TReturnType>>(aRotation).Rotation);
 	}
-    template<typename TRep, typename TRatio, typename TReturnType = TRep> requires WmMath::has_floating_representation_v<TReturnType>
+    template<typename TRep, typename TRatio, typename TReturnType = TRep> requires WmMath::HasFloatingRepresentation<TReturnType>
     [[nodiscard]] inline TReturnType Sin(const SRotation<TRep, TRatio> aRotation) noexcept
 	{
 		return WmMath::Sin(RotationCast<SRadian<TReturnType>>(aRotation).Rotation);

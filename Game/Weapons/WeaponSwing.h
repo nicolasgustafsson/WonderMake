@@ -1,5 +1,5 @@
 #pragma once
-#include "Utilities/BezierCurve.h"
+#include "Utilities/Geometry/BezierCurve.h"
 enum class ESwingStages
 {
 	PreSwing,

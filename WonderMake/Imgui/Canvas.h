@@ -2,7 +2,7 @@
 
 #include "Imgui/imgui.h"
 #include "Utilities/Color.h"
-#include "Utilities/Geometry.h"
+#include "Utilities/Geometry/Geometry.h"
 #include "Utilities/Vector.h"
 
 namespace WmGui

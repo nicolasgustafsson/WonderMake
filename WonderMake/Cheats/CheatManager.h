@@ -1,5 +1,15 @@
 #pragma once
-class CheatManager : public System<>, Debugged
+#include "Utilities/Container/Container.h"
+#include "System/System.h"
+#include "System/SystemPtr.h"
+#include "Utilities/Debugging/Debugged.h"
+
+namespace Wm
+{
+    class CommandPalette;
+}
+
+class CheatManager : public System<Wm::CommandPalette>, Debugged
 {
 public:
 	 CheatManager()

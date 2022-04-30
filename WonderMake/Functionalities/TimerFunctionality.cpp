@@ -94,7 +94,7 @@ void TimerFunctionality::Tick()
 
 	STimerComponent& timerComponent = Get<STimerComponent>();
 
-	const f32 deltaTime = Get<TimeKeeper>().GetDeltaSeconds();
+	const f32 deltaTime = Get<Wm::TimeKeeper>().GetDeltaSeconds();
 
 	for (auto&& timer : timerComponent.Timers)
 	{

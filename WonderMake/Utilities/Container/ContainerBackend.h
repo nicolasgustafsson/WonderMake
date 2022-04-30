@@ -2,6 +2,7 @@
 #include "Utilities/Container/Traits/ContainerTraits.h"
 #include "Utilities/TypeTraits/ContainsType.h"
 #include <type_traits>
+#include <initializer_list>
 
 template<typename TStorage>
 class ContainerBackend
@@ -12,11 +13,14 @@ public:
 #else
     using StorageBackend = typename ContainerBackend<TStorage>;
 #endif
+
 	using IteratorType = typename TStorage::iterator;
 	using ConstIteratorType = typename TStorage::const_iterator;
 	using ElementType = typename TStorage::value_type;
+    ContainerBackend() = default;
+    ContainerBackend(std::initializer_list<ElementType> aObjects) : myBackend(aObjects){}
 
-	void Clear()
+    void Clear()
 	{
 		myBackend.clear();
 	}

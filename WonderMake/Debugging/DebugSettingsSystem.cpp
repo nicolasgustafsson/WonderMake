@@ -48,7 +48,7 @@ void DebugSettingsSystem::Debug()
 
 	std::size_t hash = hasher(mySettings);
 
-	ImGui::JsonInspector::Inspect(mySettings, "Debug Settings");
+	WmGui::JsonInspector::Inspect(mySettings, "Debug Settings");
 
 	const bool changed = hash != hasher(mySettings);
 

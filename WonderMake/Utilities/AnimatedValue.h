@@ -21,7 +21,7 @@ public:
 		From = Current;
 		To = aSetValue;
 
-		SetTime = SystemPtr<TimeKeeper>()->GetGameTime();
+		SetTime = SystemPtr<Wm::TimeKeeper>()->GetGameTime();
 
 		return Current;
 	}
@@ -36,7 +36,7 @@ private:
 
 	void UpdateCurrentValue() const
 	{
-		Current = TFunction(SRange<T>{From, To}, WmMath::Clamp(0.f, Time, SystemPtr<TimeKeeper>()->TimeSince(SetTime)) / Time);
+		Current = TFunction(SRange<T>{From, To}, WmMath::Clamp(0.f, Time, SystemPtr<Wm::TimeKeeper>()->TimeSince(SetTime)) / Time);
 	}
 
 	mutable T Current{};

@@ -16,3 +16,8 @@ void Debugged::OnDebugMessage(const SDebugMessage&)
 
 	Debug();
 }
+
+void Debugged::HideDebugWindow()
+{
+    SystemPtr<DebugSettingsSystem>()->SetDebugValue(myDebugName, false);
+}

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Object/DependencyDestructor.h"
-#include "Object/Object.h"
+#include "Object/BaseObject.h"
 
 #include "System/System.h"
 

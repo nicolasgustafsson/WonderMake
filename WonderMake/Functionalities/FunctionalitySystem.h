@@ -10,6 +10,7 @@
 
 #include "System/System.h"
 
+#include "System/SystemPtr.h"
 #include "Utilities/plf_colony.h"
 #include "Universe/UniverseSystem.h"
 
@@ -43,7 +44,7 @@ namespace _Impl
 
 	template<typename... TFunctionalityPolicies>
 	using CreatePolicySet = Policy::Set<PAdd<ScheduleSystem, PWrite>, ConvertPolicy<TFunctionalityPolicies>...>;
-
+	
 	template<typename TPolicySet>
 	using ConvertPolicySet = typename TPolicySet::template ExtractPolicies<CreatePolicySet>;
 
@@ -101,7 +102,7 @@ public:
 		return myFunctionalities.empty();
 	}
 
-    [[nodiscard]] inline void Tick()
+    inline void Tick()
 	{
 		auto guard = SystemPtr<UniverseManagerSystem>()->PushUniverse(this->myUniverseId);
 

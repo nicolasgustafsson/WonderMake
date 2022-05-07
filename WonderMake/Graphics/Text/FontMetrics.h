@@ -1,4 +1,8 @@
 #pragma once
+#include "Typedefs.h"
+#include "Utilities/Container/Container.h"
+#include <filesystem>
+
 struct SFontAtlasMetrics
 {
 	//Nicos: type and yOrigin are not covered here - if you want to use them, make sure to look in a json file to see how they are used and implement them

@@ -1,5 +1,8 @@
 #pragma once
 #include "Utilities/Range.h"
+#include "Utilities/Vector.h"
+#include "Utilities/Container/Container.h"
+#include "Utilities/Geometry/Rectangle.h"
 
 struct SCircle
 {

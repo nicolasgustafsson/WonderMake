@@ -12,7 +12,7 @@
 
 REGISTER_SYSTEM(Renderer);
 
-void GLAPIENTRY
+void GLAPIENTRY	
 MessageCallback([[maybe_unused]] GLenum source,
 	GLenum type,
 	[[maybe_unused]]GLuint id,
@@ -23,9 +23,9 @@ MessageCallback([[maybe_unused]] GLenum source,
 {
 	if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
 		return;
-
+	
 	auto severityTag = severity == GL_DEBUG_SEVERITY_HIGH ? TagError : (severity == GL_DEBUG_SEVERITY_MEDIUM) ? TagWarning : "";
-
+	
 	WmLog(severityTag, TagOpenGL, " type = ", type, " severity: ", severity, "\n", message);
 }
 
@@ -36,14 +36,11 @@ Renderer::Renderer() noexcept
 	Get<OpenGLFacade>().Enable(GL_DEBUG_OUTPUT);
 	Get<OpenGLFacade>().Enable(GL_BLEND);
 	Get<OpenGLFacade>().Enable(GL_MULTISAMPLE);
-
 	Get<OpenGLFacade>().Enable(GL_DEPTH_TEST);
 
 	glDepthFunc(GL_GEQUAL);
 	glClearDepth(-1000);
-
 	Get<OpenGLFacade>().SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 	Get<OpenGLFacade>().SetDebugMessageCallback(MessageCallback);
 }
 
@@ -64,7 +61,6 @@ void Renderer::FinishFrame()
 {
 	WmDispatchMessage(RenderPassMessage{});
 	Get<CameraManager>().FinishFrame();
-
 	Get<DebugLineDrawer>().Update();
 
 	Get<OpenGLFacade>().BindFramebuffer(GL_FRAMEBUFFER, 0);

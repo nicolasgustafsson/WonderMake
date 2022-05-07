@@ -1,4 +1,5 @@
 #pragma once
+#include "Scheduling/ScheduleSystem.h"
 #include "System/System.h"
 #include "Utilities/Debugging/Debugged.h"
 #include "Utilities/Stopwatch.h"

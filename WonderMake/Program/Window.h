@@ -5,9 +5,7 @@ class GlfwFacade;
 struct GLFWwindow;
 
 class Window
-	: public System<
-		Policy::Set<
-			PAdd<GlfwFacade, PWrite>>>
+	: public System<GlfwFacade>
 {
 public:
 	Window();

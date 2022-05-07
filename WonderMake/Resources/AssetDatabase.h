@@ -25,14 +25,14 @@ class AssetDatabase
 {
 public:
 	AssetDatabase() 
-		: Debugged("Asset Databases/" + GetAssetTypeName()) 
+		: Debugged("Asset Databases/" + std::string(GetAssetTypeName())) 
 	{
 		Load();
 	}
 
 	void Load()
 	{
-		std::ifstream file("AssetDatabases/" + GetAssetTypeName() + ".json", std::fstream::app);
+		std::ifstream file("AssetDatabases/" + std::string(GetAssetTypeName()) + ".json", std::fstream::app);
 
 		std::string fileContents((std::istreambuf_iterator<char>(file)),
 			(std::istreambuf_iterator<char>()));
@@ -126,7 +126,7 @@ public:
 	{
 		nlohmann::json serialized = Serialize();
 
-		std::ofstream file("AssetDatabases/" + GetAssetTypeName() + ".json");
+		std::ofstream file("AssetDatabases/" + std::string(GetAssetTypeName()) + ".json");
 
 		file << serialized.dump(4);
 	}
@@ -162,7 +162,7 @@ public:
 
 	virtual void Debug() override
 	{
-		std::string assetDatabaseName = GetAssetTypeName() + " Database";
+		std::string assetDatabaseName = std::string(GetAssetTypeName()) + " Database";
 		ImGui::Begin(assetDatabaseName.c_str());
 		
 		if (ImGui::Button("Scan assets"))
@@ -216,7 +216,7 @@ public:
 	}
 
 private:
-	constexpr std::string GetAssetTypeName() const
+	constexpr std::string_view GetAssetTypeName() const
 	{
 		//[Nicos]: Special case shaders cause otherwise they show up as Shader<0> etc
 		if constexpr (std::is_same_v<TAssetType, Shader<EShaderType::Fragment>>)
@@ -227,7 +227,7 @@ private:
 			return "Geometry Shader";
 		else
 		{
-            return std::string(TypeString<TAssetType>());
+            return (TypeString<TAssetType>());
             //std::string assetTypeName = typeid(TAssetType).name();
 
 			//if (assetTypeName.starts_with("class "))

@@ -1,9 +1,12 @@
 #pragma once
 #include <json/json.hpp>
 #include <filesystem>
+#include <optional>
 #include <sstream>
 #include <chrono>
 #include "Graphics/Text/FontMetrics.h"
+#include "Utilities/Color.h"
+#include "Utilities/Vector.h"
 
 
 namespace std::filesystem

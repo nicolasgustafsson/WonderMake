@@ -12,6 +12,13 @@
 
 REGISTER_SYSTEM_MASKED(WinProcessSystem, ProcessSystem);
 
+ProcessId WinProcessSystem::GetCurrentProcessId()
+{
+    auto&& winPlatform = Get<WinPlatformSystem>();
+
+    return winPlatform.GetProcessId(winPlatform.GetCurrentProcess());
+}
+
 Result<ProcessSystem::EStartError, std::shared_ptr<Process>> WinProcessSystem::StartProcess(std::filesystem::path aApplicationPath, std::wstring aCommandLine)
 {
     auto&& winPlatform = Get<WinPlatformSystem>();

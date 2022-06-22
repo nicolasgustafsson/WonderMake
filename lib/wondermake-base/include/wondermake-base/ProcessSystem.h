@@ -1,5 +1,6 @@
 #pragma once
 
+#include "wondermake-base/ProcessId.h"
 #include "wondermake-base/System.h"
 
 #include "wondermake-utility/Result.h"
@@ -19,6 +20,8 @@ public:
 		FileNotFound,
 		InternalError
 	};
+
+	virtual ProcessId GetCurrentProcessId() = 0;
 
 	virtual Result<EStartError, std::shared_ptr<Process>> StartProcess(std::filesystem::path aApplicationPath, std::wstring aCommandLine) = 0;
 

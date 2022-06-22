@@ -83,6 +83,10 @@ public:
 		LPDWORD lpNumberOfBytesWritten,
 		LPOVERLAPPED lpOverlapped), (override));
 
+	MOCK_METHOD(HANDLE, GetCurrentProcess, (), (override));
+	MOCK_METHOD(DWORD, GetProcessId, (
+		HANDLE Process), (override));
+
 	MOCK_METHOD(BOOL, CreateProcessW, (
 		LPCWSTR lpApplicationName,
 		LPWSTR lpCommandLine,

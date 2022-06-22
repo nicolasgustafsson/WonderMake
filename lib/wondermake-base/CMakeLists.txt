@@ -11,6 +11,7 @@ list(APPEND SourceFiles
     "include/wondermake-base/Logger.h"
     "include/wondermake-base/LoggerTypes.h"
     "include/wondermake-base/Process.h"
+    "include/wondermake-base/ProcessId.h"
     "include/wondermake-base/ProcessSystem.h"
     "include/wondermake-base/ScheduleSystem.h"
     "include/wondermake-base/System.h"

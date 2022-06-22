@@ -6,6 +6,8 @@
 
 #include "WinEventSystemImpl.h"
 
+#include <algorithm>
+
 REGISTER_SYSTEM_MASKED(WinEventSystemImpl, WinEventSystem);
 
 WinEventSystemImpl::WinEventSystemImpl() noexcept

@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 list(APPEND SourceFiles
     "Include/WonderMakeBaseTests/JobMock.h"
     "Include/WonderMakeBaseTests/ProcessMock.h"
+    "Include/WonderMakeBaseTests/ProcessSystemMock.h"
     "Include/WonderMakeBaseTests/WinEventSystemMock.h"
     "Include/WonderMakeBaseTests/WinPlatformSystemMock.h"
     "Tests/JobRegistryTests.cpp"

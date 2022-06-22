@@ -134,6 +134,17 @@ BOOL WinPlatformSystemImpl::WriteFile(
 	return ::WriteFile(hFile, lpBuffer, nNumberOfBytesToWrite, lpNumberOfBytesWritten, lpOverlapped);
 }
 
+HANDLE WinPlatformSystemImpl::GetCurrentProcess()
+{
+	return ::GetCurrentProcess();
+}
+
+DWORD WinPlatformSystemImpl::GetProcessId(
+	HANDLE Process)
+{
+	return ::GetProcessId(Process);
+}
+
 BOOL WinPlatformSystemImpl::CreateProcessW(
 	LPCWSTR lpApplicationName,
 	LPWSTR lpCommandLine,

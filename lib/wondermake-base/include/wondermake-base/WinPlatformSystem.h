@@ -82,6 +82,10 @@ public:
 		DWORD nNumberOfBytesToWrite,
 		LPDWORD lpNumberOfBytesWritten,
 		LPOVERLAPPED lpOverlapped) = 0;
+	
+	virtual HANDLE GetCurrentProcess() = 0;
+	virtual DWORD GetProcessId(
+		HANDLE Process) = 0;
 
 	virtual BOOL CreateProcessW(
 		LPCWSTR lpApplicationName,

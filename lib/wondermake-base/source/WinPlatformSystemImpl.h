@@ -87,6 +87,10 @@ public:
 		LPDWORD lpNumberOfBytesWritten,
 		LPOVERLAPPED lpOverlapped) override;
 
+	HANDLE GetCurrentProcess() override;
+	DWORD GetProcessId(
+		HANDLE Process) override;
+
 	BOOL CreateProcessW(
 		LPCWSTR lpApplicationName,
 		LPWSTR lpCommandLine,

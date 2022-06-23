@@ -55,6 +55,51 @@ void StaticTest_Guid_Copy()
 	static_assert(copyConstructed == *Guid::Parse("4ae5a5f8-4ab7-4fe7-a48f-323d89b1925b"));
 }
 
+// Since the hash output is not defined, there's nothing to test except if the same input always gives the same output.
+// So if something weird is going on, hope one of these ten cases will catch it.
+void StaticTest_Guid_Hash()
+{
+	constexpr auto guidA1 = *Guid::Parse("4ae5a5f8-4ab7-4fe7-a48f-323d89b1925b");
+	constexpr auto guidA2 = *Guid::Parse("4ae5a5f8-4ab7-4fe7-a48f-323d89b1925b");
+
+	constexpr auto guidB1 = *Guid::Parse("f58bf19d-fc32-49d2-b94a-040e573b5482");
+	constexpr auto guidB2 = *Guid::Parse("f58bf19d-fc32-49d2-b94a-040e573b5482");
+
+	constexpr auto guidC1 = *Guid::Parse("55131962-d3cc-4867-af7c-d6cf09277ea1");
+	constexpr auto guidC2 = *Guid::Parse("55131962-d3cc-4867-af7c-d6cf09277ea1");
+
+	constexpr auto guidD1 = *Guid::Parse("984da2e7-796f-4401-9584-23f719fd0fb6");
+	constexpr auto guidD2 = *Guid::Parse("984da2e7-796f-4401-9584-23f719fd0fb6");
+	
+	constexpr auto guidE1 = *Guid::Parse("244e307c-34a6-40b7-8fa4-3992a23957a3");
+	constexpr auto guidE2 = *Guid::Parse("244e307c-34a6-40b7-8fa4-3992a23957a3");
+	
+	constexpr auto guidF1 = *Guid::Parse("bae1d344-020a-42dd-b1a7-10db571fa3a8");
+	constexpr auto guidF2 = *Guid::Parse("bae1d344-020a-42dd-b1a7-10db571fa3a8");
+	
+	constexpr auto guidG1 = *Guid::Parse("e6139ff2-ce28-42d2-b4fb-563626326d7e");
+	constexpr auto guidG2 = *Guid::Parse("e6139ff2-ce28-42d2-b4fb-563626326d7e");
+	
+	constexpr auto guidH1 = *Guid::Parse("117e3f0e-fb09-40a7-a430-ceaf3410c877");
+	constexpr auto guidH2 = *Guid::Parse("117e3f0e-fb09-40a7-a430-ceaf3410c877");
+	
+	constexpr auto guidI1 = *Guid::Parse("e4873700-ef57-43a1-9962-161f1dce480e");
+	constexpr auto guidI2 = *Guid::Parse("e4873700-ef57-43a1-9962-161f1dce480e");
+	
+	constexpr auto guidJ1 = *Guid::Parse("ededf910-e9b2-4bff-b775-9665c4b812ce");
+	constexpr auto guidJ2 = *Guid::Parse("ededf910-e9b2-4bff-b775-9665c4b812ce");
+
+	static_assert(guidA1.Hash() == guidA2.Hash());
+	static_assert(guidB1.Hash() == guidB2.Hash());
+	static_assert(guidC1.Hash() == guidC2.Hash());
+	static_assert(guidD1.Hash() == guidD2.Hash());
+	static_assert(guidE1.Hash() == guidE2.Hash());
+	static_assert(guidF1.Hash() == guidF2.Hash());
+	static_assert(guidG1.Hash() == guidG2.Hash());
+	static_assert(guidH1.Hash() == guidH2.Hash());
+	static_assert(guidI1.Hash() == guidI2.Hash());
+}
+
 TEST(GuidTests, guid_assign_copy_copies_and_returns_correctly)
 {
 	constexpr auto original = *Guid::Parse("4ae5a5f8-4ab7-4fe7-a48f-323d89b1925b");

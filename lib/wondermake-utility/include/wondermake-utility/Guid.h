@@ -101,6 +101,24 @@ public:
 		return retVal;
 	}
 
+	[[nodiscard]] inline constexpr size_t Hash() const noexcept
+	{
+		constexpr size_t componentCount = 16 / sizeof(size_t);
+		size_t hash = 0;
+		
+		for (size_t i = 0; i < componentCount; ++i)
+		{
+			size_t component = 0;
+
+			for (size_t j = 0; j < sizeof(size_t); ++j)
+				component |= (static_cast<size_t>((*this)[i * sizeof(size_t) + j]) << (j * 8));
+
+			hash += component;
+		}
+
+		return hash;
+	}
+
 private:
 	static constexpr u8 InvalidHex = 0xFF;
 
@@ -130,4 +148,16 @@ static constexpr bool operator==(const Guid& aLhs, const Guid& aRhs)
 static constexpr bool operator!=(const Guid& aLhs, const Guid& aRhs)
 {
 	return !(aLhs == aRhs);
+}
+
+namespace std
+{
+	template <>
+	struct hash<Guid>
+	{
+		[[nodiscard]] inline size_t operator()(const Guid aGuid) const noexcept
+		{
+			return aGuid.Hash();
+		}
+	};
 }

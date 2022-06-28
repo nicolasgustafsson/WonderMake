@@ -16,6 +16,9 @@ namespace ConfigurationEngine
 	inline constexpr std::string_view OverrideFileDevice		= "wondermake_engine.override_file.device";
 	inline constexpr std::string_view OverrideFileUser			= "wondermake_engine.override_file.user";
 	inline constexpr std::string_view OverrideFileUserLocation	= "wondermake_engine.override_file.user_location";
+	
+	inline constexpr std::string_view WindowWidth				= "wondermake_engine.window.width";
+	inline constexpr std::string_view WindowHeight				= "wondermake_engine.window.height";
 
 	void Configure(
 		ConfigurationSystem& aConfigurationSystem,

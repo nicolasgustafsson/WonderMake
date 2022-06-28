@@ -18,5 +18,8 @@ namespace ConfigurationEngine
 			MakeAllowedValues<EOverrideFileUserLocation>(
 				std::make_pair("User",		EOverrideFileUserLocation::User),
 				std::make_pair("UserData",	EOverrideFileUserLocation::UserData)));
+		
+		aConfigurationSystem.Set<i32>(WindowWidth, 1280, EConfigGroup::Device);
+		aConfigurationSystem.Set<i32>(WindowHeight, 720, EConfigGroup::Device);
 	}
 }

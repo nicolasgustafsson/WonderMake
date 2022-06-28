@@ -5,22 +5,26 @@
 #include <fstream>
 #include "Program/GlfwFacade.h"
 #include "wondermake-base/Logger.h"
+#include "wondermake-base/ConfigurationSystem.h"
+#include "wondermake-engine/ConfigurationEngine.h"
 
 REGISTER_SYSTEM(Window);
 
 Window::Window()
 {
-	std::ifstream windowSettingsFile("windowSettings.json");
-	json windowSettings;
-
-	windowSettingsFile >> windowSettings;
-
+	auto&& configuration = Get<ConfigurationSystem>();
+	
 	auto& glfw = Get<GlfwFacade>();
 	glfw.SetWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfw.SetWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 	glfw.SetWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	mySize = { windowSettings["X"].get<i32>(), windowSettings["Y"].get<i32>() };
+	mySize =
+	{
+		configuration.Get<i32>(ConfigurationEngine::WindowWidth, 1280),
+		configuration.Get<i32>(ConfigurationEngine::WindowHeight, 720)
+	};
+
 	myGlfwWindow = glfw.CreateGlfwWindow(mySize.X, mySize.Y, "WonderMake", NULL, NULL);
 	if (!myGlfwWindow)
 	{

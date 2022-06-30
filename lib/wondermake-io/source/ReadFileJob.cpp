@@ -15,16 +15,25 @@ class ReadFileJobImpl
 public:
 	void Run(Promise<Result<ReadFileError, std::vector<u8>>> aPromise, FolderLocation aLocation, std::filesystem::path aFilePath) override
 	{
-		const auto dirPath = Get<FileSystem>().GetFolderLocation(aLocation);
+		std::filesystem::path path;
 
-		if (!dirPath)
+		if (aFilePath.is_relative())
 		{
-			aPromise.Complete(ReadFileError::InvalidArguments);
+			const auto dirPath = Get<FileSystem>().GetFolderLocation(aLocation);
 
-			return;
+			if (!dirPath)
+			{
+				aPromise.Complete(ReadFileError::InvalidArguments);
+
+				return;
+			}
+
+			path = *dirPath / aFilePath;
 		}
-
-		const auto path = *dirPath / aFilePath;
+		else
+		{
+			path = std::move(aFilePath);
+		}
 
 		if (!std::filesystem::exists(path))
 		{

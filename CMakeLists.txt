@@ -6,6 +6,7 @@ option(WonderMake_Testing OFF)
 option(WonderMake_TestingManual OFF)
 option(WonderMake_SetCxxStandard ON)
 option(WonderMake_SetConfigurationTypes ON)
+option(WonderMake_CopyDebugFolders ON)
 
 if(WonderMake_SetCxxStandard)
 	set(CMAKE_CXX_STANDARD 20)
@@ -29,3 +30,17 @@ if(WonderMake_Testing OR WonderMake_TestingManual)
 endif()
 
 set_buildsystem_targets_folder("." "wondermake")
+
+set(WONDERMAKE_BIN_DIR "${CMAKE_BINARY_DIR}/bin/")
+
+file(COPY "bin/." DESTINATION "${WONDERMAKE_BIN_DIR}")
+if(WonderMake_CopyDebugFolders)
+	set(WONDERMAKE_DEBUG_DATA_DIR "${CMAKE_BINARY_DIR}/data/")
+	set(WONDERMAKE_DEBUG_USER_DIR "${CMAKE_BINARY_DIR}/user/")
+	set(WONDERMAKE_DEBUG_USERDATA_DIR "${CMAKE_BINARY_DIR}/userdata/")
+
+    file(COPY "bin-debug/." DESTINATION "${WONDERMAKE_BIN_DIR}")
+    file(COPY "data-debug/." DESTINATION "${WONDERMAKE_DEBUG_DATA_DIR}")
+    file(COPY "user-debug/." DESTINATION "${WONDERMAKE_DEBUG_USER_DIR}")
+    file(COPY "userdata-debug/." DESTINATION "${WONDERMAKE_DEBUG_USERDATA_DIR}")
+endif()

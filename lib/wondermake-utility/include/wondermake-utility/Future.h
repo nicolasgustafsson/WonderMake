@@ -343,6 +343,10 @@ public:
 		myState.reset();
 	}
 
+	[[nodiscard]] bool IsValid() const noexcept
+	{
+		return static_cast<bool>(myState);
+	}
 	[[nodiscard]] bool IsCompleted() const
 	{
 		if (!myState)
@@ -475,6 +479,10 @@ public:
 		myState.reset();
 	}
 
+	[[nodiscard]] bool IsValid() const noexcept
+	{
+		return static_cast<bool>(myState);
+	}
 	[[nodiscard]] bool IsCompleted() const
 	{
 		if (!myState)

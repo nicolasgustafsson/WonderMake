@@ -308,11 +308,23 @@ public:
 	Future& operator=(Future&&) noexcept = default;
 
 	template<CExecutor TExecutor, typename TCallable>
-	auto ThenApply(TExecutor&& aExecutor, TCallable&& aCallback) requires std::is_invocable_v<TCallable, Future<TType>&&>
+	auto ThenApply(TExecutor&& aExecutor, TCallable&& aCallback) requires (std::is_invocable_v<TCallable, Future<TType>&&> && (std::is_const_v<TType> || std::is_trivial_v<TType>))
 	{
 		using ReturnType = std::invoke_result_t<TCallable&&, Future<TType>>;
 
 		return ThenApplyHelper(TypeWrapper<ReturnType>(), std::forward<TExecutor>(aExecutor), std::forward<TCallable>(aCallback));
+	}
+
+	template<CExecutor TExecutor, typename TCallable>
+	auto ThenApply(TExecutor&& aExecutor, TCallable&& aCallback) && requires (std::is_invocable_v<TCallable, Future<TType>&&> && !std::is_const_v<TType> && !std::is_trivial_v<TType>)
+	{
+		using ReturnType = std::invoke_result_t<TCallable&&, Future<TType>>;
+
+		auto retVal = ThenApplyHelper(TypeWrapper<ReturnType>(), std::forward<TExecutor>(aExecutor), std::forward<TCallable>(aCallback));
+
+		Reset();
+
+		return retVal;
 	}
 	
 	template<CExecutor TExecutor, typename TCallable>
@@ -330,6 +342,13 @@ public:
 		});
 
 		return *this;
+	}
+
+	[[nodiscard]] Future<std::remove_const_t<TType>> MakeConst() && noexcept requires(!std::is_const_v<TType> && !std::is_trivial_v<TType>)
+	{
+		return Future<std::remove_const_t<TType>>(std::move(myState));
+
+		myState.reset();
 	}
 
 	void Detach()
@@ -371,14 +390,21 @@ public:
 		myState->Continuation([future = std::move(aFuture)](auto&&) {});
 	}
 
-	std::optional<TType> GetResult() const& requires(std::is_copy_constructible_v<TType>)
+	std::optional<TType> GetResult() const requires(std::is_trivial_v<TType>)
 	{
 		if (!myState)
 			return std::nullopt;
 
 		return myState->GetResult();
 	}
-	std::optional<TType> GetResult() &&
+	std::optional<TType> GetResult() const& requires(!std::is_trivial_v<TType> && std::is_copy_constructible_v<TType>)
+	{
+		if (!myState)
+			return std::nullopt;
+
+		return myState->GetResult();
+	}
+	std::optional<TType> GetResult() && requires(!std::is_trivial_v<TType> && !std::is_const_v<TType>)
 	{
 		if (!myState)
 			return std::nullopt;

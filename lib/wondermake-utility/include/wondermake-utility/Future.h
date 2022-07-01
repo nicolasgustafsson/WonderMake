@@ -343,14 +343,14 @@ public:
 		myState.reset();
 	}
 
-	bool IsCompleted() const
+	[[nodiscard]] bool IsCompleted() const
 	{
 		if (!myState)
 			return false;
 
 		return myState->GetState() == _Impl::EFutureState::Completed;
 	}
-	bool IsCanceled() const
+	[[nodiscard]] bool IsCanceled() const
 	{
 		if (!myState)
 			return false;
@@ -475,14 +475,14 @@ public:
 		myState.reset();
 	}
 
-	bool IsCompleted() const
+	[[nodiscard]] bool IsCompleted() const
 	{
 		if (!myState)
 			return false;
 
 		return myState->GetState() == _Impl::EFutureState::Completed;
 	}
-	bool IsCanceled() const
+	[[nodiscard]] bool IsCanceled() const
 	{
 		if (!myState)
 			return false;

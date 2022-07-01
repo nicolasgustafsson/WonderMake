@@ -18,6 +18,52 @@ public:
 	}
 };
 
+TEST(FutureTests, future_is_valid_returns_false_when_default_constructed)
+{
+	Future<u32> future;
+
+	EXPECT_FALSE(future.IsValid());
+}
+
+TEST(FutureTests, void_future_is_valid_returns_false_when_default_constructed)
+{
+	Future<void> future;
+
+	EXPECT_FALSE(future.IsValid());
+}
+
+TEST(FutureTests, future_is_valid_returns_true_when_made)
+{
+	auto [promise, future] = MakeAsync<u32>();
+
+	EXPECT_TRUE(future.IsValid());
+}
+
+TEST(FutureTests, void_future_is_valid_returns_true_when_made)
+{
+	auto [promise, future] = MakeAsync<void>();
+
+	EXPECT_TRUE(future.IsValid());
+}
+
+TEST(FutureTests, future_is_valid_returns_false_when_reset)
+{
+	auto [promise, future] = MakeAsync<u32>();
+
+	future.Reset();
+
+	EXPECT_FALSE(future.IsValid());
+}
+
+TEST(FutureTests, void_future_is_valid_returns_false_when_reset)
+{
+	auto [promise, future] = MakeAsync<void>();
+
+	future.Reset();
+
+	EXPECT_FALSE(future.IsValid());
+}
+
 TEST(FutureTests, void_futures_are_unfulfilled_when_created)
 {
 	StrictMock<FutureCallbackMock<void>> callbackMock;
@@ -338,6 +384,24 @@ TEST(FutureTests, callback_is_called_when_promise_is_destroyed)
 
 		EXPECT_CALL(callbackMock, Invoke);
 	}
+}
+
+TEST(FutureTests, future_is_reset_when_detached)
+{
+	auto [promise, future] = MakeAsync<u32>();
+	
+	future.Detach();
+
+	EXPECT_FALSE(future.IsValid());
+}
+
+TEST(FutureTests, void_future_is_reset_when_detached)
+{
+	auto [promise, future] = MakeAsync<void>();
+
+	future.Detach();
+
+	EXPECT_FALSE(future.IsValid());
 }
 
 TEST(FutureTests, callback_is_not_called_when_no_future_remain)

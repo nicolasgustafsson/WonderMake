@@ -262,7 +262,7 @@ TEST(FutureTests, futures_are_unfulfilled_when_created)
 	EXPECT_FALSE(future.GetResult());
 }
 
-TEST(FutureTests, callback_is_called_when_promise_is_completed)
+TEST(FutureTests, trivial_callback_is_called_when_promise_is_completed)
 {
 	StrictMock<FutureCallbackMock<u32>> callbackMock;
 
@@ -279,7 +279,7 @@ TEST(FutureTests, callback_is_called_when_promise_is_completed)
 	EXPECT_TRUE(future.GetResult());
 }
 
-TEST(FutureTests, callback_future_contains_correct_result_when_promise_is_completed)
+TEST(FutureTests, trivial_callback_future_contains_correct_result_when_promise_is_completed)
 {
 	constexpr u32 dummyData = 1234;
 
@@ -303,7 +303,7 @@ TEST(FutureTests, callback_future_contains_correct_result_when_promise_is_comple
 	EXPECT_EQ(*future.GetResult(), dummyData);
 }
 
-TEST(FutureTests, callback_future_contains_no_result_when_previous_future_takes_ownership_of_the_result)
+TEST(FutureTests, trivial_callback_future_contains_result_when_previous_future_takes_ownership_of_the_result)
 {
 	constexpr u32 dummyData = 1234;
 
@@ -320,24 +320,29 @@ TEST(FutureTests, callback_future_contains_no_result_when_previous_future_takes_
 			{
 				auto result = std::move(aFuture).GetResult();
 
-				EXPECT_TRUE(result);
+				ASSERT_TRUE(result);
+
 				EXPECT_EQ(*result, dummyData);
 			})
 		.WillOnce([dummyData](auto&& aFuture)
 			{
 				auto result = aFuture.GetResult();
 
-				EXPECT_FALSE(result);
+				ASSERT_TRUE(result);
+
+				EXPECT_EQ(*result, dummyData);
 			});
 
 	promise.Complete(dummyData);
 
 	EXPECT_TRUE(future.IsCompleted());
 	EXPECT_FALSE(future.IsCanceled());
-	EXPECT_FALSE(future.GetResult());
+	ASSERT_TRUE(future.GetResult());
+
+	EXPECT_EQ(*future.GetResult(), dummyData);
 }
 
-TEST(FutureTests, callback_is_called_when_promise_is_canceled)
+TEST(FutureTests, trivial_callback_is_called_when_promise_is_canceled)
 {
 	StrictMock<FutureCallbackMock<u32>> callbackMock;
 
@@ -354,7 +359,7 @@ TEST(FutureTests, callback_is_called_when_promise_is_canceled)
 	EXPECT_FALSE(future.GetResult());
 }
 
-TEST(FutureTests, callback_is_called_when_promise_is_resolved_and_future_is_detached)
+TEST(FutureTests, trivial_callback_is_called_when_promise_is_resolved_and_future_is_detached)
 {
 	StrictMock<FutureCallbackMock<u32>> callbackMock;
 
@@ -371,7 +376,7 @@ TEST(FutureTests, callback_is_called_when_promise_is_resolved_and_future_is_deta
 	}
 }
 
-TEST(FutureTests, callback_is_called_when_promise_is_destroyed)
+TEST(FutureTests, trivial_callback_is_called_when_promise_is_destroyed)
 {
 	StrictMock<FutureCallbackMock<u32>> callbackMock;
 
@@ -386,7 +391,7 @@ TEST(FutureTests, callback_is_called_when_promise_is_destroyed)
 	}
 }
 
-TEST(FutureTests, future_is_reset_when_detached)
+TEST(FutureTests, trivial_future_is_reset_when_detached)
 {
 	auto [promise, future] = MakeAsync<u32>();
 	
@@ -404,7 +409,7 @@ TEST(FutureTests, void_future_is_reset_when_detached)
 	EXPECT_FALSE(future.IsValid());
 }
 
-TEST(FutureTests, callback_is_not_called_when_no_future_remain)
+TEST(FutureTests, trivial_callback_is_not_called_when_no_future_remain)
 {
 	StrictMock<FutureCallbackMock<u32>> callbackMock;
 
@@ -431,7 +436,7 @@ TEST(FutureTests, make_completed_future_returns_a_future_with_completed_state)
 	EXPECT_EQ(*future.GetResult(), dummyData);
 }
 
-TEST(FutureTests, thenapply_callback_is_not_called_when_returned_future_is_destroyed)
+TEST(FutureTests, trivial_thenapply_callback_is_not_called_when_returned_future_is_destroyed)
 {
 	StrictMock<FutureCallbackMock<void>> callbackMock;
 
@@ -439,9 +444,9 @@ TEST(FutureTests, thenapply_callback_is_not_called_when_returned_future_is_destr
 	auto [promiseNested, futureNested] = MakeAsync<void>();
 
 	auto futureReturned = future.ThenApply(InlineExecutor(), [&futureNested](auto&&)
-			{
-				return futureNested;
-			});
+		{
+			return futureNested;
+		});
 
 	futureReturned.ThenRun(InlineExecutor(), callbackMock.CreateCallback());
 
@@ -451,7 +456,7 @@ TEST(FutureTests, thenapply_callback_is_not_called_when_returned_future_is_destr
 	EXPECT_FALSE(futureReturned.IsCanceled());
 }
 
-TEST(FutureTests, thenapply_callback_is_called_when_nested_void_promise_is_completed)
+TEST(FutureTests, trivial_thenapply_callback_is_called_when_nested_void_promise_is_completed)
 {
 	constexpr u32 dummyData = 1234;
 
@@ -461,9 +466,9 @@ TEST(FutureTests, thenapply_callback_is_called_when_nested_void_promise_is_compl
 	auto [promiseNested, futureNested] = MakeAsync<void>();
 
 	auto futureReturned = future.ThenApply(InlineExecutor(), [&futureNested](auto&&)
-			{
-				return futureNested;
-			});
+		{
+			return futureNested;
+		});
 
 	futureReturned.ThenRun(InlineExecutor(), callbackMock.CreateCallback());
 
@@ -477,7 +482,7 @@ TEST(FutureTests, thenapply_callback_is_called_when_nested_void_promise_is_compl
 	EXPECT_FALSE(futureReturned.IsCanceled());
 }
 
-TEST(FutureTests, thenapply_callback_is_called_when_related_futures_are_destroyed)
+TEST(FutureTests, trivial_thenapply_callback_is_called_when_related_futures_are_destroyed)
 {
 	constexpr u32 dummyData = 1234;
 
@@ -505,7 +510,7 @@ TEST(FutureTests, thenapply_callback_is_called_when_related_futures_are_destroye
 	EXPECT_FALSE(futureReturned.IsCanceled());
 }
 
-TEST(FutureTests, thenapply_callback_is_passed_correct_result_when_nested_void_promise_is_completed)
+TEST(FutureTests, trivial_thenapply_callback_is_passed_correct_result_when_nested_void_promise_is_completed)
 {
 	constexpr u32 dummyData = 1234;
 	constexpr u32 dummyDataNested = 5678;
@@ -726,7 +731,7 @@ TEST(FutureTests, thenapply_unique_callback_is_not_called_when_returned_future_i
 	auto [promise, future] = MakeAsync<std::unique_ptr<u32>>();
 	auto [promiseNested, futureNested] = MakeAsync<void>();
 
-	auto futureReturned = future.ThenApply(InlineExecutor(), [&futureNested](auto&&)
+	auto futureReturned = std::move(future).ThenApply(InlineExecutor(), [&futureNested](auto&&)
 			{
 				return futureNested;
 			});
@@ -748,7 +753,7 @@ TEST(FutureTests, thenapply_unique_callback_is_called_when_nested_void_promise_i
 	auto [promise, future] = MakeAsync<std::unique_ptr<u32>>();
 	auto [promiseNested, futureNested] = MakeAsync<void>();
 
-	auto futureReturned = future.ThenApply(InlineExecutor(), [&futureNested](auto&&)
+	auto futureReturned = std::move(future).ThenApply(InlineExecutor(), [&futureNested](auto&&)
 			{
 				return futureNested;
 			});
@@ -774,7 +779,7 @@ TEST(FutureTests, thenapply_unique_callback_is_called_when_related_futures_are_d
 	auto [promise, future] = MakeAsync<std::unique_ptr<u32>>();
 	auto [promiseNested, futureNested] = MakeAsync<void>();
 
-	auto futureReturned = future.ThenApply(InlineExecutor(), [futureNested = std::move(futureNested)](auto&&) mutable
+	auto futureReturned = std::move(future).ThenApply(InlineExecutor(), [futureNested = std::move(futureNested)](auto&&) mutable
 	{
 		return std::move(futureNested);
 	});
@@ -803,7 +808,7 @@ TEST(FutureTests, thenapply_unique_callback_is_passed_correct_result_when_nested
 	auto [promise, future] = MakeAsync<std::unique_ptr<u32>>();
 	auto [promiseNested, futureNested] = MakeAsync<u32>();
 
-	auto futureReturned = future.ThenApply(InlineExecutor(), [&futureNested](auto&&)
+	auto futureReturned = std::move(future).ThenApply(InlineExecutor(), [&futureNested](auto&&)
 			{
 				return futureNested;
 			});
@@ -817,6 +822,39 @@ TEST(FutureTests, thenapply_unique_callback_is_passed_correct_result_when_nested
 	ASSERT_TRUE(futureReturned.GetResult());
 
 	EXPECT_EQ(*futureReturned.GetResult(), dummyDataNested);
+}
+
+TEST(FutureTests, unique_future_is_reset_when_makeconst_is_called)
+{
+	auto [promise, future] = MakeAsync<std::unique_ptr<u32>>();
+	
+	(void)std::move(future).MakeConst();
+
+	EXPECT_FALSE(future.IsValid());
+}
+
+TEST(FutureTests, unique_future_is_valid_when_returned_from_makeconst)
+{
+	auto [promise, future] = MakeAsync<std::unique_ptr<u32>>();
+
+	auto futureConst = std::move(future).MakeConst();
+
+	EXPECT_TRUE(futureConst.IsValid());
+}
+
+TEST(FutureTests, unique_future_is_called_when_returned_from_makeconst)
+{
+	NiceMock<FutureCallbackMock<std::unique_ptr<u32>>> callbackMock;
+
+	auto [promise, future] = MakeAsync<std::unique_ptr<u32>>();
+
+	auto futureConst = std::move(future).MakeConst();
+
+	futureConst.ThenRun(InlineExecutor(), callbackMock.CreateCallback());
+
+	EXPECT_CALL(callbackMock, Invoke);
+
+	promise.Complete(std::make_unique<u32>(1234));
 }
 
 TEST(FutureTests, waitforall_is_completed_when_single_future_completes)

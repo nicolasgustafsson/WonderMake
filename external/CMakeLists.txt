@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.19)
 
 add_subdirectory("catch-2.12.1")
 add_subdirectory("glad")

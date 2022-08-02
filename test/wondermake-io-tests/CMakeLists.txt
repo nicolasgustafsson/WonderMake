@@ -19,8 +19,6 @@ list(APPEND SourceFiles
     
 add_executable(WonderMakeIoTests ${SourceFiles})
 
-add_test(WonderMakeIoTests WonderMakeIoTests)
-
 target_link_libraries(WonderMakeIoTests gtest_main gmock WonderMakeTestsCommon)
 target_include_directories(WonderMakeIoTests
     PUBLIC

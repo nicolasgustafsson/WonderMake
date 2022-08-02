@@ -23,5 +23,3 @@ target_include_directories(WonderMakeTests
     PRIVATE
         "../WonderMakeIo/Source")
 target_link_libraries(WonderMakeTests Catch2 WonderMake)
-
-gtest_discover_tests(WonderMakeTests)

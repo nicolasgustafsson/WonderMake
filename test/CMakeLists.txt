@@ -8,9 +8,11 @@ if(WonderMake_Testing)
 	add_subdirectory("wondermake-io-tests")
 	add_subdirectory("wondermake-engine-tests")
 endif()
-
 if(WonderMake_TestingManual)
 	add_subdirectory("manual")
+endif()
+if(WonderMake_TestingLegacy)
+	add_subdirectory("legacy")
 endif()
 
 set_buildsystem_targets_folder("." "test")

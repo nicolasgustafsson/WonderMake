@@ -39,7 +39,7 @@ public:
 	class Builder
 	{
 	public:
-		Builder(Logger& aLogger, ELogSeverity aSeverity, ELogLevel aLevel, std::string_view aFile, u64 aLine, const std::string& aLoggerName, std::chrono::time_point<std::chrono::system_clock> aTimepoint, size_t aThreadHash);
+		Builder(Logger& aLogger, ELogSeverity aSeverity, ELogLevel aLevel, std::string_view aFile, u64 aLine, const std::string& aLoggerName, std::string aTimestamp, size_t aThreadHash);
 		Builder(Logger& aLogger, ELogSeverity aSeverity, ELogLevel aLevel, std::string_view aFile, u64 aLine);
 		~Builder();
 

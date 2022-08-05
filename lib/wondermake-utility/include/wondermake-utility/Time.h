@@ -3,4 +3,4 @@
 #include <chrono>
 #include <string>
 
-std::string TimePointToString(const std::chrono::system_clock::time_point& aTimePoint);
+std::string TimePointToISO8601(const std::chrono::system_clock::time_point& aTimePoint);

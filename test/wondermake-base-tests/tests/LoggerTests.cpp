@@ -21,7 +21,7 @@ constexpr auto locDummyLevel = ELogLevel::Normal;
 constexpr auto locDummyFile = "Dummy File";
 constexpr auto locDummyLine = 1234;
 constexpr auto locDummyLoggerName = "Logger";
-constexpr auto locDummyTimepoint = std::chrono::time_point<std::chrono::system_clock>();
+constexpr auto locDummyTimepoint = "01-01-1970 00:00:00";
 constexpr auto locDummyThreadHash = 0xabcd1234;
 constexpr auto locDummyMessage = "Dummy Message";
 
@@ -32,7 +32,7 @@ TEST(LoggingTests, print_args_are_passed_to_loggers)
 
 	Logger logging;
 
-	logging.SetFilters({ locDummySeverity }, { locDummyLevel });
+	logging.SetFilters({ locDummySeverity }, locDummyLevel);
 
 	logging.AddLogger(loggerMockA);
 	logging.AddLogger(loggerMockB);
@@ -49,7 +49,7 @@ TEST(LoggingTests, print_args_are_filtered_based_on_allowed_severities)
 
 	Logger logging;
 
-	logging.SetFilters({ ELogSeverity::Success, ELogSeverity::Error }, { locDummyLevel });
+	logging.SetFilters({ ELogSeverity::Success, ELogSeverity::Error }, locDummyLevel);
 
 	logging.AddLogger(loggerMock);
 
@@ -90,13 +90,13 @@ TEST(LoggingTests, builder_passes_correctly_formatted_message_to_logging)
 
 	constexpr auto messageString = "Test Value: ";
 	constexpr auto messageEnum = TestEnum::CorrectValue;
-	constexpr auto expectedMessage = "[Logger]       01-01-1970 01:00:00 [0xabcd1234]         Info    Dummy File(1234)               Test Value: 5678";
+	constexpr auto expectedMessage = "[Logger]       01-01-1970 00:00:00 [0xabcd1234]         Info    Dummy File(1234)               Test Value: 5678";
 
 	auto loggerMock = std::make_shared<StrictMock<LoggerMock>>();
 
 	Logger logging;
 
-	logging.SetFilters({ locDummySeverity }, { locDummyLevel });
+	logging.SetFilters({ locDummySeverity }, locDummyLevel);
 
 	logging.AddLogger(loggerMock);
 
@@ -114,13 +114,13 @@ TEST(LoggingTests, builder_trims_filename_before_passing_it_to_logger)
 	constexpr auto originalFileName = "C:\\Program Files\\Tests/LoggerTests.cpp";
 	constexpr auto expectedFileName = "LoggerTests.cpp";
 
-	constexpr auto expectedMessage = "[Logger]       01-01-1970 01:00:00 [0xabcd1234]         Info    LoggerTests.cpp(1234)          Dummy Message";
+	constexpr auto expectedMessage = "[Logger]       01-01-1970 00:00:00 [0xabcd1234]         Info    LoggerTests.cpp(1234)          Dummy Message";
 
 	auto loggerMock = std::make_shared<StrictMock<LoggerMock>>();
 
 	Logger logging;
 
-	logging.SetFilters({ locDummySeverity }, { locDummyLevel });
+	logging.SetFilters({ locDummySeverity }, locDummyLevel);
 
 	logging.AddLogger(loggerMock);
 

@@ -1,5 +1,5 @@
 
-conan_cmake_run(REQUIRES "protobuf/3.19.2" BASIC_SETUP)
+conan_cmake_run(REQUIRES "protobuf/3.19.2" BASIC_SETUP BUILD missing)
 
 find_package(Protobuf REQUIRED)
 

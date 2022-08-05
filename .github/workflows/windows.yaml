@@ -1,0 +1,25 @@
+name: windows
+
+on:
+  push:
+    branches: [ kevin/caravanseri ]
+  pull_request:
+    branches: [ kevin/caravanseri ]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  test:
+    name: Build on Windows
+    timeout-minutes: 30
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DWonderMake_Testing=ON
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+    - name: Test
+      working-directory: ${{github.workspace}}/build
+      run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure

@@ -91,28 +91,47 @@ private:
 
 };
 
+template <typename F, typename S, typename... T>
+struct impl_is_one_of
+{
+	static constexpr bool value =
+		std::is_same<F, S>::value || is_one_of<F, T...>::value;
+};
+
 template<typename TVariableType>
 void OpenGLFacade::SetUniformVariable(const u32 aLocation, TVariableType aProperty)
 {
-	if constexpr (std::is_same_v<TVariableType, i32>)
+	using Type = std::decay_t<TVariableType>;
+
+	static_assert(
+		std::is_same_v<Type, i32> || 
+		std::is_same_v<Type, f32> || 
+		std::is_same_v<Type, bool> || 
+		std::is_same_v<Type, f64> || 
+		std::is_same_v<Type, SVector2f> || 
+		std::is_same_v<Type, SVector2i> || 
+		std::is_same_v<Type, SVector3f> || 
+		std::is_same_v<Type, SVector4f> || 
+		std::is_same_v<Type, SColor>,
+		"Uniform variable type is not supported!");
+
+	if constexpr (std::is_same_v<Type, i32>)
 		glUniform1i(aLocation, aProperty);
-	else if constexpr (std::is_same_v<TVariableType, f32>)
+	else if constexpr (std::is_same_v<Type, f32>)
 		glUniform1f(aLocation, aProperty);
-	else if constexpr (std::is_same_v<TVariableType, bool>)
+	else if constexpr (std::is_same_v<Type, bool>)
 		glUniform1i(aLocation, aProperty);
-	else if constexpr (std::is_same_v<TVariableType, f64>)
+	else if constexpr (std::is_same_v<Type, f64>)
 		glUniform1d(aLocation, aProperty);
-	else if constexpr (std::is_same_v<TVariableType, SVector2f>)
+	else if constexpr (std::is_same_v<Type, SVector2f>)
 		glUniform2f(aLocation, aProperty.X, aProperty.Y);
-	else if constexpr (std::is_same_v<TVariableType, SVector2i>)
+	else if constexpr (std::is_same_v<Type, SVector2i>)
 		glUniform2i(aLocation, aProperty.X, aProperty.Y);
-	else if constexpr (std::is_same_v<TVariableType, SVector3f>)
+	else if constexpr (std::is_same_v<Type, SVector3f>)
 		glUniform3f(aLocation, aProperty.X, aProperty.Y, aProperty.Z);
-	else if constexpr (std::is_same_v<TVariableType, SVector4f>)
+	else if constexpr (std::is_same_v<Type, SVector4f>)
 		glUniform4f(aLocation, aProperty.X, aProperty.Y, aProperty.Z, aProperty.W);
-	else if constexpr (std::is_same_v<TVariableType, SColor>)
+	else if constexpr (std::is_same_v<Type, SColor>)
 		glUniform4f(aLocation, aProperty.R, aProperty.G, aProperty.B, aProperty.A);
-	else
-		static_assert(false, "Uniform variable type is not supported!");
 }
 

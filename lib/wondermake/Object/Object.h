@@ -70,30 +70,23 @@ private:
 template<typename TType, typename TCreateFunc>
 inline TType& Object::Add(TCreateFunc aCreateFunc, DependencyDestructor& aDestructor, const bool aExplicitlyAdded)
 {
+	static_assert(std::is_base_of_v<SComponent, TType> || std::is_base_of_v<_BaseFunctionality, TType>, "Type must inherit from SComponent or _BaseFunctionality!");
+
 	if constexpr (std::is_base_of<SComponent, TType>::value)
-	{
 		return Add<TType>(myComponents, aCreateFunc, aDestructor, aExplicitlyAdded);
-	}
 	else if constexpr (std::is_base_of<_BaseFunctionality, TType>::value)
-	{
 		return Add<TType>(myFunctionalities, aCreateFunc, aDestructor, aExplicitlyAdded);
-	}
-	else
-	{
-		static_assert(false, "Type must inherit from SComponent or _BaseFunctionality!");
-	}
 }
 
 template<typename TType>
 inline void Object::Remove(const bool aExplicitlyRemoved)
 {
+	static_assert(std::is_base_of_v<SComponent, TType> || std::is_base_of_v<_BaseFunctionality, TType> || std::is_base_of_v<SystemAbstracted, TType>, "Type must inherit from SComponent, _BaseFunctionality, or SystemAbstracted!");
+
 	if constexpr (std::is_base_of<SComponent, TType>::value)
 		Remove<TType>(myComponents, aExplicitlyRemoved);
 	else if constexpr (std::is_base_of<_BaseFunctionality, TType>::value)
 		Remove<TType>(myFunctionalities, aExplicitlyRemoved);
-	else if constexpr (std::is_base_of<SystemAbstracted, TType>::value) {}
-	else
-		static_assert(false, "Type must inherit from SComponent or _BaseFunctionality!");
 }
 
 template<typename TVisitFunc>

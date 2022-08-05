@@ -2,15 +2,14 @@
 
 #include <time.h>
 
-std::string TimePointToString(const std::chrono::system_clock::time_point& aTimePoint)
+std::string TimePointToISO8601(const std::chrono::system_clock::time_point& aTimePoint)
 {
-	const std::time_t rawtime = std::chrono::system_clock::to_time_t(aTimePoint);
-	std::tm timeinfo;
-	char buffer[80];
-
-	localtime_s(&timeinfo, &rawtime);
-
-	std::strftime(buffer, sizeof(buffer), "%d-%m-%Y %H:%M:%S", &timeinfo);
-
-	return buffer;
+	try
+	{
+		return std::format("{:%FT%T%z}", aTimePoint);
+	}
+	catch (std::format_error)
+	{
+		return "0000-00-00T00:00:00+0000";
+	}
 }

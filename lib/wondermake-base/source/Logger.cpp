@@ -19,7 +19,7 @@ std::string SeverityToString(ELogSeverity aSeverity)
 	return "Unknown value: " + std::to_string(static_cast<std::underlying_type_t<ELogSeverity>>(aSeverity));
 }
 
-Logger::Builder::Builder(Logger& aLogger, ELogSeverity aSeverity, ELogLevel aLevel, std::string_view aFile, u64 aLine, const std::string& aLoggerName, std::chrono::time_point<std::chrono::system_clock> aTimepoint, size_t aThreadHash)
+Logger::Builder::Builder(Logger& aLogger, ELogSeverity aSeverity, ELogLevel aLevel, std::string_view aFile, u64 aLine, const std::string& aLoggerName, std::string aTimestamp, size_t aThreadHash)
 	: myLogger(aLogger)
 	, mySeverity(aSeverity)
 	, myLevel(aLevel)
@@ -39,7 +39,7 @@ Logger::Builder::Builder(Logger& aLogger, ELogSeverity aSeverity, ELogLevel aLev
 	myStringStream
 		<< std::setw(15) << std::setfill(' ') << std::left
 		<< ("[" + aLoggerName + "] ")
-		<< TimePointToString(aTimepoint) << ' '
+		<< std::move(aTimestamp) << ' '
 		<< std::setw(20) << std::setfill(' ') << std::left
 		<< std::move(threadHashStream).str() << ' '
 		<< std::setw(7) << std::setfill(' ') << std::left
@@ -49,7 +49,7 @@ Logger::Builder::Builder(Logger& aLogger, ELogSeverity aSeverity, ELogLevel aLev
 }
 
 Logger::Builder::Builder(Logger& aLogger, ELogSeverity aSeverity, ELogLevel aLevel, std::string_view aFile, u64 aLine)
-	: Builder(aLogger, aSeverity, aLevel, aFile, aLine, aLogger.GetLoggerName(), std::chrono::system_clock::now(), std::hash<std::thread::id>{}(std::this_thread::get_id()))
+	: Builder(aLogger, aSeverity, aLevel, aFile, aLine, aLogger.GetLoggerName(), TimePointToISO8601(std::chrono::floor<std::chrono::seconds>(std::chrono::system_clock::now())), std::hash<std::thread::id>{}(std::this_thread::get_id()))
 {}
 
 Logger::Builder::~Builder()

@@ -1,8 +1,4 @@
 
-conan_cmake_run(REQUIRES "protobuf/3.19.2" BASIC_SETUP BUILD missing)
-
-find_package(Protobuf REQUIRED)
-
 function(add_protobuf_library ARG_TARGET ARG_FOLDER_NAME ARG_PROTO_LIST)
     protobuf_generate_cpp(PROTO_SRC PROTO_HEADER ${ARG_PROTO_LIST})
 

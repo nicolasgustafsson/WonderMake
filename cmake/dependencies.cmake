@@ -11,7 +11,7 @@ conan_basic_setup()
 find_package(Protobuf REQUIRED)
 
 include("${CMAKE_CURRENT_LIST_DIR}/protobuf_helper.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/TargetHelper.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/target_helper.cmake")
 if(WonderMake_Testing)
     include("${CMAKE_CURRENT_LIST_DIR}/dependencies/GTest.cmake")
 endif()

@@ -13,7 +13,7 @@ class ReadFileJobImpl
 	, public ReadFileJob
 {
 public:
-	void Run(Promise<Result<ReadFileError, std::vector<u8>>> aPromise, FolderLocation aLocation, std::filesystem::path aFilePath) override
+	void Run(Promise<Result<std::vector<u8>, ReadFileError>> aPromise, FolderLocation aLocation, std::filesystem::path aFilePath) override
 	{
 		std::filesystem::path path;
 
@@ -23,7 +23,7 @@ public:
 
 			if (!dirPath)
 			{
-				aPromise.Complete(ReadFileError::InvalidArguments);
+				aPromise.Complete(Err(ReadFileError::InvalidArguments));
 
 				return;
 			}
@@ -37,14 +37,14 @@ public:
 
 		if (!std::filesystem::exists(path))
 		{
-			aPromise.Complete(ReadFileError::FileNotFound);
+			aPromise.Complete(Err(ReadFileError::FileNotFound));
 
 			return;
 		}
 
 		if (!std::filesystem::is_regular_file(path))
 		{
-			aPromise.Complete(ReadFileError::NotAFile);
+			aPromise.Complete(Err(ReadFileError::NotAFile));
 
 			return;
 		}
@@ -53,14 +53,14 @@ public:
 
 		if (!file)
 		{
-			aPromise.Complete(ReadFileError::FailedToOpen);
+			aPromise.Complete(Err(ReadFileError::FailedToOpen));
 
 			return;
 		}
 
 		std::vector<u8> buffer(std::istreambuf_iterator<char>(file), {});
 	
-		aPromise.Complete(std::move(buffer));
+		aPromise.Complete(Ok(std::move(buffer)));
 	}
 
 };

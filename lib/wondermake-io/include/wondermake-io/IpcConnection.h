@@ -10,7 +10,7 @@ class IpcConnection
 	: public Socket
 {
 public:
-	enum class ConnectionError
+	enum class EConnectionError
 	{
 		InvalidArgs,
 		InvalidState,
@@ -19,5 +19,11 @@ public:
 		InternalError
 	};
 
-	virtual Result<ConnectionError> Connect(std::string aConnectionName) = 0;
+	struct SConnectionError
+	{
+		EConnectionError Error = EConnectionError::InternalError;
+		u64 Reason = 0;
+	};
+
+	virtual Result<void, SConnectionError> Connect(std::string aConnectionName) = 0;
 };

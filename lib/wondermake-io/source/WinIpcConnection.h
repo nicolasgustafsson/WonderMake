@@ -18,11 +18,11 @@ public:
 	WinIpcConnection(WinEventSystem& aWinEvent, WinPlatformSystem& aWinPlatform) noexcept;
 	~WinIpcConnection() noexcept;
 
-	Result<ConnectionError> Connect(std::string aConnectionName) override;
-	Result<ConnectionError> ConnectHandle(HANDLE aPipeHandle);
+	Result<void, SConnectionError> Connect(std::string aConnectionName) override;
+	Result<void, SConnectionError> ConnectHandle(HANDLE aPipeHandle);
 
-	Result<EWriteError, EAsynchronicity> Write(std::vector<u8> aBuffer, OnWriteCallback aOnWrite) override;
-	Result<EReadError, EAsynchronicity> Read(OnReadCallback aOnRead) override;
+	Result<EAsynchronicity, SWriteError> Write(std::vector<u8> aBuffer, OnWriteCallback aOnWrite) override;
+	Result<EAsynchronicity, SReadError> Read(OnReadCallback aOnRead) override;
 	void OnClose(OnCloseCallback aOnClose) override;
 	void Close() override;
 
@@ -35,14 +35,14 @@ private:
 		OnWriteCallback OnWrite;
 	};
 
-	Result<ConnectionError> Setup();
+	Result<void, SConnectionError> Setup();
 	
 	void OnWrite(std::vector<u8> aBuffer);
 	void NextWrite();
 	void OnRead(std::vector<u8> aBuffer);
 	void NextRead();
 
-	void Reset(Result<ECloseError, ECloseReason> aResult);
+	void Reset(Result<SCloseLocation, SCloseError> aResult);
 
 	WinEventSystem& myWinEvent;
 	WinPlatformSystem& myWinPlatform;

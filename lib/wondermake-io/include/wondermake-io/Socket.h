@@ -38,8 +38,19 @@ public:
 		MessageToBig,
 		InternalError
 	};
+	
+	struct SWriteError
+	{
+		EWriteError Error = EWriteError::InternalError;
+		u64 Reason = 0;
+	};
+	struct SReadError
+	{
+		EReadError Error = EReadError::InternalError;
+		u64 Reason = 0;
+	};
 
-	enum class ECloseReason
+	enum class ECloseLocation
 	{
 		ClosedLocally,
 		ClosedRemotely
@@ -51,14 +62,25 @@ public:
 		InternalError
 	};
 
-	using OnWriteCallback = UniqueFunction<void(Result<EWriteError>)>;
-	using OnReadCallback = UniqueFunction<void(Result<EReadError, std::vector<u8>>&&)>;
-	using OnCloseCallback = UniqueFunction<void(Result<ECloseError, ECloseReason>)>;
+	struct SCloseLocation
+	{
+		ECloseLocation Location = ECloseLocation::ClosedLocally;
+		u64 Reason = 0;
+	};
+	struct SCloseError
+	{
+		ECloseError Error = ECloseError::InternalError;
+		u64 Reason = 0;
+	};
+
+	using OnWriteCallback = UniqueFunction<void(Result<void, SWriteError>)>;
+	using OnReadCallback = UniqueFunction<void(Result<std::vector<u8>, SReadError>)>;
+	using OnCloseCallback = UniqueFunction<void(Result<SCloseLocation, SCloseError>)>;
 
 	virtual ~Socket() noexcept = default;
 
-	virtual Result<EWriteError, EAsynchronicity> Write(std::vector<u8> aBuffer, OnWriteCallback aOnWrite) = 0;
-	virtual Result<EReadError, EAsynchronicity> Read(OnReadCallback aOnRead) = 0;
+	virtual Result<EAsynchronicity, SWriteError> Write(std::vector<u8> aBuffer, OnWriteCallback aOnWrite) = 0;
+	virtual Result<EAsynchronicity, SReadError> Read(OnReadCallback aOnRead) = 0;
 	virtual void OnClose(OnCloseCallback aOnClose) = 0;
 	virtual void Close() = 0;
 

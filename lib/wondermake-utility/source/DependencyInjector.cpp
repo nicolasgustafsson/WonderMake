@@ -2,7 +2,7 @@
 
 #include "wondermake-utility/Utility.h"
 
-Result<DependencyInjector::ECreateError, decltype(Success), std::string> DependencyInjector::CreateAll()
+Result<void, DependencyInjector::SError> DependencyInjector::CreateAll()
 {
 	for (auto& [key, createFunc] : myCreateFuncs)
 	{
@@ -16,8 +16,8 @@ Result<DependencyInjector::ECreateError, decltype(Success), std::string> Depende
 		auto result = std::move(createFunc)(*this);
 
 		if (!result)
-			return { static_cast<ECreateError>(result), result.Meta() };
+			return result;
 	}
 
-	return Success;
+	return Ok();
 }

@@ -160,6 +160,34 @@ public:
 	constexpr [[nodiscard]] bool operator==(const Result&) const noexcept = default;
 	constexpr [[nodiscard]] bool operator!=(const Result&) const noexcept = default;
 
+	template<typename TArg>
+	constexpr [[nodiscard]] bool operator==(const ResultSuccess<TArg>& aRhs) const noexcept
+	{
+		if (!IsOk())
+			return false;
+
+		return Unwrap() == aRhs.Value;
+	}
+	template<typename TArg>
+	constexpr [[nodiscard]] bool operator!=(const ResultSuccess<TArg>& aRhs) const noexcept
+	{
+		return !(*this == aRhs);
+	}
+
+	template<typename TArg>
+	constexpr [[nodiscard]] bool operator==(const ResultFailure<TArg>& aRhs) const noexcept
+	{
+		if (!IsErr())
+			return false;
+
+		return Err() == aRhs.Value;
+	}
+	template<typename TArg>
+	constexpr [[nodiscard]] bool operator!=(const ResultFailure<TArg>&aRhs) const noexcept
+	{
+		return !(*this == aRhs);
+	}
+
 	constexpr [[nodiscard]] operator bool() const noexcept
 	{
 		return IsOk();

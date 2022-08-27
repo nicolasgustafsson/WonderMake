@@ -8,24 +8,24 @@
 enum class EMemoryRatio : u64
 {
 	B		= 1,
-	KB		= 1000,
-	MB		= 1000000,
-	GB		= 1000000000,
-	TB		= 1000000000000,
-	KiB		= 1024,
-	MiB		= 1048576,
-	GiB		= 1073741824,
-	TiB		= 1099511627776,
+	KB		= 1'000,
+	MB		= 1'000'000,
+	GB		= 1'000'000'000,
+	TB		= 1'000'000'000'000,
+	KiB		= 1'024,
+	MiB		= 1'048'576,
+	GiB		= 1'073'741'824,
+	TiB		= 1'099'511'627'776,
 
-	Bytes = 1,
-	KiloBytes = 1000,
-	MegaBytes = 1000000,
-	GigaBytes = 1000000000,
-	TeraBytes = 1000000000000,
-	KibiBytes = 1024,
-	MibiBytes = 1048576,
-	GibiBytes = 1073741824,
-	TebiBytes = 1099511627776
+	Bytes		= 1,
+	KiloBytes	= 1'000,
+	MegaBytes	= 1'000'000,
+	GigaBytes	= 1'000'000'000,
+	TeraBytes	= 1'000'000'000'000,
+	KibiBytes	= 1'024,
+	MibiBytes	= 1'048'576,
+	GibiBytes	= 1'073'741'824,
+	TebiBytes	= 1'099'511'627'776
 };
 
 template<EMemoryRatio TRatio, typename TRep>

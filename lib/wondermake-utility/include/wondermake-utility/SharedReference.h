@@ -8,12 +8,12 @@ template<typename TType>
 class SharedReference final
 {
 public:
-	inline static [[nodiscard]] Result<decltype(Failure), SharedReference> FromPointer(std::shared_ptr<TType> aPointer) noexcept
+	inline static [[nodiscard]] Result<SharedReference> FromPointer(std::shared_ptr<TType> aPointer) noexcept
 	{
 		if (!aPointer)
-			return Failure;
+			return Err();
 
-		return SharedReference(std::move(aPointer));
+		return Ok(SharedReference(std::move(aPointer)));
 	}
 
 	SharedReference(const SharedReference&) noexcept = default;
@@ -78,11 +78,11 @@ private:
 template<typename TType, typename... TArgs>
 inline [[nodiscard]] SharedReference<TType> MakeSharedReference(TArgs&&... aArgs)
 {
-	return SharedReference<TType>::FromPointer(std::make_shared<TType>(std::forward<TArgs>(aArgs)...));
+	return SharedReference<TType>::FromPointer(std::make_shared<TType>(std::forward<TArgs>(aArgs)...)).Unwrap();
 }
 
 template<typename TTo, typename TFrom>
 inline [[nodiscard]] SharedReference<TTo> StaticReferenceCast(SharedReference<TFrom> aReference)
 {
-	return SharedReference<TTo>::FromPointer(std::static_pointer_cast<TTo>(static_cast<std::shared_ptr<TFrom>>(std::move(aReference))));
+	return SharedReference<TTo>::FromPointer(std::static_pointer_cast<TTo>(static_cast<std::shared_ptr<TFrom>>(std::move(aReference)))).Unwrap();
 }

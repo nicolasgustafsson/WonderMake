@@ -18,7 +18,13 @@ public:
 		InternalError
 	};
 
-	using OnExitCallback = UniqueFunction<void(Result<EExitError, i64, i64>)>;
+	struct SExitError
+	{
+		EExitError Error = EExitError::InternalError;
+		i64 Reason = 0;
+	};
+
+	using OnExitCallback = UniqueFunction<void(Result<i64, SExitError>)>;
 
 	virtual EState GetState() const = 0;
 	

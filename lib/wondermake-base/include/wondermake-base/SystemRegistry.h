@@ -22,6 +22,12 @@ public:
 		InternalError
 	};
 
+	struct SError
+	{
+		ECreateError	Error = ECreateError::InternalError;
+		std::string		Reason;
+	};
+
 	struct Filter
 	{
 		std::optional<SystemTraits::SetList> RequiredAnyTraits;
@@ -36,7 +42,7 @@ public:
 		AddSystemHelper<TSystem, TBaseSystem>(std::forward<TCreateFunc>(aCreateFunc), TupleWrapper<typename TSystem::Dependencies>());
 	}
 
-	Result<ECreateError, SystemContainer, std::string> CreateSystems(const Filter& aFilter);
+	Result<SystemContainer, SError> CreateSystems(const Filter& aFilter);
 
 private:
 	template<typename TDependencyTuple>

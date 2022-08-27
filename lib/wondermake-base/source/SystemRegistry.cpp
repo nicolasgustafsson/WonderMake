@@ -2,7 +2,7 @@
 
 thread_local SystemContainer::InternalRep SystemRegistry::myConstructingContainer;
 
-Result<SystemRegistry::ECreateError, SystemContainer, std::string> SystemRegistry::CreateSystems(const Filter& aFilter)
+Result<SystemContainer, SystemRegistry::SError> SystemRegistry::CreateSystems(const Filter& aFilter)
 {
 	myDependencyInjector = DependencyInjector();
 
@@ -40,21 +40,21 @@ Result<SystemRegistry::ECreateError, SystemContainer, std::string> SystemRegistr
 
 	if (!result)
 	{
-		const auto err = static_cast<DependencyInjector::ECreateError>(result);
+		const auto err = result.Err();
 
-		switch (err)
+		switch (err.Error)
 		{
-		case DependencyInjector::ECreateError::MissingDependency: return { ECreateError::MissingSystemDependency, result.Meta() };
+		case DependencyInjector::ECreateError::MissingDependency: return Err(SError{ ECreateError::MissingSystemDependency, err.Reason });
 		}
 
-		const auto errorCode = static_cast<std::underlying_type_t<DependencyInjector::ECreateError>>(err);
+		const auto errorCode = static_cast<std::underlying_type_t<DependencyInjector::ECreateError>>(err.Error);
 
-		return { ECreateError::InternalError, "Unknown error; " + std::to_string(errorCode) };
+		return Err(SError{ ECreateError::InternalError, "Unknown error; " + std::to_string(errorCode) });
 	}
 
 	SystemContainer::InternalRep internalRep;
 
 	std::swap(internalRep, myConstructingContainer);
 
-	return SystemContainer(std::move(internalRep));
+	return Ok(std::move(internalRep));
 }

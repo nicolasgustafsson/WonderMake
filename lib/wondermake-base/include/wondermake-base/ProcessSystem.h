@@ -21,8 +21,14 @@ public:
 		InternalError
 	};
 
+	struct SError
+	{
+		EStartError Error = EStartError::InternalError;
+		u64 Reason = 0;
+	};
+
 	virtual ProcessId GetCurrentProcessId() = 0;
 
-	virtual Result<EStartError, std::shared_ptr<Process>> StartProcess(std::filesystem::path aApplicationPath, std::wstring aCommandLine) = 0;
+	virtual Result<std::shared_ptr<Process>, SError> StartProcess(std::filesystem::path aApplicationPath, std::wstring aCommandLine) = 0;
 
 };

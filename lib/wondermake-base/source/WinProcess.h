@@ -28,7 +28,7 @@ public:
 private:
 	void OnClose();
 
-	void Reset(Result<EExitError, i64, i64> aResult);
+	void Reset(Result<i64, SExitError> aResult);
 
 	WinEventSystem& myWinEvent;
 	WinPlatformSystem& myWinPlatform;

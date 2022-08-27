@@ -34,7 +34,7 @@ void WinProcess::Terminate(i64 aExitCode)
 	if (myProcessHandle)
 		(void)myWinPlatform.TerminateProcess(myProcessHandle, static_cast<UINT>(aExitCode));
 
-	Reset({ EExitError::Terminated, aExitCode });
+	Reset(Err(SExitError{ EExitError::Terminated, aExitCode }));
 }
 
 void WinProcess::OnExit(OnExitCallback&& aOnExit)
@@ -46,7 +46,7 @@ void WinProcess::OnExit(OnExitCallback&& aOnExit)
 		return;
 	}
 
-	std::move(aOnExit)(EExitError::AlreadyStopped);
+	std::move(aOnExit)(Err(SExitError{ EExitError::AlreadyStopped }));
 }
 
 void WinProcess::OnClose()
@@ -59,16 +59,16 @@ void WinProcess::OnClose()
 	const BOOL result = myWinPlatform.GetExitCodeProcess(myProcessHandle, &exitCode);
 
 	if (result)
-		Reset(exitCode);
+		Reset(Ok(exitCode));
 	else
 	{
 		const auto err = myWinPlatform.GetLastError();
 
-		Reset({ EExitError::InternalError, err });
+		Reset(Err(SExitError{ EExitError::InternalError, err }));
 	}
 }
 
-void WinProcess::Reset(Result<EExitError, i64, i64> aResult)
+void WinProcess::Reset(Result<i64, SExitError> aResult)
 {
 	myState = EState::Stopped;
 

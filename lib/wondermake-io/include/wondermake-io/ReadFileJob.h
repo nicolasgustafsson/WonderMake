@@ -23,5 +23,5 @@ class ReadFileJob
 	: public JobAbstracted<
 		JobInputSet<
 			JobInput<FolderLocation, std::filesystem::path>>,
-		Result<ReadFileError, std::vector<u8>>>
+		Result<std::vector<u8>, ReadFileError>>
 {};

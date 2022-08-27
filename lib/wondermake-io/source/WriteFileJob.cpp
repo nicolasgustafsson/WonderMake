@@ -23,7 +23,7 @@ public:
 
 			if (!dirPath)
 			{
-				aPromise.Complete(EWriteFileError::InvalidArguments);
+				aPromise.Complete(Err(EWriteFileError::InvalidArguments));
 
 				return;
 			}
@@ -37,7 +37,7 @@ public:
 
 		if (std::filesystem::is_directory(path))
 		{
-			aPromise.Complete(EWriteFileError::PathIsAlreadyADirectory);
+			aPromise.Complete(Err(EWriteFileError::PathIsAlreadyADirectory));
 
 			return;
 		}
@@ -45,7 +45,7 @@ public:
 		if (!std::filesystem::is_directory(path.parent_path())
 			&& !std::filesystem::create_directories(path.parent_path()))
 		{
-			aPromise.Complete(EWriteFileError::FailedToCreateDirectory);
+			aPromise.Complete(Err(EWriteFileError::FailedToCreateDirectory));
 
 			return;
 		}
@@ -54,7 +54,7 @@ public:
 
 		if (!file)
 		{
-			aPromise.Complete(EWriteFileError::FailedToOpen);
+			aPromise.Complete(Err(EWriteFileError::FailedToOpen));
 
 			return;
 		}
@@ -65,7 +65,7 @@ public:
 
 		file.close();
 
-		aPromise.Complete(Success);
+		aPromise.Complete(Ok());
 	}
 	void Run(Promise<Output> aPromise, FolderLocation aLocation, std::filesystem::path aFilePath, std::string aBuffer) override
 	{

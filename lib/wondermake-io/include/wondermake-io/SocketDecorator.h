@@ -8,8 +8,8 @@ class SocketDecorator
 	: public Socket
 {
 public:
-	Result<EWriteError, EAsynchronicity> Write(std::vector<u8> aBuffer, OnWriteCallback aOnWrite) override;
-	Result<EReadError, EAsynchronicity> Read(OnReadCallback aOnRead) override;
+	Result<EAsynchronicity, SWriteError> Write(std::vector<u8> aBuffer, OnWriteCallback aOnWrite) override;
+	Result<EAsynchronicity, SReadError> Read(OnReadCallback aOnRead) override;
 	void OnClose(OnCloseCallback aOnClose) override;
 	void Close() override;
 

@@ -24,5 +24,5 @@ class WriteFileJob
 		JobInputSet<
 			JobInput<FolderLocation, std::filesystem::path, std::vector<u8>>,
 			JobInput<FolderLocation, std::filesystem::path, std::string>>,
-		Result<EWriteFileError>>
+		Result<void, EWriteFileError>>
 {};

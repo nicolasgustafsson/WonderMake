@@ -17,7 +17,7 @@ public:
 	SocketSerializingImpl(
 		MemoryUnit<EMemoryRatio::Bytes, size_t> aBufferMaxSize,
 		std::function<std::vector<u8>(const TSerializable&)> aSerialize,
-		std::function<Result<decltype(Failure), std::pair<TSerializable, size_t>>(std::span<const u8>)> aDeserialize,
+		std::function<Result<std::pair<TSerializable, size_t>>(std::span<const u8>)> aDeserialize,
 		SharedReference<Socket> aSocket)
 		: myBufferMaxSize(aBufferMaxSize)
 		, mySerialize(std::move(aSerialize))
@@ -25,16 +25,16 @@ public:
 		, mySocket(std::move(aSocket))
 	{}
 
-	Result<Socket::EWriteError> WriteMessage(const TSerializable& aMessage, SocketSerializing<TSerializable>::OnWriteCallback aOnWrite) override
+	Result<void, Socket::SWriteError> WriteMessage(const TSerializable& aMessage, SocketSerializing<TSerializable>::OnWriteCallback aOnWrite) override
 	{
 		const auto result = mySocket->Write(mySerialize(aMessage), std::move(aOnWrite));
 
 		if (result)
-			return Success;
+			return Ok();
 
-		return static_cast<Socket::EWriteError>(result);
+		return result;
 	}
-	Result<Socket::EReadError> ReadMessage(SocketSerializing<TSerializable>::OnReadCallback aOnRead) override
+	Result<void, Socket::SReadError> ReadMessage(SocketSerializing<TSerializable>::OnReadCallback aOnRead) override
 	{
 		return ParseBuffer(std::move(aOnRead));
 	}
@@ -54,16 +54,16 @@ public:
 	}
 
 private:
-	Result<Socket::EReadError> ParseBuffer(SocketSerializing<TSerializable>::OnReadCallback&& aOnRead)
+	Result<void, Socket::SReadError> ParseBuffer(SocketSerializing<TSerializable>::OnReadCallback&& aOnRead)
 	{
 		if (myReadBuffer.empty())
 		{
 			auto readResult = mySocket->Read(Bind(&SocketSerializingImpl<TSerializable>::OnRead, this->weak_from_this(), std::move(aOnRead)));
 
 			if (!readResult)
-				return static_cast<Socket::EReadError>(readResult);
+				return readResult;
 
-			return Success;
+			return Ok();
 		}
 
 		const auto maxBytes = myBufferMaxSize.To<EMemoryRatio::Bytes>();
@@ -76,37 +76,37 @@ private:
 		{
 			if (myReadBuffer.size() >= maxBytes)
 			{
-				std::move(aOnRead)(Socket::EReadError::MessageToBig);
+				std::move(aOnRead)(Err(Socket::SReadError{ Socket::EReadError::MessageToBig }));
 
-				return Socket::EReadError::MessageToBig;
+				return Err(Socket::SReadError{ Socket::EReadError::MessageToBig });
 			}
 
 			auto readResult = mySocket->Read(Bind(&SocketSerializingImpl<TSerializable>::OnRead, this->weak_from_this(), std::move(aOnRead)));
 
 			if (!readResult)
-				return static_cast<Socket::EReadError>(readResult);
+				return readResult;
 
-			return Success;
+			return Ok();
 		}
 
-		std::pair<TSerializable, size_t> serializable = std::move(result);
+		auto serializable = std::move(result).Unwrap();
 
 		myReadBuffer.erase(myReadBuffer.begin(), myReadBuffer.begin() + serializable.second);
 
-		std::move(aOnRead)(std::move(serializable.first));
+		std::move(aOnRead)(Ok(std::move(serializable.first)));
 
-		return Success;
+		return Ok();
 	}
-	void OnRead(SocketSerializing<TSerializable>::OnReadCallback&& aOnRead, Result<Socket::EReadError, std::vector<u8>>&& aResult)
+	void OnRead(SocketSerializing<TSerializable>::OnReadCallback&& aOnRead, Result<std::vector<u8>, Socket::SReadError>&& aResult)
 	{
 		if (!aResult)
 		{
-			std::move(aOnRead)(static_cast<Socket::EReadError>(aResult));
+			std::move(aOnRead)(aResult);
 
 			return;
 		}
 
-		std::vector<u8> buffer = std::move(aResult);
+		auto buffer = std::move(aResult).Unwrap();
 
 		myReadBuffer.insert(myReadBuffer.end(), buffer.begin(), buffer.end());
 
@@ -115,7 +115,7 @@ private:
 
 	const MemoryUnit<EMemoryRatio::Bytes, size_t> myBufferMaxSize;
 	std::function<std::vector<u8>(const TSerializable&)> mySerialize;
-	std::function<Result<decltype(Failure), std::pair<TSerializable, size_t>>(std::span<const u8>)> myDeserialize;
+	std::function<Result<std::pair<TSerializable, size_t>>(std::span<const u8>)> myDeserialize;
 
 	SharedReference<Socket> mySocket;
 	std::vector<u8> myReadBuffer;

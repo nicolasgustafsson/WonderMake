@@ -24,15 +24,25 @@ public:
 		OutOfMemory,
 		InternalError
 	};
-
-	enum class ECloseReason
+	enum class ECloseError
 	{
 		OutOfMemory,
 		InternalError
 	};
 
+	struct SOpenError
+	{
+		EOpenError Error = EOpenError::InternalError;
+		u64 Reason = 0;
+	};
+	struct SCloseError
+	{
+		ECloseError Error = ECloseError::InternalError;
+		u64 Reason = 0;
+	};
+
 	using OnConnectionCallback = std::function<void(std::shared_ptr<IpcConnection>&&)>;
-	using OnCloseCallback = UniqueFunction<void(Result<ECloseReason>)>;
+	using OnCloseCallback = UniqueFunction<void(Result<void, SCloseError>)>;
 
 	struct CallbackInfo
 	{
@@ -42,7 +52,7 @@ public:
 
 	virtual ~IpcAcceptor() noexcept = default;
 
-	virtual Result<EOpenError> Open(std::string aName, CallbackInfo&& aCallbackInfo) = 0;
+	virtual Result<void, SOpenError> Open(std::string aName, CallbackInfo&& aCallbackInfo) = 0;
 	virtual void Close() = 0;
 
 	virtual EState GetState() const noexcept = 0;

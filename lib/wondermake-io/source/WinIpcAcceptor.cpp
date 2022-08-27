@@ -24,13 +24,13 @@ WinIpcAcceptor::~WinIpcAcceptor() noexcept
 	Close();
 }
 
-Result<IpcAcceptor::EOpenError> WinIpcAcceptor::Open(std::string aName, CallbackInfo&& aCallbackInfo)
+Result<void, IpcAcceptor::SOpenError> WinIpcAcceptor::Open(std::string aName, CallbackInfo&& aCallbackInfo)
 {
 	if (aName.empty())
-		return Result(IpcAcceptor::EOpenError::InvalidArgs);
+		return Err(SOpenError{ IpcAcceptor::EOpenError::InvalidArgs });
 
 	if (myState == EState::Open)
-		return Result(IpcAcceptor::EOpenError::InvalidState);
+		return Err(SOpenError{ IpcAcceptor::EOpenError::InvalidState });
 
 	myPipeName = locPipePrefix + std::wstring(aName.begin(), aName.end());
 	myCallbackInfo = std::move(aCallbackInfo);
@@ -46,9 +46,9 @@ Result<IpcAcceptor::EOpenError> WinIpcAcceptor::Open(std::string aName, Callback
 	{
 		const DWORD err = myWinPlatform.GetLastError();
 
-		Reset({ ECloseReason::InternalError, err });
+		Reset(Err(SCloseError{ ECloseError::InternalError, err }));
 
-		return { EOpenError::InternalError, err };
+		return Err(SOpenError{ EOpenError::InternalError, err });
 	}
 
 	myState = EState::Open;
@@ -58,7 +58,7 @@ Result<IpcAcceptor::EOpenError> WinIpcAcceptor::Open(std::string aName, Callback
 
 void WinIpcAcceptor::Close()
 {
-	Reset(Success);
+	Reset(Ok());
 }
 
 WinIpcAcceptor::EState WinIpcAcceptor::GetState() const noexcept
@@ -66,7 +66,7 @@ WinIpcAcceptor::EState WinIpcAcceptor::GetState() const noexcept
 	return myState;
 }
 
-Result<IpcAcceptor::EOpenError> WinIpcAcceptor::ListenForConnection()
+Result<void, IpcAcceptor::SOpenError> WinIpcAcceptor::ListenForConnection()
 {
 	const		LPCWSTR					lpName = myPipeName.c_str();
 	constexpr	DWORD					dwOpenMode = PIPE_ACCESS_DUPLEX | FILE_FLAG_OVERLAPPED;
@@ -78,7 +78,7 @@ Result<IpcAcceptor::EOpenError> WinIpcAcceptor::ListenForConnection()
 	constexpr	LPSECURITY_ATTRIBUTES	lpSecurityAttributes = NULL;
 
 	if (myState != EState::Open)
-		return IpcAcceptor::EOpenError::InvalidState;
+		return Err(SOpenError{ IpcAcceptor::EOpenError::InvalidState });
 
 	myPipeHandle = myWinPlatform.CreateNamedPipeW(
 		lpName,
@@ -94,9 +94,9 @@ Result<IpcAcceptor::EOpenError> WinIpcAcceptor::ListenForConnection()
 	{
 		const DWORD err = myWinPlatform.GetLastError();
 
-		Reset({ ECloseReason::InternalError, err });
+		Reset(Err(SCloseError{ ECloseError::InternalError, err }));
 
-		return { EOpenError::InternalError, err };
+		return Err(SOpenError{ EOpenError::InternalError, err });
 	}
 
 	const BOOL result = myWinPlatform.ConnectNamedPipe(myPipeHandle, &myPipeOverlapped);
@@ -105,9 +105,9 @@ Result<IpcAcceptor::EOpenError> WinIpcAcceptor::ListenForConnection()
 	{
 		const DWORD err = myWinPlatform.GetLastError();
 
-		Reset({ ECloseReason::InternalError, err });
+		Reset(Err(SCloseError{ ECloseError::InternalError, err }));
 
-		return { EOpenError::InternalError, err };
+		return Err(SOpenError{ EOpenError::InternalError, err });
 	}
 
 	const DWORD err = myWinPlatform.GetLastError();
@@ -121,15 +121,15 @@ Result<IpcAcceptor::EOpenError> WinIpcAcceptor::ListenForConnection()
 
 	if (err != ERROR_IO_PENDING)
 	{
-		Reset({ ECloseReason::InternalError, err });
+		Reset(Err(SCloseError{ ECloseError::InternalError, err }));
 
-		return { IpcAcceptor::EOpenError::InternalError, err };
+		return Err(SOpenError{ IpcAcceptor::EOpenError::InternalError, err });
 	}
 
-	return Success;
+	return Ok();
 }
 
-Result<IpcAcceptor::EOpenError> WinIpcAcceptor::OnConnection()
+Result<void, IpcAcceptor::SOpenError> WinIpcAcceptor::OnConnection()
 {
 	std::shared_ptr<WinIpcConnection> connection;
 
@@ -139,9 +139,9 @@ Result<IpcAcceptor::EOpenError> WinIpcAcceptor::OnConnection()
 	}
 	catch (const std::bad_alloc&)
 	{
-		Reset(ECloseReason::OutOfMemory);
+		Reset(Err(SCloseError{ ECloseError::OutOfMemory }));
 
-		return EOpenError::OutOfMemory;
+		return Err(SOpenError{ EOpenError::OutOfMemory });
 	}
 
 	connection->ConnectHandle(myPipeHandle);
@@ -154,12 +154,12 @@ Result<IpcAcceptor::EOpenError> WinIpcAcceptor::OnConnection()
 	const auto result = ListenForConnection();
 
 	if (result)
-		return Success;
+		return Ok();
 
-	switch (static_cast<EOpenError>(result))
+	switch (result.Err().Error)
 	{
 	case EOpenError::InvalidArgs:		break;
-	case EOpenError::InvalidState:		return Success;
+	case EOpenError::InvalidState:		return Ok();
 	case EOpenError::OutOfMemory:		break;
 	case EOpenError::InternalError:		break;
 	}
@@ -167,7 +167,7 @@ Result<IpcAcceptor::EOpenError> WinIpcAcceptor::OnConnection()
 	return result;
 }
 
-void WinIpcAcceptor::Reset(Result<ECloseReason> aResult)
+void WinIpcAcceptor::Reset(Result<void, SCloseError> aResult)
 {
 	auto onClose = std::move(myCallbackInfo.OnClose);
 	if (myPipeHandle != INVALID_HANDLE_VALUE)

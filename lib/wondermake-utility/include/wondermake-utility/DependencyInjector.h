@@ -17,17 +17,23 @@ public:
 		MissingDependency
 	};
 
+	struct SError
+	{
+		ECreateError	Error = ECreateError::MissingDependency;
+		std::string		Reason;
+	};
+
 	template<typename TType, typename TCreateFunc, typename... TDependencies>
 	inline void Add(TCreateFunc aCreateFunc)
 	{	
-		myCreateFuncs.emplace(typeid(Key<std::decay_t<TType>>), [createFunc = std::move(aCreateFunc)]([[maybe_unused]] DependencyInjector& aThis) mutable -> Result<ECreateError, void*, std::string>
+		myCreateFuncs.emplace(typeid(Key<std::decay_t<TType>>), [createFunc = std::move(aCreateFunc)]([[maybe_unused]] DependencyInjector& aThis) mutable -> Result<void*, SError>
 		{
-			std::optional<Result<ECreateError, void*, std::string>> errResult;
+			std::optional<Result<void*, SError>> errResult;
 
 			auto parseResult = [&errResult](auto aResult)
 			{
 				if (!aResult)
-					errResult = { static_cast<ECreateError>(aResult), std::move(aResult.Meta()) };
+					errResult = aResult;
 
 				return aResult;
 			};
@@ -46,29 +52,29 @@ public:
 
 			aThis.myDependencies.emplace(typeid(Key<std::decay_t<TType>>), dependencyPtr);
 
-			return dependencyPtr;
+			return Ok(dependencyPtr);
 		});
 	}
 
 	template<typename TType>
-	inline Result<ECreateError, std::reference_wrapper<TType>, std::string> Get()
+	inline Result<std::reference_wrapper<TType>, SError> Get()
 	{
 		return GetDependency<TType>();
 	}
 
-	Result<ECreateError, decltype(Success), std::string> CreateAll();
+	Result<void, SError> CreateAll();
 
 private:
 	template<typename TDependency>
 	struct Key {};
 
-	using CreateFunc = UniqueFunction<Result<ECreateError, void*, std::string> (DependencyInjector&)>;
+	using CreateFunc = UniqueFunction<Result<void*, SError> (DependencyInjector&)>;
 
 	std::unordered_map<std::type_index, CreateFunc>	myCreateFuncs;
 	std::unordered_map<std::type_index, void*>		myDependencies;
 
 	template<typename TType>
-	Result<ECreateError, std::reference_wrapper<TType>, std::string> GetDependency()
+	Result<std::reference_wrapper<TType>, SError> GetDependency()
 	{
 		const auto& typeIndex = typeid(Key<std::decay_t<TType>>);
 
@@ -76,27 +82,27 @@ private:
 
 		if (depIt != myDependencies.cend())
 		{
-			return std::ref(*((TType*)depIt->second));
+			return Ok(std::ref(*((TType*)depIt->second)));
 		}
 
 		const auto createIt = myCreateFuncs.find(typeIndex);
 
 		if (createIt == myCreateFuncs.cend())
 		{
-			return { ECreateError::MissingDependency, typeIndex.name() };
+			return Err(SError{ ECreateError::MissingDependency, typeIndex.name() });
 		}
 
 		auto result = std::move(createIt->second)(*this);
 
 		if (result)
-			return std::ref(*((TType*)static_cast<void*>(result)));
+			return Ok(std::ref(*((TType*)result.Unwrap())));
 
-		return { static_cast<ECreateError>(result), result.Meta() };
+		return result;
 	}
 
 	template<typename TDependency, typename TCreateFunc, typename... TDependencies>
-	static TDependency& CreateDependencyHelper(TCreateFunc&& aCreateFunc, Result<ECreateError, std::reference_wrapper<TDependencies>, std::string>... aDependencies)
+	static TDependency& CreateDependencyHelper(TCreateFunc&& aCreateFunc, Result<std::reference_wrapper<TDependencies>, SError>... aDependencies)
 	{
-		return std::move(aCreateFunc)(static_cast<TDependencies&>(static_cast<std::reference_wrapper<TDependencies>>(aDependencies))...);
+		return std::move(aCreateFunc)(static_cast<TDependencies&>(aDependencies.Unwrap())...);
 	}
 };

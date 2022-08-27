@@ -4,6 +4,7 @@
 #include "Typedefs.h"
 
 #include <array>
+#include <cassert>
 
 template<typename TRep, u32 TSize>
 struct SVectorBase;
@@ -149,12 +150,12 @@ struct SVector
 	}
 
 	// Lowers or raises the dimension of the vector by one
-	[[nodiscard]] constexpr TRep Demote() const noexcept
+	constexpr [[nodiscard]] TRep Demote() const noexcept
 		requires (TSize == 2)
 	{
 		return (*this)[0];
 	}
-	[[nodiscard]] constexpr SVector<TRep, TSize - 1> Demote() const noexcept
+	constexpr [[nodiscard]] SVector<TRep, TSize - 1> Demote() const noexcept
 		requires (TSize > 2)
 	{
 		SVector<TRep, Size - 1> ReturnVal;
@@ -166,7 +167,7 @@ struct SVector
 
 		return ReturnVal;
 	}
-	[[nodiscard]] constexpr SVector<TRep, TSize + 1> Promote(const TRep LastValue = {}) const noexcept
+	constexpr [[nodiscard]] SVector<TRep, TSize + 1> Promote(const TRep LastValue = {}) const noexcept
 	{
 		SVector<TRep, TSize + 1> ReturnVal;
 
@@ -180,18 +181,18 @@ struct SVector
 		return ReturnVal;
 	}
 
-	[[nodiscard]] constexpr TRep& operator[] (const u32 Index) noexcept
+	constexpr [[nodiscard]] TRep& operator[] (const u32 Index) noexcept
 	{
 		assert(Index < TSize);
 		return this->MemberArray[Index];
 	}
-	[[nodiscard]] constexpr const TRep& operator[] (const u32 Index) const noexcept
+	constexpr [[nodiscard]] const TRep& operator[] (const u32 Index) const noexcept
 	{
 		assert(Index < TSize);
 		return this->MemberArray[Index];
 	}
 
-	[[nodiscard]] constexpr char GetMemberName(const u32 Index) const noexcept
+	constexpr [[nodiscard]] char GetMemberName(const u32 Index) const noexcept
 	{
 		switch (Index)
 		{
@@ -208,7 +209,7 @@ struct SVector
 		}
 	}
 
-	[[nodiscard]] constexpr SVector<TRep, TSize> operator-() const noexcept
+	constexpr [[nodiscard]] SVector<TRep, TSize> operator-() const noexcept
 	{
 		SVector<TRep, TSize> ReturnVal;
 
@@ -245,7 +246,7 @@ struct SVector
 		return *this;
 	}
 
-	constexpr bool operator==(const SVector<TRep, TSize>& aRhs) const noexcept
+	constexpr [[nodiscard]] bool operator==(const SVector<TRep, TSize>& aRhs) const noexcept
 	{
 		for (u32 u = 0; u < TSize; u++)
 		{
@@ -255,12 +256,12 @@ struct SVector
 
 		return true;
 	}
-	constexpr bool operator!=(const SVector<TRep, TSize>& aRhs) const noexcept
+	constexpr [[nodiscard]] bool operator!=(const SVector<TRep, TSize>& aRhs) const noexcept
 	{
 		return !(*this == aRhs);
 	}
 
-	[[nodiscard]] constexpr TRep LengthSquared() const noexcept
+	constexpr [[nodiscard]] TRep LengthSquared() const noexcept
 	{
 		TRep total = 0;
 
@@ -271,16 +272,16 @@ struct SVector
 
 		return total;
 	}
-	[[nodiscard]] constexpr TRep Length() const noexcept
+	constexpr [[nodiscard]] TRep Length() const noexcept
 	{
 		return static_cast<TRep>(std::sqrt(LengthSquared()));
 	}
-	[[nodiscard]] constexpr TRep DistanceTo(const SVector<TRep, TSize> aRhs) const noexcept
+	constexpr [[nodiscard]] TRep DistanceTo(const SVector<TRep, TSize> aRhs) const noexcept
 	{
 		return (aRhs - *this).Length();
 	}
 
-	[[nodiscard]] constexpr TRep Dot(const SVector<TRep, TSize> aRhs) const noexcept
+	constexpr [[nodiscard]] TRep Dot(const SVector<TRep, TSize> aRhs) const noexcept
 	{
 		TRep sum = 0;
 		for (u32 i = 0; i < TSize; i++)
@@ -292,7 +293,7 @@ struct SVector
 	}
 
 	template<u64 TArraySize, typename TVector> requires std::is_same_v<SVector, std::decay_t<TVector>>
-	[[nodiscard]] static constexpr TVector& Closest(SVector aPoint, std::array<TVector*, TArraySize> aArray) noexcept
+	static constexpr [[nodiscard]] TVector& Closest(SVector aPoint, std::array<TVector*, TArraySize> aArray) noexcept
 	{
 		size_t index = 0;
 		f32 distance = std::numeric_limits<f32>::max();
@@ -332,7 +333,7 @@ struct SVector
 		}
 	}
 
-	constexpr SVector<TRep, TSize> GetFloored() const noexcept
+	constexpr [[nodiscard]] SVector<TRep, TSize> GetFloored() const noexcept
 	{
 		SVector<TRep, TSize> vec = *this;
 
@@ -358,7 +359,7 @@ struct SVector
 		return vec;
 	}
 
-	[[nodiscard]] constexpr SVector<TRep, TSize> GetNormalized() const noexcept
+	constexpr [[nodiscard]] SVector<TRep, TSize> GetNormalized() const noexcept
 	{
 		SVector<TRep, TSize> retVec = *this;
 
@@ -367,24 +368,24 @@ struct SVector
 		return retVec;
 	}
 	
-	[[nodiscard]] constexpr SVector<TRep, TSize> GetPerpendicularCounterClockWise() const noexcept
+	constexpr [[nodiscard]] SVector<TRep, TSize> GetPerpendicularCounterClockWise() const noexcept
 		requires (TSize == 2)
 	{
 		return SVector<TRep, TSize>(-(*this).Y, (*this).X);
 	}
-	[[nodiscard]] constexpr SVector<TRep, TSize> GetPerpendicularClockWise() const noexcept
+	constexpr [[nodiscard]] SVector<TRep, TSize> GetPerpendicularClockWise() const noexcept
 		requires (TSize == 2)
 	{
 		return SVector<TRep, TSize>((*this).Y, -(*this).X);
 	}
 
-	[[nodiscard]] constexpr static SVector<TRep, TSize> Zero() noexcept
+	static constexpr [[nodiscard]] SVector<TRep, TSize> Zero() noexcept
 	{
 		SVector<TRep, TSize> retVec;
 
 		return retVec;
 	}
-	[[nodiscard]] constexpr static SVector<TRep, TSize> One() noexcept
+	static constexpr [[nodiscard]] SVector<TRep, TSize> One() noexcept
 	{
 		SVector<TRep, TSize> retVec;
 

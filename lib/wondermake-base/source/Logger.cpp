@@ -49,7 +49,7 @@ Logger::Builder::Builder(Logger& aLogger, ELogSeverity aSeverity, ELogLevel aLev
 }
 
 Logger::Builder::Builder(Logger& aLogger, ELogSeverity aSeverity, ELogLevel aLevel, std::string_view aFile, u64 aLine)
-	: Builder(aLogger, aSeverity, aLevel, aFile, aLine, aLogger.GetLoggerName(), TimePointToISO8601(std::chrono::floor<std::chrono::seconds>(std::chrono::system_clock::now())), std::hash<std::thread::id>{}(std::this_thread::get_id()))
+	: Builder(aLogger, aSeverity, aLevel, aFile, aLine, aLogger.GetLoggerName(), TimePointToISO8601(std::chrono::floor<std::chrono::seconds>(std::chrono::system_clock::now())).Unwrap(), std::hash<std::thread::id>{}(std::this_thread::get_id()))
 {}
 
 Logger::Builder::~Builder()

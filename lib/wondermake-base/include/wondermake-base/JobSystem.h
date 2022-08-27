@@ -29,7 +29,7 @@ public:
 
 		if (!result)
 		{
-			switch (static_cast<JobRegistry::EGetPoliciesError>(result))
+			switch (result.Err())
 			{
 			case JobRegistry::EGetPoliciesError::JobNotRegistered:	WM_LOG_ERROR("Failed to get job policies: ", typeid(TJob).name(), ", job not registered.");
 			}
@@ -51,16 +51,18 @@ private:
 
 		if (!result)
 		{
-			switch (static_cast<JobRegistry::ECreateError>(result))
+			auto& err = result.Err();
+
+			switch (err.Error)
 			{
-			case JobRegistry::ECreateError::JobNotRegistered:	WM_LOG_ERROR("Failed to create job: ", typeid(TJob).name(), ", job not registered.");						break;
-			case JobRegistry::ECreateError::MissingDependency:	WM_LOG_ERROR("Failed to create job: ", typeid(TJob).name(), ", missing dependency: ", result.Meta(), ".");	break;
+			case JobRegistry::ECreateError::JobNotRegistered:	WM_LOG_ERROR("Failed to create job: ", typeid(TJob).name(), ", job not registered.");					break;
+			case JobRegistry::ECreateError::MissingDependency:	WM_LOG_ERROR("Failed to create job: ", typeid(TJob).name(), ", missing dependency: ", err.Reason, ".");	break;
 			}
 
 			return;
 		}
 
-		SharedReference<TJob> job = std::move(result);
+		SharedReference<TJob> job = std::move(result).Unwrap();
 
 		job->Run(std::move(aPromise), std::move(aArgs)...);
 

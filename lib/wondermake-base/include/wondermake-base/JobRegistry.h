@@ -27,6 +27,12 @@ public:
 		MissingDependency
 	};
 
+	struct SError
+	{
+		ECreateError	Error = ECreateError::JobNotRegistered;
+		std::string		Reason;
+	};
+
 	template<
 		CJob TJob,
 		typename TBaseJob = TJob,
@@ -39,30 +45,30 @@ public:
 	}
 
 	template<typename TJob>
-	Result<EGetPoliciesError, std::vector<Policy>> GetJobPolicies()
+	Result<std::vector<Policy>, EGetPoliciesError> GetJobPolicies()
 	{
 		auto it = myJobData.find(typeid(TJob));
 
 		if (it == myJobData.cend())
-			return EGetPoliciesError::JobNotRegistered;
+			return Err(EGetPoliciesError::JobNotRegistered);
 
-		return it->second.Policies;
+		return Ok(it->second.Policies);
 	}
 
 	template<typename TJob>
-	Result<ECreateError, SharedReference<TJob>, std::string> Create(SystemContainer& aSystemContainer)
+	Result<SharedReference<TJob>, SError> Create(SystemContainer& aSystemContainer)
 	{
 		auto it = myJobData.find(typeid(TJob));
 
 		if (it == myJobData.cend())
-			return ECreateError::JobNotRegistered;
+			return Err(SError{ ECreateError::JobNotRegistered });
 
 		auto result = it->second.CreateFunc(aSystemContainer);
 
 		if (!result)
-			return { static_cast<ECreateError>(result), result.Meta() };
+			return result;
 
-		return StaticReferenceCast<TJob>(static_cast<SharedReference<JobBase>>(result));
+		return Ok(StaticReferenceCast<TJob>(result.Unwrap()));
 	}
 
 private:
@@ -72,7 +78,7 @@ private:
 
 	struct JobData
 	{
-		std::function<Result<ECreateError, SharedReference<JobBase>, std::string>(SystemContainer&)> CreateFunc;
+		std::function<Result<SharedReference<JobBase>, SError>(SystemContainer&)> CreateFunc;
 		std::vector<Policy> Policies;
 	};
 
@@ -83,14 +89,14 @@ private:
 		typename... TDependencies>
 	inline void AddJobHelper(TCreateFunc&& aCreateFunc, TupleWrapper<std::tuple<TDependencies...>>&&) requires(std::is_invocable_r_v<SharedReference<TJob>, TCreateFunc, std::tuple<std::decay_t<TDependencies>&...>>)
 	{
-		auto construct = [createFunc = std::forward<TCreateFunc>(aCreateFunc)](SystemContainer& aSystemContainer) -> Result<ECreateError, SharedReference<JobBase>, std::string>
+		auto construct = [createFunc = std::forward<TCreateFunc>(aCreateFunc)](SystemContainer& aSystemContainer) -> Result<SharedReference<JobBase>, SError>
 		{
-			std::optional<Result<ECreateError, SharedReference<JobBase>, std::string>> errResult;
+			std::optional<Result<SharedReference<JobBase>, SError>> errResult;
 
 			auto sanitizeDependency = [&errResult](auto aDependencyPtr)
 			{
 				if (!aDependencyPtr)
-					errResult = { ECreateError::MissingDependency, typeid(std::decay_t<decltype(*aDependencyPtr)>).name() };
+					errResult = Err(SError{ ECreateError::MissingDependency, typeid(std::decay_t<decltype(*aDependencyPtr)>).name() });
 
 				return aDependencyPtr;
 			};
@@ -107,7 +113,7 @@ private:
 
 			SharedReference<JobBase> refBase = std::move(ref);
 
-			return refBase;
+			return Ok(std::move(refBase));
 		};
 
 		myJobData[typeid(TBaseJob)] = { std::move(construct), TJob::PolicySet::GetPolicies() };

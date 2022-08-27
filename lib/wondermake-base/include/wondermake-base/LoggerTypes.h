@@ -10,8 +10,8 @@ enum class ELogSeverity
 
 enum class ELogLevel
 {
-	Debug,
 	Verbose,
+	Debug,
 	Normal,
 	Priority
 };

@@ -24,6 +24,6 @@ class WinProcessSystem
 public:
 	ProcessId GetCurrentProcessId() override;
 
-	Result<EStartError, std::shared_ptr<Process>> StartProcess(std::filesystem::path aApplicationPath, std::wstring aCommandLine) override;
+	Result<std::shared_ptr<Process>, SError> StartProcess(std::filesystem::path aApplicationPath, std::wstring aCommandLine) override;
 
 };

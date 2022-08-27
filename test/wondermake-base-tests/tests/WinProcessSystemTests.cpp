@@ -61,8 +61,10 @@ TEST_F(WinProcessSystemTest, returns_file_not_found_when_createprocess_fails_wit
 
 	ASSERT_FALSE(result);
 
-	EXPECT_EQ(result, ProcessSystem::EStartError::FileNotFound);
-	EXPECT_EQ(result.Meta(), ERROR_FILE_NOT_FOUND);
+	const auto& err = result.Err();
+
+	EXPECT_EQ(err.Error, ProcessSystem::EStartError::FileNotFound);
+	EXPECT_EQ(err.Reason, ERROR_FILE_NOT_FOUND);
 }
 
 TEST_F(WinProcessSystemTest, returns_internal_error_when_createprocess_fails_with_unknown_error)
@@ -78,8 +80,10 @@ TEST_F(WinProcessSystemTest, returns_internal_error_when_createprocess_fails_wit
 
 	ASSERT_FALSE(result);
 
-	EXPECT_EQ(result, ProcessSystem::EStartError::InternalError);
-	EXPECT_EQ(result.Meta(), ERROR_INVALID_FUNCTION);
+	const auto& err = result.Err();
+
+	EXPECT_EQ(err.Error, ProcessSystem::EStartError::InternalError);
+	EXPECT_EQ(err.Reason, ERROR_INVALID_FUNCTION);
 }
 
 TEST_F(WinProcessSystemTest, returns_success_when_createprocess_returns_true)
@@ -98,7 +102,7 @@ TEST_F(WinProcessSystemTest, returns_running_process)
 {
 	CreateWinProcessSystem();
 
-	std::shared_ptr<Process> process = myWinProcessSystem->StartProcess(locDummyApplicationFilePath, locDummyCommandLine);
+	std::shared_ptr<Process> process = myWinProcessSystem->StartProcess(locDummyApplicationFilePath, locDummyCommandLine).Unwrap();
 
 	ASSERT_NE(process, nullptr);
 

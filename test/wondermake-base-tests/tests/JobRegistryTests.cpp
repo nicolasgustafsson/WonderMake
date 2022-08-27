@@ -63,7 +63,7 @@ TEST(JobRegistryTests, getjobpolicies_returns_error_when_job_is_not_registered)
 
 	ASSERT_FALSE(result);
 
-	EXPECT_EQ(result, JobRegistry::EGetPoliciesError::JobNotRegistered);
+	EXPECT_EQ(result.Err(), JobRegistry::EGetPoliciesError::JobNotRegistered);
 }
 
 TEST(JobRegistryTests, getjobpolicies_returns_empty_list_when_job_has_no_dependencies)
@@ -81,7 +81,7 @@ TEST(JobRegistryTests, getjobpolicies_returns_empty_list_when_job_has_no_depende
 
 	ASSERT_TRUE(result);
 
-	EXPECT_EQ(result, Policy::Set<>::GetPolicies());
+	EXPECT_EQ(result.Unwrap(), Policy::Set<>::GetPolicies());
 }
 
 TEST(JobRegistryTests, getjobpolicies_returns_list_when_job_has_dependencies)
@@ -100,7 +100,7 @@ TEST(JobRegistryTests, getjobpolicies_returns_list_when_job_has_dependencies)
 
 	ASSERT_TRUE(result);
 
-	EXPECT_EQ(result, expectedPolicies);
+	EXPECT_EQ(result.Unwrap(), expectedPolicies);
 }
 
 TEST(JobRegistryTests, getjobpolicies_returns_list_when_masked_job_has_dependencies)
@@ -119,7 +119,7 @@ TEST(JobRegistryTests, getjobpolicies_returns_list_when_masked_job_has_dependenc
 
 	ASSERT_TRUE(result);
 
-	EXPECT_EQ(result, expectedPolicies);
+	EXPECT_EQ(result.Unwrap(), expectedPolicies);
 }
 
 TEST(JobRegistryTests, create_returns_error_when_job_is_not_added)
@@ -131,7 +131,7 @@ TEST(JobRegistryTests, create_returns_error_when_job_is_not_added)
 
 	ASSERT_FALSE(result);
 
-	EXPECT_EQ(result, JobRegistry::ECreateError::JobNotRegistered);
+	EXPECT_EQ(result.Err().Error, JobRegistry::ECreateError::JobNotRegistered);
 }
 
 TEST(JobRegistryTests, create_returns_error_when_a_dependency_is_missing)
@@ -150,7 +150,7 @@ TEST(JobRegistryTests, create_returns_error_when_a_dependency_is_missing)
 
 	ASSERT_FALSE(result);
 
-	EXPECT_EQ(result, JobRegistry::ECreateError::MissingDependency);
+	EXPECT_EQ(result.Err().Error, JobRegistry::ECreateError::MissingDependency);
 }
 
 TEST(JobRegistryTests, added_jobs_can_be_created)
@@ -170,7 +170,7 @@ TEST(JobRegistryTests, added_jobs_can_be_created)
 
 	ASSERT_TRUE(result);
 
-	EXPECT_EQ(result, mock);
+	EXPECT_EQ(result.Unwrap(), mock);
 }
 
 TEST(JobRegistryTests, added_jobs_can_be_run)
@@ -186,7 +186,7 @@ TEST(JobRegistryTests, added_jobs_can_be_run)
 			return mock;
 		});
 
-	SharedReference<StrictMock<TestJobBMock>> result = registry.Create<StrictMock<TestJobBMock>>(dummySystemContainer);
+	SharedReference<StrictMock<TestJobBMock>> result = registry.Create<StrictMock<TestJobBMock>>(dummySystemContainer).Unwrap();
 	auto [promise, future] = MakeAsync<void>();
 
 	EXPECT_CALL(*mock, Run(_));
@@ -208,7 +208,7 @@ TEST(JobRegistryTests, added_masked_jobs_can_be_created)
 
 	ASSERT_TRUE(result);
 
-	EXPECT_EQ(result, mock);
+	EXPECT_EQ(result.Unwrap(), mock);
 }
 
 TEST(JobRegistryTests, added_masked_jobs_can_be_run)
@@ -219,7 +219,7 @@ TEST(JobRegistryTests, added_masked_jobs_can_be_run)
 
 	mock->AddToRegistry(registry);
 
-	SharedReference<TestJobB> result = registry.Create<TestJobB>(dummySystemContainer);
+	SharedReference<TestJobB> result = registry.Create<TestJobB>(dummySystemContainer).Unwrap();
 	auto [promise, future] = MakeAsync<void>();
 
 	EXPECT_CALL(*mock, Run(_));

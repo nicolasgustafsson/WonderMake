@@ -3,4 +3,6 @@
 #include <chrono>
 #include <string>
 
-std::string TimePointToISO8601(const std::chrono::system_clock::time_point& aTimePoint);
+#include "wondermake-utility/Result.h"
+
+Result<std::string> TimePointToISO8601(std::chrono::system_clock::time_point aTimePoint);

@@ -7,10 +7,36 @@
 
 #include "WinProcess.h"
 
+inline std::ostream& operator<<(std::ostream& out, const Process::SExitError& aError)
+{
+	return out << '{'
+		<< static_cast<std::underlying_type_t<decltype(aError.Error)>>(aError.Error) << ','
+		<< aError.Reason << '}';
+}
+
+MATCHER_P(ExitResultMatcher, aResult, "")
+{
+	Result<i64, Process::SExitError> argResult = aResult;
+
+	if (arg && argResult)
+		return ExplainMatchResult(
+			Eq(argResult.Unwrap()),
+			arg.Unwrap(), result_listener);
+
+	if (!arg && !argResult)
+		return ExplainMatchResult(
+			AllOf(
+				Field("Error", &Process::SExitError::Error, argResult.Err().Error),
+				Field("Reason", &Process::SExitError::Reason, argResult.Err().Reason)),
+			arg.Err(), result_listener);
+
+	return false;
+}
+
 class OnExitCallbackMock
 {
 public:
-	using ArgType = Result<Process::EExitError, i64, i64>;
+	using ArgType = Result<i64, Process::SExitError>;
 
 	MOCK_METHOD(void, OnExit, (ArgType));
 
@@ -126,7 +152,7 @@ TEST_F(WinProcessTest, onexit_is_called_when_deconstructed)
 
 	auto process = std::make_shared<WinProcess>(myWinEventSystem, myWinPlatformSystem, locDummyHandle, locDummyHandle);
 
-	EXPECT_CALL(onExitCallbackMock, OnExit(Eq(Process::EExitError::Terminated)));
+	EXPECT_CALL(onExitCallbackMock, OnExit(ExitResultMatcher(Err(Process::SExitError{ Process::EExitError::Terminated }))));
 
 	process->OnExit(onExitCallbackMock.CreateOnExit());
 }
@@ -140,7 +166,7 @@ TEST_F(WinProcessTest, onexit_is_called_when_terminated)
 
 	process->OnExit(onExitCallbackMock.CreateOnExit());
 
-	EXPECT_CALL(onExitCallbackMock, OnExit(Eq(Process::EExitError::Terminated)));
+	EXPECT_CALL(onExitCallbackMock, OnExit(ExitResultMatcher(Err(Process::SExitError{ Process::EExitError::Terminated }))));
 
 	process->Terminate(exitCode);
 }
@@ -154,7 +180,7 @@ TEST_F(WinProcessTest, exit_code_is_passed_to_onexit_when_terminated_and_error_c
 
 	process->OnExit(onExitCallbackMock.CreateOnExit());
 
-	EXPECT_CALL(onExitCallbackMock, OnExit(OnExitCallbackMock::ArgType(Process::EExitError::Terminated, exitCode)));
+	EXPECT_CALL(onExitCallbackMock, OnExit(ExitResultMatcher(Err(Process::SExitError{ Process::EExitError::Terminated, exitCode }))));
 
 	process->Terminate(exitCode);
 }
@@ -168,7 +194,7 @@ TEST_F(WinProcessTest, exit_code_is_passed_to_onexit_when_terminated_and_error_c
 
 	process->OnExit(onExitCallbackMock.CreateOnExit());
 
-	EXPECT_CALL(onExitCallbackMock, OnExit(OnExitCallbackMock::ArgType(Process::EExitError::Terminated, exitCode)));
+	EXPECT_CALL(onExitCallbackMock, OnExit(ExitResultMatcher(Err(Process::SExitError{ Process::EExitError::Terminated, exitCode }))));
 
 	process->Terminate(exitCode);
 }
@@ -182,7 +208,7 @@ TEST_F(WinProcessTest, exit_code_is_passed_to_onexit_when_terminated_and_error_c
 
 	process->OnExit(onExitCallbackMock.CreateOnExit());
 
-	EXPECT_CALL(onExitCallbackMock, OnExit(OnExitCallbackMock::ArgType(Process::EExitError::Terminated, exitCode)));
+	EXPECT_CALL(onExitCallbackMock, OnExit(ExitResultMatcher(Err(Process::SExitError{ Process::EExitError::Terminated, exitCode }))));
 
 	process->Terminate(exitCode);
 }
@@ -279,7 +305,7 @@ TEST_F(WinProcessTest, error_code_is_passed_to_onexit_when_process_exits_and_err
 
 				return TRUE;
 			});
-	EXPECT_CALL(onExitCallbackMock, OnExit(Eq(exitCode)));
+	EXPECT_CALL(onExitCallbackMock, OnExit(ExitResultMatcher(Ok(exitCode))));
 
 	std::move(callback)();
 }
@@ -307,7 +333,7 @@ TEST_F(WinProcessTest, error_code_is_passed_to_onexit_when_process_exits_and_err
 
 				return TRUE;
 			});
-	EXPECT_CALL(onExitCallbackMock, OnExit(Eq(exitCode)));
+	EXPECT_CALL(onExitCallbackMock, OnExit(ExitResultMatcher(Ok(exitCode))));
 
 	std::move(callback)();
 }
@@ -335,7 +361,7 @@ TEST_F(WinProcessTest, error_code_is_passed_to_onexit_when_process_exits_and_err
 
 				return TRUE;
 			});
-	EXPECT_CALL(onExitCallbackMock, OnExit(Eq(exitCode)));
+	EXPECT_CALL(onExitCallbackMock, OnExit(ExitResultMatcher(Ok(exitCode))));
 
 	std::move(callback)();
 }
@@ -360,7 +386,7 @@ TEST_F(WinProcessTest, internal_error_is_passed_to_onexit_when_unable_to_get_exi
 		.WillOnce(Return(FALSE));
 	EXPECT_CALL(myWinPlatformSystem, GetLastError)
 		.WillOnce(Return(errorCode));
-	EXPECT_CALL(onExitCallbackMock, OnExit(OnExitCallbackMock::ArgType(Process::EExitError::InternalError, errorCode)));
+	EXPECT_CALL(onExitCallbackMock, OnExit(ExitResultMatcher(Err(Process::SExitError{ Process::EExitError::InternalError, errorCode }))));
 
 	std::move(callback)();
 }
@@ -374,7 +400,7 @@ TEST_F(WinProcessTest, onexit_is_called_immediately_when_process_is_already_stop
 
 	process->Terminate(exitCode);
 
-	EXPECT_CALL(onExitCallbackMock, OnExit(Eq(Process::EExitError::AlreadyStopped)));
+	EXPECT_CALL(onExitCallbackMock, OnExit(ExitResultMatcher(Err(Process::SExitError{ Process::EExitError::AlreadyStopped }))));
 
 	process->OnExit(onExitCallbackMock.CreateOnExit());
 }

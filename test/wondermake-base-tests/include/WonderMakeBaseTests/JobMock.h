@@ -16,7 +16,7 @@ public:
 	{
 		auto result = SharedReference<JobMock>::FromPointer(this->shared_from_this());
 
-		SharedReference<JobMock> selfReference = result;
+		SharedReference<JobMock> selfReference = result.Unwrap();
 
 		auto createFunc = [self = std::move(selfReference)](auto&&) -> SharedReference<JobMock>
 		{

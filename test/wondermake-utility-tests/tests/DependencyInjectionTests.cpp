@@ -157,7 +157,7 @@ TEST_F(DependencyInjectorTest, can_fetch_object_with_no_dependencies)
 
 	ASSERT_TRUE(result);
 
-	TestMockWithNoDependencies& testMock = static_cast<std::reference_wrapper<TestMockWithNoDependencies>>(result);
+	TestMockWithNoDependencies& testMock = result.Unwrap();
 
 	EXPECT_EQ(&myMockA, &testMock);
 }
@@ -174,7 +174,7 @@ TEST_F(DependencyInjectorTest, can_fetch_object_with_dependencies)
 
 	ASSERT_TRUE(result);
 
-	TestMockWithTwoDependencies& testMock = static_cast<std::reference_wrapper<TestMockWithTwoDependencies>>(result);
+	TestMockWithTwoDependencies& testMock = result.Unwrap();
 
 	EXPECT_EQ(&myMockC, &testMock);
 }
@@ -185,7 +185,7 @@ TEST_F(DependencyInjectorTest, returns_error_when_type_is_not_added)
 
 	ASSERT_FALSE(result);
 
-	EXPECT_EQ(result, DependencyInjector::ECreateError::MissingDependency);
+	EXPECT_EQ(result.Err().Error, DependencyInjector::ECreateError::MissingDependency);
 }
 
 TEST_F(DependencyInjectorTest, returns_error_when_dependency_is_not_added)
@@ -197,7 +197,7 @@ TEST_F(DependencyInjectorTest, returns_error_when_dependency_is_not_added)
 
 	ASSERT_FALSE(result);
 
-	EXPECT_EQ(result, DependencyInjector::ECreateError::MissingDependency);
+	EXPECT_EQ(result.Err().Error, DependencyInjector::ECreateError::MissingDependency);
 }
 
 TEST_F(DependencyInjectorTest, returns_error_when_dependency_is_not_added_during_createall)
@@ -209,5 +209,5 @@ TEST_F(DependencyInjectorTest, returns_error_when_dependency_is_not_added_during
 
 	ASSERT_FALSE(result);
 
-	EXPECT_EQ(result, DependencyInjector::ECreateError::MissingDependency);
+	EXPECT_EQ(result.Err().Error, DependencyInjector::ECreateError::MissingDependency);
 }

@@ -5,12 +5,14 @@
 #include "WonderMakeBaseTests/WinEventSystemMock.h"
 #include "WonderMakeBaseTests/WinPlatformSystemMock.h"
 
+#include "WonderMakeIoTests/SocketMock.h"
+
 #include "WinIpcConnection.h"
 
 class CloseCallbackMock
 {
 public:
-	using ArgType = Result<Socket::ECloseError, Socket::ECloseReason>;
+	using ArgType = Result<Socket::SCloseLocation, Socket::SCloseError>;
 
 	MOCK_METHOD(void, OnClose, (ArgType));
 
@@ -18,7 +20,7 @@ public:
 	{
 		return [&mock = aMock](ArgType aResult)
 		{
-			mock.OnClose(aResult);
+			mock.OnClose(std::move(aResult));
 		};
 	}
 
@@ -33,8 +35,8 @@ constexpr auto locPipePrefix = "\\\\.\\pipe\\";
 class IpcConnectionCallbackMock
 {
 public:
-	using ReadResult = Result<Socket::EReadError, std::vector<u8>>;
-	using WriteResult = Result<Socket::EWriteError>;
+	using ReadResult = Result<std::vector<u8>, Socket::SReadError>;
+	using WriteResult = Result<void, Socket::SWriteError>;
 
 	MOCK_METHOD(void, OnRead, (ReadResult&& aResult), ());
 	MOCK_METHOD(void, OnWrite, (WriteResult&& aResult), ());
@@ -57,7 +59,8 @@ TEST_F(WinIpcConnectionTest, connect_returns_error_when_passing_empty_name)
 	const auto result = ipcConnection->Connect(emptyName);
 
 	ASSERT_FALSE(result);
-	EXPECT_EQ(result, IpcConnection::ConnectionError::InvalidArgs);
+
+	EXPECT_EQ(result.Err().Error, IpcConnection::EConnectionError::InvalidArgs);
 }
 
 TEST_F(WinIpcConnectionTest, connect_call_create_file)
@@ -95,7 +98,8 @@ TEST_F(WinIpcConnectionTest, connect_returns_error_when_unable_to_open_pipe)
 	const auto result = ipcConnection->Connect(pipeName);
 
 	ASSERT_FALSE(result);
-	EXPECT_EQ(result, IpcConnection::ConnectionError::NoConnection);
+
+	EXPECT_EQ(result.Err().Error, IpcConnection::EConnectionError::NoConnection);
 }
 
 TEST_F(WinIpcConnectionTest, connect_calls_create_event)
@@ -156,7 +160,8 @@ TEST_F(WinIpcConnectionTest, connect_returns_error_when_unable_to_create_read_ev
 	const auto result = ipcConnection->Connect(pipeName);
 
 	ASSERT_FALSE(result);
-	EXPECT_EQ(result, IpcConnection::ConnectionError::InternalError);
+
+	EXPECT_EQ(result.Err().Error, IpcConnection::EConnectionError::InternalError);
 }
 
 TEST_F(WinIpcConnectionTest, connect_returns_error_when_unable_to_create_write_event)
@@ -178,7 +183,8 @@ TEST_F(WinIpcConnectionTest, connect_returns_error_when_unable_to_create_write_e
 	const auto result = ipcConnection->Connect(pipeName);
 
 	ASSERT_FALSE(result);
-	EXPECT_EQ(result, IpcConnection::ConnectionError::InternalError);
+
+	EXPECT_EQ(result.Err().Error, IpcConnection::EConnectionError::InternalError);
 }
 
 TEST_F(WinIpcConnectionTest, connect_returns_success)
@@ -212,7 +218,7 @@ TEST(WinIpcConnectionTests, onclose_is_called_when_a_connection_is_already_close
 
 	auto ipcConnection = std::make_shared<WinIpcConnection>(winEventSystem, winPlatformSystem);
 
-	EXPECT_CALL(callbackMock, OnClose(Eq(Socket::ECloseError::AlreadyClosed)));
+	EXPECT_CALL(callbackMock, OnClose(CloseResultMatcher(Err(Socket::SCloseError{ Socket::ECloseError::AlreadyClosed }))));
 
 	ipcConnection->OnClose(callbackMock.CreateOnClose(callbackMock));
 }
@@ -232,7 +238,7 @@ TEST(WinIpcConnectionTests, onclose_is_call_when_an_open_connection_is_closed)
 
 	ipcConnection->OnClose(callbackMock.CreateOnClose(callbackMock));
 
-	EXPECT_CALL(callbackMock, OnClose(Eq(Socket::ECloseReason::ClosedLocally)));
+	EXPECT_CALL(callbackMock, OnClose(CloseResultMatcher(Ok(Socket::SCloseLocation{ Socket::ECloseLocation::ClosedLocally }))));
 }
 
 TEST(WinIpcConnectionTests, onclose_is_called_when_a_connection_is_closed_locally)
@@ -250,13 +256,16 @@ TEST(WinIpcConnectionTests, onclose_is_called_when_a_connection_is_closed_locall
 
 	ipcConnection->OnClose(callbackMock.CreateOnClose(callbackMock));
 
-	EXPECT_CALL(callbackMock, OnClose(Eq(Socket::ECloseReason::ClosedLocally)));
+	EXPECT_CALL(callbackMock, OnClose(CloseResultMatcher(Ok(Socket::SCloseLocation{ Socket::ECloseLocation::ClosedLocally }))));
 
 	ipcConnection->Close();
 }
 
 TEST(WinIpcConnectionTests, onclose_is_called_when_a_connection_is_closed_remotely)
 {
+	constexpr auto expectedLocation = Socket::ECloseLocation::ClosedRemotely;
+	constexpr u64 expectedReason = ERROR_BROKEN_PIPE;
+
 	NiceMock<WinEventSystemMock> winEventSystem;
 	NiceMock<WinPlatformSystemMock> winPlatformSystem;
 	StrictMock<CloseCallbackMock> callbackMock;
@@ -282,9 +291,9 @@ TEST(WinIpcConnectionTests, onclose_is_called_when_a_connection_is_closed_remote
 	EXPECT_CALL(winPlatformSystem, GetOverlappedResult)
 		.WillOnce(Return(FALSE));
 	EXPECT_CALL(winPlatformSystem, GetLastError())
-		.WillOnce(Return(ERROR_BROKEN_PIPE));
+		.WillOnce(Return(expectedReason));
 
-	EXPECT_CALL(callbackMock, OnClose(Eq(Socket::ECloseReason::ClosedRemotely)));
+	EXPECT_CALL(callbackMock, OnClose(CloseResultMatcher(Ok(Socket::SCloseLocation{ expectedLocation, expectedReason }))));
 
 	std::move(callback)();
 }
@@ -317,7 +326,7 @@ TEST(WinIpcConnectionTests, onclose_is_called_when_a_connection_is_closed_due_to
 		.WillOnce(Return(FALSE));
 	EXPECT_CALL(winPlatformSystem, GetLastError);
 
-	EXPECT_CALL(callbackMock, OnClose(Eq(Socket::ECloseError::InternalError)));
+	EXPECT_CALL(callbackMock, OnClose(CloseResultMatcher(Err(Socket::SCloseError{ Socket::ECloseError::InternalError }))));
 
 	std::move(callback)();
 }
@@ -333,7 +342,8 @@ TEST_F(WinIpcConnectionTest, read_returns_invalid_state_when_not_open)
 	const auto result = ipcConnection->Read(locDummyOnRead);
 
 	ASSERT_FALSE(result);
-	EXPECT_EQ(result, Socket::EReadError::InvalidState);
+
+	EXPECT_EQ(result.Err().Error, Socket::EReadError::InvalidState);
 }
 
 TEST_F(WinIpcConnectionTest, read_passes_file_handle)
@@ -382,7 +392,8 @@ TEST_F(WinIpcConnectionTest, read_returns_synchronous)
 	auto result = ipcConnection->Read(locDummyOnRead);
 
 	ASSERT_TRUE(result);
-	EXPECT_EQ(result, Socket::EAsynchronicity::Synchronous);
+
+	EXPECT_EQ(result.Unwrap(), Socket::EAsynchronicity::Synchronous);
 }
 
 TEST_F(WinIpcConnectionTest, synchronous_read_closes_on_internal_error)
@@ -406,7 +417,7 @@ TEST_F(WinIpcConnectionTest, synchronous_read_closes_on_internal_error)
 	EXPECT_CALL(myWinPlatformSystem, ReadFile)
 		.WillOnce(Return(FALSE));
 	EXPECT_CALL(myWinPlatformSystem, GetLastError);
-	EXPECT_CALL(callbackMock, OnRead(Eq(Socket::EReadError::InternalError)));
+	EXPECT_CALL(callbackMock, OnRead(ReadResultMatcher(Err(Socket::SReadError{ Socket::EReadError::InternalError }))));
 
 	(void)ipcConnection->Read([&callbackMock](auto&& aResult)
 		{
@@ -438,7 +449,7 @@ TEST_F(WinIpcConnectionTest, synchronous_read_closes_on_state_change)
 		.WillOnce(Return(FALSE));
 	EXPECT_CALL(myWinPlatformSystem, GetLastError)
 		.WillOnce(Return(ERROR_BROKEN_PIPE));
-	EXPECT_CALL(callbackMock, OnRead(Eq(Socket::EReadError::StateChanged)));
+	EXPECT_CALL(callbackMock, OnRead(ReadResultMatcher(Err(Socket::SReadError{ Socket::EReadError::StateChanged }))));
 
 	(void)ipcConnection->Read([&callbackMock](auto&& aResult)
 		{
@@ -470,7 +481,7 @@ TEST_F(WinIpcConnectionTest, synchronous_read_remains_open_on_out_of_memory)
 		.WillOnce(Return(FALSE));
 	EXPECT_CALL(myWinPlatformSystem, GetLastError)
 		.WillOnce(Return(ERROR_NOT_ENOUGH_MEMORY));
-	EXPECT_CALL(callbackMock, OnRead(Eq(Socket::EReadError::OutOfMemory)));
+	EXPECT_CALL(callbackMock, OnRead(ReadResultMatcher(Err(Socket::SReadError{ Socket::EReadError::OutOfMemory }))));
 
 	(void)ipcConnection->Read([&callbackMock](auto&& aResult)
 		{
@@ -506,7 +517,7 @@ TEST_F(WinIpcConnectionTest, synchronous_read_calls_onread_with_data)
 
 				return TRUE;
 			});
-	EXPECT_CALL(callbackMock, OnRead(Eq(locDummyData)));
+	EXPECT_CALL(callbackMock, OnRead(ReadResultMatcher(Ok(locDummyData))));
 
 	(void)ipcConnection->Read([&callbackMock](auto&& aResult)
 		{
@@ -543,7 +554,8 @@ TEST_F(WinIpcConnectionTest, read_returns_asynchronous)
 	auto result = ipcConnection->Read(locDummyOnRead);
 
 	ASSERT_TRUE(result);
-	EXPECT_EQ(result, Socket::EAsynchronicity::Asynchronous);
+
+	EXPECT_EQ(result.Unwrap(), Socket::EAsynchronicity::Asynchronous);
 }
 
 TEST_F(WinIpcConnectionTest, asynchronous_read_calls_onread)
@@ -633,7 +645,7 @@ TEST_F(WinIpcConnectionTest, asynchronous_read_closes_on_internal_error)
 	EXPECT_CALL(myWinPlatformSystem, GetLastError);
 	EXPECT_CALL(myWinPlatformSystem, ResetEvent);
 
-	EXPECT_CALL(callbackMock, OnRead(Eq(Socket::EReadError::InternalError)));
+	EXPECT_CALL(callbackMock, OnRead(ReadResultMatcher(Err(Socket::SReadError{ Socket::EReadError::InternalError }))));
 
 	std::move(registerdCallback)();
 
@@ -682,7 +694,7 @@ TEST_F(WinIpcConnectionTest, asynchronous_read_closes_on_state_changed)
 		.WillOnce(Return(ERROR_BROKEN_PIPE));
 	EXPECT_CALL(myWinPlatformSystem, ResetEvent);
 
-	EXPECT_CALL(callbackMock, OnRead(Eq(Socket::EReadError::StateChanged)));
+	EXPECT_CALL(callbackMock, OnRead(ReadResultMatcher(Err(Socket::SReadError{ Socket::EReadError::StateChanged }))));
 
 	std::move(registerdCallback)();
 
@@ -731,7 +743,7 @@ TEST_F(WinIpcConnectionTest, asynchronous_read_remains_open_on_out_of_memory)
 		.WillOnce(Return(ERROR_NOT_ENOUGH_MEMORY));
 	EXPECT_CALL(myWinPlatformSystem, ResetEvent);
 
-	EXPECT_CALL(callbackMock, OnRead(Eq(Socket::EReadError::OutOfMemory)));
+	EXPECT_CALL(callbackMock, OnRead(ReadResultMatcher(Err(Socket::SReadError{ Socket::EReadError::OutOfMemory }))));
 
 	std::move(registerdCallback)();
 
@@ -774,7 +786,7 @@ TEST_F(WinIpcConnectionTest, asynchronous_read_calls_onread_with_data)
 				registerdCallback = std::move(aCallback);
 			});
 
-	EXPECT_CALL(callbackMock, OnRead(Eq(locDummyData)));
+	EXPECT_CALL(callbackMock, OnRead(ReadResultMatcher(Ok(locDummyData))));
 
 	(void)ipcConnection->Read([&callbackMock](auto&& aResult)
 		{
@@ -796,98 +808,102 @@ TEST_F(WinIpcConnectionTest, asynchronous_read_calls_onread_with_data)
 
 TEST_F(WinIpcConnectionTest, asynchronous_queue_reads)
 {
-	StrictMock<IpcConnectionCallbackMock> callbackMock;
+	{
+		StrictMock<IpcConnectionCallbackMock> callbackMock;
 
-	auto ipcConnection = std::make_shared<WinIpcConnection>(myWinEventSystem, myWinPlatformSystem);
-	constexpr auto pipeName = "test";
-	const HANDLE dummyHandle = (HANDLE)0x1234ABCD;
+		auto ipcConnection = std::make_shared<WinIpcConnection>(myWinEventSystem, myWinPlatformSystem);
+		constexpr auto pipeName = "test";
+		const HANDLE dummyHandle = (HANDLE)0x1234ABCD;
 
-	EXPECT_CALL(myWinPlatformSystem, CreateFileW)
-		.WillOnce(Return(dummyHandle));
-	EXPECT_CALL(myWinPlatformSystem, CreateEventW)
-		.Times(2)
-		.WillRepeatedly(Return(dummyHandle));
-	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
-		.Times(3);
+		EXPECT_CALL(myWinPlatformSystem, CreateFileW)
+			.WillOnce(Return(dummyHandle));
+		EXPECT_CALL(myWinPlatformSystem, CreateEventW)
+			.Times(2)
+			.WillRepeatedly(Return(dummyHandle));
+		EXPECT_CALL(myWinPlatformSystem, CloseHandle)
+			.Times(3);
 
-	(void)ipcConnection->Connect(pipeName);
+		(void)ipcConnection->Connect(pipeName);
 
-	EXPECT_CALL(myWinPlatformSystem, ReadFile)
-		.WillOnce(Return(FALSE));
-	EXPECT_CALL(myWinPlatformSystem, GetLastError)
-		.WillOnce(Return(ERROR_IO_PENDING));
+		EXPECT_CALL(myWinPlatformSystem, ReadFile)
+			.WillOnce(Return(FALSE));
+		EXPECT_CALL(myWinPlatformSystem, GetLastError)
+			.WillOnce(Return(ERROR_IO_PENDING));
 
-	EXPECT_CALL(myWinEventSystem, RegisterEvent);
-	EXPECT_CALL(myWinEventSystem, UnregisterEvent);
+		EXPECT_CALL(myWinEventSystem, RegisterEvent);
+		EXPECT_CALL(myWinEventSystem, UnregisterEvent);
 
-	const auto onRead = [&callbackMock](auto&& aResult)
-		{
-			callbackMock.OnRead(std::move(aResult));
-		};
+		const auto onRead = [&callbackMock](auto&& aResult)
+			{
+				callbackMock.OnRead(std::move(aResult));
+			};
 
-	(void)ipcConnection->Read(onRead);
+		(void)ipcConnection->Read(onRead);
 	
-	auto result = ipcConnection->Read(onRead);
+		auto result = ipcConnection->Read(onRead);
 
-	ASSERT_TRUE(result);
-	EXPECT_EQ(result, Socket::EAsynchronicity::Asynchronous);
+		ASSERT_TRUE(result);
 
-	EXPECT_CALL(callbackMock, OnRead(Eq(Socket::EReadError::StateChanged)))
-		.Times(2);
+		EXPECT_EQ(result.Unwrap(), Socket::EAsynchronicity::Asynchronous);
+		EXPECT_CALL(callbackMock, OnRead(ReadResultMatcher(Err(Socket::SReadError{ Socket::EReadError::StateChanged }))))
+			.Times(2);
+	}
 }
 
 TEST_F(WinIpcConnectionTest, asynchronous_dequeues_read)
 {
-	StrictMock<IpcConnectionCallbackMock> callbackMock;
+	{
+		StrictMock<IpcConnectionCallbackMock> callbackMock;
 
-	auto ipcConnection = std::make_shared<WinIpcConnection>(myWinEventSystem, myWinPlatformSystem);
-	constexpr auto pipeName = "test";
-	const HANDLE dummyHandle = (HANDLE)0x1234ABCD;
+		auto ipcConnection = std::make_shared<WinIpcConnection>(myWinEventSystem, myWinPlatformSystem);
+		constexpr auto pipeName = "test";
+		const HANDLE dummyHandle = (HANDLE)0x1234ABCD;
 
-	EXPECT_CALL(myWinPlatformSystem, CreateFileW)
-		.WillOnce(Return(dummyHandle));
-	EXPECT_CALL(myWinPlatformSystem, CreateEventW)
-		.Times(2)
-		.WillRepeatedly(Return(dummyHandle));
-	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
-		.Times(3);
+		EXPECT_CALL(myWinPlatformSystem, CreateFileW)
+			.WillOnce(Return(dummyHandle));
+		EXPECT_CALL(myWinPlatformSystem, CreateEventW)
+			.Times(2)
+			.WillRepeatedly(Return(dummyHandle));
+		EXPECT_CALL(myWinPlatformSystem, CloseHandle)
+			.Times(3);
 
-	(void)ipcConnection->Connect(pipeName);
+		(void)ipcConnection->Connect(pipeName);
 
-	EXPECT_CALL(myWinPlatformSystem, ReadFile)
-		.WillOnce(Return(FALSE));
-	EXPECT_CALL(myWinPlatformSystem, GetLastError)
-		.WillOnce(Return(ERROR_IO_PENDING));
+		EXPECT_CALL(myWinPlatformSystem, ReadFile)
+			.WillOnce(Return(FALSE));
+		EXPECT_CALL(myWinPlatformSystem, GetLastError)
+			.WillOnce(Return(ERROR_IO_PENDING));
 
-	Closure registerdCallback = []() {};
+		Closure registerdCallback = []() {};
 
-	EXPECT_CALL(myWinEventSystem, RegisterEvent)
-		.WillOnce([&registerdCallback](auto&&, auto&& aCallback)
+		EXPECT_CALL(myWinEventSystem, RegisterEvent)
+			.WillOnce([&registerdCallback](auto&&, auto&& aCallback)
+				{
+					registerdCallback = std::move(aCallback);
+				});
+
+		(void)ipcConnection->Read(locDummyOnRead);
+
+		(void)ipcConnection->Read([&callbackMock](auto&& aResult)
 			{
-				registerdCallback = std::move(aCallback);
+				callbackMock.OnRead(std::move(aResult));
 			});
 
-	(void)ipcConnection->Read(locDummyOnRead);
+		EXPECT_CALL(myWinPlatformSystem, GetOverlappedResult)
+			.WillOnce(Return(TRUE));
+		EXPECT_CALL(myWinPlatformSystem, ResetEvent);
+		EXPECT_CALL(myWinPlatformSystem, ReadFile)
+			.WillOnce(Return(FALSE));
+		EXPECT_CALL(myWinPlatformSystem, GetLastError)
+			.WillOnce(Return(ERROR_SUCCESS))
+			.WillOnce(Return(ERROR_IO_PENDING));
+		EXPECT_CALL(myWinEventSystem, RegisterEvent);
 
-	(void)ipcConnection->Read([&callbackMock](auto&& aResult)
-		{
-			callbackMock.OnRead(std::move(aResult));
-		});
+		std::move(registerdCallback)();
 
-	EXPECT_CALL(myWinPlatformSystem, GetOverlappedResult)
-		.WillOnce(Return(TRUE));
-	EXPECT_CALL(myWinPlatformSystem, ResetEvent);
-	EXPECT_CALL(myWinPlatformSystem, ReadFile)
-		.WillOnce(Return(FALSE));
-	EXPECT_CALL(myWinPlatformSystem, GetLastError)
-		.WillOnce(Return(ERROR_SUCCESS))
-		.WillOnce(Return(ERROR_IO_PENDING));
-	EXPECT_CALL(myWinEventSystem, RegisterEvent);
-
-	std::move(registerdCallback)();
-
-	EXPECT_CALL(callbackMock, OnRead(Eq(Socket::EReadError::StateChanged)));
-	EXPECT_CALL(myWinEventSystem, UnregisterEvent);
+		EXPECT_CALL(callbackMock, OnRead(ReadResultMatcher(Err(Socket::SReadError{ Socket::EReadError::StateChanged }))));
+		EXPECT_CALL(myWinEventSystem, UnregisterEvent);
+	}
 }
 
  // --------------------------
@@ -901,7 +917,8 @@ TEST_F(WinIpcConnectionTest, write_returns_invalid_state_when_not_open)
 	const auto result = ipcConnection->Write(locDummyData, locDummyOnWrite);
 
 	ASSERT_FALSE(result);
-	EXPECT_EQ(result, Socket::EWriteError::InvalidState);
+
+	EXPECT_EQ(result.Err().Error, Socket::EWriteError::InvalidState);
 }
 
 TEST_F(WinIpcConnectionTest, write_passes_file_handle)
@@ -955,7 +972,8 @@ TEST_F(WinIpcConnectionTest, write_returns_synchronous)
 	auto result = ipcConnection->Write(locDummyData, locDummyOnWrite);
 
 	ASSERT_TRUE(result);
-	EXPECT_EQ(result, Socket::EAsynchronicity::Synchronous);
+
+	EXPECT_EQ(result.Unwrap(), Socket::EAsynchronicity::Synchronous);
 }
 
 TEST_F(WinIpcConnectionTest, synchronous_write_closes_on_internal_error)
@@ -979,7 +997,7 @@ TEST_F(WinIpcConnectionTest, synchronous_write_closes_on_internal_error)
 	EXPECT_CALL(myWinPlatformSystem, WriteFile)
 		.WillOnce(Return(FALSE));
 	EXPECT_CALL(myWinPlatformSystem, GetLastError);
-	EXPECT_CALL(callbackMock, OnWrite(Eq(Socket::EWriteError::InternalError)));
+	EXPECT_CALL(callbackMock, OnWrite(WriteResultMatcher(Err(Socket::SWriteError{ Socket::EWriteError::InternalError }))));
 
 	(void)ipcConnection->Write(locDummyData, [&callbackMock](auto&& aResult)
 		{
@@ -1011,7 +1029,7 @@ TEST_F(WinIpcConnectionTest, synchronous_write_closes_on_state_change)
 		.WillOnce(Return(FALSE));
 	EXPECT_CALL(myWinPlatformSystem, GetLastError)
 		.WillOnce(Return(ERROR_BROKEN_PIPE));
-	EXPECT_CALL(callbackMock, OnWrite(Eq(Socket::EWriteError::StateChanged)));
+	EXPECT_CALL(callbackMock, OnWrite(WriteResultMatcher(Err(Socket::SWriteError{ Socket::EWriteError::StateChanged }))));
 
 	(void)ipcConnection->Write(locDummyData, [&callbackMock](auto&& aResult)
 		{
@@ -1043,7 +1061,7 @@ TEST_F(WinIpcConnectionTest, synchronous_write_remains_open_on_out_of_memory)
 		.WillOnce(Return(FALSE));
 	EXPECT_CALL(myWinPlatformSystem, GetLastError)
 		.WillOnce(Return(ERROR_NOT_ENOUGH_MEMORY));
-	EXPECT_CALL(callbackMock, OnWrite(Eq(Socket::EWriteError::OutOfMemory)));
+	EXPECT_CALL(callbackMock, OnWrite(WriteResultMatcher(Err(Socket::SWriteError{ Socket::EWriteError::OutOfMemory }))));
 
 	(void)ipcConnection->Write(locDummyData, [&callbackMock](auto&& aResult)
 		{
@@ -1079,7 +1097,7 @@ TEST_F(WinIpcConnectionTest, synchronous_write_calls_onwrite_with_data)
 
 				return TRUE;
 			});
-	EXPECT_CALL(callbackMock, OnWrite(Eq(Success)));
+	EXPECT_CALL(callbackMock, OnWrite(WriteResultMatcher(Ok())));
 
 	(void)ipcConnection->Write(locDummyData, [&callbackMock](auto&& aResult)
 		{
@@ -1116,7 +1134,8 @@ TEST_F(WinIpcConnectionTest, write_returns_asynchronous)
 	auto result = ipcConnection->Write(locDummyData, locDummyOnWrite);
 
 	ASSERT_TRUE(result);
-	EXPECT_EQ(result, Socket::EAsynchronicity::Asynchronous);
+
+	EXPECT_EQ(result.Unwrap(), Socket::EAsynchronicity::Asynchronous);
 }
 
 TEST_F(WinIpcConnectionTest, synchronous_write_splits_buffer_if_not_all_bytes_were_written)
@@ -1154,7 +1173,7 @@ TEST_F(WinIpcConnectionTest, synchronous_write_splits_buffer_if_not_all_bytes_we
 				return TRUE;
 			});
 
-	EXPECT_CALL(callbackMock, OnWrite(Eq(Success)));
+	EXPECT_CALL(callbackMock, OnWrite(WriteResultMatcher(Ok())));
 
 	(void)ipcConnection->Write(locDummyData, [&callbackMock](auto&& aResult)
 		{
@@ -1249,7 +1268,7 @@ TEST_F(WinIpcConnectionTest, asynchronous_write_closes_on_internal_error)
 	EXPECT_CALL(myWinPlatformSystem, GetLastError);
 	EXPECT_CALL(myWinPlatformSystem, ResetEvent);
 
-	EXPECT_CALL(callbackMock, OnWrite(Eq(Socket::EWriteError::InternalError)));
+	EXPECT_CALL(callbackMock, OnWrite(WriteResultMatcher(Err(Socket::SWriteError{ Socket::EWriteError::InternalError }))));
 
 	std::move(registerdCallback)();
 
@@ -1298,7 +1317,7 @@ TEST_F(WinIpcConnectionTest, asynchronous_write_closes_on_state_changed)
 		.WillOnce(Return(ERROR_BROKEN_PIPE));
 	EXPECT_CALL(myWinPlatformSystem, ResetEvent);
 
-	EXPECT_CALL(callbackMock, OnWrite(Eq(Socket::EWriteError::StateChanged)));
+	EXPECT_CALL(callbackMock, OnWrite(WriteResultMatcher(Err(Socket::SWriteError{ Socket::EWriteError::StateChanged }))));
 
 	std::move(registerdCallback)();
 
@@ -1347,7 +1366,7 @@ TEST_F(WinIpcConnectionTest, asynchronous_write_remains_open_on_out_of_memory)
 		.WillOnce(Return(ERROR_NOT_ENOUGH_MEMORY));
 	EXPECT_CALL(myWinPlatformSystem, ResetEvent);
 
-	EXPECT_CALL(callbackMock, OnWrite(Eq(Socket::EWriteError::OutOfMemory)));
+	EXPECT_CALL(callbackMock, OnWrite(WriteResultMatcher(Err(Socket::SWriteError{ Socket::EWriteError::OutOfMemory }))));
 
 	std::move(registerdCallback)();
 
@@ -1356,52 +1375,54 @@ TEST_F(WinIpcConnectionTest, asynchronous_write_remains_open_on_out_of_memory)
 
 TEST_F(WinIpcConnectionTest, asynchronous_write_calls_onwrite_on_success)
 {
-	StrictMock<IpcConnectionCallbackMock> callbackMock;
+	{
+		StrictMock<IpcConnectionCallbackMock> callbackMock;
 
-	auto ipcConnection = std::make_shared<WinIpcConnection>(myWinEventSystem, myWinPlatformSystem);
-	constexpr auto pipeName = "test";
-	const HANDLE dummyHandle = (HANDLE)0x1234ABCD;
+		auto ipcConnection = std::make_shared<WinIpcConnection>(myWinEventSystem, myWinPlatformSystem);
+		constexpr auto pipeName = "test";
+		const HANDLE dummyHandle = (HANDLE)0x1234ABCD;
 
-	EXPECT_CALL(myWinPlatformSystem, CreateFileW)
-		.WillOnce(Return(dummyHandle));
-	EXPECT_CALL(myWinPlatformSystem, CreateEventW)
-		.Times(2)
-		.WillRepeatedly(Return(dummyHandle));
-	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
-		.Times(3);
+		EXPECT_CALL(myWinPlatformSystem, CreateFileW)
+			.WillOnce(Return(dummyHandle));
+		EXPECT_CALL(myWinPlatformSystem, CreateEventW)
+			.Times(2)
+			.WillRepeatedly(Return(dummyHandle));
+		EXPECT_CALL(myWinPlatformSystem, CloseHandle)
+			.Times(3);
 
-	(void)ipcConnection->Connect(pipeName);
+		(void)ipcConnection->Connect(pipeName);
 
-	EXPECT_CALL(myWinPlatformSystem, WriteFile);
-	EXPECT_CALL(myWinPlatformSystem, GetLastError)
-		.WillOnce(Return(ERROR_IO_PENDING));
+		EXPECT_CALL(myWinPlatformSystem, WriteFile);
+		EXPECT_CALL(myWinPlatformSystem, GetLastError)
+			.WillOnce(Return(ERROR_IO_PENDING));
 
-	Closure registerdCallback = []() {};
+		Closure registerdCallback = []() {};
 
-	EXPECT_CALL(myWinEventSystem, RegisterEvent)
-		.WillOnce([&registerdCallback](auto&&, auto&& aCallback)
+		EXPECT_CALL(myWinEventSystem, RegisterEvent)
+			.WillOnce([&registerdCallback](auto&&, auto&& aCallback)
+				{
+					registerdCallback = std::move(aCallback);
+				});
+
+		EXPECT_CALL(callbackMock, OnWrite(WriteResultMatcher(Ok())));
+
+		(void)ipcConnection->Write(locDummyData, [&callbackMock](auto&& aResult)
 			{
-				registerdCallback = std::move(aCallback);
+				callbackMock.OnWrite(std::move(aResult));
 			});
 
-	EXPECT_CALL(callbackMock, OnWrite(Eq(Success)));
+		EXPECT_CALL(myWinPlatformSystem, GetOverlappedResult)
+			.WillOnce([&dummyData = locDummyData](auto&&, auto&&, LPDWORD lpNumberOfBytesTransferred, auto&&)
+				{
+					*lpNumberOfBytesTransferred = static_cast<DWORD>(dummyData.size());
 
-	(void)ipcConnection->Write(locDummyData, [&callbackMock](auto&& aResult)
-		{
-			callbackMock.OnWrite(std::move(aResult));
-		});
+					return TRUE;
+				});
+		EXPECT_CALL(myWinPlatformSystem, GetLastError);
+		EXPECT_CALL(myWinPlatformSystem, ResetEvent);
 
-	EXPECT_CALL(myWinPlatformSystem, GetOverlappedResult)
-		.WillOnce([&dummyData = locDummyData](auto&&, auto&&, LPDWORD lpNumberOfBytesTransferred, auto&&)
-			{
-				*lpNumberOfBytesTransferred = static_cast<DWORD>(dummyData.size());
-
-				return TRUE;
-			});
-	EXPECT_CALL(myWinPlatformSystem, GetLastError);
-	EXPECT_CALL(myWinPlatformSystem, ResetEvent);
-
-	std::move(registerdCallback)();
+		std::move(registerdCallback)();
+	}
 }
 
 TEST_F(WinIpcConnectionTest, asynchronous_write_splits_buffer_if_not_all_bytes_were_written)
@@ -1434,7 +1455,7 @@ TEST_F(WinIpcConnectionTest, asynchronous_write_splits_buffer_if_not_all_bytes_w
 				registerdCallback = std::move(aCallback);
 			});
 
-	EXPECT_CALL(callbackMock, OnWrite(Eq(Success)));
+	EXPECT_CALL(callbackMock, OnWrite(WriteResultMatcher(Ok())));
 
 	(void)ipcConnection->Write(locDummyData, [&callbackMock](auto&& aResult)
 		{
@@ -1464,96 +1485,101 @@ TEST_F(WinIpcConnectionTest, asynchronous_write_splits_buffer_if_not_all_bytes_w
 
 TEST_F(WinIpcConnectionTest, asynchronous_queue_writes)
 {
-	StrictMock<IpcConnectionCallbackMock> callbackMock;
-
-	auto ipcConnection = std::make_shared<WinIpcConnection>(myWinEventSystem, myWinPlatformSystem);
-	constexpr auto pipeName = "test";
-	const HANDLE dummyHandle = (HANDLE)0x1234ABCD;
-
-	EXPECT_CALL(myWinPlatformSystem, CreateFileW)
-		.WillOnce(Return(dummyHandle));
-	EXPECT_CALL(myWinPlatformSystem, CreateEventW)
-		.Times(2)
-		.WillRepeatedly(Return(dummyHandle));
-	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
-		.Times(3);
-
-	(void)ipcConnection->Connect(pipeName);
-
-	EXPECT_CALL(myWinPlatformSystem, WriteFile)
-		.WillOnce(Return(FALSE));
-	EXPECT_CALL(myWinPlatformSystem, GetLastError)
-		.WillOnce(Return(ERROR_IO_PENDING));
-
-	EXPECT_CALL(myWinEventSystem, RegisterEvent);
-	EXPECT_CALL(myWinEventSystem, UnregisterEvent);
-
-	const auto onWrite = [&callbackMock](auto&& aResult)
 	{
-		callbackMock.OnWrite(std::move(aResult));
-	};
+		StrictMock<IpcConnectionCallbackMock> callbackMock;
 
-	(void)ipcConnection->Write(locDummyData, onWrite);
+		auto ipcConnection = std::make_shared<WinIpcConnection>(myWinEventSystem, myWinPlatformSystem);
+		constexpr auto pipeName = "test";
+		const HANDLE dummyHandle = (HANDLE)0x1234ABCD;
 
-	auto result = ipcConnection->Write(locDummyData, onWrite);
+		EXPECT_CALL(myWinPlatformSystem, CreateFileW)
+			.WillOnce(Return(dummyHandle));
+		EXPECT_CALL(myWinPlatformSystem, CreateEventW)
+			.Times(2)
+			.WillRepeatedly(Return(dummyHandle));
+		EXPECT_CALL(myWinPlatformSystem, CloseHandle)
+			.Times(3);
 
-	ASSERT_TRUE(result);
-	EXPECT_EQ(result, Socket::EAsynchronicity::Asynchronous);
+		(void)ipcConnection->Connect(pipeName);
 
-	EXPECT_CALL(callbackMock, OnWrite(Eq(Socket::EWriteError::StateChanged)))
-		.Times(2);
+		EXPECT_CALL(myWinPlatformSystem, WriteFile)
+			.WillOnce(Return(FALSE));
+		EXPECT_CALL(myWinPlatformSystem, GetLastError)
+			.WillOnce(Return(ERROR_IO_PENDING));
+
+		EXPECT_CALL(myWinEventSystem, RegisterEvent);
+		EXPECT_CALL(myWinEventSystem, UnregisterEvent);
+
+		const auto onWrite = [&callbackMock](auto&& aResult)
+		{
+			callbackMock.OnWrite(std::move(aResult));
+		};
+
+		(void)ipcConnection->Write(locDummyData, onWrite);
+
+		auto result = ipcConnection->Write(locDummyData, onWrite);
+
+		ASSERT_TRUE(result);
+
+		EXPECT_EQ(result.Unwrap(), Socket::EAsynchronicity::Asynchronous);
+
+		EXPECT_CALL(callbackMock, OnWrite(WriteResultMatcher(Err(Socket::SWriteError{ Socket::EWriteError::StateChanged }))))
+			.Times(2);
+	}
 }
 
 TEST_F(WinIpcConnectionTest, asynchronous_dequeues_write)
 {
-	StrictMock<IpcConnectionCallbackMock> callbackMock;
+	{
+		StrictMock<IpcConnectionCallbackMock> callbackMock;
 
-	auto ipcConnection = std::make_shared<WinIpcConnection>(myWinEventSystem, myWinPlatformSystem);
-	constexpr auto pipeName = "test";
-	const HANDLE dummyHandle = (HANDLE)0x1234ABCD;
+		auto ipcConnection = std::make_shared<WinIpcConnection>(myWinEventSystem, myWinPlatformSystem);
+		constexpr auto pipeName = "test";
+		const HANDLE dummyHandle = (HANDLE)0x1234ABCD;
 
-	EXPECT_CALL(myWinPlatformSystem, CreateFileW)
-		.WillOnce(Return(dummyHandle));
-	EXPECT_CALL(myWinPlatformSystem, CreateEventW)
-		.Times(2)
-		.WillRepeatedly(Return(dummyHandle));
-	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
-		.Times(3);
+		EXPECT_CALL(myWinPlatformSystem, CreateFileW)
+			.WillOnce(Return(dummyHandle));
+		EXPECT_CALL(myWinPlatformSystem, CreateEventW)
+			.Times(2)
+			.WillRepeatedly(Return(dummyHandle));
+		EXPECT_CALL(myWinPlatformSystem, CloseHandle)
+			.Times(3);
 
-	(void)ipcConnection->Connect(pipeName);
+		(void)ipcConnection->Connect(pipeName);
 
-	EXPECT_CALL(myWinPlatformSystem, WriteFile)
-		.WillOnce(Return(FALSE));
-	EXPECT_CALL(myWinPlatformSystem, GetLastError)
-		.WillOnce(Return(ERROR_IO_PENDING));
+		EXPECT_CALL(myWinPlatformSystem, WriteFile)
+			.WillOnce(Return(FALSE));
+		EXPECT_CALL(myWinPlatformSystem, GetLastError)
+			.WillOnce(Return(ERROR_IO_PENDING));
 
-	Closure registerdCallback = []() {};
+		Closure registerdCallback = []() {};
 
-	EXPECT_CALL(myWinEventSystem, RegisterEvent)
-		.WillOnce([&registerdCallback](auto&&, auto&& aCallback)
+		EXPECT_CALL(myWinEventSystem, RegisterEvent)
+			.WillOnce([&registerdCallback](auto&&, auto&& aCallback)
+				{
+					registerdCallback = std::move(aCallback);
+				});
+
+		(void)ipcConnection->Write(locDummyData, locDummyOnWrite);
+
+		(void)ipcConnection->Write(locDummyData, [&callbackMock](auto&& aResult)
 			{
-				registerdCallback = std::move(aCallback);
+				callbackMock.OnWrite(std::move(aResult));
 			});
 
-	(void)ipcConnection->Write(locDummyData, locDummyOnWrite);
+		EXPECT_CALL(myWinPlatformSystem, GetOverlappedResult)
+			.WillOnce(Return(TRUE));
+		EXPECT_CALL(myWinPlatformSystem, ResetEvent);
+		EXPECT_CALL(myWinPlatformSystem, WriteFile)
+			.WillOnce(Return(FALSE));
+		EXPECT_CALL(myWinPlatformSystem, GetLastError)
+			.WillOnce(Return(ERROR_SUCCESS))
+			.WillOnce(Return(ERROR_IO_PENDING));
+		EXPECT_CALL(myWinEventSystem, RegisterEvent);
 
-	(void)ipcConnection->Write(locDummyData, [&callbackMock](auto&& aResult)
-		{
-			callbackMock.OnWrite(std::move(aResult));
-		});
+		std::move(registerdCallback)();
 
-	EXPECT_CALL(myWinPlatformSystem, GetOverlappedResult)
-		.WillOnce(Return(TRUE));
-	EXPECT_CALL(myWinPlatformSystem, ResetEvent);
-	EXPECT_CALL(myWinPlatformSystem, WriteFile)
-		.WillOnce(Return(FALSE));
-	EXPECT_CALL(myWinPlatformSystem, GetLastError)
-		.WillOnce(Return(ERROR_SUCCESS))
-		.WillOnce(Return(ERROR_IO_PENDING));
-	EXPECT_CALL(myWinEventSystem, RegisterEvent);
-
-	std::move(registerdCallback)();
-
-	EXPECT_CALL(callbackMock, OnWrite(Eq(Socket::EWriteError::StateChanged)));
-	EXPECT_CALL(myWinEventSystem, UnregisterEvent);
+		EXPECT_CALL(callbackMock, OnWrite(WriteResultMatcher(Err(Socket::SWriteError{ Socket::EWriteError::StateChanged }))));
+		EXPECT_CALL(myWinEventSystem, UnregisterEvent);
+	}
 }

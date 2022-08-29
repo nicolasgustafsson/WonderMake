@@ -1,8 +1,12 @@
+#pragma once
+
 #include "wondermake-tests-common/GTestInclude.h"
 
 #include "wondermake-io/SocketSerializing.h"
 
 #include "wondermake-utility/SharedReference.h"
+
+#include "WonderMakeIoTests/SocketMock.h"
 
 struct SerializableMock
 {
@@ -14,7 +18,7 @@ struct SerializableMock
 class SerializerMock
 {
 public:
-	using ResultTypeDeserialize = Result<decltype(Failure), std::pair<SerializableMock, size_t>>;
+	using ResultTypeDeserialize = Result<std::pair<SerializableMock, size_t>>;
 
 	MOCK_METHOD(std::vector<u8>, Serialize, (const SerializableMock&));
 	MOCK_METHOD(ResultTypeDeserialize, Deserialize, (std::span<const u8>));
@@ -24,7 +28,7 @@ public:
 		ON_CALL(*this, Serialize)
 			.WillByDefault(Return(std::vector<u8>()));
 		ON_CALL(*this, Deserialize)
-			.WillByDefault(Return(Failure));
+			.WillByDefault(Return(Err()));
 	}
 
 	inline auto CreateSerialize()
@@ -47,11 +51,11 @@ class SocketSerializingMock
 	: public SocketSerializing<SerializableMock>
 {
 public:
-	using ResultTypeWrite = Result<Socket::EWriteError, Socket::EAsynchronicity>;
-	using ResultTypeRead = Result<Socket::EReadError, Socket::EAsynchronicity>;
+	using ResultTypeWriteMessage = Result<void, Socket::SWriteError>;
+	using ResultTypeReadMessage = Result<void, Socket::SReadError>;
 
-	MOCK_METHOD(Result<Socket::EWriteError>, WriteMessage, (const SerializableMock& aMessage, SocketSerializing<SerializableMock>::OnWriteCallback aOnWrite), (override));
-	MOCK_METHOD(Result<Socket::EReadError>, ReadMessage, (SocketSerializing<SerializableMock>::OnReadCallback aOnRead), (override));
+	MOCK_METHOD(ResultTypeWriteMessage, WriteMessage, (const SerializableMock& aMessage, SocketSerializing<SerializableMock>::OnWriteCallback aOnWrite), (override));
+	MOCK_METHOD(ResultTypeReadMessage, ReadMessage, (SocketSerializing<SerializableMock>::OnReadCallback aOnRead), (override));
 
 	MOCK_METHOD(void, OnClose, (Socket::OnCloseCallback aOnClose), (override));
 	MOCK_METHOD(void, Close, (), (override));
@@ -61,9 +65,9 @@ public:
 	void DelegateToFake()
 	{
 		ON_CALL(*this, WriteMessage)
-			.WillByDefault(Return(Socket::EWriteError::InternalError));
+			.WillByDefault(Return(Err(Socket::SWriteError{ Socket::EWriteError::InternalError })));
 		ON_CALL(*this, ReadMessage)
-			.WillByDefault(Return(Socket::EReadError::InternalError));
+			.WillByDefault(Return(Err(Socket::SReadError{ Socket::EReadError::InternalError })));
 
 		ON_CALL(*this, GetState)
 			.WillByDefault(Return(Socket::EState::Closed));
@@ -73,9 +77,9 @@ public:
 class SocketSerializingCallbackMock
 {
 public:
-	using ArgTypeOnWrite = Result<Socket::EWriteError>;
-	using ArgTypeOnRead = Result<Socket::EReadError, SerializableMock>&&;
-	using ArgTypeOnClose = Result<Socket::ECloseError, Socket::ECloseReason>;
+	using ArgTypeOnWrite = Result<void, Socket::SWriteError>;
+	using ArgTypeOnRead = Result<SerializableMock, Socket::SReadError>&&;
+	using ArgTypeOnClose = Result<Socket::SCloseLocation, Socket::SCloseError>;
 
 	MOCK_METHOD(void, OnWriteMessage, (ArgTypeOnWrite));
 	MOCK_METHOD(void, OnReadMessage, (ArgTypeOnRead));
@@ -94,3 +98,38 @@ public:
 		return [this](auto&& aResult) { OnClose(std::move(aResult)); };
 	}
 };
+
+MATCHER_P(WriteMessageResultMatcher, aResult, "")
+{
+	Result<void, Socket::SWriteError> argResult = aResult;
+
+	if (arg && argResult)
+		return true;
+
+	if (!arg && !argResult)
+		return ExplainMatchResult(
+			AllOf(
+				Field("Error", &Socket::SWriteError::Error, arg.Err().Error),
+				Field("Reason", &Socket::SWriteError::Reason, arg.Err().Reason)),
+			argResult.Err(), result_listener);
+
+	return false;
+}
+MATCHER_P(ReadMessageResultMatcher, aResult, "")
+{
+	Result<SerializableMock, Socket::SReadError> argResult = aResult;
+
+	if (arg && argResult)
+		return ExplainMatchResult(
+			Eq(argResult.Unwrap()),
+			arg.Unwrap(), result_listener);
+
+	if (!arg && !argResult)
+		return ExplainMatchResult(
+			AllOf(
+				Field("Error", &Socket::SReadError::Error, argResult.Err().Error),
+				Field("Reason", &Socket::SReadError::Reason, argResult.Err().Reason)),
+			arg.Err(), result_listener);
+
+	return false;
+}

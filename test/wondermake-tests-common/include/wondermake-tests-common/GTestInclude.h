@@ -13,9 +13,12 @@ using ::testing::Args;
 using ::testing::ElementsAre;
 using ::testing::Return;
 
+using ::testing::AllOf;
 using ::testing::Eq;
 using ::testing::Ge;
 using ::testing::StrEq;
+
+using ::testing::Field;
 
 // This is a matcher like ElementsAreArray, but it allows you to match against a void *.
 template <typename T>

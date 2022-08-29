@@ -1,3 +1,5 @@
+#pragma once
+
 #include "wondermake-tests-common/GTestInclude.h"
 
 #include "wondermake-io/ReadFileJob.h"

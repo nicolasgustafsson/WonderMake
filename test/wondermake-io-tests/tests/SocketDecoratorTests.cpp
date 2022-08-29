@@ -22,7 +22,7 @@ TEST(SocketDecoratorTests, write_calls_socket_function)
 
 	socketMock->DelegateToFake();
 
-	SocketDecoratorTestImplementation decorator(SharedReference<Socket>::FromPointer(socketMock));
+	SocketDecoratorTestImplementation decorator(SharedReference<Socket>::FromPointer(socketMock).Unwrap());
 
 	EXPECT_CALL(*socketMock, Write);
 
@@ -35,7 +35,7 @@ TEST(SocketDecoratorTests, write_forwards_buffer_correctly)
 
 	socketMock->DelegateToFake();
 
-	SocketDecoratorTestImplementation decorator(SharedReference<Socket>::FromPointer(socketMock));
+	SocketDecoratorTestImplementation decorator(SharedReference<Socket>::FromPointer(socketMock).Unwrap());
 
 	EXPECT_CALL(*socketMock, Write(Eq(locDummyBuffer), _));
 
@@ -48,14 +48,14 @@ TEST(SocketDecoratorTests, write_return_correct_value)
 
 	socketMock->DelegateToFake();
 
-	SocketDecoratorTestImplementation decorator(SharedReference<Socket>::FromPointer(socketMock));
+	SocketDecoratorTestImplementation decorator(SharedReference<Socket>::FromPointer(socketMock).Unwrap());
 
 	EXPECT_CALL(*socketMock, Write)
-		.WillOnce(Return(Socket::EAsynchronicity::Synchronous));
+		.WillOnce(Return(Ok(Socket::EAsynchronicity::Synchronous)));
 
 	const auto result = decorator.Write(locDummyBuffer, locDummyCallback);
 
-	EXPECT_EQ(result, Socket::EAsynchronicity::Synchronous);
+	EXPECT_EQ(result, Ok(Socket::EAsynchronicity::Synchronous));
 }
 
 TEST(SocketDecoratorTests, write_forwards_correct_callback)
@@ -66,16 +66,16 @@ TEST(SocketDecoratorTests, write_forwards_correct_callback)
 
 	socketMock->DelegateToFake();
 
-	SocketDecoratorTestImplementation decorator(SharedReference<Socket>::FromPointer(socketMock));
+	SocketDecoratorTestImplementation decorator(SharedReference<Socket>::FromPointer(socketMock).Unwrap());
 
 	EXPECT_CALL(*socketMock, Write)
 		.WillOnce([](auto&&, auto&& aCallback)
 			{
-				std::move(aCallback)(Socket::EWriteError::InternalError);
+				std::move(aCallback)(Err(Socket::SWriteError{ Socket::EWriteError::InternalError }));
 
-				return Socket::EAsynchronicity::Synchronous;
+				return Ok(Socket::EAsynchronicity::Synchronous);
 			});
-	EXPECT_CALL(callback, OnWrite(Eq(Socket::EWriteError::InternalError)));
+	EXPECT_CALL(callback, OnWrite(WriteResultMatcher(Err(Socket::SWriteError{ Socket::EWriteError::InternalError }))));
 
 	(void)decorator.Write(locDummyBuffer, callback.CreateOnWrite());
 }
@@ -86,7 +86,7 @@ TEST(SocketDecoratorTests, read_calls_socket_function)
 
 	socketMock->DelegateToFake();
 
-	SocketDecoratorTestImplementation decorator(SharedReference<Socket>::FromPointer(socketMock));
+	SocketDecoratorTestImplementation decorator(SharedReference<Socket>::FromPointer(socketMock).Unwrap());
 
 	EXPECT_CALL(*socketMock, Read);
 
@@ -97,14 +97,14 @@ TEST(SocketDecoratorTests, read_return_correct_value)
 {
 	auto socketMock = std::make_shared<NiceMock<SocketMock>>();
 
-	SocketDecoratorTestImplementation decorator(SharedReference<Socket>::FromPointer(socketMock));
+	SocketDecoratorTestImplementation decorator(SharedReference<Socket>::FromPointer(socketMock).Unwrap());
 
 	EXPECT_CALL(*socketMock, Read)
-		.WillOnce(Return(Socket::EAsynchronicity::Synchronous));
+		.WillOnce(Return(Ok(Socket::EAsynchronicity::Synchronous)));
 
 	const auto result = decorator.Read(locDummyCallback);
 
-	EXPECT_EQ(result, Socket::EAsynchronicity::Synchronous);
+	EXPECT_EQ(result, Ok(Socket::EAsynchronicity::Synchronous));
 }
 
 TEST(SocketDecoratorTests, read_forwards_correct_callback)
@@ -113,16 +113,16 @@ TEST(SocketDecoratorTests, read_forwards_correct_callback)
 
 	auto socketMock = std::make_shared<NiceMock<SocketMock>>();
 
-	SocketDecoratorTestImplementation decorator(SharedReference<Socket>::FromPointer(socketMock));
+	SocketDecoratorTestImplementation decorator(SharedReference<Socket>::FromPointer(socketMock).Unwrap());
 
 	EXPECT_CALL(*socketMock, Read)
 		.WillOnce([](auto&& aCallback)
 			{
-				std::move(aCallback)(Socket::EReadError::InternalError);
+				std::move(aCallback)(Err(Socket::SReadError{ Socket::EReadError::InternalError }));
 
-				return Socket::EAsynchronicity::Synchronous;
+				return Ok(Socket::EAsynchronicity::Synchronous);
 			});
-	EXPECT_CALL(callback, OnRead(Eq(Socket::EReadError::InternalError)));
+	EXPECT_CALL(callback, OnRead(ReadResultMatcher(Err(Socket::SReadError{ Socket::EReadError::InternalError }))));
 
 	(void)decorator.Read(callback.CreateOnRead());
 }
@@ -133,14 +133,14 @@ TEST(SocketDecoratorTests, onclose_calls_socket_function)
 
 	auto socketMock = std::make_shared<NiceMock<SocketMock>>();
 
-	SocketDecoratorTestImplementation decorator(SharedReference<Socket>::FromPointer(socketMock));
+	SocketDecoratorTestImplementation decorator(SharedReference<Socket>::FromPointer(socketMock).Unwrap());
 
 	EXPECT_CALL(*socketMock, OnClose)
 		.WillOnce([](auto&& aCallback)
 			{
-				std::move(aCallback)(Socket::ECloseError::InternalError);
+				std::move(aCallback)(Err(Socket::SCloseError{ Socket::ECloseError::InternalError }));
 			});
-	EXPECT_CALL(callback, OnClose(Eq(Socket::ECloseError::InternalError)));
+	EXPECT_CALL(callback, OnClose(CloseResultMatcher(Err(Socket::SCloseError{ Socket::ECloseError::InternalError }))));
 
 	decorator.OnClose(callback.CreateOnClose());
 }
@@ -149,7 +149,7 @@ TEST(SocketDecoratorTests, close_calls_socket_function)
 {
 	auto socketMock = std::make_shared<NiceMock<SocketMock>>();
 
-	SocketDecoratorTestImplementation decorator(SharedReference<Socket>::FromPointer(socketMock));
+	SocketDecoratorTestImplementation decorator(SharedReference<Socket>::FromPointer(socketMock).Unwrap());
 
 	EXPECT_CALL(*socketMock, Close);
 
@@ -160,7 +160,7 @@ TEST(SocketDecoratorTests, getstate_calls_socket_function)
 {
 	auto socketMock = std::make_shared<NiceMock<SocketMock>>();
 
-	SocketDecoratorTestImplementation decorator(SharedReference<Socket>::FromPointer(socketMock));
+	SocketDecoratorTestImplementation decorator(SharedReference<Socket>::FromPointer(socketMock).Unwrap());
 
 	EXPECT_CALL(*socketMock, GetState);
 
@@ -171,7 +171,7 @@ TEST(SocketDecoratorTests, getstate_returns_correct_value)
 {
 	auto socketMock = std::make_shared<NiceMock<SocketMock>>();
 
-	SocketDecoratorTestImplementation decorator(SharedReference<Socket>::FromPointer(socketMock));
+	SocketDecoratorTestImplementation decorator(SharedReference<Socket>::FromPointer(socketMock).Unwrap());
 
 	EXPECT_CALL(*socketMock, GetState)
 		.WillOnce(Return(Socket::EState::Open));

@@ -75,7 +75,7 @@ namespace Engine
 			if (!result)
 				return;
 
-			SystemContainer foundationalContainer = std::move(result);
+			SystemContainer foundationalContainer = std::move(result).Unwrap();
 
 			auto&& fileSystem = foundationalContainer.Get<FileSystem>();
  
@@ -94,7 +94,7 @@ namespace Engine
 						if (!aResult)
 							return Future<DeserializeConfigurationJob::Output>();
 
-						std::vector<u8> jsonBlob = std::move(aResult);
+						std::vector<u8> jsonBlob = std::move(aResult).Unwrap();
 
 						return jobSystem->StartJob<DeserializeConfigurationJob>(EConfigGroup::Application, std::string(jsonBlob.begin(), jsonBlob.end()));
 					}))
@@ -112,7 +112,7 @@ namespace Engine
 						if (!aResult)
 							return Future<DeserializeConfigurationJob::Output>();
 
-						std::vector<u8> jsonBlob = std::move(aResult);
+						std::vector<u8> jsonBlob = std::move(aResult).Unwrap();
 
 						return jobSystem->StartJob<DeserializeConfigurationJob>(EConfigGroup::Device, std::string(jsonBlob.begin(), jsonBlob.end()));
 					}))
@@ -133,7 +133,7 @@ namespace Engine
 						if (!aResult)
 							return Future<DeserializeConfigurationJob::Output>();
 
-						std::vector<u8> jsonBlob = std::move(aResult);
+						std::vector<u8> jsonBlob = std::move(aResult).Unwrap();
 
 						return jobSystem->StartJob<DeserializeConfigurationJob>(EConfigGroup::User, std::string(jsonBlob.begin(), jsonBlob.end()));
 					}))
@@ -156,7 +156,7 @@ namespace Engine
 
 			bool logFileError = false;
 
-			loggerContainer = std::move(result);
+			loggerContainer = std::move(result).Unwrap();
 
 			if (aInfo.Logging.File)
 			{
@@ -187,10 +187,10 @@ namespace Engine
 				if (connectionResult)
 				{
 					WM_LOG_INFO("IPC log connection opened, name: ", connectionInfo.Name, ".");
-					loggerRemoteConnection = connectionResult;
+					loggerRemoteConnection = std::move(connectionResult).Unwrap();
 				}
 				else
-					WM_LOG_ERROR("Failed to open IPC log connection, error: ", static_cast<IpcConnection::ConnectionError>(connectionResult), ".");
+					WM_LOG_ERROR("Failed to open IPC log connection, error: ", connectionResult.Err().Error, ".");
 			}
 			if (aInfo.Logging.IpcSocket)
 			{
@@ -205,10 +205,10 @@ namespace Engine
 				if (socketResult)
 				{
 					WM_LOG_INFO("IPC log socket opened, name: ", socketInfo.Name, ".");
-					loggerRemoteSocket = socketResult;
+					loggerRemoteSocket = std::move(socketResult).Unwrap();
 				}
 				else
-					WM_LOG_ERROR("Failed to open IPC log socket, error: ", static_cast<IpcAcceptor::EOpenError>(socketResult), ".");
+					WM_LOG_ERROR("Failed to open IPC log socket, error: ", socketResult.Err().Error, ".");
 			}
 
 			if (logFileError)
@@ -226,7 +226,7 @@ namespace Engine
 
 			if (!result)
 			{
-				WM_LOG_ERROR("Failed to create singleton systems; error: ", static_cast<SystemRegistry::ECreateError>(result), ", meta: ", result.Meta(), ".");
+				WM_LOG_ERROR("Failed to create singleton systems; error: ", result.Err().Error, ", reason: ", result.Err().Reason, ".");
 
 				return;
 			}
@@ -274,12 +274,12 @@ namespace Engine
 
 			if (!result)
 			{
-				WM_LOG_ERROR("Failed to create systems; error: ", static_cast<SystemRegistry::ECreateError>(result), ", meta: ", result.Meta(), ".");
+				WM_LOG_ERROR("Failed to create systems; error: ", result.Err().Error, ", reason: ", result.Err().Reason, ".");
 
 				return;
 			}
 
-			sysContainer = std::move(result);
+			sysContainer = std::move(result).Unwrap();
 
 			auto&& timeKeeper = sysContainer.Get<TimeKeeper>();
 

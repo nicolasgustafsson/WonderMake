@@ -12,7 +12,7 @@ using namespace MemoryUnitLiterals;
 
 using ProtoLoggerRemote::LogLine;
 
-Result<IpcConnection::ConnectionError> LoggerRemoteConnection::ConnectIpc(SharedReference<IpcConnection> aConnection, std::string aIpcName)
+Result<void, IpcConnection::SConnectionError> LoggerRemoteConnection::ConnectIpc(SharedReference<IpcConnection> aConnection, std::string aIpcName)
 {
 	std::lock_guard<decltype(myMutex)> lock(myMutex);
 
@@ -21,7 +21,9 @@ Result<IpcConnection::ConnectionError> LoggerRemoteConnection::ConnectIpc(Shared
 	if (!result)
 		return result;
 
-	myConnection = std::make_shared<SocketSerializingImpl<ProtoLoggerRemote::LogLine>>(4_KiB, &SerializeLogline, &DeserializeLogline, SharedReference<Socket>::FromPointer(std::move(aConnection)));
+	auto connectionRef = SharedReference<Socket>::FromPointer(std::move(aConnection)).Unwrap();
+
+	myConnection = std::make_shared<SocketSerializingImpl<ProtoLoggerRemote::LogLine>>(4_KiB, &SerializeLogline, &DeserializeLogline, std::move(connectionRef));
 
 	myConnection->OnClose(Bind(&LoggerRemoteConnection::OnClosed, weak_from_this()));
 
@@ -49,18 +51,18 @@ void LoggerRemoteConnection::Print(ELogSeverity aSeverity, ELogLevel aLevel, std
 			if (aResult)
 				return;
 
-			WM_LOG_ERROR("Failed to write to log connection. Error: ", static_cast<Socket::EWriteError>(aResult), ".");
+			WM_LOG_ERROR("Failed to write to log connection. Error: ", aResult.Err().Error, ".");
 		});
 }
 
-void LoggerRemoteConnection::OnClosed(Result<Socket::ECloseError, Socket::ECloseReason> aResult)
+void LoggerRemoteConnection::OnClosed(Result<Socket::SCloseLocation, Socket::SCloseError> aResult)
 {
 	std::lock_guard<decltype(myMutex)> lock(myMutex);
 
 	myConnection.reset();
 
 	if (aResult)
-		WM_LOG_INFO("Local IPC log connection closed. ", (aResult == Socket::ECloseReason::ClosedLocally ? "Closed locally." : "Closed remotely."));
+		WM_LOG_INFO("Local IPC log connection closed. ", (aResult.Unwrap().Location == Socket::ECloseLocation::ClosedLocally ? "Closed locally." : "Closed remotely."));
 	else
-		WM_LOG_ERROR("Local IPC log connection closed. Error: ", static_cast<Socket::ECloseError>(aResult), ".");
+		WM_LOG_ERROR("Local IPC log connection closed. Error: ", aResult.Err().Error, ".");
 }

@@ -23,15 +23,15 @@ class LoggerRemoteSocket
 	: public std::enable_shared_from_this<LoggerRemoteSocket>
 {
 public:
-	Result<IpcAcceptor::EOpenError> OpenIpc(SharedReference<IpcAcceptor> aAcceptor, std::string aIpcName);
+	Result<void, IpcAcceptor::SOpenError> OpenIpc(SharedReference<IpcAcceptor> aAcceptor, std::string aIpcName);
 
 private:
 	void OnConnection(std::shared_ptr<Socket>&& aConnection);
 
-	void OnIpcClosed(Result<IpcAcceptor::ECloseReason> aResult);
+	void OnIpcClosed(Result<void, IpcAcceptor::SCloseError> aResult);
 
-	void OnConnectionMessage(std::weak_ptr<Socket> aConnection, Result<Socket::EReadError, ProtoLoggerRemote::LogLine>&& aResult);
-	void OnConnectionClosed(std::weak_ptr<Socket> aConnection, Result<Socket::ECloseError, Socket::ECloseReason> aResult);
+	void OnConnectionMessage(std::weak_ptr<Socket> aConnection, Result<ProtoLoggerRemote::LogLine, Socket::SReadError>&& aResult);
+	void OnConnectionClosed(std::weak_ptr<Socket> aConnection, Result<Socket::SCloseLocation, Socket::SCloseError> aResult);
 
 	std::shared_ptr<IpcAcceptor> myAcceptor;
 	std::unordered_map<std::shared_ptr<Socket>, std::shared_ptr<SocketSerializing<ProtoLoggerRemote::LogLine>>> myConnections;

@@ -9,4 +9,4 @@
 #include <vector>
 
 std::vector<u8> SerializeLogline(const ProtoLoggerRemote::LogLine& aMessage) noexcept;
-Result<decltype(Failure), std::pair<ProtoLoggerRemote::LogLine, size_t>> DeserializeLogline(std::span<const u8> aData) noexcept;
+Result<std::pair<ProtoLoggerRemote::LogLine, size_t>> DeserializeLogline(std::span<const u8> aData) noexcept;

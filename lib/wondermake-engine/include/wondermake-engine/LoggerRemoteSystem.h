@@ -23,8 +23,8 @@ class LoggerRemoteSystem
 			STSingleton>>
 {
 public:
-	Result<IpcAcceptor::EOpenError, std::shared_ptr<LoggerRemoteSocket>> OpenSocketIpc(std::string aName);
+	Result<std::shared_ptr<LoggerRemoteSocket>, IpcAcceptor::SOpenError> OpenSocketIpc(std::string aName);
 
-	Result<IpcConnection::ConnectionError, std::shared_ptr<LoggerRemoteConnection>> ConnectIpc(std::string aName);
+	Result<std::shared_ptr<LoggerRemoteConnection>, IpcConnection::SConnectionError> ConnectIpc(std::string aName);
 
 };

@@ -20,7 +20,7 @@ void DeserializeConfigurationJob::Run(Promise<Output> aPromise, EConfigGroup aCo
 	{
 		WM_LOG_ERROR("Failed to parse string to json, ", e.what(), ".");
 
-		aPromise.Complete(EDeserializeConfigurationError::ParsingError);
+		aPromise.Complete(Err(EDeserializeConfigurationError::ParsingError));
 
 		return;
 	}
@@ -32,7 +32,7 @@ void DeserializeConfigurationJob::Run(Promise<Output> aPromise, EConfigGroup aCo
 	{
 		WM_LOG_ERROR("Missing overrides object.");
 
-		aPromise.Complete(EDeserializeConfigurationError::InvalidJsonStructure);
+		aPromise.Complete(Err(EDeserializeConfigurationError::InvalidJsonStructure));
 
 		return;
 	}
@@ -160,5 +160,5 @@ void DeserializeConfigurationJob::Run(Promise<Output> aPromise, EConfigGroup aCo
 			}, itConfig->second);
 	}
 
-	aPromise.Complete(Success);
+	aPromise.Complete(Ok());
 }

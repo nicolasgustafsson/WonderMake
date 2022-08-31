@@ -35,7 +35,7 @@ TEST(ConfigurationSerializationTests, deserialize_completes_with_parsing_error_w
 
 	ASSERT_FALSE(*future.GetResult());
 
-	EXPECT_EQ(*future.GetResult(), EDeserializeConfigurationError::ParsingError);
+	EXPECT_EQ(future.GetResult()->Err(), EDeserializeConfigurationError::ParsingError);
 }
 
 TEST(ConfigurationSerializationTests, deserialize_completes_with_parsing_error_when_given_non_configuration_json)
@@ -60,7 +60,7 @@ TEST(ConfigurationSerializationTests, deserialize_completes_with_parsing_error_w
 
 	ASSERT_FALSE(*future.GetResult());
 
-	EXPECT_EQ(*future.GetResult(), EDeserializeConfigurationError::InvalidJsonStructure);
+	EXPECT_EQ(future.GetResult()->Err(), EDeserializeConfigurationError::InvalidJsonStructure);
 }
 
 TEST(ConfigurationSerializationTests, deserialize_completes_with_success_when_given_configuration_json)

@@ -19,7 +19,7 @@ class DeserializeConfigurationJob
 	: public Job<
 		JobInputSet<
 			JobInput<EConfigGroup, std::string>>,
-		Result<EDeserializeConfigurationError>,
+		Result<void, EDeserializeConfigurationError>,
 		Policy::Set<
 			PAdd<ConfigurationSystem, PWrite>>>
 {

@@ -22,12 +22,12 @@ class LoggerRemoteConnection
 	, public std::enable_shared_from_this<LoggerRemoteConnection>
 {
 public:
-	Result<IpcConnection::ConnectionError> ConnectIpc(SharedReference<IpcConnection> aConnection, std::string aIpcName);
+	Result<void, IpcConnection::SConnectionError> ConnectIpc(SharedReference<IpcConnection> aConnection, std::string aIpcName);
 
 	void Print(ELogSeverity aSeverity, ELogLevel aLevel, std::string aLogMessage) override;
 
 private:
-	void OnClosed(Result<Socket::ECloseError, Socket::ECloseReason> aResult);
+	void OnClosed(Result<Socket::SCloseLocation, Socket::SCloseError> aResult);
 
 	std::recursive_mutex myMutex;
 	std::shared_ptr<SocketSerializing<ProtoLoggerRemote::LogLine>> myConnection;

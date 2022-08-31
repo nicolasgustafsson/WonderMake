@@ -17,21 +17,21 @@ std::vector<u8> SerializeLogline(const ProtoLoggerRemote::LogLine& aMessage) noe
 	return serializedData;
 }
 
-Result<decltype(Failure), std::pair<ProtoLoggerRemote::LogLine, size_t>> DeserializeLogline(std::span<const u8> aData) noexcept
+Result<std::pair<ProtoLoggerRemote::LogLine, size_t>> DeserializeLogline(std::span<const u8> aData) noexcept
 {
 	ProtoLoggerRemote::LogLine logline;
 
 	const u32 size = ToEndianHost(*reinterpret_cast<const u32*>(aData.data()));
 
 	if (aData.size() < sizeof(size) + size)
-		return Failure;
+		return Err();
 
 	const bool result = logline.ParseFromArray(aData.data() + sizeof(size), static_cast<int>(size));
 
 	if (!result)
-		return Failure;
+		return Err();
 
 	const size_t readBytes = sizeof(size) + static_cast<size_t>(size);
 
-	return std::make_pair(std::move(logline), readBytes);
+	return Ok(std::make_pair(std::move(logline), readBytes));
 }

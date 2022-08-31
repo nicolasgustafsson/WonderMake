@@ -15,7 +15,7 @@ target_link_libraries(WonderMakeIoManualTests gtest_main gmock WonderMakeTestsCo
 target_include_directories(WonderMakeIoManualTests
     PUBLIC
         "include"
-        "../wondermake-base-tests/include"
+        "../../wondermake-io-tests/include"
         "../../../lib/wondermake-base/include"
         "../../../lib/wondermake-io/include"
         "../../../lib/wondermake-utility/include"

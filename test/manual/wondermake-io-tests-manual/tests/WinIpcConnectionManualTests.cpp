@@ -6,6 +6,8 @@
 #include "WinIpcAcceptor.h"
 #include "WinIpcConnection.h"
 
+#include "WonderMakeIoTests/SocketMock.h"
+
 class AcceptorCallbackMock
 {
 public:
@@ -14,8 +16,8 @@ public:
 class ConnectionCallbackMock
 {
 public:
-	using WriteResult = Result<Socket::EWriteError>;
-	using ReadResult = Result<Socket::EReadError, std::vector<u8>>;
+	using WriteResult = Result<void, Socket::SWriteError>;
+	using ReadResult = Result<std::vector<u8>, Socket::SReadError>;
 
 	MOCK_METHOD(void, OnWrite, (WriteResult&& aResult), ());
 	MOCK_METHOD(void, OnRead, (ReadResult&& aResult), ());
@@ -58,7 +60,8 @@ TEST(WinIpcConnectionManualTests, connection_fails_when_no_acceptor_exists)
 	auto connectResult = ipcConnection->Connect("wondermake__manual_test_connection");
 
 	ASSERT_FALSE(connectResult);
-	EXPECT_EQ(connectResult, IpcConnection::ConnectionError::NoConnection);
+
+	EXPECT_EQ(connectResult.Err().Error, IpcConnection::EConnectionError::NoConnection);
 }
 
 TEST(WinIpcConnectionManualTests, connection_connects_when_acceptor_exists)
@@ -169,7 +172,7 @@ TEST(WinIpcConnectionManualTests, connection_can_read_and_write)
 
 	constexpr auto pipeName = "wondermake__manual_test_connection";
 	const std::vector<u8> dummyDataA = { 34, 12, 198, 201 };
-	const std::vector<u8> dummyDataB = { 34, 12, 198, 201 };
+	const std::vector<u8> dummyDataB = { 65, 35, 212, 98 };
 
 	WinPlatformSystemImpl::InjectDependencies(std::tie());
 
@@ -188,8 +191,8 @@ TEST(WinIpcConnectionManualTests, connection_can_read_and_write)
 			{
 				ipcConnectionServer = std::move(aConnection);
 			});
-	EXPECT_CALL(callbackMockClient, OnWrite(Eq(Success)));
-	EXPECT_CALL(callbackMockServer, OnRead(Eq(dummyDataA)));
+	EXPECT_CALL(callbackMockClient, OnWrite(WriteResultMatcher(Ok())));
+	EXPECT_CALL(callbackMockServer, OnRead(ReadResultMatcher(Ok(dummyDataA))));
 
 	auto openResult = ipcAcceptor->Open(pipeName, { onConnection(callbackMockAcceptor) });
 
@@ -208,8 +211,8 @@ TEST(WinIpcConnectionManualTests, connection_can_read_and_write)
 
 	winEvent.WaitForEvent(0);
 
-	EXPECT_CALL(callbackMockServer, OnWrite(Eq(Success)));
-	EXPECT_CALL(callbackMockClient, OnRead(Eq(dummyDataB)));
+	EXPECT_CALL(callbackMockServer, OnWrite(WriteResultMatcher(Ok())));
+	EXPECT_CALL(callbackMockClient, OnRead(ReadResultMatcher(Ok(dummyDataB))));
 
 	ipcConnectionServer->Write(dummyDataB, onWrite(callbackMockServer));
 	ipcConnectionClient->Read(onRead(callbackMockClient));

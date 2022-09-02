@@ -4,6 +4,8 @@
 #include "wondermake-utility/Typedefs.h"
 #include "wondermake-utility/UniqueFunction.h"
 
+#include <magic_enum.hpp>
+
 #include <vector>
 
 class Socket
@@ -90,3 +92,20 @@ protected:
 	Socket() noexcept = default;
 
 };
+
+inline static void WmLogStream(std::ostream& aStream, const Socket::SWriteError& aError)
+{
+	aStream << magic_enum::enum_name(aError.Error) << '(' << static_cast<std::underlying_type_t<decltype(aError.Error)>>(aError.Error) << ':' << aError.Reason << ')';
+}
+inline static void WmLogStream(std::ostream& aStream, const Socket::SReadError& aError)
+{
+	aStream << magic_enum::enum_name(aError.Error) << '(' << static_cast<std::underlying_type_t<decltype(aError.Error)>>(aError.Error) << ':' << aError.Reason << ')';
+}
+inline static void WmLogStream(std::ostream& aStream, const Socket::SCloseLocation& aLocation)
+{
+	aStream << magic_enum::enum_name(aLocation.Location) << '(' << static_cast<std::underlying_type_t<decltype(aLocation.Location)>>(aLocation.Location) << ':' << aLocation.Reason << ')';
+}
+inline static void WmLogStream(std::ostream& aStream, const Socket::SCloseError& aError)
+{
+	aStream << magic_enum::enum_name(aError.Error) << '(' << static_cast<std::underlying_type_t<decltype(aError.Error)>>(aError.Error) << ':' << aError.Reason << ')';
+}

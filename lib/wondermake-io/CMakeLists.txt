@@ -32,4 +32,4 @@ set_pedantic_warning_level(WonderMakeIo)
 set_whole_archive(WonderMakeIo)
 target_include_directories(WonderMakeIo PUBLIC "include")
 
-target_link_libraries(WonderMakeIo WonderMakeBase WonderMakeUtility)
+target_link_libraries(WonderMakeIo WonderMakeBase WonderMakeUtility magic_enum::magic_enum)

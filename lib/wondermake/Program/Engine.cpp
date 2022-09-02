@@ -169,17 +169,17 @@ namespace Engine
 				logFileError = !fileLogger.OpenLogFile(logFileInfo.Path, logFileInfo.Filename);
 			}
 
-			WmLog(LInfo(TagWonderMake, ""));
-			WmLog(LInfo(TagWonderMake, ""));
-			WmLog(LInfo(TagWonderMake, ""));
-			WmLog(LInfo(TagWonderMake, "---------------- ", aInfo.ApplicationName, " ----------------"));
+			WmLogInfo(TagWonderMake << "");
+			WmLogInfo(TagWonderMake << "");
+			WmLogInfo(TagWonderMake << "");
+			WmLogInfo(TagWonderMake << "---------------- " << aInfo.ApplicationName << " ----------------");
 			WmLogSuccess(TagWonderMake << "Started logging.");
 
 			if (aInfo.Logging.IpcConnection)
 			{
 				auto&& connectionInfo = *aInfo.Logging.IpcConnection;
 
-				WM_LOG_INFO("Opening IPC logging connection, name: ", connectionInfo.Name, ".");
+				WmLogInfo(TagWonderMake << "Opening IPC logging connection, name: " << connectionInfo.Name << '.');
 
 				auto&& loggerRemote = loggerContainer.Get<LoggerRemoteSystem>();
 
@@ -187,7 +187,7 @@ namespace Engine
 
 				if (connectionResult)
 				{
-					WM_LOG_INFO("IPC log connection opened, name: ", connectionInfo.Name, ".");
+					WmLogInfo(TagWonderMake << "IPC log connection opened, name: " << connectionInfo.Name << '.');
 					loggerRemoteConnection = std::move(connectionResult).Unwrap();
 				}
 				else
@@ -197,7 +197,7 @@ namespace Engine
 			{
 				auto&& socketInfo = *aInfo.Logging.IpcSocket;
 
-				WM_LOG_INFO("Opening IPC logging socket, name: ", socketInfo.Name, ".");
+				WmLogInfo(TagWonderMake << "Opening IPC logging socket, name: " << socketInfo.Name << '.');
 
 				auto&& loggerRemote = loggerContainer.Get<LoggerRemoteSystem>();
 
@@ -205,7 +205,7 @@ namespace Engine
 
 				if (socketResult)
 				{
-					WM_LOG_INFO("IPC log socket opened, name: ", socketInfo.Name, ".");
+					WmLogInfo(TagWonderMake << "IPC log socket opened, name: " << socketInfo.Name << '.');
 					loggerRemoteSocket = std::move(socketResult).Unwrap();
 				}
 				else
@@ -217,7 +217,7 @@ namespace Engine
 		}
 
 		{
-			WM_LOG_INFO("Creating single instance systems...");
+			WmLogInfo(TagWonderMake << "Creating single instance systems...");
 
 			SystemRegistry::Filter filter;
 
@@ -234,7 +234,7 @@ namespace Engine
 		}
 
 		{
-			WM_LOG_INFO("Registering core systems...");
+			WmLogInfo(TagWonderMake << "Registering core systems...");
 
 			auto&& sysContainer = Global::GetSystemContainer();
 
@@ -262,14 +262,14 @@ namespace Engine
 					return std::make_shared<ScheduleSystem>(scheduleProc, scheduleRepeatingProc);
 				});
 
-			WM_LOG_INFO("Setting up filters...");
+			WmLogInfo(TagWonderMake << "Setting up filters...");
 
 			SystemRegistry::Filter filter;
 
 			if (aInfo.Headless)
 				filter.DisallowedTraits = { STrait::ToObject<STGui>() };
 
-			WM_LOG_INFO("Creating systems...");
+			WmLogInfo(TagWonderMake << "Creating systems...");
 
 			auto result = sysRegistry.CreateSystems(filter);
 
@@ -288,7 +288,7 @@ namespace Engine
 
 			std::move(aCallbacks.OnSetup)();
 
-			WM_LOG_INFO("Starting main loop.");
+			WmLogInfo(TagWonderMake << "Starting main loop.");
 
 			for (;;)
 			{

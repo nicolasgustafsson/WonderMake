@@ -6,8 +6,10 @@ list(APPEND SourceFiles
 list(APPEND SourceFiles
     "../../lib/wondermake-base/source/Configuration.cpp"
     "../../lib/wondermake-base/source/ConfigurationSystem.cpp"
+    "../../lib/wondermake-base/source/Logger.cpp"
     "../../lib/wondermake-engine/source/DeserializeConfigurationJob.cpp"
-    "../../lib/wondermake-engine/source/SerializeConfigurationJob.cpp")
+    "../../lib/wondermake-engine/source/SerializeConfigurationJob.cpp"
+    "../../lib/wondermake-utility/source/Time.cpp")
     
 add_executable(WonderMakeEngineTests ${SourceFiles})
 

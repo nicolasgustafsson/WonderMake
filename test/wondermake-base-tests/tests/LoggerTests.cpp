@@ -1,7 +1,5 @@
 #include "wondermake-tests-common/GTestInclude.h"
 
-#undef WM_SUPPRESS_LOGGER
-
 #include "wondermake-base/Logger.h"
 
 #include "Logger.cpp"
@@ -16,14 +14,14 @@ public:
 		std::string aLogMessage), (override));
 };
 
-constexpr auto locDummySeverity = ELogSeverity::Info;
-constexpr auto locDummyLevel = ELogLevel::Normal;
-constexpr auto locDummyFile = "Dummy File";
-constexpr auto locDummyLine = 1234;
-constexpr auto locDummyLoggerName = "Logger";
-constexpr auto locDummyTimepoint = "01-01-1970 00:00:00";
-constexpr auto locDummyThreadHash = 0xabcd1234;
-constexpr auto locDummyMessage = "Dummy Message";
+inline constexpr auto locDummySeverity = ELogSeverity::Info;
+inline constexpr auto locDummyLevel = ELogLevel::Normal;
+inline constexpr auto locDummyFile = "Dummy File";
+inline constexpr auto locDummyLine = 1234;
+inline constexpr auto locDummyLoggerName = "Logger";
+inline constexpr auto locDummyTimepoint = "01-01-1970 00:00:00";
+inline constexpr auto locDummyThreadHash = 0xabcd1234;
+inline constexpr auto locDummyMessage = "Dummy Message";
 
 TEST(LoggingTests, print_args_are_passed_to_loggers)
 {
@@ -81,54 +79,46 @@ TEST(LoggingTests, print_args_are_filtered_based_on_min_level)
 	logging.Print(locDummySeverity, ELogLevel::Priority,	locDummyMessage);
 }
 
-TEST(LoggingTests, builder_passes_correctly_formatted_message_to_logging)
+TEST(LoggingTests, logger_formatline)
 {
-	enum class TestEnum
-	{
-		CorrectValue = 5678
-	};
-
-	constexpr auto messageString = "Test Value: ";
-	constexpr auto messageEnum = TestEnum::CorrectValue;
-	constexpr auto expectedMessage = "[Logger]       01-01-1970 00:00:00 [0xabcd1234]         Info    Dummy File(1234)               Test Value: 5678";
+	static constexpr auto expectedMessage = "[Logger]       01-01-1970 00:00:00 [0xabcd1234]         Info    Dummy File(1234)               Dummy Message";
 
 	auto loggerMock = std::make_shared<StrictMock<LoggerMock>>();
 
-	Logger logging;
+	Logger logger;
 
-	logging.SetFilters({ locDummySeverity }, locDummyLevel);
+	logger.SetLoggerName(locDummyLoggerName);
 
-	logging.AddLogger(loggerMock);
-
-	EXPECT_CALL(*loggerMock, Print(locDummySeverity, locDummyLevel, Eq(expectedMessage)));
-
-	{
-		Logger::Builder builder(logging, locDummySeverity, locDummyLevel, locDummyFile, locDummyLine, locDummyLoggerName, locDummyTimepoint, locDummyThreadHash);
-
-		builder << messageString << messageEnum;
-	}
+	logger.FormatLine(locDummySeverity, locDummyMessage, locDummyFile, locDummyLine, locDummyTimepoint, locDummyThreadHash);
 }
 
-TEST(LoggingTests, builder_trims_filename_before_passing_it_to_logger)
+TEST(LoggingTests, logger_fixedsizelogstream_can_stream_chararrays)
 {
-	constexpr auto originalFileName = "C:\\Program Files\\Tests/LoggerTests.cpp";
-	constexpr auto expectedFileName = "LoggerTests.cpp";
+	static constexpr auto tag				= MakeLogTag("Test");
+	static constexpr auto message			= MakeFixedSizeString("Hello!");
+	static constexpr char expectedLine[]	= "[Test] Hello!";
 
-	constexpr auto expectedMessage = "[Logger]       01-01-1970 00:00:00 [0xabcd1234]         Info    LoggerTests.cpp(1234)          Dummy Message";
+	static constexpr size_t expectedSize	= sizeof(expectedLine) - 1;
 
-	auto loggerMock = std::make_shared<StrictMock<LoggerMock>>();
+	FixedSizeLogStream<false, expectedSize> stream = tag << message;
 
-	Logger logging;
+	Logger::SLogText text = stream;
 
-	logging.SetFilters({ locDummySeverity }, locDummyLevel);
+	EXPECT_EQ(text.Line, expectedLine);
+}
 
-	logging.AddLogger(loggerMock);
+TEST(LoggingTests, logger_fixedsizelogstream_can_stream_logtags)
+{
+	static constexpr auto tagFirst			= MakeLogTag("First");
+	static constexpr auto tagSecond			= MakeLogTag("Second");
+	static constexpr auto message			= MakeFixedSizeString("Hello!");
+	static constexpr char expectedLine[]	= "[First] [Second] Hello!";
 
-	EXPECT_CALL(*loggerMock, Print(_, _, Eq(expectedMessage)));
+	static constexpr size_t expectedSize	= sizeof(expectedLine) - 1;
 
-	{
-		Logger::Builder builder(logging, locDummySeverity, locDummyLevel, originalFileName, locDummyLine, locDummyLoggerName, locDummyTimepoint, locDummyThreadHash);
+	FixedSizeLogStream<false, expectedSize> stream = tagFirst << tagSecond << message;
 
-		builder << locDummyMessage;
-	}
+	Logger::SLogText text = stream;
+
+	EXPECT_EQ(text.Line, expectedLine);
 }

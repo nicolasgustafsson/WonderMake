@@ -1,8 +1,7 @@
 #pragma once
 
-#ifndef WM_SUPPRESS_LOGGER
-
 #include "wondermake-base/LoggerTypes.h"
+#include "wondermake-base/LogTag.h"
 #include "wondermake-base/System.h"
 
 #include "wondermake-utility/Singleton.h"
@@ -10,6 +9,7 @@
 
 #include <chrono>
 #include <memory>
+#include <source_location>
 #include <sstream>
 #include <unordered_set>
 #include <vector>
@@ -21,8 +21,6 @@ namespace SystemTraits
 
 using STLogger = SystemTraits::Logger;
 
-std::string SeverityToString(ELogSeverity aSeverity);
-
 class LoggerBase
 {
 public:
@@ -32,55 +30,23 @@ public:
 
 };
 
+template<typename TType>
+concept CWmLoggable = requires(std::ostream& aStream, TType&& aType)
+{
+	{ WmLogStream(aStream, std::forward<TType>(aType)) };
+};
+
 class Logger final
 	: public Singleton<Logger>
 {
 public:
-	class Builder
+	struct SLogText
 	{
-	public:
-		Builder(Logger& aLogger, ELogSeverity aSeverity, ELogLevel aLevel, std::string_view aFile, u64 aLine, const std::string& aLoggerName, std::string aTimestamp, size_t aThreadHash);
-		Builder(Logger& aLogger, ELogSeverity aSeverity, ELogLevel aLevel, std::string_view aFile, u64 aLine);
-		~Builder();
-
-		template<typename T>
-		inline Builder& operator<<(const T& aValue) requires(!std::is_enum_v<T>)
-		{
-			myStringStream << aValue;
-
-			return *this;
-		}
-		template<typename T>
-		inline Builder& operator<<(const T& aValue) requires(std::is_enum_v<T>)
-		{
-			myStringStream << static_cast<std::underlying_type_t<T>>(aValue);
-
-			return *this;
-		}
-
-		template<typename... TArgs>
-		inline static void StreamHelper(Logger& aLogger, ELogSeverity aSeverity, ELogLevel aLevel, std::string_view aFile, u64 aLine, TArgs&&... aArgs)
-		{
-			Builder builder(aLogger, aSeverity, aLevel, aFile, aLine);
-
-			const auto stream = [&builder](auto&& aArg)
-			{
-				builder << std::forward<decltype(aArg)>(aArg);
-
-				return true;
-			};
-
-			(stream(std::forward<TArgs>(aArgs)) && ...);
-		}
-
-	private:
-		Logger& myLogger;
-		ELogSeverity mySeverity = ELogSeverity::Error;
-		ELogLevel myLevel = ELogLevel::Priority;
-
-		std::stringstream myStringStream;
-
+		std::string Line;
 	};
+
+	std::string FormatLine(ELogSeverity aSeverity, std::string aMessage, std::string_view aFile, u64 aLine, std::string aTimestamp, size_t aThreadHash);
+	std::string FormatLine(ELogSeverity aSeverity, std::string aMessage, std::string_view aFile, u64 aLine);
 
 	void SetLoggerName(std::string aName);
 	const std::string& GetLoggerName() const;
@@ -100,60 +66,120 @@ private:
 
 };
 
-#define WM_LOG(aSeverity, aLevel, ...)	Logger::Builder::StreamHelper(Logger::Get(), ( aSeverity ), ( aLevel ), __FILE__ , __LINE__ , __VA_ARGS__ )
+template<typename TType>
+inline static void WmLogStream(std::ostream& aStream, const TType& aArgument)
+	requires(std::is_enum_v<std::decay_t<TType>>)
+{
+	aStream << static_cast<std::underlying_type_t<std::decay_t<TType>>>(aArgument);
+}
 
-#define WM_LOG_DEBUG_SUCCESS(...)		WM_LOG(ELogSeverity::Success,	ELogLevel::Debug, __VA_ARGS__ )
-#define WM_LOG_DEBUG_INFO(...)			WM_LOG(ELogSeverity::Info,		ELogLevel::Debug, __VA_ARGS__ )
-#define WM_LOG_DEBUG_WARNING(...)		WM_LOG(ELogSeverity::Warning,	ELogLevel::Debug, __VA_ARGS__ )
-#define WM_LOG_DEBUG_ERROR(...)			WM_LOG(ELogSeverity::Error,		ELogLevel::Debug, __VA_ARGS__ )
+void WmLog(
+	[[maybe_unused]] Logger::SLogText aText,
+	[[maybe_unused]] ELogSeverity aSeverity,
+	[[maybe_unused]] ELogLevel aLevel,
+	[[maybe_unused]] Logger& aLogger = Logger::Get(),
+	[[maybe_unused]] std::source_location aSourceLocation = std::source_location::current());
 
-#define WM_LOG_VERBOSE_SUCCESS(...)		WM_LOG(ELogSeverity::Success,	ELogLevel::Verbose, __VA_ARGS__ )
-#define WM_LOG_VERBOSE_INFO(...)		WM_LOG(ELogSeverity::Info,		ELogLevel::Verbose, __VA_ARGS__ )
-#define WM_LOG_VERBOSE_WARNING(...)		WM_LOG(ELogSeverity::Warning,	ELogLevel::Verbose, __VA_ARGS__ )
-#define WM_LOG_VERBOSE_ERROR(...)		WM_LOG(ELogSeverity::Error,		ELogLevel::Verbose, __VA_ARGS__ )
+inline void WmLogSuccess(Logger::SLogText aText, Logger& aLogger = Logger::Get(), std::source_location aSourceLocation = std::source_location::current())
+{
+	WmLog(std::move(aText), ELogSeverity::Success, ELogLevel::Normal, aLogger, aSourceLocation);
+}
+inline void WmLogInfo(Logger::SLogText aText, Logger& aLogger = Logger::Get(), std::source_location aSourceLocation = std::source_location::current())
+{
+	WmLog(std::move(aText), ELogSeverity::Info, ELogLevel::Normal, aLogger, aSourceLocation);
+}
+inline void WmLogWarning(Logger::SLogText aText, Logger& aLogger = Logger::Get(), std::source_location aSourceLocation = std::source_location::current())
+{
+	WmLog(std::move(aText), ELogSeverity::Warning, ELogLevel::Normal, aLogger, aSourceLocation);
+}
+inline void WmLogError(Logger::SLogText aText, Logger& aLogger = Logger::Get(), std::source_location aSourceLocation = std::source_location::current())
+{
+	WmLog(std::move(aText), ELogSeverity::Error, ELogLevel::Normal, aLogger, aSourceLocation);
+}
 
-#define WM_LOG_NORMAL_SUCCESS(...)		WM_LOG(ELogSeverity::Success,	ELogLevel::Normal, __VA_ARGS__ )
-#define WM_LOG_NORMAL_INFO(...)			WM_LOG(ELogSeverity::Info,		ELogLevel::Normal, __VA_ARGS__ )
-#define WM_LOG_NORMAL_WARNING(...)		WM_LOG(ELogSeverity::Warning,	ELogLevel::Normal, __VA_ARGS__ )
-#define WM_LOG_NORMAL_ERROR(...)		WM_LOG(ELogSeverity::Error,		ELogLevel::Normal, __VA_ARGS__ )
+class LogStream
+{
+public:
+	template<typename TType>
+	inline [[nodiscard]] LogStream&& operator<<(TType&& aValue) &&
+	{
+		if constexpr (CWmLoggable<TType>)
+			WmLogStream(myStream, std::forward<TType>(aValue));
+		else
+			myStream << std::forward<TType>(aValue);
 
-#define WM_LOG_PRIORITY_SUCCESS(...)	WM_LOG(ELogSeverity::Success,	ELogLevel::Priority, __VA_ARGS__ )
-#define WM_LOG_PRIORITY_INFO(...)		WM_LOG(ELogSeverity::Info,		ELogLevel::Priority, __VA_ARGS__ )
-#define WM_LOG_PRIORITY_WARNING(...)	WM_LOG(ELogSeverity::Warning,	ELogLevel::Priority, __VA_ARGS__ )
-#define WM_LOG_PRIORITY_ERROR(...)		WM_LOG(ELogSeverity::Error,		ELogLevel::Priority, __VA_ARGS__ )
+		return std::move(*this);
+	}
 
-#define WM_LOG_SUCCESS(...)				WM_LOG_NORMAL_SUCCESS( __VA_ARGS__ )
-#define WM_LOG_INFO(...)				WM_LOG_NORMAL_INFO( __VA_ARGS__ )
-#define WM_LOG_WARNING(...)				WM_LOG_NORMAL_WARNING( __VA_ARGS__ )
-#define WM_LOG_ERROR(...)				WM_LOG_NORMAL_ERROR( __VA_ARGS__ )
+	inline [[nodiscard]] operator Logger::SLogText() &&
+	{
+		return { std::move(myStream).str() };
+	}
 
-#else
+private:
+	std::stringstream myStream;
 
-#define WM_LOG(...) (__VA_ARGS__)
+};
 
-#define WM_LOG_DEBUG_SUCCESS(...) (__VA_ARGS__)
-#define WM_LOG_DEBUG_INFO(...) (__VA_ARGS__)
-#define WM_LOG_DEBUG_WARNING(...) (__VA_ARGS__)
-#define WM_LOG_DEBUG_ERROR(...) (__VA_ARGS__)
+template<bool TCanStreamTag, size_t TSize>
+class FixedSizeLogStream
+{
+public:
+	inline constexpr FixedSizeLogStream(const FixedSizeString<TSize>& aString) noexcept
+		: myStream(aString)
+	{}
 
-#define WM_LOG_VERBOSE_SUCCESS(...) (__VA_ARGS__)
-#define WM_LOG_VERBOSE_INFO(...) (__VA_ARGS__)
-#define WM_LOG_VERBOSE_WARNING(...) (__VA_ARGS__)
-#define WM_LOG_VERBOSE_ERROR(...) (__VA_ARGS__)
+	template<size_t TTagSize>
+	inline constexpr [[nodiscard]] auto operator<<(const LogTag<TTagSize>& aValue) noexcept
+		requires(TCanStreamTag)
+	{
+		return ::FixedSizeLogStream<true, TSize + LogTag<TTagSize>::FormattedSize>(myStream + aValue.GetFormattedString());
+	}
+	template<CCanConcatWithFixedSizeString TType>
+	inline constexpr [[nodiscard]] auto operator<<(const TType& aValue) noexcept
+	{
+		return ::FixedSizeLogStream<false, decltype(myStream + aValue)::Size>(myStream + aValue);
+	}
 
-#define WM_LOG_NORMAL_SUCCESS(...) (__VA_ARGS__)
-#define WM_LOG_NORMAL_INFO(...) (__VA_ARGS__)
-#define WM_LOG_NORMAL_WARNING(...) (__VA_ARGS__)
-#define WM_LOG_NORMAL_ERROR(...) (__VA_ARGS__)
+	template<typename TType>
+	inline [[nodiscard]] LogStream operator<<(TType&& aValue)
+		requires(!CCanConcatWithFixedSizeString<TType>)
+	{
+		return (LogStream() << myStream << std::forward<TType>(aValue));
+	}
 
-#define WM_LOG_PRIORITY_SUCCESS(...) (__VA_ARGS__)
-#define WM_LOG_PRIORITY_INFO(...) (__VA_ARGS__)
-#define WM_LOG_PRIORITY_WARNING(...) (__VA_ARGS__)
-#define WM_LOG_PRIORITY_ERROR(...) (__VA_ARGS__)
+	inline constexpr [[nodiscard]] operator Logger::SLogText()
+		requires(!TCanStreamTag)
+	{
+		return { myStream.ToString() };
+	}
 
-#define WM_LOG_SUCCESS(...) (__VA_ARGS__)
-#define WM_LOG_INFO(...) (__VA_ARGS__)
-#define WM_LOG_WARNING(...) (__VA_ARGS__)
-#define WM_LOG_ERROR(...) (__VA_ARGS__)
+private:
+	FixedSizeString<TSize> myStream;
 
-#endif
+};
+
+template<size_t TSize, typename TType>
+inline constexpr [[nodiscard]] auto operator<<(const LogTag<TSize>& aLogTag, TType&& aValue)
+{
+	return (FixedSizeLogStream<true, LogTag<TSize>::FormattedSize>(aLogTag.GetFormattedString()) << std::forward<TType>(aValue));
+}
+
+template<typename... TArgs>
+inline static std::string FormatLogMessage(TArgs&&... aArgs)
+{
+	LogStream stream;
+
+	((std::move(stream) << std::forward<TArgs>(aArgs)), ...);
+
+	Logger::SLogText logText = std::move(stream);
+
+	return std::move(logText.Line);
+}
+
+#define WM_LOG(aSeverity, aLevel, ...)	WmLog({ FormatLogMessage( __VA_ARGS__ ), ( aSeverity ), ( aLevel ) })
+
+#define WM_LOG_SUCCESS(...)				WmLog({ FormatLogMessage( __VA_ARGS__ ), ELogSeverity::Success,	ELogLevel::Normal })
+#define WM_LOG_INFO(...)				WmLog({ FormatLogMessage( __VA_ARGS__ ), ELogSeverity::Info,	ELogLevel::Normal })
+#define WM_LOG_WARNING(...)				WmLog({ FormatLogMessage( __VA_ARGS__ ), ELogSeverity::Warning,	ELogLevel::Normal })
+#define WM_LOG_ERROR(...)				WmLog({ FormatLogMessage( __VA_ARGS__ ), ELogSeverity::Error,	ELogLevel::Normal })

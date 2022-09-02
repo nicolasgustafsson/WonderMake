@@ -1,6 +1,8 @@
 [requires]
 zlib/1.2.12@#b1b85bfdc2206d81b3ed6a49e78498182bb98ef3
 protobuf/3.19.2@#6b251a3d67c612ea01b0038b4c794e87a3c4fd88
+magic_enum/0.8.0@#5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9
 
 [generators]
-cmake
+CMakeDeps
+CMakeToolchain

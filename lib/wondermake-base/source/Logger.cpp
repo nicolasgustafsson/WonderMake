@@ -6,6 +6,12 @@
 
 #include <thread>
 
+#ifdef WM_SUPPRESS_LOGGER
+inline constexpr bool IsWmLoggingSuppressed = true;
+#else
+inline constexpr bool IsWmLoggingSuppressed = false;
+#endif
+
 std::string SeverityToString(ELogSeverity aSeverity)
 {
 	switch (aSeverity)
@@ -16,13 +22,10 @@ std::string SeverityToString(ELogSeverity aSeverity)
 	case ELogSeverity::Error:	return "Error";
 	}
 
-	return "Unknown value: " + std::to_string(static_cast<std::underlying_type_t<ELogSeverity>>(aSeverity));
+	return "Unknown Severity(" + std::to_string(static_cast<std::underlying_type_t<ELogSeverity>>(aSeverity)) + ')';
 }
 
-Logger::Builder::Builder(Logger& aLogger, ELogSeverity aSeverity, ELogLevel aLevel, std::string_view aFile, u64 aLine, const std::string& aLoggerName, std::string aTimestamp, size_t aThreadHash)
-	: myLogger(aLogger)
-	, mySeverity(aSeverity)
-	, myLevel(aLevel)
+std::string Logger::FormatLine(ELogSeverity aSeverity, std::string aMessage, std::string_view aFile, u64 aLine, std::string aTimestamp, size_t aThreadHash)
 {
 	auto index = aFile.find_last_of("/");
 
@@ -36,9 +39,11 @@ Logger::Builder::Builder(Logger& aLogger, ELogSeverity aSeverity, ELogLevel aLev
 
 	threadHashStream << "[0x" << std::hex << aThreadHash << ']';
 
-	myStringStream
+	std::stringstream ss;
+
+	ss
 		<< std::setw(15) << std::setfill(' ') << std::left
-		<< ("[" + aLoggerName + "] ")
+		<< ("[" + GetLoggerName() + "] ")
 		<< std::move(aTimestamp) << ' '
 		<< std::setw(20) << std::setfill(' ') << std::left
 		<< std::move(threadHashStream).str() << ' '
@@ -46,15 +51,19 @@ Logger::Builder::Builder(Logger& aLogger, ELogSeverity aSeverity, ELogLevel aLev
 		<< SeverityToString(aSeverity) << ' '
 		<< std::setw(30) << std::setfill(' ') << std::left
 		<< (static_cast<std::string>(aFile) + '(' + std::to_string(aLine) + ')') << ' ';
+
+	return std::move(ss).str();
 }
 
-Logger::Builder::Builder(Logger& aLogger, ELogSeverity aSeverity, ELogLevel aLevel, std::string_view aFile, u64 aLine)
-	: Builder(aLogger, aSeverity, aLevel, aFile, aLine, aLogger.GetLoggerName(), TimePointToISO8601(std::chrono::floor<std::chrono::seconds>(std::chrono::system_clock::now())).Unwrap(), std::hash<std::thread::id>{}(std::this_thread::get_id()))
-{}
-
-Logger::Builder::~Builder()
+std::string Logger::FormatLine(ELogSeverity aSeverity, std::string aMessage, std::string_view aFile, u64 aLine)
 {
-	myLogger.Print(mySeverity, myLevel, std::move(myStringStream).str());
+	return FormatLine(
+		aSeverity,
+		std::move(aMessage),
+		aFile,
+		aLine,
+		TimePointToISO8601(std::chrono::floor<std::chrono::seconds>(std::chrono::system_clock::now())).UnwrapOr("[Time-Error]"),
+		std::hash<std::thread::id>{}(std::this_thread::get_id()));
 }
 
 void Logger::SetLoggerName(std::string aName)
@@ -102,4 +111,19 @@ void Logger::Print(ELogSeverity aSeverity, ELogLevel aLevel, std::string aLogMes
 		});
 
 	myLoggers.erase(it, myLoggers.end());
+}
+
+void WmLog(
+	[[maybe_unused]] Logger::SLogText aText,
+	[[maybe_unused]] ELogSeverity aSeverity,
+	[[maybe_unused]] ELogLevel aLevel,
+	[[maybe_unused]] Logger& aLogger,
+	[[maybe_unused]] std::source_location aSourceLocation)
+{
+	if constexpr (!IsWmLoggingSuppressed)
+	{
+		auto logLine = aLogger.FormatLine(aSeverity, std::move(aText.Line), aSourceLocation.file_name(), static_cast<u64>(aSourceLocation.line()));
+
+		aLogger.Print(aSeverity, aLevel, std::move(logLine));
+	}
 }

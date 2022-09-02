@@ -6,6 +6,8 @@
 
 #include "wondermake-io/Socket.h"
 
+#include <magic_enum.hpp>
+
 class IpcConnection
 	: public Socket
 {
@@ -27,3 +29,8 @@ public:
 
 	virtual Result<void, SConnectionError> Connect(std::string aConnectionName) = 0;
 };
+
+inline static void WmLogStream(std::ostream& aStream, const IpcConnection::SConnectionError& aError)
+{
+	aStream << magic_enum::enum_name(aError.Error) << '(' << static_cast<std::underlying_type_t<decltype(aError.Error)>>(aError.Error) << ':' << aError.Reason << ')';
+}

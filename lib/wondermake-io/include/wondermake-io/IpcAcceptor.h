@@ -3,6 +3,8 @@
 #include "wondermake-utility/Result.h"
 #include "wondermake-utility/UniqueFunction.h"
 
+#include <magic_enum.hpp>
+
 #include <memory>
 #include <functional>
 
@@ -61,3 +63,12 @@ protected:
 	IpcAcceptor() noexcept = default;
 
 };
+
+inline static void WmLogStream(std::ostream& aStream, const IpcAcceptor::SOpenError& aError)
+{
+	aStream << magic_enum::enum_name(aError.Error) << '(' << static_cast<std::underlying_type_t<decltype(aError.Error)>>(aError.Error) << ':' << aError.Reason << ')';
+}
+inline static void WmLogStream(std::ostream& aStream, const IpcAcceptor::SCloseError& aError)
+{
+	aStream << magic_enum::enum_name(aError.Error) << '(' << static_cast<std::underlying_type_t<decltype(aError.Error)>>(aError.Error) << ':' << aError.Reason << ')';
+}

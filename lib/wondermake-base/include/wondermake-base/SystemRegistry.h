@@ -5,6 +5,8 @@
 
 #include "wondermake-utility/DependencyInjector.h"
 
+#include <magic_enum.hpp>
+
 #include <cassert>
 #include <functional>
 #include <memory>
@@ -86,3 +88,8 @@ private:
 	std::vector<SystemElement> mySystemList;
 
 };
+
+inline static void WmLogStream(std::ostream& aStream, const SystemRegistry::SError& aError)
+{
+	aStream << magic_enum::enum_name(aError.Error) << '(' << static_cast<std::underlying_type_t<decltype(aError.Error)>>(aError.Error) << ':' << aError.Reason << ')';
+}

@@ -54,9 +54,7 @@ list(APPEND SourceFiles
 
 add_library(WonderMakeBase STATIC ${SourceFiles})
 
+set_whole_archive(WonderMakeBase)
 target_include_directories(WonderMakeBase PUBLIC "include")
-if(MSVC)
-    target_link_options(WonderMakeBase PUBLIC "/WHOLEARCHIVE:WonderMakeBase")
-endif()
 
 target_link_libraries(WonderMakeBase WonderMakeUtility)

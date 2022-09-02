@@ -22,9 +22,7 @@ list(APPEND SourceFiles
 
 add_library(WonderMakeEngine STATIC ${SourceFiles})
 
+set_whole_archive(WonderMakeEngine)
 target_include_directories(WonderMakeEngine PUBLIC "Include")
-if(MSVC)
-    target_link_options(WonderMakeEngine PUBLIC "/WHOLEARCHIVE:WonderMakeEngine")
-endif()
 
 target_link_libraries(WonderMakeEngine WonderMakeEngineProto WonderMakeBase WonderMakeUtility WonderMakeIo NlohmannJson)

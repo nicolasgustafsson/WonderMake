@@ -11,6 +11,7 @@
 #include "Graphics/RenderTarget.h"
 
 #include "wondermake-base/Logger.h"
+#include "wondermake-base/WmLogTags.h"
 
 REGISTER_SYSTEM(Renderer);
 
@@ -28,7 +29,7 @@ MessageCallback([[maybe_unused]] GLenum source,
 
 	const auto logSeverity = severity == GL_DEBUG_SEVERITY_HIGH ? ELogSeverity::Error : (severity == GL_DEBUG_SEVERITY_MEDIUM) ? ELogSeverity::Warning : ELogSeverity::Info;
 
-	WM_LOG(logSeverity, ELogLevel::Normal, TagOpenGL, " type: ", type, ", severity: ", severity, ", message: {", message, "}.");
+	WmLog(TagWonderMake << TagWmOpenGL << " type: " << type << ", severity: " << severity << ", message: {" << message << "}.", logSeverity, ELogLevel::Normal);
 }
 
 Renderer::Renderer() noexcept

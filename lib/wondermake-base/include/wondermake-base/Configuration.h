@@ -1,6 +1,7 @@
 #pragma once
 
 #include "wondermake-base/Logger.h"
+#include "wondermake-base/WmLogTags.h"
 
 #include "wondermake-utility/Typedefs.h"
 
@@ -272,7 +273,7 @@ public:
 
 		if (it == myConfigs.end())
 		{
-			WM_LOG_WARNING("Config missing, attempted to get type ", configFetchType.name(), " from id ", aId, ".");
+			WmLogWarning(TagWonderMake << TagWmConfiguration << "Config missing, attempted to get type " << configFetchType.name() << " from id " << aId << '.');
 
 			return std::forward<TDefaultArg>(aDefaultValue);
 		}

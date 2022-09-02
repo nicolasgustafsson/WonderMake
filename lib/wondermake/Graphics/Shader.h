@@ -5,6 +5,7 @@
 #include "Resources/ResourceSystem.h"
 
 #include "wondermake-base/Logger.h"
+#include "wondermake-base/WmLogTags.h"
 
 #include "wondermake-utility/RestrictTypes.h"
 
@@ -33,7 +34,7 @@ public:
 
 		if (!shaderString)
 		{
-			WM_LOG_ERROR(TagOpenGL, "Shader preprocessing failed: ", aPath.string(), ".");
+			WmLogError(TagWonderMake << TagWmOpenGL << "Shader preprocessing failed: " << aPath.string() << '.');
 			return;
 		}
 
@@ -53,7 +54,7 @@ public:
 		if (!compileWasSuccessful)
 		{
 			const std::string errorMessage = openGL->GetShaderInfoLog(myShaderHandle);
-			WM_LOG_ERROR(TagOpenGL, "Shader compilation failed: {", errorMessage, "}.");
+			WmLogError(TagWonderMake << TagWmOpenGL << "Shader compilation failed: {" << errorMessage << "}.");
 		}
 	}
 

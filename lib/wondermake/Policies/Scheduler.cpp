@@ -3,6 +3,7 @@
 #include "Policies/Scheduler.h"
 
 #include "wondermake-base/Logger.h"
+#include "wondermake-base/WmLogTags.h"
 
 #include <algorithm>
 
@@ -89,7 +90,7 @@ void Scheduler::AddSystem(const SystemId aSystemId)
 			if (systemIt == systemsInfo.cend())
 			{
 				// TODO(Kevin): Assert, something has gone terribly wrong.
-				WM_LOG_ERROR("Unknown system id found.");
+				WmLogError(TagWonderMake << TagWmScheduler << "Unknown system id found.");
 
 				return false;
 			}
@@ -118,7 +119,7 @@ void Scheduler::AddSystem(const SystemId aSystemId)
 	if (systemIt == mySystemsInfo.cend())
 	{
 		// TODO(Kevin): Assert, something has gone terribly wrong.
-		WM_LOG_ERROR("Unknown system id found.");
+		WmLogError(TagWonderMake << TagWmScheduler << "Unknown system id found.");
 
 		return std::optional<SystemId>();
 	}
@@ -154,7 +155,7 @@ void Scheduler::MarkSystemAsDone(const SystemId aSystemId)
 		if (it == mySystemsInfo.cend())
 		{
 			// TODO(Kevin): Assert, something has gone terribly wrong.
-			WM_LOG_ERROR("Unknown system id found.");
+			WmLogError(TagWonderMake << TagWmScheduler << "Unknown system id found.");
 
 			return false;
 		}
@@ -214,7 +215,7 @@ void Scheduler::ConstructSystemParallels(SSchedulingInfo& aSystemInfo)
 		{
 			if (dependencyId == rootSystemInfo.Id)
 			{
-				WM_LOG_ERROR("Circular System dependency.");
+				WmLogError(TagWonderMake << TagWmScheduler << "Circular System dependency.");
 				return false;
 			}
 

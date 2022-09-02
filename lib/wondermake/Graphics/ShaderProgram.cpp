@@ -8,6 +8,7 @@
 
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/SystemPtr.h"
+#include "wondermake-base/WmLogTags.h"
 
 ShaderProgram::ShaderProgram(
 	ResourceSystem<Shader<EShaderType::Vertex>>& aVsSystem, ResourceSystem<Shader<EShaderType::Fragment>>& aFsSystem, ResourceSystem<Shader<EShaderType::Geometry>>& aGsSystem,
@@ -45,7 +46,7 @@ void ShaderProgram::Create()
 	{
 		const std::string errorMessage = openGL->GetShaderProgramInfoLog(*myProgramHandle);
 
-		WM_LOG_ERROR("Shader program linking failed: {", errorMessage, "}.");
+		WmLogError(TagWonderMake << TagWmOpenGL << "Shader program linking failed: {" << errorMessage << "}.");
 
 		openGL->DeleteShaderProgram(*myProgramHandle);
 		myProgramHandle.reset();

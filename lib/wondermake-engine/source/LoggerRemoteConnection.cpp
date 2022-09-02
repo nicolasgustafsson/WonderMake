@@ -52,7 +52,7 @@ void LoggerRemoteConnection::Print(ELogSeverity aSeverity, ELogLevel aLevel, std
 			if (aResult)
 				return;
 
-			WM_LOG_ERROR("Failed to write to log connection. Error: ", aResult.Err().Error, ".");
+			WmLogError(TagWonderMake << TagWmLoggerRemote << "Failed to write to log connection. Error: " << aResult.Err() << '.');
 		});
 }
 
@@ -65,5 +65,5 @@ void LoggerRemoteConnection::OnClosed(Result<Socket::SCloseLocation, Socket::SCl
 	if (aResult)
 		WmLogInfo(TagWonderMake << TagWmLoggerRemote << "Local IPC log connection closed. " << aResult.Unwrap() << '.');
 	else
-		WM_LOG_ERROR("Local IPC log connection closed. Error: ", aResult.Err().Error, ".");
+		WmLogError(TagWonderMake << TagWmLoggerRemote << "Local IPC log connection closed. Error: " << aResult.Err() << '.');
 }

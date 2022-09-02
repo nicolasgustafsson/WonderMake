@@ -19,7 +19,7 @@ void DeserializeConfigurationJob::Run(Promise<Output> aPromise, EConfigGroup aCo
 	}
 	catch ([[maybe_unused]] json::exception& e)
 	{
-		WM_LOG_ERROR("Failed to parse string to json, ", e.what(), ".");
+		WmLogError(TagWonderMake << TagWmConfiguration << "Failed to parse string to json, " << e.what() << '.');
 
 		aPromise.Complete(Err(EDeserializeConfigurationError::ParsingError));
 
@@ -31,7 +31,7 @@ void DeserializeConfigurationJob::Run(Promise<Output> aPromise, EConfigGroup aCo
 	if (itOverrides == j.cend()
 		|| !itOverrides->is_object())
 	{
-		WM_LOG_ERROR("Missing overrides object.");
+		WmLogError(TagWonderMake << TagWmConfiguration << "Missing overrides object.");
 
 		aPromise.Complete(Err(EDeserializeConfigurationError::InvalidJsonStructure));
 

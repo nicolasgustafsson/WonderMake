@@ -164,17 +164,3 @@ inline constexpr [[nodiscard]] auto operator<<(const LogTag<TSize>& aLogTag, TTy
 {
 	return (FixedSizeLogStream<true, LogTag<TSize>::FormattedSize>(aLogTag.GetFormattedString()) << std::forward<TType>(aValue));
 }
-
-template<typename... TArgs>
-inline static std::string FormatLogMessage(TArgs&&... aArgs)
-{
-	LogStream stream;
-
-	((std::move(stream) << std::forward<TArgs>(aArgs)), ...);
-
-	Logger::SLogText logText = std::move(stream);
-
-	return std::move(logText.Line);
-}
-
-#define WM_LOG_ERROR(...)				WmLog({ FormatLogMessage( __VA_ARGS__ ), ELogSeverity::Error,	ELogLevel::Normal })

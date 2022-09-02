@@ -37,7 +37,7 @@ void LoggerRemoteSocket::OnConnection(std::shared_ptr<Socket>&& aConnection)
 	const auto result = socket->ReadMessage(Bind(&LoggerRemoteSocket::OnConnectionMessage, weak_from_this(), std::weak_ptr(aConnection)));
 
 	if (!result)
-		WM_LOG_ERROR("Failed to read from remote connection, error: ", result.Err().Error, ".");
+		WmLogError(TagWonderMake << TagWmLoggerRemote << "Failed to read from remote connection, error: " << result.Err() << '.');
 }
 
 void LoggerRemoteSocket::OnIpcClosed(Result<void, IpcAcceptor::SCloseError> aResult)
@@ -45,7 +45,7 @@ void LoggerRemoteSocket::OnIpcClosed(Result<void, IpcAcceptor::SCloseError> aRes
 	if (aResult)
 		WmLogInfo(TagWonderMake << TagWmLoggerRemote << "Remote IPC log socket closed.");
 	else
-		WM_LOG_ERROR("Remote IPC log socket closed, error: ", aResult.Err().Error, ".");
+		WmLogError(TagWonderMake << TagWmLoggerRemote << "Remote IPC log socket closed, error: " << aResult.Err() << '.');
 }
 
 void LoggerRemoteSocket::OnConnectionMessage(std::weak_ptr<Socket> aConnection, Result<ProtoLoggerRemote::LogLine, Socket::SReadError>&& aResult)
@@ -59,14 +59,14 @@ void LoggerRemoteSocket::OnConnectionMessage(std::weak_ptr<Socket> aConnection, 
 
 	if (it == myConnections.cend())
 	{
-		WM_LOG_ERROR("IPC log connection read from unknown socket.");
+		WmLogError(TagWonderMake << TagWmLoggerRemote << "IPC log connection read from unknown socket.");
 
 		return;
 	}
 
 	if (!aResult)
 	{
-		WM_LOG_ERROR("IPC log connection read failed, error: ", aResult.Err().Error, ".");
+		WmLogError(TagWonderMake << TagWmLoggerRemote << "IPC log connection read failed, error: " << aResult.Err() << '.');
 
 		connection->Close();
 
@@ -80,7 +80,7 @@ void LoggerRemoteSocket::OnConnectionMessage(std::weak_ptr<Socket> aConnection, 
 	const auto result = it->second->ReadMessage(Bind(&LoggerRemoteSocket::OnConnectionMessage, weak_from_this(), std::weak_ptr(aConnection)));
 
 	if (!result)
-		WM_LOG_ERROR("Failed to read from log connection, error: ", result.Err().Error, ".");
+		WmLogError(TagWonderMake << TagWmLoggerRemote << "Failed to read from log connection, error: " << result.Err() << '.');
 }
 
 void LoggerRemoteSocket::OnConnectionClosed(std::weak_ptr<Socket> aConnection, Result<Socket::SCloseLocation, Socket::SCloseError> aResult)
@@ -97,7 +97,7 @@ void LoggerRemoteSocket::OnConnectionClosed(std::weak_ptr<Socket> aConnection, R
 		if (aResult)
 			WmLogWarning(TagWonderMake << TagWmLoggerRemote << "Unknown remote IPC log connection closed. Possibly closed twice? " << aResult.Unwrap() << '.');
 		else
-			WM_LOG_ERROR("Unknown remote IPC log connection closed. Possibly closed twice? Error: ", aResult.Err().Error, ".");
+			WmLogError(TagWonderMake << TagWmLoggerRemote << "Unknown remote IPC log connection closed. Possibly closed twice? Error: " << aResult.Err() << '.');
 
 		return;
 	}
@@ -107,5 +107,5 @@ void LoggerRemoteSocket::OnConnectionClosed(std::weak_ptr<Socket> aConnection, R
 	if (aResult)
 		WmLogInfo(TagWonderMake << TagWmLoggerRemote << "Remote IPC log connection closed. " << aResult.Unwrap() << '.');
 	else
-		WM_LOG_ERROR("Remote IPC log connection closed. Error: ", aResult.Err().Error, ".");
+		WmLogError(TagWonderMake << TagWmLoggerRemote << "Remote IPC log connection closed. Error: " << aResult.Err() << '.');
 }

@@ -189,7 +189,7 @@ public:
 
 		if (it == myConfigs.end())
 		{
-			WM_LOG_ERROR("Config missing, attempted to set override type ", overrideType.name(), " for id ", aId, ".");
+			WmLogError(TagWonderMake << TagWmConfiguration << "Config missing, attempted to set override type " << overrideType.name() << " for id " << aId << '.');
 
 			return;
 		}
@@ -198,7 +198,7 @@ public:
 
 		if (!TRaw && configRaw.Type != overrideType)
 		{
-			WM_LOG_ERROR("Config type mismatch, attempted to set override type ", overrideType.name(), " for id ", aId, ". Set type: ", configRaw.Type.name(), ".");
+			WmLogError(TagWonderMake << TagWmConfiguration << "Config type mismatch, attempted to set override type " << overrideType.name() << " for id " << aId << ". Set type: " << configRaw.Type.name() << '.');
 
 			return;
 		}
@@ -209,7 +209,7 @@ public:
 
 			if (!std::holds_alternative<ConfigData<RawType>>(configRaw.Config))
 			{
-				WM_LOG_ERROR("Config element type mismatch, attempted to set override type ", overrideType.name(), " for id ", aId, ". Set type: ", configRaw.Type.name(), ".");
+				WmLogError(TagWonderMake << TagWmConfiguration << "Config type mismatch, attempted to set override type " << overrideType.name() << " for id " << aId << ". Set type: " << configRaw.Type.name() << '.');
 
 				return;
 			}
@@ -222,7 +222,7 @@ public:
 		{
 			if (!std::holds_alternative<ConfigData<TConfigType>>(configRaw.Config))
 			{
-				WM_LOG_ERROR("Config element type mismatch, attempted to set override type ", overrideType.name(), " for id ", aId, ". Set type: ", configRaw.Type.name(), ".");
+				WmLogError(TagWonderMake << TagWmConfiguration << "Config type mismatch, attempted to set override type " << overrideType.name() << " for id " << aId << ". Set type: " << configRaw.Type.name() << '.');
 
 				return;
 			}
@@ -282,7 +282,7 @@ public:
 
 		if (configRaw.Type != typeid(TConfigType))
 		{
-			WM_LOG_ERROR("Config type mismatch, attempted to get type ", configFetchType.name(), " from id ", aId, ". Set type: ", configRaw.Type.name(), ".");
+			WmLogError(TagWonderMake << TagWmConfiguration << "Config type mismatch, attempted to get type " << configFetchType.name() << " from id " << aId << ". Set type: " << configRaw.Type.name() << '.');
 
 			return std::forward<TDefaultArg>(aDefaultValue);
 		}
@@ -293,7 +293,7 @@ public:
 
 			if (!std::holds_alternative<ConfigData<RawType>>(configRaw.Config))
 			{
-				WM_LOG_ERROR("Config element type mismatch, attempted to get type ", configFetchType.name(), " from id ", aId, ". Set type: ", configRaw.Type.name(), ".");
+				WmLogError(TagWonderMake << TagWmConfiguration << "Config element type mismatch, attempted to get type " << configFetchType.name() << " from id " << aId << ". Set type: " << configRaw.Type.name() << '.');
 
 				return std::move(aDefaultValue);
 			}
@@ -309,7 +309,7 @@ public:
 		{
 			if (!std::holds_alternative<ConfigData<TConfigType>>(configRaw.Config))
 			{
-				WM_LOG_ERROR("Config element type mismatch, attempted to get type ", configFetchType.name(), " from id ", aId, ". Set type: ", configRaw.Type.name(), ".");
+				WmLogError(TagWonderMake << TagWmConfiguration << "Config element type mismatch, attempted to get type " << configFetchType.name() << " from id " << aId << ". Set type: " << configRaw.Type.name() << '.');
 
 				return std::move(aDefaultValue);
 			}

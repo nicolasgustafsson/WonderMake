@@ -133,7 +133,7 @@ inline void ResourceSystem<TResource>::ResourceDeleter(std::filesystem::path aPa
 	const auto resourceIt = myResources.find(aPath.string());
 	if (resourceIt == myResources.cend())
 	{
-		WM_LOG_ERROR('[', typeid(TResource).name(), "]Unknown resource deletion requested: ", aResource, ".");
+		WmLogError(TagWonderMake << TagWmResources << '[' << typeid(TResource).name() << "]Unknown resource deletion requested: " << aResource << '.');
 		return;
 	}
 	myResources.erase(resourceIt);

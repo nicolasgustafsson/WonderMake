@@ -6,6 +6,7 @@
 
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/ScheduleSystem.h"
+#include "wondermake-base/WmLogTags.h"
 
 REGISTER_SYSTEM(CollisionSystem);
 
@@ -163,7 +164,7 @@ bool CollisionSystem::TestSphereVsLineCollision(const Colliders::SSphere& aSpher
 
 bool CollisionSystem::TestLineVsLineCollision(const Colliders::SCollisionLine& /*aLineA*/, const Colliders::SCollisionLine& /*aLineB*/) noexcept
 {
-	WM_LOG_ERROR("Line-line collision not implemented yet.");
+	WmLogError(TagWonderMake << TagWmCollision << "Line-line collision not implemented yet.");
 	return false;
 }
 

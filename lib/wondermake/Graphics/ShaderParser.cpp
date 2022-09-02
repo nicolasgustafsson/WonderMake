@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "ShaderParser.h"
 
+#include "wondermake-base/WmLogTags.h"
+
 namespace ShaderParser
 {
 	std::optional<std::string> ParseShader(const std::filesystem::path& aShaderPath)
@@ -18,7 +20,7 @@ namespace ShaderParser
 		std::optional<std::string> parseResult = ParseShaderFileRecursive(aShaderPath, std::move(shaderString), true, includedFiles);
 
 		if (!parseResult)
-			WM_LOG_ERROR("Failed to parse shader file with path: ", aShaderPath.string(), ".");
+			WmLogError(TagWonderMake << TagWmOpenGL << "Failed to parse shader file with path: " << aShaderPath.string() << '.');
 
 		return parseResult;
 	}
@@ -61,7 +63,7 @@ namespace ShaderParser
 
 		if (root_include_directory.empty())
 		{
-			WM_LOG_ERROR("Failed to parse shader, could not find root directory of shader with path:", aShaderPath.string(), ".");
+			WmLogError(TagWonderMake << TagWmOpenGL << "Failed to parse shader, could not find root directory of shader with path:" << aShaderPath.string() << '.');
 			return {};
 		}
 
@@ -85,7 +87,7 @@ namespace ShaderParser
 
 						if (!std::filesystem::exists(includePath))
 						{
-							WM_LOG_ERROR("Failed to parse shader, could not find file to include with path: ", includePath, ".");
+							WmLogError(TagWonderMake << TagWmOpenGL << "Failed to parse shader, could not find file to include with path: " << includePath << '.');
 							return {};
 						}
 						std::ifstream includedFileStream{ includePath };
@@ -100,7 +102,7 @@ namespace ShaderParser
 
 						if (!includedResult)
 						{
-							WM_LOG_ERROR("Failed to parse shader, could not parse included file with path: ", includePath, ".");
+							WmLogError(TagWonderMake << TagWmOpenGL << "Failed to parse shader, could not parse included file with path: " << includePath << '.');
 							return {};
 						}
 

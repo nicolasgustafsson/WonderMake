@@ -7,6 +7,7 @@
 #include "wondermake-io/SocketSerializingImpl.h"
 
 #include "wondermake-base/LoggerTypes.h"
+#include "wondermake-base/WmLogTags.h"
 
 #include "wondermake-utility/Bindable.h"
 
@@ -42,7 +43,7 @@ void LoggerRemoteSocket::OnConnection(std::shared_ptr<Socket>&& aConnection)
 void LoggerRemoteSocket::OnIpcClosed(Result<void, IpcAcceptor::SCloseError> aResult)
 {
 	if (aResult)
-		WM_LOG_INFO("Remote IPC log socket closed.");
+		WmLogInfo(TagWonderMake << TagWmLoggerRemote << "Remote IPC log socket closed.");
 	else
 		WM_LOG_ERROR("Remote IPC log socket closed, error: ", aResult.Err().Error, ".");
 }
@@ -104,7 +105,7 @@ void LoggerRemoteSocket::OnConnectionClosed(std::weak_ptr<Socket> aConnection, R
 	myConnections.erase(it);
 
 	if (aResult)
-		WM_LOG_INFO("Remote IPC log connection closed. ", (aResult.Unwrap().Location == Socket::ECloseLocation::ClosedLocally ? "Closed locally." : "Closed remotely."));
+		WmLogInfo(TagWonderMake << TagWmLoggerRemote << "Remote IPC log connection closed. " << aResult.Unwrap() << '.');
 	else
 		WM_LOG_ERROR("Remote IPC log connection closed. Error: ", aResult.Err().Error, ".");
 }

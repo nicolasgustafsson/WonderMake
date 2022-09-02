@@ -5,6 +5,7 @@
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/System.h"
 #include "wondermake-base/SystemContainer.h"
+#include "wondermake-base/WmLogTags.h"
 
 #include "wondermake-utility/AnyExecutor.h"
 #include "wondermake-utility/Bindable.h"
@@ -31,7 +32,7 @@ public:
 		{
 			switch (result.Err())
 			{
-			case JobRegistry::EGetPoliciesError::JobNotRegistered:	WM_LOG_ERROR("Failed to get job policies: ", typeid(TJob).name(), ", job not registered.");
+			case JobRegistry::EGetPoliciesError::JobNotRegistered:	WmLogError(TagWonderMake << TagWmJobSystem << "Failed to get job policies: " << typeid(TJob).name() << ", job not registered.");
 			}
 
 			return future;
@@ -55,8 +56,8 @@ private:
 
 			switch (err.Error)
 			{
-			case JobRegistry::ECreateError::JobNotRegistered:	WM_LOG_ERROR("Failed to create job: ", typeid(TJob).name(), ", job not registered.");					break;
-			case JobRegistry::ECreateError::MissingDependency:	WM_LOG_ERROR("Failed to create job: ", typeid(TJob).name(), ", missing dependency: ", err.Reason, ".");	break;
+			case JobRegistry::ECreateError::JobNotRegistered:	WmLogError(TagWonderMake << TagWmJobSystem << "Failed to create job: " << typeid(TJob).name() << ", job not registered.");							break;
+			case JobRegistry::ECreateError::MissingDependency:	WmLogError(TagWonderMake << TagWmJobSystem << "Failed to create job: " << typeid(TJob).name() << ", missing dependency: " << err.Reason << '.');	break;
 			}
 
 			return;

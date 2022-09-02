@@ -191,7 +191,7 @@ namespace Engine
 					loggerRemoteConnection = std::move(connectionResult).Unwrap();
 				}
 				else
-					WM_LOG_ERROR("Failed to open IPC log connection, error: ", connectionResult.Err().Error, ".");
+					WmLogError(TagWonderMake << "Failed to open IPC log connection, error: " << connectionResult.Err() << '.');
 			}
 			if (aInfo.Logging.IpcSocket)
 			{
@@ -209,11 +209,11 @@ namespace Engine
 					loggerRemoteSocket = std::move(socketResult).Unwrap();
 				}
 				else
-					WM_LOG_ERROR("Failed to open IPC log socket, error: ", socketResult.Err().Error, ".");
+					WmLogError(TagWonderMake << "Failed to open IPC log socket, error: " << socketResult.Err() << '.');
 			}
 
 			if (logFileError)
-				WM_LOG_ERROR("Failed to open log file.");
+				WmLogError(TagWonderMake << "Failed to open log file.");
 		}
 
 		{
@@ -227,7 +227,7 @@ namespace Engine
 
 			if (!result)
 			{
-				WM_LOG_ERROR("Failed to create singleton systems; error: ", result.Err().Error, ", reason: ", result.Err().Reason, ".");
+				WmLogError(TagWonderMake << "Failed to create singleton systems; error: " << result.Err() << '.');
 
 				return;
 			}
@@ -275,7 +275,7 @@ namespace Engine
 
 			if (!result)
 			{
-				WM_LOG_ERROR("Failed to create systems; error: ", result.Err().Error, ", reason: ", result.Err().Reason, ".");
+				WmLogError(TagWonderMake << "Failed to create systems; error: " << result.Err() << '.');
 
 				return;
 			}

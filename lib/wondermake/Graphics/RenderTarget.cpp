@@ -54,7 +54,7 @@ void RenderTarget::BindAsTarget()
 {
 	if (myFrameBufferObject == std::numeric_limits<u32>::max())
 	{
-		WM_LOG_ERROR("Tried to bind uninitialized RenderTarget.");
+		WmLogError(TagWonderMake << TagWmOpenGL << "Tried to bind uninitialized RenderTarget.");
 
 		return;
 	}
@@ -92,7 +92,7 @@ void RenderTarget::Initialize(const SRenderTargetSettings& aSettings)
 {
 	if (aSettings.Size == SVector2u::Zero())
 	{
-		WM_LOG_ERROR("Tried to create RenderTarget with zero size, settings: ", ToString(aSettings), ".");
+		WmLogError(TagWonderMake << TagWmOpenGL << "Tried to create RenderTarget with zero size, settings: " << ToString(aSettings) << '.');
 
 		return;
 	}

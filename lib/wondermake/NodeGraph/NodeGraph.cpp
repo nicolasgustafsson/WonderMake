@@ -60,7 +60,7 @@ void NodeGraph::Load()
 	RegisterNodes();
 
 	if (myRootNodeType == nullptr)
-		WM_LOG_ERROR(TagNodeGraph, "No root node type registered! Things may break.");
+		WmLogError(TagWonderMake << TagWmNodeGraph << "No root node type registered! Things may break.");
 
 	std::ifstream file(myPath, std::fstream::app);
 
@@ -234,7 +234,7 @@ void NodeGraph::Deserialize(const nlohmann::json& aJsonFile)
 
 		if (!myRootNode)
 		{
-			WM_LOG_ERROR(TagNodeGraph, "No root node detected on load! Adding one...");
+			WmLogError(TagWonderMake << TagWmNodeGraph << "No root node detected on load! Adding one...");
 			SetupRootNode();
 		}
 	}

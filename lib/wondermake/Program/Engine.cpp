@@ -27,6 +27,7 @@
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/ScheduleSystem.h"
 #include "wondermake-base/SystemGlobal.h"
+#include "wondermake-base/WmLogTags.h"
 
 using namespace MemoryUnitLiterals;
 
@@ -168,11 +169,11 @@ namespace Engine
 				logFileError = !fileLogger.OpenLogFile(logFileInfo.Path, logFileInfo.Filename);
 			}
 
-			WM_LOG_INFO("");
-			WM_LOG_INFO("");
-			WM_LOG_INFO("");
-			WM_LOG_INFO("---------------- ", aInfo.ApplicationName, " ----------------");
-			WM_LOG_SUCCESS("Started logging.");
+			WmLog(LInfo(TagWonderMake, ""));
+			WmLog(LInfo(TagWonderMake, ""));
+			WmLog(LInfo(TagWonderMake, ""));
+			WmLog(LInfo(TagWonderMake, "---------------- ", aInfo.ApplicationName, " ----------------"));
+			WmLogSuccess(TagWonderMake << "Started logging.");
 
 			if (aInfo.Logging.IpcConnection)
 			{
@@ -283,7 +284,7 @@ namespace Engine
 
 			auto&& timeKeeper = sysContainer.Get<TimeKeeper>();
 
-			WM_LOG_SUCCESS("Engine is up and running.");
+			WmLogSuccess(TagWonderMake << "Engine is up and running.");
 
 			std::move(aCallbacks.OnSetup)();
 

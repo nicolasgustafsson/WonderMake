@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "NodeGraph.h"
 #include "Debugging/DebugSettingsSystem.h"
+
 #include "wondermake-base/Logger.h"
+#include "wondermake-base/WmLogTags.h"
 
 NodeGraph::NodeGraph(std::filesystem::path aFilePath)
 	: myPath(aFilePath)
@@ -38,7 +40,7 @@ void NodeGraph::Save()
 
 	file << std::setw(4) << json.dump();
 
-	WM_LOG_SUCCESS(TagNodeGraph, "Saved node graph [", myPath.string(), "].");
+	WmLogSuccess(TagWonderMake << TagWmNodeGraph << "Saved node graph [" << myPath.string() << "].");
 }
 
 void NodeGraph::ExecuteExternal()
@@ -337,7 +339,7 @@ void NodeGraph::CompileNodeGraph(SNode& aRoot, std::vector<SCompiledNode>& aNode
 	}
 
 	if (aIsFirstCompileCall)
-		WM_LOG_SUCCESS(TagNodeGraph, "Compiled node graph [", myPath.string(), "].");
+		WmLogSuccess(TagWonderMake << TagWmNodeGraph << "Compiled node graph [" << myPath.string() << "].");
 }
 
 void NodeGraph::SerializeInlineInputs(SNode& aNode, json& aInputArray)

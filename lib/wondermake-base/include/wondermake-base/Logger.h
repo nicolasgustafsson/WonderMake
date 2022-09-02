@@ -177,7 +177,6 @@ inline static std::string FormatLogMessage(TArgs&&... aArgs)
 	return std::move(logText.Line);
 }
 
-#define WM_LOG_SUCCESS(...)				WmLog({ FormatLogMessage( __VA_ARGS__ ), ELogSeverity::Success,	ELogLevel::Normal })
 #define WM_LOG_INFO(...)				WmLog({ FormatLogMessage( __VA_ARGS__ ), ELogSeverity::Info,	ELogLevel::Normal })
 #define WM_LOG_WARNING(...)				WmLog({ FormatLogMessage( __VA_ARGS__ ), ELogSeverity::Warning,	ELogLevel::Normal })
 #define WM_LOG_ERROR(...)				WmLog({ FormatLogMessage( __VA_ARGS__ ), ELogSeverity::Error,	ELogLevel::Normal })

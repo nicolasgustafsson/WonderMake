@@ -95,7 +95,7 @@ void LoggerRemoteSocket::OnConnectionClosed(std::weak_ptr<Socket> aConnection, R
 	if (it == myConnections.cend())
 	{
 		if (aResult)
-			WM_LOG_WARNING("Unknown remote IPC log connection closed. Possibly closed twice? ", (aResult.Unwrap().Location == Socket::ECloseLocation::ClosedLocally ? "Closed locally." : "Closed remotely."));
+			WmLogWarning(TagWonderMake << TagWmLoggerRemote << "Unknown remote IPC log connection closed. Possibly closed twice? " << aResult.Unwrap() << '.');
 		else
 			WM_LOG_ERROR("Unknown remote IPC log connection closed. Possibly closed twice? Error: ", aResult.Err().Error, ".");
 

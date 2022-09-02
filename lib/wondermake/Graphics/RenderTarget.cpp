@@ -3,6 +3,7 @@
 #include "OpenGLFacade.h"
 
 #include "wondermake-base/Logger.h"
+#include "wondermake-base/WmLogTags.h"
 
 std::string ToString(const SRenderTargetSettings& aSettings)
 {
@@ -64,7 +65,7 @@ void RenderTarget::BindAsTarget()
 
 	if (status != GL_FRAMEBUFFER_COMPLETE)
 	{
-		WM_LOG_WARNING("Could not bind RenderTarget as Frame buffer object is incomplete, status: ", status, ".");
+		WmLogWarning(TagWonderMake << TagWmOpenGL << "Could not bind RenderTarget as Frame buffer object is incomplete, status: " << status << '.');
 
 		return;
 	}
@@ -124,7 +125,7 @@ void RenderTarget::Initialize(const SRenderTargetSettings& aSettings)
 
 	auto status = openGL->CheckFramebufferStatus(GL_FRAMEBUFFER);
 	if (status != GL_FRAMEBUFFER_COMPLETE)
-		WM_LOG_WARNING("Frame buffer object is incomplete, status: ", status, ", settings: ", ToString(aSettings), ".");
+		WmLogWarning(TagWonderMake << TagWmOpenGL << "Frame buffer object is incomplete, status: " << status << ", settings: " << ToString(aSettings) << '.');
 
 	//reset framebuffer
 	openGL->BindFramebuffer(GL_FRAMEBUFFER, 0);

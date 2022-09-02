@@ -3,6 +3,7 @@
 #include "wondermake-base/ConfigurationSystem.h"
 #include "wondermake-base/JobGlobal.h"
 #include "wondermake-base/Logger.h"
+#include "wondermake-base/WmLogTags.h"
 
 #include "json/json.hpp"
 
@@ -66,7 +67,7 @@ void DeserializeConfigurationJob::Run(Promise<Output> aPromise, EConfigGroup aCo
 					if (value.is_boolean())
 						configuration.SetOverride<bool>(name, value.get<bool>());
 					else
-						WM_LOG_WARNING("Expected boolean value for override: \"", name, "\".");
+						WmLogWarning(TagWonderMake << TagWmConfiguration << "Expected boolean value for override: \"" << name << "\".");
 				}
 
 				// Floating-point number
@@ -75,14 +76,14 @@ void DeserializeConfigurationJob::Run(Promise<Output> aPromise, EConfigGroup aCo
 					if (value.is_number())
 						configuration.SetOverride<f32>(name, value.get<f32>());
 					else
-						WM_LOG_WARNING("Expected f32 value for override: \"", name, "\".");
+						WmLogWarning(TagWonderMake << TagWmConfiguration << "Expected f32 value for override: \"" << name << "\".");
 				}
 				else if constexpr (std::is_same_v<Type, f64>)
 				{
 					if (value.is_number())
 						configuration.SetOverride<f64>(name, value.get<f64>());
 					else
-						WM_LOG_WARNING("Expected f64 value for override: \"", name, "\".");
+						WmLogWarning(TagWonderMake << TagWmConfiguration << "Expected f64 value for override: \"" << name << "\".");
 				}
 
 				// Unsigned integer
@@ -91,28 +92,28 @@ void DeserializeConfigurationJob::Run(Promise<Output> aPromise, EConfigGroup aCo
 					if (value.is_number_unsigned())
 						configuration.SetOverride<u8>(name, value.get<u8>());
 					else
-						WM_LOG_WARNING("Expected u8 value for override: \"", name, "\".");
+						WmLogWarning(TagWonderMake << TagWmConfiguration << "Expected u8 value for override: \"" << name << "\".");
 				}
 				else if constexpr (std::is_same_v<Type, u16>)
 				{
 					if (value.is_number_unsigned())
 						configuration.SetOverride<u16>(name, value.get<u16>());
 					else
-						WM_LOG_WARNING("Expected u16 value for override: \"", name, "\".");
+						WmLogWarning(TagWonderMake << TagWmConfiguration << "Expected u16 value for override: \"" << name << "\".");
 				}
 				else if constexpr (std::is_same_v<Type, u32>)
 				{
 					if (value.is_number_unsigned())
 						configuration.SetOverride<u32>(name, value.get<u32>());
 					else
-						WM_LOG_WARNING("Expected u32 value for override: \"", name, "\".");
+						WmLogWarning(TagWonderMake << TagWmConfiguration << "Expected u32 value for override: \"" << name << "\".");
 				}
 				else if constexpr (std::is_same_v<Type, u64>)
 				{
 					if (value.is_number_unsigned())
 						configuration.SetOverride<u64>(name, value.get<u64>());
 					else
-						WM_LOG_WARNING("Expected u64 value for override: \"", name, "\".");
+						WmLogWarning(TagWonderMake << TagWmConfiguration << "Expected u64 value for override: \"" << name << "\".");
 				}
 
 				// Signed integer
@@ -121,28 +122,28 @@ void DeserializeConfigurationJob::Run(Promise<Output> aPromise, EConfigGroup aCo
 					if (value.is_number_integer())
 						configuration.SetOverride<i8>(name, value.get<i8>());
 					else
-						WM_LOG_WARNING("Expected i8 value for override: \"", name, "\".");
+						WmLogWarning(TagWonderMake << TagWmConfiguration << "Expected i8 value for override: \"" << name << "\".");
 				}
 				else if constexpr (std::is_same_v<Type, i16>)
 				{
 					if (value.is_number_integer())
 						configuration.SetOverride<i16>(name, value.get<i16>());
 					else
-						WM_LOG_WARNING("Expected i16 value for override: \"", name, "\".");
+						WmLogWarning(TagWonderMake << TagWmConfiguration << "Expected i16 value for override: \"" << name << "\".");
 				}
 				else if constexpr (std::is_same_v<Type, i32>)
 				{
 					if (value.is_number_integer())
 						configuration.SetOverride<i32>(name, value.get<i32>());
 					else
-						WM_LOG_WARNING("Expected i32 value for override: \"", name, "\".");
+						WmLogWarning(TagWonderMake << TagWmConfiguration << "Expected i32 value for override: \"" << name << "\".");
 				}
 				else if constexpr (std::is_same_v<Type, i64>)
 				{
 					if (value.is_number_integer())
 						configuration.SetOverride<i64>(name, value.get<i64>());
 					else
-						WM_LOG_WARNING("Expected i64 value for override: \"", name, "\".");
+						WmLogWarning(TagWonderMake << TagWmConfiguration << "Expected i64 value for override: \"" << name << "\".");
 				}
 
 				// String
@@ -151,7 +152,7 @@ void DeserializeConfigurationJob::Run(Promise<Output> aPromise, EConfigGroup aCo
 					if (value.is_string())
 						configuration.SetOverride<std::string>(name, value.get<std::string>());
 					else
-						WM_LOG_WARNING("Expected string value for override: \"", name, "\".");
+						WmLogWarning(TagWonderMake << TagWmConfiguration << "Expected string value for override: \"" << name << "\".");
 				}
 
 				else

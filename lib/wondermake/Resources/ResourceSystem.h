@@ -4,6 +4,7 @@
 
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/System.h"
+#include "wondermake-base/WmLogTags.h"
 
 #include <filesystem>
 #include <functional>
@@ -80,7 +81,7 @@ void ResourceSystem<TResource>::OnFileChange(const SFileChangedMessage& aFileCha
 
 				strongResource->myGeneration++;
 
-				WM_LOG_SUCCESS("Reloaded asset: ", aFileChangedMessage.FilePath.string(), ".");
+				WmLogSuccess(TagWonderMake << TagWmResources << "Reloaded asset: " << aFileChangedMessage.FilePath.string() << ".");
 			}
 		}
 	}

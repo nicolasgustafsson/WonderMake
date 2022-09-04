@@ -22,6 +22,7 @@ list(APPEND SourceFiles
 
 add_library(WonderMakeEngine STATIC ${SourceFiles})
 
+set_pedantic_warning_level(WonderMakeEngine)
 set_whole_archive(WonderMakeEngine)
 target_include_directories(WonderMakeEngine PUBLIC "Include")
 

@@ -556,6 +556,9 @@ void WmGui::NodeGraphEditor::Slot(const bool aIsInput, SSlotInstanceBase& aSlotI
 		ImGui::EndGroup();
 		auto after = window->IDStack.Size;
 
+		before;
+		after;
+
 		assert(before == after);
 	}
 
@@ -735,8 +738,6 @@ void WmGui::NodeGraphEditor::DrawPendingConnection()
 				CurrentNodeGraph->CachedData.GetFloat(MakeSlotDataID("y",  dragPayload->IsInput ? dragPayload->InputSlotInstance->SlotType.Name.c_str() : dragPayload->OutputSlotInstance->SlotType.Name.c_str(), dragPayload->NodePointer,
 					dragPayload->IsInput)),
 			};
-
-			const f32 connectionIndent = 5.f * CurrentNodeGraph->CanvasState.ZoomLevel;
 
 			ImVec2 inputPosition, outputPosition;
 			if (dragPayload->IsInput)

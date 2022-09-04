@@ -38,4 +38,5 @@ list(APPEND SourceFiles
 
 add_library(WonderMakeUtility STATIC ${SourceFiles})
 
+set_pedantic_warning_level(WonderMakeUtility)
 target_include_directories(WonderMakeUtility PUBLIC "Include")

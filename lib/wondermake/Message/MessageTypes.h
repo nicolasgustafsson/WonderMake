@@ -2,8 +2,6 @@
 
 #include "wondermake-utility/Typedefs.h"
 
-#include "Logging/LogMessageTags.h"
-
 #include <atomic>
 #include <filesystem>
 #include <functional>

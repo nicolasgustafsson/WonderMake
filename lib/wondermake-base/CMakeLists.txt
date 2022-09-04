@@ -54,6 +54,7 @@ list(APPEND SourceFiles
 
 add_library(WonderMakeBase STATIC ${SourceFiles})
 
+set_pedantic_warning_level(WonderMakeBase)
 set_whole_archive(WonderMakeBase)
 target_include_directories(WonderMakeBase PUBLIC "include")
 

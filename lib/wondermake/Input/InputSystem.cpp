@@ -213,6 +213,6 @@ bool InputSystem::ShouldCaptureMouseInput() const noexcept
 {
 	if constexpr (!Constants::IsDebugging)
 		return true;
-
-	return Get<CameraManager>().AnyDisplayIsFocused();
+	else
+		return Get<CameraManager>().AnyDisplayIsFocused();
 }

@@ -28,6 +28,7 @@ list(APPEND SourceFiles
 
 add_library(WonderMakeIo STATIC ${SourceFiles})
 
+set_pedantic_warning_level(WonderMakeIo)
 set_whole_archive(WonderMakeIo)
 target_include_directories(WonderMakeIo PUBLIC "include")
 

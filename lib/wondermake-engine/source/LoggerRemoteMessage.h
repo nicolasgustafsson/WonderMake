@@ -1,6 +1,9 @@
 #pragma once
 
+#pragma warning(push)
+#pragma warning(disable: 5054)
 #include "wondermake-engine-proto/LoggerRemote.pb.h"
+#pragma warning(pop)
 
 #include "wondermake-utility/Result.h"
 #include "wondermake-utility/Typedefs.h"

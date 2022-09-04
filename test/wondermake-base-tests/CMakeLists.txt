@@ -11,6 +11,7 @@ list(APPEND SourceFiles
     "Tests/JobRegistryTests.cpp"
     "Tests/JobSystemTests.cpp"
     "Tests/LoggerTests.cpp"
+    "Tests/LogTagTests.cpp"
     "Tests/WinEventSystemImplTests.cpp"
     "Tests/WinGuidGeneratorSystemTests.cpp"
     "Tests/WinProcessSystemTests.cpp"

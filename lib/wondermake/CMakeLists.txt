@@ -111,7 +111,6 @@ list(APPEND SourceFiles
     "Input/InputSystem.h"
     "Logging/ImGuiLogger.cpp"
     "Logging/ImGuiLogger.h"
-    "Logging/LogMessageTags.h"
     "Message/DispatchableBuffer.cpp"
     "Message/DispatchableBuffer.h"
     "Message/DispatchRouter.cpp"

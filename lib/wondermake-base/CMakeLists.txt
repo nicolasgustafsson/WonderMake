@@ -27,6 +27,7 @@ list(APPEND SourceFiles
     "include/wondermake-base/SystemTraits.h"
     "include/wondermake-base/WinEventSystem.h"
     "include/wondermake-base/WinPlatformSystem.h"
+    "include/wondermake-base/WmLogTags.h"
     "source/CmdLineArgsSystem.cpp"
     "source/Configuration.cpp"
     "source/ConfigurationSystem.cpp"

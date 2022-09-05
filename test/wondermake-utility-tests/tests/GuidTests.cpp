@@ -37,12 +37,20 @@ void StaticTest_Guid_Parse()
 	static_assert(std::ranges::equal(*Guid::Parse("4ae5a5f84ab74fe7a48f323d89b1925b"), *Guid::Parse("4AE5A5F84AB74FE7A48F323D89B1925B")));
 }
 
+void StaticTest_Guid_StringConvertible()
+{
+	static_assert(CConvertibleToFixedSizeString<Guid>);
+}
+
 void StaticTest_Guid_Comparison()
 {
 	static_assert(*Guid::Parse("4ae5a5f8-4ab7-4fe7-a48f-323d89b1925b") == *Guid::Parse("4AE5A5F84AB74FE7A48F323D89B1925B"));
 	static_assert(*Guid::Parse("4ae5a5f8-4ab7-4fe7-a48f-323d89b1925b") != *Guid::Parse("6864eff0-6303-4bca-9e13-ee1be8160b56"));
 	static_assert(Guid::Zero() == *Guid::Parse("00000000000000000000000000000000"));
 	static_assert(Guid::Zero() == *Guid::Parse("00000000-0000-0000-0000-000000000000"));
+
+	static_assert(Guid::Parse("4ae5a5f8-4ab7-4fe7-a48f-323d89b1925b")->ToFixedSizeString() == "4ae5a5f8-4ab7-4fe7-a48f-323d89b1925b");
+	static_assert(Guid::Parse("4ae5a5f8-4ab7-4fe7-a48f-323d89b1925b")->ToFixedSizeString() != "6864eff0-6303-4bca-9e13-ee1be8160b56");
 }
 
 void StaticTest_Guid_Copy()

@@ -6,13 +6,16 @@
 #include <string>
 #include <string_view>
 
+#include "wondermake-utility/FixedSizeString.h"
 #include "wondermake-utility/Typedefs.h"
 
 class Guid
 	: public std::array<u8, 16>
 {
 public:
-	static [[nodiscard]] constexpr std::optional<Guid> Parse(std::string_view aGuid)
+	using String = FixedSizeString<36>;
+
+	static constexpr [[nodiscard]] std::optional<Guid> Parse(std::string_view aGuid)
 	{
 		constexpr auto translateGuid = [](auto aGuid) -> std::optional<Guid>
 		{
@@ -52,7 +55,7 @@ public:
 		return std::nullopt;
 	}
 
-	static [[nodiscard]] constexpr Guid Zero()
+	static constexpr [[nodiscard]] Guid Zero()
 	{
 		return std::array<u8, 16> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	}
@@ -73,32 +76,46 @@ public:
 		return *this;
 	}
 
-	inline explicit operator std::string() const
+	constexpr [[nodiscard]] String ToFixedSizeString() const noexcept
 	{
 		constexpr u8 high = 0xF0;
 		constexpr u8 low = 0x0F;
 
-		std::string retVal;
+		std::array<char, 37> retVal = { '\0' };
 
-		retVal.reserve(36);
-
-		retVal.resize(32, '0');
-
-		for (size_t i = 0; i < size(); ++i)
+		constexpr auto format = [](const auto aBegin, const auto aEnd, auto aInsertIt)
 		{
-			const u8 val = (*this)[i];
-			const size_t index = i * 2;
+			for (auto it = aBegin; it != aEnd; ++it)
+			{
+				const u8 val = *it;
 
-			retVal[index]		= HexToChar((val & high) >> 4);
-			retVal[index + 1]	= HexToChar(val & low);
-		}
+				(*aInsertIt++) = HexToChar((val & high) >> 4);
+				(*aInsertIt++) = HexToChar(val & low);
+			}
 
-		retVal.insert(8,	1, '-');
-		retVal.insert(13,	1, '-');
-		retVal.insert(18,	1, '-');
-		retVal.insert(23,	1, '-');
+			return aInsertIt;
+		};
+
+		auto insertIt = format(begin(), begin() + 4, retVal.begin());
+
+		insertIt = format(begin() + 4, begin() + 6, ++insertIt);
+
+		insertIt = format(begin() + 6, begin() + 8, ++insertIt);
+
+		insertIt = format(begin() + 8, begin() + 10, ++insertIt);
+
+		format(begin() + 10, end(), ++insertIt);
+
+		retVal[8]	= '-';
+		retVal[13]	= '-';
+		retVal[18]	= '-';
+		retVal[23]	= '-';
 
 		return retVal;
+	}
+	inline explicit operator std::string() const
+	{
+		return ToFixedSizeString().ToString();
 	}
 
 	[[nodiscard]] inline constexpr size_t Hash() const noexcept
@@ -122,13 +139,13 @@ public:
 private:
 	static constexpr u8 InvalidHex = 0xFF;
 
-	static [[nodiscard]] constexpr char HexToChar(u8 aHex) noexcept
+	static constexpr [[nodiscard]] char HexToChar(u8 aHex) noexcept
 	{
 		constexpr std::string_view digits = "0123456789abcdef";
 
 		return digits[aHex & 0x0F];
 	}
-	static [[nodiscard]] constexpr u8 CharToHex(char aChar) noexcept
+	static constexpr [[nodiscard]] u8 CharToHex(char aChar) noexcept
 	{
 		if (aChar >= 'a' && aChar <= 'f')
 			return static_cast<u8>(aChar - 'a') + 10;
@@ -141,11 +158,11 @@ private:
 	}
 };
 
-static constexpr bool operator==(const Guid& aLhs, const Guid& aRhs)
+static constexpr [[nodiscard]] bool operator==(const Guid& aLhs, const Guid& aRhs)
 {
 	return std::ranges::equal(aLhs, aRhs);
 }
-static constexpr bool operator!=(const Guid& aLhs, const Guid& aRhs)
+static constexpr [[nodiscard]] bool operator!=(const Guid& aLhs, const Guid& aRhs)
 {
 	return !(aLhs == aRhs);
 }
@@ -155,9 +172,16 @@ namespace std
 	template <>
 	struct hash<Guid>
 	{
-		[[nodiscard]] inline size_t operator()(const Guid aGuid) const noexcept
+		inline [[nodiscard]] size_t operator()(const Guid aGuid) const noexcept
 		{
 			return aGuid.Hash();
 		}
 	};
+}
+
+inline std::ostream& operator<<(std::ostream& aStream, const Guid aGuid)
+{
+	aStream << aGuid.ToFixedSizeString();
+
+	return aStream;
 }

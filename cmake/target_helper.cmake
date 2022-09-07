@@ -35,7 +35,7 @@ endfunction()
 
 function(set_whole_archive ARG_TARGET)
     if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-        target_link_options(${ARG_TARGET} PUBLIC "/WHOLEARCHIVE:WonderMakeEngine")
+        target_link_options(${ARG_TARGET} PUBLIC "/WHOLEARCHIVE:${ARG_TARGET}")
     elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         target_link_options(${ARG_TARGET} PUBLIC "--whole-archive")
     elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")

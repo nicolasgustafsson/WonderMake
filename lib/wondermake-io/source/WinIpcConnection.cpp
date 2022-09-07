@@ -1,15 +1,18 @@
 #include "WinIpcConnection.h"
 
-#include "wondermake-utility/Bindable.h"
-#include "wondermake-utility/MemoryUnit.h"
-
 #include "wondermake-base/WinEventSystem.h"
 #include "wondermake-base/WinPlatformSystem.h"
 
+#include "wondermake-utility/Bindable.h"
+#include "wondermake-utility/BufferExecutor.h"
+#include "wondermake-utility/MemoryUnit.h"
+
 using namespace MemoryUnitLiterals;
 
-constexpr auto locPipePrefix = L"\\\\.\\pipe\\";
-constexpr auto locReadBufferSize = 4_KiB;
+inline constexpr auto locPipePrefix = L"\\\\.\\pipe\\";
+inline constexpr auto locReadBufferSize = 4_KiB;
+
+inline constexpr auto locNoOp = []() {};
 
 Socket::EReadError WindowsErrorCodeToReadError(const DWORD aErrorCode)
 {
@@ -32,14 +35,21 @@ Socket::EWriteError WindowsErrorCodeToWriteError(const DWORD aErrorCode)
 	return Socket::EWriteError::InternalError;
 }
 
-WinIpcConnection::WinIpcConnection(WinEventSystem& aWinEvent, WinPlatformSystem& aWinPlatform) noexcept
-	: myWinEvent(aWinEvent)
+WinIpcConnection::WinIpcConnection(AnyExecutor aExecutor, WinEventSystem& aWinEvent, WinPlatformSystem& aWinPlatform) noexcept
+	: myExecutor(std::move(aExecutor))
+	, myWinEvent(aWinEvent)
 	, myWinPlatform(aWinPlatform)
 {}
 
 WinIpcConnection::~WinIpcConnection() noexcept
 {
-	Close();
+	myMutex.lock();
+
+	Closure closure = Reset(Ok(SCloseLocation{ ECloseLocation::ClosedLocally }));
+
+	myMutex.unlock();
+
+	std::move(closure)();
 }
 
 Result<void, IpcConnection::SConnectionError> WinIpcConnection::Connect(std::string aConnectionName)
@@ -95,167 +105,78 @@ Result<void, IpcConnection::SConnectionError> WinIpcConnection::ConnectHandle(HA
 	return Setup();
 }
 
-Result<Socket::EAsynchronicity, Socket::SWriteError> WinIpcConnection::Write(std::vector<u8> aBuffer, OnWriteCallback aOnWrite)
+Socket::FutureTypeWrite WinIpcConnection::Write(std::vector<u8> aBuffer)
 {
-	if (aBuffer.empty())
-		return Err(SWriteError{ EWriteError::InvalidArgs });
+	auto [promise, future] = MakeAsync<ResultTypeWrite>();
 
-	if (myState != EState::Open)
-		return Err(SWriteError{ EWriteError::InvalidState });
+	myMutex.lock();
 
-	if (myCurrentlyWriting)
+	Closure closure = PerformWrite(std::move(aBuffer), std::move(promise));
+
+	myMutex.unlock();
+
+	std::move(closure)();
+
+	return future;
+}
+
+Socket::FutureTypeRead WinIpcConnection::Read()
+{
+	const auto getNextRequestId = [&requestQueue = myReadQueue]() -> RequestIdType
 	{
-		myWriteQueue.emplace(WriteData{ std::move(aBuffer), std::move(aOnWrite) });
-
-		return Ok(EAsynchronicity::Asynchronous);
-	}
-
-	DWORD bytesWritten = 0;
-	BOOL result = TRUE;
-
-	while (result)
-	{
-		result = myWinPlatform.WriteFile(myFileHandle, aBuffer.data(), static_cast<DWORD>(aBuffer.size()), &bytesWritten, &myWriteOverlapped);
-
-		if (result)
+		for (RequestIdType requestId = 0;; ++requestId)
 		{
-			if (bytesWritten >= aBuffer.size())
-				break;
-			else
-				aBuffer.erase(aBuffer.begin(), aBuffer.begin() + bytesWritten);
+			const auto pred = [requestId](const auto& aRequest)
+			{
+				return aRequest.RequestId == requestId;
+			};
+
+			if (std::find_if(requestQueue.begin(), requestQueue.end(), pred) == requestQueue.end())
+				return requestId;
 		}
-	}
+	};
+	auto [promise, future] = MakeAsync<Socket::ResultTypeRead>();
 
-	if (result)
-	{
-		std::move(aOnWrite)(Ok());
+	myMutex.lock();
 
-		return Ok(EAsynchronicity::Synchronous);
-	}
+	const auto requestId = getNextRequestId();
 
-	const DWORD err = myWinPlatform.GetLastError();
+	Closure closure = PerformRead(std::move(promise), requestId);
 
-	if (err == ERROR_IO_PENDING)
-	{
+	myMutex.unlock();
 
-		myCurrentlyWriting = true;
-		myCurrentWriteCallback = std::move(aOnWrite);
-		myWinEvent.RegisterEvent(myWriteOverlapped.hEvent, Bind(&WinIpcConnection::OnWrite, weak_from_this(), std::move(aBuffer)));
+	future.OnCancel(myExecutor, Bind(&WinIpcConnection::CancelRead, weak_from_this(), requestId));
 
-		return Ok(EAsynchronicity::Asynchronous);
-	}
+	std::move(closure)();
 
-	const EWriteError writeErr = WindowsErrorCodeToWriteError(err);
-
-	switch (writeErr)
-	{
-	case EWriteError::InvalidArgs:	break;
-	case EWriteError::InvalidState:	break;
-	case EWriteError::StateChanged:
-		Reset(Ok(SCloseLocation{ ECloseLocation::ClosedRemotely, err }));
-
-		break;
-	case EWriteError::OutOfMemory:	break;
-	case EWriteError::InternalError:
-		Reset(Err(SCloseError{ ECloseError::InternalError , err }));
-
-		break;
-	}
-
-	std::move(aOnWrite)(Err(SWriteError{ writeErr }));
-
-	return Err(SWriteError{ writeErr, err });
+	return future;
 }
 
-Result<Socket::EAsynchronicity, Socket::SReadError> WinIpcConnection::Read(OnReadCallback aOnRead)
-{
-	if (myState != EState::Open)
-		return Err(SReadError{ EReadError::InvalidState });
-
-	if (myCurrentlyReading)
-	{
-		myReadQueue.emplace(std::move(aOnRead));
-
-		return Ok(EAsynchronicity::Asynchronous);
-	}
-
-	std::vector<u8> readBuffer;
-
-	try
-	{
-		readBuffer.resize(locReadBufferSize.To<EMemoryRatio::Bytes, size_t>(), 0);
-	}
-	catch (const std::bad_alloc&)
-	{
-		std::move(aOnRead)(Err(SReadError{ EReadError::OutOfMemory }));
-
-		return Err(SReadError{ EReadError::OutOfMemory });
-	}
-
-	DWORD bytesRead = 0;
-
-	const BOOL result = myWinPlatform.ReadFile(myFileHandle, static_cast<void*>(readBuffer.data()), static_cast<DWORD>(readBuffer.size()), &bytesRead, &myReadOverlapped);
-
-	if (result)
-	{
-		std::vector<u8> buffer;
-		readBuffer.resize(bytesRead);
-
-		std::swap(readBuffer, buffer);
-
-		std::move(aOnRead)(Ok(std::move(buffer)));
-
-		return Ok(EAsynchronicity::Synchronous);
-	}
-
-	const DWORD err = myWinPlatform.GetLastError();
-
-	if (err == ERROR_IO_PENDING)
-	{
-		myCurrentlyReading = true;
-		myCurrentReadCallback = std::move(aOnRead);
-		myWinEvent.RegisterEvent(myReadOverlapped.hEvent, Bind(&WinIpcConnection::OnRead, weak_from_this(), std::move(readBuffer)));
-
-		return Ok(EAsynchronicity::Asynchronous);
-	}
-
-	const EReadError readErr = WindowsErrorCodeToReadError(err);
-
-	switch (readErr)
-	{
-	case EReadError::InvalidState:	break;
-	case EReadError::StateChanged:
-		Reset(Ok(SCloseLocation{ ECloseLocation::ClosedRemotely, err }));
-
-		break;
-	case EReadError::OutOfMemory:	break;
-	case EReadError::MessageToBig:	break;
-	case EReadError::InternalError:
-		Reset(Err(SCloseError{ ECloseError::InternalError , err }));
-		
-		break;
-	}
-
-	std::move(aOnRead)(Err(SReadError{ readErr }));
-
-	return Err(SReadError{ readErr, err });
-}
-
-void WinIpcConnection::OnClose(OnCloseCallback aOnClose)
+Socket::FutureTypeClose WinIpcConnection::OnClose()
 {
 	if (myState == EState::Closed)
-	{
-		std::move(aOnClose)(Err(SCloseError{ ECloseError::AlreadyClosed }));
+		return MakeCompletedFuture<Socket::ResultTypeClose>(Err(SCloseError{ ECloseError::AlreadyClosed }));
 
-		return;
-	}
+	auto [promise, future] = MakeAsync<Socket::ResultTypeClose>();
 
-	myCloseCallbacks.emplace_back(std::move(aOnClose));
+	myClosePromises.emplace_back(std::move(promise));
+
+	return future;
 }
 
-void WinIpcConnection::Close()
+Socket::FutureTypeClose WinIpcConnection::Close()
 {
-	Reset(Ok(SCloseLocation{ ECloseLocation::ClosedLocally }));
+	static constexpr auto closeResult = Ok(SCloseLocation{ ECloseLocation::ClosedLocally });
+
+	myMutex.lock();
+
+	Closure closure = Reset(closeResult);
+
+	myMutex.unlock();
+
+	std::move(closure)();
+
+	return MakeCompletedFuture<Socket::ResultTypeClose>(closeResult);
 }
 
 Socket::EState WinIpcConnection::GetState() const noexcept
@@ -276,7 +197,7 @@ Result<void, IpcConnection::SConnectionError> WinIpcConnection::Setup()
 	{
 		const DWORD err = myWinPlatform.GetLastError();
 
-		Reset(Err(SCloseError{ err == ERROR_NOT_ENOUGH_MEMORY ? ECloseError::OutOfMemory : ECloseError::InternalError, err }));
+		Reset(Err(SCloseError{ err == ERROR_NOT_ENOUGH_MEMORY ? ECloseError::OutOfMemory : ECloseError::InternalError, err }))();
 
 		return Err(SConnectionError{ err == ERROR_NOT_ENOUGH_MEMORY ? EConnectionError::OutOfMemory : EConnectionError::InternalError, err });
 	}
@@ -287,7 +208,7 @@ Result<void, IpcConnection::SConnectionError> WinIpcConnection::Setup()
 	{
 		const DWORD err = myWinPlatform.GetLastError();
 
-		Reset(Err(SCloseError{ err == ERROR_NOT_ENOUGH_MEMORY ? ECloseError::OutOfMemory : ECloseError::InternalError, err }));
+		Reset(Err(SCloseError{ err == ERROR_NOT_ENOUGH_MEMORY ? ECloseError::OutOfMemory : ECloseError::InternalError, err }))();
 
 		return Err(SConnectionError{ err == ERROR_NOT_ENOUGH_MEMORY ? EConnectionError::OutOfMemory : EConnectionError::InternalError, err });
 	}
@@ -297,8 +218,97 @@ Result<void, IpcConnection::SConnectionError> WinIpcConnection::Setup()
 	return Ok();
 }
 
+Closure WinIpcConnection::PerformWrite(std::vector<u8>&& aBuffer, Promise<ResultTypeWrite>&& aPromise)
+{
+	if (aBuffer.empty())
+		return [promise = std::move(aPromise)]() mutable
+		{
+			promise.Complete(Err(SWriteError{ EWriteError::InvalidArgs }));
+		};
+
+	if (myState != EState::Open)
+		return [promise = std::move(aPromise)]() mutable
+		{
+			promise.Complete(Err(SWriteError{ EWriteError::InvalidState }));
+		};
+
+	if (myCurrentlyWriting)
+	{
+		myWriteQueue.emplace(WriteData{ std::move(aBuffer), std::move(aPromise) });
+
+		return locNoOp;
+	}
+
+	DWORD bytesWritten = 0;
+	BOOL result = TRUE;
+
+	while (result)
+	{
+		result = myWinPlatform.WriteFile(myFileHandle, aBuffer.data(), static_cast<DWORD>(aBuffer.size()), &bytesWritten, &myWriteOverlapped);
+
+		if (result)
+		{
+			if (bytesWritten >= aBuffer.size())
+				break;
+			else
+				aBuffer.erase(aBuffer.begin(), aBuffer.begin() + bytesWritten);
+		}
+	}
+
+	if (result)
+		return[promise = std::move(aPromise)]() mutable
+		{
+			promise.Complete(Ok());
+		};
+
+	const DWORD err = myWinPlatform.GetLastError();
+
+	if (err == ERROR_IO_PENDING)
+	{
+		myCurrentlyWriting = true;
+		myCurrentWritePromise.emplace(std::move(aPromise));
+
+		return[&executor = myExecutor, &winEvent = myWinEvent, eventHandle = myWriteOverlapped.hEvent, callback = Bind(&WinIpcConnection::OnWrite, weak_from_this(), std::move(aBuffer))]() mutable
+		{
+			winEvent.RegisterEvent(eventHandle)
+				.ThenRun(executor, [callback = std::move(callback)](auto&&) mutable
+				{
+					std::move(callback)();
+				})
+				.Detach();
+		};
+	}
+
+	const EWriteError writeErr = WindowsErrorCodeToWriteError(err);
+	Closure closure = locNoOp;
+
+	switch (writeErr)
+	{
+	case EWriteError::InvalidArgs:	break;
+	case EWriteError::InvalidState:	break;
+	case EWriteError::StateChanged:
+		closure = Reset(Ok(SCloseLocation{ ECloseLocation::ClosedRemotely, err }));
+
+		break;
+	case EWriteError::OutOfMemory:	break;
+	case EWriteError::InternalError:
+		closure = Reset(Err(SCloseError{ ECloseError::InternalError , err }));
+
+		break;
+	}
+
+	return[closure = std::move(closure), promise = std::move(aPromise), writeErr]() mutable
+	{
+		std::move(closure)();
+
+		promise.Complete(Err(SWriteError{ writeErr }));
+	};
+}
+
 void WinIpcConnection::OnWrite(std::vector<u8> aBuffer)
 {
+	myMutex.lock();
+
 	DWORD bytesWritten = 0;
 
 	const BOOL result = myWinPlatform.GetOverlappedResult(myFileHandle, &myWriteOverlapped, &bytesWritten, FALSE);
@@ -307,33 +317,44 @@ void WinIpcConnection::OnWrite(std::vector<u8> aBuffer)
 
 	myWinPlatform.ResetEvent(myWriteOverlapped.hEvent);
 
-	auto onWrite = std::move(myCurrentWriteCallback);
+	if (!myCurrentWritePromise)
+	{
+		myMutex.unlock();
+
+		NextWrite()();
+
+		return;
+	}
+
+	auto writePromise = std::move(*myCurrentWritePromise);
 
 	myCurrentlyWriting = false;
-	myCurrentWriteCallback = [](auto&&) {};
+	myCurrentWritePromise.reset();
 
 	if (!result)
 	{
 		const EWriteError writeErr = WindowsErrorCodeToWriteError(err);
+
+		myMutex.unlock();
 
 		switch (writeErr)
 		{
 		case EWriteError::InvalidArgs:	break;
 		case EWriteError::InvalidState:	break;
 		case EWriteError::StateChanged:
-			Reset(Ok(SCloseLocation{ ECloseLocation::ClosedRemotely, err }));
+			Reset(Ok(SCloseLocation{ ECloseLocation::ClosedRemotely, err }))();
 
 			break;
 		case EWriteError::OutOfMemory:	break;
 		case EWriteError::InternalError:
-			Reset(Err(SCloseError{ ECloseError::InternalError , err }));
+			Reset(Err(SCloseError{ ECloseError::InternalError , err }))();
 
 			break;
 		}
 
-		std::move(onWrite)(Err(SWriteError{ writeErr }));
+		writePromise.Complete(Err(SWriteError{ writeErr }));
 
-		NextWrite();
+		NextWrite()();
 
 		return;
 	}
@@ -342,144 +363,271 @@ void WinIpcConnection::OnWrite(std::vector<u8> aBuffer)
 	{
 		aBuffer.erase(aBuffer.begin(), aBuffer.begin() + bytesWritten);
 
-		(void)WinIpcConnection::Write(std::move(aBuffer), std::move(onWrite));
-		
+		myMutex.unlock();
+
+		PerformWrite(std::move(aBuffer), std::move(writePromise))();
+
 		return;
 	}
 
-	std::move(onWrite)(Ok());
+	myMutex.unlock();
 
-	NextWrite();
+	writePromise.Complete(Ok());
+
+	NextWrite()();
 }
 
-void WinIpcConnection::NextWrite()
+Closure WinIpcConnection::NextWrite()
 {
 	if (myWriteQueue.empty())
-		return;
+		return locNoOp;
 
 	auto writeData = std::move(myWriteQueue.front());
 
 	myWriteQueue.pop();
 
-	(void)WinIpcConnection::Write(std::move(writeData.Buffer), std::move(writeData.OnWrite));
+	return PerformWrite(std::move(writeData.Buffer), std::move(writeData.Promise));
+}
+
+Closure WinIpcConnection::PerformRead(Promise<ResultTypeRead>&& aPromise, RequestIdType aRequestId)
+{
+	if (myState != EState::Open)
+		return [promise = std::move(aPromise)]() mutable
+		{
+			promise.Complete(Err(SReadError{ EReadError::InvalidState }));
+		};
+
+	if (myCurrentlyReading)
+	{
+		myReadQueue.emplace_back(ReadData{ std::move(aPromise), aRequestId });
+
+		return locNoOp;
+	}
+
+	if (!myReadBuffer.empty())
+	{
+		auto buffer = std::exchange(myReadBuffer, std::vector<u8>());
+
+		return [promise = std::move(aPromise), buffer = std::move(buffer)]() mutable
+		{
+			promise.Complete(Ok(std::move(buffer)));
+		};
+	}
+
+	std::vector<u8> readBuffer;
+
+	readBuffer.resize(locReadBufferSize.To<EMemoryRatio::Bytes, size_t>(), 0);
+
+	DWORD bytesRead = 0;
+
+	const BOOL result = myWinPlatform.ReadFile(myFileHandle, static_cast<void*>(readBuffer.data()), static_cast<DWORD>(readBuffer.size()), &bytesRead, &myReadOverlapped);
+
+	if (result)
+	{
+		readBuffer.resize(bytesRead);
+
+		auto buffer = std::exchange(readBuffer, std::vector<u8>());
+
+		return [promise = std::move(aPromise), buffer = std::move(buffer)]() mutable
+		{
+			promise.Complete(Ok(std::move(buffer)));
+		};
+	}
+
+	const DWORD err = myWinPlatform.GetLastError();
+
+	if (err == ERROR_IO_PENDING)
+	{
+		myCurrentlyReading = true;
+		myReadQueue.emplace_back(ReadData{ std::move(aPromise), aRequestId });
+
+		return [&executor = myExecutor, &winEvent = myWinEvent, eventHandle = myReadOverlapped.hEvent, callback = Bind(&WinIpcConnection::OnRead, weak_from_this(), std::move(readBuffer))]() mutable
+		{
+			winEvent.RegisterEvent(eventHandle)
+				.ThenRun(executor, [callback = std::move(callback)](auto&&) mutable
+					{
+						std::move(callback)();
+					})
+				.Detach();
+		};
+	}
+
+	const EReadError readErr = WindowsErrorCodeToReadError(err);
+	Closure closure = locNoOp;
+
+	switch (readErr)
+	{
+	case EReadError::InvalidState:	break;
+	case EReadError::StateChanged:
+		closure = Reset(Ok(SCloseLocation{ ECloseLocation::ClosedRemotely, err }));
+
+		break;
+	case EReadError::OutOfMemory:	break;
+	case EReadError::MessageToBig:	break;
+	case EReadError::InternalError:
+		closure = Reset(Err(SCloseError{ ECloseError::InternalError , err }));
+		
+		break;
+	}
+
+	return [closure = std::move(closure), promise = std::move(aPromise), readErr]() mutable
+	{
+		std::move(closure)();
+
+		promise.Complete(Err(SReadError{ readErr }));
+	};
 }
 
 void WinIpcConnection::OnRead(std::vector<u8> aBuffer)
 {
+	myMutex.lock();
+
 	DWORD bytesRead = 0;
 
-	const BOOL result = myWinPlatform.GetOverlappedResult(myFileHandle, &myReadOverlapped, &bytesRead, FALSE);
+	const BOOL readResult = myWinPlatform.GetOverlappedResult(myFileHandle, &myReadOverlapped, &bytesRead, FALSE);
 
 	const DWORD err = myWinPlatform.GetLastError();
 
 	myWinPlatform.ResetEvent(myReadOverlapped.hEvent);
 
-	auto onRead = std::move(myCurrentReadCallback);
-
 	myCurrentlyReading = false;
-	myCurrentReadCallback = [](auto&&) {};
 
-	if (!result)
+	const EReadError readErr = WindowsErrorCodeToReadError(err);
+	if (readResult)
+		aBuffer.resize(bytesRead);
+
+	auto completionResult = readResult
+		? ResultTypeRead(Ok(std::move(aBuffer)))
+		: ResultTypeRead(Err(SReadError{ readErr, err }));
+
+	while (!myReadQueue.empty())
 	{
-		const EReadError readErr = WindowsErrorCodeToReadError(err);
+		auto readData = std::move(myReadQueue.front());
 
-		switch (readErr)
+		myReadQueue.pop_front();
+		BufferExecutor executor;
+
+		if (!readResult)
 		{
-		case EReadError::InvalidState:	break;
-		case EReadError::StateChanged:
-			Reset(Ok(SCloseLocation{ ECloseLocation::ClosedRemotely, err }));
+			if (!readData.Promise.Complete(executor, std::move(completionResult)))
+				continue;
 
-			break;
-		case EReadError::OutOfMemory:	break;
-		case EReadError::MessageToBig:	break;
-		case EReadError::InternalError:
-			Reset(Err(SCloseError{ ECloseError::InternalError , err }));
+			myMutex.unlock();
 
-			break;
+			switch (readErr)
+			{
+			case EReadError::InvalidState:	break;
+			case EReadError::StateChanged:
+				Reset(Ok(SCloseLocation{ ECloseLocation::ClosedRemotely, err }))();
+
+				break;
+			case EReadError::OutOfMemory:	break;
+			case EReadError::MessageToBig:	break;
+			case EReadError::InternalError:
+				Reset(Err(SCloseError{ ECloseError::InternalError , err }))();
+
+				break;
+			}
+
+			executor.ExecuteAll();
+
+			NextRead()();
+
+			return;
 		}
 
-		std::move(onRead)(Err(SReadError{ readErr }));
+		if (!readData.Promise.Complete(executor, std::move(completionResult)))
+			continue;
 
-		NextRead();
+		myMutex.unlock();
+
+		executor.ExecuteAll();
+
+		auto closure = NextRead();
+
+		std::move(closure)();
 
 		return;
 	}
 
-	aBuffer.resize(bytesRead);
+	const auto& buffer = completionResult.Unwrap();
 
-	std::move(onRead)(Ok(std::move(aBuffer)));
+	if (readResult)
+		myReadBuffer.insert(myReadBuffer.end(), buffer.begin(), buffer.end());
 
-	NextRead();
+	myMutex.unlock();
 }
 
-void WinIpcConnection::NextRead()
+Closure WinIpcConnection::NextRead()
 {
+	std::lock_guard lock(myMutex);
+
 	if (myReadQueue.empty())
-		return;
+		return locNoOp;
 
 	auto readData = std::move(myReadQueue.front());
 
-	myReadQueue.pop();
+	myReadQueue.pop_front();
 
-	(void)WinIpcConnection::Read(std::move(readData));
+	return PerformRead(std::move(readData.Promise), readData.RequestId);
 }
 
-void WinIpcConnection::Reset(Result<SCloseLocation, SCloseError> aResult)
+void WinIpcConnection::CancelRead(RequestIdType aRequestId)
 {
-	auto currentOnWrite = std::move(myCurrentWriteCallback);
-	auto currentOnRead = std::move(myCurrentReadCallback);
-	std::queue<WriteData> writeQueue;
-	std::queue<OnReadCallback> readQueue;
-	std::vector<OnCloseCallback> closeCallbacks;
+	std::lock_guard lock(myMutex);
 
-	std::swap(myWriteQueue, writeQueue);
-	std::swap(myReadQueue, readQueue);
-	std::swap(myCloseCallbacks, closeCallbacks);
+	const auto pred = [aRequestId](const auto& aReadRequest)
+	{
+		return aReadRequest.RequestId == aRequestId;
+	};
+
+	const auto it = std::find_if(myReadQueue.begin(), myReadQueue.end(), pred);
+
+	if (it == myReadQueue.end())
+		return;
+
+	myReadQueue.erase(it);
+}
+
+Closure WinIpcConnection::Reset(Result<SCloseLocation, SCloseError> aResult)
+{
+	auto currentWritePromise	= std::exchange(myCurrentWritePromise, std::nullopt);
+	auto writeQueue				= std::exchange(myWriteQueue, decltype(myWriteQueue)());
+	auto readQueue				= std::exchange(myReadQueue, decltype(myReadQueue)());
+	auto closePromises			= std::exchange(myClosePromises, decltype(myClosePromises)());
 
 	if (myFileHandle != INVALID_HANDLE_VALUE)
 		(void)myWinPlatform.CloseHandle(myFileHandle);
 	if (myReadOverlapped.hEvent != NULL)
-	{
-		if (myCurrentlyReading)
-			myWinEvent.UnregisterEvent(myReadOverlapped.hEvent);
-
 		(void)myWinPlatform.CloseHandle(myReadOverlapped.hEvent);
-	}
 	if (myWriteOverlapped.hEvent != NULL)
-	{
-		if (myCurrentlyWriting)
-			myWinEvent.UnregisterEvent(myWriteOverlapped.hEvent);
-
 		(void)myWinPlatform.CloseHandle(myWriteOverlapped.hEvent);
-	}
 
 	myState = EState::Closed;
 	myFileHandle = INVALID_HANDLE_VALUE;
 
 	myCurrentlyWriting = false;
-	myCurrentWriteCallback = [](auto&&) {};
+	myCurrentlyReading = false;
+	myCurrentWritePromise.reset();
 	myWriteOverlapped = {};
 
-	myCurrentlyReading = false;
-	myCurrentReadCallback = [](auto&&) {};
 	myReadOverlapped = {};
 
-	std::move(currentOnWrite)(Err(SWriteError{ EWriteError::StateChanged }));
-	std::move(currentOnRead)(Err(SReadError{ EReadError::StateChanged }));
-
-	while (!writeQueue.empty())
+	return [currentWritePromise = std::move(currentWritePromise), writeQueue = std::move(writeQueue), readQueue = std::move(readQueue), closePromises = std::move(closePromises), aResult]() mutable
 	{
-		std::move(writeQueue.front()).OnWrite(Err(SWriteError{ EWriteError::StateChanged }));
+		if (currentWritePromise)
+			currentWritePromise->Complete(Err(SWriteError{ EWriteError::StateChanged }));
 
-		writeQueue.pop();
-	}
-	while (!readQueue.empty())
-	{
-		std::move(readQueue.front())(Err(SReadError{ EReadError::StateChanged }));
+		while (!writeQueue.empty())
+		{
+			writeQueue.front().Promise.Complete(Err(SWriteError{ EWriteError::StateChanged }));
 
-		readQueue.pop();
-	}
+			writeQueue.pop();
+		}
+		for (auto& readData : readQueue)
+			readData.Promise.Complete(Err(SReadError{ EReadError::StateChanged }));
 
-	for (auto&& onClose : closeCallbacks)
-		std::move(onClose)(aResult);
+		for (auto& closePromise : closePromises)
+			closePromise.Complete(aResult);
+	};
 }

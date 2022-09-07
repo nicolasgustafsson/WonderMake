@@ -19,7 +19,7 @@ ProcessId WinProcessSystem::GetCurrentProcessId()
     return winPlatform.GetProcessId(winPlatform.GetCurrentProcess());
 }
 
-Result<std::shared_ptr<Process>, ProcessSystem::SError> WinProcessSystem::StartProcess(std::filesystem::path aApplicationPath, std::wstring aCommandLine)
+Result<std::shared_ptr<Process>, ProcessSystem::SStartError> WinProcessSystem::StartProcess(std::filesystem::path aApplicationPath, std::wstring aCommandLine)
 {
     auto&& winPlatform = Get<WinPlatformSystem>();
 
@@ -61,9 +61,9 @@ Result<std::shared_ptr<Process>, ProcessSystem::SError> WinProcessSystem::StartP
         const DWORD err = winPlatform.GetLastError();
 
         if (err == ERROR_FILE_NOT_FOUND)
-            return Err(SError{ EStartError::FileNotFound, err });
+            return Err(SStartError{ EStartError::FileNotFound, err });
 
-        return Err(SError{ EStartError::InternalError, err });
+        return Err(SStartError{ EStartError::InternalError, err });
     }
 
     auto process = std::make_shared<WinProcess>(Get<WinEventSystem>(), Get<WinPlatformSystem>(), proccessInformation.hProcess, proccessInformation.hThread);

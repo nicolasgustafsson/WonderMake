@@ -10,7 +10,7 @@ class ProcessSystemMock
 public:
 	MOCK_METHOD(ProcessId, GetCurrentProcessId, (), (override));
 
-	using StartProcessRet = Result<std::shared_ptr<Process>, SError>;
+	using StartProcessRet = Result<std::shared_ptr<Process>, SStartError>;
 	MOCK_METHOD(StartProcessRet, StartProcess, (std::filesystem::path aApplicationPath, std::wstring aCommandLine), (override));
 
 };

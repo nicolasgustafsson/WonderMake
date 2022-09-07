@@ -7,109 +7,104 @@
 
 using namespace MemoryUnitLiterals;
 
-constexpr auto locDummyMaxBufferSize = 1_GiB;
-constexpr auto locDummySerializable = [](const SerializableMock&)
+inline constexpr auto locDummyMaxBufferSize = 1_GiB;
+inline constexpr auto locDummySerializable = [](const SerializableMock&)
 {
 	return std::vector<u8>();
 };
-constexpr auto locDummyDeserializable = [](auto&&)
+inline constexpr auto locDummyDeserializable = [](auto&&)
 {
 	return Err();
 };
 
+TEST(SocketSerializingImplTests, readmessage_returns_non_completed_future_when_socket_read_retuns_non_completed_future)
+{
+	const std::vector<u8> dummyBuffer = { 1, 2, 3, 4 };
+	auto [_, future] = MakeAsync<Socket::ResultTypeRead>();
+
+	auto socketMock = MakeSharedReference<NiceMock<SocketMock>>();
+
+	socketMock->DelegateToFake();
+
+	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(InlineExecutor(), locDummyMaxBufferSize, locDummySerializable, locDummyDeserializable, socketMock);
+
+	EXPECT_CALL(*socketMock, Read)
+		.WillOnce(Return(future));
+
+	const auto result = socketSerializing->ReadMessage();
+
+	ASSERT_FALSE(result.GetResult());
+}
+
 TEST(SocketSerializingImplTests, readmessage_returns_error_when_socket_returns_error_result)
 {
-	constexpr auto expectedError = Socket::EReadError::InternalError;
-	constexpr u64 expectedReason = 1234;
+	static constexpr auto expectedResult = Err(Socket::SReadError{ Socket::EReadError::InternalError, 1234 });
 
-	StrictMock<SocketSerializingCallbackMock> socketSerializingCallbackMock;
 	auto socketMock = MakeSharedReference<NiceMock<SocketMock>>();
 
 	socketMock->DelegateToFake();
 
-	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(locDummyMaxBufferSize, locDummySerializable, locDummyDeserializable, socketMock);
+	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(InlineExecutor(), locDummyMaxBufferSize, locDummySerializable, locDummyDeserializable, socketMock);
 
 	EXPECT_CALL(*socketMock, Read)
-		.WillOnce(Return(Err(Socket::SReadError{ expectedError, expectedReason })));
+		.WillOnce(Return(MakeCompletedFuture<Socket::ResultTypeRead>(expectedResult)));
 
-	const auto result = socketSerializing->ReadMessage(socketSerializingCallbackMock.CreateOnReadMessage());
+	const auto result = socketSerializing->ReadMessage();
 
-	ASSERT_FALSE(result);
+	ASSERT_TRUE(result.GetResult());
 
-	EXPECT_EQ(result.Err().Error, expectedError);
-	EXPECT_EQ(result.Err().Reason, expectedReason);
+	EXPECT_THAT(*result.GetResult(), ReadMessageResultMatcher(expectedResult));
 }
 
-TEST(SocketSerializingImplTests, readmessage_returns_success_when_socket_returns_success_result)
+TEST(SocketSerializingImplTests, readmessage_returns_serializable_object_when_socket_and_deserializer_returns_success_result)
 {
-	StrictMock<SocketSerializingCallbackMock> socketSerializingCallbackMock;
-	auto socketMock = MakeSharedReference<NiceMock<SocketMock>>();
+	const std::vector<u8> dummyBuffer = { 1, 2, 3, 4 };
 
-	socketMock->DelegateToFake();
-
-	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(locDummyMaxBufferSize, locDummySerializable, locDummyDeserializable, socketMock);
-
-	EXPECT_CALL(*socketMock, Read)
-		.WillOnce(Return(Ok(Socket::EAsynchronicity::Synchronous)));
-
-	const auto result = socketSerializing->ReadMessage(socketSerializingCallbackMock.CreateOnReadMessage());
-
-	ASSERT_TRUE(result);
-}
-
-TEST(SocketSerializingImplTests, readmessage_calls_callback_with_correct_buffer)
-{
-	const std::vector<u8> dummyBuffer = { 4, 2, 3, 1 };
+	const auto expectedReadResult = Ok(dummyBuffer);
+	static constexpr auto expectedResult = Ok(SerializableMock{ 1234 });
 
 	NiceMock<SerializerMock> serializerMock;
-	StrictMock<SocketSerializingCallbackMock> socketSerializingCallbackMock;
 	auto socketMock = MakeSharedReference<NiceMock<SocketMock>>();
 
 	serializerMock.DelegateToFake();
 	socketMock->DelegateToFake();
 
-	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(locDummyMaxBufferSize, locDummySerializable, serializerMock.CreateDeserialize(), socketMock);
+	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(InlineExecutor(), locDummyMaxBufferSize, locDummySerializable, serializerMock.CreateDeserialize(), socketMock);
 
 	EXPECT_CALL(*socketMock, Read)
-		.WillOnce([&dummyBuffer](auto&& aCallback)
-			{
-				std::move(aCallback)(Ok(dummyBuffer));
-
-				return Ok(Socket::EAsynchronicity::Synchronous);
-			});
+		.WillOnce(Return(MakeCompletedFuture<Socket::ResultTypeRead>(expectedReadResult)));
 	EXPECT_CALL(serializerMock, Deserialize(ElementsAreSpan(dummyBuffer)))
-		.WillOnce(Return(Ok(std::make_pair(SerializableMock{ 1 }, dummyBuffer.size()))));
-	EXPECT_CALL(socketSerializingCallbackMock, OnReadMessage(ReadMessageResultMatcher(Ok(SerializableMock{ 1 }))));
+		.WillOnce(Return(Ok(std::make_pair(SerializableMock{ 1234 }, dummyBuffer.size()))));
 
-	(void)socketSerializing->ReadMessage(socketSerializingCallbackMock.CreateOnReadMessage());
+	const auto result = socketSerializing->ReadMessage();
+
+	ASSERT_TRUE(result.GetResult());
+
+	EXPECT_THAT(*result.GetResult(), ReadMessageResultMatcher(expectedResult));
 }
 
-TEST(SocketSerializingImplTests, readmessage_do_not_call_callback_with_when_deserialize_fail)
+TEST(SocketSerializingImplTests, readmessage_returns_non_completed_future_when_deserializer_returns_error_result_and_socket_read_retuns_non_completed_future)
 {
-	const std::vector<u8> dummyBuffer = { 4, 2, 3, 1 };
+	const std::vector<u8> dummyBuffer = { 1, 2, 3, 4 };
+	auto [_, future] = MakeAsync<Socket::ResultTypeRead>();
 
 	NiceMock<SerializerMock> serializerMock;
-	StrictMock<SocketSerializingCallbackMock> socketSerializingCallbackMock;
 	auto socketMock = MakeSharedReference<NiceMock<SocketMock>>();
 
 	serializerMock.DelegateToFake();
 	socketMock->DelegateToFake();
 
-	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(locDummyMaxBufferSize, locDummySerializable, serializerMock.CreateDeserialize(), socketMock);
+	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(InlineExecutor(), locDummyMaxBufferSize, locDummySerializable, serializerMock.CreateDeserialize(), socketMock);
 
 	EXPECT_CALL(*socketMock, Read)
-		.WillOnce([&dummyBuffer](auto&& aCallback)
-			{
-				std::move(aCallback)(Ok(dummyBuffer));
-
-				return Ok(Socket::EAsynchronicity::Synchronous);
-			})
-		.WillOnce(Return(Ok(Socket::EAsynchronicity::Asynchronous)));
-
-	EXPECT_CALL(serializerMock, Deserialize(ElementsAreSpan(dummyBuffer)))
+		.WillOnce(Return(MakeCompletedFuture<Socket::ResultTypeRead>(Ok(dummyBuffer))))
+		.WillOnce(Return(future));
+	EXPECT_CALL(serializerMock, Deserialize)
 		.WillOnce(Return(Err()));
 
-	(void)socketSerializing->ReadMessage(socketSerializingCallbackMock.CreateOnReadMessage());
+	const auto result = socketSerializing->ReadMessage();
+
+	ASSERT_FALSE(result.GetResult());
 }
 
 TEST(SocketSerializingImplTests, readmessage_is_able_to_deserialize_two_messages_from_two_buffers)
@@ -117,183 +112,172 @@ TEST(SocketSerializingImplTests, readmessage_is_able_to_deserialize_two_messages
 	const std::vector<u8> dummyBufferA = { 4, 2, 3, 1 };
 	const std::vector<u8> dummyBufferB = { 5, 8, 7 };
 
+	static constexpr auto expectedSerializableA = SerializableMock{ 1 };
+	static constexpr auto expectedSerializableB = SerializableMock{ 2 };
+
+	static constexpr auto expectedResultA = Ok(expectedSerializableA);
+	static constexpr auto expectedResultB = Ok(expectedSerializableB);
+
 	NiceMock<SerializerMock> serializerMock;
-	StrictMock<SocketSerializingCallbackMock> socketSerializingCallbackMock;
 	auto socketMock = MakeSharedReference<NiceMock<SocketMock>>();
 
 	serializerMock.DelegateToFake();
 	socketMock->DelegateToFake();
 
-	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(locDummyMaxBufferSize, locDummySerializable, serializerMock.CreateDeserialize(), socketMock);
+	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(InlineExecutor(), locDummyMaxBufferSize, locDummySerializable, serializerMock.CreateDeserialize(), socketMock);
 
 	EXPECT_CALL(*socketMock, Read)
-		.WillOnce([&dummyBufferA](auto&& aCallback)
-			{
-				std::move(aCallback)(Ok(dummyBufferA));
-
-				return Ok(Socket::EAsynchronicity::Synchronous);
-			})
-		.WillOnce([&dummyBufferB](auto&& aCallback)
-			{
-				std::move(aCallback)(Ok(dummyBufferB));
-
-				return Ok(Socket::EAsynchronicity::Synchronous);
-			});
+		.WillOnce(Return(MakeCompletedFuture<Socket::ResultTypeRead>(Ok(dummyBufferA))))
+		.WillOnce(Return(MakeCompletedFuture<Socket::ResultTypeRead>(Ok(dummyBufferB))));
 
 	EXPECT_CALL(serializerMock, Deserialize(ElementsAreSpan(dummyBufferA)))
 		.WillOnce(Return(Ok(std::make_pair(SerializableMock{ 1 }, dummyBufferA.size()))));
 	EXPECT_CALL(serializerMock, Deserialize(ElementsAreSpan(dummyBufferB)))
 		.WillOnce(Return(Ok(std::make_pair(SerializableMock{ 2 }, dummyBufferB.size()))));
 
-	EXPECT_CALL(socketSerializingCallbackMock, OnReadMessage(ReadMessageResultMatcher(Ok(SerializableMock{ 1 }))));
-	EXPECT_CALL(socketSerializingCallbackMock, OnReadMessage(ReadMessageResultMatcher(Ok(SerializableMock{ 2 }))));
-	
-	(void)socketSerializing->ReadMessage(socketSerializingCallbackMock.CreateOnReadMessage());
-	(void)socketSerializing->ReadMessage(socketSerializingCallbackMock.CreateOnReadMessage());
+	const auto resultA = socketSerializing->ReadMessage();
+	const auto resultB = socketSerializing->ReadMessage();
+
+	ASSERT_TRUE(resultA.GetResult());
+	ASSERT_TRUE(resultB.GetResult());
+
+	EXPECT_THAT(*resultA.GetResult(), ReadMessageResultMatcher(expectedResultA));
+	EXPECT_THAT(*resultB.GetResult(), ReadMessageResultMatcher(expectedResultB));
 }
 
-TEST(SocketSerializingImplTests, readmessage_is_able_to_deserialize_two_messages_from_one_buffer)
-{
-	const std::vector<u8> dummyBufferOriginal = { 4, 2, 3, 1, 5, 8, 7 };
-	const std::vector<u8> dummyBufferA = { 4, 2, 3, 1 };
-	const std::vector<u8> dummyBufferB = { 5, 8, 7 };
-
-	NiceMock<SerializerMock> serializerMock;
-	StrictMock<SocketSerializingCallbackMock> socketSerializingCallbackMock;
-	auto socketMock = MakeSharedReference<NiceMock<SocketMock>>();
-
-	serializerMock.DelegateToFake();
-	socketMock->DelegateToFake();
-
-	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(locDummyMaxBufferSize, locDummySerializable, serializerMock.CreateDeserialize(), socketMock);
-
-	EXPECT_CALL(*socketMock, Read)
-		.WillOnce([&dummyBufferOriginal](auto&& aCallback)
-			{
-				std::move(aCallback)(Ok(dummyBufferOriginal));
-
-				return Ok(Socket::EAsynchronicity::Synchronous);
-			});
-
-	EXPECT_CALL(serializerMock, Deserialize(ElementsAreSpan(dummyBufferOriginal)))
-		.WillOnce(Return(Ok(std::make_pair(SerializableMock{ 1 }, dummyBufferA.size()))));
-	EXPECT_CALL(serializerMock, Deserialize(ElementsAreSpan(dummyBufferB)))
-		.WillOnce(Return(Ok(std::make_pair(SerializableMock{ 2 }, dummyBufferB.size()))));
-
-	EXPECT_CALL(socketSerializingCallbackMock, OnReadMessage(ReadMessageResultMatcher(Ok(SerializableMock{ 1 }))));
-	EXPECT_CALL(socketSerializingCallbackMock, OnReadMessage(ReadMessageResultMatcher(Ok(SerializableMock{ 2 }))));
-
-	(void)socketSerializing->ReadMessage(socketSerializingCallbackMock.CreateOnReadMessage());
-	(void)socketSerializing->ReadMessage(socketSerializingCallbackMock.CreateOnReadMessage());
-}
-
-TEST(SocketSerializingImplTests, readmessage_calls_onreadmessage_with_outofmemory_error_when_buffer_is_full)
+TEST(SocketSerializingImplTests, readmessage_returns_messagetobig_error_when_buffer_is_full)
 {
 	const std::vector<u8> dummyBuffer = { 4, 2, 3, 1, 5, 9, 8, 6, 0, 7 };
-	constexpr auto maxBufferSize = 5_B;
+	static constexpr auto maxBufferSize = 5_B;
+	static constexpr auto expectedResult = Err(Socket::SReadError{ Socket::EReadError::MessageToBig });
 
-	StrictMock<SocketSerializingCallbackMock> socketSerializingCallbackMock;
 	auto socketMock = MakeSharedReference<NiceMock<SocketMock>>();
 
 	socketMock->DelegateToFake();
 
-	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(maxBufferSize, locDummySerializable, locDummyDeserializable, socketMock);
+	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(InlineExecutor(), maxBufferSize, locDummySerializable, locDummyDeserializable, socketMock);
 
 	EXPECT_CALL(*socketMock, Read)
-		.WillOnce([&dummyBuffer](auto&& aCallback)
-			{
-				std::move(aCallback)(Ok(dummyBuffer));
+		.WillOnce(Return(MakeCompletedFuture<Socket::ResultTypeRead>(Ok(dummyBuffer))));
 
-				return Ok(Socket::EAsynchronicity::Synchronous);
-			});
-	EXPECT_CALL(socketSerializingCallbackMock, OnReadMessage(ReadMessageResultMatcher(Err(Socket::SReadError{ Socket::EReadError::MessageToBig }))));
+	const auto result = socketSerializing->ReadMessage();
 
-	(void)socketSerializing->ReadMessage(socketSerializingCallbackMock.CreateOnReadMessage());
+	ASSERT_TRUE(result.GetResult());
+
+	EXPECT_THAT(*result.GetResult(), ReadMessageResultMatcher(expectedResult));
+}
+
+TEST(SocketSerializingImplTests, writemessage_returns_non_completed_future_when_socket_write_retuns_non_completed_future)
+{
+	auto [_, future] = MakeAsync<Socket::ResultTypeWrite>();
+
+	auto socketMock = MakeSharedReference<NiceMock<SocketMock>>();
+
+	socketMock->DelegateToFake();
+
+	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(InlineExecutor(), locDummyMaxBufferSize, locDummySerializable, locDummyDeserializable, socketMock);
+
+	EXPECT_CALL(*socketMock, Write)
+		.WillOnce(Return(future));
+
+	const auto result = socketSerializing->WriteMessage(SerializableMock());
+
+	ASSERT_FALSE(result.GetResult());
 }
 
 TEST(SocketSerializingImplTests, writemessage_returns_error_when_socket_returns_error_result)
 {
-	constexpr auto expectedError = Socket::EWriteError::InternalError;
-	constexpr u64 expectedReason = 1234;
+	static constexpr auto expectedResult = Err(Socket::SWriteError{ Socket::EWriteError::InternalError, 1234 });
 
-	SerializableMock serializableMock;
-	StrictMock<SocketSerializingCallbackMock> socketSerializingCallbackMock;
 	auto socketMock = MakeSharedReference<NiceMock<SocketMock>>();
 
 	socketMock->DelegateToFake();
 
-	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(locDummyMaxBufferSize, locDummySerializable, locDummyDeserializable, socketMock);
+	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(InlineExecutor(), locDummyMaxBufferSize, locDummySerializable, locDummyDeserializable, socketMock);
 
 	EXPECT_CALL(*socketMock, Write)
-		.WillOnce(Return(Err(Socket::SWriteError{ expectedError, expectedReason })));
+		.WillOnce(Return(MakeCompletedFuture<Socket::ResultTypeWrite>(expectedResult)));
 
-	const auto result = socketSerializing->WriteMessage(serializableMock, socketSerializingCallbackMock.CreateOnWriteMessage());
+	const auto result = socketSerializing->WriteMessage(SerializableMock());
 
-	ASSERT_FALSE(result);
+	ASSERT_TRUE(result.GetResult());
 
-	EXPECT_EQ(result.Err().Error, expectedError);
-	EXPECT_EQ(result.Err().Reason, expectedReason);
+	EXPECT_THAT(*result.GetResult(), WriteMessageResultMatcher(expectedResult));
 }
 
 TEST(SocketSerializingImplTests, writemessage_returns_success_when_socket_returns_success_result)
 {
-	SerializableMock serializableMock;
-	StrictMock<SocketSerializingCallbackMock> socketSerializingCallbackMock;
+	static constexpr auto expectedResult = Ok();
+
 	auto socketMock = MakeSharedReference<NiceMock<SocketMock>>();
 
 	socketMock->DelegateToFake();
 
-	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(locDummyMaxBufferSize, locDummySerializable, locDummyDeserializable, socketMock);
+	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(InlineExecutor(), locDummyMaxBufferSize, locDummySerializable, locDummyDeserializable, socketMock);
 
 	EXPECT_CALL(*socketMock, Write)
-		.WillOnce(Return(Ok(Socket::EAsynchronicity::Synchronous)));
+		.WillOnce(Return(MakeCompletedFuture<Socket::ResultTypeWrite>(expectedResult)));
 
-	const auto result = socketSerializing->WriteMessage(serializableMock, socketSerializingCallbackMock.CreateOnWriteMessage());
+	const auto result = socketSerializing->WriteMessage(SerializableMock());
 
-	ASSERT_TRUE(result);
+	ASSERT_TRUE(result.GetResult());
+
+	EXPECT_THAT(*result.GetResult(), WriteMessageResultMatcher(expectedResult));
 }
 
-TEST(SocketSerializingImplTests, writemessage_calls_callback_with_correct_buffer)
+TEST(SocketSerializingImplTests, writemessage_calls_socket_write_with_correct_buffer)
 {
+	static constexpr auto expectedResult = Ok();
+
 	const std::vector<u8> dummyBuffer = { 4, 2, 3, 1 };
 
 	SerializableMock serializableMock = { 1 };
 	NiceMock<SerializerMock> serializerMock;
-	StrictMock<SocketSerializingCallbackMock> socketSerializingCallbackMock;
 	auto socketMock = MakeSharedReference<NiceMock<SocketMock>>();
 
 	serializerMock.DelegateToFake();
 	socketMock->DelegateToFake();
 
-	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(locDummyMaxBufferSize, serializerMock.CreateSerialize(), locDummyDeserializable, socketMock);
+	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(InlineExecutor(), locDummyMaxBufferSize, serializerMock.CreateSerialize(), locDummyDeserializable, socketMock);
 
 	EXPECT_CALL(serializerMock, Serialize(serializableMock))
 		.WillOnce(Return(dummyBuffer));
-	EXPECT_CALL(*socketMock, Write(dummyBuffer, _))
-		.WillOnce([](auto&&, auto&& aOnWrite)
-			{
-				std::move(aOnWrite)(Ok());
-			
-				return Ok(Socket::EAsynchronicity::Synchronous);
-			});
-	EXPECT_CALL(socketSerializingCallbackMock, OnWriteMessage(WriteMessageResultMatcher(Ok())));
+	EXPECT_CALL(*socketMock, Write(dummyBuffer));
 
-	(void)socketSerializing->WriteMessage(serializableMock, socketSerializingCallbackMock.CreateOnWriteMessage());
+	(void)socketSerializing->WriteMessage(serializableMock);
 }
 
 TEST(SocketSerializingImplTests, onclose_call_correct_function)
 {
-	constexpr auto dummyOnClose = [](auto&&) {};
+	auto socketMock = MakeSharedReference<NiceMock<SocketMock>>();
+
+	socketMock->DelegateToFake();
+
+	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(InlineExecutor(), locDummyMaxBufferSize, locDummySerializable, locDummyDeserializable, socketMock);
+
+	EXPECT_CALL(*socketMock, OnClose);
+
+	(void)socketSerializing->OnClose();
+}
+
+TEST(SocketSerializingImplTests, onclose_returns_correct_value)
+{
+	static constexpr auto expectedResult = Ok(Socket::SCloseLocation{ Socket::ECloseLocation::ClosedLocally, 1234 });
 
 	auto socketMock = MakeSharedReference<NiceMock<SocketMock>>();
 
 	socketMock->DelegateToFake();
 
-	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(locDummyMaxBufferSize, locDummySerializable, locDummyDeserializable, socketMock);
+	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(InlineExecutor(), locDummyMaxBufferSize, locDummySerializable, locDummyDeserializable, socketMock);
 
-	EXPECT_CALL(*socketMock, OnClose);
+	EXPECT_CALL(*socketMock, OnClose)
+		.WillOnce(Return(MakeCompletedFuture<Socket::ResultTypeClose>(expectedResult)));
 
-	socketSerializing->OnClose(dummyOnClose);
+	const auto result = socketSerializing->OnClose();
+
+	ASSERT_TRUE(result.GetResult());
+
+	EXPECT_THAT(*result.GetResult(), CloseResultMatcher(expectedResult));
 }
 
 TEST(SocketSerializingImplTests, close_call_correct_function)
@@ -302,9 +286,29 @@ TEST(SocketSerializingImplTests, close_call_correct_function)
 
 	socketMock->DelegateToFake();
 
-	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(locDummyMaxBufferSize, locDummySerializable, locDummyDeserializable, socketMock);
+	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(InlineExecutor(), locDummyMaxBufferSize, locDummySerializable, locDummyDeserializable, socketMock);
 
 	EXPECT_CALL(*socketMock, Close);
 
-	socketSerializing->Close();
+	(void)socketSerializing->Close();
+}
+
+TEST(SocketSerializingImplTests, close_returns_correct_value)
+{
+	static constexpr auto expectedResult = Ok(Socket::SCloseLocation{ Socket::ECloseLocation::ClosedLocally, 1234 });
+
+	auto socketMock = MakeSharedReference<NiceMock<SocketMock>>();
+
+	socketMock->DelegateToFake();
+
+	auto socketSerializing = MakeSharedReference<SocketSerializingImpl<SerializableMock>>(InlineExecutor(), locDummyMaxBufferSize, locDummySerializable, locDummyDeserializable, socketMock);
+
+	EXPECT_CALL(*socketMock, Close)
+		.WillOnce(Return(MakeCompletedFuture<Socket::ResultTypeClose>(expectedResult)));
+
+	const auto result = socketSerializing->Close();
+
+	ASSERT_TRUE(result.GetResult());
+
+	EXPECT_THAT(*result.GetResult(), CloseResultMatcher(expectedResult));
 }

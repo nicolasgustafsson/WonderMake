@@ -2,24 +2,24 @@
 
 #include "wondermake-io/SocketDecorator.h"
 
-Result<Socket::EAsynchronicity, Socket::SWriteError> SocketDecorator::Write(std::vector<u8> aBuffer, OnWriteCallback aOnWrite)
+Socket::FutureTypeWrite SocketDecorator::Write(std::vector<u8> aBuffer)
 {
-	return mySocket->Write(std::move(aBuffer), std::move(aOnWrite));
+	return mySocket->Write(std::move(aBuffer));
 }
 
-Result<Socket::EAsynchronicity, Socket::SReadError> SocketDecorator::Read(OnReadCallback aOnRead)
+Socket::FutureTypeRead SocketDecorator::Read()
 {
-	return mySocket->Read(std::move(aOnRead));
+	return mySocket->Read();
 }
 
-void SocketDecorator::OnClose(OnCloseCallback aOnClose)
+Socket::FutureTypeClose SocketDecorator::OnClose()
 {
-	mySocket->OnClose(std::move(aOnClose));
+	return mySocket->OnClose();
 }
 
-void SocketDecorator::Close()
+Socket::FutureTypeClose SocketDecorator::Close()
 {
-	mySocket->Close();
+	return mySocket->Close();
 }
 
 Socket::EState SocketDecorator::GetState() const noexcept

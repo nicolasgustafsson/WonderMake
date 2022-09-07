@@ -2,11 +2,13 @@
 
 #include "wondermake-io/SocketSerializing.h"
 
+#include "wondermake-utility/AnyExecutor.h"
 #include "wondermake-utility/Bindable.h"
 #include "wondermake-utility/MemoryUnit.h"
 #include "wondermake-utility/SharedReference.h"
 
 #include <functional>
+#include <mutex>
 
 template<typename TSerializable>
 class SocketSerializingImpl
@@ -15,37 +17,36 @@ class SocketSerializingImpl
 {
 public:
 	SocketSerializingImpl(
+		AnyExecutor aExecutor,
 		MemoryUnit<EMemoryRatio::Bytes, size_t> aBufferMaxSize,
 		std::function<std::vector<u8>(const TSerializable&)> aSerialize,
 		std::function<Result<std::pair<TSerializable, size_t>>(std::span<const u8>)> aDeserialize,
 		SharedReference<Socket> aSocket)
-		: myBufferMaxSize(aBufferMaxSize)
+		: myExecutor(std::move(aExecutor))
+		, myBufferMaxSize(aBufferMaxSize)
 		, mySerialize(std::move(aSerialize))
 		, myDeserialize(std::move(aDeserialize))
 		, mySocket(std::move(aSocket))
 	{}
 
-	Result<void, Socket::SWriteError> WriteMessage(const TSerializable& aMessage, SocketSerializing<TSerializable>::OnWriteCallback aOnWrite) override
+	SocketSerializing<TSerializable>::FutureTypeWrite WriteMessage(const TSerializable& aMessage) override
 	{
-		const auto result = mySocket->Write(mySerialize(aMessage), std::move(aOnWrite));
-
-		if (result)
-			return Ok();
-
-		return result;
+		return mySocket->Write(mySerialize(aMessage));
 	}
-	Result<void, Socket::SReadError> ReadMessage(SocketSerializing<TSerializable>::OnReadCallback aOnRead) override
+	SocketSerializing<TSerializable>::FutureTypeRead ReadMessage() override
 	{
-		return ParseBuffer(std::move(aOnRead));
+		std::lock_guard lock(myMutex);
+
+		return ParseBuffer();
 	}
 
-	void OnClose(Socket::OnCloseCallback aOnClose) override
+	SocketSerializing<TSerializable>::FutureTypeClose OnClose() override
 	{
-		mySocket->OnClose(std::move(aOnClose));
+		return mySocket->OnClose();
 	}
-	void Close() override
+	SocketSerializing<TSerializable>::FutureTypeClose Close() override
 	{
-		mySocket->Close();
+		return mySocket->Close();
 	}
 
 	Socket::EState GetState() const noexcept override
@@ -54,16 +55,28 @@ public:
 	}
 
 private:
-	Result<void, Socket::SReadError> ParseBuffer(SocketSerializing<TSerializable>::OnReadCallback&& aOnRead)
+	SocketSerializing<TSerializable>::FutureTypeRead ParseBuffer()
 	{
+		using ResultTypeRead = SocketSerializing<TSerializable>::ResultTypeRead;
+		using FutureTypeRead = SocketSerializing<TSerializable>::FutureTypeRead;
+
+		const auto makeThenApply = [this]()
+		{
+			return MoveFutureResult([selfWeak = this->weak_from_this()](auto&& aResult) -> FutureTypeRead
+			{
+				auto self = selfWeak.lock();
+
+				if (!self)
+					return MakeCanceledFuture<ResultTypeRead>();
+
+				return self->OnRead(std::move(aResult));
+			});
+		};
+
 		if (myReadBuffer.empty())
 		{
-			auto readResult = mySocket->Read(Bind(&SocketSerializingImpl<TSerializable>::OnRead, this->weak_from_this(), std::move(aOnRead)));
-
-			if (!readResult)
-				return readResult;
-
-			return Ok();
+			return mySocket->Read()
+				.ThenApply(myExecutor, makeThenApply());
 		}
 
 		const auto maxBytes = myBufferMaxSize.To<EMemoryRatio::Bytes>();
@@ -75,44 +88,34 @@ private:
 		if (!result)
 		{
 			if (myReadBuffer.size() >= maxBytes)
-			{
-				std::move(aOnRead)(Err(Socket::SReadError{ Socket::EReadError::MessageToBig }));
-
-				return Err(Socket::SReadError{ Socket::EReadError::MessageToBig });
-			}
-
-			auto readResult = mySocket->Read(Bind(&SocketSerializingImpl<TSerializable>::OnRead, this->weak_from_this(), std::move(aOnRead)));
-
-			if (!readResult)
-				return readResult;
-
-			return Ok();
+				return MakeCompletedFuture<ResultTypeRead>(Err(Socket::SReadError{ Socket::EReadError::MessageToBig }));
+			
+			return mySocket->Read()
+				.ThenApply(myExecutor, makeThenApply());
 		}
 
 		auto serializable = std::move(result).Unwrap();
 
 		myReadBuffer.erase(myReadBuffer.begin(), myReadBuffer.begin() + serializable.second);
 
-		std::move(aOnRead)(Ok(std::move(serializable.first)));
-
-		return Ok();
+		return MakeCompletedFuture<ResultTypeRead>(Ok(std::move(serializable.first)));
 	}
-	void OnRead(SocketSerializing<TSerializable>::OnReadCallback&& aOnRead, Result<std::vector<u8>, Socket::SReadError>&& aResult)
+	SocketSerializing<TSerializable>::FutureTypeRead OnRead(Result<std::vector<u8>, Socket::SReadError>&& aResult)
 	{
-		if (!aResult)
-		{
-			std::move(aOnRead)(aResult);
+		std::lock_guard lock(myMutex);
 
-			return;
-		}
+		if (!aResult)
+			return MakeCompletedFuture<SocketSerializing<TSerializable>::ResultTypeRead>(std::move(aResult));
 
 		auto buffer = std::move(aResult).Unwrap();
 
 		myReadBuffer.insert(myReadBuffer.end(), buffer.begin(), buffer.end());
 
-		ParseBuffer(std::move(aOnRead));
+		return ParseBuffer();
 	}
 
+	std::recursive_mutex myMutex;
+	AnyExecutor myExecutor;
 	const MemoryUnit<EMemoryRatio::Bytes, size_t> myBufferMaxSize;
 	std::function<std::vector<u8>(const TSerializable&)> mySerialize;
 	std::function<Result<std::pair<TSerializable, size_t>>(std::span<const u8>)> myDeserialize;

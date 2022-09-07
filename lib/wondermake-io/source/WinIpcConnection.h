@@ -1,9 +1,15 @@
 #pragma once
 
-#include "wondermake-utility/WinPlatform.h"
-
 #include "wondermake-io/IpcConnection.h"
 
+#include "wondermake-utility/AnyExecutor.h"
+#include "wondermake-utility/UniqueFunction.h"
+#include "wondermake-utility/WinPlatform.h"
+
+#include <atomic>
+#include <deque>
+#include <mutex>
+#include <optional>
 #include <queue>
 #include <vector>
 
@@ -15,51 +21,67 @@ class WinIpcConnection final
 	, public std::enable_shared_from_this<WinIpcConnection>
 {
 public:
-	WinIpcConnection(WinEventSystem& aWinEvent, WinPlatformSystem& aWinPlatform) noexcept;
+	WinIpcConnection(AnyExecutor aExecutor, WinEventSystem& aWinEvent, WinPlatformSystem& aWinPlatform) noexcept;
 	~WinIpcConnection() noexcept;
 
 	Result<void, SConnectionError> Connect(std::string aConnectionName) override;
 	Result<void, SConnectionError> ConnectHandle(HANDLE aPipeHandle);
 
-	Result<EAsynchronicity, SWriteError> Write(std::vector<u8> aBuffer, OnWriteCallback aOnWrite) override;
-	Result<EAsynchronicity, SReadError> Read(OnReadCallback aOnRead) override;
-	void OnClose(OnCloseCallback aOnClose) override;
-	void Close() override;
+	FutureTypeWrite		Write(std::vector<u8> aBuffer) override;
+	FutureTypeRead		Read() override;
+	FutureTypeClose		OnClose() override;
+	FutureTypeClose		Close() override;
 
-	EState GetState() const noexcept override;
+	EState				GetState() const noexcept override;
 
 private:
+	// Having the RequestId's type be that of a pointer guarantees that
+	// the application runs out of memory before it runs out of ids.
+	using RequestIdType = std::uintptr_t;
+
 	struct WriteData
 	{
-		std::vector<u8> Buffer;
-		OnWriteCallback OnWrite;
+		std::vector<u8>				Buffer;
+		Promise<ResultTypeWrite>	Promise;
+	};
+	struct ReadData
+	{
+		Promise<ResultTypeRead>		Promise;
+		RequestIdType				RequestId;
 	};
 
 	Result<void, SConnectionError> Setup();
 	
+	[[nodiscard]] Closure PerformWrite(std::vector<u8>&& aBuffer, Promise<ResultTypeWrite>&& aPromise);
 	void OnWrite(std::vector<u8> aBuffer);
-	void NextWrite();
+	[[nodiscard]] Closure NextWrite();
+
+	[[nodiscard]] Closure PerformRead(Promise<ResultTypeRead>&& aPromise, RequestIdType aRequestId);
 	void OnRead(std::vector<u8> aBuffer);
-	void NextRead();
+	[[nodiscard]] Closure NextRead();
+	void CancelRead(RequestIdType aRequestId);
 
-	void Reset(Result<SCloseLocation, SCloseError> aResult);
+	[[nodiscard]] Closure Reset(Result<SCloseLocation, SCloseError> aResult);
 
+	std::mutex myMutex;
+
+	AnyExecutor myExecutor;
 	WinEventSystem& myWinEvent;
 	WinPlatformSystem& myWinPlatform;
 	
-	EState myState = EState::Closed;
+	std::atomic<EState> myState = EState::Closed;
 	HANDLE myFileHandle = INVALID_HANDLE_VALUE;
 
 	bool myCurrentlyWriting = false;
-	OnWriteCallback myCurrentWriteCallback = [](auto&&) {};
+	std::optional<Promise<ResultTypeWrite>> myCurrentWritePromise;
 	OVERLAPPED myWriteOverlapped = {};
 	std::queue<WriteData> myWriteQueue;
 
 	bool myCurrentlyReading = false;
-	OnReadCallback myCurrentReadCallback = [](auto&&) {};
+	std::vector<u8> myReadBuffer;
 	OVERLAPPED myReadOverlapped = {};
-	std::queue<OnReadCallback> myReadQueue;
+	std::deque<ReadData> myReadQueue;
 
-	std::vector<OnCloseCallback> myCloseCallbacks;
+	std::vector<Promise<ResultTypeClose>> myClosePromises;
 
 };

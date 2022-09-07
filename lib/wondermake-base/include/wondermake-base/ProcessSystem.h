@@ -6,8 +6,11 @@
 #include "wondermake-utility/Result.h"
 #include "wondermake-utility/UniqueFunction.h"
 
+#include <magic_enum.hpp>
+
 #include <filesystem>
 #include <memory>
+#include <ostream>
 
 class Process;
 
@@ -32,3 +35,8 @@ public:
 	virtual Result<std::shared_ptr<Process>, SStartError> StartProcess(std::filesystem::path aApplicationPath, std::wstring aCommandLine) = 0;
 
 };
+
+inline static void WmLogStream(std::ostream& aStream, const ProcessSystem::SStartError& aError)
+{
+	aStream << magic_enum::enum_name(aError.Error) << '(' << static_cast<std::underlying_type_t<decltype(aError.Error)>>(aError.Error) << ':' << aError.Reason << ')';
+}

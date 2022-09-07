@@ -44,13 +44,15 @@ std::string Logger::FormatLine(ELogSeverity aSeverity, std::string aMessage, std
 	ss
 		<< std::setw(15) << std::setfill(' ') << std::left
 		<< ("[" + GetLoggerName() + "] ")
+		<< std::setw(32) << std::setfill(' ') << std::left
 		<< std::move(aTimestamp) << ' '
 		<< std::setw(20) << std::setfill(' ') << std::left
 		<< std::move(threadHashStream).str() << ' '
 		<< std::setw(7) << std::setfill(' ') << std::left
 		<< SeverityToString(aSeverity) << ' '
 		<< std::setw(30) << std::setfill(' ') << std::left
-		<< (static_cast<std::string>(aFile) + '(' + std::to_string(aLine) + ')') << ' ';
+		<< (static_cast<std::string>(aFile) + '(' + std::to_string(aLine) + ')') << ' '
+		<< std::move(aMessage);
 
 	return std::move(ss).str();
 }

@@ -1,8 +1,8 @@
 #pragma once
 
+#include "wondermake-utility/Future.h"
 #include "wondermake-utility/Result.h"
 #include "wondermake-utility/Typedefs.h"
-#include "wondermake-utility/UniqueFunction.h"
 
 #include <magic_enum.hpp>
 
@@ -19,11 +19,6 @@ public:
 		Closed
 	};
 
-	enum class EAsynchronicity
-	{
-		Asynchronous,
-		Synchronous
-	};
 	enum class EWriteError
 	{
 		InvalidArgs,
@@ -75,16 +70,20 @@ public:
 		u64 Reason = 0;
 	};
 
-	using OnWriteCallback = UniqueFunction<void(Result<void, SWriteError>)>;
-	using OnReadCallback = UniqueFunction<void(Result<std::vector<u8>, SReadError>)>;
-	using OnCloseCallback = UniqueFunction<void(Result<SCloseLocation, SCloseError>)>;
+	using ResultTypeWrite	= Result<void, SWriteError>;
+	using ResultTypeRead	= Result<std::vector<u8>, SReadError>;
+	using ResultTypeClose	= Result<SCloseLocation, SCloseError>;
+
+	using FutureTypeWrite	= Future<ResultTypeWrite>;
+	using FutureTypeRead	= Future<ResultTypeRead>;
+	using FutureTypeClose	= Future<ResultTypeClose>;
 
 	virtual ~Socket() noexcept = default;
 
-	virtual Result<EAsynchronicity, SWriteError> Write(std::vector<u8> aBuffer, OnWriteCallback aOnWrite) = 0;
-	virtual Result<EAsynchronicity, SReadError> Read(OnReadCallback aOnRead) = 0;
-	virtual void OnClose(OnCloseCallback aOnClose) = 0;
-	virtual void Close() = 0;
+	virtual FutureTypeWrite		Write(std::vector<u8> aBuffer) = 0;
+	virtual FutureTypeRead		Read() = 0;
+	virtual FutureTypeClose		OnClose() = 0;
+	virtual FutureTypeClose		Close() = 0;
 
 	virtual EState GetState() const noexcept = 0;
 

@@ -51,51 +51,29 @@ class SocketSerializingMock
 	: public SocketSerializing<SerializableMock>
 {
 public:
-	using ResultTypeWriteMessage = Result<void, Socket::SWriteError>;
-	using ResultTypeReadMessage = Result<void, Socket::SReadError>;
+	using SSerializing = SocketSerializing<SerializableMock>;
 
-	MOCK_METHOD(ResultTypeWriteMessage, WriteMessage, (const SerializableMock& aMessage, SocketSerializing<SerializableMock>::OnWriteCallback aOnWrite), (override));
-	MOCK_METHOD(ResultTypeReadMessage, ReadMessage, (SocketSerializing<SerializableMock>::OnReadCallback aOnRead), (override));
+	MOCK_METHOD(SSerializing::FutureTypeWrite, WriteMessage, (const SerializableMock& aMessage), (override));
+	MOCK_METHOD(SSerializing::FutureTypeRead, ReadMessage, (), (override));
 
-	MOCK_METHOD(void, OnClose, (Socket::OnCloseCallback aOnClose), (override));
-	MOCK_METHOD(void, Close, (), (override));
+	MOCK_METHOD(SSerializing::FutureTypeClose, OnClose, (), (override));
+	MOCK_METHOD(SSerializing::FutureTypeClose, Close, (), (override));
 
 	MOCK_METHOD(Socket::EState, GetState, (), (const, noexcept, override));
 
 	void DelegateToFake()
 	{
 		ON_CALL(*this, WriteMessage)
-			.WillByDefault(Return(Err(Socket::SWriteError{ Socket::EWriteError::InternalError })));
+			.WillByDefault(Return(MakeCompletedFuture<SSerializing::ResultTypeWrite>(Err(Socket::SWriteError{ Socket::EWriteError::InternalError }))));
 		ON_CALL(*this, ReadMessage)
-			.WillByDefault(Return(Err(Socket::SReadError{ Socket::EReadError::InternalError })));
+			.WillByDefault(Return(MakeCompletedFuture<SSerializing::ResultTypeRead>(Err(Socket::SReadError{ Socket::EReadError::InternalError }))));
+		ON_CALL(*this, OnClose)
+			.WillByDefault(Return(MakeCompletedFuture<SSerializing::ResultTypeClose>(Err(Socket::SCloseError{ Socket::ECloseError::InternalError }))));
+		ON_CALL(*this, Close)
+			.WillByDefault(Return(MakeCompletedFuture<SSerializing::ResultTypeClose>(Err(Socket::SCloseError{ Socket::ECloseError::InternalError }))));
 
 		ON_CALL(*this, GetState)
 			.WillByDefault(Return(Socket::EState::Closed));
-	}
-};
-
-class SocketSerializingCallbackMock
-{
-public:
-	using ArgTypeOnWrite = Result<void, Socket::SWriteError>;
-	using ArgTypeOnRead = Result<SerializableMock, Socket::SReadError>&&;
-	using ArgTypeOnClose = Result<Socket::SCloseLocation, Socket::SCloseError>;
-
-	MOCK_METHOD(void, OnWriteMessage, (ArgTypeOnWrite));
-	MOCK_METHOD(void, OnReadMessage, (ArgTypeOnRead));
-	MOCK_METHOD(void, OnClose, (ArgTypeOnClose));
-
-	auto CreateOnWriteMessage()
-	{
-		return [this](auto&& aResult) { OnWriteMessage(std::move(aResult)); };
-	}
-	auto CreateOnReadMessage()
-	{
-		return [this](auto&& aResult) { OnReadMessage(std::move(aResult)); };
-	}
-	auto CreateOnClose()
-	{
-		return [this](auto&& aResult) { OnClose(std::move(aResult)); };
 	}
 };
 

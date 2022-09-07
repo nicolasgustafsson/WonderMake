@@ -804,6 +804,17 @@ inline Future<void> MakeCompletedFuture<void>(void)
 	return std::move(sharedState);
 }
 
+template<typename TArg>
+Future<std::decay_t<TArg>> MakeCanceledFuture()
+{
+	auto sharedState = std::make_shared<_Impl::FutureSharedState<std::decay_t<TArg>>>();
+	InlineExecutor executor;
+
+	sharedState->Cancel(executor);
+
+	return std::move(sharedState);
+}
+
 template<typename... TTypes>
 inline [[nodiscard]] Future<void> WaitForAll(Future<TTypes>... aFutures)
 {

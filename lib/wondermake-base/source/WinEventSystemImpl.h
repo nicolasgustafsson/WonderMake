@@ -19,15 +19,13 @@ class WinEventSystemImpl
 			STSingleton,
 			STThreadsafe>>
 	, public WinEventSystem
+	, public std::enable_shared_from_this<WinEventSystemImpl>
 {
 public:
 	WinEventSystemImpl() noexcept;
 	~WinEventSystemImpl() noexcept;
 
-	void RegisterEvent(
-		HANDLE aEventHandle,
-		Closure&& aCallback) override;
-	void UnregisterEvent(
+	Future<void> RegisterEvent(
 		HANDLE aEventHandle) override;
 
 	void WaitForEvent(
@@ -37,10 +35,12 @@ private:
 	struct HandleData
 	{
 		HANDLE Handle;
-		Closure Callback;
+		Promise<void> Promise;
 	};
 
 	void TriggerWaitInterruption();
+	void UnregisterEvent(
+		HANDLE aEventHandle);
 
 	std::mutex myMutex;
 	HANDLE myInterruptEvent = INVALID_HANDLE_VALUE;

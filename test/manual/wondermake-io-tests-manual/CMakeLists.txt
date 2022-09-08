@@ -7,7 +7,8 @@ list(APPEND SourceFiles
     "../../../lib/wondermake-base/source/WinEventSystemImpl.cpp"
     "../../../lib/wondermake-base/source/WinPlatformSystemImpl.cpp"
     "../../../lib/wondermake-io/source/WinIpcAcceptor.cpp"
-    "../../../lib/wondermake-io/source/WinIpcConnection.cpp")
+    "../../../lib/wondermake-io/source/WinIpcConnection.cpp"
+    "../../../lib/wondermake-utility/source/AnyExecutor.cpp")
     
 add_executable(WonderMakeIoManualTests ${SourceFiles})
 

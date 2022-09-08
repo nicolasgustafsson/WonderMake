@@ -5,8 +5,9 @@
 
 #include "wondermake-utility/Bindable.h"
 
-WinProcess::WinProcess(WinEventSystem& aWinEvent, WinPlatformSystem& aWinPlatform, HANDLE aProcessHandle, HANDLE aThreadHandle) noexcept
-	: myWinEvent(aWinEvent)
+WinProcess::WinProcess(AnyExecutor aExecutor, WinEventSystem& aWinEvent, WinPlatformSystem& aWinPlatform, HANDLE aProcessHandle, HANDLE aThreadHandle) noexcept
+	: myExecutor(std::move(aExecutor))
+	, myWinEvent(aWinEvent)
 	, myWinPlatform(aWinPlatform)
 	, myProcessHandle(aProcessHandle)
 	, myThreadHandle(aThreadHandle)
@@ -18,7 +19,11 @@ WinProcess::~WinProcess()
 
 void WinProcess::Initialize()
 {
-	myWinEvent.RegisterEvent(myProcessHandle, Bind(&WinProcess::OnClose, weak_from_this()));
+	myCloseFuture = myWinEvent.RegisterEvent(myProcessHandle)
+		.ThenRun(myExecutor, [callable = Bind(&WinProcess::OnClose, weak_from_this())](auto&&) mutable
+		{
+			std::move(callable)();
+		});
 }
 
 Process::EState WinProcess::GetState() const
@@ -37,16 +42,16 @@ void WinProcess::Terminate(i64 aExitCode)
 	Reset(Err(SExitError{ EExitError::Terminated, aExitCode }));
 }
 
-void WinProcess::OnExit(OnExitCallback&& aOnExit)
+Future<Result<i64, Process::SExitError>> WinProcess::OnExit()
 {
-	if (myState == EState::Running)
-	{
-		myOnExitCallbacks.emplace_back(std::move(aOnExit));
+	if (myState != EState::Running)
+		return MakeCompletedFuture<Result<i64, Process::SExitError>>(Err(SExitError{ EExitError::AlreadyStopped }));
+	
+	auto [promise, future] = MakeAsync<Result<i64, Process::SExitError>>();
 
-		return;
-	}
+	myOnExitPromises.emplace_back(std::move(promise));
 
-	std::move(aOnExit)(Err(SExitError{ EExitError::AlreadyStopped }));
+	return future;
 }
 
 void WinProcess::OnClose()
@@ -71,23 +76,18 @@ void WinProcess::OnClose()
 void WinProcess::Reset(Result<i64, SExitError> aResult)
 {
 	myState = EState::Stopped;
+	myCloseFuture.Reset();
 
 	if (myProcessHandle)
-	{
-		myWinEvent.UnregisterEvent(myProcessHandle);
-
 		(void)myWinPlatform.CloseHandle(myProcessHandle);
-	}
 	if (myThreadHandle)
 		(void)myWinPlatform.CloseHandle(myThreadHandle);
 
 	myProcessHandle = NULL;
 	myThreadHandle = NULL;
 
-	decltype(myOnExitCallbacks) onExitCallbacks;
+	auto onExitPromises = std::exchange(myOnExitPromises, decltype(myOnExitPromises)());
 
-	std::swap(myOnExitCallbacks, onExitCallbacks);
-
-	for (auto&& onClose : onExitCallbacks)
-		std::move(onClose)(aResult);
+	for (auto&& promise : onExitPromises)
+		promise.Complete(aResult);
 }

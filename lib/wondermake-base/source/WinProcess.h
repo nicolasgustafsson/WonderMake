@@ -2,6 +2,8 @@
 
 #include "wondermake-base/Process.h"
 
+#include "wondermake-utility/AnyExecutor.h"
+#include "wondermake-utility/Future.h"
 #include "wondermake-utility/WinPlatform.h"
 
 #include <memory>
@@ -14,7 +16,7 @@ class WinProcess final
 	, public std::enable_shared_from_this<WinProcess>
 {
 public:
-	WinProcess(WinEventSystem& aWinEvent, WinPlatformSystem& aWinPlatform, HANDLE aProcessHandle, HANDLE aThreadHandle) noexcept;
+	WinProcess(AnyExecutor aExecutor, WinEventSystem& aWinEvent, WinPlatformSystem& aWinPlatform, HANDLE aProcessHandle, HANDLE aThreadHandle) noexcept;
 	~WinProcess();
 
 	void Initialize();
@@ -23,13 +25,14 @@ public:
 	
 	void Terminate(i64 aExitCode) override;
 
-	void OnExit(OnExitCallback&& aOnExit) override;
+	Future<Result<i64, SExitError>> OnExit() override;
 
 private:
 	void OnClose();
 
 	void Reset(Result<i64, SExitError> aResult);
 
+	AnyExecutor myExecutor;
 	WinEventSystem& myWinEvent;
 	WinPlatformSystem& myWinPlatform;
 
@@ -37,7 +40,8 @@ private:
 	HANDLE myThreadHandle = NULL;
 
 	EState myState = EState::Running;
+	Future<void> myCloseFuture;
 
-	std::vector<OnExitCallback> myOnExitCallbacks;
+	std::vector<Promise<Result<i64, SExitError>>> myOnExitPromises;
 
 };

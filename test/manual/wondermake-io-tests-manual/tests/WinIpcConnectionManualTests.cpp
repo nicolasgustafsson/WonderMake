@@ -55,7 +55,7 @@ TEST(WinIpcConnectionManualTests, connection_fails_when_no_acceptor_exists)
 
 	WinEventSystemImpl winEvent;
 
-	auto ipcConnection = std::make_shared<WinIpcConnection>(winEvent, winPlatform);
+	auto ipcConnection = std::make_shared<WinIpcConnection>(InlineExecutor(), winEvent, winPlatform);
 
 	auto connectResult = ipcConnection->Connect("wondermake__manual_test_connection");
 
@@ -74,12 +74,15 @@ TEST(WinIpcConnectionManualTests, connection_connects_when_acceptor_exists)
 
 	WinEventSystemImpl winEvent;
 
-	auto ipcAcceptor = std::make_shared<WinIpcAcceptor>(winEvent, winPlatform);
-	auto ipcConnection = std::make_shared<WinIpcConnection>(winEvent, winPlatform);
+	auto ipcAcceptor = std::make_shared<WinIpcAcceptor>(InlineExecutor(), winEvent, winPlatform);
+	auto ipcConnection = std::make_shared<WinIpcConnection>(InlineExecutor(), winEvent, winPlatform);
 
-	auto openResult = ipcAcceptor->Open("wondermake__manual_test_connection", {});
+	auto openResult = ipcAcceptor->Open("wondermake__manual_test_connection");
 
 	ASSERT_TRUE(openResult);
+
+	ipcAcceptor->OnConnection()
+		.Detach();
 
 	auto connectResult = ipcConnection->Connect("wondermake__manual_test_connection");
 
@@ -98,13 +101,15 @@ TEST(WinIpcConnectionManualTests, acceptor_accepts_multiple_connections)
 
 	WinEventSystemImpl winEvent;
 
-	auto ipcAcceptor = std::make_shared<WinIpcAcceptor>(winEvent, winPlatform);
-	auto ipcConnectionA = std::make_shared<WinIpcConnection>(winEvent, winPlatform);
-	auto ipcConnectionB = std::make_shared<WinIpcConnection>(winEvent, winPlatform);
+	auto ipcAcceptor = std::make_shared<WinIpcAcceptor>(InlineExecutor(), winEvent, winPlatform);
+	auto ipcConnectionA = std::make_shared<WinIpcConnection>(InlineExecutor(), winEvent, winPlatform);
+	auto ipcConnectionB = std::make_shared<WinIpcConnection>(InlineExecutor(), winEvent, winPlatform);
 
-	auto openResult = ipcAcceptor->Open("wondermake__manual_test_connection", {});
+	auto openResult = ipcAcceptor->Open("wondermake__manual_test_connection");
 
 	ASSERT_TRUE(openResult);
+
+	auto acceptorConnectionFuture = ipcAcceptor->OnConnection();
 
 	auto connectResultA = ipcConnectionA->Connect("wondermake__manual_test_connection");
 
@@ -112,17 +117,23 @@ TEST(WinIpcConnectionManualTests, acceptor_accepts_multiple_connections)
 
 	winEvent.WaitForEvent(0);
 
+	ASSERT_TRUE(acceptorConnectionFuture.GetResult());
+
+	ASSERT_TRUE(*acceptorConnectionFuture.GetResult());
+
+	acceptorConnectionFuture = ipcAcceptor->OnConnection();
+
 	auto connectResultB = ipcConnectionB->Connect("wondermake__manual_test_connection");
 
 	ASSERT_TRUE(connectResultB);
 
 	winEvent.WaitForEvent(0);
+
+	ASSERT_TRUE(acceptorConnectionFuture.IsCompleted());
 }
 
 TEST(WinIpcConnectionManualTests, connection_closes_when_other_connection_is_closed)
 {
-	StrictMock<AcceptorCallbackMock>	callbackMockAcceptor;
-
 	constexpr auto pipeName = "wondermake__manual_test_connection";
 
 	WinPlatformSystemImpl::InjectDependencies(std::tie());
@@ -133,19 +144,14 @@ TEST(WinIpcConnectionManualTests, connection_closes_when_other_connection_is_clo
 
 	WinEventSystemImpl winEvent;
 
-	auto ipcAcceptor = std::make_shared<WinIpcAcceptor>(winEvent, winPlatform);
-	auto ipcConnectionClient = std::make_shared<WinIpcConnection>(winEvent, winPlatform);
-	std::shared_ptr<IpcConnection> ipcConnectionServer;
-
-	EXPECT_CALL(callbackMockAcceptor, OnConnection)
-		.WillOnce([&ipcConnectionServer](auto&& aConnection)
-			{
-				ipcConnectionServer = std::move(aConnection);
-			});
-
-	auto openResult = ipcAcceptor->Open(pipeName, { onConnection(callbackMockAcceptor) });
+	auto ipcAcceptor = std::make_shared<WinIpcAcceptor>(InlineExecutor(), winEvent, winPlatform);
+	auto ipcConnectionClient = std::make_shared<WinIpcConnection>(InlineExecutor(), winEvent, winPlatform);
+	
+	auto openResult = ipcAcceptor->Open(pipeName);
 
 	ASSERT_TRUE(openResult);
+
+	auto acceptorConnectionFuture = ipcAcceptor->OnConnection();
 
 	auto connectResult = ipcConnectionClient->Connect(pipeName);
 
@@ -153,7 +159,14 @@ TEST(WinIpcConnectionManualTests, connection_closes_when_other_connection_is_clo
 
 	winEvent.WaitForEvent(0);
 
-	ipcConnectionClient->Read([](auto&&) {});
+	ASSERT_TRUE(acceptorConnectionFuture.GetResult());
+
+	ASSERT_TRUE(*acceptorConnectionFuture.GetResult());
+
+	auto ipcConnectionServer = acceptorConnectionFuture.GetResult()->Unwrap();
+
+	ipcConnectionClient->Read()
+		.Detach();
 
 	winEvent.WaitForEvent(0);
 
@@ -166,7 +179,6 @@ TEST(WinIpcConnectionManualTests, connection_closes_when_other_connection_is_clo
 
 TEST(WinIpcConnectionManualTests, connection_can_read_and_write)
 {
-	StrictMock<AcceptorCallbackMock>	callbackMockAcceptor;
 	StrictMock<ConnectionCallbackMock>	callbackMockClient;
 	StrictMock<ConnectionCallbackMock>	callbackMockServer;
 
@@ -182,21 +194,17 @@ TEST(WinIpcConnectionManualTests, connection_can_read_and_write)
 
 	WinEventSystemImpl winEvent;
 
-	auto ipcAcceptor = std::make_shared<WinIpcAcceptor>(winEvent, winPlatform);
-	auto ipcConnectionClient = std::make_shared<WinIpcConnection>(winEvent, winPlatform);
-	std::shared_ptr<IpcConnection> ipcConnectionServer;
+	auto ipcAcceptor = std::make_shared<WinIpcAcceptor>(InlineExecutor(), winEvent, winPlatform);
+	auto ipcConnectionClient = std::make_shared<WinIpcConnection>(InlineExecutor(), winEvent, winPlatform);
 
-	EXPECT_CALL(callbackMockAcceptor, OnConnection)
-		.WillOnce([&ipcConnectionServer](auto&& aConnection)
-			{
-				ipcConnectionServer = std::move(aConnection);
-			});
 	EXPECT_CALL(callbackMockClient, OnWrite(WriteResultMatcher(Ok())));
 	EXPECT_CALL(callbackMockServer, OnRead(ReadResultMatcher(Ok(dummyDataA))));
 
-	auto openResult = ipcAcceptor->Open(pipeName, { onConnection(callbackMockAcceptor) });
+	auto openResult = ipcAcceptor->Open(pipeName);
 
 	ASSERT_TRUE(openResult);
+
+	auto acceptorConnectionFuture = ipcAcceptor->OnConnection();
 
 	auto connectResult = ipcConnectionClient->Connect(pipeName);
 
@@ -204,18 +212,26 @@ TEST(WinIpcConnectionManualTests, connection_can_read_and_write)
 
 	winEvent.WaitForEvent(0);
 
-	ASSERT_TRUE(ipcConnectionServer);
+	ASSERT_TRUE(acceptorConnectionFuture.GetResult());
 
-	ipcConnectionClient->Write(dummyDataA, onWrite(callbackMockClient));
-	ipcConnectionServer->Read(onRead(callbackMockServer));
+	ASSERT_TRUE(*acceptorConnectionFuture.GetResult());
+
+	auto ipcConnectionServer = acceptorConnectionFuture.GetResult()->Unwrap();
+
+	ipcConnectionClient->Write(dummyDataA)
+		.ThenRun(InlineExecutor(), MoveFutureResult(onWrite(callbackMockClient)));
+	ipcConnectionServer->Read()
+		.ThenRun(InlineExecutor(), MoveFutureResult(onRead(callbackMockServer)));
 
 	winEvent.WaitForEvent(0);
 
 	EXPECT_CALL(callbackMockServer, OnWrite(WriteResultMatcher(Ok())));
 	EXPECT_CALL(callbackMockClient, OnRead(ReadResultMatcher(Ok(dummyDataB))));
 
-	ipcConnectionServer->Write(dummyDataB, onWrite(callbackMockServer));
-	ipcConnectionClient->Read(onRead(callbackMockClient));
+	ipcConnectionServer->Write(dummyDataB)
+		.ThenRun(InlineExecutor(), MoveFutureResult(onWrite(callbackMockServer)));
+	ipcConnectionClient->Read()
+		.ThenRun(InlineExecutor(), MoveFutureResult(onRead(callbackMockClient)));
 
 	winEvent.WaitForEvent(0);
 }

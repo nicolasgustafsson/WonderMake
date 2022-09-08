@@ -8,27 +8,23 @@ class WinEventSystemMock
 	: public WinEventSystem
 {
 public:
-	MOCK_METHOD(void, RegisterEvent, (
-		HANDLE aEventHandle,
-		Closure&& aCallback), (override));
-	MOCK_METHOD(void, UnregisterEvent, (
+	MOCK_METHOD(Future<void>, RegisterEvent, (
 		HANDLE aEventHandle), (override));
-
+	
 	MOCK_METHOD(void, WaitForEvent, (
 		DWORD aTimeoutMs), (override));
 
-	static auto CreateRegisterEvent()
+	void DelegateToFake()
 	{
-		auto funcPtr = std::make_shared<Closure>([]() {});
+		ON_CALL(*this, RegisterEvent)
+			.WillByDefault([](auto&&)
+				{
+					auto [promise, future] = MakeAsync<void>();
 
-		return std::make_pair([funcPtr]()
-			{
-				std::move(*funcPtr)();
-			},
-			[funcPtr](auto, auto&& aCallback)
-			{
-				*funcPtr = std::move(aCallback);
-			});
+					(void)std::make_unique<Promise<void>>(std::move(promise)).release();
+
+					return future;
+				});
 	}
 
 };

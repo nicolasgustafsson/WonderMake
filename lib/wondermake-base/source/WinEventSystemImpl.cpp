@@ -22,40 +22,25 @@ WinEventSystemImpl::~WinEventSystemImpl() noexcept
 	TriggerWaitInterruption();
 }
 
-void WinEventSystemImpl::RegisterEvent(
-	HANDLE aEventHandle,
-	Closure&& aCallback)
-{
-	if (aEventHandle == NULL)
-		return;
-
-	{
-		std::lock_guard<std::mutex> lock(myMutex);
-
-		myHandleData.emplace_back(HandleData{ aEventHandle, std::move(aCallback) });
-	}
-
-	TriggerWaitInterruption();
-}
-
-void WinEventSystemImpl::UnregisterEvent(
+Future<void> WinEventSystemImpl::RegisterEvent(
 	HANDLE aEventHandle)
 {
+	if (aEventHandle == NULL)
+		return MakeCanceledFuture<void>();
+
+	auto [promise, future] = MakeAsync<void>();
+
 	{
 		std::lock_guard<std::mutex> lock(myMutex);
 
-		const auto it = std::find_if(myHandleData.begin(), myHandleData.end(), [aEventHandle](auto& aHandleData)
-			{
-				return aHandleData.Handle == aEventHandle;
-			});
-
-		if (it == myHandleData.cend())
-			return;
-
-		myHandleData.erase(it);
+		myHandleData.emplace_back(HandleData{ aEventHandle, std::move(promise) });
 	}
 
+	future.OnCancel(GetExecutor(), Bind(&WinEventSystemImpl::UnregisterEvent, weak_from_this(), aEventHandle));
+
 	TriggerWaitInterruption();
+
+	return future;
 }
 
 void WinEventSystemImpl::WaitForEvent(
@@ -90,10 +75,10 @@ void WinEventSystemImpl::WaitForEvent(
 		return;
 
 	std::vector<HANDLE> signaledEvents;
-	std::vector<Closure> signaledCallbacks;
+	std::vector<Promise<void>> signaledPromises;
 
 	signaledEvents.reserve(MAXIMUM_WAIT_OBJECTS - 1);
-	signaledCallbacks.reserve(MAXIMUM_WAIT_OBJECTS - 1);
+	signaledPromises.reserve(MAXIMUM_WAIT_OBJECTS - 1);
 
 	for (size_t i = 1; i < myHandles.size(); ++i)
 		if (winPlatformSystem.WaitForSingleObject(myHandles[i], 0) == WAIT_OBJECT_0)
@@ -102,27 +87,42 @@ void WinEventSystemImpl::WaitForEvent(
 	{
 		std::lock_guard<std::mutex> lock(myMutex);
 
-		for (auto handle : signaledEvents)
-		{
-			const auto it = std::find_if(myHandleData.begin(), myHandleData.end(), [handle](auto& aHandleData)
-				{
-					return aHandleData.Handle == handle;
-				});
+		const auto itBegin = std::partition(myHandleData.begin(), myHandleData.end(), [&signaledEvents](const auto& aHandleData)
+			{
+				return std::find(signaledEvents.begin(), signaledEvents.end(), aHandleData.Handle) == signaledEvents.end();
+			});
 
-			if (it == myHandleData.cend())
-				continue;
+		for (auto it = itBegin; it != myHandleData.end(); ++it)
+			signaledPromises.emplace_back(std::move(it->Promise));
 
-			signaledCallbacks.emplace_back(std::move(it->Callback));
-
-			myHandleData.erase(it);
-		}
+		myHandleData.erase(itBegin, myHandleData.end());
 	}
 
-	for (auto&& callback : signaledCallbacks)
-		std::move(callback)();
+	for (auto&& promise : signaledPromises)
+		promise.Complete();
 }
 
 void WinEventSystemImpl::TriggerWaitInterruption()
 {
 	Get<WinPlatformSystem>().SetEvent(myInterruptEvent);
+}
+
+void WinEventSystemImpl::UnregisterEvent(
+	HANDLE aEventHandle)
+{
+	{
+		std::lock_guard<std::mutex> lock(myMutex);
+
+		const auto it = std::find_if(myHandleData.begin(), myHandleData.end(), [aEventHandle](auto& aHandleData)
+			{
+				return aHandleData.Handle == aEventHandle;
+			});
+
+		if (it == myHandleData.cend())
+			return;
+
+		myHandleData.erase(it);
+	}
+
+	TriggerWaitInterruption();
 }

@@ -1,10 +1,13 @@
 #pragma once
 
-#include "wondermake-utility/WinPlatform.h"
-
 #include "wondermake-io/IpcAcceptor.h"
 
-#include <optional>
+#include "wondermake-utility/AnyExecutor.h"
+#include "wondermake-utility/WinPlatform.h"
+
+#include <atomic>
+#include <deque>
+#include <mutex>
 #include <vector>
 
 class WinEventSystem;
@@ -15,30 +18,48 @@ class WinIpcAcceptor final
 	, public std::enable_shared_from_this<WinIpcAcceptor>
 {
 public:
-	WinIpcAcceptor(WinEventSystem& aWinEvent, WinPlatformSystem& aWinPlatform) noexcept;
+	WinIpcAcceptor(AnyExecutor aExecutor, WinEventSystem& aWinEvent, WinPlatformSystem& aWinPlatform) noexcept;
 	~WinIpcAcceptor() noexcept;
 
-	Result<void, SOpenError> Open(std::string aName, CallbackInfo&& aCallbackInfo) override;
-	void Close() override;
+	ResultTypeOpen			Open(std::string aName) override;
+	FutureTypeConnection	OnConnection() override;
+	FutureTypeClose			OnClose() override;
+	void					Close() override;
 
-	EState GetState() const noexcept override;
+	EState					GetState() const noexcept override;
 
 private:
-	Result<void, SOpenError> ListenForConnection();
-	Result<void, SOpenError> OnConnection();
+	// Having the RequestId's type be that of a pointer guarantees that
+	// the application runs out of memory before it runs out of ids.
+	using RequestIdType = std::uintptr_t;
 
-	void Reset(Result<void, SCloseError> aResult);
+	struct SOnConnectionData
+	{
+		Promise<ResultTypeConnection>	Promise;
+		RequestIdType					RequestId;
+	};
 
-	WinEventSystem& myWinEvent;
-	WinPlatformSystem& myWinPlatform;
+	[[nodiscard]] Closure	ListenForConnection();
+	void					OnNewConnection();
+	ResultTypeConnection	CreateIpcConnection();
+	void					CancelOnConnection(RequestIdType aRequestId);
 
-	EState myState = EState::Closed;
+	[[nodiscard]] Closure	Reset();
 
-	std::wstring myPipeName;
+	std::mutex				 myMutex;
 
-	HANDLE myPipeHandle = INVALID_HANDLE_VALUE;
-	OVERLAPPED myPipeOverlapped = {};
+	AnyExecutor				myExecutor;
+	WinEventSystem&			myWinEvent;
+	WinPlatformSystem&		myWinPlatform;
 
-	CallbackInfo myCallbackInfo;
+	std::wstring			myPipeName;
+	std::atomic<EState>		myState = EState::Closed;
+
+	Future<void>			myPipeFuture;
+	HANDLE					myPipeHandle = INVALID_HANDLE_VALUE;
+	OVERLAPPED				myPipeOverlapped = {};
+
+	std::deque<SOnConnectionData>	myOnConnectionQueue;
+	std::vector<Promise<void>>		myOnClosePromises;
 
 };

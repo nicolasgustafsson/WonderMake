@@ -1,18 +1,18 @@
 #pragma once
 
+#include "wondermake-base/System.h"
+
 #include "wondermake-utility/UniqueFunction.h"
 #include "wondermake-utility/WinPlatform.h"
+#include "wondermake-utility/Future.h"
 
-#include "wondermake-base/System.h"
+ // FIXME: Use futures instead.
 
 class WinEventSystem
 	: public SystemAbstracted
 {
 public:
-	virtual void RegisterEvent(
-		HANDLE aEventHandle,
-		Closure&& aCallback) = 0;
-	virtual void UnregisterEvent(
+	virtual Future<void> RegisterEvent(
 		HANDLE aEventHandle) = 0;
 
 	virtual void WaitForEvent(

@@ -24,6 +24,14 @@ namespace _Impl
 		: public std::enable_shared_from_this<FutureSharedState<TType>>
 	{
 	public:
+		inline ~FutureSharedState()
+		{
+			if (myState != EFutureState::Uncompleted)
+				return;
+
+			Resolve(EFutureState::Canceled);
+		}
+
 		void Cancel()
 		{
 			std::lock_guard<decltype(myMutex)> lock(myMutex);
@@ -69,6 +77,23 @@ namespace _Impl
 			std::move(aContinuation)(this->shared_from_this());
 		}
 
+		template<typename TCallable>
+		void Cancellation(TCallable&& aCancellation) requires std::is_invocable_v<TCallable>
+		{
+			{
+				std::lock_guard<decltype(myMutex)> lock(myMutex);
+
+				if (myState == EFutureState::Uncompleted)
+				{
+					myCancellations.emplace_back(std::forward<TCallable>(aCancellation));
+
+					return;
+				}
+			}
+
+			std::move(aCancellation)();
+		}
+
 		std::optional<TType> GetResult() requires(std::is_copy_constructible_v<TType>)
 		{
 			std::lock_guard<decltype(myMutex)> lock(myMutex);
@@ -95,13 +120,20 @@ namespace _Impl
 		void Resolve(EFutureState aState)
 		{
 			myState = aState;
-
+			
 			decltype(myContinuations) continuations;
+			decltype(myCancellations) cancellations;
 
 			std::swap(continuations, myContinuations);
+			std::swap(cancellations, myCancellations);
 
-			for (auto&& continuation : continuations)
-				std::move(continuation)(this->shared_from_this());
+			if (aState == EFutureState::Completed)
+				for (auto&& continuation : continuations)
+					std::move(continuation)(this->shared_from_this());
+
+			if (aState == EFutureState::Canceled)
+				for (auto&& cancellation : cancellations)
+					std::move(cancellation)();
 		}
 
 		std::recursive_mutex myMutex;
@@ -110,6 +142,7 @@ namespace _Impl
 		std::optional<TType> myResult;
 
 		std::vector<UniqueFunction<void(std::shared_ptr<FutureSharedState<TType>>&&)>> myContinuations;
+		std::vector<Closure> myCancellations;
 	};
 
 	template<>
@@ -117,6 +150,14 @@ namespace _Impl
 		: public std::enable_shared_from_this<FutureSharedState<void>>
 	{
 	public:
+		inline ~FutureSharedState()
+		{
+			if (myState != EFutureState::Uncompleted)
+				return;
+
+			Resolve(EFutureState::Canceled);
+		}
+
 		void Cancel()
 		{
 			std::lock_guard<decltype(myMutex)> lock(myMutex);
@@ -158,6 +199,23 @@ namespace _Impl
 
 			std::move(aContinuation)(this->shared_from_this());
 		}
+		
+		template<typename TCallable>
+		void Cancellation(TCallable&& aCancellation) requires std::is_invocable_v<TCallable>
+		{
+			{
+				std::lock_guard<decltype(myMutex)> lock(myMutex);
+
+				if (myState == EFutureState::Uncompleted)
+				{
+					myCancellations.emplace_back(std::forward<TCallable>(aCancellation));
+
+					return;
+				}
+			}
+
+			std::move(aCancellation)();
+		}
 
 	private:
 		void Resolve(EFutureState aState)
@@ -165,11 +223,18 @@ namespace _Impl
 			myState = aState;
 
 			decltype(myContinuations) continuations;
+			decltype(myCancellations) cancellations;
 
 			std::swap(continuations, myContinuations);
+			std::swap(cancellations, myCancellations);
 
-			for (auto&& continuation : continuations)
-				std::move(continuation)(this->shared_from_this());
+			if (aState == EFutureState::Completed)
+				for (auto&& continuation : continuations)
+					std::move(continuation)(this->shared_from_this());
+
+			if (aState == EFutureState::Canceled)
+				for (auto&& cancellation : cancellations)
+					std::move(cancellation)();
 		}
 
 		std::recursive_mutex myMutex;
@@ -177,6 +242,7 @@ namespace _Impl
 		EFutureState myState = EFutureState::Uncompleted;
 
 		std::vector<UniqueFunction<void(std::shared_ptr<FutureSharedState<void>>&&)>> myContinuations;
+		std::vector<Closure> myCancellations;
 	};
 
 }
@@ -198,6 +264,8 @@ public:
 	{
 		Cancel();
 	}
+
+	Promise& operator=(Promise&&) noexcept = default;
 
 	void Cancel()
 	{
@@ -253,6 +321,8 @@ public:
 	{
 		Cancel();
 	}
+
+	Promise& operator=(Promise&&) noexcept = default;
 
 	void Cancel()
 	{
@@ -338,6 +408,23 @@ public:
 			executor.Execute([callback = std::move(callback), state = std::move(aSharedState)]() mutable
 			{
 				(void)std::move(callback)(Future<TType>(std::move(state)));
+			});
+		});
+
+		return *this;
+	}
+	
+	template<CExecutor TExecutor, typename TCallable>
+	Future& OnCancel(TExecutor&& aExecutor, TCallable&& aCallback) requires std::is_invocable_v<TCallable>
+	{
+		if (!myState)
+			return *this;
+
+		myState->Cancellation([executor = std::forward<TExecutor>(aExecutor), callback = std::forward<TCallable>(aCallback)]() mutable
+		{
+			executor.Execute([callback = std::move(callback)]() mutable
+			{
+				(void)std::move(callback)();
 			});
 		});
 
@@ -493,6 +580,23 @@ public:
 
 		return *this;
 	}
+	
+	template<CExecutor TExecutor, typename TCallable>
+	Future& OnCancel(TExecutor&& aExecutor, TCallable&& aCallback) requires std::is_invocable_v<TCallable>
+	{
+		if (!myState)
+			return *this;
+
+		myState->Cancellation([executor = std::forward<TExecutor>(aExecutor), callback = std::forward<TCallable>(aCallback)]() mutable
+		{
+			executor.Execute([callback = std::move(callback)]() mutable
+			{
+				(void)std::move(callback)();
+			});
+		});
+
+		return *this;
+	}
 
 	void Detach()
 	{
@@ -642,6 +746,15 @@ inline [[nodiscard]] Future<void> WaitForAny(Future<TTypes>... aFutures)
 	constexpr auto waitFor = [](auto& aFuture, auto& aSharedPromise)
 	{
 		aFuture.ThenRun(InlineExecutor(), [promise = std::weak_ptr(aSharedPromise)](auto&&)
+		{
+			auto ptr = promise.lock();
+
+			if (!ptr)
+				return;
+
+			ptr->Complete();
+		});
+		aFuture.OnCancel(InlineExecutor(), [promise = std::weak_ptr(aSharedPromise)]()
 		{
 			auto ptr = promise.lock();
 

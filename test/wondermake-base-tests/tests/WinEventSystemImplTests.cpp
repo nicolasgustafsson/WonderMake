@@ -44,21 +44,21 @@ TEST_F(WinEventSystemImplTest, calls_setevent_when_registering_an_event)
 {
 	const HANDLE dummyInterruptEventHandle = (HANDLE)0x1234ABCD;
 	const HANDLE dummyEventHandle = (HANDLE)0x1234ABCD;
-	StrictMock<EventCallbackMock> eventCallbackMock;
-
-	auto eventCallback = [&eventCallbackMock]()
-	{
-		eventCallbackMock.Invoke();
-	};
-
+	
 	EXPECT_CALL(myWinPlatformSystem, CreateEventW)
 		.WillOnce(Return(dummyInterruptEventHandle));
 	EXPECT_CALL(myWinPlatformSystem, SetEvent(dummyInterruptEventHandle))
-		.Times(2);
+		.Times(3);
 
 	CreateEventSystem();
 
-	myWinEventSystem->RegisterEvent(dummyEventHandle, eventCallback);
+	{
+		const auto future = myWinEventSystem->RegisterEvent(dummyEventHandle);
+
+		ASSERT_TRUE(future.IsValid());
+		ASSERT_FALSE(future.IsCompleted());
+		ASSERT_FALSE(future.IsCanceled());
+	}
 }
 
 TEST_F(WinEventSystemImplTest, interrupt_event_is_passed_to_waitformultipleobjects)
@@ -81,16 +81,10 @@ TEST_F(WinEventSystemImplTest, interrupt_event_is_passed_to_waitformultipleobjec
 TEST_F(WinEventSystemImplTest, callback_event_is_passed_to_waitformultipleobjects)
 {
 	const HANDLE dummyEventHandle = (HANDLE)0x1234ABCD;
-	StrictMock<EventCallbackMock> eventCallbackMock;
-
-	auto eventCallback = [&eventCallbackMock]()
-	{
-		eventCallbackMock.Invoke();
-	};
-
+	
 	EXPECT_CALL(myWinPlatformSystem, CreateEventW);
 	EXPECT_CALL(myWinPlatformSystem, SetEvent)
-		.Times(2);
+		.Times(3);
 	EXPECT_CALL(myWinPlatformSystem, ResetEvent);
 	EXPECT_CALL(myWinPlatformSystem, WaitForMultipleObjects)
 		.With(Args<1, 0>(ElementsAre(_, dummyEventHandle)))
@@ -98,20 +92,18 @@ TEST_F(WinEventSystemImplTest, callback_event_is_passed_to_waitformultipleobject
 
 	CreateEventSystem();
 
-	myWinEventSystem->RegisterEvent(dummyEventHandle, eventCallback);
+	const auto future = myWinEventSystem->RegisterEvent(dummyEventHandle);
 
 	myWinEventSystem->WaitForEvent(0);
+
+	ASSERT_TRUE(future.IsValid());
+	ASSERT_FALSE(future.IsCompleted());
+	ASSERT_FALSE(future.IsCanceled());
 }
 
 TEST_F(WinEventSystemImplTest, callback_is_called_when_event_is_set)
 {
 	const HANDLE dummyEventHandle = (HANDLE)0x1234ABCD;
-	StrictMock<EventCallbackMock> eventCallbackMock;
-
-	auto eventCallback = [&eventCallbackMock]()
-	{
-		eventCallbackMock.Invoke();
-	};
 
 	EXPECT_CALL(myWinPlatformSystem, CreateEventW);
 	EXPECT_CALL(myWinPlatformSystem, SetEvent)
@@ -122,25 +114,21 @@ TEST_F(WinEventSystemImplTest, callback_is_called_when_event_is_set)
 	EXPECT_CALL(myWinPlatformSystem, WaitForSingleObject(dummyEventHandle, _))
 		.WillOnce(Return(WAIT_OBJECT_0));
 
-	EXPECT_CALL(eventCallbackMock, Invoke);
-
 	CreateEventSystem();
 
-	myWinEventSystem->RegisterEvent(dummyEventHandle, eventCallback);
+	const auto future = myWinEventSystem->RegisterEvent(dummyEventHandle);
 
 	myWinEventSystem->WaitForEvent(0);
+
+	ASSERT_TRUE(future.IsValid());
+	ASSERT_TRUE(future.IsCompleted());
+	ASSERT_FALSE(future.IsCanceled());
 }
 
-TEST_F(WinEventSystemImplTest, unregistered_callback_is_not_called_when_event_is_set)
+TEST_F(WinEventSystemImplTest, canceled_event_is_not_called_when_event_is_set)
 {
 	const HANDLE dummyEventHandle = (HANDLE)0x1234ABCD;
-	StrictMock<EventCallbackMock> eventCallbackMock;
-
-	auto eventCallback = [&eventCallbackMock]()
-	{
-		eventCallbackMock.Invoke();
-	};
-
+	
 	EXPECT_CALL(myWinPlatformSystem, CreateEventW);
 	EXPECT_CALL(myWinPlatformSystem, SetEvent)
 		.Times(3);
@@ -150,9 +138,7 @@ TEST_F(WinEventSystemImplTest, unregistered_callback_is_not_called_when_event_is
 
 	CreateEventSystem();
 
-	myWinEventSystem->RegisterEvent(dummyEventHandle, eventCallback);
-
-	myWinEventSystem->UnregisterEvent(dummyEventHandle);
+	(void)myWinEventSystem->RegisterEvent(dummyEventHandle);
 
 	myWinEventSystem->WaitForEvent(0);
 }

@@ -17,6 +17,7 @@ list(APPEND SourceFiles
     "../../lib/wondermake-io/source/SocketDecorator.cpp"
     "../../lib/wondermake-io/source/WinFileSystem.cpp"
     "../../lib/wondermake-io/source/WinIpcConnection.cpp"
+    "../../lib/wondermake-utility/source/AnyExecutor.cpp"
     "../../lib/wondermake-utility/source/Time.cpp")
     
 add_executable(WonderMakeIoTests ${SourceFiles})

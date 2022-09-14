@@ -18,6 +18,6 @@ class WinIpcSystem
 			STSingleton>>
 {
 public:
-	std::shared_ptr<IpcAcceptor> CreateAcceptor() override;
-	std::shared_ptr<IpcConnection> CreateConnection() override;
+	SharedReference<IpcAcceptor>	CreateAcceptor() override;
+	SharedReference<IpcConnection>	CreateConnection() override;
 };

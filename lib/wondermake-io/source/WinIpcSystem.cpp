@@ -9,12 +9,12 @@
 
 REGISTER_SYSTEM_MASKED(WinIpcSystem, IpcSystem);
 
-std::shared_ptr<IpcAcceptor> WinIpcSystem::CreateAcceptor()
+SharedReference<IpcAcceptor> WinIpcSystem::CreateAcceptor()
 {
-	return std::make_shared<WinIpcAcceptor>(Get<WinEventSystem>(), Get<WinPlatformSystem>());
+	return MakeSharedReference<WinIpcAcceptor>(GetExecutor(), Get<WinEventSystem>(), Get<WinPlatformSystem>());
 }
 
-std::shared_ptr<IpcConnection> WinIpcSystem::CreateConnection()
+SharedReference<IpcConnection> WinIpcSystem::CreateConnection()
 {
-	return std::make_shared<WinIpcConnection>(Get<WinEventSystem>(), Get<WinPlatformSystem>());
+	return MakeSharedReference<WinIpcConnection>(GetExecutor(), Get<WinEventSystem>(), Get<WinPlatformSystem>());
 }

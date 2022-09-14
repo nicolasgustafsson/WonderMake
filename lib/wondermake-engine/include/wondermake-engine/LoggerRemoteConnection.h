@@ -4,6 +4,7 @@
 
 #include "wondermake-base/Logger.h"
 
+#include "wondermake-utility/AnyExecutor.h"
 #include "wondermake-utility/SharedReference.h"
 
 #include <memory>
@@ -22,6 +23,8 @@ class LoggerRemoteConnection
 	, public std::enable_shared_from_this<LoggerRemoteConnection>
 {
 public:
+	LoggerRemoteConnection(AnyExecutor aExecutor) noexcept;
+
 	Result<void, IpcConnection::SConnectionError> ConnectIpc(SharedReference<IpcConnection> aConnection, std::string aIpcName);
 
 	void Print(ELogSeverity aSeverity, ELogLevel aLevel, std::string aLogMessage) override;
@@ -30,6 +33,7 @@ private:
 	void OnClosed(Result<Socket::SCloseLocation, Socket::SCloseError> aResult);
 
 	std::recursive_mutex myMutex;
+	AnyExecutor myExecutor;
 	std::shared_ptr<SocketSerializing<ProtoLoggerRemote::LogLine>> myConnection;
 
 };

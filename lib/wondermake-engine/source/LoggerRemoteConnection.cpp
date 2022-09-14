@@ -13,20 +13,24 @@ using namespace MemoryUnitLiterals;
 
 using ProtoLoggerRemote::LogLine;
 
+LoggerRemoteConnection::LoggerRemoteConnection(AnyExecutor aExecutor) noexcept
+	: myExecutor(std::move(aExecutor))
+{}
+
 Result<void, IpcConnection::SConnectionError> LoggerRemoteConnection::ConnectIpc(SharedReference<IpcConnection> aConnection, std::string aIpcName)
 {
-	std::lock_guard<decltype(myMutex)> lock(myMutex);
+	std::lock_guard lock(myMutex);
 
 	auto result = aConnection->Connect(std::move(aIpcName));
 
 	if (!result)
 		return result;
 
-	auto connectionRef = SharedReference<Socket>::FromPointer(std::move(aConnection)).Unwrap();
+	myConnection = std::make_shared<SocketSerializingImpl<ProtoLoggerRemote::LogLine>>(myExecutor, 4_KiB, &SerializeLogline, &DeserializeLogline, std::move(aConnection));
 
-	myConnection = std::make_shared<SocketSerializingImpl<ProtoLoggerRemote::LogLine>>(4_KiB, &SerializeLogline, &DeserializeLogline, std::move(connectionRef));
-
-	myConnection->OnClose(Bind(&LoggerRemoteConnection::OnClosed, weak_from_this()));
+	myConnection->OnClose()
+		.ThenRun(myExecutor, MoveFutureResult(Bind(&LoggerRemoteConnection::OnClosed, weak_from_this())))
+		.Detach();
 
 	Logger::Get().AddLogger(weak_from_this());
 
@@ -35,7 +39,7 @@ Result<void, IpcConnection::SConnectionError> LoggerRemoteConnection::ConnectIpc
 
 void LoggerRemoteConnection::Print(ELogSeverity aSeverity, ELogLevel aLevel, std::string aLogMessage)
 {
-	std::lock_guard<decltype(myMutex)> lock(myMutex);
+	std::lock_guard lock(myMutex);
 
 	if (!myConnection
 		|| myConnection->GetState() != Socket::EState::Open)
@@ -47,18 +51,20 @@ void LoggerRemoteConnection::Print(ELogSeverity aSeverity, ELogLevel aLevel, std
 	logline.set_level(static_cast<LogLine::ELogLevel>(aLevel));
 	logline.set_severity(static_cast<LogLine::ELogSeverity>(aSeverity));
 
-	myConnection->WriteMessage(logline, [](auto aResult)
-		{
-			if (aResult)
-				return;
+	myConnection->WriteMessage(logline)
+		.ThenRun(myExecutor, MoveFutureResult([](auto aResult)
+			{
+				if (aResult)
+					return;
 
-			WmLogError(TagWonderMake << TagWmLoggerRemote << "Failed to write to log connection. Error: " << aResult.Err() << '.');
-		});
+				WmLogError(TagWonderMake << TagWmLoggerRemote << "Failed to write to log connection. Error: " << aResult.Err() << '.');
+			}))
+		.Detach();
 }
 
 void LoggerRemoteConnection::OnClosed(Result<Socket::SCloseLocation, Socket::SCloseError> aResult)
 {
-	std::lock_guard<decltype(myMutex)> lock(myMutex);
+	std::lock_guard lock(myMutex);
 
 	myConnection.reset();
 

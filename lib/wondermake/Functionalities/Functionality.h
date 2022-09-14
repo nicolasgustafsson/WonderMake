@@ -24,6 +24,11 @@ public:
 		myInjectedDependencies.emplace(std::move(aDependencies));
 	}
 
+	inline InlineExecutor GetExecutor()
+	{
+		return InlineExecutor();
+	}
+
 	template<typename TDependency> requires
 		TPolicySet::template HasPolicy_v<TDependency, PWrite>
 		constexpr __forceinline TDependency& Get() noexcept

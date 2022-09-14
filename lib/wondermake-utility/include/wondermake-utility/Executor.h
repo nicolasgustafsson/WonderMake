@@ -3,7 +3,7 @@
 #include "wondermake-utility/UniqueFunction.h"
 
 template<typename TExecutor>
-concept CExecutor = requires(const TExecutor aExecutor, Closure aClosure)
+concept CExecutor = requires(TExecutor aExecutor, Closure aClosure)
 {
 	aExecutor.Execute(std::move(aClosure));
 };

@@ -7,8 +7,7 @@
 #include "wondermake-base/System.h"
 
 #include "wondermake-utility/Result.h"
-
-#include <memory>
+#include "wondermake-utility/SharedReference.h"
 
 class IpcSystem;
 class LoggerRemoteConnection;
@@ -23,8 +22,8 @@ class LoggerRemoteSystem
 			STSingleton>>
 {
 public:
-	Result<std::shared_ptr<LoggerRemoteSocket>, IpcAcceptor::SOpenError> OpenSocketIpc(std::string aName);
+	Result<SharedReference<LoggerRemoteSocket>, IpcAcceptor::SOpenError> OpenSocketIpc(std::string aName);
 
-	Result<std::shared_ptr<LoggerRemoteConnection>, IpcConnection::SConnectionError> ConnectIpc(std::string aName);
+	Result<SharedReference<LoggerRemoteConnection>, IpcConnection::SConnectionError> ConnectIpc(std::string aName);
 
 };

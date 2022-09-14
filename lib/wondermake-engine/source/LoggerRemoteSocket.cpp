@@ -3,7 +3,6 @@
 #include "LoggerRemoteMessage.h"
 
 #include "wondermake-io/IpcConnection.h"
-#include "wondermake-io/IpcSystem.h"
 #include "wondermake-io/SocketSerializingImpl.h"
 
 #include "wondermake-base/LoggerTypes.h"
@@ -13,47 +12,81 @@
 
 using namespace MemoryUnitLiterals;
 
+LoggerRemoteSocket::LoggerRemoteSocket(AnyExecutor aExecutor) noexcept
+	: myExecutor(std::move(aExecutor))
+{}
+
 Result<void, IpcAcceptor::SOpenError> LoggerRemoteSocket::OpenIpc(SharedReference<IpcAcceptor> aAcceptor, std::string aIpcName)
 {
+	std::unique_lock lock(myMutex);
+
 	myAcceptor = std::move(aAcceptor);
 
-	return myAcceptor->Open(std::move(aIpcName),
-		{
-			Bind(&LoggerRemoteSocket::OnConnection, weak_from_this()),
-			Bind(&LoggerRemoteSocket::OnIpcClosed, weak_from_this())
-		});
+	const auto result = myAcceptor->Open(std::move(aIpcName));
+
+	if (result)
+	{
+		auto futureClose = myAcceptor->OnClose();
+		auto futureConnection = myAcceptor->OnConnection();
+
+		lock.unlock();
+
+		futureClose
+			.ThenRun(myExecutor, Bind(&LoggerRemoteSocket::OnIpcClosed, weak_from_this()))
+			.Detach();
+		futureConnection
+			.ThenRun(myExecutor, MoveFutureResult(Bind(&LoggerRemoteSocket::OnConnection, weak_from_this())))
+			.Detach();
+	}
+
+	return result;
 }
 
-void LoggerRemoteSocket::OnConnection(std::shared_ptr<Socket>&& aConnection)
+void LoggerRemoteSocket::OnConnection(IpcAcceptor::ResultTypeConnection&& aResult)
 {
-	auto connectionRef = SharedReference<Socket>::FromPointer(aConnection).Unwrap();
+	if (!aResult)
+	{
+		WmLogError(TagWonderMake << TagWmLoggerRemote << "IPC connection error: " << aResult.Err() << '.');
 
-	auto socket = std::make_shared<SocketSerializingImpl<ProtoLoggerRemote::LogLine>>(4_KiB, &SerializeLogline, &DeserializeLogline, std::move(connectionRef));
+		return;
+	}
+	
+	std::unique_lock lock(myMutex);
 
-	myConnections.emplace(aConnection, socket);
+	auto& connection = aResult.Unwrap();
 
-	socket->OnClose(Bind(&LoggerRemoteSocket::OnConnectionClosed, weak_from_this(), std::weak_ptr(aConnection)));
+	auto socket = std::make_shared<SocketSerializingImpl<ProtoLoggerRemote::LogLine>>(myExecutor, 4_KiB, &SerializeLogline, &DeserializeLogline, connection);
 
-	const auto result = socket->ReadMessage(Bind(&LoggerRemoteSocket::OnConnectionMessage, weak_from_this(), std::weak_ptr(aConnection)));
+	myConnections.emplace(connection, socket);
 
-	if (!result)
-		WmLogError(TagWonderMake << TagWmLoggerRemote << "Failed to read from remote connection, error: " << result.Err() << '.');
+	auto self = weak_from_this();
+
+	lock.unlock();
+
+	socket->OnClose()
+		.ThenRun(myExecutor, MoveFutureResult(Bind(&LoggerRemoteSocket::OnConnectionClosed, self, std::weak_ptr<Socket>(connection))))
+		.Detach();
+
+	socket->ReadMessage()
+		.ThenRun(myExecutor, MoveFutureResult(Bind(&LoggerRemoteSocket::OnConnectionMessage, std::move(self), std::weak_ptr<Socket>(connection))))
+		.Detach();
 }
 
-void LoggerRemoteSocket::OnIpcClosed(Result<void, IpcAcceptor::SCloseError> aResult)
+void LoggerRemoteSocket::OnIpcClosed(const IpcAcceptor::FutureTypeClose&)
 {
-	if (aResult)
-		WmLogInfo(TagWonderMake << TagWmLoggerRemote << "Remote IPC log socket closed.");
-	else
-		WmLogError(TagWonderMake << TagWmLoggerRemote << "Remote IPC log socket closed, error: " << aResult.Err() << '.');
+	WmLogInfo(TagWonderMake << TagWmLoggerRemote << "Remote IPC log socket closed.");
 }
 
 void LoggerRemoteSocket::OnConnectionMessage(std::weak_ptr<Socket> aConnection, Result<ProtoLoggerRemote::LogLine, Socket::SReadError>&& aResult)
 {
-	auto connection = aConnection.lock();
+	auto connectionResult = SharedReference<Socket>::FromPointer(aConnection.lock());
 
-	if (!connection)
+	if (!connectionResult)
 		return;
+
+	auto& connection = connectionResult.Unwrap();
+
+	std::unique_lock lock(myMutex);
 
 	const auto it = myConnections.find(connection);
 
@@ -77,18 +110,24 @@ void LoggerRemoteSocket::OnConnectionMessage(std::weak_ptr<Socket> aConnection, 
 
 	Logger::Get().Print(static_cast<ELogSeverity>(message.severity()), static_cast<ELogLevel>(message.level()), message.log());
 	
-	const auto result = it->second->ReadMessage(Bind(&LoggerRemoteSocket::OnConnectionMessage, weak_from_this(), std::weak_ptr(aConnection)));
+	auto future = it->second->ReadMessage();
 
-	if (!result)
-		WmLogError(TagWonderMake << TagWmLoggerRemote << "Failed to read from log connection, error: " << result.Err() << '.');
+	lock.unlock();
+
+	future.ThenRun(myExecutor, MoveFutureResult(Bind(&LoggerRemoteSocket::OnConnectionMessage, weak_from_this(), std::move(aConnection))))
+		.Detach();
 }
 
 void LoggerRemoteSocket::OnConnectionClosed(std::weak_ptr<Socket> aConnection, Result<Socket::SCloseLocation, Socket::SCloseError> aResult)
 {
-	const auto connection = aConnection.lock();
+	std::lock_guard lock(myMutex);
 
-	if (!connection)
+	auto connectionResult = SharedReference<Socket>::FromPointer(aConnection.lock());
+
+	if (!connectionResult)
 		return;
+
+	auto& connection = connectionResult.Unwrap();
 
 	const auto it = myConnections.find(connection);
 

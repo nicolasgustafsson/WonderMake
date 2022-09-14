@@ -11,46 +11,28 @@
 
 REGISTER_SYSTEM(LoggerRemoteSystem);
 
-Result<std::shared_ptr<LoggerRemoteSocket>, IpcAcceptor::SOpenError> LoggerRemoteSystem::OpenSocketIpc(std::string aName)
+Result<SharedReference<LoggerRemoteSocket>, IpcAcceptor::SOpenError> LoggerRemoteSystem::OpenSocketIpc(std::string aName)
 {
 	auto ipcAcceptor = Get<IpcSystem>().CreateAcceptor();
+	auto lrSocket = MakeSharedReference<LoggerRemoteSocket>(GetExecutor());
 
-	auto ipcAcceptorRef = SharedReference<IpcAcceptor>::FromPointer(std::move(ipcAcceptor));
-
-	if (!ipcAcceptorRef)
-		return Err(IpcAcceptor::SOpenError{ IpcAcceptor::EOpenError::OutOfMemory });
-
-	auto lrSocket = std::make_shared<LoggerRemoteSocket>();
-
-	if (!lrSocket)
-		return Err(IpcAcceptor::SOpenError{ IpcAcceptor::EOpenError::OutOfMemory });
-
-	auto resultOpen = lrSocket->OpenIpc(std::move(ipcAcceptorRef).Unwrap(), std::move(aName));
+	auto resultOpen = lrSocket->OpenIpc(std::move(ipcAcceptor), std::move(aName));
 
 	if (!resultOpen)
-		return Err(std::move(resultOpen).Err());
+		return Err(resultOpen.Err());
 
-	return Ok(lrSocket);
+	return Ok(std::move(lrSocket));
 }
 
-Result<std::shared_ptr<LoggerRemoteConnection>, IpcConnection::SConnectionError> LoggerRemoteSystem::ConnectIpc(std::string aName)
+Result<SharedReference<LoggerRemoteConnection>, IpcConnection::SConnectionError> LoggerRemoteSystem::ConnectIpc(std::string aName)
 {
 	auto ipcConnection = Get<IpcSystem>().CreateConnection();
+	auto lrConnection = MakeSharedReference<LoggerRemoteConnection>(GetExecutor());
 
-	auto ipcConnectionRef = SharedReference<IpcConnection>::FromPointer(std::move(ipcConnection));
-
-	if (!ipcConnectionRef)
-		return Err(IpcConnection::SConnectionError{ IpcConnection::EConnectionError::OutOfMemory });
-
-	auto lrConnection = std::make_shared<LoggerRemoteConnection>();
-
-	if (!lrConnection)
-		return Err(IpcConnection::SConnectionError{ IpcConnection::EConnectionError::OutOfMemory });
-
-	auto resultConnection = lrConnection->ConnectIpc(std::move(ipcConnectionRef).Unwrap(), std::move(aName));
+	auto resultConnection = lrConnection->ConnectIpc(std::move(ipcConnection), std::move(aName));
 
 	if (!resultConnection)
-		return Err(std::move(resultConnection).Err());
+		return Err(resultConnection.Err());
 
-	return Ok(lrConnection);
+	return Ok(std::move(lrConnection));
 }

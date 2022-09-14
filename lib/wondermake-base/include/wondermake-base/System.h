@@ -3,6 +3,7 @@
 #include "SystemPolicy.h"
 #include "SystemTraits.h"
 
+#include "wondermake-utility/Executor.h"
 #include "wondermake-utility/RestrictTypes.h"
 
 #include <optional>
@@ -32,6 +33,11 @@ public:
 	}
 
 	virtual void Initialize() {};
+
+	inline InlineExecutor GetExecutor()
+	{
+		return InlineExecutor();
+	}
 
 protected:
 	inline SystemSub() noexcept

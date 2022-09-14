@@ -13,9 +13,7 @@ conan_cmake_run(CONANFILE "conanfile.txt"
 
 conan_basic_setup()
 
-# Without adding this, the magic_enum package can't be found by the cmake generator if not run by Visual Studio.
-# The issue can be reproduced by commenting this line and running cmake. However it did not reproduce if run from a development console, which is probably why it works in Visual Studio.
-# This should be investigated further, but works for now.
+# Need to add the binary directory here, otherwise cmake can't find config packages.
 LIST(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR})
 
 find_package(Protobuf REQUIRED)

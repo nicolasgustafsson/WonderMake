@@ -16,6 +16,11 @@ class JobBase
 {
 public:
 	virtual ~JobBase() = default;
+
+	inline InlineExecutor GetExecutor()
+	{
+		return InlineExecutor();
+	}
 };
 
 namespace _Impl

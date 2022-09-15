@@ -12,6 +12,7 @@ using ::testing::_;
 using ::testing::Args;
 using ::testing::ElementsAre;
 using ::testing::Return;
+using ::testing::ByMove;
 
 using ::testing::AllOf;
 using ::testing::Eq;

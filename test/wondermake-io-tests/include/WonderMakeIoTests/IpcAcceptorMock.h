@@ -22,7 +22,7 @@ public:
 		ON_CALL(*this, OnConnection)
 			.WillByDefault(Return(MakeCompletedFuture<ResultTypeConnection>(Err(SConnectionError{ EConnectionError::InternalError }))));
 		ON_CALL(*this, OnClose)
-			.WillByDefault(Return(MakeCompletedFuture<ResultTypeClose>(Err(SCloseError{ ECloseError::InternalError }))));
+			.WillByDefault(Return(MakeCompletedFuture<void>()));
 
 		ON_CALL(*this, GetState)
 			.WillByDefault(Return(EState::Closed));
@@ -36,12 +36,6 @@ inline std::ostream& operator<<(std::ostream& out, const IpcAcceptor::SOpenError
 		<< aError.Reason << '}';
 }
 inline std::ostream& operator<<(std::ostream& out, const IpcAcceptor::SConnectionError& aError)
-{
-	return out << '{'
-		<< static_cast<std::underlying_type_t<decltype(aError.Error)>>(aError.Error) << ','
-		<< aError.Reason << '}';
-}
-inline std::ostream& operator<<(std::ostream& out, const IpcAcceptor::SCloseError& aError)
 {
 	return out << '{'
 		<< static_cast<std::underlying_type_t<decltype(aError.Error)>>(aError.Error) << ','
@@ -78,22 +72,6 @@ MATCHER_P(IpcAcceptorConnectionResultMatcher, aResult, "")
 			AllOf(
 				Field("Error", &IpcAcceptor::SConnectionError::Error, argResult.Err().Error),
 				Field("Reason", &IpcAcceptor::SConnectionError::Reason, argResult.Err().Reason)),
-			arg.Err(), result_listener);
-
-	return false;
-}
-MATCHER_P(IpcAcceptorCloseResultMatcher, aResult, "")
-{
-	IpcAcceptor::ResultTypeClose argResult = aResult;
-
-	if (arg && argResult)
-		return true;
-
-	if(!arg && !argResult)
-		return ExplainMatchResult(
-			AllOf(
-				Field("Error", &IpcAcceptor::SCloseError::Error, argResult.Err().Error),
-				Field("Reason", &IpcAcceptor::SCloseError::Reason, argResult.Err().Reason)),
 			arg.Err(), result_listener);
 
 	return false;

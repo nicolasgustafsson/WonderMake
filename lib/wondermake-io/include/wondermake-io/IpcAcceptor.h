@@ -1,12 +1,12 @@
 #pragma once
 
+#include "wondermake-utility/Future.h"
 #include "wondermake-utility/Result.h"
-#include "wondermake-utility/UniqueFunction.h"
+#include "wondermake-utility/SharedReference.h"
 
 #include <magic_enum.hpp>
 
 #include <memory>
-#include <functional>
 
 class IpcConnection;
 
@@ -26,8 +26,9 @@ public:
 		OutOfMemory,
 		InternalError
 	};
-	enum class ECloseError
+	enum class EConnectionError
 	{
+		InvalidState,
 		OutOfMemory,
 		InternalError
 	};
@@ -37,25 +38,24 @@ public:
 		EOpenError Error = EOpenError::InternalError;
 		u64 Reason = 0;
 	};
-	struct SCloseError
+	struct SConnectionError
 	{
-		ECloseError Error = ECloseError::InternalError;
+		EConnectionError Error = EConnectionError::InternalError;
 		u64 Reason = 0;
 	};
 
-	using OnConnectionCallback = std::function<void(std::shared_ptr<IpcConnection>&&)>;
-	using OnCloseCallback = UniqueFunction<void(Result<void, SCloseError>)>;
+	using ResultTypeOpen		= Result<void, SOpenError>;
+	using ResultTypeConnection	= Result<SharedReference<IpcConnection>, SConnectionError>;
 
-	struct CallbackInfo
-	{
-		OnConnectionCallback	OnConnection;
-		OnCloseCallback			OnClose = [](auto) {};
-	};
+	using FutureTypeConnection	= Future<ResultTypeConnection>;
+	using FutureTypeClose		= Future<void>;
 
 	virtual ~IpcAcceptor() noexcept = default;
 
-	virtual Result<void, SOpenError> Open(std::string aName, CallbackInfo&& aCallbackInfo) = 0;
-	virtual void Close() = 0;
+	virtual ResultTypeOpen			Open(std::string aName) = 0;
+	virtual FutureTypeConnection	OnConnection() = 0;
+	virtual FutureTypeClose			OnClose() = 0;
+	virtual void					Close() = 0;
 
 	virtual EState GetState() const noexcept = 0;
 
@@ -68,7 +68,7 @@ inline static void WmLogStream(std::ostream& aStream, const IpcAcceptor::SOpenEr
 {
 	aStream << magic_enum::enum_name(aError.Error) << '(' << static_cast<std::underlying_type_t<decltype(aError.Error)>>(aError.Error) << ':' << aError.Reason << ')';
 }
-inline static void WmLogStream(std::ostream& aStream, const IpcAcceptor::SCloseError& aError)
+inline static void WmLogStream(std::ostream& aStream, const IpcAcceptor::SConnectionError& aError)
 {
 	aStream << magic_enum::enum_name(aError.Error) << '(' << static_cast<std::underlying_type_t<decltype(aError.Error)>>(aError.Error) << ':' << aError.Reason << ')';
 }

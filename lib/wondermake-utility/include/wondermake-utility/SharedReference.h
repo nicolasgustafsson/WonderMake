@@ -18,9 +18,31 @@ public:
 
 	SharedReference(const SharedReference&) noexcept = default;
 	SharedReference(SharedReference&&) noexcept = default;
+	template<typename TChild>
+	inline SharedReference(const SharedReference<TChild>& aRhs) noexcept requires(std::is_constructible_v<std::shared_ptr<TType>, std::shared_ptr<TChild>>)
+		: myPointer(aRhs)
+	{}
+	template<typename TChild>
+	inline SharedReference(SharedReference<TChild>&& aRhs) noexcept requires(std::is_constructible_v<std::shared_ptr<TType>, std::shared_ptr<TChild>>)
+		: myPointer(std::move(aRhs))
+	{}
 
 	SharedReference& operator=(const SharedReference&) noexcept = default;
 	SharedReference& operator=(SharedReference &&) noexcept = default;
+	template<typename TChild>
+	SharedReference& operator=(const SharedReference<TChild>& aRhs) noexcept
+	{
+		myPointer = aRhs;
+
+		return *this;
+	}
+	template<typename TChild>
+	SharedReference& operator=(SharedReference<TChild>&& aRhs) noexcept
+	{
+		myPointer = std::move(aRhs);
+
+		return *this;
+	}
 
 	bool operator==(const SharedReference&) const noexcept = default;
 
@@ -51,16 +73,6 @@ public:
 	inline [[nodiscard]] operator std::shared_ptr<TToType>() const&& noexcept requires(std::is_constructible_v<std::shared_ptr<TToType>, std::shared_ptr<TType>>)
 	{
 		return std::move(myPointer);
-	}
-	template<typename TParent>
-	inline [[nodiscard]] operator SharedReference<TParent>() const& noexcept requires(std::is_constructible_v<std::shared_ptr<TParent>, std::shared_ptr<TType>>)
-	{
-		return SharedReference<TParent>(myPointer);
-	}
-	template<typename TParent>
-	inline [[nodiscard]] operator SharedReference<TParent>() const&& noexcept requires(std::is_constructible_v<std::shared_ptr<TParent>, std::shared_ptr<TType>>)
-	{
-		return SharedReference<TParent>(std::move(myPointer));
 	}
 
 private:

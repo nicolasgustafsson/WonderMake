@@ -769,10 +769,13 @@ auto MakeAsync()
 	return std::make_pair(std::move(promise), std::move(future));
 }
 
-template<typename TArg>
-Future<std::decay_t<TArg>> MakeCompletedFuture(TArg&& aArgs)
+template<typename TFutureType>
+Future<TFutureType> MakeCompletedFuture();
+
+template<typename TFutureType, typename TArg>
+inline Future<TFutureType> MakeCompletedFuture(TArg&& aArgs)
 {
-	auto sharedState = std::make_shared<_Impl::FutureSharedState<std::decay_t<TArg>>>();
+	auto sharedState = std::make_shared<_Impl::FutureSharedState<TFutureType>>();
 	InlineExecutor executor;
 
 	sharedState->Complete(executor, std::forward<TArg>(aArgs));
@@ -780,8 +783,8 @@ Future<std::decay_t<TArg>> MakeCompletedFuture(TArg&& aArgs)
 	return std::move(sharedState);
 }
 
-template<typename TArg>
-Future<void> MakeCompletedFuture(void)
+template<>
+inline Future<void> MakeCompletedFuture<void>(void)
 {
 	auto sharedState = std::make_shared<_Impl::FutureSharedState<void>>();
 	InlineExecutor executor;

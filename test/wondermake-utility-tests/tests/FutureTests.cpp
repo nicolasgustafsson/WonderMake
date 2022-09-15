@@ -569,7 +569,7 @@ TEST(FutureTests, make_completed_future_returns_a_future_with_completed_state)
 {
 	constexpr u32 dummyData = 1234;
 
-	auto future = MakeCompletedFuture(dummyData);
+	auto future = MakeCompletedFuture<u32>(dummyData);
 
 	EXPECT_TRUE(future.IsCompleted());
 	EXPECT_FALSE(future.IsCanceled());
@@ -849,7 +849,7 @@ TEST(FutureTests, make_completed_unique_future_returns_a_future_with_completed_s
 {
 	constexpr u32 dummyResult = 1234;
 
-	auto future = MakeCompletedFuture(std::make_unique<u32>(dummyResult));
+	auto future = MakeCompletedFuture<std::unique_ptr<u32>>(std::make_unique<u32>(dummyResult));
 
 	ASSERT_TRUE(future.IsCompleted());
 	ASSERT_FALSE(future.IsCanceled());

@@ -215,6 +215,28 @@ TEST(FutureTests, cancelling_void_promise_with_no_futures_returns_false)
 	EXPECT_FALSE(promise.Cancel());
 }
 
+TEST(FutureTests, promise_is_valid_while_future_exists)
+{
+	auto [promise, future] = MakeAsync<u32>();
+
+	EXPECT_TRUE(promise.IsValid());
+
+	future.Reset();
+
+	EXPECT_FALSE(promise.IsValid());
+}
+
+TEST(FutureTests, void_promise_is_valid_while_future_exists)
+{
+	auto [promise, future] = MakeAsync<void>();
+
+	EXPECT_TRUE(promise.IsValid());
+
+	future.Reset();
+
+	EXPECT_FALSE(promise.IsValid());
+}
+
 TEST(FutureTests, void_futures_are_unfulfilled_when_created)
 {
 	StrictMock<FutureCallbackMock<void>> callbackMock;

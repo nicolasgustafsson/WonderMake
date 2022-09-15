@@ -8,6 +8,7 @@ list(APPEND SourceFiles
     "Tests/SocketDecoratorTests.cpp"
     "Tests/SocketSerializingImplTests.cpp"
     "Tests/WinFileSystemTests.cpp"
+    "Tests/WinIpcAcceptorTests.cpp"
     "Tests/WinIpcConnectionTests.cpp")
     
 list(APPEND SourceFiles
@@ -16,6 +17,7 @@ list(APPEND SourceFiles
     "../../lib/wondermake-base/source/Logger.cpp"
     "../../lib/wondermake-io/source/SocketDecorator.cpp"
     "../../lib/wondermake-io/source/WinFileSystem.cpp"
+    "../../lib/wondermake-io/source/WinIpcAcceptor.cpp"
     "../../lib/wondermake-io/source/WinIpcConnection.cpp"
     "../../lib/wondermake-utility/source/AnyExecutor.cpp"
     "../../lib/wondermake-utility/source/Time.cpp")

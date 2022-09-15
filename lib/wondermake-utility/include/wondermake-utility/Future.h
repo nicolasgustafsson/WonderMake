@@ -311,6 +311,11 @@ public:
 	}
 
 	Promise& operator=(Promise&&) noexcept = default;
+	
+	[[nodiscard]] bool IsValid() const
+	{
+		return !myState.expired();
+	}
 
 	template<CExecutor TExecutor>
 	bool Cancel(TExecutor& aExecutor)
@@ -386,6 +391,11 @@ public:
 	}
 
 	Promise& operator=(Promise&&) noexcept = default;
+
+	[[nodiscard]] bool IsValid() const
+	{
+		return !myState.expired();
+	}
 
 	template<CExecutor TExecutor>
 	bool Cancel(TExecutor& aExecutor)

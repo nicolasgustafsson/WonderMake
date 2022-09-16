@@ -1,5 +1,6 @@
 #include "wondermake-tests-common/GTestInclude.h"
 
+#include "wondermake-utility/BufferExecutor.h"
 #include "wondermake-utility/Future.h"
 #include "wondermake-utility/Typedefs.h"
 
@@ -76,6 +77,142 @@ TEST(FutureTests, void_future_is_valid_returns_false_when_reset)
 	future.Reset();
 
 	EXPECT_FALSE(future.IsValid());
+}
+
+TEST(FutureTests, completing_promise_returns_true)
+{
+	auto [promise, future] = MakeAsync<u32>();
+
+	EXPECT_TRUE(promise.Complete(0));
+}
+
+TEST(FutureTests, completing_void_promise_returns_true)
+{
+	auto [promise, future] = MakeAsync<void>();
+
+	EXPECT_TRUE(promise.Complete());
+}
+
+TEST(FutureTests, completing_completed_promise_returns_false)
+{
+	auto [promise, future] = MakeAsync<u32>();
+
+	promise.Complete(0);
+
+	EXPECT_FALSE(promise.Complete(0));
+}
+
+TEST(FutureTests, completing_completed_void_promise_returns_false)
+{
+	auto [promise, future] = MakeAsync<void>();
+
+	promise.Complete();
+
+	EXPECT_FALSE(promise.Complete());
+}
+
+TEST(FutureTests, completing_cancelled_promise_returns_false)
+{
+	auto [promise, future] = MakeAsync<u32>();
+
+	promise.Cancel();
+
+	EXPECT_FALSE(promise.Complete(0));
+}
+
+TEST(FutureTests, completing_cancelled_void_promise_returns_false)
+{
+	auto [promise, future] = MakeAsync<void>();
+
+	promise.Cancel();
+
+	EXPECT_FALSE(promise.Complete());
+}
+
+TEST(FutureTests, completing_promise_with_no_futures_returns_false)
+{
+	auto [promise, future] = MakeAsync<u32>();
+
+	future.Reset();
+
+	EXPECT_FALSE(promise.Complete(0));
+}
+
+TEST(FutureTests, completing_void_promise_with_no_futures_returns_false)
+{
+	auto [promise, future] = MakeAsync<void>();
+
+	future.Reset();
+
+	EXPECT_FALSE(promise.Complete());
+}
+
+TEST(FutureTests, cancelling_promise_returns_true)
+{
+	auto [promise, future] = MakeAsync<u32>();
+
+	EXPECT_TRUE(promise.Cancel());
+}
+
+TEST(FutureTests, cancelling_void_promise_returns_true)
+{
+	auto [promise, future] = MakeAsync<void>();
+
+	EXPECT_TRUE(promise.Cancel());
+}
+
+TEST(FutureTests, cancelling_completed_promise_returns_false)
+{
+	auto [promise, future] = MakeAsync<u32>();
+
+	promise.Complete(0);
+
+	EXPECT_FALSE(promise.Cancel());
+}
+
+TEST(FutureTests, cancelling_completed_void_promise_returns_false)
+{
+	auto [promise, future] = MakeAsync<void>();
+
+	promise.Complete();
+
+	EXPECT_FALSE(promise.Cancel());
+}
+
+TEST(FutureTests, cancelling_cancelled_promise_returns_false)
+{
+	auto [promise, future] = MakeAsync<u32>();
+
+	promise.Cancel();
+
+	EXPECT_FALSE(promise.Cancel());
+}
+
+TEST(FutureTests, cancelling_cancelled_void_promise_returns_false)
+{
+	auto [promise, future] = MakeAsync<void>();
+
+	promise.Cancel();
+
+	EXPECT_FALSE(promise.Cancel());
+}
+
+TEST(FutureTests, cancelling_promise_with_no_futures_returns_false)
+{
+	auto [promise, future] = MakeAsync<u32>();
+
+	future.Reset();
+
+	EXPECT_FALSE(promise.Cancel());
+}
+
+TEST(FutureTests, cancelling_void_promise_with_no_futures_returns_false)
+{
+	auto [promise, future] = MakeAsync<void>();
+
+	future.Reset();
+
+	EXPECT_FALSE(promise.Cancel());
 }
 
 TEST(FutureTests, void_futures_are_unfulfilled_when_created)
@@ -927,6 +1064,126 @@ TEST(FutureTests, cancellation_callback_is_called_when_void_promise_calls_cancel
 	EXPECT_CALL(callbackMock, Invoke);
 
 	promise.Cancel();
+}
+
+TEST(FutureTests, continuations_are_called_when_using_a_bufferexecutor)
+{
+	StrictMock<FutureCallbackMock<u32>> callbackMock;
+	auto [promise, future] = MakeAsync<u32>();
+	BufferExecutor executor;
+
+	future.ThenRun(InlineExecutor(), callbackMock.CreateCallback());
+
+	promise.Complete(executor, 0);
+
+	EXPECT_CALL(callbackMock, Invoke);
+
+	executor.ExecuteAll();
+}
+
+TEST(FutureTests, void_continuations_are_called_when_using_a_bufferexecutor)
+{
+	StrictMock<FutureCallbackMock<void>> callbackMock;
+	auto [promise, future] = MakeAsync<void>();
+	BufferExecutor executor;
+
+	future.ThenRun(InlineExecutor(), callbackMock.CreateCallback());
+
+	promise.Complete(executor);
+
+	EXPECT_CALL(callbackMock, Invoke);
+
+	executor.ExecuteAll();
+}
+
+TEST(FutureTests, continuations_are_not_called_when_no_futures_remain_when_using_a_bufferexecutor)
+{
+	StrictMock<FutureCallbackMock<u32>> callbackMock;
+	auto [promise, future] = MakeAsync<u32>();
+	BufferExecutor executor;
+
+	future.ThenRun(InlineExecutor(), callbackMock.CreateCallback());
+
+	promise.Complete(executor, 0);
+
+	future.Reset();
+
+	executor.ExecuteAll();
+}
+
+TEST(FutureTests, void_continuations_are_not_called_when_no_futures_remain_when_using_a_bufferexecutor)
+{
+	StrictMock<FutureCallbackMock<void>> callbackMock;
+	auto [promise, future] = MakeAsync<void>();
+	BufferExecutor executor;
+
+	future.ThenRun(InlineExecutor(), callbackMock.CreateCallback());
+
+	promise.Complete(executor);
+
+	future.Reset();
+
+	executor.ExecuteAll();
+}
+
+TEST(FutureTests, cancellations_are_called_when_using_a_bufferexecutor)
+{
+	StrictMock<CancellationCallbackMock> callbackMock;
+	auto [promise, future] = MakeAsync<u32>();
+	BufferExecutor executor;
+
+	future.OnCancel(InlineExecutor(), callbackMock.CreateCallback());
+
+	promise.Cancel(executor);
+
+	EXPECT_CALL(callbackMock, Invoke);
+
+	executor.ExecuteAll();
+}
+
+TEST(FutureTests, void_cancellations_are_called_when_using_a_bufferexecutor)
+{
+	StrictMock<CancellationCallbackMock> callbackMock;
+	auto [promise, future] = MakeAsync<void>();
+	BufferExecutor executor;
+
+	future.OnCancel(InlineExecutor(), callbackMock.CreateCallback());
+
+	promise.Cancel(executor);
+
+	EXPECT_CALL(callbackMock, Invoke);
+
+	executor.ExecuteAll();
+}
+
+TEST(FutureTests, cancellations_are_not_called_when_no_futures_remain_when_using_a_bufferexecutor)
+{
+	StrictMock<CancellationCallbackMock> callbackMock;
+	auto [promise, future] = MakeAsync<u32>();
+	BufferExecutor executor;
+
+	future.OnCancel(InlineExecutor(), callbackMock.CreateCallback());
+
+	promise.Cancel(executor);
+
+	future.Reset();
+
+	executor.ExecuteAll();
+}
+
+TEST(FutureTests, void_cancellations_are_not_called_when_no_futures_remain_when_using_a_bufferexecutor)
+{
+	StrictMock<CancellationCallbackMock> callbackMock;
+	auto [promise, future] = MakeAsync<void>();
+	BufferExecutor executor;
+
+	future.OnCancel(InlineExecutor(), callbackMock.CreateCallback());
+
+	promise.Cancel(executor);
+
+	future.Reset();
+
+	executor.ExecuteAll();
 }
 
 TEST(FutureTests, waitforall_is_completed_when_single_future_completes)

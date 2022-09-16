@@ -86,6 +86,11 @@ public:
 		return std::move(myPointer);
 	}
 
+	[[nodiscard]] inline constexpr size_t Hash() const noexcept
+	{
+		return std::hash<std::shared_ptr<TType>>()(myPointer);
+	}
+
 private:
 	template<typename T>
 	friend class SharedReference;
@@ -97,6 +102,18 @@ private:
 	std::shared_ptr<TType> myPointer;
 
 };
+
+namespace std
+{
+	template <typename TType>
+	struct hash<SharedReference<TType>>
+	{
+		inline [[nodiscard]] size_t operator()(const SharedReference<TType>& aReference) const noexcept
+		{
+			return aReference.Hash();
+		}
+	};
+}
 
 template<typename TType, typename... TArgs>
 inline [[nodiscard]] SharedReference<TType> MakeSharedReference(TArgs&&... aArgs)

@@ -1,7 +1,7 @@
 #pragma once
 
+#include "wondermake-utility/Future.h"
 #include "wondermake-utility/Result.h"
-#include "wondermake-utility/UniqueFunction.h"
 
 class Process
 {
@@ -24,12 +24,10 @@ public:
 		i64 Reason = 0;
 	};
 
-	using OnExitCallback = UniqueFunction<void(Result<i64, SExitError>)>;
-
 	virtual EState GetState() const = 0;
 	
 	virtual void Terminate(i64 aExitCode) = 0;
 
-	virtual void OnExit(OnExitCallback&& aOnExit) = 0;
+	virtual Future<Result<i64, SExitError>> OnExit() = 0;
 
 };

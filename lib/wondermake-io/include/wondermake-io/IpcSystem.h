@@ -2,6 +2,8 @@
 
 #include "wondermake-base/System.h"
 
+#include "wondermake-utility/SharedReference.h"
+
 #include <memory>
 
 class IpcAcceptor;
@@ -11,6 +13,6 @@ class IpcSystem
 	: public SystemAbstracted
 {
 public:
-	virtual std::shared_ptr<IpcAcceptor> CreateAcceptor() = 0;
-	virtual std::shared_ptr<IpcConnection> CreateConnection() = 0;
+	virtual SharedReference<IpcAcceptor>	CreateAcceptor() = 0;
+	virtual SharedReference<IpcConnection>	CreateConnection() = 0;
 };

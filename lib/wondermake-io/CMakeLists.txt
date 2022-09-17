@@ -9,6 +9,7 @@ list(APPEND SourceFiles
     "include/wondermake-io/IpcSystem.h"
     "include/wondermake-io/ReadFileJob.h"
     "include/wondermake-io/Socket.h"
+    "include/wondermake-io/SocketAcceptor.h"
     "include/wondermake-io/SocketDecorator.h"
     "include/wondermake-io/SocketProtobuf.h"
     "include/wondermake-io/SocketProtobufImpl.h"

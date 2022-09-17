@@ -27,7 +27,9 @@ public:
 		u64 Reason = 0;
 	};
 
-	virtual Result<void, SConnectionError> Connect(std::string aConnectionName) = 0;
+	using ResultTypeConnect = Result<void, SConnectionError>;
+
+	virtual ResultTypeConnect Connect(std::string aConnectionName) = 0;
 };
 
 inline static void WmLogStream(std::ostream& aStream, const IpcConnection::SConnectionError& aError)

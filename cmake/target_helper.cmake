@@ -47,7 +47,7 @@ endfunction()
 
 function(set_pedantic_warning_level ARG_TARGET)
     if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-        target_compile_options(${ARG_TARGET} PRIVATE /W4 /WX)
+        target_compile_options(${ARG_TARGET} PRIVATE /W4 /WX /w44062)
     elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         target_compile_options(${ARG_TARGET} PRIVATE -Wall -Wextra -Wpedantic -Werror)
     elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")

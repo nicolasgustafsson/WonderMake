@@ -11,6 +11,8 @@ list(APPEND SourceFiles
     "include/wondermake-engine/LoggerRemoteSystem.h"
     "include/wondermake-engine/SerializeConfigurationJob.h"
     "source/ConfigurationEngine.cpp"
+    "source/ConfigurationProtoSerialization.cpp"
+    "source/ConfigurationProtoSerialization.h"
     "source/DeserializeConfigurationJob.cpp"
     "source/LoggerFileSystem.cpp"
     "source/LoggerRemoteConnection.cpp"

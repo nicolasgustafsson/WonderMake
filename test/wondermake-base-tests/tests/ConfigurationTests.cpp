@@ -1308,3 +1308,104 @@ TEST(ConfigurationTests, allowed_list_is_returned_when_calling_getconfig_when_li
 	EXPECT_EQ(std::get<Configuration::ConfigData<i32>>(			configs["dummy_id_enum_i32"])	.AllowedValues["dummy_name"], static_cast<i32>(ETestEnumI32::One));
 	EXPECT_EQ(std::get<Configuration::ConfigData<u32>>(			configs["dummy_id_enum_u32"])	.AllowedValues["dummy_name"], static_cast<u32>(ETestEnumU32::One));
 }
+
+TEST(ConfigurationTests, configuration_are_equal_if_they_contain_same_values_and_overrides)
+{
+	Configuration configurationL;
+	Configuration configurationR;
+
+	configurationL.Set<u32>("test_id", 123, EConfigGroup::Application);
+	configurationL.Set<u32>("test_id_restricted", 234, EConfigGroup::Application, Configuration::AllowedValues<u32>{ { {"FIRST", 1}, {"SECOND", 2}, {"THIRD", 3} } });
+	configurationL.Set<std::string>("test_id_text", "Hello", EConfigGroup::Device);
+
+	configurationL.SetOverride<std::string>("test_id_text", "World");
+
+	configurationR.Set<u32>("test_id", 123, EConfigGroup::Application);
+	configurationR.Set<u32>("test_id_restricted", 234, EConfigGroup::Application, Configuration::AllowedValues<u32>{ { {"FIRST", 1}, { "SECOND", 2 }, { "THIRD", 3 } } });
+	configurationR.Set<std::string>("test_id_text", "Hello", EConfigGroup::Device);
+
+	configurationR.SetOverride<std::string>("test_id_text", "World");
+
+	EXPECT_EQ(configurationL, configurationR);
+}
+
+TEST(ConfigurationTests, configuration_are_not_equal_if_a_value_is_different)
+{
+	Configuration configurationL;
+	Configuration configurationR;
+
+	configurationL.Set<u32>("test_id_mismatch", 123, EConfigGroup::Application);
+	configurationR.Set<u32>("test_id_mismatch", 100000000, EConfigGroup::Application);
+
+	EXPECT_NE(configurationL, configurationR);
+}
+
+TEST(ConfigurationTests, configuration_are_not_equal_if_a_override_is_different)
+{
+	Configuration configurationL;
+	Configuration configurationR;
+
+	configurationL.Set<u32>("test_id_mismatch", 123, EConfigGroup::Application);
+	configurationR.Set<u32>("test_id_mismatch", 123, EConfigGroup::Application);
+
+	configurationL.SetOverride<u32>("test_id_mismatch", 456);
+	configurationR.SetOverride<u32>("test_id_mismatch", 1000000);
+
+	EXPECT_NE(configurationL, configurationR);
+}
+
+TEST(ConfigurationTests, configuration_are_not_equal_if_a_config_group_is_different)
+{
+	Configuration configurationL;
+	Configuration configurationR;
+
+	configurationL.Set<u32>("test_id_mismatch", 123, EConfigGroup::Application);
+	configurationR.Set<u32>("test_id_mismatch", 123, EConfigGroup::Device);
+
+	EXPECT_NE(configurationL, configurationR);
+}
+
+TEST(ConfigurationTests, configuration_are_not_equal_if_ids_are_not_the_same)
+{
+	Configuration configurationL;
+	Configuration configurationR;
+
+	configurationL.Set<u32>("test_id_mismatch_1", 123, EConfigGroup::Application);
+	configurationR.Set<u32>("test_id_mismatch_2", 123, EConfigGroup::Application);
+
+	EXPECT_NE(configurationL, configurationR);
+}
+
+TEST(ConfigurationTests, configuration_are_not_equal_if_one_contains_more_configs)
+{
+	Configuration configurationL;
+	Configuration configurationR;
+
+	configurationL.Set<u32>("test_id", 123, EConfigGroup::Application);
+	configurationL.Set<u32>("test_id_mismatch", 123, EConfigGroup::Application);
+	configurationR.Set<u32>("test_id_mismatch", 123, EConfigGroup::Application);
+
+	EXPECT_NE(configurationL, configurationR);
+}
+
+TEST(ConfigurationTests, configuration_are_not_equal_if_restricted_lists_have_different_values)
+{
+	Configuration configurationL;
+	Configuration configurationR;
+
+	configurationL.Set<u32>("test_id_mismatch", 123, EConfigGroup::Application, Configuration::AllowedValues<u32>{ { {"FIRST", 1}, { "SECOND", 2 }, { "THIRD", 4 } } });
+	configurationR.Set<u32>("test_id_mismatch", 123, EConfigGroup::Application, Configuration::AllowedValues<u32>{ { {"FIRST", 1}, { "SECOND", 2 }, { "THIRD", 3 } } });
+
+	EXPECT_NE(configurationL, configurationR);
+}
+
+TEST(ConfigurationTests, configuration_are_not_equal_if_restricted_lists_contains_more_values)
+{
+	Configuration configurationL;
+	Configuration configurationR;
+
+	configurationL.Set<u32>("test_id_mismatch", 123, EConfigGroup::Application, Configuration::AllowedValues<u32>{ { {"FIRST", 1}, { "SECOND", 2 }, { "THIRD", 3 } } });
+	configurationR.Set<u32>("test_id_mismatch", 123, EConfigGroup::Application, Configuration::AllowedValues<u32>{ { {"FIRST", 1}, { "SECOND", 2 }, { "THIRD", 3 }, { "FOURTH", 4 } } });
+
+	EXPECT_NE(configurationL, configurationR);
+}

@@ -337,6 +337,62 @@ public:
 		return retVal;
 	}
 
+	inline [[nodiscard]] bool operator==(const Configuration& aRhs) const noexcept
+	{
+		std::shared_lock<std::shared_mutex> lockLhs(myMutex);
+		std::shared_lock<std::shared_mutex> lockRhs(aRhs.myMutex);
+
+		if (myConfigs.size() != aRhs.myConfigs.size())
+			return false;
+
+		for (const auto& [lhsId, lhsConfigElement] : myConfigs)
+		{
+			const auto it = aRhs.myConfigs.find(lhsId);
+
+			if (it == aRhs.myConfigs.end())
+				return false;
+
+			const auto& [rhsId, rhsConfigElement] = *it;
+
+			const bool sameValue = std::visit([&rhsConfigElement](const auto& aLhsConfigData)
+				{
+					if (!std::holds_alternative<std::decay_t<decltype(aLhsConfigData)>>(rhsConfigElement.Config))
+						return false;
+
+					const auto& rhsConfigData = std::get<std::decay_t<decltype(aLhsConfigData)>>(rhsConfigElement.Config);
+
+					if (aLhsConfigData.Value != rhsConfigData.Value ||
+						aLhsConfigData.Override != rhsConfigData.Override ||
+						aLhsConfigData.ConfigGroup != rhsConfigData.ConfigGroup)
+						return false;
+					
+					const auto& lhsAllowedValues = aLhsConfigData.AllowedValues;
+					const auto& rhsAllowedValues = rhsConfigData.AllowedValues;
+
+					if (lhsAllowedValues.size() != rhsAllowedValues.size())
+						return false;
+
+					const auto pred = [&rhsAllowedValues](const auto& aItem)
+					{
+						const auto it = rhsAllowedValues.find(aItem.first);
+
+						return it != rhsAllowedValues.end() && it->second == aItem.second;
+					};
+
+					return std::all_of(lhsAllowedValues.begin(), lhsAllowedValues.end(), pred);
+				}, lhsConfigElement.Config);
+
+			if (!sameValue)
+				return false;
+		}
+
+		return true;
+	}
+	inline [[nodiscard]] bool operator!=(const Configuration& aRhs) const noexcept
+	{
+		return !(*this == aRhs);
+	}
+
 private:
 	struct ConfigDataRaw
 	{

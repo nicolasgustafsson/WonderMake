@@ -4,6 +4,7 @@ add_subdirectory("proto")
 
 list(APPEND SourceFiles
     "include/wondermake-engine/ConfigurationEngine.h"
+    "include/wondermake-engine/ConfigurationRemoteSystem.h"
     "include/wondermake-engine/DeserializeConfigurationJob.h"
     "include/wondermake-engine/LoggerFileSystem.h"
     "include/wondermake-engine/LoggerRemoteConnection.h"
@@ -13,6 +14,7 @@ list(APPEND SourceFiles
     "source/ConfigurationEngine.cpp"
     "source/ConfigurationProtoSerialization.cpp"
     "source/ConfigurationProtoSerialization.h"
+    "source/ConfigurationRemoteSystem.cpp"
     "source/DeserializeConfigurationJob.cpp"
     "source/LoggerFileSystem.cpp"
     "source/LoggerRemoteConnection.cpp"

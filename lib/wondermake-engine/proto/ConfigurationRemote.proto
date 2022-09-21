@@ -95,7 +95,7 @@ message PushUpSetOverride
 	oneof config_type
 	{
 		bool	config_bool		= 3;
-		uint64	config_f64		= 4;
+		double	config_f64		= 4;
 		uint64	config_u64		= 5;
 		int64	config_i64		= 6;
 		string	config_string	= 7;
@@ -120,7 +120,7 @@ message PushDownSetOverride
 	oneof config_type
 	{
 		bool	config_bool		= 3;
-		uint64	config_f64		= 4;
+		double	config_f64		= 4;
 		uint64	config_u64		= 5;
 		int64	config_i64		= 6;
 		string	config_string	= 7;

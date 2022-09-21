@@ -1,7 +1,5 @@
 #include "wondermake-tests-common/GTestInclude.h"
 
-#include "WonderMakeBaseTests/ProcessSystemMock.h"
-
 #include "wondermake-engine/DeserializeConfigurationJob.h"
 #include "wondermake-engine/SerializeConfigurationJob.h"
 
@@ -16,9 +14,8 @@ inline constexpr auto locTestConfigGroup = EConfigGroup::Application;
 TEST(ConfigurationSerializationTests, deserialize_completes_with_parsing_error_when_given_non_json_string)
 {
 	constexpr auto dummyJsonString = "Hello World!";
-	NiceMock<ProcessSystemMock> processSystem;
 
-	ConfigurationSystem::InjectDependencies(std::tie(processSystem));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem configSystem;
 
@@ -41,9 +38,8 @@ TEST(ConfigurationSerializationTests, deserialize_completes_with_parsing_error_w
 TEST(ConfigurationSerializationTests, deserialize_completes_with_parsing_error_when_given_non_configuration_json)
 {
 	constexpr auto dummyJsonString = "{\"Hello\":\"World!\"}";
-	NiceMock<ProcessSystemMock> processSystem;
 
-	ConfigurationSystem::InjectDependencies(std::tie(processSystem));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem configSystem;
 
@@ -66,9 +62,8 @@ TEST(ConfigurationSerializationTests, deserialize_completes_with_parsing_error_w
 TEST(ConfigurationSerializationTests, deserialize_completes_with_success_when_given_configuration_json)
 {
 	constexpr auto dummyJsonString = "{\"overrides\": {}}";
-	NiceMock<ProcessSystemMock> processSystem;
 
-	ConfigurationSystem::InjectDependencies(std::tie(processSystem));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem configSystem;
 
@@ -89,9 +84,8 @@ TEST(ConfigurationSerializationTests, deserialize_completes_with_success_when_gi
 TEST(ConfigurationSerializationTests, deserialize_sets_no_override_when_no_configuration_is_set)
 {
 	constexpr auto dummyJsonString = "{\"overrides\": { \"kalle\": \"hobbe\", \"greger\": 1234, \"sylt\": -1234 } }";
-	NiceMock<ProcessSystemMock> processSystem;
 
-	ConfigurationSystem::InjectDependencies(std::tie(processSystem));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem configSystem;
 
@@ -110,9 +104,8 @@ TEST(ConfigurationSerializationTests, deserialize_sets_no_override_when_no_confi
 TEST(ConfigurationSerializationTests, deserialize_sets_configurations_when_configuration_is_set)
 {
 	constexpr auto dummyJsonString = "{\"overrides\": { \"kalle\": \"hobbe\", \"greger\": 1234, \"sylt\": -1234 } }";
-	NiceMock<ProcessSystemMock> processSystem;
 
-	ConfigurationSystem::InjectDependencies(std::tie(processSystem));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem configSystem;
 
@@ -137,9 +130,8 @@ TEST(ConfigurationSerializationTests, deserialize_do_not_set_config_when_wrong_c
 	constexpr EConfigGroup dummyGroupTarget = EConfigGroup::Application;
 	constexpr EConfigGroup dummyGroupOther = EConfigGroup::Device;
 	constexpr auto dummyJsonString = "{\"overrides\": { \"kalle\": \"hobbe\", \"greger\": 1234, \"sylt\": -1234 } }";
-	NiceMock<ProcessSystemMock> processSystem;
 
-	ConfigurationSystem::InjectDependencies(std::tie(processSystem));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem configSystem;
 
@@ -161,9 +153,7 @@ TEST(ConfigurationSerializationTests, deserialize_do_not_set_config_when_wrong_c
 
 TEST(ConfigurationSerializationTests, serialize_completes_when_run)
 {
-	NiceMock<ProcessSystemMock> processSystem;
-
-	ConfigurationSystem::InjectDependencies(std::tie(processSystem));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem configSystem;
 
@@ -179,9 +169,7 @@ TEST(ConfigurationSerializationTests, serialize_completes_when_run)
 
 TEST(ConfigurationSerializationTests, serialized_outputs_valid_json)
 {
-	NiceMock<ProcessSystemMock> processSystem;
-
-	ConfigurationSystem::InjectDependencies(std::tie(processSystem));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem configSystem;
 
@@ -197,9 +185,7 @@ TEST(ConfigurationSerializationTests, serialized_outputs_valid_json)
 
 TEST(ConfigurationSerializationTests, serialized_outputs_valid_structure)
 {
-	NiceMock<ProcessSystemMock> processSystem;
-
-	ConfigurationSystem::InjectDependencies(std::tie(processSystem));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem configSystem;
 
@@ -234,9 +220,8 @@ TEST(ConfigurationSerializationTests, serialized_outputs_selected_config_group)
 {
 	constexpr EConfigGroup dummyGroupTarget	= EConfigGroup::Application;
 	constexpr EConfigGroup dummyGroupOther	= EConfigGroup::Device;
-	NiceMock<ProcessSystemMock> processSystem;
-
-	ConfigurationSystem::InjectDependencies(std::tie(processSystem));
+	
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem configSystem;
 
@@ -268,9 +253,7 @@ TEST(ConfigurationSerializationTests, serialized_outputs_selected_config_group)
 
 TEST(ConfigurationSerializationTests, serialized_output_can_be_deserialized)
 {
-	NiceMock<ProcessSystemMock> processSystem;
-
-	ConfigurationSystem::InjectDependencies(std::tie(processSystem));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem configSystem;
 
@@ -309,9 +292,7 @@ TEST(ConfigurationSerializationTests, serialized_output_can_be_deserialized)
 
 TEST(ConfigurationSerializationTests, boolean_values_are_serialized_and_deserialized_correctly)
 {
-	NiceMock<ProcessSystemMock> processSystem;
-
-	ConfigurationSystem::InjectDependencies(std::tie(processSystem));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem configSystem;
 
@@ -346,9 +327,7 @@ TEST(ConfigurationSerializationTests, unsigned_values_are_serialized_and_deseria
 {
 	constexpr auto dummyDefaultValue = 1;
 
-	NiceMock<ProcessSystemMock> processSystem;
-
-	ConfigurationSystem::InjectDependencies(std::tie(processSystem));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem configSystem;
 
@@ -407,9 +386,7 @@ TEST(ConfigurationSerializationTests, signed_values_are_serialized_and_deseriali
 {
 	constexpr auto dummyDefaultValue = 1;
 
-	NiceMock<ProcessSystemMock> processSystem;
-
-	ConfigurationSystem::InjectDependencies(std::tie(processSystem));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem configSystem;
 
@@ -484,9 +461,7 @@ TEST(ConfigurationSerializationTests, floating_values_are_serialized_and_deseria
 {
 	constexpr auto dummyDefaultValue = 1.f;
 
-	NiceMock<ProcessSystemMock> processSystem;
-
-	ConfigurationSystem::InjectDependencies(std::tie(processSystem));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem configSystem;
 
@@ -537,9 +512,7 @@ TEST(ConfigurationSerializationTests, string_values_are_serialized_and_deseriali
 {
 	constexpr auto dummyDefaultValue = "default_string";
 
-	NiceMock<ProcessSystemMock> processSystem;
-
-	ConfigurationSystem::InjectDependencies(std::tie(processSystem));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem configSystem;
 

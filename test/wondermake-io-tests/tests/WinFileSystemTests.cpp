@@ -1,7 +1,5 @@
 #include "wondermake-tests-common/GTestInclude.h"
 
-#include "WonderMakeBaseTests/ProcessSystemMock.h"
-
 #include "wondermake-base/ConfigurationSystem.h"
 
 #include "WonderMakeBaseTests/WinPlatformSystemMock.h"
@@ -20,9 +18,7 @@ constexpr auto CreateSetPath = [](PWSTR aPath, HRESULT aResult)
 
 TEST(WinFileSystemTests, getfolderlocation_returns_bin_folder)
 {
-	NiceMock<ProcessSystemMock> processSystemMock;
-
-	ConfigurationSystem::InjectDependencies(std::tie(processSystemMock));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem config;
 
@@ -48,9 +44,7 @@ TEST(WinFileSystemTests, getfolderlocation_returns_data_folder)
 
 	std::wstring				expectedPath	= L"TEST//";
 
-	NiceMock<ProcessSystemMock> processSystemMock;
-
-	ConfigurationSystem::InjectDependencies(std::tie(processSystemMock));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem config;
 
@@ -80,9 +74,7 @@ TEST(WinFileSystemTests, getfolderlocation_returns_user_folder)
 
 	std::wstring				expectedPath	= L"TEST//";
 
-	NiceMock<ProcessSystemMock> processSystemMock;
-
-	ConfigurationSystem::InjectDependencies(std::tie(processSystemMock));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem config;
 
@@ -112,9 +104,7 @@ TEST(WinFileSystemTests, getfolderlocation_returns_user_data_folder)
 
 	std::wstring				expectedPath	= L"TEST//";
 
-	NiceMock<ProcessSystemMock> processSystemMock;
-
-	ConfigurationSystem::InjectDependencies(std::tie(processSystemMock));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem config;
 
@@ -137,9 +127,7 @@ TEST(WinFileSystemTests, getfolderlocation_returns_bin_folder_with_suffix)
 {
 	auto expectedPath = std::filesystem::current_path() / "suffix";
 
-	NiceMock<ProcessSystemMock> processSystemMock;
-
-	ConfigurationSystem::InjectDependencies(std::tie(processSystemMock));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem config;
 
@@ -162,9 +150,7 @@ TEST(WinFileSystemTests, getfolderlocation_returns_data_folder_with_suffix)
 	std::wstring				dummyPath		= L"TEST";
 	std::wstring				expectedPath	= L"TEST//suffix";
 
-	NiceMock<ProcessSystemMock> processSystemMock;
-
-	ConfigurationSystem::InjectDependencies(std::tie(processSystemMock));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem config;
 
@@ -191,9 +177,7 @@ TEST(WinFileSystemTests, getfolderlocation_returns_user_folder_with_suffix)
 	std::wstring				dummyPath		= L"TEST";
 	std::wstring				expectedPath	= L"TEST//suffix";
 
-	NiceMock<ProcessSystemMock> processSystemMock;
-
-	ConfigurationSystem::InjectDependencies(std::tie(processSystemMock));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem config;
 
@@ -220,9 +204,7 @@ TEST(WinFileSystemTests, getfolderlocation_returns_user_data_folder_with_suffix)
 	std::wstring				dummyPath		= L"TEST";
 	std::wstring				expectedPath	= L"TEST//suffix";
 
-	NiceMock<ProcessSystemMock> processSystemMock;
-
-	ConfigurationSystem::InjectDependencies(std::tie(processSystemMock));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem config;
 
@@ -245,9 +227,7 @@ TEST(WinFileSystemTests, getfolderlocation_returns_user_data_folder_with_suffix)
 
 TEST(WinFileSystemTests, getfolderlocation_returns_nullopt_on_failure_when_getting_data_folder)
 {
-	NiceMock<ProcessSystemMock> processSystemMock;
-
-	ConfigurationSystem::InjectDependencies(std::tie(processSystemMock));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem config;
 
@@ -267,9 +247,7 @@ TEST(WinFileSystemTests, getfolderlocation_returns_nullopt_on_failure_when_getti
 
 TEST(WinFileSystemTests, getfolderlocation_returns_nullopt_on_failure_when_getting_user_folder)
 {
-	NiceMock<ProcessSystemMock> processSystemMock;
-
-	ConfigurationSystem::InjectDependencies(std::tie(processSystemMock));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem config;
 
@@ -289,9 +267,7 @@ TEST(WinFileSystemTests, getfolderlocation_returns_nullopt_on_failure_when_getti
 
 TEST(WinFileSystemTests, getfolderlocation_returns_nullopt_on_failure_when_getting_user_data_folder)
 {
-	NiceMock<ProcessSystemMock> processSystemMock;
-
-	ConfigurationSystem::InjectDependencies(std::tie(processSystemMock));
+	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem config;
 

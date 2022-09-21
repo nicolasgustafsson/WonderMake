@@ -30,7 +30,6 @@ list(APPEND SourceFiles
     "include/wondermake-base/WmLogTags.h"
     "source/CmdLineArgsSystem.cpp"
     "source/Configuration.cpp"
-    "source/ConfigurationSystem.cpp"
     "source/JobGlobal.cpp"
     "source/JobSystem.cpp"
     "source/Logger.cpp"

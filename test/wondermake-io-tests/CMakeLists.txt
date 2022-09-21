@@ -4,6 +4,7 @@ add_subdirectory("proto")
 
 list(APPEND SourceFiles
     "Include/WonderMakeIoTests/ReadFileJobMock.h"
+    "Include/WonderMakeIoTests/SocketAcceptorMock.h"
     "Include/WonderMakeIoTests/SocketMock.h"
     "Include/WonderMakeIoTests/SocketSerializingMock.h"
     "Include/WonderMakeIoTests/WriteFileJobMock.h"

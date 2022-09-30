@@ -64,6 +64,16 @@ public:
 		return *myPointer;
 	}
 
+	inline [[nodiscard]] std::weak_ptr<TType> Weak() const noexcept
+	{
+		return myPointer;
+	}
+
+	inline [[nodiscard]] auto UseCount() const noexcept
+	{
+		return myPointer.use_count();
+	}
+
 	template<typename TToType>
 	inline [[nodiscard]] operator std::shared_ptr<TToType>() const& noexcept requires(std::is_constructible_v<std::shared_ptr<TToType>, std::shared_ptr<TType>>)
 	{

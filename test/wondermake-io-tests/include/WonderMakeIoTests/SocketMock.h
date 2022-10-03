@@ -4,6 +4,8 @@
 
 #include "wondermake-io/Socket.h"
 
+#include <memory>
+
 class SocketMock
 	: public Socket
 {
@@ -17,18 +19,43 @@ public:
 
 	void DelegateToFake()
 	{
+		auto [promiseClose,	futureClose] = MakeAsync<ResultTypeClose>();
+		
+		std::make_unique<decltype(promiseClose)>(std::move(promiseClose))
+			.release();
+
 		ON_CALL(*this, Write)
-			.WillByDefault(Return(MakeCompletedFuture<ResultTypeWrite>(Err(SWriteError{ EWriteError::InternalError }))));
+			.WillByDefault(Return(MakeCompletedFuture<ResultTypeWrite>(Ok())));
 		ON_CALL(*this, Read)
-			.WillByDefault(Return(MakeCompletedFuture<ResultTypeRead>(Err(SReadError{ EReadError::InternalError }))));
+			.WillByDefault([this]()
+				{
+					auto [promise, future] = MakeAsync<ResultTypeRead>();
+
+					myReadPromises.emplace_back(std::move(promise));
+
+					return future;
+				});
 		ON_CALL(*this, OnClose)
-			.WillByDefault(Return(MakeCompletedFuture<ResultTypeClose>(Err(SCloseError{ ECloseError::InternalError }))));
+			.WillByDefault(Return(futureClose));
 		ON_CALL(*this, Close)
-			.WillByDefault(Return(MakeCompletedFuture<ResultTypeClose>(Err(SCloseError{ ECloseError::InternalError }))));
+			.WillByDefault(Return(futureClose));
 
 		ON_CALL(*this, GetState)
-			.WillByDefault(Return(EState::Closed));
+			.WillByDefault(Return(EState::Open));
 	}
+	void CompleteNextRead(ResultTypeRead aResult)
+	{
+		ASSERT_FALSE(myReadPromises.empty());
+
+		auto promise = std::move(myReadPromises.front());
+
+		myReadPromises.erase(myReadPromises.begin());
+
+		promise.Complete(std::move(aResult));
+	}
+
+private:
+	std::vector<Promise<ResultTypeRead>> myReadPromises;
 };
 
 inline std::ostream& operator<<(std::ostream& out, const Socket::SWriteError& aError)

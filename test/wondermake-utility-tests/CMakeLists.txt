@@ -6,6 +6,7 @@ list(APPEND SourceFiles
     "Tests/BindableTests.cpp"
     "Tests/BufferExecutorTests.cpp"
     "Tests/DependencyInjectionTests.cpp"
+    "Tests/EventSubscriberTests.cpp"
     "Tests/FixedSizeStringTests.cpp"
     "Tests/FutureTests.cpp"
     "Tests/GuidTests.cpp"

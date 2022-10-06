@@ -6,6 +6,7 @@ list(APPEND SourceFiles
     "include/wondermake-utility/AutoRegister.h"
     "include/wondermake-utility/Bindable.h"
     "include/wondermake-utility/BufferExecutor.h"
+    "include/wondermake-utility/CancelableList.h"
     "include/wondermake-utility/CmdLineArgs.h"
     "include/wondermake-utility/DependencyInjector.h"
     "include/wondermake-utility/Endian.h"

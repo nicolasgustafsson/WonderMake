@@ -1,51 +1,10 @@
 #include "wondermake-tests-common/GTestInclude.h"
 
+#include "wondermake-utility-tests/ExecutorMock.h"
+
 #include "wondermake-utility/AnyExecutor.h"
 
 #include "wondermake-utility/Typedefs.h"
-
-class ExecutorCallableMock
-{
-public:
-	MOCK_METHOD(void, Executed, ());
-
-	auto GetCallable()
-	{
-		return [this]()
-		{
-			Executed();
-		};
-	}
-};
-
-class ExecutorMock
-{
-public:
-	MOCK_METHOD(void, Execute, (Closure));
-
-	auto GetExecutor()
-	{
-		class InternalExecutor
-		{
-		public:
-			InternalExecutor(ExecutorMock& aExecutorMock) noexcept
-				: myExecutor(aExecutorMock)
-			{}
-			InternalExecutor(const InternalExecutor&) noexcept = default;
-
-			void Execute(Closure&& aClosure) const
-			{
-				myExecutor.Execute(std::move(aClosure));
-			}
-
-		private:
-			ExecutorMock& myExecutor;
-
-		};
-
-		return InternalExecutor(*this);
-	}
-};
 
 TEST(AnyExecutorTests, executor_execute_does_nothing_when_no_executor_is_passed)
 {

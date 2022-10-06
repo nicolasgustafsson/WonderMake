@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.19)
 
 list(APPEND SourceFiles
+    "include/wondermake-utility-tests/ExecutorMock.h"
     "Tests/AliasTests.cpp"
     "Tests/AnyExecutorTests.cpp"
     "Tests/BindableTests.cpp"
@@ -22,6 +23,9 @@ list(APPEND SourceFiles
 add_executable(WonderMakeUtilityTests ${SourceFiles})
 
 target_link_libraries(WonderMakeUtilityTests gtest_main gmock WonderMakeTestsCommon)
-target_include_directories(WonderMakeUtilityTests PUBLIC "../../lib/wondermake-utility/include")
+target_include_directories(WonderMakeUtilityTests
+    PUBLIC
+        "include"
+        "../../lib/wondermake-utility/include")
 
 gtest_discover_tests(WonderMakeUtilityTests)

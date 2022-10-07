@@ -6,8 +6,6 @@
 #include "wondermake-utility/WinPlatform.h"
 #include "wondermake-utility/Future.h"
 
- // FIXME: Use futures instead.
-
 class WinEventSystem
 	: public SystemAbstracted
 {

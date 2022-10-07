@@ -6,8 +6,10 @@ list(APPEND SourceFiles
     "Include/WonderMakeBaseTests/ProcessSystemMock.h"
     "Include/WonderMakeBaseTests/WinEventSystemMock.h"
     "Include/WonderMakeBaseTests/WinPlatformSystemMock.h"
+    "Tests/ConfigurationSystemOverridesTests.cpp"
     "Tests/ConfigurationSystemTests.cpp"
     "Tests/ConfigurationTests.cpp"
+    "Tests/ConfigurationTests.h"
     "Tests/JobRegistryTests.cpp"
     "Tests/JobSystemTests.cpp"
     "Tests/LoggerTests.cpp"
@@ -33,6 +35,7 @@ target_link_libraries(WonderMakeBaseTests gtest_main gmock WonderMakeTestsCommon
 target_include_directories(WonderMakeBaseTests
     PUBLIC
         "Include"
+        "../wondermake-utility-tests/include"
         "../../lib/wondermake-base/include"
         "../../lib/wondermake-utility/include"
     PRIVATE

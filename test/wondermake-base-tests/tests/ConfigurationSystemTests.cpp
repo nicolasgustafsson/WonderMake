@@ -1,20 +1,8 @@
 #include "wondermake-tests-common/GTestInclude.h"
 
-#include "wondermake-base/ConfigurationSystem.h"
+#include "ConfigurationTests.h"
 
-enum class ETestEnumI32 : i32
-{
-	Zero = 0,
-	One = 1,
-	Min = std::numeric_limits<i32>::min(),
-	Max = std::numeric_limits<i32>::max()
-};
-enum class ETestEnumU32 : u32
-{
-	Zero = 0,
-	One = 1,
-	Max = std::numeric_limits<i32>::max()
-};
+#include "wondermake-base/ConfigurationSystem.h"
 
 inline constexpr ProcessId locDummyProcessId(1234);
 
@@ -57,6 +45,14 @@ TEST(ConfigurationSystemTests, getting_unset_ids_returns_default_value)
 	EXPECT_EQ(configuration.Get<i64>(dummyId, std::numeric_limits<i64>::min()), std::numeric_limits<i64>::min());
 	EXPECT_EQ(configuration.Get<i64>(dummyId, std::numeric_limits<i64>::max()), std::numeric_limits<i64>::max());
 
+	EXPECT_EQ(configuration.Get<f32>(dummyId, 0.f), 0.f);
+	EXPECT_EQ(configuration.Get<f32>(dummyId, std::numeric_limits<f32>::min()), std::numeric_limits<f32>::min());
+	EXPECT_EQ(configuration.Get<f32>(dummyId, std::numeric_limits<f32>::max()), std::numeric_limits<f32>::max());
+
+	EXPECT_EQ(configuration.Get<f64>(dummyId, 0.), 0.);
+	EXPECT_EQ(configuration.Get<f64>(dummyId, std::numeric_limits<f64>::min()), std::numeric_limits<f64>::min());
+	EXPECT_EQ(configuration.Get<f64>(dummyId, std::numeric_limits<f64>::max()), std::numeric_limits<f64>::max());
+
 	EXPECT_EQ(configuration.Get<std::string>(dummyId, ""), "");
 	EXPECT_EQ(configuration.Get<std::string>(dummyId, "dummy_value"), "dummy_value");
 
@@ -85,6 +81,8 @@ TEST(ConfigurationSystemTests, values_can_be_set_and_get)
 	configuration.Set<i16>(						"dummy_id_i16",			1,						dummyGroup);
 	configuration.Set<i32>(						"dummy_id_i32",			1,						dummyGroup);
 	configuration.Set<i64>(						"dummy_id_i64",			1,						dummyGroup);
+	configuration.Set<f32>(						"dummy_id_f32",			1.f,					dummyGroup);
+	configuration.Set<f64>(						"dummy_id_f64",			1.,						dummyGroup);
 	configuration.Set<std::string>(				"dummy_id_string",		"dummy_value_first",	dummyGroup);
 	configuration.Set<ETestEnumI32>(			"dummy_id_enum_i32",	ETestEnumI32::One,		dummyGroup);
 	configuration.Set<ETestEnumU32>(			"dummy_id_enum_u32",	ETestEnumU32::One,		dummyGroup);
@@ -98,6 +96,8 @@ TEST(ConfigurationSystemTests, values_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<i16>(			"dummy_id_i16",			0),						1);
 	EXPECT_EQ(configuration.Get<i32>(			"dummy_id_i32",			0),						1);
 	EXPECT_EQ(configuration.Get<i64>(			"dummy_id_i64",			0),						1);
+	EXPECT_EQ(configuration.Get<f32>(			"dummy_id_f32",			0.f),					1.f);
+	EXPECT_EQ(configuration.Get<f64>(			"dummy_id_f64",			0.),					1.);
 	EXPECT_EQ(configuration.Get<std::string>(	"dummy_id_string",		"dummy_default"),		"dummy_value_first");
 	EXPECT_EQ(configuration.Get<ETestEnumI32>(	"dummy_id_enum_i32",	ETestEnumI32::Zero),	ETestEnumI32::One);
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	"dummy_id_enum_u32",	ETestEnumU32::Zero),	ETestEnumU32::One);
@@ -120,6 +120,8 @@ TEST(ConfigurationSystemTests, values_can_be_overridden)
 	configuration.Set<i16>(						"dummy_id_i16",			1,						dummyGroup);
 	configuration.Set<i32>(						"dummy_id_i32",			1,						dummyGroup);
 	configuration.Set<i64>(						"dummy_id_i64",			1,						dummyGroup);
+	configuration.Set<f32>(						"dummy_id_f32",			1.f,					dummyGroup);
+	configuration.Set<f64>(						"dummy_id_f64",			1.,						dummyGroup);
 	configuration.Set<std::string>(				"dummy_id_string",		"dummy_value_first",	dummyGroup);
 	configuration.Set<ETestEnumI32>(			"dummy_id_enum_i32",	ETestEnumI32::One,		dummyGroup);
 	configuration.Set<ETestEnumU32>(			"dummy_id_enum_u32",	ETestEnumU32::One,		dummyGroup);
@@ -133,6 +135,8 @@ TEST(ConfigurationSystemTests, values_can_be_overridden)
 	configuration.SetOverride<i16>(				"dummy_id_i16",			2);
 	configuration.SetOverride<i32>(				"dummy_id_i32",			2);
 	configuration.SetOverride<i64>(				"dummy_id_i64",			2);
+	configuration.SetOverride<f32>(				"dummy_id_f32",			2.f);
+	configuration.SetOverride<f64>(				"dummy_id_f64",			2.);
 	configuration.SetOverride<std::string>(		"dummy_id_string",		"dummy_value_second");
 	configuration.SetOverride<ETestEnumI32>(	"dummy_id_enum_i32",	ETestEnumI32::Max);
 	configuration.SetOverride<ETestEnumU32>(	"dummy_id_enum_u32",	ETestEnumU32::Max);
@@ -146,6 +150,8 @@ TEST(ConfigurationSystemTests, values_can_be_overridden)
 	EXPECT_EQ(configuration.Get<i16>(			"dummy_id_i16",			0),						2);
 	EXPECT_EQ(configuration.Get<i32>(			"dummy_id_i32",			0),						2);
 	EXPECT_EQ(configuration.Get<i64>(			"dummy_id_i64",			0),						2);
+	EXPECT_EQ(configuration.Get<f32>(			"dummy_id_f32",			0.f),					2.f);
+	EXPECT_EQ(configuration.Get<f64>(			"dummy_id_f64",			0.),					2.);
 	EXPECT_EQ(configuration.Get<std::string>(	"dummy_id_string",		"dummy_default"),		"dummy_value_second");
 	EXPECT_EQ(configuration.Get<ETestEnumI32>(	"dummy_id_enum_i32",	ETestEnumI32::Zero),	ETestEnumI32::Max);
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	"dummy_id_enum_u32",	ETestEnumU32::Zero),	ETestEnumU32::Max);
@@ -168,6 +174,8 @@ TEST(ConfigurationSystemTests, overrides_can_be_reset)
 	configuration.Set<i16>(						"dummy_id_i16",			1,						dummyGroup);
 	configuration.Set<i32>(						"dummy_id_i32",			1,						dummyGroup);
 	configuration.Set<i64>(						"dummy_id_i64",			1,						dummyGroup);
+	configuration.Set<f32>(						"dummy_id_f32",			1.f,					dummyGroup);
+	configuration.Set<f64>(						"dummy_id_f64",			1.,						dummyGroup);
 	configuration.Set<std::string>(				"dummy_id_string",		"dummy_value_first",	dummyGroup);
 	configuration.Set<ETestEnumI32>(			"dummy_id_enum_i32",	ETestEnumI32::One,		dummyGroup);
 	configuration.Set<ETestEnumU32>(			"dummy_id_enum_u32",	ETestEnumU32::One,		dummyGroup);
@@ -181,6 +189,8 @@ TEST(ConfigurationSystemTests, overrides_can_be_reset)
 	configuration.SetOverride<i16>(				"dummy_id_i16",			2);
 	configuration.SetOverride<i32>(				"dummy_id_i32",			2);
 	configuration.SetOverride<i64>(				"dummy_id_i64",			2);
+	configuration.SetOverride<f32>(				"dummy_id_f32",			2.f);
+	configuration.SetOverride<f64>(				"dummy_id_f64",			2.);
 	configuration.SetOverride<std::string>(		"dummy_id_string",		"dummy_value_second");
 	configuration.SetOverride<ETestEnumI32>(	"dummy_id_enum_i32",	ETestEnumI32::Max);
 	configuration.SetOverride<ETestEnumU32>(	"dummy_id_enum_u32",	ETestEnumU32::Max);
@@ -194,6 +204,8 @@ TEST(ConfigurationSystemTests, overrides_can_be_reset)
 	configuration.ResetOverride(				"dummy_id_i16");
 	configuration.ResetOverride(				"dummy_id_i32");
 	configuration.ResetOverride(				"dummy_id_i64");
+	configuration.ResetOverride(				"dummy_id_f32");
+	configuration.ResetOverride(				"dummy_id_f64");
 	configuration.ResetOverride(				"dummy_id_string");
 	configuration.ResetOverride(				"dummy_id_enum_i32");
 	configuration.ResetOverride(				"dummy_id_enum_u32");
@@ -207,6 +219,8 @@ TEST(ConfigurationSystemTests, overrides_can_be_reset)
 	EXPECT_EQ(configuration.Get<i16>(			"dummy_id_i16",			0),						1);
 	EXPECT_EQ(configuration.Get<i32>(			"dummy_id_i32",			0),						1);
 	EXPECT_EQ(configuration.Get<i64>(			"dummy_id_i64",			0),						1);
+	EXPECT_EQ(configuration.Get<f32>(			"dummy_id_f32",			0.f),					1.f);
+	EXPECT_EQ(configuration.Get<f64>(			"dummy_id_f64",			0.),					1.);
 	EXPECT_EQ(configuration.Get<std::string>(	"dummy_id_string",		"dummy_default"),		"dummy_value_first");
 	EXPECT_EQ(configuration.Get<ETestEnumI32>(	"dummy_id_enum_i32",	ETestEnumI32::Zero),	ETestEnumI32::One);
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	"dummy_id_enum_u32",	ETestEnumU32::Zero),	ETestEnumU32::One);
@@ -229,6 +243,8 @@ TEST(ConfigurationSystemTests, getconfigs_map_has_all_entries)
 	configuration.Set<i16>(						"dummy_id_i16",			1,						dummyGroup);
 	configuration.Set<i32>(						"dummy_id_i32",			1,						dummyGroup);
 	configuration.Set<i64>(						"dummy_id_i64",			1,						dummyGroup);
+	configuration.Set<f32>(						"dummy_id_f32",			1.f,					dummyGroup);
+	configuration.Set<f64>(						"dummy_id_f64",			1.,						dummyGroup);
 	configuration.Set<std::string>(				"dummy_id_string",		"dummy_value",			dummyGroup);
 	configuration.Set<ETestEnumI32>(			"dummy_id_enum_i32",	ETestEnumI32::One,		dummyGroup);
 	configuration.Set<ETestEnumU32>(			"dummy_id_enum_u32",	ETestEnumU32::One,		dummyGroup);
@@ -244,6 +260,8 @@ TEST(ConfigurationSystemTests, getconfigs_map_has_all_entries)
 	EXPECT_NE(configs.find("dummy_id_i16"),			configs.cend());
 	EXPECT_NE(configs.find("dummy_id_i32"),			configs.cend());
 	EXPECT_NE(configs.find("dummy_id_i64"),			configs.cend());
+	EXPECT_NE(configs.find("dummy_id_f32"),			configs.cend());
+	EXPECT_NE(configs.find("dummy_id_f64"),			configs.cend());
 	EXPECT_NE(configs.find("dummy_id_string"),		configs.cend());
 	EXPECT_NE(configs.find("dummy_id_enum_i32"),	configs.cend());
 	EXPECT_NE(configs.find("dummy_id_enum_u32"),	configs.cend());
@@ -266,6 +284,8 @@ TEST(ConfigurationSystemTests, getconfigs_entries_are_correct_raw_type)
 	configuration.Set<i16>(						"dummy_id_i16",			1,						dummyGroup);
 	configuration.Set<i32>(						"dummy_id_i32",			1,						dummyGroup);
 	configuration.Set<i64>(						"dummy_id_i64",			1,						dummyGroup);
+	configuration.Set<f32>(						"dummy_id_f32",			1.f,					dummyGroup);
+	configuration.Set<f64>(						"dummy_id_f64",			1.,						dummyGroup);
 	configuration.Set<std::string>(				"dummy_id_string",		"dummy_value",			dummyGroup);
 	configuration.Set<ETestEnumI32>(			"dummy_id_enum_i32",	ETestEnumI32::One,		dummyGroup);
 	configuration.Set<ETestEnumU32>(			"dummy_id_enum_u32",	ETestEnumU32::One,		dummyGroup);
@@ -281,6 +301,8 @@ TEST(ConfigurationSystemTests, getconfigs_entries_are_correct_raw_type)
 	EXPECT_TRUE(std::holds_alternative<Configuration::ConfigData<i16>>(			configs["dummy_id_i16"]));
 	EXPECT_TRUE(std::holds_alternative<Configuration::ConfigData<i32>>(			configs["dummy_id_i32"]));
 	EXPECT_TRUE(std::holds_alternative<Configuration::ConfigData<i64>>(			configs["dummy_id_i64"]));
+	EXPECT_TRUE(std::holds_alternative<Configuration::ConfigData<f32>>(			configs["dummy_id_f32"]));
+	EXPECT_TRUE(std::holds_alternative<Configuration::ConfigData<f64>>(			configs["dummy_id_f64"]));
 	EXPECT_TRUE(std::holds_alternative<Configuration::ConfigData<std::string>>(	configs["dummy_id_string"]));
 	EXPECT_TRUE(std::holds_alternative<Configuration::ConfigData<i32>>(			configs["dummy_id_enum_i32"]));
 	EXPECT_TRUE(std::holds_alternative<Configuration::ConfigData<u32>>(			configs["dummy_id_enum_u32"]));
@@ -303,6 +325,8 @@ TEST(ConfigurationSystemTests, getconfigs_entries_have_correct_values)
 	configuration.Set<i16>(						"dummy_id_i16",			1,						dummyGroup);
 	configuration.Set<i32>(						"dummy_id_i32",			1,						dummyGroup);
 	configuration.Set<i64>(						"dummy_id_i64",			1,						dummyGroup);
+	configuration.Set<f32>(						"dummy_id_f32",			1.f,					dummyGroup);
+	configuration.Set<f64>(						"dummy_id_f64",			1.,						dummyGroup);
 	configuration.Set<std::string>(				"dummy_id_string",		"dummy_value",			dummyGroup);
 	configuration.Set<ETestEnumI32>(			"dummy_id_enum_i32",	ETestEnumI32::One,		dummyGroup);
 	configuration.Set<ETestEnumU32>(			"dummy_id_enum_u32",	ETestEnumU32::One,		dummyGroup);
@@ -329,6 +353,8 @@ TEST(ConfigurationSystemTests, getconfigs_entries_have_correct_values)
 	EXPECT_TRUE(isSameValue("dummy_id_i16",			i16(1)));
 	EXPECT_TRUE(isSameValue("dummy_id_i32",			i32(1)));
 	EXPECT_TRUE(isSameValue("dummy_id_i64",			i64(1)));
+	EXPECT_TRUE(isSameValue("dummy_id_f32",			f32(1.f)));
+	EXPECT_TRUE(isSameValue("dummy_id_f64",			f64(1.)));
 	EXPECT_TRUE(isSameValue("dummy_id_string",		std::string("dummy_value")));
 	EXPECT_TRUE(isSameValue("dummy_id_enum_i32",	static_cast<i32>(ETestEnumI32::One)));
 	EXPECT_TRUE(isSameValue("dummy_id_enum_u32",	static_cast<u32>(ETestEnumU32::One)));
@@ -351,6 +377,8 @@ TEST(ConfigurationSystemTests, getconfigs_entries_retain_value_when_overridden)
 	configuration.Set<i16>(						"dummy_id_i16",			0,						dummyGroup);
 	configuration.Set<i32>(						"dummy_id_i32",			0,						dummyGroup);
 	configuration.Set<i64>(						"dummy_id_i64",			0,						dummyGroup);
+	configuration.Set<f32>(						"dummy_id_f32",			0.f,					dummyGroup);
+	configuration.Set<f64>(						"dummy_id_f64",			0.,						dummyGroup);
 	configuration.Set<std::string>(				"dummy_id_string",		"dummy_value",			dummyGroup);
 	configuration.Set<ETestEnumI32>(			"dummy_id_enum_i32",	ETestEnumI32::Zero,		dummyGroup);
 	configuration.Set<ETestEnumU32>(			"dummy_id_enum_u32",	ETestEnumU32::Zero,		dummyGroup);
@@ -364,6 +392,8 @@ TEST(ConfigurationSystemTests, getconfigs_entries_retain_value_when_overridden)
 	configuration.SetOverride<i16>(				"dummy_id_i16",			1);
 	configuration.SetOverride<i32>(				"dummy_id_i32",			1);
 	configuration.SetOverride<i64>(				"dummy_id_i64",			1);
+	configuration.SetOverride<f32>(				"dummy_id_f32",			1.f);
+	configuration.SetOverride<f64>(				"dummy_id_f64",			1.);
 	configuration.SetOverride<std::string>(		"dummy_id_string",		"dummy_override");
 	configuration.SetOverride<ETestEnumI32>(	"dummy_id_enum_i32",	ETestEnumI32::One);
 	configuration.SetOverride<ETestEnumU32>(	"dummy_id_enum_u32",	ETestEnumU32::One);
@@ -390,6 +420,8 @@ TEST(ConfigurationSystemTests, getconfigs_entries_retain_value_when_overridden)
 	EXPECT_TRUE(isSameValue("dummy_id_i16",			i16(0)));
 	EXPECT_TRUE(isSameValue("dummy_id_i32",			i32(0)));
 	EXPECT_TRUE(isSameValue("dummy_id_i64",			i64(0)));
+	EXPECT_TRUE(isSameValue("dummy_id_f32",			f32(0.f)));
+	EXPECT_TRUE(isSameValue("dummy_id_f64",			f64(0.)));
 	EXPECT_TRUE(isSameValue("dummy_id_string",		std::string("dummy_value")));
 	EXPECT_TRUE(isSameValue("dummy_id_enum_i32",	static_cast<i32>(ETestEnumI32::Zero)));
 	EXPECT_TRUE(isSameValue("dummy_id_enum_u32",	static_cast<u32>(ETestEnumU32::Zero)));
@@ -412,6 +444,8 @@ TEST(ConfigurationSystemTests, getconfigs_entries_have_unset_overrides)
 	configuration.Set<i16>(						"dummy_id_i16",			0,						dummyGroup);
 	configuration.Set<i32>(						"dummy_id_i32",			0,						dummyGroup);
 	configuration.Set<i64>(						"dummy_id_i64",			0,						dummyGroup);
+	configuration.Set<f32>(						"dummy_id_f32",			0.f,					dummyGroup);
+	configuration.Set<f64>(						"dummy_id_f64",			0.,						dummyGroup);
 	configuration.Set<std::string>(				"dummy_id_string",		"dummy_value",			dummyGroup);
 	configuration.Set<ETestEnumI32>(			"dummy_id_enum_i32",	ETestEnumI32::Zero,		dummyGroup);
 	configuration.Set<ETestEnumU32>(			"dummy_id_enum_u32",	ETestEnumU32::Zero,		dummyGroup);
@@ -435,6 +469,8 @@ TEST(ConfigurationSystemTests, getconfigs_entries_have_unset_overrides)
 	EXPECT_FALSE(isOverrideSet("dummy_id_i16"));
 	EXPECT_FALSE(isOverrideSet("dummy_id_i32"));
 	EXPECT_FALSE(isOverrideSet("dummy_id_i64"));
+	EXPECT_FALSE(isOverrideSet("dummy_id_f32"));
+	EXPECT_FALSE(isOverrideSet("dummy_id_f64"));
 	EXPECT_FALSE(isOverrideSet("dummy_id_string"));
 	EXPECT_FALSE(isOverrideSet("dummy_id_enum_i32"));
 	EXPECT_FALSE(isOverrideSet("dummy_id_enum_u32"));
@@ -457,6 +493,8 @@ TEST(ConfigurationSystemTests, getconfigs_entries_have_set_overrides)
 	configuration.Set<i16>(						"dummy_id_i16",			0,						dummyGroup);
 	configuration.Set<i32>(						"dummy_id_i32",			0,						dummyGroup);
 	configuration.Set<i64>(						"dummy_id_i64",			0,						dummyGroup);
+	configuration.Set<f32>(						"dummy_id_f32",			0.f,					dummyGroup);
+	configuration.Set<f64>(						"dummy_id_f64",			0.,						dummyGroup);
 	configuration.Set<std::string>(				"dummy_id_string",		"dummy_value",			dummyGroup);
 	configuration.Set<ETestEnumI32>(			"dummy_id_enum_i32",	ETestEnumI32::Zero,		dummyGroup);
 	configuration.Set<ETestEnumU32>(			"dummy_id_enum_u32",	ETestEnumU32::Zero,		dummyGroup);
@@ -470,6 +508,8 @@ TEST(ConfigurationSystemTests, getconfigs_entries_have_set_overrides)
 	configuration.SetOverride<i16>(				"dummy_id_i16",			1);
 	configuration.SetOverride<i32>(				"dummy_id_i32",			1);
 	configuration.SetOverride<i64>(				"dummy_id_i64",			1);
+	configuration.SetOverride<f32>(				"dummy_id_f32",			1.f);
+	configuration.SetOverride<f64>(				"dummy_id_f64",			1.);
 	configuration.SetOverride<std::string>(		"dummy_id_string",		"dummy_override");
 	configuration.SetOverride<ETestEnumI32>(	"dummy_id_enum_i32",	ETestEnumI32::One);
 	configuration.SetOverride<ETestEnumU32>(	"dummy_id_enum_u32",	ETestEnumU32::One);
@@ -493,6 +533,8 @@ TEST(ConfigurationSystemTests, getconfigs_entries_have_set_overrides)
 	EXPECT_TRUE(isOverrideSet("dummy_id_i16"));
 	EXPECT_TRUE(isOverrideSet("dummy_id_i32"));
 	EXPECT_TRUE(isOverrideSet("dummy_id_i64"));
+	EXPECT_TRUE(isOverrideSet("dummy_id_f32"));
+	EXPECT_TRUE(isOverrideSet("dummy_id_f64"));
 	EXPECT_TRUE(isOverrideSet("dummy_id_string"));
 	EXPECT_TRUE(isOverrideSet("dummy_id_enum_i32"));
 	EXPECT_TRUE(isOverrideSet("dummy_id_enum_u32"));
@@ -515,6 +557,8 @@ TEST(ConfigurationSystemTests, getconfigs_entries_have_correct_overrides)
 	configuration.Set<i16>(						"dummy_id_i16",			0,						dummyGroup);
 	configuration.Set<i32>(						"dummy_id_i32",			0,						dummyGroup);
 	configuration.Set<i64>(						"dummy_id_i64",			0,						dummyGroup);
+	configuration.Set<f32>(						"dummy_id_f32",			0.f,					dummyGroup);
+	configuration.Set<f64>(						"dummy_id_f64",			0.,						dummyGroup);
 	configuration.Set<std::string>(				"dummy_id_string",		"dummy_value",			dummyGroup);
 	configuration.Set<ETestEnumI32>(			"dummy_id_enum_i32",	ETestEnumI32::Zero,		dummyGroup);
 	configuration.Set<ETestEnumU32>(			"dummy_id_enum_u32",	ETestEnumU32::Zero,		dummyGroup);
@@ -528,6 +572,8 @@ TEST(ConfigurationSystemTests, getconfigs_entries_have_correct_overrides)
 	configuration.SetOverride<i16>(				"dummy_id_i16",			1);
 	configuration.SetOverride<i32>(				"dummy_id_i32",			1);
 	configuration.SetOverride<i64>(				"dummy_id_i64",			1);
+	configuration.SetOverride<f32>(				"dummy_id_f32",			1.f);
+	configuration.SetOverride<f64>(				"dummy_id_f64",			1.);
 	configuration.SetOverride<std::string>(		"dummy_id_string",		"dummy_override");
 	configuration.SetOverride<ETestEnumI32>(	"dummy_id_enum_i32",	ETestEnumI32::One);
 	configuration.SetOverride<ETestEnumU32>(	"dummy_id_enum_u32",	ETestEnumU32::One);
@@ -554,6 +600,8 @@ TEST(ConfigurationSystemTests, getconfigs_entries_have_correct_overrides)
 	EXPECT_TRUE(isSameOverride("dummy_id_i16",		i16(1)));
 	EXPECT_TRUE(isSameOverride("dummy_id_i32",		i32(1)));
 	EXPECT_TRUE(isSameOverride("dummy_id_i64",		i64(1)));
+	EXPECT_TRUE(isSameOverride("dummy_id_f32",		f32(1.f)));
+	EXPECT_TRUE(isSameOverride("dummy_id_f64",		f64(1.)));
 	EXPECT_TRUE(isSameOverride("dummy_id_string",	std::string("dummy_override")));
 	EXPECT_TRUE(isSameOverride("dummy_id_enum_i32",	static_cast<i32>(ETestEnumI32::One)));
 	EXPECT_TRUE(isSameOverride("dummy_id_enum_u32",	static_cast<u32>(ETestEnumU32::One)));
@@ -576,6 +624,8 @@ TEST(ConfigurationSystemTests, getconfigs_set_override_is_only_set_for_one_entry
 	configuration.Set<i16>(						"dummy_id_value_i16",			0,						dummyGroup);
 	configuration.Set<i32>(						"dummy_id_value_i32",			0,						dummyGroup);
 	configuration.Set<i64>(						"dummy_id_value_i64",			0,						dummyGroup);
+	configuration.Set<f32>(						"dummy_id_value_f32",			0.f,					dummyGroup);
+	configuration.Set<f64>(						"dummy_id_value_f64",			0.,						dummyGroup);
 	configuration.Set<std::string>(				"dummy_id_value_string",		"dummy_value",			dummyGroup);
 	configuration.Set<ETestEnumI32>(			"dummy_id_value_enum_i32",		ETestEnumI32::Zero,		dummyGroup);
 	configuration.Set<ETestEnumU32>(			"dummy_id_value_enum_u32",		ETestEnumU32::Zero,		dummyGroup);
@@ -589,6 +639,8 @@ TEST(ConfigurationSystemTests, getconfigs_set_override_is_only_set_for_one_entry
 	configuration.Set<i16>(						"dummy_id_override_i16",		0,						dummyGroup);
 	configuration.Set<i32>(						"dummy_id_override_i32",		0,						dummyGroup);
 	configuration.Set<i64>(						"dummy_id_override_i64",		0,						dummyGroup);
+	configuration.Set<f32>(						"dummy_id_override_f32",		0.f,					dummyGroup);
+	configuration.Set<f64>(						"dummy_id_override_f64",		0.,						dummyGroup);
 	configuration.Set<std::string>(				"dummy_id_override_string",		"dummy_value",			dummyGroup);
 	configuration.Set<ETestEnumI32>(			"dummy_id_override_enum_i32",	ETestEnumI32::Zero,		dummyGroup);
 	configuration.Set<ETestEnumU32>(			"dummy_id_override_enum_u32",	ETestEnumU32::Zero,		dummyGroup);
@@ -602,6 +654,8 @@ TEST(ConfigurationSystemTests, getconfigs_set_override_is_only_set_for_one_entry
 	configuration.SetOverride<i16>(				"dummy_id_override_i16",		1);
 	configuration.SetOverride<i32>(				"dummy_id_override_i32",		1);
 	configuration.SetOverride<i64>(				"dummy_id_override_i64",		1);
+	configuration.SetOverride<f32>(				"dummy_id_override_f32",		1.f);
+	configuration.SetOverride<f64>(				"dummy_id_override_f64",		1.);
 	configuration.SetOverride<std::string>(		"dummy_id_override_string",		"dummy_override");
 	configuration.SetOverride<ETestEnumI32>(	"dummy_id_override_enum_i32",	ETestEnumI32::One);
 	configuration.SetOverride<ETestEnumU32>(	"dummy_id_override_enum_u32",	ETestEnumU32::One);
@@ -625,6 +679,8 @@ TEST(ConfigurationSystemTests, getconfigs_set_override_is_only_set_for_one_entry
 	EXPECT_FALSE(isOverrideSet("dummy_id_value_i16"));
 	EXPECT_FALSE(isOverrideSet("dummy_id_value_i32"));
 	EXPECT_FALSE(isOverrideSet("dummy_id_value_i64"));
+	EXPECT_FALSE(isOverrideSet("dummy_id_value_f32"));
+	EXPECT_FALSE(isOverrideSet("dummy_id_value_f64"));
 	EXPECT_FALSE(isOverrideSet("dummy_id_value_string"));
 	EXPECT_FALSE(isOverrideSet("dummy_id_value_enum_i32"));
 	EXPECT_FALSE(isOverrideSet("dummy_id_value_enum_u32"));
@@ -638,6 +694,8 @@ TEST(ConfigurationSystemTests, getconfigs_set_override_is_only_set_for_one_entry
 	EXPECT_TRUE(isOverrideSet("dummy_id_override_i16"));
 	EXPECT_TRUE(isOverrideSet("dummy_id_override_i32"));
 	EXPECT_TRUE(isOverrideSet("dummy_id_override_i64"));
+	EXPECT_TRUE(isOverrideSet("dummy_id_override_f32"));
+	EXPECT_TRUE(isOverrideSet("dummy_id_override_f64"));
 	EXPECT_TRUE(isOverrideSet("dummy_id_override_string"));
 	EXPECT_TRUE(isOverrideSet("dummy_id_override_enum_i32"));
 	EXPECT_TRUE(isOverrideSet("dummy_id_override_enum_u32"));
@@ -658,6 +716,8 @@ TEST(ConfigurationSystemTests, getconfigs_entries_are_correct_config_group)
 	configuration.Set<i16>(						"dummy_id_application_i16",			0,						EConfigGroup::Application);
 	configuration.Set<i32>(						"dummy_id_application_i32",			0,						EConfigGroup::Application);
 	configuration.Set<i64>(						"dummy_id_application_i64",			0,						EConfigGroup::Application);
+	configuration.Set<f32>(						"dummy_id_application_f32",			0.f,					EConfigGroup::Application);
+	configuration.Set<f64>(						"dummy_id_application_f64",			0.,						EConfigGroup::Application);
 	configuration.Set<std::string>(				"dummy_id_application_string",		"dummy_value",			EConfigGroup::Application);
 	configuration.Set<ETestEnumI32>(			"dummy_id_application_enum_i32",	ETestEnumI32::Zero,		EConfigGroup::Application);
 	configuration.Set<ETestEnumU32>(			"dummy_id_application_enum_u32",	ETestEnumU32::Zero,		EConfigGroup::Application);
@@ -671,6 +731,8 @@ TEST(ConfigurationSystemTests, getconfigs_entries_are_correct_config_group)
 	configuration.Set<i16>(						"dummy_id_user_i16",				0,						EConfigGroup::User);
 	configuration.Set<i32>(						"dummy_id_user_i32",				0,						EConfigGroup::User);
 	configuration.Set<i64>(						"dummy_id_user_i64",				0,						EConfigGroup::User);
+	configuration.Set<f32>(						"dummy_id_user_f32",				0.f,					EConfigGroup::User);
+	configuration.Set<f64>(						"dummy_id_user_f64",				0.,						EConfigGroup::User);
 	configuration.Set<std::string>(				"dummy_id_user_string",				"dummy_value",			EConfigGroup::User);
 	configuration.Set<ETestEnumI32>(			"dummy_id_user_enum_i32",			ETestEnumI32::Zero,		EConfigGroup::User);
 	configuration.Set<ETestEnumU32>(			"dummy_id_user_enum_u32",			ETestEnumU32::Zero,		EConfigGroup::User);
@@ -684,6 +746,8 @@ TEST(ConfigurationSystemTests, getconfigs_entries_are_correct_config_group)
 	configuration.Set<i16>(						"dummy_id_device_i16",				0,						EConfigGroup::Device);
 	configuration.Set<i32>(						"dummy_id_device_i32",				0,						EConfigGroup::Device);
 	configuration.Set<i64>(						"dummy_id_device_i64",				0,						EConfigGroup::Device);
+	configuration.Set<f32>(						"dummy_id_device_f32",				0.f,					EConfigGroup::Device);
+	configuration.Set<f64>(						"dummy_id_device_f64",				0.,						EConfigGroup::Device);
 	configuration.Set<std::string>(				"dummy_id_device_string",			"dummy_value",			EConfigGroup::Device);
 	configuration.Set<ETestEnumI32>(			"dummy_id_device_enum_i32",			ETestEnumI32::Zero,		EConfigGroup::Device);
 	configuration.Set<ETestEnumU32>(			"dummy_id_device_enum_u32",			ETestEnumU32::Zero,		EConfigGroup::Device);
@@ -707,6 +771,8 @@ TEST(ConfigurationSystemTests, getconfigs_entries_are_correct_config_group)
 	EXPECT_EQ(getConfigGroup("dummy_id_application_i16"),		EConfigGroup::Application);
 	EXPECT_EQ(getConfigGroup("dummy_id_application_i32"),		EConfigGroup::Application);
 	EXPECT_EQ(getConfigGroup("dummy_id_application_i64"),		EConfigGroup::Application);
+	EXPECT_EQ(getConfigGroup("dummy_id_application_f32"),		EConfigGroup::Application);
+	EXPECT_EQ(getConfigGroup("dummy_id_application_f64"),		EConfigGroup::Application);
 	EXPECT_EQ(getConfigGroup("dummy_id_application_string"),	EConfigGroup::Application);
 	EXPECT_EQ(getConfigGroup("dummy_id_application_enum_i32"),	EConfigGroup::Application);
 	EXPECT_EQ(getConfigGroup("dummy_id_application_enum_u32"),	EConfigGroup::Application);
@@ -720,6 +786,8 @@ TEST(ConfigurationSystemTests, getconfigs_entries_are_correct_config_group)
 	EXPECT_EQ(getConfigGroup("dummy_id_user_i16"),				EConfigGroup::User);
 	EXPECT_EQ(getConfigGroup("dummy_id_user_i32"),				EConfigGroup::User);
 	EXPECT_EQ(getConfigGroup("dummy_id_user_i64"),				EConfigGroup::User);
+	EXPECT_EQ(getConfigGroup("dummy_id_user_f32"),				EConfigGroup::User);
+	EXPECT_EQ(getConfigGroup("dummy_id_user_f64"),				EConfigGroup::User);
 	EXPECT_EQ(getConfigGroup("dummy_id_user_string"),			EConfigGroup::User);
 	EXPECT_EQ(getConfigGroup("dummy_id_user_enum_i32"),			EConfigGroup::User);
 	EXPECT_EQ(getConfigGroup("dummy_id_user_enum_u32"),			EConfigGroup::User);
@@ -733,6 +801,8 @@ TEST(ConfigurationSystemTests, getconfigs_entries_are_correct_config_group)
 	EXPECT_EQ(getConfigGroup("dummy_id_device_i16"),			EConfigGroup::Device);
 	EXPECT_EQ(getConfigGroup("dummy_id_device_i32"),			EConfigGroup::Device);
 	EXPECT_EQ(getConfigGroup("dummy_id_device_i64"),			EConfigGroup::Device);
+	EXPECT_EQ(getConfigGroup("dummy_id_device_f32"),			EConfigGroup::Device);
+	EXPECT_EQ(getConfigGroup("dummy_id_device_f64"),			EConfigGroup::Device);
 	EXPECT_EQ(getConfigGroup("dummy_id_device_string"),			EConfigGroup::Device);
 	EXPECT_EQ(getConfigGroup("dummy_id_device_enum_i32"),		EConfigGroup::Device);
 	EXPECT_EQ(getConfigGroup("dummy_id_device_enum_u32"),		EConfigGroup::Device);

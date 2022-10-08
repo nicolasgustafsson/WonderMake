@@ -1,8 +1,7 @@
 #include "pch.h"
+
 #include "Window.h"
-#include <GLFW/glfw3.h>
-#include "Json/json.hpp"
-#include <fstream>
+
 #include "Program/GlfwFacade.h"
 
 #include "wondermake-engine/ConfigurationEngine.h"
@@ -11,9 +10,35 @@
 #include "wondermake-base/ConfigurationSystem.h"
 #include "wondermake-base/WmLogTags.h"
 
+#include "wondermake-utility/Bindable.h"
+#include "wondermake-utility/BufferExecutor.h"
+
+#include "GLFW/glfw3.h"
+
+#include "Json/json.hpp"
+
+#include <fstream>
+
 REGISTER_SYSTEM(Window);
 
-Window::Window()
+using WindowSizeCallback = std::function<void(GLFWwindow*, int, int)>;
+
+inline constexpr SVector2i locDefaultWindowSize = { 1280, 720 };
+
+Window::~Window()
+{
+	auto& glfw = Get<GlfwFacade>();
+
+	auto meta = glfw.GetWindowUserPointer(myGlfwWindow);
+
+	if (meta)
+		delete static_cast<WindowSizeCallback*>(meta);
+
+	glfw.SetWindowUserPointer(myGlfwWindow, nullptr);
+	glfw.SetFramebufferSizeCallback(myGlfwWindow, nullptr);
+}
+
+void Window::Initialize()
 {
 	auto&& configuration = Get<ConfigurationSystem>();
 	
@@ -24,8 +49,8 @@ Window::Window()
 
 	mySize =
 	{
-		configuration.Get<i32>(ConfigurationEngine::WindowWidth, 1280),
-		configuration.Get<i32>(ConfigurationEngine::WindowHeight, 720)
+		configuration.Get<i32>(ConfigurationEngine::WindowWidth,	locDefaultWindowSize.X),
+		configuration.Get<i32>(ConfigurationEngine::WindowHeight,	locDefaultWindowSize.Y)
 	};
 
 	myGlfwWindow = glfw.CreateGlfwWindow(mySize.X, mySize.Y, "WonderMake", NULL, NULL);
@@ -42,6 +67,43 @@ Window::Window()
 	{
 		WmLogError(TagWonderMake << TagWmOpenGL << "Failed to initialize GLAD.");
 	}
+
+	auto closure = std::make_unique<WindowSizeCallback>(Bind(&Window::OnWindowSizeChanged, weak_from_this()))
+		.release();
+
+	glfw.SetWindowUserPointer(myGlfwWindow, closure);
+	glfw.SetFramebufferSizeCallback(myGlfwWindow, [](GLFWwindow* aWindow, int aWidth, int aHeight) -> void
+		{
+			GlfwFacade& glfw = GetSystem<GlfwFacade>();
+
+			const auto& callback = *static_cast<WindowSizeCallback*>(glfw.GetWindowUserPointer(aWindow));
+
+			callback(aWindow, aWidth, aHeight);
+		});
+
+	auto onSizeChange = [this](auto&&...)
+	{
+		auto& configuration = Get<ConfigurationSystem>();
+		auto& glfw = Get<GlfwFacade>();
+
+		SVector2i newSize =
+		{
+			configuration.Get<i32>(ConfigurationEngine::WindowWidth,	locDefaultWindowSize.X),
+			configuration.Get<i32>(ConfigurationEngine::WindowHeight,	locDefaultWindowSize.Y)
+		};
+
+		if (newSize == mySize)
+			return;
+
+		mySize = newSize;
+
+		WmLogInfo(TagWonderMake << TagWmOpenGL << "Window size changed to " << mySize.X << ',' << mySize.Y << '.');
+
+		glfw.SetWindowSize(myGlfwWindow, mySize.X, mySize.Y);
+	};
+
+	mySubscriberSizeWidth	= configuration.OnOverrideChanged<i32>(ConfigurationEngine::WindowWidth,	GetExecutor(), onSizeChange);
+	mySubscriberSizeHeight	= configuration.OnOverrideChanged<i32>(ConfigurationEngine::WindowHeight,	GetExecutor(), onSizeChange);
 }
 
 void Window::Update()
@@ -54,17 +116,17 @@ void Window::Update()
 	glfw.PollEvents();
 
 	if (glfw.ShouldWindowClose(myGlfwWindow))
-	{
 		quick_exit(0);
-	}
 }
 
-bool Window::IsValid() const
+void Window::OnWindowSizeChanged(GLFWwindow* /*aWindow*/, i32 aWidth, i32 aHeight)
 {
-	return myGlfwWindow != nullptr;
-}
+	mySize = { aWidth, aHeight };
 
-SVector2i Window::GetSize() const
-{
-	return mySize;
+	BufferExecutor executor;
+
+	for (auto& onResize : myResizeList)
+		onResize.Trigger(executor, SVector2i(aWidth, aHeight));
+
+	executor.ExecuteAll();
 }

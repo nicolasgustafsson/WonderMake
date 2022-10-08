@@ -6,38 +6,24 @@
 #include "Graphics/EngineUniformBuffer.h"
 #include "Graphics/Renderer.h"
 #include "Input/InputSystem.h"
-#include "Program/GlfwFacade.h"
 #include "Program/Window.h"
-#include "wondermake-base/SystemPtr.h"
 #include "Utilities/TimeKeeper.h"
+
+#include "wondermake-utility/Bindable.h"
 
 REGISTER_SYSTEM(ProgramSystem);
 
-using WindowSizeCallback = std::function<void(GLFWwindow*, int, int)>;
-
 ProgramSystem::ProgramSystem()
 {
-	myThisPointer = std::make_shared<ProgramSystem*>(this);
-
 	Get<ScheduleSystem>().ScheduleRepeating<>([this]() { Tick(); });
-
-	SetupCallbacks();
 }
 
-ProgramSystem::~ProgramSystem()
+void ProgramSystem::Initialize()
 {
-	auto&& glfw = Get<GlfwFacade>();
-	auto glfwWindow = Get<Window>().myGlfwWindow;
+	auto& window = Get<Window>();
 
-	auto meta = glfw.GetWindowUserPointer(glfwWindow);
-
-	if (meta)
-	{
-		delete static_cast<WindowSizeCallback*>(meta);
-	}
-
-	glfw.SetWindowUserPointer(glfwWindow, nullptr);
-	glfw.SetFramebufferSizeCallback(glfwWindow, nullptr);
+	if constexpr (!Constants::IsDebugging)
+		mySubscriberWindowResize = window.OnResize(GetExecutor(), Bind(&ProgramSystem::OnWindowSizeChanged, weak_from_this()));
 }
 
 void ProgramSystem::Tick()
@@ -67,44 +53,8 @@ void ProgramSystem::FinishPreviousFrame()
 		Get<Renderer>().FinishFrame();
 }
 
-void ProgramSystem::SetupCallbacks()
+void ProgramSystem::OnWindowSizeChanged(SVector2i aSize)
 {
-	auto&& glfw = Get<GlfwFacade>();
-	auto glfwWindow = Get<Window>().myGlfwWindow;
-
-	auto meta = glfw.GetWindowUserPointer(glfwWindow);
-
-	if (meta)
-	{
-		delete static_cast<WindowSizeCallback*>(meta);
-	}
-
-	auto closure = std::make_unique<WindowSizeCallback>([weakThis = std::weak_ptr(myThisPointer)](GLFWwindow* aWindow, int aWidth, int aHeight)
-	{
-		auto ptr = weakThis.lock();
-
-		if (ptr)
-		{
-			(*ptr)->OnWindowSizeChanged(aWindow, aWidth, aHeight);
-		}
-	});
-
-	glfw.SetWindowUserPointer(glfwWindow, closure.get());
-	glfw.SetFramebufferSizeCallback(glfwWindow, [](GLFWwindow* aWindow, int aWidth, int aHeight) -> void
-		{
-			SystemPtr<GlfwFacade> glfw;
-
-			static_cast<WindowSizeCallback*>(glfw->GetWindowUserPointer(aWindow))->operator()(aWindow, aWidth, aHeight);
-		});
-
-	closure.release();
-}
-
-void ProgramSystem::OnWindowSizeChanged(GLFWwindow* /*aWindow*/, i32 aWidth, i32 aHeight)
-{
-	if constexpr (!Constants::IsDebugging)
-	{
-		Get<CameraManager>().SetViewportSize({ aWidth, aHeight });
-	}
+	Get<CameraManager>().SetViewportSize(aSize);
 }
 

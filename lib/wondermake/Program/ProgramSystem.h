@@ -2,12 +2,13 @@
 
 #include "wondermake-base/System.h"
 
+#include "wondermake-utility/EventSubscriber.h"
+
 #include <memory>
 
 class AudioManager;
 class CameraManager;
 class EngineUniformBuffer;
-class GlfwFacade;
 class InputSystem;
 class ScheduleSystem;
 class TimeKeeper;
@@ -20,7 +21,6 @@ class ProgramSystem
 			PAdd<AudioManager, PWrite>,
 			PAdd<CameraManager, PWrite>,
 			PAdd<EngineUniformBuffer, PWrite>,
-			PAdd<GlfwFacade, PWrite>,
 			PAdd<InputSystem, PWrite>,
 			PAdd<ScheduleSystem, PWrite>,
 			PAdd<TimeKeeper, PRead>,
@@ -28,10 +28,12 @@ class ProgramSystem
 			PAdd<Window, PWrite>>,
 		STrait::Set<
 			STGui>>
+	, public std::enable_shared_from_this<ProgramSystem>
 {
 public:
 	ProgramSystem();
-	~ProgramSystem();
+
+	void Initialize() override;
 
 	void Tick();
 
@@ -40,11 +42,8 @@ public:
 	void FinishPreviousFrame();
 
 private:
-	void SetupCallbacks();
-	void OnWindowSizeChanged(GLFWwindow* aWindow, i32 aWidth, i32 aHeight);
+	void OnWindowSizeChanged(SVector2i aSize);
 
-	std::shared_ptr<ProgramSystem*> myThisPointer;
-
-	static constexpr SVector2<i32> WindowSize = { 1600, 900 };
+	EventSubscriber mySubscriberWindowResize;
 };
 

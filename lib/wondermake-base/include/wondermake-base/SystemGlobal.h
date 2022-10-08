@@ -41,6 +41,15 @@ static void _RegisterSystem()
 		});
 }
 
+template<typename TSystem>
+inline TSystem& GetSystem()
+	requires(
+		TSystem::TraitSet::template HasTrait<STSingleton> &&
+		TSystem::TraitSet::template HasTrait<STThreadsafe>)
+{
+	return Global::GetSystemContainer().Get<TSystem>();
+}
+
 #define _REGISTER_SYSTEM_CLASS(aSystem, aBaseSystem) _RegisterSystem<aSystem, aBaseSystem>
 
 #define _REGISTER_SYSTEM_MASKED_IMPL(aSystem, aBaseSystem, aSystemName) WM_AUTO_REGISTER(_REGISTER_SYSTEM_CLASS(aSystem, aBaseSystem), aSystemName)

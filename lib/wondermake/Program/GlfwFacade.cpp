@@ -35,6 +35,16 @@ void GlfwFacade::GetCursorPos(GLFWwindow* aWindow, double* aXPosition, double* a
 	glfwGetCursorPos(aWindow, aXPosition, aYPosition);
 }
 
+void GlfwFacade::GetWindowSize(GLFWwindow* aWindow, int* aWidth, int* aHeight)
+{
+	glfwGetWindowSize(aWindow, aWidth, aHeight);
+}
+
+void GlfwFacade::SetWindowSize(GLFWwindow* aWindow, i32 aWidth, i32 aHeight)
+{
+	glfwSetWindowSize(aWindow, aWidth, aHeight);
+}
+
 void GlfwFacade::SetFramebufferSizeCallback(GLFWwindow* aWindow, GLFWframebuffersizefun aCallback)
 {
 	glfwSetFramebufferSizeCallback(aWindow, aCallback);

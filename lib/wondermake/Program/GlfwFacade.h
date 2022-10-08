@@ -8,7 +8,9 @@ class GlfwFacade
 	: public System<
 		Policy::Set<>,
 		STrait::Set<
-			STGui>>
+			STGui,
+			STSingleton,
+			STThreadsafe>>
 {
 public:
 	GlfwFacade();
@@ -19,6 +21,9 @@ public:
 
 	void GetWindowPos(GLFWwindow* aWindow, int* aXPosition, int* aYPosition);
 	void GetCursorPos(GLFWwindow* aWindow, double* aXPosition, double* aYPosition);
+
+	void GetWindowSize(GLFWwindow* aWindow, int* aWidth, int* aHeight);
+	void SetWindowSize(GLFWwindow* aWindow, i32 aWidth, i32 aHeight);
 
 	void SetFramebufferSizeCallback(GLFWwindow* aWindow, GLFWframebuffersizefun aCallback);
 

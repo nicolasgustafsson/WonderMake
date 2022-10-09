@@ -6,6 +6,11 @@
 
 constexpr EConfigGroup locDummyGroup = EConfigGroup::Application;
 
+using namespace MemoryUnitLiterals;
+
+using UMemoryUnit = MemoryUnit<EMemoryRatio::B, u32>;
+using IMemoryUnit = MemoryUnit<EMemoryRatio::B, i32>;
+
 TEST(ConfigurationTests, get_configs_returns_empty_list_when_no_values_are_set)
 {
 	Configuration configuration;
@@ -141,6 +146,54 @@ TEST(ConfigurationTests, get_configs_returns_list_with_all_set_overrides)
 	EXPECT_EQ(configB.Override, dummyOverrideB);
 }
 
+template<CMemoryUnit TConfig>
+void GetConfigsReturnsRatiosForMemoryUnitConfigs()
+{
+	const char* const dummyId = "dummy_id";
+
+	Configuration configuration;
+
+	configuration.Set<TConfig>(dummyId, TConfig(), locDummyGroup);
+
+	auto configs = configuration.GetConfigs();
+
+	const auto& config = std::get<Configuration::ConfigData<typename TConfig::Rep>>(configs[dummyId]);
+
+	ASSERT_TRUE(config.MemoryRatio);
+
+	EXPECT_EQ(*config.MemoryRatio, TConfig::Ratio);
+}
+
+TEST(ConfigurationTests, get_configs_returns_ratios_for_memoryunit_configs)
+{
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::B,		f32>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::KB,	f32>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::KiB,	f32>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::B,		f64>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::KB,	f64>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::KiB,	f64>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::B,		u8>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::B,		u16>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::KB,	u16>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::KiB,	u16>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::B,		u32>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::KB,	u32>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::KiB,	u32>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::B,		u64>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::KB,	u64>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::KiB,	u64>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::B,		i8>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::B,		i16>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::KB,	i16>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::KiB,	i16>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::B,		i32>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::KB,	i32>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::KiB,	i32>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::B,		i64>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::KB,	i64>>();
+	GetConfigsReturnsRatiosForMemoryUnitConfigs<MemoryUnit<EMemoryRatio::KiB,	i64>>();
+}
+
 TEST(ConfigurationTests, empty_allowed_list_is_returned_when_calling_getconfig_when_none_is_set)
 {
 	Configuration configuration;
@@ -157,6 +210,8 @@ TEST(ConfigurationTests, empty_allowed_list_is_returned_when_calling_getconfig_w
 	configuration.Set<std::string>(		"dummy_id_string",			"dummy_value",		locDummyGroup);
 	configuration.Set<ETestEnumI32>(	"dummy_id_enum_i32",		ETestEnumI32::Zero,	locDummyGroup);
 	configuration.Set<ETestEnumU32>(	"dummy_id_enum_u32",		ETestEnumU32::Zero,	locDummyGroup);
+	configuration.Set<IMemoryUnit>(		"dummy_id_memoryunit_i32",	0_B,				locDummyGroup);
+	configuration.Set<UMemoryUnit>(		"dummy_id_memoryunit_u32",	0_B,				locDummyGroup);
 
 	auto configs = configuration.GetConfigs();
 
@@ -172,6 +227,8 @@ TEST(ConfigurationTests, empty_allowed_list_is_returned_when_calling_getconfig_w
 	EXPECT_TRUE(std::get<Configuration::ConfigData<std::string>>	(configs["dummy_id_string"])			.AllowedValues.empty());
 	EXPECT_TRUE(std::get<Configuration::ConfigData<i32>>			(configs["dummy_id_enum_i32"])			.AllowedValues.empty());
 	EXPECT_TRUE(std::get<Configuration::ConfigData<u32>>			(configs["dummy_id_enum_u32"])			.AllowedValues.empty());
+	EXPECT_TRUE(std::get<Configuration::ConfigData<i32>>			(configs["dummy_id_memoryunit_i32"])	.AllowedValues.empty());
+	EXPECT_TRUE(std::get<Configuration::ConfigData<u32>>			(configs["dummy_id_memoryunit_u32"])	.AllowedValues.empty());
 }
 
 TEST(ConfigurationTests, allowed_list_is_returned_when_calling_getconfig_when_list_is_set)
@@ -190,6 +247,8 @@ TEST(ConfigurationTests, allowed_list_is_returned_when_calling_getconfig_when_li
 	configuration.Set<std::string>(		"dummy_id_string",			"dummy_value",			locDummyGroup,	Configuration::AllowedValues<std::string>(	{ { "dummy_name", std::string("dummy_value") } }));
 	configuration.Set<ETestEnumI32>(	"dummy_id_enum_i32",		ETestEnumI32::One,		locDummyGroup,	Configuration::AllowedValues<ETestEnumI32>(	{ { "dummy_name", ETestEnumI32::One } }));
 	configuration.Set<ETestEnumU32>(	"dummy_id_enum_u32",		ETestEnumU32::One,		locDummyGroup,	Configuration::AllowedValues<ETestEnumU32>(	{ { "dummy_name", ETestEnumU32::One } }));
+	configuration.Set<IMemoryUnit>(		"dummy_id_memoryunit_i32",	1_B,					locDummyGroup,	Configuration::AllowedValues<IMemoryUnit>(	{ { "dummy_name", 1_B } }));
+	configuration.Set<UMemoryUnit>(		"dummy_id_memoryunit_u32",	1_B,					locDummyGroup,	Configuration::AllowedValues<UMemoryUnit>(	{ { "dummy_name", 1_B } }));
 
 	auto configs = configuration.GetConfigs();
 
@@ -205,6 +264,8 @@ TEST(ConfigurationTests, allowed_list_is_returned_when_calling_getconfig_when_li
 	EXPECT_EQ(std::get<Configuration::ConfigData<std::string>>(	configs["dummy_id_string"])			.AllowedValues.size(), 1);
 	EXPECT_EQ(std::get<Configuration::ConfigData<i32>>(			configs["dummy_id_enum_i32"])		.AllowedValues.size(), 1);
 	EXPECT_EQ(std::get<Configuration::ConfigData<u32>>(			configs["dummy_id_enum_u32"])		.AllowedValues.size(), 1);
+	EXPECT_EQ(std::get<Configuration::ConfigData<i32>>(			configs["dummy_id_memoryunit_i32"])	.AllowedValues.size(), 1);
+	EXPECT_EQ(std::get<Configuration::ConfigData<u32>>(			configs["dummy_id_memoryunit_u32"])	.AllowedValues.size(), 1);
 
 	EXPECT_EQ(std::get<Configuration::ConfigData<bool>>(		configs["dummy_id_bool"])			.AllowedValues["dummy_name"], true);
 	EXPECT_EQ(std::get<Configuration::ConfigData<u8>>(			configs["dummy_id_u8"])				.AllowedValues["dummy_name"], 1);

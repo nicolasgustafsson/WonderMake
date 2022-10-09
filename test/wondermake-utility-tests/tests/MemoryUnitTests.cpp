@@ -2,6 +2,10 @@
 
 #include "wondermake-utility/MemoryUnit.h"
 
+static_assert(CMemoryUnit<MemoryUnit<EMemoryRatio::B, u32>>);
+static_assert(!CMemoryUnit<EMemoryRatio>);
+static_assert(!CMemoryUnit<u32>);
+
 TEST(MemoryUnitTest, is_converts_between_ratios)
 {
 	using MemB = MemoryUnit<EMemoryRatio::B, u32>;

@@ -3,6 +3,7 @@
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/WmLogTags.h"
 
+#include "wondermake-utility/MemoryUnit.h"
 #include "wondermake-utility/Typedefs.h"
 
 #include <optional>
@@ -18,6 +19,7 @@ concept CConfigType =
 	!std::is_reference_v<TConfig> && (
 		std::is_arithmetic_v<TConfig> ||
 		std::is_enum_v<TConfig> ||
+		CMemoryUnit<TConfig> ||
 		std::is_same_v<std::string, TConfig>);
 
 template<typename TConfig>
@@ -29,6 +31,7 @@ template<typename TConfig>
 concept CConfig =
 	std::is_arithmetic_v<std::remove_const_t<TConfig>> ||
 	std::is_enum_v<std::remove_const_t<TConfig>> ||
+	CMemoryUnit<TConfig> ||
 	std::is_constructible_v<std::string, TConfig> ||
 	std::is_convertible_v<TConfig, std::string> ||
 	CConfigRaw<TConfig>;
@@ -52,6 +55,7 @@ public:
 		std::optional<TConfigType>						Override;
 		std::unordered_map<std::string, TConfigType>	AllowedValues;
 		EConfigGroup									ConfigGroup;
+		std::optional<EMemoryRatio>						MemoryRatio;
 	};
 
 	using ConfigElement = std::variant<
@@ -79,7 +83,7 @@ public:
 	template<CConfigType TConfigType, typename TId, typename TArg, typename TRestrict = NoRestrictions>
 	inline void Set(TId&& aId, TArg&& aValue, EConfigGroup aGroup, TRestrict aRestrict = NoRestrictions())
 		requires(
-			CConfig<std::remove_reference_t<TArg>>
+			CConfig<std::decay_t<TArg>>
 			&& (std::is_constructible_v<std::string, TId> || std::is_convertible_v<TId, std::string>)
 			&& (std::is_constructible_v<TConfigType, TArg> || std::is_convertible_v<TArg, TConfigType>)
 			&& (std::is_same_v<TRestrict, NoRestrictions> || std::is_same_v<TRestrict, AllowedValues<TConfigType>>))
@@ -89,6 +93,7 @@ public:
 		auto getAllowedValuesMap = [&aRestrict]()
 		{
 			if constexpr (std::is_same_v<TRestrict, AllowedValues<TConfigType>>)
+			{
 				if constexpr (std::is_enum_v<TConfigType>)
 				{
 					using RawType = std::underlying_type_t<TConfigType>;
@@ -102,13 +107,29 @@ public:
 
 					return retVal;
 				}
+				else if constexpr (CMemoryUnit<TConfigType>)
+				{
+					std::unordered_map<std::string, typename TConfigType::Rep> retVal;
+
+					retVal.reserve(aRestrict.Map.size());
+
+					for (auto&& [name, value] : aRestrict.Map)
+						retVal.emplace(std::make_pair(name, value.To<TConfigType::Ratio>()));
+
+					return retVal;
+				}
 				else
 					return std::move(aRestrict.Map);
+			}
 			else
+			{
 				if constexpr (std::is_enum_v<TConfigType>)
 					return std::unordered_map<std::string, std::underlying_type_t<TConfigType>>();
+				else if constexpr (CMemoryUnit<TConfigType>)
+					return std::unordered_map<std::string, typename TConfigType::Rep>();
 				else
 					return std::unordered_map<std::string, TConfigType>();
+			}
 		};
 
 		if constexpr (std::is_enum_v<TConfigType>)
@@ -121,6 +142,23 @@ public:
 					std::nullopt,
 					getAllowedValuesMap(),
 					aGroup
+				},
+				typeid(TConfigType)
+			};
+
+			myConfigs.insert(std::make_pair(static_cast<std::string>(std::forward<TId>(aId)), std::move(data)));
+		}
+		else if constexpr (CMemoryUnit<TConfigType>)
+		{
+			ConfigDataRaw data =
+			{
+				ConfigData<typename TConfigType::Rep>
+				{
+					TConfigType(aValue).To<TConfigType::Ratio>(),
+					std::nullopt,
+					getAllowedValuesMap(),
+					aGroup,
+					TConfigType::Ratio
 				},
 				typeid(TConfigType)
 			};
@@ -179,7 +217,7 @@ public:
 	template<CConfigType TConfigType, bool TRaw = false, typename TArg>
 	void SetOverride(const std::string& aId, TArg&& aValue)
 		requires(
-			CConfig<std::remove_reference_t<TArg>>
+			CConfig<std::decay_t<TArg>>
 			&& std::is_constructible_v<TConfigType, TArg&&>)
 	{
 		std::unique_lock<std::shared_mutex> lock(myMutex);
@@ -216,7 +254,22 @@ public:
 
 			auto&& config = std::get<ConfigData<RawType>>(configRaw.Config);
 			
-			config.Override = static_cast<std::underlying_type_t<TConfigType>>(aValue);
+			config.Override = static_cast<RawType>(aValue);
+		}
+		else if constexpr (CMemoryUnit<TConfigType>)
+		{
+			using RawType = typename TConfigType::Rep;
+
+			if (!std::holds_alternative<ConfigData<RawType>>(configRaw.Config))
+			{
+				WmLogError(TagWonderMake << TagWmConfiguration << "Config type mismatch, attempted to set override type " << overrideType.name() << " for id " << aId << ". Set type: " << configRaw.Type.name() << '.');
+
+				return;
+			}
+
+			auto&& config = std::get<ConfigData<RawType>>(configRaw.Config);
+
+			config.Override = TConfigType(aValue).To<TConfigType::Ratio>();
 		}
 		else
 		{
@@ -238,10 +291,44 @@ public:
 		}
 	}
 
+	inline void SetMemoryRatio(const char* aId, EMemoryRatio aRatio)
+	{
+		SetMemoryRatio(std::string_view(aId), aRatio);
+	}
+	inline void SetMemoryRatio(std::string_view aId, EMemoryRatio aRatio)
+	{
+		thread_local std::string buffer;
+
+		buffer.reserve(aId.size() + 1);
+
+		buffer.assign(aId.data(), aId.size());
+
+		SetMemoryRatio(buffer, aRatio);
+	}
+	inline void SetMemoryRatio(const std::string& aId, EMemoryRatio aRatio)
+	{
+		std::unique_lock<std::shared_mutex> lock(myMutex);
+
+		auto it = myConfigs.find(aId);
+
+		if (it == myConfigs.end())
+		{
+			WmLogError(TagWonderMake << TagWmConfiguration << "Config missing, attempted to set memory ratio for id " << aId << '.');
+
+			return;
+		}
+
+		std::visit([aRatio](auto& aConfig)
+			{
+				aConfig.MemoryRatio = aRatio;
+			},
+			it->second.Config);
+	}
+
 	template<CConfigType TConfigType, typename TDefaultArg>
 	inline [[nodiscard]] TConfigType Get(const char* aId, TDefaultArg&& aDefaultValue) const
 		requires(
-			CConfig<std::remove_reference_t<TDefaultArg>>
+			CConfig<std::decay_t<TDefaultArg>>
 			&& std::is_constructible_v<TConfigType, TDefaultArg>)
 	{
 		return Get<TConfigType>(std::string_view(aId), std::forward<TDefaultArg>(aDefaultValue));
@@ -249,7 +336,7 @@ public:
 	template<CConfigType TConfigType, typename TDefaultArg>
 	inline [[nodiscard]] TConfigType Get(std::string_view aId, TDefaultArg&& aDefaultValue) const
 		requires(
-			CConfig<std::remove_reference_t<TDefaultArg>>
+			CConfig<std::decay_t<TDefaultArg>>
 			&& std::is_constructible_v<TConfigType, TDefaultArg>)
 	{
 		thread_local std::string buffer;
@@ -263,7 +350,7 @@ public:
 	template<CConfigType TConfigType, typename TDefaultArg>
 	inline [[nodiscard]] TConfigType Get(const std::string& aId, TDefaultArg&& aDefaultValue) const
 		requires(
-			CConfig<std::remove_reference_t<TDefaultArg>>
+			CConfig<std::decay_t<TDefaultArg>>
 			&& std::is_constructible_v<TConfigType, TDefaultArg>)
 	{
 		std::shared_lock<std::shared_mutex> lock(myMutex);
@@ -304,6 +391,24 @@ public:
 				return static_cast<TConfigType>(*config.Override);
 
 			return static_cast<TConfigType>(config.Value);
+		}
+		else if constexpr (CMemoryUnit<TConfigType>)
+		{
+			using RawType = typename TConfigType::Rep;
+
+			if (!std::holds_alternative<ConfigData<RawType>>(configRaw.Config))
+			{
+				WmLogError(TagWonderMake << TagWmConfiguration << "Config element type mismatch, attempted to get type " << configFetchType.name() << " from id " << aId << ". Set type: " << configRaw.Type.name() << '.');
+
+				return std::move(aDefaultValue);
+			}
+
+			auto&& config = std::get<ConfigData<RawType>>(configRaw.Config);
+
+			if (config.Override)
+				return TConfigType(*config.Override);
+
+			return TConfigType(config.Value);
 		}
 		else
 		{
@@ -363,7 +468,8 @@ public:
 
 					if (aLhsConfigData.Value != rhsConfigData.Value ||
 						aLhsConfigData.Override != rhsConfigData.Override ||
-						aLhsConfigData.ConfigGroup != rhsConfigData.ConfigGroup)
+						aLhsConfigData.ConfigGroup != rhsConfigData.ConfigGroup ||
+						aLhsConfigData.MemoryRatio != rhsConfigData.MemoryRatio)
 						return false;
 					
 					const auto& lhsAllowedValues = aLhsConfigData.AllowedValues;

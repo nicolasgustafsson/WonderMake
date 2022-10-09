@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.19)
 
 list(APPEND SourceFiles
+    "Include/WonderMakeBaseTests/GuidGeneratorSystemMock.h"
     "Include/WonderMakeBaseTests/JobMock.h"
     "Include/WonderMakeBaseTests/ProcessMock.h"
     "Include/WonderMakeBaseTests/ProcessSystemMock.h"

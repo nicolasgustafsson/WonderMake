@@ -140,3 +140,21 @@ namespace MemoryUnitLiterals
 		return MemoryUnit<EMemoryRatio::TiB, u64>(aValue);
 	}
 }
+
+namespace _Impl
+{
+	template <typename>
+	struct IsMemoryUnit
+		: public std::false_type
+	{};
+	template <template<EMemoryRatio, typename> typename TType, EMemoryRatio TRatio, typename TRep>
+	struct IsMemoryUnit<TType<TRatio, TRep>>
+		: public std::is_same<std::decay_t<TType<TRatio, TRep>>, MemoryUnit<TRatio, TRep>>
+	{};
+}
+
+template<typename TType>
+inline constexpr bool IsMemoryUnit = _Impl::IsMemoryUnit<TType>::value;
+
+template<typename TType>
+concept CMemoryUnit = IsMemoryUnit<TType>;

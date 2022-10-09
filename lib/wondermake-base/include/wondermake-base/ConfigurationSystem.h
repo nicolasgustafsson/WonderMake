@@ -25,7 +25,7 @@ public:
 	template<CConfigType TConfigType, typename TId, typename TArg, typename TRestrict = Configuration::NoRestrictions>
 	inline void Set(TId&& aId, TArg&& aValue, EConfigGroup aConfigGroup, TRestrict aRestrict = Configuration::NoRestrictions())
 		requires(
-			CConfig<std::remove_reference_t<TArg>>
+			CConfig<std::decay_t<TArg>>
 			&& (std::is_constructible_v<std::string, TId> || std::is_convertible_v<TId, std::string>)
 			&& (std::is_constructible_v<TConfigType, TArg&&> || std::is_convertible_v<TArg&&, TConfigType>)
 			&& (std::is_same_v<TRestrict, Configuration::NoRestrictions> || std::is_same_v<TRestrict, Configuration::AllowedValues<TConfigType>>))
@@ -35,7 +35,7 @@ public:
 	template<CConfigType TConfigType, bool TRaw = false, typename TArg>
 	void SetOverride(const std::string& aId, TArg&& aValue)
 		requires(
-			CConfig<std::remove_reference_t<TArg>>
+			CConfig<std::decay_t<TArg>>
 			&& std::is_constructible_v<TConfigType, TArg>)
 	{
 		if constexpr (TRaw)
@@ -91,7 +91,7 @@ public:
 	template<CConfigType TConfigType, typename TDefaultArg>
 	inline [[nodiscard]] TConfigType Get(const char* aId, TDefaultArg&& aDefaultValue) const
 		requires(
-			CConfig<std::remove_reference_t<TDefaultArg>>
+			CConfig<std::decay_t<TDefaultArg>>
 			&& std::is_constructible_v<TConfigType, TDefaultArg>)
 	{
 		return myConfiguration.Get<TConfigType>(aId, std::forward<TDefaultArg>(aDefaultValue));
@@ -99,7 +99,7 @@ public:
 	template<CConfigType TConfigType, typename TDefaultArg>
 	inline [[nodiscard]] TConfigType Get(std::string_view aId, TDefaultArg&& aDefaultValue) const
 		requires(
-			CConfig<std::remove_reference_t<TDefaultArg>>
+			CConfig<std::decay_t<TDefaultArg>>
 			&& std::is_constructible_v<TConfigType, TDefaultArg>)
 	{
 		return myConfiguration.Get<TConfigType>(aId, std::forward<TDefaultArg>(aDefaultValue));
@@ -107,7 +107,7 @@ public:
 	template<CConfigType TConfigType, typename TDefaultArg>
 	inline [[nodiscard]] TConfigType Get(const std::string& aId, TDefaultArg&& aDefaultValue) const
 		requires(
-			CConfig<std::remove_reference_t<TDefaultArg>>
+			CConfig<std::decay_t<TDefaultArg>>
 			&& std::is_constructible_v<TConfigType, TDefaultArg&&>)
 	{
 		return myConfiguration.Get<TConfigType>(aId, std::forward<TDefaultArg>(aDefaultValue));

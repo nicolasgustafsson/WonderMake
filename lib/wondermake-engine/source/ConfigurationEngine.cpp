@@ -2,6 +2,8 @@
 
 #include "wondermake-base/ConfigurationSystem.h"
 
+using namespace MemoryUnitLiterals;
+
 namespace ConfigurationEngine
 {
 	void Configure(
@@ -21,5 +23,7 @@ namespace ConfigurationEngine
 		
 		aConfigurationSystem.Set<i32>(WindowWidth, 1280, EConfigGroup::Device);
 		aConfigurationSystem.Set<i32>(WindowHeight, 720, EConfigGroup::Device);
+
+		aConfigurationSystem.Set<MemoryType>(ConfigurationRemoteBufferSize, 4_KiB, EConfigGroup::Application);
 	}
 }

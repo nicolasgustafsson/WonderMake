@@ -21,22 +21,37 @@ public:
 
 	void DelegateToFake()
 	{
+		auto [promiseClose, futureClose] = MakeAsync<void>();
+
 		ON_CALL(*this, OnConnection)
-			.WillByDefault([]()
+			.WillByDefault([this]()
 				{
 					auto [promise, future] = MakeAsync<ResultTypeConnection>();
 
-					std::make_unique<decltype(promise)>(std::move(promise))
-						.release();
+					myConnectionPromises.emplace_back(std::move(promise));
 
 					return future;
 				});
 		ON_CALL(*this, OnClose)
-			.WillByDefault(Return(MakeCompletedFuture<void>()));
+			.WillByDefault(Return(futureClose));
 
 		ON_CALL(*this, GetState)
-			.WillByDefault(Return(EState::Closed));
+			.WillByDefault(Return(EState::Open));
 	}
+	void CompleteNextConnection(ResultTypeConnection aResult)
+	{
+		ASSERT_FALSE(myConnectionPromises.empty());
+
+		auto promise = std::move(myConnectionPromises.front());
+
+		myConnectionPromises.erase(myConnectionPromises.begin());
+
+		promise.Complete(std::move(aResult));
+	}
+
+private:
+	std::vector<Promise<ResultTypeConnection>> myConnectionPromises;
+
 };
 
 inline std::ostream& operator<<(std::ostream& out, const SocketAcceptor::SConnectionError& aError)

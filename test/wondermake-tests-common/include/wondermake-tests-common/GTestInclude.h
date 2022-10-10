@@ -10,9 +10,10 @@ using ::testing::StrictMock;
 
 using ::testing::_;
 using ::testing::Args;
+using ::testing::ByMove;
+using ::testing::DoDefault;
 using ::testing::ElementsAre;
 using ::testing::Return;
-using ::testing::ByMove;
 
 using ::testing::AllOf;
 using ::testing::Eq;

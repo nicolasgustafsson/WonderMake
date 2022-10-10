@@ -1334,6 +1334,105 @@ TEST(ConfigurationTests, type_memoryunit_u32_reset_overridden_value)
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(dummyId, dummyDefault), dummyValue);
 }
 
+template<CConfig TConfig, CConfigRaw TConfigRaw = TConfig>
+void TestSpecializedHasReturnsCorrectValues()
+{
+	const char* const dummyId = "dummy_id";
+
+	Configuration configuration;
+
+	configuration.Set<TConfig>(dummyId, TConfig(), locDummyGroup);
+
+	const auto isConfig = [dummyId, &configuration](const auto& aType) -> bool
+	{
+		static constexpr bool isSame = std::is_same_v<TConfig, std::decay_t<decltype(aType)>>;
+
+		const bool evalString		= isSame == configuration.Has<std::decay_t<decltype(aType)>>(std::string(dummyId));
+		const bool evalStringView	= isSame == configuration.Has<std::decay_t<decltype(aType)>>(std::string_view(dummyId));
+		const bool evalCString		= isSame == configuration.Has<std::decay_t<decltype(aType)>>(dummyId);
+
+		return evalString && evalStringView && evalCString;
+	};
+
+	EXPECT_TRUE(isConfig(bool()));
+	EXPECT_TRUE(isConfig(f32()));
+	EXPECT_TRUE(isConfig(f64()));
+	EXPECT_TRUE(isConfig(u8()));
+	EXPECT_TRUE(isConfig(u16()));
+	EXPECT_TRUE(isConfig(u32()));
+	EXPECT_TRUE(isConfig(u64()));
+	EXPECT_TRUE(isConfig(i8()));
+	EXPECT_TRUE(isConfig(i16()));
+	EXPECT_TRUE(isConfig(i32()));
+	EXPECT_TRUE(isConfig(i64()));
+	EXPECT_TRUE(isConfig(ETestEnumI32()));
+	EXPECT_TRUE(isConfig(ETestEnumU32()));
+	EXPECT_TRUE(isConfig(IMemoryUnit()));
+	EXPECT_TRUE(isConfig(UMemoryUnit()));
+	EXPECT_TRUE(isConfig(std::string()));
+
+	const auto isRawConfig = [dummyId, &configuration](const auto& aType) -> bool
+	{
+		static constexpr bool isSame = std::is_same_v<TConfigRaw, std::decay_t<decltype(aType)>>;
+
+		const bool evalString		= isSame == configuration.Has<std::decay_t<decltype(aType)>, true>(std::string(dummyId));
+		const bool evalStringView	= isSame == configuration.Has<std::decay_t<decltype(aType)>, true>(std::string_view(dummyId));
+		const bool evalCString		= isSame == configuration.Has<std::decay_t<decltype(aType)>, true>(dummyId);
+
+		return evalString && evalStringView && evalCString;
+	};
+	
+	EXPECT_TRUE(isRawConfig(bool()));
+	EXPECT_TRUE(isRawConfig(f32()));
+	EXPECT_TRUE(isRawConfig(f64()));
+	EXPECT_TRUE(isRawConfig(u8()));
+	EXPECT_TRUE(isRawConfig(u16()));
+	EXPECT_TRUE(isRawConfig(u32()));
+	EXPECT_TRUE(isRawConfig(u64()));
+	EXPECT_TRUE(isRawConfig(i8()));
+	EXPECT_TRUE(isRawConfig(i16()));
+	EXPECT_TRUE(isRawConfig(i32()));
+	EXPECT_TRUE(isRawConfig(i64()));
+	EXPECT_TRUE(isRawConfig(std::string()));
+}
+
+TEST(ConfigurationTests, specialized_has_returns_correct_values)
+{
+	TestSpecializedHasReturnsCorrectValues<bool>();
+	TestSpecializedHasReturnsCorrectValues<f32>();
+	TestSpecializedHasReturnsCorrectValues<f64>();
+	TestSpecializedHasReturnsCorrectValues<u8>();
+	TestSpecializedHasReturnsCorrectValues<u16>();
+	TestSpecializedHasReturnsCorrectValues<u32>();
+	TestSpecializedHasReturnsCorrectValues<u64>();
+	TestSpecializedHasReturnsCorrectValues<i8>();
+	TestSpecializedHasReturnsCorrectValues<i16>();
+	TestSpecializedHasReturnsCorrectValues<i32>();
+	TestSpecializedHasReturnsCorrectValues<i64>();
+	TestSpecializedHasReturnsCorrectValues<ETestEnumI32, i32>();
+	TestSpecializedHasReturnsCorrectValues<ETestEnumU32, u32>();
+	TestSpecializedHasReturnsCorrectValues<IMemoryUnit, i32>();
+	TestSpecializedHasReturnsCorrectValues<UMemoryUnit, u32>();
+	TestSpecializedHasReturnsCorrectValues<std::string>();
+}
+
+TEST(ConfigurationTests, generic_has_returns_correct_values)
+{
+	static constexpr const char* dummyId = "dummy_id";
+
+	Configuration configuration;
+
+	EXPECT_FALSE(configuration.Has(dummyId));
+	EXPECT_FALSE(configuration.Has(std::string_view(dummyId)));
+	EXPECT_FALSE(configuration.Has(std::string(dummyId)));
+
+	configuration.Set<u32>(dummyId, 1234, EConfigGroup::Application);
+
+	EXPECT_TRUE(configuration.Has(dummyId));
+	EXPECT_TRUE(configuration.Has(std::string_view(dummyId)));
+	EXPECT_TRUE(configuration.Has(std::string(dummyId)));
+}
+
 TEST(ConfigurationTests, set_memory_ratio_sets_ratio)
 {
 	static constexpr auto dummyId = "dummy_id";

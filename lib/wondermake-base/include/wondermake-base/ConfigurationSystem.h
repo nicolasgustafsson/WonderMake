@@ -112,6 +112,35 @@ public:
 	{
 		return myConfiguration.Get<TConfigType>(aId, std::forward<TDefaultArg>(aDefaultValue));
 	}
+	
+	template<CConfigType TConfigType, bool TRaw = false>
+	inline [[nodiscard]] bool Has(const char* aId) const
+	{
+		return myConfiguration.Has<TConfigType, TRaw>(aId);
+	}
+	template<CConfigType TConfigType, bool TRaw = false>
+	inline [[nodiscard]] bool Has(std::string_view aId) const
+	{
+		return myConfiguration.Has<TConfigType, TRaw>(aId);
+	}
+	template<CConfigType TConfigType, bool TRaw = false>
+	inline [[nodiscard]] bool Has(const std::string& aId) const
+	{
+		return myConfiguration.Has<TConfigType, TRaw>(aId);
+	}
+
+	inline [[nodiscard]] bool Has(const char* aId) const
+	{
+		return myConfiguration.Has(aId);
+	}
+	inline [[nodiscard]] bool Has(std::string_view aId) const
+	{
+		return myConfiguration.Has(aId);
+	}
+	inline [[nodiscard]] bool Has(const std::string& aId) const
+	{
+		return myConfiguration.Has(aId);
+	}
 
 	inline void ResetOverride(const std::string& aId)
 	{

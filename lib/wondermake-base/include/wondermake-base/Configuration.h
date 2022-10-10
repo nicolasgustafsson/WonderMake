@@ -325,6 +325,78 @@ public:
 			it->second.Config);
 	}
 
+	template<CConfigType TConfigType, bool TRaw = false>
+	inline [[nodiscard]] bool Has(const char* aId) const
+	{
+		return Has<TConfigType, TRaw>(std::string_view(aId));
+	}
+	template<CConfigType TConfigType, bool TRaw = false>
+	inline [[nodiscard]] bool Has(std::string_view aId) const
+	{
+		thread_local std::string buffer;
+
+		buffer.reserve(aId.size() + 1);
+
+		buffer.assign(aId.data(), aId.size());
+
+		return Has<TConfigType, TRaw>(buffer);
+	}
+	template<CConfigType TConfigType, bool TRaw = false>
+	inline [[nodiscard]] bool Has(const std::string& aId) const
+	{
+		std::shared_lock<std::shared_mutex> lock(myMutex);
+
+		const auto it = myConfigs.find(aId);
+
+		if (it == myConfigs.end())
+			return false;
+
+		const auto& configRaw = it->second;
+
+		if constexpr (TRaw)
+		{
+			static constexpr auto GetDataType = []()
+			{
+				if constexpr (TRaw)
+					return TConfigType();
+
+				if constexpr (std::is_enum_v<TConfigType>)
+					return std::underlying_type_t<TConfigType>();
+				else if constexpr (CMemoryUnit<TConfigType>)
+					return typename TConfigType::Rep();
+				else
+					return TConfigType();
+			};
+
+			using RawType = decltype(GetDataType());
+			
+			return std::holds_alternative<ConfigData<RawType>>(configRaw.Config);
+		}
+		else
+			return configRaw.Type == typeid(TConfigType);
+	}
+	
+	inline [[nodiscard]] bool Has(const char* aId) const
+	{
+		return Has(std::string_view(aId));
+	}
+	inline [[nodiscard]] bool Has(std::string_view aId) const
+	{
+		thread_local std::string buffer;
+
+		buffer.reserve(aId.size() + 1);
+
+		buffer.assign(aId.data(), aId.size());
+
+		return Has(buffer);
+	}
+	inline [[nodiscard]] bool Has(const std::string& aId) const
+	{
+		std::shared_lock<std::shared_mutex> lock(myMutex);
+
+		return myConfigs.find(aId) != myConfigs.end();
+	}
+	
 	template<CConfigType TConfigType, typename TDefaultArg>
 	inline [[nodiscard]] TConfigType Get(const char* aId, TDefaultArg&& aDefaultValue) const
 		requires(

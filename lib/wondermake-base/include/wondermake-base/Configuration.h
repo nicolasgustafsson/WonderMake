@@ -234,12 +234,13 @@ public:
 
 		auto&& configRaw = it->second;
 
-		if (!TRaw && configRaw.Type != overrideType)
-		{
-			WmLogError(TagWonderMake << TagWmConfiguration << "Config type mismatch, attempted to set override type " << overrideType.name() << " for id " << aId << ". Set type: " << configRaw.Type.name() << '.');
+		if constexpr (!TRaw)
+			if (configRaw.Type != overrideType)
+			{
+				WmLogError(TagWonderMake << TagWmConfiguration << "Config type mismatch, attempted to set override type " << overrideType.name() << " for id " << aId << ". Set type: " << configRaw.Type.name() << '.');
 
-			return;
-		}
+				return;
+			}
 
 		if constexpr (std::is_enum_v<TConfigType>)
 		{

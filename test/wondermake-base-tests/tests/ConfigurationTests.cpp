@@ -1433,6 +1433,116 @@ TEST(ConfigurationTests, generic_has_returns_correct_values)
 	EXPECT_TRUE(configuration.Has(std::string(dummyId)));
 }
 
+template<CConfig TConfig, CConfigRaw TConfigRaw>
+void TestGetOverrideReturnsCorrectValues(const TConfig& aOverride, const TConfigRaw& aOverrideRaw)
+{
+	const char* const dummyId = "dummy_id";
+
+	Configuration configuration;
+
+	configuration.Set<TConfig>(dummyId, TConfig(), locDummyGroup);
+
+	configuration.SetOverride<TConfig>(dummyId, aOverride);
+
+	const auto hasOverride = [dummyId, &configuration, &aOverride](const auto& aType) -> bool
+	{
+		using Type = std::decay_t<decltype(aType)>;
+
+		static constexpr bool isSame = std::is_same_v<TConfig, Type>;
+
+		if constexpr (isSame)
+		{
+			const auto evalString		= configuration.GetOverride<Type>(std::string(dummyId)) == aOverride;
+			const auto evalStringView	= configuration.GetOverride<Type>(std::string_view(dummyId)) == aOverride;
+			const auto evalCString		= configuration.GetOverride<Type>(dummyId) == aOverride;
+
+			return evalString && evalStringView && evalCString;
+		}
+		else
+		{
+			const bool evalString		= !configuration.GetOverride<Type>(std::string(dummyId));
+			const bool evalStringView	= !configuration.GetOverride<Type>(std::string_view(dummyId));
+			const bool evalCString		= !configuration.GetOverride<Type>(dummyId);
+
+			return evalString && evalStringView && evalCString;
+		}
+	};
+
+	EXPECT_TRUE(hasOverride(bool()));
+	EXPECT_TRUE(hasOverride(f32()));
+	EXPECT_TRUE(hasOverride(f64()));
+	EXPECT_TRUE(hasOverride(u8()));
+	EXPECT_TRUE(hasOverride(u16()));
+	EXPECT_TRUE(hasOverride(u32()));
+	EXPECT_TRUE(hasOverride(u64()));
+	EXPECT_TRUE(hasOverride(i8()));
+	EXPECT_TRUE(hasOverride(i16()));
+	EXPECT_TRUE(hasOverride(i32()));
+	EXPECT_TRUE(hasOverride(i64()));
+	EXPECT_TRUE(hasOverride(ETestEnumI32()));
+	EXPECT_TRUE(hasOverride(ETestEnumU32()));
+	EXPECT_TRUE(hasOverride(IMemoryUnit()));
+	EXPECT_TRUE(hasOverride(UMemoryUnit()));
+	EXPECT_TRUE(hasOverride(std::string()));
+	
+	const auto isRawConfig = [dummyId, &configuration, &aOverrideRaw](const auto& aType) -> bool
+	{
+		using Type = std::decay_t<decltype(aType)>;
+
+		static constexpr bool isSame = std::is_same_v<TConfigRaw, Type>;
+
+		if constexpr (isSame)
+		{
+			const auto evalString		= configuration.GetOverride<Type, true>(std::string(dummyId)) == aOverrideRaw;
+			const auto evalStringView	= configuration.GetOverride<Type, true>(std::string_view(dummyId)) == aOverrideRaw;
+			const auto evalCString		= configuration.GetOverride<Type, true>(dummyId) == aOverrideRaw;
+
+			return evalString && evalStringView && evalCString;
+		}
+		else
+		{
+			const bool evalString		= !configuration.GetOverride<Type, true>(std::string(dummyId));
+			const bool evalStringView	= !configuration.GetOverride<Type, true>(std::string_view(dummyId));
+			const bool evalCString		= !configuration.GetOverride<Type, true>(dummyId);
+
+			return evalString && evalStringView && evalCString;
+		}
+	};
+	
+	EXPECT_TRUE(isRawConfig(bool()));
+	EXPECT_TRUE(isRawConfig(f32()));
+	EXPECT_TRUE(isRawConfig(f64()));
+	EXPECT_TRUE(isRawConfig(u8()));
+	EXPECT_TRUE(isRawConfig(u16()));
+	EXPECT_TRUE(isRawConfig(u32()));
+	EXPECT_TRUE(isRawConfig(u64()));
+	EXPECT_TRUE(isRawConfig(i8()));
+	EXPECT_TRUE(isRawConfig(i16()));
+	EXPECT_TRUE(isRawConfig(i32()));
+	EXPECT_TRUE(isRawConfig(i64()));
+	EXPECT_TRUE(isRawConfig(std::string()));
+}
+
+TEST(ConfigurationTests, get_override_returns_correct_values)
+{
+	TestGetOverrideReturnsCorrectValues<bool,			bool>		(true,				true);
+	TestGetOverrideReturnsCorrectValues<f32,			f32>		(1.f,				1.f);
+	TestGetOverrideReturnsCorrectValues<f64,			f64>		(1.,				1.);
+	TestGetOverrideReturnsCorrectValues<u8,				u8>			(1,					1);
+	TestGetOverrideReturnsCorrectValues<u16,			u16>		(1,					1);
+	TestGetOverrideReturnsCorrectValues<u32,			u32>		(1,					1);
+	TestGetOverrideReturnsCorrectValues<u64,			u64>		(1,					1);
+	TestGetOverrideReturnsCorrectValues<i8,				i8>			(1,					1);
+	TestGetOverrideReturnsCorrectValues<i16,			i16>		(1,					1);
+	TestGetOverrideReturnsCorrectValues<i32,			i32>		(1,					1);
+	TestGetOverrideReturnsCorrectValues<i64,			i64>		(1,					1);
+	TestGetOverrideReturnsCorrectValues<ETestEnumI32,	i32>		(ETestEnumI32::One,	1);
+	TestGetOverrideReturnsCorrectValues<ETestEnumU32,	u32>		(ETestEnumU32::One,	1);
+	TestGetOverrideReturnsCorrectValues<IMemoryUnit,	i32>		(1,					1);
+	TestGetOverrideReturnsCorrectValues<UMemoryUnit,	u32>		(1,					1);
+	TestGetOverrideReturnsCorrectValues<std::string,	std::string>("override",		"override");
+}
+
 TEST(ConfigurationTests, set_memory_ratio_sets_ratio)
 {
 	static constexpr auto dummyId = "dummy_id";

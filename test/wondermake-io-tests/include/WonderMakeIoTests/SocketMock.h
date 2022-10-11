@@ -4,6 +4,9 @@
 
 #include "wondermake-io/Socket.h"
 
+#include "wondermake-utility/CancelableList.h"
+#include "wondermake-utility/SharedReference.h"
+
 #include <memory>
 
 class SocketMock
@@ -56,7 +59,189 @@ public:
 
 private:
 	std::vector<Promise<ResultTypeRead>> myReadPromises;
+
 };
+
+enum class ELinkedSocket { A, B };
+
+class SocketSharedState
+{
+public:
+	inline [[nodiscard]] Socket::FutureTypeWrite Write(ELinkedSocket aSocket, std::vector<u8>&& aBuffer)
+	{
+		auto& data = GetSocketData(aSocket == ELinkedSocket::A ? ELinkedSocket::B : ELinkedSocket::A);
+
+		if (data.ReadPromises.IsEmpty())
+			data.Buffer.insert(data.Buffer.end(), aBuffer.begin(), aBuffer.end());
+		else
+		{
+			auto promise = data.ReadPromises.Pop();
+
+			promise.Complete(Ok(std::move(aBuffer)));
+		}
+
+		return MakeCompletedFuture<Socket::ResultTypeWrite>(Ok());
+	}
+	inline [[nodiscard]] Socket::FutureTypeRead Read(ELinkedSocket aSocket)
+	{
+		auto& data = GetSocketData(aSocket);
+
+		if (!data.Buffer.empty())
+		{
+			auto buffer = std::exchange(data.Buffer, decltype(data.Buffer)());
+
+			return MakeCompletedFuture<Socket::ResultTypeRead>(Ok(std::move(buffer)));
+		}
+
+		auto [promise, future] = MakeAsync<Socket::ResultTypeRead>();
+
+		data.ReadPromises.Emplace(std::move(promise));
+
+		return std::move(future);
+	}
+
+	inline [[nodiscard]] Socket::FutureTypeClose Close(ELinkedSocket aSocket)
+	{
+		if (myState != Socket::EState::Open)
+			return MakeCompletedFuture<Socket::ResultTypeClose>(Ok(
+				Socket::SCloseLocation
+				{
+					(aSocket == myCloseSocket)
+						? Socket::ECloseLocation::ClosedLocally
+						: Socket::ECloseLocation::ClosedRemotely
+				}));
+
+		myState = Socket::EState::Closed;
+		myCloseSocket = aSocket;
+
+		for (auto& promise : mySocketDataA.ClosePromises)
+		{
+			promise.Complete(Ok(
+				Socket::SCloseLocation
+				{
+					(ELinkedSocket::A == myCloseSocket)
+						? Socket::ECloseLocation::ClosedLocally
+						: Socket::ECloseLocation::ClosedRemotely
+				}));
+		}
+		for (auto& promise : mySocketDataB.ClosePromises)
+		{
+			promise.Complete(Ok(
+				Socket::SCloseLocation
+				{
+					(ELinkedSocket::B == myCloseSocket)
+						? Socket::ECloseLocation::ClosedLocally
+						: Socket::ECloseLocation::ClosedRemotely
+				}));
+		}
+
+		mySocketDataA.ClosePromises.Clear();
+		mySocketDataB.ClosePromises.Clear();
+
+		return MakeCompletedFuture<Socket::ResultTypeClose>(Ok(Socket::SCloseLocation{ Socket::ECloseLocation::ClosedLocally }));
+	}
+
+	inline [[nodiscard]] Socket::FutureTypeClose OnClose(ELinkedSocket aSocket)
+	{
+		if (myState != Socket::EState::Open)
+			return MakeCompletedFuture<Socket::ResultTypeClose>(Ok(
+				Socket::SCloseLocation
+				{
+					(aSocket == myCloseSocket)
+						? Socket::ECloseLocation::ClosedLocally
+						: Socket::ECloseLocation::ClosedRemotely
+				}));
+
+		auto& data = GetSocketData(aSocket);
+		auto [promise, future] = MakeAsync<Socket::ResultTypeClose>();
+
+		data.ClosePromises.Emplace(std::move(promise));
+
+		return std::move(future);
+	}
+
+	inline [[nodiscard]] Socket::EState GetState() const noexcept
+	{
+		return myState;
+	}
+
+private:
+	struct SSocketData
+	{
+		inline SSocketData()
+			: ClosePromises(InlineExecutor())
+			, ReadPromises(InlineExecutor())
+		{}
+
+		CancelableList<Promise<Socket::ResultTypeClose>>	ClosePromises;
+		CancelableList<Promise<Socket::ResultTypeRead>>		ReadPromises;
+		std::vector<u8>										Buffer;
+	};
+
+	inline [[nodiscard]] SSocketData& GetSocketData(ELinkedSocket aSocket) noexcept
+	{
+		return aSocket == ELinkedSocket::A
+			? mySocketDataA
+			: mySocketDataB;
+	}
+
+	SSocketData mySocketDataA;
+	SSocketData mySocketDataB;
+
+	Socket::EState	myState = Socket::EState::Open;
+	ELinkedSocket	myCloseSocket = ELinkedSocket::A;
+
+};
+
+class SocketLinked
+	: public Socket
+{
+public:
+	inline SocketLinked(SharedReference<SocketSharedState> aState, ELinkedSocket aSocket)
+		: myState(std::move(aState))
+		, mySocket(aSocket)
+	{}
+	inline virtual ~SocketLinked()
+	{
+		Close();
+	}
+
+	inline FutureTypeWrite Write(std::vector<u8> aBuffer) override
+	{
+		return myState->Write(mySocket, std::move(aBuffer));
+	}
+	inline FutureTypeRead Read() override
+	{
+		return myState->Read(mySocket);
+	}
+	inline FutureTypeClose OnClose() override
+	{
+		return myState->OnClose(mySocket);
+	}
+	inline FutureTypeClose Close() override
+	{
+		return myState->Close(mySocket);
+	}
+
+	inline EState GetState() const noexcept override
+	{
+		return myState->GetState();
+	}
+
+private:
+	SharedReference<SocketSharedState>	myState;
+	ELinkedSocket						mySocket;
+
+};
+
+inline std::pair<SharedReference<Socket>, SharedReference<Socket>> MakeLinkedSockets()
+{
+	auto state = MakeSharedReference<SocketSharedState>();
+
+	return std::make_pair(
+		MakeSharedReference<SocketLinked>(state, ELinkedSocket::A),
+		MakeSharedReference<SocketLinked>(state, ELinkedSocket::B));
+}
 
 inline std::ostream& operator<<(std::ostream& out, const Socket::SWriteError& aError)
 {

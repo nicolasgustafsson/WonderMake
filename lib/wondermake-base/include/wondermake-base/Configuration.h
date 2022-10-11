@@ -500,6 +500,72 @@ public:
 		}
 	}
 	
+	template<CConfigType TConfigType, bool TRaw = false>
+	inline [[nodiscard]] std::optional<TConfigType> GetOverride(const char* aId) const
+	{
+		return GetOverride<TConfigType, TRaw>(std::string_view(aId));
+	}
+	template<CConfigType TConfigType, bool TRaw = false>
+	inline [[nodiscard]] std::optional<TConfigType> GetOverride(std::string_view aId) const
+	{
+		thread_local std::string buffer;
+
+		buffer.reserve(aId.size() + 1);
+
+		buffer.assign(aId.data(), aId.size());
+
+		return GetOverride<TConfigType, TRaw>(buffer);
+	}
+	template<CConfigType TConfigType, bool TRaw = false>
+	inline [[nodiscard]] std::optional<TConfigType> GetOverride(const std::string& aId) const
+	{
+		std::shared_lock<std::shared_mutex> lock(myMutex);
+
+		const auto it = myConfigs.find(aId);
+		const auto& configFetchType = typeid(TConfigType);
+
+		if (it == myConfigs.end())
+		{
+			WmLogWarning(TagWonderMake << TagWmConfiguration << "Config missing, attempted to get type " << configFetchType.name() << " from id " << aId << '.');
+
+			return std::nullopt;
+		}
+
+		const auto& configRaw = it->second;
+
+		if constexpr (!TRaw)
+			if (configRaw.Type != typeid(TConfigType))
+			{
+				WmLogError(TagWonderMake << TagWmConfiguration << "Config type mismatch, attempted to get type " << configFetchType.name() << " from id " << aId << ". Set type: " << configRaw.Type.name() << '.');
+
+				return std::nullopt;
+			}
+
+		using RawType = decltype([]()
+			{
+				if constexpr (std::is_enum_v<TConfigType>)
+					return std::underlying_type_t<TConfigType>();
+				else if constexpr (CMemoryUnit<TConfigType>)
+					return typename TConfigType::Rep();
+				else
+					return TConfigType();
+			}());
+
+		if (!std::holds_alternative<ConfigData<RawType>>(configRaw.Config))
+		{
+			WmLogError(TagWonderMake << TagWmConfiguration << "Config element type mismatch, attempted to get type " << configFetchType.name() << " from id " << aId << ". Set type: " << configRaw.Type.name() << '.');
+
+			return std::nullopt;
+		}
+
+		const auto& config = std::get<ConfigData<RawType>>(configRaw.Config);
+
+		if (!config.Override)
+			return std::nullopt;
+
+		return TConfigType(*config.Override);
+	}
+
 	void ResetOverride(const std::string& aId);
 
 	inline [[nodiscard]] std::unordered_map<std::string, ConfigElement> GetConfigs() const

@@ -337,6 +337,25 @@ public:
 
 		return Cancel(executor);
 	}
+
+	template<CExecutor TExecutor, typename TCallable>
+	void OnCancel(TExecutor&& aExecutor, TCallable&& aCallback) requires std::is_invocable_v<TCallable>
+	{
+		auto state = myState.lock();
+
+		if (!state)
+		{
+			aExecutor.Execute(std::forward<TCallable>(aCallback));
+
+			return;
+		}
+
+		state->Cancellation([executor = std::forward<TExecutor>(aExecutor), callback = std::forward<TCallable>(aCallback)]() mutable
+		{
+			executor.Execute(std::move(callback));
+		});
+	}
+
 	template<CExecutor TExecutor, typename TArg>
 	bool Complete(TExecutor& aExecutor, TArg&& aArg) requires(std::is_constructible_v<TType, decltype(std::forward<TArg>(aArg))>)
 	{
@@ -415,6 +434,25 @@ public:
 
 		return Cancel(executor);
 	}
+
+	template<CExecutor TExecutor, typename TCallable>
+	void OnCancel(TExecutor&& aExecutor, TCallable&& aCallback) requires std::is_invocable_v<TCallable>
+	{
+		auto state = myState.lock();
+
+		if (!state)
+		{
+			aExecutor.Execute(std::forward<TCallable>(aCallback));
+
+			return;
+		}
+
+		state->Cancellation([executor = std::forward<TExecutor>(aExecutor), callback = std::forward<TCallable>(aCallback)]() mutable
+		{
+			executor.Execute(std::move(callback));
+		});
+	}
+
 	template<CExecutor TExecutor>
 	bool Complete(TExecutor& aExecutor)
 	{

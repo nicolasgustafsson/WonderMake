@@ -525,7 +525,7 @@ public:
 	}
 	
 	template<CExecutor TExecutor, typename TCallable>
-	Future& ThenRun(TExecutor&& aExecutor, TCallable&& aCallback) requires std::is_invocable_v<TCallable, Future<TType>&&>
+	Future& ThenRun(TExecutor&& aExecutor, TCallable&& aCallback) & requires std::is_invocable_v<TCallable, Future<TType>&&>
 	{
 		if (!myState)
 			return *this;
@@ -539,6 +539,11 @@ public:
 		});
 
 		return *this;
+	}
+	template<CExecutor TExecutor, typename TCallable>
+	Future&& ThenRun(TExecutor&& aExecutor, TCallable&& aCallback) && requires std::is_invocable_v<TCallable, Future<TType>&&>
+	{
+		return std::move(ThenRun(std::forward<TExecutor>(aExecutor), std::forward<TCallable>(aCallback)));
 	}
 	
 	template<CExecutor TExecutor, typename TCallable>
@@ -704,7 +709,7 @@ public:
 	}
 	
 	template<CExecutor TExecutor, typename TCallable>
-	Future& ThenRun(TExecutor&& aExecutor, TCallable&& aCallback) requires std::is_invocable_v<TCallable, Future<void>&&>
+	Future& ThenRun(TExecutor&& aExecutor, TCallable&& aCallback) & requires std::is_invocable_v<TCallable, Future<void>&&>
 	{
 		if (!myState)
 			return *this;
@@ -718,6 +723,11 @@ public:
 		});
 
 		return *this;
+	}
+	template<CExecutor TExecutor, typename TCallable>
+	Future&& ThenRun(TExecutor&& aExecutor, TCallable&& aCallback) && requires std::is_invocable_v<TCallable, Future<void>&&>
+	{
+		return std::move(ThenRun(std::forward<TExecutor>(aExecutor), std::forward<TCallable>(aCallback)));
 	}
 	
 	template<CExecutor TExecutor, typename TCallable>

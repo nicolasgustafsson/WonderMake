@@ -48,6 +48,15 @@ inline constexpr auto NoOp = [](auto&&...) {};
 
 void StaticTest_Result()
 {
+	enum class ETestA
+	{
+		Kalle
+	};
+	enum class ETestB
+	{
+		Hobbe
+	};
+
 	constexpr Result<void> resultOk = Ok();
 	constexpr Result<void> resultErr = Err();
 
@@ -80,11 +89,15 @@ void StaticTest_Result()
 
 		constexpr auto copyOp = [](auto& aValue)
 		{
-			return aValue;
+			auto v = aValue;
+
+			v;
 		};
 		constexpr auto moveOp = [](auto& aValue)
 		{
-			return std::move(aValue);
+			auto v = std::move(aValue);
+
+			v;
 		};
 
 		resultOk
@@ -166,6 +179,96 @@ void StaticTest_Result()
 	};
 
 	static_assert(nonConstTest());
+
+	constexpr auto CompareOpt = [](std::optional<bool> aLhs, std::optional<bool> aRhs) -> bool
+	{
+		return aLhs == aRhs;
+	};
+	static constexpr auto OnSuccess	= [](auto&...) { return true; };
+	static constexpr auto OnError	= [](auto&...) { return false; };
+
+	static_assert(CompareOpt(Result<void>(Ok()).OrElse(OnError), std::nullopt));
+	static_assert(CompareOpt(Result<void>(Ok()).OrElse(OnError), std::nullopt));
+	static_assert(CompareOpt(Result<void>(Err()).AndThen(OnError), std::nullopt));
+	static_assert(CompareOpt(Result<void>(Err()).AndThen(OnError), std::nullopt));
+	static_assert(CompareOpt(Result<void>(Ok()).AndThen(OnSuccess).OrElse(OnError), true));
+	static_assert(CompareOpt(Result<void>(Ok()).AndThen(OnSuccess).OrElse(OnError), true));
+	static_assert(CompareOpt(Result<void>(Err()).AndThen(OnSuccess).OrElse(OnError), false));
+	static_assert(CompareOpt(Result<void>(Err()).AndThen(OnSuccess).OrElse(OnError), false));
+
+	static_assert(CompareOpt(Result<u32>(Err()).AndThen(OnSuccess), std::nullopt));
+	static_assert(CompareOpt(Result<ResultNonCopyable<u32>>(Err()).AndThen(OnSuccess), std::nullopt));
+	static_assert(CompareOpt(Result<u32>(Ok(1234)).AndThen(OnSuccess).OrElse(OnError), true));
+	static_assert(CompareOpt(Result<ResultNonCopyable<u32>>(Ok(1234)).AndThen(OnSuccess).OrElse(OnError), true));
+	static_assert(CompareOpt(Result<u32>(Err()).AndThen(OnSuccess).OrElse(OnError), false));
+	static_assert(CompareOpt(Result<ResultNonCopyable<u32>>(Err()).AndThen(OnSuccess).OrElse(OnError), false));
+
+	static_assert(CompareOpt(Result<void, u32>(Ok()).OrElse(OnError), std::nullopt));
+	static_assert(CompareOpt(Result<void, ResultNonCopyable<u32>>(Ok()).OrElse(OnError), std::nullopt));
+	static_assert(CompareOpt(Result<void, u32>(Ok()).AndThen(OnSuccess).OrElse(OnError), true));
+	static_assert(CompareOpt(Result<void, ResultNonCopyable<u32>>(Ok()).AndThen(OnSuccess).OrElse(OnError), true));
+	static_assert(CompareOpt(Result<void, u32>(Err(1234)).AndThen(OnSuccess).OrElse(OnError), false));
+	static_assert(CompareOpt(Result<void, ResultNonCopyable<u32>>(Err(1234)).AndThen(OnSuccess).OrElse(OnError), false));
+
+	constexpr auto Compare = [](bool aLhs, bool aRhs) -> bool
+	{
+		return aLhs == aRhs;
+	};
+
+	static_assert(Compare(Result<void>(Ok()).AndThen(OnSuccess).OrElse(OnError), true));
+	static_assert(Compare(Result<void>(Ok()).AndThen(OnSuccess).OrElse(OnError), true));
+	static_assert(Compare(Result<void>(Err()).AndThen(OnSuccess).OrElse(OnError), false));
+	static_assert(Compare(Result<void>(Err()).AndThen(OnSuccess).OrElse(OnError), false));
+
+	static_assert(Compare(Result<u32>(Ok(1234)).AndThen(OnSuccess).OrElse(OnError), true));
+	static_assert(Compare(Result<ResultNonCopyable<u32>>(Ok(1234)).AndThen(OnSuccess).OrElse(OnError), true));
+	static_assert(Compare(Result<u32>(Err()).AndThen(OnSuccess).OrElse(OnError), false));
+	static_assert(Compare(Result<ResultNonCopyable<u32>>(Err()).AndThen(OnSuccess).OrElse(OnError), false));
+
+	static_assert(u32(Result<void>(Ok())
+		.AndThen([]() -> u32
+			{
+				return 1;
+			})
+		.OrElse([]() -> u32
+			{
+				return 2;
+			})) == 1);
+	static_assert(u32(Result<void>(Err())
+		.AndThen([]() -> u32
+			{
+				return 1;
+			})
+		.OrElse([]() -> u32
+			{
+				return 2;
+			})) == 2);
+	static_assert(u32(Result<std::variant<ETestB, ETestA>>(Ok(ETestB::Hobbe))
+		.AndThen<ETestA>([](auto) -> u32
+			{
+				return 1;
+			})
+		.AndThen<ETestB>([](auto) -> u32
+			{
+				return 2;
+			})
+		.OrElse([]() -> u32
+			{
+				return 3;
+			})) == 2);
+	static_assert(u32(Result<void, std::variant<ETestB, ETestA>>(Err(ETestB::Hobbe))
+		.OrElse<ETestA>([](auto) -> u32
+			{
+				return 1;
+			})
+		.OrElse<ETestB>([](auto) -> u32
+			{
+				return 2;
+			})
+		.AndThen([]() -> u32
+			{
+				return 3;
+			})) == 2);
 }
 
 TEST(ResultTests, successful_result_boolean_conversions_returns_correct_values)
@@ -175,6 +278,16 @@ TEST(ResultTests, successful_result_boolean_conversions_returns_correct_values)
 	EXPECT_TRUE(result);
 	EXPECT_TRUE(result.IsOk());
 	EXPECT_FALSE(result.IsErr());
+
+	std::optional<bool> opt = Result<ResultNonCopyable<u32>>(Ok(1234))
+		.AndThen([](auto&)
+			{
+				return true;
+			})
+		.OrElse([]()
+			{
+				return false;
+			});
 }
 
 TEST(ResultTests, error_result_boolean_conversions_returns_correct_values)

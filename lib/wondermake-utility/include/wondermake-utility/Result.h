@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Typedefs.h"
+#include "wondermake-utility/TupleUtility.h"
+#include "wondermake-utility/Typedefs.h"
 
 #include <any>
 #include <variant>
@@ -43,6 +44,11 @@ constexpr [[nodiscard]] ResultFailure<void> Err()
 
 namespace ResultConversions
 {
+	template<typename TType, typename TRequiredTypesTuple>
+	struct IsAll
+		: std::false_type
+	{};
+
 	template<typename TReturnType, typename... TArgs>
 	constexpr bool Has(const std::variant<TArgs...>& aValue)
 	{
@@ -57,6 +63,10 @@ namespace ResultConversions
 
 		return std::get<TReturnType>(aValue);
 	}
+	template<typename TRequiredTypesTuple, typename... TArgs>
+	struct IsAll<std::variant<TArgs...>, TRequiredTypesTuple>
+		: std::bool_constant<TupleContainsAllTypesInTuple_v<std::tuple<TArgs...>, TRequiredTypesTuple>>
+	{};
 	
 	template<typename TReturnType>
 	bool Has(const std::any& aValue)
@@ -71,7 +81,7 @@ namespace ResultConversions
 }
 
 template<typename TType, typename TReturnType>
-concept ResultGettableResult = requires(TType& aValue, const TType& aConstValue)
+concept CResultGettableResult = requires(TType& aValue, const TType& aConstValue)
 {
 	{ ResultConversions::Has<TReturnType>(aConstValue) } -> std::convertible_to<bool>;
 	{ ResultConversions::Get<TReturnType>(aValue) } -> std::convertible_to<TReturnType&>;
@@ -103,6 +113,9 @@ private:
 	inline static constexpr size_t IndexError	= 1;
 
 public:
+	using SuccessType	= TSuccessType;
+	using ErrorType		= TErrorType;
+
 	template<typename TRhsSuccessType, typename TRhsErrorType>
 	constexpr Result(const Result<TRhsSuccessType, TRhsErrorType>& aResult)
 		noexcept(ConvertableResultNoThrow<TSuccessType, TErrorType, TRhsSuccessType, TRhsErrorType>)
@@ -252,53 +265,139 @@ public:
 	{
 		return std::move(std::get<IndexError>(myResult).Value);
 	}
-	
+
+private:
+	template<typename TRetType>
+	struct SRetValueWrapper
+	{
+		std::optional<TRetType> RetVal;
+
+		template<typename TArg>
+		inline constexpr void Emplace(TArg&& aArg)
+		{
+			RetVal.emplace(std::forward<TArg>(aArg));
+		}
+	};
+
+	template<>
+	struct SRetValueWrapper<void>
+	{
+		inline constexpr void Emplace(auto&&...) noexcept {}
+	};
+
+	struct AllValues {};
+
+	template<typename TType, typename TCheckedValues>
+	struct CheckedAllValues
+		: std::bool_constant<std::is_same_v<TCheckedValues, AllValues> || ResultConversions::IsAll<TType, TCheckedValues>::value>
+	{};
+	template<typename TType, typename>
+	struct AddCheckedValue
+	{
+		using type = void;
+	};
+	template<typename TType, typename... TTypes>
+	struct AddCheckedValue<TType, std::tuple<TTypes...>>
+	{
+		using type = std::tuple<TType, TTypes...>;
+	};
+
+public:
+
+	template<typename TRetType, typename TCheckedSuccessValues, typename TCheckedErrorValues>
 	class ResultWrapper
 	{
 	public:
 		constexpr ResultWrapper(std::variant<ResultSuccess<TSuccessType>, ResultFailure<TErrorType>>& aResult)
 			: myResult(aResult)
 		{}
+		constexpr ResultWrapper(std::variant<ResultSuccess<TSuccessType>, ResultFailure<TErrorType>>& aResult, SRetValueWrapper<TRetType>&& aRetVal)
+			: myResult(aResult)
+			, myRetVal(std::move(aRetVal))
+		{}
 
 		template<typename TType = TSuccessType, typename TCallable>
-		constexpr ResultWrapper AndThen(TCallable&& aCallable)
+		constexpr ResultWrapper<TRetType, std::conditional_t<std::is_same_v<TType, TSuccessType>, AllValues, typename AddCheckedValue<TType, TCheckedSuccessValues>::type>, TCheckedErrorValues> AndThen(TCallable&& aCallable) &&
 		{
 			if (myResult.index() != IndexSuccess)
-				return myResult;
+				return { myResult, std::move(myRetVal) };
 
-			static_assert(std::is_void_v<TType> || std::is_same_v<TType, TSuccessType> || ResultGettableResult<TSuccessType, TType>);
+			static_assert(std::is_void_v<TType> || std::is_same_v<TType, TSuccessType> || CResultGettableResult<TSuccessType, TType>);
 
-			if constexpr (std::is_void_v<TType>)
-				(void)std::forward<TCallable>(aCallable)();
-			else if constexpr (std::is_same_v<TType, TSuccessType>)
-				(void)std::forward<TCallable>(aCallable)(Unwrap());
-			else if constexpr (ResultGettableResult<TSuccessType, TType>)
+			if constexpr (std::is_void_v<TRetType>)
 			{
-				if (ResultConversions::Has<TType>(Unwrap()))
-					(void)std::forward<TCallable>(aCallable)(ResultConversions::Get<TType>(Unwrap()));
+				if constexpr (std::is_void_v<TType>)
+					(void)std::forward<TCallable>(aCallable)();
+				else if constexpr (std::is_same_v<TType, TSuccessType>)
+					(void)std::forward<TCallable>(aCallable)(Unwrap());
+				else if constexpr (CResultGettableResult<TSuccessType, TType>)
+				{
+					if (ResultConversions::Has<TType>(Unwrap()))
+						(void)std::forward<TCallable>(aCallable)(ResultConversions::Get<TType>(Unwrap()));
+				}
+			}
+			else
+			{
+				if constexpr (std::is_void_v<TType>)
+					myRetVal.Emplace(std::forward<TCallable>(aCallable)());
+				else if constexpr (std::is_same_v<TType, TSuccessType>)
+					myRetVal.Emplace(std::forward<TCallable>(aCallable)(Unwrap()));
+				else if constexpr (CResultGettableResult<TSuccessType, TType>)
+				{
+					if (ResultConversions::Has<TType>(Unwrap()))
+						myRetVal.Emplace(std::forward<TCallable>(aCallable)(ResultConversions::Get<TType>(Unwrap())));
+				}
 			}
 
-			return myResult;
+			return { myResult, std::move(myRetVal) };
 		}
 		template<typename TType = TErrorType, typename TCallable>
-		constexpr ResultWrapper OrElse(TCallable&& aCallable)
+		constexpr ResultWrapper<TRetType, TCheckedSuccessValues, std::conditional_t<std::is_same_v<TType, TErrorType>, AllValues, typename AddCheckedValue<TType, TCheckedErrorValues>::type>> OrElse(TCallable&& aCallable) &&
 		{
 			if (myResult.index() != IndexError)
-				return myResult;
+				return { myResult, std::move(myRetVal) };
 
-			static_assert(std::is_void_v<TType> || std::is_same_v<TType, TErrorType> || ResultGettableResult<TErrorType, TType>);
+			static_assert(std::is_void_v<TType> || std::is_same_v<TType, TErrorType> || CResultGettableResult<TErrorType, TType>);
 
-			if constexpr (std::is_void_v<TType>)
-				(void)std::forward<TCallable>(aCallable)();
-			else if constexpr (std::is_same_v<TType, TErrorType>)
-				(void)std::forward<TCallable>(aCallable)(Err());
-			else if constexpr (ResultGettableResult<TErrorType, TType>)
+			if constexpr (std::is_void_v<TRetType>)
 			{
-				if (ResultConversions::Has<TType>(Err()))
-					(void)std::forward<TCallable>(aCallable)(ResultConversions::Get<TType>(Err()));
+				if constexpr (std::is_void_v<TType>)
+					(void)std::forward<TCallable>(aCallable)();
+				else if constexpr (std::is_same_v<TType, TErrorType>)
+					(void)std::forward<TCallable>(aCallable)(Err());
+				else if constexpr (CResultGettableResult<TErrorType, TType>)
+				{
+					if (ResultConversions::Has<TType>(Err()))
+						(void)std::forward<TCallable>(aCallable)(ResultConversions::Get<TType>(Err()));
+				}
+			}
+			else
+			{
+				if constexpr (std::is_void_v<TType>)
+					myRetVal.Emplace(std::forward<TCallable>(aCallable)());
+				else if constexpr (std::is_same_v<TType, TErrorType>)
+					myRetVal.Emplace(std::forward<TCallable>(aCallable)(Err()));
+				else if constexpr (CResultGettableResult<TErrorType, TType>)
+				{
+					if (ResultConversions::Has<TType>(Err()))
+						myRetVal.Emplace(std::forward<TCallable>(aCallable)(ResultConversions::Get<TType>(Err())));
+				}
 			}
 
-			return myResult;
+			return { myResult, std::move(myRetVal) };
+		}
+
+		inline constexpr [[nodiscard]] operator std::optional<TRetType>() && noexcept
+			requires(!std::is_void_v<TRetType>)
+		{
+			return myRetVal.RetVal;
+		}
+		inline constexpr [[nodiscard]] operator TRetType() && noexcept
+			requires(!std::is_void_v<TRetType>)
+		{
+			static_assert(CheckedAllValues<TSuccessType, TCheckedSuccessValues>::value && CheckedAllValues<TErrorType, TCheckedErrorValues>::value, "All result values must be checked to access return value.");
+
+			return std::move(*myRetVal.RetVal);
 		}
 
 	private:
@@ -314,18 +413,47 @@ public:
 		};
 
 		std::variant<ResultSuccess<TSuccessType>, ResultFailure<TErrorType>>& myResult;
+		SRetValueWrapper<TRetType> myRetVal;
 
 	};
 
 	template<typename TType = TSuccessType, typename TCallable>
-	constexpr ResultWrapper AndThen(TCallable&& aCallable)
+	constexpr auto AndThen(TCallable&& aCallable)
 	{
-		return ResultWrapper(myResult).AndThen<TType>(std::forward<TCallable>(aCallable));
+		using RetType = std::decay_t<decltype([this, &aCallable]()
+			{
+				if constexpr (std::is_void_v<TType>)
+					return std::forward<TCallable>(aCallable)();
+				else if constexpr (std::is_same_v<TType, TSuccessType>)
+					return std::forward<TCallable>(aCallable)(Unwrap());
+				else if constexpr (CResultGettableResult<TSuccessType, TType>)
+				{
+					if (ResultConversions::Has<TType>(Unwrap()))
+						return std::forward<TCallable>(aCallable)(ResultConversions::Get<TType>(Unwrap()));
+				}
+			}())>;
+
+		return ResultWrapper<RetType, std::tuple<>, std::tuple<>>(myResult)
+			.AndThen<TType>(std::forward<TCallable>(aCallable));
 	}
 	template<typename TType = TErrorType, typename TCallable>
-	constexpr ResultWrapper OrElse(TCallable&& aCallable)
+	constexpr auto OrElse(TCallable&& aCallable)
 	{
-		return ResultWrapper(myResult).OrElse<TType>(std::forward<TCallable>(aCallable));
+		using RetType = std::decay_t<decltype([this, &aCallable]()
+			{
+				if constexpr (std::is_void_v<TType>)
+					return std::forward<TCallable>(aCallable)();
+				else if constexpr (std::is_same_v<TType, TErrorType>)
+					return std::forward<TCallable>(aCallable)(Err());
+				else if constexpr (CResultGettableResult<TErrorType, TType>)
+				{
+					if (ResultConversions::Has<TType>(Err()))
+						return std::forward<TCallable>(aCallable)(ResultConversions::Get<TType>(Err()));
+				}
+			}())>;
+
+		return ResultWrapper<RetType, std::tuple<>, std::tuple<>>(myResult)
+			.OrElse<TType>(std::forward<TCallable>(aCallable));
 	}
 
 private:

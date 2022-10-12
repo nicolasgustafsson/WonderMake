@@ -243,6 +243,7 @@ TEST(FutureTests, void_futures_are_unfulfilled_when_created)
 
 	auto [promise, future] = MakeAsync<void>();
 
+	EXPECT_FALSE(future.IsDone());
 	EXPECT_FALSE(future.IsCompleted());
 	EXPECT_FALSE(future.IsCanceled());
 }
@@ -259,6 +260,7 @@ TEST(FutureTests, callback_void_is_called_when_promise_is_completed)
 
 	promise.Complete();
 
+	EXPECT_TRUE(future.IsDone());
 	EXPECT_TRUE(future.IsCompleted());
 	EXPECT_FALSE(future.IsCanceled());
 }
@@ -273,6 +275,7 @@ TEST(FutureTests, callback_void_is_not_called_when_promise_is_canceled)
 
 	promise.Cancel();
 
+	EXPECT_TRUE(future.IsDone());
 	EXPECT_FALSE(future.IsCompleted());
 	EXPECT_TRUE(future.IsCanceled());
 }
@@ -324,6 +327,7 @@ TEST(FutureTests, make_completed_void_future_returns_a_future_with_completed_sta
 {
 	auto future = MakeCompletedFuture<void>();
 
+	EXPECT_TRUE(future.IsDone());
 	EXPECT_TRUE(future.IsCompleted());
 	EXPECT_FALSE(future.IsCanceled());
 }
@@ -365,6 +369,7 @@ TEST(FutureTests, thenapply_void_callback_is_called_when_nested_void_promise_is_
 
 	promiseNested.Complete();
 
+	EXPECT_TRUE(future.IsDone());
 	EXPECT_TRUE(futureReturned.IsCompleted());
 	EXPECT_FALSE(futureReturned.IsCanceled());
 }
@@ -391,6 +396,7 @@ TEST(FutureTests, thenapply_void_callback_is_called_when_related_futures_are_des
 
 	promiseNested.Complete();
 
+	EXPECT_TRUE(futureReturned.IsDone());
 	EXPECT_TRUE(futureReturned.IsCompleted());
 	EXPECT_FALSE(futureReturned.IsCanceled());
 }
@@ -426,6 +432,7 @@ TEST(FutureTests, futures_are_unfulfilled_when_created)
 
 	auto [promise, future] = MakeAsync<u32>();
 
+	EXPECT_FALSE(future.IsDone());
 	EXPECT_FALSE(future.IsCompleted());
 	EXPECT_FALSE(future.IsCanceled());
 	EXPECT_FALSE(future.GetResult());
@@ -443,6 +450,7 @@ TEST(FutureTests, trivial_callback_is_called_when_promise_is_completed)
 
 	promise.Complete(0);
 
+	EXPECT_TRUE(future.IsDone());
 	EXPECT_TRUE(future.IsCompleted());
 	EXPECT_FALSE(future.IsCanceled());
 	EXPECT_TRUE(future.GetResult());
@@ -504,6 +512,7 @@ TEST(FutureTests, trivial_callback_future_contains_result_when_previous_future_t
 
 	promise.Complete(dummyData);
 
+	EXPECT_TRUE(future.IsDone());
 	EXPECT_TRUE(future.IsCompleted());
 	EXPECT_FALSE(future.IsCanceled());
 	ASSERT_TRUE(future.GetResult());
@@ -521,6 +530,7 @@ TEST(FutureTests, trivial_callback_is_not_called_when_promise_is_canceled)
 
 	promise.Cancel();
 
+	EXPECT_TRUE(future.IsDone());
 	EXPECT_FALSE(future.IsCompleted());
 	EXPECT_TRUE(future.IsCanceled());
 	EXPECT_FALSE(future.GetResult());
@@ -593,6 +603,7 @@ TEST(FutureTests, make_completed_future_returns_a_future_with_completed_state)
 
 	auto future = MakeCompletedFuture<u32>(dummyData);
 
+	EXPECT_TRUE(future.IsDone());
 	EXPECT_TRUE(future.IsCompleted());
 	EXPECT_FALSE(future.IsCanceled());
 
@@ -617,6 +628,7 @@ TEST(FutureTests, trivial_thenapply_callback_is_not_called_when_returned_future_
 
 	futureReturned.Reset();
 
+	EXPECT_FALSE(future.IsDone());
 	EXPECT_FALSE(futureReturned.IsCompleted());
 	EXPECT_FALSE(futureReturned.IsCanceled());
 }
@@ -643,6 +655,7 @@ TEST(FutureTests, trivial_thenapply_callback_is_called_when_nested_void_promise_
 
 	promiseNested.Complete();
 
+	EXPECT_TRUE(future.IsDone());
 	EXPECT_TRUE(futureReturned.IsCompleted());
 	EXPECT_FALSE(futureReturned.IsCanceled());
 }
@@ -671,6 +684,7 @@ TEST(FutureTests, trivial_thenapply_callback_is_called_when_related_futures_are_
 
 	promiseNested.Complete();
 
+	EXPECT_TRUE(futureReturned.IsDone());
 	EXPECT_TRUE(futureReturned.IsCompleted());
 	EXPECT_FALSE(futureReturned.IsCanceled());
 }
@@ -707,6 +721,7 @@ TEST(FutureTests, unique_futures_are_unfulfilled_when_created)
 
 	auto [promise, future] = MakeAsync<std::unique_ptr<u32>>();
 
+	EXPECT_FALSE(future.IsDone());
 	EXPECT_FALSE(future.IsCompleted());
 	EXPECT_FALSE(future.IsCanceled());
 }
@@ -804,6 +819,7 @@ TEST(FutureTests, unique_callback_future_contains_no_result_when_previous_future
 
 	promise.Complete(std::make_unique<u32>(dummyData));
 
+	EXPECT_TRUE(future.IsDone());
 	EXPECT_TRUE(future.IsCompleted());
 	EXPECT_FALSE(future.IsCanceled());
 	EXPECT_FALSE(std::move(future).GetResult());
@@ -819,6 +835,7 @@ TEST(FutureTests, unique_callback_is_not_called_when_promise_is_canceled)
 
 	promise.Cancel();
 
+	EXPECT_TRUE(future.IsDone());
 	EXPECT_FALSE(future.IsCompleted());
 	EXPECT_TRUE(future.IsCanceled());
 	EXPECT_FALSE(std::move(future).GetResult());
@@ -873,6 +890,7 @@ TEST(FutureTests, make_completed_unique_future_returns_a_future_with_completed_s
 
 	auto future = MakeCompletedFuture<std::unique_ptr<u32>>(std::make_unique<u32>(dummyResult));
 
+	EXPECT_TRUE(future.IsDone());
 	ASSERT_TRUE(future.IsCompleted());
 	ASSERT_FALSE(future.IsCanceled());
 
@@ -901,6 +919,7 @@ TEST(FutureTests, thenapply_unique_callback_is_not_called_when_returned_future_i
 
 	futureReturned.Reset();
 
+	EXPECT_FALSE(future.IsDone());
 	EXPECT_FALSE(futureReturned.IsCompleted());
 	EXPECT_FALSE(futureReturned.IsCanceled());
 }
@@ -927,6 +946,7 @@ TEST(FutureTests, thenapply_unique_callback_is_called_when_nested_void_promise_i
 
 	promiseNested.Complete();
 
+	EXPECT_TRUE(futureReturned.IsDone());
 	EXPECT_TRUE(futureReturned.IsCompleted());
 	EXPECT_FALSE(futureReturned.IsCanceled());
 }
@@ -955,6 +975,7 @@ TEST(FutureTests, thenapply_unique_callback_is_called_when_related_futures_are_d
 
 	promiseNested.Complete();
 
+	EXPECT_TRUE(futureReturned.IsDone());
 	EXPECT_TRUE(futureReturned.IsCompleted());
 	EXPECT_FALSE(futureReturned.IsCanceled());
 }
@@ -1284,11 +1305,13 @@ TEST(FutureTests, waitforall_is_completed_when_single_future_completes)
 
 	auto futureWaitFor = WaitForAll(std::move(future));
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 
 	promise.Complete();
 
+	EXPECT_TRUE(futureWaitFor.IsDone());
 	EXPECT_TRUE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 }
@@ -1301,11 +1324,13 @@ TEST(FutureTests, waitforall_is_not_completed_when_first_future_completes)
 
 	auto futureWaitFor = WaitForAll(std::move(futureA), std::move(futureB), std::move(futureC));
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 
 	promiseA.Complete();
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 }
@@ -1318,11 +1343,13 @@ TEST(FutureTests, waitforall_is_not_completed_when_second_future_completes)
 
 	auto futureWaitFor = WaitForAll(std::move(futureA), std::move(futureB), std::move(futureC));
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 
 	promiseB.Complete();
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 }
@@ -1335,11 +1362,13 @@ TEST(FutureTests, waitforall_is_not_completed_when_third_future_completes)
 
 	auto futureWaitFor = WaitForAll(std::move(futureA), std::move(futureB), std::move(futureC));
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 
 	promiseC.Complete();
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 }
@@ -1352,12 +1381,14 @@ TEST(FutureTests, waitforall_is_not_completed_when_two_futures_completes)
 
 	auto futureWaitFor = WaitForAll(std::move(futureA), std::move(futureB), std::move(futureC));
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 
 	promiseA.Complete();
 	promiseC.Complete();
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 }
@@ -1370,6 +1401,7 @@ TEST(FutureTests, waitforall_is_completed_when_all_futures_completes)
 
 	auto futureWaitFor = WaitForAll(std::move(futureA), std::move(futureB), std::move(futureC));
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 
@@ -1377,6 +1409,7 @@ TEST(FutureTests, waitforall_is_completed_when_all_futures_completes)
 	promiseB.Complete();
 	promiseC.Complete();
 
+	EXPECT_TRUE(futureWaitFor.IsDone());
 	EXPECT_TRUE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 }
@@ -1387,11 +1420,13 @@ TEST(FutureTests, waitforall_is_completed_when_single_future_is_canceled)
 
 	auto futureWaitFor = WaitForAll(std::move(future));
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 
 	promise.Cancel();
 
+	EXPECT_TRUE(futureWaitFor.IsDone());
 	EXPECT_TRUE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 }
@@ -1404,11 +1439,13 @@ TEST(FutureTests, waitforall_is_not_completed_when_first_future_is_canceled)
 
 	auto futureWaitFor = WaitForAll(std::move(futureA), std::move(futureB), std::move(futureC));
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 
 	promiseA.Complete();
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 }
@@ -1421,11 +1458,13 @@ TEST(FutureTests, waitforall_is_not_completed_when_second_future_is_canceled)
 
 	auto futureWaitFor = WaitForAll(std::move(futureA), std::move(futureB), std::move(futureC));
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 
 	promiseB.Complete();
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 }
@@ -1438,11 +1477,13 @@ TEST(FutureTests, waitforall_is_not_completed_when_third_future_is_canceled)
 
 	auto futureWaitFor = WaitForAll(std::move(futureA), std::move(futureB), std::move(futureC));
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 
 	promiseC.Complete();
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 }
@@ -1455,12 +1496,14 @@ TEST(FutureTests, waitforall_is_not_completed_when_two_futures_is_canceled)
 
 	auto futureWaitFor = WaitForAll(std::move(futureA), std::move(futureB), std::move(futureC));
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 
 	promiseA.Complete();
 	promiseC.Complete();
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 }
@@ -1473,6 +1516,7 @@ TEST(FutureTests, waitforall_is_completed_when_all_futures_is_canceled)
 
 	auto futureWaitFor = WaitForAll(std::move(futureA), std::move(futureB), std::move(futureC));
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 
@@ -1480,6 +1524,7 @@ TEST(FutureTests, waitforall_is_completed_when_all_futures_is_canceled)
 	promiseB.Complete();
 	promiseC.Complete();
 
+	EXPECT_TRUE(futureWaitFor.IsDone());
 	EXPECT_TRUE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 }
@@ -1492,6 +1537,7 @@ TEST(FutureTests, waitforall_is_completed_when_all_futures_are_either_completed_
 
 	auto futureWaitFor = WaitForAll(std::move(futureA), std::move(futureB), std::move(futureC));
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 
@@ -1499,6 +1545,7 @@ TEST(FutureTests, waitforall_is_completed_when_all_futures_are_either_completed_
 	promiseB.Cancel();
 	promiseC.Complete();
 
+	EXPECT_TRUE(futureWaitFor.IsDone());
 	EXPECT_TRUE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 }
@@ -1509,11 +1556,13 @@ TEST(FutureTests, waitforany_is_completed_when_single_future_completes)
 	
 	auto futureWaitFor = WaitForAny(std::move(future));
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 
 	promise.Complete();
 
+	EXPECT_TRUE(futureWaitFor.IsDone());
 	EXPECT_TRUE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 }
@@ -1526,11 +1575,13 @@ TEST(FutureTests, waitforany_is_completed_when_first_future_completes)
 
 	auto futureWaitFor = WaitForAny(std::move(futureA), std::move(futureB), std::move(futureC));
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 
 	promiseA.Complete();
 
+	EXPECT_TRUE(futureWaitFor.IsDone());
 	EXPECT_TRUE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 }
@@ -1543,11 +1594,13 @@ TEST(FutureTests, waitforany_is_completed_when_second_future_completes)
 
 	auto futureWaitFor = WaitForAny(std::move(futureA), std::move(futureB), std::move(futureC));
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 
 	promiseB.Complete();
 
+	EXPECT_TRUE(futureWaitFor.IsDone());
 	EXPECT_TRUE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 }
@@ -1560,11 +1613,13 @@ TEST(FutureTests, waitforany_is_completed_when_third_future_completes)
 
 	auto futureWaitFor = WaitForAny(std::move(futureA), std::move(futureB), std::move(futureC));
 
+	EXPECT_FALSE(futureWaitFor.IsDone());
 	EXPECT_FALSE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 
 	promiseC.Complete();
 
+	EXPECT_TRUE(futureWaitFor.IsDone());
 	EXPECT_TRUE(futureWaitFor.IsCompleted());
 	EXPECT_FALSE(futureWaitFor.IsCanceled());
 }

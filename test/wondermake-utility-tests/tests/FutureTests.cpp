@@ -1018,7 +1018,7 @@ TEST(FutureTests, unique_future_is_called_when_returned_from_makeconst)
 	promise.Complete(std::make_unique<u32>(1234));
 }
 
-TEST(FutureTests, cancellation_callback_is_not_called_when_promise_is_completed)
+TEST(FutureTests, future_cancellation_callback_is_not_called_when_promise_is_completed)
 {
 	StrictMock<CancellationCallbackMock> callbackMock;
 	auto [promise, future] = MakeAsync<u32>();
@@ -1028,7 +1028,7 @@ TEST(FutureTests, cancellation_callback_is_not_called_when_promise_is_completed)
 	promise.Complete(0);
 }
 
-TEST(FutureTests, cancellation_callback_is_not_called_when_void_promise_is_completed)
+TEST(FutureTests, future_cancellation_callback_is_not_called_when_void_promise_is_completed)
 {
 	StrictMock<CancellationCallbackMock> callbackMock;
 	auto [promise, future] = MakeAsync<void>();
@@ -1038,7 +1038,7 @@ TEST(FutureTests, cancellation_callback_is_not_called_when_void_promise_is_compl
 	promise.Complete();
 }
 
-TEST(FutureTests, cancellation_callback_is_called_when_promise_is_destroyed)
+TEST(FutureTests, future_cancellation_callback_is_called_when_promise_is_destroyed)
 {
 	StrictMock<CancellationCallbackMock> callbackMock;
 
@@ -1051,7 +1051,7 @@ TEST(FutureTests, cancellation_callback_is_called_when_promise_is_destroyed)
 	}
 }
 
-TEST(FutureTests, cancellation_callback_is_called_when_void_promise_is_destroyed)
+TEST(FutureTests, future_cancellation_callback_is_called_when_void_promise_is_destroyed)
 {
 	StrictMock<CancellationCallbackMock> callbackMock;
 
@@ -1064,7 +1064,7 @@ TEST(FutureTests, cancellation_callback_is_called_when_void_promise_is_destroyed
 	}
 }
 
-TEST(FutureTests, cancellation_callback_is_called_when_promise_calls_cancel)
+TEST(FutureTests, future_cancellation_callback_is_called_when_promise_calls_cancel)
 {
 	StrictMock<CancellationCallbackMock> callbackMock;
 	auto [promise, future] = MakeAsync<u32>();
@@ -1076,12 +1076,82 @@ TEST(FutureTests, cancellation_callback_is_called_when_promise_calls_cancel)
 	promise.Cancel();
 }
 
-TEST(FutureTests, cancellation_callback_is_called_when_void_promise_calls_cancel)
+TEST(FutureTests, future_cancellation_callback_is_called_when_void_promise_calls_cancel)
 {
 	StrictMock<CancellationCallbackMock> callbackMock;
 	auto [promise, future] = MakeAsync<void>();
 
 	future.OnCancel(InlineExecutor(), callbackMock.CreateCallback());
+
+	EXPECT_CALL(callbackMock, Invoke);
+
+	promise.Cancel();
+}
+
+TEST(FutureTests, promise_cancellation_callback_is_not_called_when_promise_is_completed)
+{
+	StrictMock<CancellationCallbackMock> callbackMock;
+	auto [promise, future] = MakeAsync<u32>();
+
+	promise.OnCancel(InlineExecutor(), callbackMock.CreateCallback());
+
+	promise.Complete(0);
+}
+
+TEST(FutureTests, promise_cancellation_callback_is_not_called_when_void_promise_is_completed)
+{
+	StrictMock<CancellationCallbackMock> callbackMock;
+	auto [promise, future] = MakeAsync<void>();
+
+	promise.OnCancel(InlineExecutor(), callbackMock.CreateCallback());
+
+	promise.Complete();
+}
+
+TEST(FutureTests, promise_cancellation_callback_is_called_when_promise_is_destroyed)
+{
+	StrictMock<CancellationCallbackMock> callbackMock;
+
+	{
+		auto [promise, future] = MakeAsync<u32>();
+
+		promise.OnCancel(InlineExecutor(), callbackMock.CreateCallback());
+
+		EXPECT_CALL(callbackMock, Invoke);
+	}
+}
+
+TEST(FutureTests, promise_cancellation_callback_is_called_when_void_promise_is_destroyed)
+{
+	StrictMock<CancellationCallbackMock> callbackMock;
+
+	{
+		auto [promise, future] = MakeAsync<void>();
+
+		promise.OnCancel(InlineExecutor(), callbackMock.CreateCallback());
+
+		EXPECT_CALL(callbackMock, Invoke);
+	}
+}
+
+TEST(FutureTests, promise_cancellation_callback_is_called_when_promise_calls_cancel)
+{
+	StrictMock<CancellationCallbackMock> callbackMock;
+	auto [promise, future] = MakeAsync<u32>();
+
+	promise.OnCancel(InlineExecutor(), callbackMock.CreateCallback());
+
+	EXPECT_CALL(callbackMock, Invoke);
+
+	promise.Cancel();
+}
+
+TEST(FutureTests, promise_cancellation_callback_is_called_when_void_promise_calls_cancel)
+{
+	StrictMock<CancellationCallbackMock> callbackMock;
+	auto [promise, future] = MakeAsync<void>();
+
+	promise.OnCancel(InlineExecutor(), callbackMock.CreateCallback());
 
 	EXPECT_CALL(callbackMock, Invoke);
 

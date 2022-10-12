@@ -70,7 +70,7 @@ public:
 		return myPointer;
 	}
 	template<typename TToType>
-	inline [[nodiscard]] operator std::shared_ptr<TToType>() const&& noexcept requires(std::is_constructible_v<std::shared_ptr<TToType>, std::shared_ptr<TType>>)
+	inline [[nodiscard]] operator std::shared_ptr<TToType>() && noexcept requires(std::is_constructible_v<std::shared_ptr<TToType>, std::shared_ptr<TType>>)
 	{
 		return std::move(myPointer);
 	}
@@ -81,7 +81,7 @@ public:
 		return myPointer;
 	}
 	template<typename TToType>
-	inline [[nodiscard]] operator std::weak_ptr<TToType>() const&& noexcept requires(std::is_constructible_v<std::weak_ptr<TToType>, std::shared_ptr<TType>>)
+	inline [[nodiscard]] operator std::weak_ptr<TToType>() && noexcept requires(std::is_constructible_v<std::weak_ptr<TToType>, std::shared_ptr<TType>>)
 	{
 		return std::move(myPointer);
 	}

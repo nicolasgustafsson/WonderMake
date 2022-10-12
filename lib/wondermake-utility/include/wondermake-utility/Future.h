@@ -580,6 +580,16 @@ public:
 	{
 		return static_cast<bool>(myState);
 	}
+	[[nodiscard]] bool IsDone() const
+	{
+		if (!myState)
+			return false;
+
+		const auto state = myState->GetState();
+
+		return state == _Impl::EFutureState::Completed
+			|| state == _Impl::EFutureState::Canceled;
+	}
 	[[nodiscard]] bool IsCompleted() const
 	{
 		if (!myState)
@@ -741,6 +751,16 @@ public:
 	[[nodiscard]] bool IsValid() const noexcept
 	{
 		return static_cast<bool>(myState);
+	}
+	[[nodiscard]] bool IsDone() const
+	{
+		if (!myState)
+			return false;
+
+		const auto state = myState->GetState();
+
+		return state == _Impl::EFutureState::Completed
+			|| state == _Impl::EFutureState::Canceled;
 	}
 	[[nodiscard]] bool IsCompleted() const
 	{

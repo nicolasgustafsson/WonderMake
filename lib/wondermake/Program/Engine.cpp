@@ -90,37 +90,37 @@ namespace Engine
 			auto&& configurationSystem = foundationalContainer.Get<ConfigurationSystem>();
 
 			jobSystem->StartJob<ReadFileJob>(FolderLocation::Bin, configurationSystem.Get<std::string>(ConfigurationEngine::OverrideFileApplication, aInfo.Configuration.OverrideFileApplication.string()))
-				.ThenApply(InlineExecutor(), MoveFutureResult([jobSystem, &configurationSystem](auto aResult)
+				.ThenApply(InlineExecutor(), FutureApplyResult([jobSystem, &configurationSystem](auto aResult) -> Future<DeserializeConfigurationJob::Output>
 					{
 						if (!aResult)
-							return Future<DeserializeConfigurationJob::Output>();
+							return MakeCanceledFuture<DeserializeConfigurationJob::Output>();
 
 						std::vector<u8> jsonBlob = std::move(aResult).Unwrap();
 
 						return jobSystem->StartJob<DeserializeConfigurationJob>(EConfigGroup::Application, std::string(jsonBlob.begin(), jsonBlob.end()));
 					}))
-				.ThenApply(InlineExecutor(), MoveFutureResult([jobSystem, &configurationSystem, &aInfo](auto aResult)
+				.ThenApply(InlineExecutor(), FutureApplyResult([jobSystem, &configurationSystem, &aInfo](auto aResult)
 					{
 						if (!aResult)
-							return Future<ReadFileJob::Output>();
+							return MakeCanceledFuture<ReadFileJob::Output>();
 
 						auto path = configurationSystem.Get<std::string>(ConfigurationEngine::OverrideFileDevice, aInfo.Configuration.OverrideFileDevice.string());
 
 						return jobSystem->StartJob<ReadFileJob>(FolderLocation::Data, std::move(path));
 					}))
-				.ThenApply(InlineExecutor(), MoveFutureResult([jobSystem](auto aResult)
+				.ThenApply(InlineExecutor(), FutureApplyResult([jobSystem](auto aResult)
 					{
 						if (!aResult)
-							return Future<DeserializeConfigurationJob::Output>();
+							return MakeCanceledFuture<DeserializeConfigurationJob::Output>();
 
 						std::vector<u8> jsonBlob = std::move(aResult).Unwrap();
 
 						return jobSystem->StartJob<DeserializeConfigurationJob>(EConfigGroup::Device, std::string(jsonBlob.begin(), jsonBlob.end()));
 					}))
-				.ThenApply(InlineExecutor(), MoveFutureResult([jobSystem, &configurationSystem, &aInfo](auto aResult)
+				.ThenApply(InlineExecutor(), FutureApplyResult([jobSystem, &configurationSystem, &aInfo](auto aResult)
 					{
 						if (!aResult)
-							return Future<ReadFileJob::Output>();
+							return MakeCanceledFuture<ReadFileJob::Output>();
 
 						const auto userLocation = configurationSystem.Get<ConfigurationEngine::EOverrideFileUserLocation>(ConfigurationEngine::OverrideFileUserLocation, ConfigurationEngine::EOverrideFileUserLocation::UserData);
 
@@ -129,10 +129,10 @@ namespace Engine
 
 						return jobSystem->StartJob<ReadFileJob>(folderLocation, std::move(path));
 					}))
-				.ThenApply(InlineExecutor(), MoveFutureResult([jobSystem](auto aResult)
+				.ThenApply(InlineExecutor(), FutureApplyResult([jobSystem](auto aResult)
 					{
 						if (!aResult)
-							return Future<DeserializeConfigurationJob::Output>();
+							return MakeCanceledFuture<DeserializeConfigurationJob::Output>();
 
 						std::vector<u8> jsonBlob = std::move(aResult).Unwrap();
 

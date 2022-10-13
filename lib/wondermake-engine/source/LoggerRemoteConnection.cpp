@@ -29,7 +29,7 @@ Result<void, IpcConnection::SConnectionError> LoggerRemoteConnection::ConnectIpc
 	myConnection = std::make_shared<SocketSerializingImpl<ProtoLoggerRemote::LogLine>>(myExecutor, 4_KiB, &SerializeLogline, &DeserializeLogline, std::move(aConnection));
 
 	myConnection->OnClose()
-		.ThenRun(myExecutor, MoveFutureResult(Bind(&LoggerRemoteConnection::OnClosed, weak_from_this())))
+		.ThenRun(myExecutor, FutureRunResult(Bind(&LoggerRemoteConnection::OnClosed, weak_from_this())))
 		.Detach();
 
 	Logger::Get().AddLogger(weak_from_this());
@@ -51,8 +51,8 @@ void LoggerRemoteConnection::Print(ELogSeverity aSeverity, ELogLevel aLevel, std
 	logline.set_level(static_cast<LogLine::ELogLevel>(aLevel));
 	logline.set_severity(static_cast<LogLine::ELogSeverity>(aSeverity));
 
-	myConnection->WriteMessage(logline)
-		.ThenRun(myExecutor, MoveFutureResult([](auto aResult)
+	myConnection->WriteMessage(upstream)
+		.ThenRun(myExecutor, FutureRunResult([](auto aResult)
 			{
 				if (aResult)
 					return;

@@ -885,7 +885,7 @@ inline [[nodiscard]] Future<void> WaitForAny(Future<TTypes>... aFutures)
 };
 
 template<typename TCallable>
-inline [[nodiscard]] auto MoveFutureResult(TCallable&& aCallable)
+inline [[nodiscard]] auto FutureRunResult(TCallable&& aCallable)
 {
 	return [callable = std::forward<TCallable>(aCallable)](auto&& aFuture) mutable
 	{

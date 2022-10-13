@@ -35,7 +35,7 @@ Result<void, IpcAcceptor::SOpenError> LoggerRemoteSocket::OpenIpc(SharedReferenc
 			.ThenRun(myExecutor, Bind(&LoggerRemoteSocket::OnIpcClosed, weak_from_this()))
 			.Detach();
 		futureConnection
-			.ThenRun(myExecutor, MoveFutureResult(Bind(&LoggerRemoteSocket::OnConnection, weak_from_this())))
+			.ThenRun(myExecutor, FutureRunResult(Bind(&LoggerRemoteSocket::OnConnection, weak_from_this())))
 			.Detach();
 	}
 
@@ -64,11 +64,11 @@ void LoggerRemoteSocket::OnConnection(IpcAcceptor::ResultTypeConnection&& aResul
 	lock.unlock();
 
 	socket->OnClose()
-		.ThenRun(myExecutor, MoveFutureResult(Bind(&LoggerRemoteSocket::OnConnectionClosed, self, std::weak_ptr<Socket>(connection))))
+		.ThenRun(myExecutor, FutureRunResult(Bind(&LoggerRemoteSocket::OnConnectionClosed, self, std::weak_ptr<Socket>(connection))))
 		.Detach();
 
 	socket->ReadMessage()
-		.ThenRun(myExecutor, MoveFutureResult(Bind(&LoggerRemoteSocket::OnConnectionMessage, std::move(self), std::weak_ptr<Socket>(connection))))
+		.ThenRun(myExecutor, FutureRunResult(Bind(&LoggerRemoteSocket::OnConnectionMessage, std::move(self), std::weak_ptr<Socket>(connection))))
 		.Detach();
 }
 
@@ -114,7 +114,7 @@ void LoggerRemoteSocket::OnConnectionMessage(std::weak_ptr<Socket> aConnection, 
 
 	lock.unlock();
 
-	future.ThenRun(myExecutor, MoveFutureResult(Bind(&LoggerRemoteSocket::OnConnectionMessage, weak_from_this(), std::move(aConnection))))
+	future.ThenRun(myExecutor, FutureRunResult(Bind(&LoggerRemoteSocket::OnConnectionMessage, weak_from_this(), std::move(aConnection))))
 		.Detach();
 }
 

@@ -454,6 +454,8 @@ template<typename TType>
 class Future final
 {
 public:
+	using Type = TType;
+
 	Future() noexcept = default;
 	Future(std::shared_ptr<_Impl::FutureSharedState<TType>> aSharedState) noexcept
 		: myState(std::move(aSharedState))
@@ -633,6 +635,8 @@ template<>
 class Future<void> final
 {
 public:
+	using Type = void;
+
 	Future() noexcept = default;
 	Future(std::shared_ptr<_Impl::FutureSharedState<void>> aSharedState) noexcept
 		: myState(std::move(aSharedState))
@@ -805,7 +809,7 @@ inline Future<void> MakeCompletedFuture<void>(void)
 }
 
 template<typename TArg>
-Future<std::decay_t<TArg>> MakeCanceledFuture()
+inline Future<TArg> MakeCanceledFuture()
 {
 	auto sharedState = std::make_shared<_Impl::FutureSharedState<std::decay_t<TArg>>>();
 	InlineExecutor executor;
@@ -881,35 +885,60 @@ inline [[nodiscard]] Future<void> WaitForAny(Future<TTypes>... aFutures)
 };
 
 template<typename TCallable>
-inline [[nodiscard]] auto CopyFutureResult(TCallable&& aCallable)
-{
-	return [callable = std::forward<TCallable>(aCallable)](auto&& aFuture) mutable
-	{
-		if (!aFuture.IsCompleted())
-			return std::decay_t<decltype(std::move(callable)(std::move(*aFuture.GetResult())))>();
-		
-		auto result = aFuture.GetResult();
-
-		if (!result)
-			return std::decay_t<decltype(std::move(callable)(std::move(*result)))>();
-
-		return std::move(callable)(std::move(*result));
-	};
-};
-
-template<typename TCallable>
 inline [[nodiscard]] auto MoveFutureResult(TCallable&& aCallable)
 {
 	return [callable = std::forward<TCallable>(aCallable)](auto&& aFuture) mutable
 	{
 		if (!aFuture.IsCompleted())
-			return std::decay_t<decltype(std::move(callable)(std::move(*std::move(aFuture).GetResult())))>();
+			return;
 
 		auto result = std::move(aFuture).GetResult();
 
 		if (!result)
-			return std::decay_t<decltype(std::move(callable)(std::move(*result)))>();
+			return;
 
-		return std::move(callable)(std::move(*result));
+		std::move(callable)(std::move(*result));
+	};
+};
+
+template<typename TCallable>
+inline [[nodiscard]] auto FutureApplyResult(TCallable&& aCallable)
+{
+	return [callable = std::forward<TCallable>(aCallable)](auto&& aFuture) mutable -> auto
+	{
+		if constexpr (CWeakBindedCallable<TCallable>)
+		{
+			using FutureType = std::decay_t<decltype(std::move(callable)(*aFuture.GetResult()))>::SuccessType;
+
+			using FutureResultType = typename FutureType::Type;
+
+			if (!aFuture.IsCompleted())
+				return MakeCanceledFuture<FutureResultType>();
+
+			auto result = std::move(aFuture).GetResult();
+
+			if (!result)
+				return MakeCanceledFuture<FutureResultType>();
+
+			return FutureType((std::move(callable)(std::move(*result)))
+				.AndThen([](auto& aFuture) { return std::move(aFuture); })
+				.OrElse([](auto&) { return MakeCanceledFuture<FutureResultType>(); }));
+		}
+		else
+		{
+			using FutureType = std::decay_t<decltype(std::move(callable)(*aFuture.GetResult()))>;
+
+			using FutureResultType = typename FutureType::Type;
+
+			if (!aFuture.IsCompleted())
+				return MakeCanceledFuture<FutureResultType>();
+
+			auto result = std::move(aFuture).GetResult();
+
+			if (!result)
+				return MakeCanceledFuture<FutureResultType>();
+
+			return std::move(callable)(std::move(*result));
+		}
 	};
 };

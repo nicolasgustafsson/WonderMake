@@ -107,7 +107,10 @@ namespace _Impl
 
 			Type* const data = static_cast<Type*>(aThis.myPointers.Data);
 
-			return std::move(*data)(std::forward<TArgs>(aArgs)...);
+			if constexpr (std::is_void_v<TReturnValue>)
+				std::move(*data)(std::forward<TArgs>(aArgs)...);
+			else
+				return std::move(*data)(std::forward<TArgs>(aArgs)...);
 		}
 
 		template<typename TCallable>

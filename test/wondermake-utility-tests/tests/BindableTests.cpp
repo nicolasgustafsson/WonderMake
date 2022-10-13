@@ -21,6 +21,23 @@ public:
 	MOCK_METHOD(void, ReturnsNothingTwoNonMovableArg, (UniqueValue<int> a1, UniqueValue<int> a2));
 };
 
+void Static_BindTests()
+{
+	auto callable = std::make_shared<StrictMock<CallableMock>>();
+
+	using WeakPtr = std::weak_ptr<StrictMock<CallableMock>>;
+
+	using BindRef		= std::decay_t<decltype(Bind(&CallableMock::ReturnsNothingNoArgs, *callable))>;
+	using BindPtr		= std::decay_t<decltype(Bind(&CallableMock::ReturnsNothingNoArgs, callable.get()))>;
+	using BindStrong	= std::decay_t<decltype(Bind(&CallableMock::ReturnsNothingNoArgs, callable))>;
+	using BindWeak		= std::decay_t<decltype(Bind(&CallableMock::ReturnsNothingNoArgs, WeakPtr(callable)))>;
+
+	static_assert(!CWeakBindedCallable<BindRef>);
+	static_assert(!CWeakBindedCallable<BindPtr>);
+	static_assert(!CWeakBindedCallable<BindStrong>);
+	static_assert(CWeakBindedCallable<BindWeak>);
+}
+
 TEST(BindTest, bound_callable_is_called)
 {
 	StrictMock<CallableMock> mock;

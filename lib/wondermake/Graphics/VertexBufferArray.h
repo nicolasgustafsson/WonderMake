@@ -2,7 +2,7 @@
 #include "VertexAttributes.h"
 #include "VertexBuffer.h"
 
-#include "wondermake-utility/Utility.h"
+#include "wondermake-utility/TupleUtility.h"
 #include "OpenGLFacade.h"
 #include "Utilities/Container/Container.h"
 
@@ -88,7 +88,7 @@ VertexBufferArray<TAttributes...>::VertexBufferArray()
 	myVao = openGL->GenerateVertexArray();
 
 	(std::get<SVertexAttributeContainer<TAttributes>>(myAttributeData).SetVertexAttributeIndex
-		(Utility::TupleIndex<SVertexAttributeContainer<TAttributes>, decltype(myAttributeData)>::Index), ...);
+		(TupleIndex<SVertexAttributeContainer<TAttributes>, decltype(myAttributeData)>::Index), ...);
 }
 
 template<EVertexAttribute... TAttributes>

@@ -219,9 +219,9 @@ TEST(WinIpcConnectionManualTests, connection_can_read_and_write)
 	auto ipcConnectionServer = acceptorConnectionFuture.GetResult()->Unwrap();
 
 	ipcConnectionClient->Write(dummyDataA)
-		.ThenRun(InlineExecutor(), MoveFutureResult(onWrite(callbackMockClient)));
+		.ThenRun(InlineExecutor(), FutureRunResult(onWrite(callbackMockClient)));
 	ipcConnectionServer->Read()
-		.ThenRun(InlineExecutor(), MoveFutureResult(onRead(callbackMockServer)));
+		.ThenRun(InlineExecutor(), FutureRunResult(onRead(callbackMockServer)));
 
 	winEvent.WaitForEvent(0);
 
@@ -229,9 +229,9 @@ TEST(WinIpcConnectionManualTests, connection_can_read_and_write)
 	EXPECT_CALL(callbackMockClient, OnRead(ReadResultMatcher(Ok(dummyDataB))));
 
 	ipcConnectionServer->Write(dummyDataB)
-		.ThenRun(InlineExecutor(), MoveFutureResult(onWrite(callbackMockServer)));
+		.ThenRun(InlineExecutor(), FutureRunResult(onWrite(callbackMockServer)));
 	ipcConnectionClient->Read()
-		.ThenRun(InlineExecutor(), MoveFutureResult(onRead(callbackMockClient)));
+		.ThenRun(InlineExecutor(), FutureRunResult(onRead(callbackMockClient)));
 
 	winEvent.WaitForEvent(0);
 }

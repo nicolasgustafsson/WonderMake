@@ -141,6 +141,22 @@ public:
 	{
 		return myConfiguration.Has(aId);
 	}
+	
+	template<CConfigType TConfigType, bool TRaw = false>
+	inline [[nodiscard]] std::optional<TConfigType> GetOverride(const char* aId) const
+	{
+		return myConfiguration.GetOverride<TConfigType, TRaw>(aId);
+	}
+	template<CConfigType TConfigType, bool TRaw = false>
+	inline [[nodiscard]] std::optional<TConfigType> GetOverride(std::string_view aId) const
+	{
+		return myConfiguration.GetOverride<TConfigType, TRaw>(aId);
+	}
+	template<CConfigType TConfigType, bool TRaw = false>
+	inline [[nodiscard]] std::optional<TConfigType> GetOverride(const std::string& aId) const
+	{
+		return myConfiguration.GetOverride<TConfigType, TRaw>(aId);
+	}
 
 	inline void ResetOverride(const std::string& aId)
 	{

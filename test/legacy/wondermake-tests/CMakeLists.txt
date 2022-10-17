@@ -6,7 +6,6 @@ list(APPEND SourceFiles
     "ObjectsAndPolicies/PolicyTests.cpp"
     "Utilities/MatrixTests.cpp"
     "Utilities/RotationTests.cpp"
-    "Utilities/UniqueFunctionTests.cpp"
     "Utilities/VectorTests.cpp"
     "ContainerTests.cpp"
     "Main.cpp"

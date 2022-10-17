@@ -568,6 +568,36 @@ public:
 
 	void ResetOverride(const std::string& aId);
 
+	inline [[nodiscard]] std::optional<EConfigGroup> GetGroup(const char* aId) const
+	{
+		return GetGroup(std::string_view(aId));
+	}
+	inline [[nodiscard]] std::optional<EConfigGroup> GetGroup(std::string_view aId) const
+	{
+		thread_local std::string buffer;
+
+		buffer.reserve(aId.size() + 1);
+
+		buffer.assign(aId.data(), aId.size());
+
+		return GetGroup(buffer);
+	}
+	inline [[nodiscard]] std::optional<EConfigGroup> GetGroup(const std::string& aId) const
+	{
+		std::shared_lock<std::shared_mutex> lock(myMutex);
+
+		const auto it = myConfigs.find(aId);
+
+		if (it == myConfigs.end())
+			return std::nullopt;
+
+		return std::visit([](const auto& aConfigData)
+			{
+				return aConfigData.ConfigGroup;
+			},
+			it->second.Config);
+	}
+
 	inline [[nodiscard]] std::unordered_map<std::string, ConfigElement> GetConfigs() const
 	{
 		std::unordered_map<std::string, ConfigElement> retVal;

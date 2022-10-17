@@ -189,6 +189,19 @@ public:
 
 		executor.ExecuteAll();
 	}
+	
+	inline [[nodiscard]] std::optional<EConfigGroup> GetGroup(const char* aId) const
+	{
+		return myConfiguration.GetGroup(aId);
+	}
+	inline [[nodiscard]] std::optional<EConfigGroup> GetGroup(std::string_view aId) const
+	{
+		return myConfiguration.GetGroup(aId);
+	}
+	inline [[nodiscard]] std::optional<EConfigGroup> GetGroup(const std::string& aId) const
+	{
+		return myConfiguration.GetGroup(aId);
+	}
 
 	template<CExecutor TExecutor, typename TCallable>
 	inline EventSubscriber OnOverrideChanged(TExecutor aExecutor, TCallable&& aCallable)

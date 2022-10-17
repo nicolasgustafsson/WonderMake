@@ -1433,6 +1433,48 @@ TEST(ConfigurationTests, generic_has_returns_correct_values)
 	EXPECT_TRUE(configuration.Has(std::string(dummyId)));
 }
 
+TEST(ConfigurationTests, getgroup_returns_correct_values)
+{
+	static constexpr const char* dummyIdNone	= "dummy_id_none";
+	static constexpr const char* dummyIdApp		= "dummy_id_app";
+	static constexpr const char* dummyIdDevice	= "dummy_id_device";
+	static constexpr const char* dummyIdUser	= "dummy_id_user";
+
+	Configuration configuration;
+
+	configuration.Set<u32>(dummyIdApp,		1234, EConfigGroup::Application);
+	configuration.Set<u32>(dummyIdDevice,	1234, EConfigGroup::Device);
+	configuration.Set<u32>(dummyIdUser,		1234, EConfigGroup::User);
+
+	ASSERT_FALSE(configuration.GetGroup(dummyIdNone));
+	ASSERT_FALSE(configuration.GetGroup(std::string_view(dummyIdNone)));
+	ASSERT_FALSE(configuration.GetGroup(std::string(dummyIdNone)));
+
+	ASSERT_TRUE(configuration.GetGroup(dummyIdApp));
+	ASSERT_TRUE(configuration.GetGroup(std::string_view(dummyIdApp)));
+	ASSERT_TRUE(configuration.GetGroup(std::string(dummyIdApp)));
+
+	EXPECT_EQ(configuration.GetGroup(dummyIdApp).value(),						EConfigGroup::Application);
+	EXPECT_EQ(configuration.GetGroup(std::string_view(dummyIdApp)).value(),		EConfigGroup::Application);
+	EXPECT_EQ(configuration.GetGroup(std::string(dummyIdApp)).value(),			EConfigGroup::Application);
+
+	ASSERT_TRUE(configuration.GetGroup(dummyIdDevice));
+	ASSERT_TRUE(configuration.GetGroup(std::string_view(dummyIdDevice)));
+	ASSERT_TRUE(configuration.GetGroup(std::string(dummyIdDevice)));
+
+	EXPECT_EQ(configuration.GetGroup(dummyIdDevice).value(),					EConfigGroup::Device);
+	EXPECT_EQ(configuration.GetGroup(std::string_view(dummyIdDevice)).value(),	EConfigGroup::Device);
+	EXPECT_EQ(configuration.GetGroup(std::string(dummyIdDevice)).value(),		EConfigGroup::Device);
+
+	ASSERT_TRUE(configuration.GetGroup(dummyIdUser));
+	ASSERT_TRUE(configuration.GetGroup(std::string_view(dummyIdUser)));
+	ASSERT_TRUE(configuration.GetGroup(std::string(dummyIdUser)));
+
+	EXPECT_EQ(configuration.GetGroup(dummyIdUser).value(),						EConfigGroup::User);
+	EXPECT_EQ(configuration.GetGroup(std::string_view(dummyIdUser)).value(),	EConfigGroup::User);
+	EXPECT_EQ(configuration.GetGroup(std::string(dummyIdUser)).value(),			EConfigGroup::User);
+}
+
 template<CConfig TConfig, CConfigRaw TConfigRaw>
 void TestGetOverrideReturnsCorrectValues(const TConfig& aOverride, const TConfigRaw& aOverrideRaw)
 {

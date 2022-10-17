@@ -10,7 +10,8 @@ list(APPEND SourceFiles
     "Tests/FutureTests.cpp"
     "Tests/GuidTests.cpp"
     "Tests/MemoryUnitTests.cpp"
-    "Tests/ResultTests.cpp")
+    "Tests/ResultTests.cpp"
+    "Tests/UniqueFunctionTests.cpp")
     
 list(APPEND SourceFiles
     "../../lib/wondermake-utility/source/AnyExecutor.cpp"

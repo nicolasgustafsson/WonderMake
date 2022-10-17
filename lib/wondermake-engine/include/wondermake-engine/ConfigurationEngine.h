@@ -31,5 +31,6 @@ namespace ConfigurationEngine
 		std::string aOverrideFileApplication,
 		std::string aOverrideFileDevice,
 		std::string aOverrideFileUser,
-		EOverrideFileUserLocation aOverrideFileUserLocation);
+		EOverrideFileUserLocation aOverrideFileUserLocation,
+		bool aIsHeadless);
 }

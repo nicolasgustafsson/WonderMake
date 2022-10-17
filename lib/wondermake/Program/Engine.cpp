@@ -46,9 +46,9 @@ namespace Engine
 
 		auto&& sysRegistry = Global::GetSystemRegistry();
 
-		sysRegistry.AddSystem<ConfigurationSystem>([configurationInfo = aInfo.Configuration]()
+		sysRegistry.AddSystem<ConfigurationSystem>([&aInfo]()
 			{
-				const auto create = [&configurationInfo]()
+				const auto create = [&aInfo]()
 				{
 					auto config = std::make_shared<ConfigurationSystem>();
 
@@ -57,10 +57,11 @@ namespace Engine
 					ConfigurationIo::Configure(*config);
 					ConfigurationEngine::Configure(
 						*config,
-						configurationInfo.OverrideFileApplication.string(),
-						configurationInfo.OverrideFileDevice.string(),
-						configurationInfo.OverrideFileUser.string(),
-						configurationInfo.OverrideFileUserLocation == EOverrideFileUserLocation::User ? ConfigurationEngine::EOverrideFileUserLocation::User : ConfigurationEngine::EOverrideFileUserLocation::UserData);
+						aInfo.Configuration.OverrideFileApplication.string(),
+						aInfo.Configuration.OverrideFileDevice.string(),
+						aInfo.Configuration.OverrideFileUser.string(),
+						aInfo.Configuration.OverrideFileUserLocation == EOverrideFileUserLocation::User ? ConfigurationEngine::EOverrideFileUserLocation::User : ConfigurationEngine::EOverrideFileUserLocation::UserData,
+						aInfo.Headless);
 
 					return config;
 				};

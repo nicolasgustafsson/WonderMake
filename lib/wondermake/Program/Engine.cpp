@@ -15,10 +15,12 @@
 #include "wondermake-engine/DeserializeConfigurationJob.h"
 #include "wondermake-engine/LoggerFileSystem.h"
 #include "wondermake-engine/LoggerRemoteSystem.h"
+#include "wondermake-engine/SerializeConfigurationJob.h"
 
 #include "wondermake-io/ConfigurationIo.h"
 #include "wondermake-io/FileSystem.h"
 #include "wondermake-io/ReadFileJob.h"
+#include "wondermake-io/WriteFileJob.h"
 
 #include "wondermake-base/CmdLineArgsSystem.h"
 #include "wondermake-base/ConfigurationSystem.h"
@@ -281,6 +283,52 @@ namespace Engine
 			}
 
 			sysContainer = std::move(result).Unwrap();
+			
+			{
+				auto& configSys = sysContainer.Get<ConfigurationSystem>();
+				auto& jobSys = sysContainer.Get<JobSystem>();
+
+				configSys.OnOverrideChanged(InlineExecutor(), [&jobSys, &configSys, &aInfo](const auto& aId)
+					{
+						const auto groupOpt = configSys.GetGroup(aId);
+
+						if (!groupOpt)
+							return;
+
+						const auto				group = *groupOpt;
+						std::filesystem::path	path;
+						FolderLocation			folder = FolderLocation::Bin;
+
+						switch (group)
+						{
+						case EConfigGroup::Application:	path = configSys.Get<std::string>(ConfigurationEngine::OverrideFileApplication, aInfo.Configuration.OverrideFileApplication.string());	break;
+						case EConfigGroup::Device:		path = configSys.Get<std::string>(ConfigurationEngine::OverrideFileDevice, aInfo.Configuration.OverrideFileDevice.string());			break;
+						case EConfigGroup::User:		path = configSys.Get<std::string>(ConfigurationEngine::OverrideFileUser, aInfo.Configuration.OverrideFileUser.string());				break;
+						}
+						switch (group)
+						{
+						case EConfigGroup::Application:	folder = FolderLocation::Bin; break;
+						case EConfigGroup::Device:		folder = FolderLocation::Data; break;
+						case EConfigGroup::User:
+						{
+							const auto userLocation = configSys.Get<ConfigurationEngine::EOverrideFileUserLocation>(ConfigurationEngine::OverrideFileUserLocation, ConfigurationEngine::EOverrideFileUserLocation::UserData);
+
+							folder = userLocation == ConfigurationEngine::EOverrideFileUserLocation::User ? FolderLocation::User : FolderLocation::UserData;
+
+							break;
+						}
+						}
+
+						jobSys
+							.StartJob<SerializeConfigurationJob>(group)
+							.ThenApply(InlineExecutor(), FutureApplyResult([&jobSys, folder, path = std::move(path)](auto aJsonBlob)
+								{
+									return jobSys.StartJob<WriteFileJob>(folder, path, std::move(aJsonBlob));
+								}))
+							.Detach();
+					})
+					.Detach();
+			}
 
 			auto&& timeKeeper = sysContainer.Get<TimeKeeper>();
 

@@ -601,6 +601,8 @@ public:
 
 	inline [[nodiscard]] std::unordered_map<std::string, ConfigElement> GetConfigs() const
 	{
+		std::shared_lock<std::shared_mutex> lock(myMutex);
+
 		std::unordered_map<std::string, ConfigElement> retVal;
 
 		retVal.reserve(myConfigs.size());

@@ -11,6 +11,7 @@ list(APPEND SourceFiles
     "Tests/ConfigurationSystemTests.cpp"
     "Tests/ConfigurationTests.cpp"
     "Tests/ConfigurationTests.h"
+    "Tests/ConfigurationTestsGetConfigs.cpp"
     "Tests/JobRegistryTests.cpp"
     "Tests/JobSystemTests.cpp"
     "Tests/LoggerTests.cpp"

@@ -10,10 +10,10 @@ class ReadFileJobMock
 	: public JobMock<ReadFileJob>
 {
 public:
-	MOCK_METHOD(void, RunFolderLocationAndPath, (Promise<ReadFileJob::Output>, FolderLocation, std::filesystem::path));
+	MOCK_METHOD(void, RunFolderFilePath, (Promise<ReadFileJob::Output>, FilePath));
 
-	inline void Run(Promise<ReadFileJob::Output> aPromise, FolderLocation aLocation, std::filesystem::path aPath) override
+	inline void Run(Promise<ReadFileJob::Output> aPromise, FilePath aFilePath) override
 	{
-		RunFolderLocationAndPath(std::move(aPromise), std::move(aLocation), std::move(aPath));
+		RunFolderFilePath(std::move(aPromise), std::move(aFilePath));
 	}
 };

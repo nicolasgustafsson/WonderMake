@@ -1,9 +1,8 @@
 #pragma once
 
-#include "wondermake-io/FileTypes.h"
-
 #include "wondermake-base/JobBase.h"
 
+#include "wondermake-utility/FilePath.h"
 #include "wondermake-utility/Result.h"
 
 #include <filesystem>
@@ -22,6 +21,6 @@ enum class ReadFileError
 class ReadFileJob
 	: public JobAbstracted<
 		JobInputSet<
-			JobInput<FolderLocation, std::filesystem::path>>,
+			JobInput<FilePath>>,
 		Result<std::vector<u8>, ReadFileError>>
 {};

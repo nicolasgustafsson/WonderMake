@@ -3,6 +3,7 @@
 #include "wondermake-base/LoggerTypes.h"
 
 #include "wondermake-utility/CmdLineArgs.h"
+#include "wondermake-utility/FilePath.h"
 #include "wondermake-utility/MemoryUnit.h"
 #include "wondermake-utility/UniqueFunction.h"
 #include "wondermake-utility/Typedefs.h"
@@ -16,11 +17,8 @@ namespace Engine
 {
 	struct LogFileInfo
 	{
-		// The log file's directory relative to the project folder inside user data directory.
-		std::filesystem::path Path;
-
-		// Name of the log file, including file extension.
-		std::filesystem::path Filename;
+		// The path to the log file.
+		FilePath Path;
 
 		// Size the log file will be trimmed to when launching the engine or when exceeding the max size.
 		MemoryUnit<EMemoryRatio::Bytes, uintmax_t> TrimSize = MemoryUnit<EMemoryRatio::MiB, uintmax_t>(1);

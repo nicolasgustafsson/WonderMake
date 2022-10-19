@@ -1,7 +1,5 @@
 #include "wondermake-engine/LoggerFileSystem.h"
 
-#include "wondermake-io/FileSystem.h"
-
 #include "wondermake-base/SystemGlobal.h"
 
 #include "wondermake-utility/MemoryUnit.h"
@@ -18,23 +16,18 @@ void LoggerFileSystem::SetLogSizeLimits(MemoryUnit<EMemoryRatio::Bytes, uintmax_
 	myMaxSize = aMaxSize;
 }
 
-bool LoggerFileSystem::OpenLogFile(std::filesystem::path aRelativeFolder, std::filesystem::path aFileName)
+bool LoggerFileSystem::OpenLogFile(FilePath aLogPath)
 {
 	std::lock_guard<decltype(myMutex)> lock(myMutex);
 
 	Logger::Get().AddLogger(weak_from_this());
 
-	auto&& fileSystem = Get<FileSystem>();
+	myLogPath = std::move(aLogPath);
 
-	auto pathOpt = fileSystem.GetFolderLocation(FolderLocation::UserData);
+	std::filesystem::path directory = myLogPath.Path.parent_path();
 
-	if (!pathOpt)
-		return false;
-
-	const auto pathDir	= *pathOpt / aRelativeFolder;
-	myLogPath = *pathOpt / aRelativeFolder / aFileName;
-
-	std::filesystem::create_directories(pathDir);
+	if (!directory.empty())
+		std::filesystem::create_directories(directory);
 
 	return ReopenAndTrimFile();
 }

@@ -214,7 +214,7 @@ namespace Engine
 
 				fileLogger.SetLogSizeLimits(logFileInfo.TrimSize, logFileInfo.MaxSize);
 
-				logFileError = !fileLogger.OpenLogFile(logFileInfo.Path, logFileInfo.Filename);
+				logFileError = !fileLogger.OpenLogFile(logFileInfo.Path);
 			}
 
 			WmLogInfo(TagWonderMake << "");

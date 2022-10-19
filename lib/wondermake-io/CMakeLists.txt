@@ -26,6 +26,7 @@ list(APPEND SourceFiles
     "source/WinIpcConnection.h"
     "source/WinIpcSystem.cpp"
     "source/WinIpcSystem.h"
+    "source/WinPlatformFilePaths.cpp"
     "source/WriteFileJob.cpp")
 
 add_library(WonderMakeIo STATIC ${SourceFiles})

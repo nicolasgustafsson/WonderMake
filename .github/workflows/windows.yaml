@@ -19,6 +19,7 @@ jobs:
       run: |
         python -m pip install -v --upgrade pip
         pip install conan==1.51.3 -v --upgrade
+        conan config set general.revisions_enabled=1
     - uses: actions/checkout@v3
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DWonderMake_Testing=ON

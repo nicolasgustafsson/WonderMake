@@ -90,6 +90,7 @@ TEST(ConfigurationTests, type_bool_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdFalse,	ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdFalse,	1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdFalse,	1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdFalse,	FilePath()),		FilePath());
 	
 	EXPECT_EQ(configuration.Get<bool>(			dummyIdTrue,	false),				true);
 	EXPECT_EQ(configuration.Get<u8>(			dummyIdTrue,	1),					1);
@@ -105,6 +106,7 @@ TEST(ConfigurationTests, type_bool_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdTrue,	ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdTrue,	1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdTrue,	1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdTrue,	FilePath()),		FilePath());
 }
 
 TEST(ConfigurationTests, type_u8_can_be_set_and_get)
@@ -131,6 +133,7 @@ TEST(ConfigurationTests, type_u8_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdZero,	ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdZero,	1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdZero,	1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdZero,	FilePath()),		FilePath());
 	
 	EXPECT_EQ(configuration.Get<bool>(			dummyIdMax,		false),				false);
 	EXPECT_EQ(configuration.Get<u8>(			dummyIdMax,		1),					std::numeric_limits<u8>::max());
@@ -146,6 +149,7 @@ TEST(ConfigurationTests, type_u8_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdMax,		ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdMax,		1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdMax,		1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdMax,		FilePath()),		FilePath());
 }
 
 TEST(ConfigurationTests, type_u16_can_be_set_and_get)
@@ -172,6 +176,7 @@ TEST(ConfigurationTests, type_u16_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdZero,	ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdZero,	1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdZero,	1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdZero,	FilePath()),		FilePath());
 	
 	EXPECT_EQ(configuration.Get<bool>(			dummyIdMax,		false),				false);
 	EXPECT_EQ(configuration.Get<u8>(			dummyIdMax,		1),					1);
@@ -187,6 +192,7 @@ TEST(ConfigurationTests, type_u16_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdMax,		ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdMax,		1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdMax,		1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdMax,		FilePath()),		FilePath());
 }
 
 TEST(ConfigurationTests, type_u32_can_be_set_and_get)
@@ -213,6 +219,7 @@ TEST(ConfigurationTests, type_u32_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdZero,	ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdZero,	1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdZero,	1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdZero,	FilePath()),		FilePath());
 	
 	EXPECT_EQ(configuration.Get<bool>(			dummyIdMax,		false),				false);
 	EXPECT_EQ(configuration.Get<u8>(			dummyIdMax,		1),					1);
@@ -228,6 +235,7 @@ TEST(ConfigurationTests, type_u32_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdMax,		ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdMax,		1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdMax,		1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdMax,		FilePath()),		FilePath());
 }
 
 TEST(ConfigurationTests, type_u64_can_be_set_and_get)
@@ -254,6 +262,7 @@ TEST(ConfigurationTests, type_u64_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdZero,	ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdZero,	1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdZero,	1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdZero,	FilePath()),		FilePath());
 	
 	EXPECT_EQ(configuration.Get<bool>(			dummyIdMax,		false),				false);
 	EXPECT_EQ(configuration.Get<u8>(			dummyIdMax,		1),					1);
@@ -269,6 +278,7 @@ TEST(ConfigurationTests, type_u64_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdMax,		ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdMax,		1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdMax,		1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdMax,		FilePath()),		FilePath());
 }
 
 TEST(ConfigurationTests, type_i8_can_be_set_and_get)
@@ -297,6 +307,7 @@ TEST(ConfigurationTests, type_i8_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdZero,	ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdZero,	1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdZero,	1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdZero,	FilePath()),		FilePath());
 	
 	EXPECT_EQ(configuration.Get<bool>(			dummyIdMin,		false),				false);
 	EXPECT_EQ(configuration.Get<u8>(			dummyIdMin,		1),					1);
@@ -312,6 +323,7 @@ TEST(ConfigurationTests, type_i8_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdMin,		ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdMin,		1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdMin,		1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdMin,		FilePath()),		FilePath());
 	
 	EXPECT_EQ(configuration.Get<bool>(			dummyIdMax,		false),				false);
 	EXPECT_EQ(configuration.Get<u8>(			dummyIdMax,		1),					1);
@@ -327,6 +339,7 @@ TEST(ConfigurationTests, type_i8_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdMax,		ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdMax,		1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdMax,		1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdMax,		FilePath()),		FilePath());
 }
 
 TEST(ConfigurationTests, type_i16_can_be_set_and_get)
@@ -355,6 +368,7 @@ TEST(ConfigurationTests, type_i16_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdZero,	ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdZero,	1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdZero,	1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdZero,	FilePath()),		FilePath());
 	
 	EXPECT_EQ(configuration.Get<bool>(			dummyIdMin,		false),				false);
 	EXPECT_EQ(configuration.Get<u8>(			dummyIdMin,		1),					1);
@@ -370,6 +384,7 @@ TEST(ConfigurationTests, type_i16_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdMin,		ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdMin,		1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdMin,		1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdMin,		FilePath()),		FilePath());
 	
 	EXPECT_EQ(configuration.Get<bool>(			dummyIdMax,		false),				false);
 	EXPECT_EQ(configuration.Get<u8>(			dummyIdMax,		1),					1);
@@ -385,6 +400,7 @@ TEST(ConfigurationTests, type_i16_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdMax,		ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdMax,		1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdMax,		1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdMax,		FilePath()),		FilePath());
 }
 
 TEST(ConfigurationTests, type_i32_can_be_set_and_get)
@@ -413,6 +429,7 @@ TEST(ConfigurationTests, type_i32_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdZero,	ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdZero,	1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdZero,	1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdZero,	FilePath()),		FilePath());
 	
 	EXPECT_EQ(configuration.Get<bool>(			dummyIdMin,		false),				false);
 	EXPECT_EQ(configuration.Get<u8>(			dummyIdMin,		1),					1);
@@ -428,6 +445,7 @@ TEST(ConfigurationTests, type_i32_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdMin,		ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdMin,		1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdMin,		1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdMin,		FilePath()),		FilePath());
 	
 	EXPECT_EQ(configuration.Get<bool>(			dummyIdMax,		false),				false);
 	EXPECT_EQ(configuration.Get<u8>(			dummyIdMax,		1),					1);
@@ -443,6 +461,7 @@ TEST(ConfigurationTests, type_i32_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdMax,		ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdMax,		1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdMax,		1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdMax,		FilePath()),		FilePath());
 }
 
 TEST(ConfigurationTests, type_i64_can_be_set_and_get)
@@ -471,6 +490,7 @@ TEST(ConfigurationTests, type_i64_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdZero,	ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdZero,	1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdZero,	1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdZero,	FilePath()),		FilePath());
 	
 	EXPECT_EQ(configuration.Get<bool>(			dummyIdMin,		false),				false);
 	EXPECT_EQ(configuration.Get<u8>(			dummyIdMin,		1),					1);
@@ -486,6 +506,7 @@ TEST(ConfigurationTests, type_i64_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdMin,		ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdMin,		1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdMin,		1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdMin,		FilePath()),		FilePath());
 	
 	EXPECT_EQ(configuration.Get<bool>(			dummyIdMax,		false),				false);
 	EXPECT_EQ(configuration.Get<u8>(			dummyIdMax,		1),					1);
@@ -501,6 +522,7 @@ TEST(ConfigurationTests, type_i64_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdMax,		ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdMax,		1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdMax,		1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdMax,		FilePath()),		FilePath());
 }
 
 TEST(ConfigurationTests, type_string_can_be_set_and_get)
@@ -529,6 +551,7 @@ TEST(ConfigurationTests, type_string_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdEmpty,		ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdEmpty,		1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdEmpty,		1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdEmpty,		FilePath()),		FilePath());
 	
 	EXPECT_EQ(configuration.Get<bool>(			dummyIdNonEmpty,	false),				false);
 	EXPECT_EQ(configuration.Get<u8>(			dummyIdNonEmpty,	1),					1);
@@ -544,6 +567,7 @@ TEST(ConfigurationTests, type_string_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdNonEmpty,	ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdNonEmpty,	1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdNonEmpty,	1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdNonEmpty,	FilePath()),		FilePath());
 }
 
 TEST(ConfigurationTests, type_enum_i32_can_be_set_and_get)
@@ -572,6 +596,7 @@ TEST(ConfigurationTests, type_enum_i32_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdZero,	ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdZero,	1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdZero,	1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdZero,	FilePath()),		FilePath());
 	
 	EXPECT_EQ(configuration.Get<bool>(			dummyIdMin,		false),				false);
 	EXPECT_EQ(configuration.Get<u8>(			dummyIdMin,		1),					1);
@@ -587,6 +612,7 @@ TEST(ConfigurationTests, type_enum_i32_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdMin,		ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdMin,		1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdMin,		1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdMin,		FilePath()),		FilePath());
 	
 	EXPECT_EQ(configuration.Get<bool>(			dummyIdMax,		false),				false);
 	EXPECT_EQ(configuration.Get<u8>(			dummyIdMax,		1),					1);
@@ -602,6 +628,7 @@ TEST(ConfigurationTests, type_enum_i32_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdMax,		ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdMax,		1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdMax,		1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdMax,		FilePath()),		FilePath());
 }
 
 TEST(ConfigurationTests, type_enum_u32_can_be_set_and_get)
@@ -628,6 +655,7 @@ TEST(ConfigurationTests, type_enum_u32_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdZero,	ETestEnumU32::One),	ETestEnumU32::Zero);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdZero,	1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdZero,	1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdZero,	FilePath()),		FilePath());
 	
 	EXPECT_EQ(configuration.Get<bool>(			dummyIdMax,		false),				false);
 	EXPECT_EQ(configuration.Get<u8>(			dummyIdMax,		1),					1);
@@ -643,6 +671,7 @@ TEST(ConfigurationTests, type_enum_u32_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdMax,		ETestEnumU32::One),	ETestEnumU32::Max);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdMax,		1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdMax,		1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdMax,		FilePath()),		FilePath());
 }
 
 TEST(ConfigurationTests, type_memoryunit_i32_can_be_set_and_get)
@@ -671,6 +700,7 @@ TEST(ConfigurationTests, type_memoryunit_i32_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdZero,	ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdZero,	1_B),				0_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdZero,	1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdZero,	FilePath()),		FilePath());
 	
 	EXPECT_EQ(configuration.Get<bool>(			dummyIdMin,		false),				false);
 	EXPECT_EQ(configuration.Get<u8>(			dummyIdMin,		1),					1);
@@ -686,6 +716,7 @@ TEST(ConfigurationTests, type_memoryunit_i32_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdMin,		ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdMin,		1_B),				IMemoryUnit(std::numeric_limits<i32>::min()));
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdMin,		1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdMin,	FilePath()),		FilePath());
 	
 	EXPECT_EQ(configuration.Get<bool>(			dummyIdMax,		false),				false);
 	EXPECT_EQ(configuration.Get<u8>(			dummyIdMax,		1),					1);
@@ -701,6 +732,7 @@ TEST(ConfigurationTests, type_memoryunit_i32_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdMax,		ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdMax,		1_B),				IMemoryUnit(std::numeric_limits<i32>::max()));
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdMax,		1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdMax,		FilePath()),		FilePath());
 }
 
 TEST(ConfigurationTests, type_memoryunit_u32_can_be_set_and_get)
@@ -727,6 +759,7 @@ TEST(ConfigurationTests, type_memoryunit_u32_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdZero,	ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdZero,	1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdZero,	1_B),				0_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdZero,	FilePath()),		FilePath());
 	
 	EXPECT_EQ(configuration.Get<bool>(			dummyIdMax,		false),				false);
 	EXPECT_EQ(configuration.Get<u8>(			dummyIdMax,		1),					1);
@@ -742,6 +775,53 @@ TEST(ConfigurationTests, type_memoryunit_u32_can_be_set_and_get)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdMax,		ETestEnumU32::One),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdMax,		1_B),				1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdMax,		1_B),				UMemoryUnit(std::numeric_limits<u32>::max()));
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdMax,		FilePath()),		FilePath());
+}
+
+TEST(ConfigurationTests, type_filepath_can_be_set_and_get)
+{
+	Configuration configuration;
+
+	const std::string dummyIdEmpty = "dummy_id_empty";
+	const std::string dummyIdNonEmpty = "dummy_id_non_empty";
+
+	const FilePath dummyValue	= FilePath(FilePath::EFolder::Bin,	"dummy_value");
+	const FilePath dummyDefault	= FilePath(FilePath::EFolder::User,	"dummy_default");
+
+	configuration.Set<FilePath>(dummyIdEmpty,		FilePath(),		locDummyGroup);
+	configuration.Set<FilePath>(dummyIdNonEmpty,	dummyValue,		locDummyGroup);
+	
+	EXPECT_EQ(configuration.Get<bool>(			dummyIdEmpty,		false),				false);
+	EXPECT_EQ(configuration.Get<u8>(			dummyIdEmpty,		1),					1);
+	EXPECT_EQ(configuration.Get<u16>(			dummyIdEmpty,		1),					1);
+	EXPECT_EQ(configuration.Get<u32>(			dummyIdEmpty,		1),					1);
+	EXPECT_EQ(configuration.Get<u64>(			dummyIdEmpty,		1),					1);
+	EXPECT_EQ(configuration.Get<i8>(			dummyIdEmpty,		1),					1);
+	EXPECT_EQ(configuration.Get<i16>(			dummyIdEmpty,		1),					1);
+	EXPECT_EQ(configuration.Get<i32>(			dummyIdEmpty,		1),					1);
+	EXPECT_EQ(configuration.Get<i64>(			dummyIdEmpty,		1),					1);
+	EXPECT_EQ(configuration.Get<std::string>(	dummyIdEmpty,		"empty"),			"empty");
+	EXPECT_EQ(configuration.Get<ETestEnumI32>(	dummyIdEmpty,		ETestEnumI32::One),	ETestEnumI32::One);
+	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdEmpty,		ETestEnumU32::One),	ETestEnumU32::One);
+	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdEmpty,		1_B),				1_B);
+	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdEmpty,		1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdEmpty,		dummyDefault),		FilePath());
+	
+	EXPECT_EQ(configuration.Get<bool>(			dummyIdNonEmpty,	false),				false);
+	EXPECT_EQ(configuration.Get<u8>(			dummyIdNonEmpty,	1),					1);
+	EXPECT_EQ(configuration.Get<u16>(			dummyIdNonEmpty,	1),					1);
+	EXPECT_EQ(configuration.Get<u32>(			dummyIdNonEmpty,	1),					1);
+	EXPECT_EQ(configuration.Get<u64>(			dummyIdNonEmpty,	1),					1);
+	EXPECT_EQ(configuration.Get<i8>(			dummyIdNonEmpty,	1),					1);
+	EXPECT_EQ(configuration.Get<i16>(			dummyIdNonEmpty,	1),					1);
+	EXPECT_EQ(configuration.Get<i32>(			dummyIdNonEmpty,	1),					1);
+	EXPECT_EQ(configuration.Get<i64>(			dummyIdNonEmpty,	1),					1);
+	EXPECT_EQ(configuration.Get<std::string>(	dummyIdNonEmpty,	"empty"),			"empty");
+	EXPECT_EQ(configuration.Get<ETestEnumI32>(	dummyIdNonEmpty,	ETestEnumI32::One),	ETestEnumI32::One);
+	EXPECT_EQ(configuration.Get<ETestEnumU32>(	dummyIdNonEmpty,	ETestEnumU32::One),	ETestEnumU32::One);
+	EXPECT_EQ(configuration.Get<IMemoryUnit>(	dummyIdNonEmpty,	1_B),				1_B);
+	EXPECT_EQ(configuration.Get<UMemoryUnit>(	dummyIdNonEmpty,	1_B),				1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		dummyIdNonEmpty,	dummyDefault),		dummyValue);
 }
 
 TEST(ConfigurationTests, values_can_only_be_set_once)
@@ -762,6 +842,7 @@ TEST(ConfigurationTests, values_can_only_be_set_once)
 	configuration.Set<ETestEnumU32>(	"dummy_id_enum_u32",		ETestEnumU32::One,		locDummyGroup);
 	configuration.Set<IMemoryUnit>(		"dummy_id_memoryunit_i32",	1_B,					locDummyGroup);
 	configuration.Set<UMemoryUnit>(		"dummy_id_memoryunit_u32",	1_B,					locDummyGroup);
+	configuration.Set<FilePath>(		"dummy_id_filepath",		FilePath("first"),		locDummyGroup);
 	
 	configuration.Set<bool>(			"dummy_id_bool",			false,					locDummyGroup);
 	configuration.Set<u8>(				"dummy_id_u8",				2,						locDummyGroup);
@@ -777,6 +858,7 @@ TEST(ConfigurationTests, values_can_only_be_set_once)
 	configuration.Set<ETestEnumU32>(	"dummy_id_enum_u32",		ETestEnumU32::Zero,		locDummyGroup);
 	configuration.Set<IMemoryUnit>(		"dummy_id_memoryunit_i32",	0_B,					locDummyGroup);
 	configuration.Set<UMemoryUnit>(		"dummy_id_memoryunit_u32",	0_B,					locDummyGroup);
+	configuration.Set<FilePath>(		"dummy_id_filepath",		FilePath(),				locDummyGroup);
 
 	EXPECT_EQ(configuration.Get<bool>(			"dummy_id_bool",			false),					true);
 	EXPECT_EQ(configuration.Get<u8>(			"dummy_id_u8",				0),						1);
@@ -792,6 +874,7 @@ TEST(ConfigurationTests, values_can_only_be_set_once)
 	EXPECT_EQ(configuration.Get<ETestEnumU32>(	"dummy_id_enum_u32",		ETestEnumU32::Zero),	ETestEnumU32::One);
 	EXPECT_EQ(configuration.Get<IMemoryUnit>(	"dummy_id_memoryunit_i32",	0_B),					1_B);
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(	"dummy_id_memoryunit_u32",	0_B),					1_B);
+	EXPECT_EQ(configuration.Get<FilePath>(		"dummy_id_filepath",		FilePath()),			FilePath("first"));
 }
 
 TEST(ConfigurationTests, type_bool_get_returns_overridden_value)
@@ -1082,6 +1165,26 @@ TEST(ConfigurationTests, type_memoryunit_u32_get_returns_overridden_value)
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(dummyIdMax, dummyDefault), UMemoryUnit(std::numeric_limits<u32>::max()));
 }
 
+TEST(ConfigurationTests, type_filepath_get_returns_overridden_value)
+{
+	Configuration configuration;
+
+	const std::string dummyIdEmpty		= "dummy_id_empty";
+	const std::string dummyIdNonEmpty	= "dummy_id_non_empty";
+	const FilePath dummyValue			= FilePath(FilePath::EFolder::Bin,	"dummy_value");
+	const FilePath dummyDefault			= FilePath(FilePath::EFolder::Data,	"dummy_default");
+	const FilePath dummyOverride		= FilePath(FilePath::EFolder::User,	"dummy_override");
+
+	configuration.Set<FilePath>(dummyIdEmpty, dummyValue, locDummyGroup);
+	configuration.Set<FilePath>(dummyIdNonEmpty, dummyValue, locDummyGroup);
+
+	configuration.SetOverride<FilePath>(dummyIdEmpty, FilePath());
+	configuration.SetOverride<FilePath>(dummyIdNonEmpty, dummyOverride);
+
+	EXPECT_EQ(configuration.Get<FilePath>(dummyIdEmpty, dummyDefault), FilePath());
+	EXPECT_EQ(configuration.Get<FilePath>(dummyIdNonEmpty, dummyDefault), dummyOverride);
+}
+
 TEST(ConfigurationTests, type_bool_reset_overridden_value)
 {
 	Configuration configuration;
@@ -1332,6 +1435,24 @@ TEST(ConfigurationTests, type_memoryunit_u32_reset_overridden_value)
 	configuration.ResetOverride(dummyId);
 
 	EXPECT_EQ(configuration.Get<UMemoryUnit>(dummyId, dummyDefault), dummyValue);
+}
+
+TEST(ConfigurationTests, type_filepath_reset_overridden_value)
+{
+	Configuration configuration;
+
+	const std::string dummyId		= "dummy_id";
+	const FilePath dummyValue		= FilePath(FilePath::EFolder::Bin,	"dummy_value");
+	const FilePath dummyDefault		= FilePath(FilePath::EFolder::Data,	"dummy_default");
+	const FilePath dummyOverride	= FilePath(FilePath::EFolder::User,	"dummy_override");
+
+	configuration.Set<FilePath>(dummyId, dummyValue, locDummyGroup);
+
+	configuration.SetOverride<FilePath>(dummyId, dummyOverride);
+
+	configuration.ResetOverride(dummyId);
+
+	EXPECT_EQ(configuration.Get<FilePath>(dummyId, dummyDefault), dummyValue);
 }
 
 template<CConfig TConfig, CConfigRaw TConfigRaw = TConfig>
@@ -1646,15 +1767,21 @@ TEST(ConfigurationTests, configuration_are_equal_if_they_contain_same_values_and
 	configurationL.Set<u32>("test_id_restricted", 234, EConfigGroup::Application, Configuration::AllowedValues<u32>{ { {"FIRST", 1}, {"SECOND", 2}, {"THIRD", 3} } });
 	configurationL.Set<std::string>("test_id_text", "Hello", EConfigGroup::Device);
 	configurationL.Set<UMemoryUnit>("test_id_memoryunit", 1234_KiB, EConfigGroup::User);
+	configurationL.Set<FilePath>("test_id_filepath", FilePath(FilePath::EFolder::Bin, "path_value"), EConfigGroup::User);
+	configurationL.Set<FilePath>("test_id_filepath_override", FilePath(FilePath::EFolder::Unset, "path_default"), EConfigGroup::User);
 
 	configurationL.SetOverride<std::string>("test_id_text", "World");
+	configurationL.SetOverride<FilePath>("test_id_filepath_override", FilePath(FilePath::EFolder::UserData, "path_override"));
 
 	configurationR.Set<u32>("test_id", 123, EConfigGroup::Application);
 	configurationR.Set<u32>("test_id_restricted", 234, EConfigGroup::Application, Configuration::AllowedValues<u32>{ { {"FIRST", 1}, { "SECOND", 2 }, { "THIRD", 3 } } });
 	configurationR.Set<std::string>("test_id_text", "Hello", EConfigGroup::Device);
 	configurationR.Set<UMemoryUnit>("test_id_memoryunit", 1234_KiB, EConfigGroup::User);
+	configurationR.Set<FilePath>("test_id_filepath", FilePath(FilePath::EFolder::Bin, "path_value"), EConfigGroup::User);
+	configurationR.Set<FilePath>("test_id_filepath_override", FilePath(FilePath::EFolder::Unset, "path_default"), EConfigGroup::User);
 
 	configurationR.SetOverride<std::string>("test_id_text", "World");
+	configurationR.SetOverride<FilePath>("test_id_filepath_override", FilePath(FilePath::EFolder::UserData, "path_override"));
 
 	EXPECT_EQ(configurationL, configurationR);
 }
@@ -1702,6 +1829,31 @@ TEST(ConfigurationTests, configuration_are_not_equal_if_a_config_memory_ratio_is
 
 	configurationL.Set<MemoryUnit<EMemoryRatio::KB, u32>>("test_id_mismatch", 1000_KB, EConfigGroup::Application);
 	configurationR.Set<MemoryUnit<EMemoryRatio::KiB, u32>>("test_id_mismatch", 1000_KiB, EConfigGroup::Application);
+
+	EXPECT_NE(configurationL, configurationR);
+}
+
+TEST(ConfigurationTests, configuration_are_not_equal_if_a_filepath_location_is_different)
+{
+	Configuration configurationL;
+	Configuration configurationR;
+
+	configurationL.Set<FilePath>("test_id_mismatch", FilePath(FilePath::EFolder::Data, "path"), EConfigGroup::Application);
+	configurationR.Set<FilePath>("test_id_mismatch", FilePath(FilePath::EFolder::User, "path"), EConfigGroup::Application);
+
+	EXPECT_NE(configurationL, configurationR);
+}
+
+TEST(ConfigurationTests, configuration_are_not_equal_if_a_filepath_override_location_is_different)
+{
+	Configuration configurationL;
+	Configuration configurationR;
+
+	configurationL.Set<FilePath>("test_id_mismatch", FilePath(FilePath::EFolder::Unset, "path"), EConfigGroup::Application);
+	configurationR.Set<FilePath>("test_id_mismatch", FilePath(FilePath::EFolder::Unset, "path"), EConfigGroup::Application);
+
+	configurationL.SetOverride<FilePath>("test_id_mismatch", FilePath(FilePath::EFolder::Data, "path"));
+	configurationR.SetOverride<FilePath>("test_id_mismatch", FilePath(FilePath::EFolder::User, "path"));
 
 	EXPECT_NE(configurationL, configurationR);
 }

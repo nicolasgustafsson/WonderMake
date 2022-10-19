@@ -21,6 +21,7 @@
 
 #include "wondermake-io/ConfigurationIo.h"
 #include "wondermake-io/FileSystem.h"
+#include "wondermake-io/PlatformFilePaths.h"
 #include "wondermake-io/ReadFileJob.h"
 #include "wondermake-io/WriteFileJob.h"
 
@@ -33,10 +34,14 @@
 #include "wondermake-base/SystemGlobal.h"
 #include "wondermake-base/WmLogTags.h"
 
+#include "wondermake-utility/FilePathData.h"
+
 using namespace MemoryUnitLiterals;
 
 namespace Engine
 {
+	bool SetupPlatformFilePaths(const SystemContainer& aContainer, const std::filesystem::path& aProjectFolderNames);
+
 	void RouteMessages();
 
 	void Start(Info&& aInfo, Callbacks&& aCallbacks)
@@ -58,6 +63,9 @@ namespace Engine
 
 			SystemContainer platformContainer = std::move(result).Unwrap();
 
+			if (!SetupPlatformFilePaths(platformContainer, aInfo.ProjectFolderNames))
+				return;
+
 		}
 		
 		sysRegistry.AddSystem<ConfigurationSystem>([&aInfo]()
@@ -65,10 +73,15 @@ namespace Engine
 				const auto create = [&aInfo]()
 				{
 					auto config = std::make_shared<ConfigurationSystem>();
+					const auto& filePathData = FilePathData::Get();
 
 					config->Initialize();
 
-					ConfigurationIo::Configure(*config);
+					ConfigurationIo::Configure(
+						*config,
+						filePathData.GetPathData(),
+						filePathData.GetPathUser(),
+						filePathData.GetPathUserData());
 					ConfigurationEngine::Configure(
 						*config,
 						aInfo.Configuration.OverrideFileApplication.string(),
@@ -108,8 +121,24 @@ namespace Engine
 			auto jobSystem = std::make_shared<JobSystem>(JobGlobal::GetRegistry(), foundationalContainer, InlineExecutor());
 			auto&& configurationSystem = foundationalContainer.Get<ConfigurationSystem>();
 
+			configurationSystem.OnOverrideChanged<std::string>(ConfigurationIo::ConfigDirectoryData, InlineExecutor(), [](const auto& /*aId*/, const auto& aPath)
+				{
+					FilePathData::Get().SetPathData(aPath);
+				})
+				.Detach();
+			configurationSystem.OnOverrideChanged<std::string>(ConfigurationIo::ConfigDirectoryUser, InlineExecutor(), [](const auto& /*aId*/, const auto& aPath)
+				{
+					FilePathData::Get().SetPathUser(aPath);
+				})
+				.Detach();
+			configurationSystem.OnOverrideChanged<std::string>(ConfigurationIo::ConfigDirectoryUserData, InlineExecutor(), [](const auto& /*aId*/, const auto& aPath)
+				{
+					FilePathData::Get().SetPathUserData(aPath);
+				})
+				.Detach();
+
 			jobSystem->StartJob<ReadFileJob>(FolderLocation::Bin, configurationSystem.Get<std::string>(ConfigurationEngine::OverrideFileApplication, aInfo.Configuration.OverrideFileApplication.string()))
-				.ThenApply(InlineExecutor(), FutureApplyResult([jobSystem, &configurationSystem](auto aResult) -> Future<DeserializeConfigurationJob::Output>
+				.ThenApply(InlineExecutor(), FutureApplyResult([jobSystem, &configurationSystem](auto aResult)
 					{
 						if (!aResult)
 							return MakeCanceledFuture<DeserializeConfigurationJob::Output>();
@@ -386,6 +415,25 @@ namespace Engine
 					}
 			}
 		}
+	}
+
+	bool SetupPlatformFilePaths(const SystemContainer& aContainer, const std::filesystem::path& aProjectFolderNames)
+	{
+		auto pathBin		= PlatformFilePaths::GetFolderLocation(aContainer, FolderLocation::Bin);
+		auto pathData		= PlatformFilePaths::GetFolderLocation(aContainer, FolderLocation::Data);
+		auto pathUser		= PlatformFilePaths::GetFolderLocation(aContainer, FolderLocation::User);
+		auto pathUserData	= PlatformFilePaths::GetFolderLocation(aContainer, FolderLocation::UserData);
+
+		if (!pathBin || !pathData || !pathUser || !pathUserData)
+			return false;
+
+		FilePathData::Get().Initialize(
+			std::move(*pathBin),
+			std::move(*pathData)		/ aProjectFolderNames,
+			std::move(*pathUser)		/ aProjectFolderNames,
+			std::move(*pathUserData)	/ aProjectFolderNames);
+
+		return true;
 	}
 
 	void RouteMessages()

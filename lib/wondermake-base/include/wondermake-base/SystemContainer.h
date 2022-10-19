@@ -22,7 +22,7 @@ public:
 	{}
 
 	template<typename TSystem>
-	inline [[nodiscard]] TSystem* TryGet()
+	inline [[nodiscard]] TSystem* TryGet() const
 	{
 		auto it = myMap.find(typeid(TSystem));
 
@@ -34,7 +34,7 @@ public:
 		return static_cast<TSystem*>(it->second.get());
 	}
 	template<typename TSystem>
-	inline [[nodiscard]] TSystem& Get()
+	inline [[nodiscard]] TSystem& Get() const
 	{
 		return *static_cast<TSystem*>(myMap.find(typeid(TSystem))->second.get());
 	}

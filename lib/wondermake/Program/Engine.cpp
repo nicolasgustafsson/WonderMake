@@ -20,7 +20,6 @@
 #include "wondermake-debug-ui/DebugSettingsSystem.h"
 
 #include "wondermake-io/ConfigurationIo.h"
-#include "wondermake-io/FileSystem.h"
 #include "wondermake-io/PlatformFilePaths.h"
 #include "wondermake-io/ReadFileJob.h"
 #include "wondermake-io/WriteFileJob.h"
@@ -109,12 +108,6 @@ namespace Engine
 				return;
 
 			SystemContainer foundationalContainer = std::move(result).Unwrap();
-
-			auto&& fileSystem = foundationalContainer.Get<FileSystem>();
- 
- 			fileSystem.SetFolderSuffix(FolderLocation::Data,		aInfo.ProjectFolderNames);
- 			fileSystem.SetFolderSuffix(FolderLocation::User,		aInfo.ProjectFolderNames);
- 			fileSystem.SetFolderSuffix(FolderLocation::UserData,	aInfo.ProjectFolderNames);
 
 			JobSystem::InjectDependencies(std::tie());
 

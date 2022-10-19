@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.19)
 
 list(APPEND SourceFiles
     "include/wondermake-io/ConfigurationIo.h"
-    "include/wondermake-io/FileSystem.h"
     "include/wondermake-io/FileTypes.h"
     "include/wondermake-io/IpcAcceptor.h"
     "include/wondermake-io/IpcConnection.h"
@@ -18,8 +17,6 @@ list(APPEND SourceFiles
     "source/ConfigurationIo.cpp"
     "source/ReadFileJob.cpp"
     "source/SocketDecorator.cpp"
-    "source/WinFileSystem.cpp"
-    "source/WinFileSystem.h"
     "source/WinIpcAcceptor.cpp"
     "source/WinIpcAcceptor.h"
     "source/WinIpcConnection.cpp"

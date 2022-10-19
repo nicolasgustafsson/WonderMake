@@ -47,7 +47,25 @@ class Configuration
 {
 public:
 	template<CConfigRaw TConfigType>
+	static constexpr bool ConfigCanBeMemoryUnit = std::is_arithmetic_v<TConfigType> && !std::is_same_v<TConfigType, bool>;
+
+	template<CConfigRaw TConfigType>
+	struct ConfigDataMemoryUnit
+	{
+		bool operator==(const ConfigDataMemoryUnit&) const noexcept = default;
+	};
+
+	template<CConfigRaw TConfigType> requires(ConfigCanBeMemoryUnit<TConfigType>)
+		struct ConfigDataMemoryUnit<TConfigType>
+	{
+		std::optional<EMemoryRatio>						MemoryRatio;
+
+		bool operator==(const ConfigDataMemoryUnit&) const noexcept = default;
+	};
+
+	template<CConfigRaw TConfigType>
 	struct ConfigData
+		: public ConfigDataMemoryUnit<TConfigType>
 	{
 		using ConfigType = TConfigType;
 
@@ -55,9 +73,10 @@ public:
 		std::optional<TConfigType>						Override;
 		std::unordered_map<std::string, TConfigType>	AllowedValues;
 		EConfigGroup									ConfigGroup;
-		std::optional<EMemoryRatio>						MemoryRatio;
-	};
 
+		bool operator==(const ConfigData&) const noexcept = default;
+	};
+	
 	using ConfigElement = std::variant<
 		ConfigData<bool>,
 		ConfigData<f32>,
@@ -138,6 +157,7 @@ public:
 			{
 				ConfigData<std::underlying_type_t<TConfigType>>
 				{
+					{},
 					static_cast<std::underlying_type_t<TConfigType>>(aValue),
 					std::nullopt,
 					getAllowedValuesMap(),
@@ -154,11 +174,13 @@ public:
 			{
 				ConfigData<typename TConfigType::Rep>
 				{
+					{
+						TConfigType::Ratio
+					},
 					TConfigType(aValue).To<TConfigType::Ratio>(),
 					std::nullopt,
 					getAllowedValuesMap(),
-					aGroup,
-					TConfigType::Ratio
+					aGroup
 				},
 				typeid(TConfigType)
 			};
@@ -171,6 +193,7 @@ public:
 			{
 				ConfigData<TConfigType>
 				{
+					{},
 					static_cast<TConfigType>(std::move(aValue)),
 					std::nullopt,
 					getAllowedValuesMap(),
@@ -187,6 +210,7 @@ public:
 			{
 				ConfigData<std::string>
 				{
+					{},
 					std::string(std::forward<TArg>(aValue)),
 					std::nullopt,
 					getAllowedValuesMap(),
@@ -203,6 +227,7 @@ public:
 			{
 				ConfigData<std::string>
 				{
+					{},
 					static_cast<std::string>(std::forward<TArg>(aValue)),
 					std::nullopt,
 					getAllowedValuesMap(),
@@ -319,9 +344,14 @@ public:
 			return;
 		}
 
-		std::visit([aRatio](auto& aConfig)
+		std::visit([&aId, aRatio, &type = it->second.Type](auto& aConfig)
 			{
-				aConfig.MemoryRatio = aRatio;
+				using ConfigType = std::decay_t<decltype(aConfig)>::ConfigType;
+
+				if constexpr (ConfigCanBeMemoryUnit<ConfigType>)
+					aConfig.MemoryRatio = aRatio;
+				else
+					WmLogError(TagWonderMake << TagWmConfiguration << "Type mismatch, attempted to set memory ratio for id " << aId << " which has type: " << type.name() << '.');
 			},
 			it->second.Config);
 	}
@@ -637,10 +667,7 @@ public:
 
 					const auto& rhsConfigData = std::get<std::decay_t<decltype(aLhsConfigData)>>(rhsConfigElement.Config);
 
-					if (aLhsConfigData.Value != rhsConfigData.Value ||
-						aLhsConfigData.Override != rhsConfigData.Override ||
-						aLhsConfigData.ConfigGroup != rhsConfigData.ConfigGroup ||
-						aLhsConfigData.MemoryRatio != rhsConfigData.MemoryRatio)
+					if (aLhsConfigData != rhsConfigData)
 						return false;
 					
 					const auto& lhsAllowedValues = aLhsConfigData.AllowedValues;

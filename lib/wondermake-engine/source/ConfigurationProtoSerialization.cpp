@@ -117,12 +117,13 @@ void SerializeConfigurationToProto(const Configuration& aConfiguration, ProtoCon
 						setRestrictionValue(allowedValue, value);
 					}
 				}
-				if (aConfigData.MemoryRatio)
-				{
-					auto& memoryUnit = *protoConfig.mutable_type_data_memory_unit();
+				if constexpr (Configuration::ConfigCanBeMemoryUnit<Type>)
+					if (aConfigData.MemoryRatio)
+					{
+						auto& memoryUnit = *protoConfig.mutable_type_data_memory_unit();
 
-					memoryUnit.set_ratio(static_cast<std::underlying_type_t<EMemoryRatio>>(*aConfigData.MemoryRatio));
-				}
+						memoryUnit.set_ratio(static_cast<std::underlying_type_t<EMemoryRatio>>(*aConfigData.MemoryRatio));
+					}
 			}, config);
 	}
 }

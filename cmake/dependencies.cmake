@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.19)
 
 include("${CMAKE_CURRENT_LIST_DIR}/conan.cmake")
 
-conan_check(VERSION 1.45.0 REQUIRED)
+conan_check(VERSION 1.51.3 REQUIRED)
 
 conan_cmake_run(CONANFILE "conanfile.txt"
                 UPDATE

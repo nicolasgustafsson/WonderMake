@@ -46,6 +46,20 @@ namespace Engine
 
 		auto&& sysRegistry = Global::GetSystemRegistry();
 
+		{
+			SystemRegistry::Filter filter;
+
+			filter.RequiredAnyTraits = { STrait::Set<STPlatform>::ToObject() };
+
+			auto result = sysRegistry.CreateSystems(filter);
+
+			if (!result)
+				return;
+
+			SystemContainer platformContainer = std::move(result).Unwrap();
+
+		}
+		
 		sysRegistry.AddSystem<ConfigurationSystem>([&aInfo]()
 			{
 				const auto create = [&aInfo]()

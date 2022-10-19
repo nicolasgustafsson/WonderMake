@@ -89,7 +89,7 @@ private:
 		typename... TDependencies>
 	inline void AddJobHelper(TCreateFunc&& aCreateFunc, TupleWrapper<std::tuple<TDependencies...>>&&) requires(std::is_invocable_r_v<SharedReference<TJob>, TCreateFunc, std::tuple<std::decay_t<TDependencies>&...>>)
 	{
-		auto construct = [createFunc = std::forward<TCreateFunc>(aCreateFunc)](SystemContainer& aSystemContainer) -> Result<SharedReference<JobBase>, SError>
+		auto construct = [createFunc = std::forward<TCreateFunc>(aCreateFunc)]([[maybe_unused]] SystemContainer& aSystemContainer) -> Result<SharedReference<JobBase>, SError>
 		{
 			std::optional<Result<SharedReference<JobBase>, SError>> errResult;
 

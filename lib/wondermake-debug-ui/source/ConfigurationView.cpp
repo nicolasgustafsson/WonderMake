@@ -406,7 +406,7 @@ void ConfigurationView::UpdateConfigurationList()
 
 									aConfig.ValueCurrent = newValue / static_cast<Type>(baseConfig.AllowedMemoryRatio[baseConfig.CurrentMemoryRatioIndex]);
 									
-									myActions[id] = newValue;
+									myActions[id] = aConfig.ValueCurrent * static_cast<Type>(baseConfig.AllowedMemoryRatio[baseConfig.CurrentMemoryRatioIndex]);
 									baseConfig.IsOverridden = true;
 								}
 

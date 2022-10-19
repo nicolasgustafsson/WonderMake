@@ -1,39 +1,17 @@
 #include "wondermake-io/WriteFileJob.h"
 
-#include "wondermake-io/FileSystem.h"
-
 #include "wondermake-base/JobGlobal.h"
 
 #include <fstream>
 
 class WriteFileJobImpl
-	: public JobSub<
-		Policy::Set<
-			PAdd<FileSystem, PWrite>>>
+	: public JobSub<>
 	, public WriteFileJob
 {
 public:
-	void Run(Promise<Output> aPromise, FolderLocation aLocation, std::filesystem::path aFilePath, std::vector<u8> aBuffer) override
+	void Run(Promise<Output> aPromise, FilePath aFilePath, std::vector<u8> aBuffer) override
 	{
-		std::filesystem::path path;
-
-		if (aFilePath.is_relative())
-		{
-			const auto dirPath = Get<FileSystem>().GetFolderLocation(aLocation);
-
-			if (!dirPath)
-			{
-				aPromise.Complete(Err(EWriteFileError::InvalidArguments));
-
-				return;
-			}
-
-			path = *dirPath / aFilePath;
-		}
-		else
-		{
-			path = std::move(aFilePath);
-		}
+		std::filesystem::path path = std::move(aFilePath);
 
 		if (std::filesystem::is_directory(path))
 		{
@@ -67,9 +45,9 @@ public:
 
 		aPromise.Complete(Ok());
 	}
-	void Run(Promise<Output> aPromise, FolderLocation aLocation, std::filesystem::path aFilePath, std::string aBuffer) override
+	void Run(Promise<Output> aPromise, FilePath aFilePath, std::string aBuffer) override
 	{
-		Run(std::move(aPromise), aLocation, std::move(aFilePath), std::vector<u8>(aBuffer.begin(), aBuffer.end()));
+		Run(std::move(aPromise), std::move(aFilePath), std::vector<u8>(aBuffer.begin(), aBuffer.end()));
 	}
 
 };

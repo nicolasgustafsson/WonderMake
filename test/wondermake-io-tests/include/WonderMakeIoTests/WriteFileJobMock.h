@@ -10,15 +10,15 @@ class WriteFileJobMock
 	: public JobMock<WriteFileJobMock>
 {
 public:
-	MOCK_METHOD(void, RunFolderLocationAndPathAndBuffer, (Promise<WriteFileJobMock::Output>, FolderLocation, std::filesystem::path, std::vector<u8>));
-	MOCK_METHOD(void, RunFolderLocationAndPathAndString, (Promise<WriteFileJobMock::Output>, FolderLocation, std::filesystem::path, std::string));
+	MOCK_METHOD(void, RunFolderFilePathAndBuffer, (Promise<WriteFileJobMock::Output>, FilePath, std::vector<u8>));
+	MOCK_METHOD(void, RunFolderFilePathAndString, (Promise<WriteFileJobMock::Output>, FilePath, std::string));
 
-	inline void Run(Promise<WriteFileJobMock::Output> aPromise, FolderLocation aLocation, std::filesystem::path aPath, std::vector<u8> aBuffer) override
+	inline void Run(Promise<WriteFileJobMock::Output> aPromise, FilePath aFilePath, std::vector<u8> aBuffer) override
 	{
-		RunFolderLocationAndPathAndBuffer(std::move(aPromise), std::move(aLocation), std::move(aPath), std::move(aBuffer));
+		RunFolderLocationAndPathAndBuffer(std::move(aPromise), std::move(aFilePath), std::move(aBuffer));
 	}
-	inline void Run(Promise<WriteFileJobMock::Output> aPromise, FolderLocation aLocation, std::filesystem::path aPath, std::string aBuffer) override
+	inline void Run(Promise<WriteFileJobMock::Output> aPromise, FilePath aFilePath, std::string aBuffer) override
 	{
-		RunFolderLocationAndPathAndString(std::move(aPromise), std::move(aLocation), std::move(aPath), std::move(aBuffer));
+		RunFolderLocationAndPathAndString(std::move(aPromise), std::move(aFilePath), std::move(aBuffer));
 	}
 };

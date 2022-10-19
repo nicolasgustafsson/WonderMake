@@ -16,6 +16,7 @@ class WinEventSystemImpl
 			PAdd<WinPlatformSystem, PWrite>>,
 		STrait::Set<
 			STFoundational,
+			STPlatform,
 			STSingleton,
 			STThreadsafe>>
 	, public WinEventSystem

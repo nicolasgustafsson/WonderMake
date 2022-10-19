@@ -9,6 +9,7 @@ list(APPEND SourceFiles
     "Include/WonderMakeIoTests/WriteFileJobMock.h"
     "Tests/SocketDecoratorTests.cpp"
     "Tests/SocketProtobufImplTests.cpp"
+    "Tests/WinPlatformFilePathsTests.cpp"
     "Tests/WinIpcAcceptorTests.cpp"
     "Tests/WinIpcConnectionTests.cpp")
     
@@ -18,6 +19,7 @@ list(APPEND SourceFiles
     "../../lib/wondermake-io/source/SocketDecorator.cpp"
     "../../lib/wondermake-io/source/WinIpcAcceptor.cpp"
     "../../lib/wondermake-io/source/WinIpcConnection.cpp"
+    "../../lib/wondermake-io/source/WinPlatformFilePaths.cpp"
     "../../lib/wondermake-utility/source/AnyExecutor.cpp"
     "../../lib/wondermake-utility/source/Time.cpp")
     

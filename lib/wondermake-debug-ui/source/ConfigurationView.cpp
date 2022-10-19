@@ -572,14 +572,15 @@ void ConfigurationView::ReconstructSelectionConfigs()
 
 					const int allowedValueIndex = GetValueIndexInNameList(aConfigData.AllowedValues, allowedValueNames, valueCurrent);
 
-					const bool					hasMemoryRatio = static_cast<bool>(aConfigData.MemoryRatio);
+					bool						hasMemoryRatio = false;
 					std::vector<EMemoryRatio>	allowedMemoryRatio;
 					std::vector<std::string>	allowedMemoryRatioNames;
 					int							currentMemoryRatioIndex = 0;
 
-					if constexpr (std::is_arithmetic_v<Type> && !std::is_same_v<Type, bool>)
+					if constexpr (Configuration::ConfigCanBeMemoryUnit<Type>)
 						if (aConfigData.MemoryRatio)
 						{
+							hasMemoryRatio = true;
 							const auto ratio = static_cast<std::underlying_type_t<EMemoryRatio>>(*aConfigData.MemoryRatio);
 
 							const auto addRatioIfAllowed = [valueCurrent, &allowedMemoryRatio, &allowedMemoryRatioNames, &currentMemoryRatioIndex, ratio](EMemoryRatio aRatio, auto aName)

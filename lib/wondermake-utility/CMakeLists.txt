@@ -12,6 +12,7 @@ list(APPEND SourceFiles
     "include/wondermake-utility/Endian.h"
     "include/wondermake-utility/EventSubscriber.h"
     "include/wondermake-utility/Executor.h"
+    "include/wondermake-utility/FilePath.h"
     "include/wondermake-utility/FilePathData.h"
     "include/wondermake-utility/FixedSizeString.h"
     "include/wondermake-utility/Future.h"

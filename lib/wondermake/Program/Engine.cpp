@@ -343,7 +343,7 @@ namespace Engine
 
 						const auto				group = *groupOpt;
 						std::filesystem::path	path;
-						FolderLocation			folder = FolderLocation::Bin;
+						FilePath::EFolder		folder = FilePath::EFolder::Bin;
 
 						switch (group)
 						{
@@ -353,13 +353,13 @@ namespace Engine
 						}
 						switch (group)
 						{
-						case EConfigGroup::Application:	folder = FolderLocation::Bin; break;
-						case EConfigGroup::Device:		folder = FolderLocation::Data; break;
+						case EConfigGroup::Application:	folder = FilePath::EFolder::Bin; break;
+						case EConfigGroup::Device:		folder = FilePath::EFolder::Data; break;
 						case EConfigGroup::User:
 						{
 							const auto userLocation = configSys.Get<ConfigurationEngine::EOverrideFileUserLocation>(ConfigurationEngine::OverrideFileUserLocation, ConfigurationEngine::EOverrideFileUserLocation::UserData);
 
-							folder = userLocation == ConfigurationEngine::EOverrideFileUserLocation::User ? FolderLocation::User : FolderLocation::UserData;
+							folder = userLocation == ConfigurationEngine::EOverrideFileUserLocation::User ? FilePath::EFolder::User : FilePath::EFolder::UserData;
 
 							break;
 						}
@@ -367,9 +367,9 @@ namespace Engine
 
 						jobSys
 							.StartJob<SerializeConfigurationJob>(group)
-							.ThenApply(InlineExecutor(), FutureApplyResult([&jobSys, folder, path = std::move(path)](auto aJsonBlob)
+							.ThenApply(InlineExecutor(), FutureApplyResult([&jobSys, folder, path = std::move(path)](auto aJsonBlob) mutable
 								{
-									return jobSys.StartJob<WriteFileJob>(folder, path, std::move(aJsonBlob));
+									return jobSys.StartJob<WriteFileJob>(FilePath(folder, std::move(path)), std::move(aJsonBlob));
 								}))
 							.Detach();
 					})

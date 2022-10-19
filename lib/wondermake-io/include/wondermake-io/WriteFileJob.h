@@ -1,9 +1,8 @@
 #pragma once
 
-#include "wondermake-io/FileTypes.h"
-
 #include "wondermake-base/JobBase.h"
 
+#include "wondermake-utility/FilePath.h"
 #include "wondermake-utility/Result.h"
 
 #include <filesystem>
@@ -22,7 +21,7 @@ enum class EWriteFileError
 class WriteFileJob
 	: public JobAbstracted<
 		JobInputSet<
-			JobInput<FolderLocation, std::filesystem::path, std::vector<u8>>,
-			JobInput<FolderLocation, std::filesystem::path, std::string>>,
+			JobInput<FilePath, std::vector<u8>>,
+			JobInput<FilePath, std::string>>,
 		Result<void, EWriteFileError>>
 {};

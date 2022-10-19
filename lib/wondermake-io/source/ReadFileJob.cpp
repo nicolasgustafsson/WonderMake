@@ -1,55 +1,31 @@
 #include "wondermake-io/ReadFileJob.h"
 
-#include "wondermake-io/FileSystem.h"
-
 #include "wondermake-base/JobGlobal.h"
 
 #include <fstream>
 
 class ReadFileJobImpl
-	: public JobSub<
-		Policy::Set<
-			PAdd<FileSystem, PWrite>>>
+	: public JobSub<>
 	, public ReadFileJob
 {
 public:
-	void Run(Promise<Result<std::vector<u8>, ReadFileError>> aPromise, FolderLocation aLocation, std::filesystem::path aFilePath) override
+	void Run(Promise<Result<std::vector<u8>, ReadFileError>> aPromise, FilePath aFilePath) override
 	{
-		std::filesystem::path path;
-
-		if (aFilePath.is_relative())
-		{
-			const auto dirPath = Get<FileSystem>().GetFolderLocation(aLocation);
-
-			if (!dirPath)
-			{
-				aPromise.Complete(Err(ReadFileError::InvalidArguments));
-
-				return;
-			}
-
-			path = *dirPath / aFilePath;
-		}
-		else
-		{
-			path = std::move(aFilePath);
-		}
-
-		if (!std::filesystem::exists(path))
+		if (!std::filesystem::exists(aFilePath))
 		{
 			aPromise.Complete(Err(ReadFileError::FileNotFound));
 
 			return;
 		}
 
-		if (!std::filesystem::is_regular_file(path))
+		if (!std::filesystem::is_regular_file(aFilePath))
 		{
 			aPromise.Complete(Err(ReadFileError::NotAFile));
 
 			return;
 		}
 
-		std::ifstream file(path, std::ios_base::binary);
+		std::ifstream file(aFilePath, std::ios_base::binary);
 
 		if (!file)
 		{

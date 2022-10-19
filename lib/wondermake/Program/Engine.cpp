@@ -137,7 +137,7 @@ namespace Engine
 				})
 				.Detach();
 
-			jobSystem->StartJob<ReadFileJob>(FolderLocation::Bin, configurationSystem.Get<std::string>(ConfigurationEngine::OverrideFileApplication, aInfo.Configuration.OverrideFileApplication.string()))
+			jobSystem->StartJob<ReadFileJob>(FilePath(FilePath::EFolder::Bin, configurationSystem.Get<std::string>(ConfigurationEngine::OverrideFileApplication, aInfo.Configuration.OverrideFileApplication.string())))
 				.ThenApply(InlineExecutor(), FutureApplyResult([jobSystem, &configurationSystem](auto aResult)
 					{
 						if (!aResult)
@@ -154,7 +154,7 @@ namespace Engine
 
 						auto path = configurationSystem.Get<std::string>(ConfigurationEngine::OverrideFileDevice, aInfo.Configuration.OverrideFileDevice.string());
 
-						return jobSystem->StartJob<ReadFileJob>(FolderLocation::Data, std::move(path));
+						return jobSystem->StartJob<ReadFileJob>(FilePath(FilePath::EFolder::Data, std::move(path)));
 					}))
 				.ThenApply(InlineExecutor(), FutureApplyResult([jobSystem](auto aResult)
 					{
@@ -172,10 +172,10 @@ namespace Engine
 
 						const auto userLocation = configurationSystem.Get<ConfigurationEngine::EOverrideFileUserLocation>(ConfigurationEngine::OverrideFileUserLocation, ConfigurationEngine::EOverrideFileUserLocation::UserData);
 
-						const auto folderLocation = userLocation == ConfigurationEngine::EOverrideFileUserLocation::User ? FolderLocation::User : FolderLocation::UserData;
+						const auto folderLocation = userLocation == ConfigurationEngine::EOverrideFileUserLocation::User ? FilePath::EFolder::User : FilePath::EFolder::UserData;
 						auto path = configurationSystem.Get<std::string>(ConfigurationEngine::OverrideFileUser, aInfo.Configuration.OverrideFileUser.string());
 
-						return jobSystem->StartJob<ReadFileJob>(folderLocation, std::move(path));
+						return jobSystem->StartJob<ReadFileJob>(FilePath(folderLocation, std::move(path)));
 					}))
 				.ThenApply(InlineExecutor(), FutureApplyResult([jobSystem](auto aResult)
 					{

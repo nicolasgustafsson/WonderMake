@@ -3,6 +3,7 @@
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/WmLogTags.h"
 
+#include "wondermake-utility/FilePath.h"
 #include "wondermake-utility/MemoryUnit.h"
 #include "wondermake-utility/Typedefs.h"
 
@@ -20,18 +21,21 @@ concept CConfigType =
 		std::is_arithmetic_v<TConfig> ||
 		std::is_enum_v<TConfig> ||
 		CMemoryUnit<TConfig> ||
+		std::is_same_v<TConfig, FilePath> ||
 		std::is_same_v<std::string, TConfig>);
 
 template<typename TConfig>
 concept CConfigRaw =
 	std::is_arithmetic_v<std::remove_const_t<TConfig>> ||
-	std::is_same_v<std::decay_t<TConfig>, std::string>;
+	std::is_same_v<std::decay_t<TConfig>, std::string> ||
+	std::is_same_v<std::decay_t<TConfig>, FilePath>;
 
 template<typename TConfig>
 concept CConfig =
 	std::is_arithmetic_v<std::remove_const_t<TConfig>> ||
 	std::is_enum_v<std::remove_const_t<TConfig>> ||
 	CMemoryUnit<TConfig> ||
+	std::is_same_v<TConfig, FilePath> ||
 	std::is_constructible_v<std::string, TConfig> ||
 	std::is_convertible_v<TConfig, std::string> ||
 	CConfigRaw<TConfig>;
@@ -48,7 +52,7 @@ class Configuration
 public:
 	template<CConfigRaw TConfigType>
 	static constexpr bool ConfigCanBeMemoryUnit = std::is_arithmetic_v<TConfigType> && !std::is_same_v<TConfigType, bool>;
-
+	
 	template<CConfigRaw TConfigType>
 	struct ConfigDataMemoryUnit
 	{
@@ -89,7 +93,8 @@ public:
 		ConfigData<i16>,
 		ConfigData<i32>,
 		ConfigData<i64>,
-		ConfigData<std::string>>;
+		ConfigData<std::string>,
+		ConfigData<FilePath>>;
 
 	struct NoRestrictions {};
 
@@ -204,6 +209,23 @@ public:
 
 			myConfigs.insert(std::make_pair(static_cast<std::string>(std::forward<TId>(aId)), std::move(data)));
 		}
+		else if constexpr (std::is_same_v<TConfigType, FilePath>)
+		{
+			ConfigDataRaw data =
+			{
+				ConfigData<FilePath>
+				{
+					{},
+					std::forward<TArg>(aValue),
+					std::nullopt,
+					getAllowedValuesMap(),
+					aGroup
+				},
+				typeid(TConfigType)
+			};
+			
+			myConfigs.insert(std::make_pair(static_cast<std::string>(std::forward<TId>(aId)), std::move(data)));
+		}
 		else if constexpr (std::is_constructible_v<std::string, TConfigType>)
 		{
 			ConfigDataRaw data =
@@ -310,6 +332,8 @@ public:
 
 			if constexpr (std::is_arithmetic_v<TConfigType>)
 				config.Override = static_cast<TConfigType>(std::forward<TArg>(aValue));
+			else if constexpr (std::is_same_v<TConfigType, FilePath>)
+				config.Override = std::forward<TArg>(aValue);
 			else if constexpr (std::is_constructible_v<std::string, TConfigType>)
 				config.Override = std::string(std::forward<TArg>(aValue));
 			else if constexpr (std::is_convertible_v<TConfigType, std::string>)
@@ -355,7 +379,7 @@ public:
 			},
 			it->second.Config);
 	}
-
+	
 	template<CConfigType TConfigType, bool TRaw = false>
 	inline [[nodiscard]] bool Has(const char* aId) const
 	{

@@ -11,6 +11,8 @@ void Configuration::ResetOverride(const std::string& aId)
 
 	std::visit([](auto& aConfig)
 		{
+			using ConfigType = std::decay_t<decltype(aConfig)>::ConfigType;
+
 			aConfig.Override.reset();
 		}, it->second.Config);
 }

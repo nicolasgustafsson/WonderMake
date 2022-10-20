@@ -10,6 +10,29 @@
 #pragma warning(pop)
 
 using ProtoConfigurationRemote::EDataType;
+using ProtoConfigurationRemote::FilePathT_EFolder;
+
+using ProtoConfigurationRemote::FilePathT_EFolder_Unset;
+using ProtoConfigurationRemote::FilePathT_EFolder_Bin;
+using ProtoConfigurationRemote::FilePathT_EFolder_Data;
+using ProtoConfigurationRemote::FilePathT_EFolder_User;
+using ProtoConfigurationRemote::FilePathT_EFolder_UserData;
+
+FilePath::EFolder ConvertFromProto(FilePathT_EFolder aLocation)
+{
+	switch (aLocation)
+	{
+	case FilePathT_EFolder_Unset:		return FilePath::EFolder::Unset;
+	case FilePathT_EFolder_Bin:			return FilePath::EFolder::Bin;
+	case FilePathT_EFolder_Data:		return FilePath::EFolder::Data;
+	case FilePathT_EFolder_User:		return FilePath::EFolder::User;
+	case FilePathT_EFolder_UserData:	return FilePath::EFolder::UserData;
+	}
+
+	EXPECT_TRUE(false);
+
+	return FilePath::EFolder::Unset;
+}
 
 template<typename TType>
 bool HasValue(const auto& aProtoList, const auto& aId, const std::optional<TType>& aValue, const std::optional<ProtoConfigurationRemote::EConfigGroup> aGroup = std::nullopt, const std::optional<TType>& aOverride = std::nullopt)
@@ -40,6 +63,8 @@ bool HasValue(const auto& aProtoList, const auto& aId, const std::optional<TType
 			return EDataType::I64;
 		if constexpr (std::is_same_v<TType, std::string>)
 			return EDataType::String;
+		if constexpr (std::is_same_v<TType, FilePath>)
+			return EDataType::FilePath;
 	};
 	constexpr auto getConfigValue = [](const auto& aProto)
 	{
@@ -53,6 +78,12 @@ bool HasValue(const auto& aProtoList, const auto& aId, const std::optional<TType
 			return aProto.config_i64();
 		else if constexpr (std::is_same_v<TType, std::string>)
 			return aProto.config_string();
+		else if constexpr (std::is_same_v<TType, FilePath>)
+		{
+			auto& filePath = aProto.config_filepath();
+
+			return FilePath(ConvertFromProto(filePath.location()), filePath.path());
+		}
 	};
 	constexpr auto getOverrideValue = [](const auto& aProto) -> std::optional<TType>
 	{
@@ -88,6 +119,17 @@ bool HasValue(const auto& aProtoList, const auto& aId, const std::optional<TType
 		{
 			if (aProto.has_override_string())
 				return aProto.override_string();
+			else
+				return std::nullopt;
+		}
+		if constexpr (std::is_same_v<TType, FilePath>)
+		{
+			if (aProto.has_override_filepath())
+			{
+				auto& filePath = aProto.override_filepath();
+
+				return FilePath(ConvertFromProto(filePath.location()), filePath.path());
+			}
 			else
 				return std::nullopt;
 		}
@@ -135,6 +177,8 @@ bool HasRestrictValue(const auto& aProtoList, const auto& aId, const auto& aName
 			return EDataType::I64;
 		if constexpr (std::is_same_v<TType, std::string>)
 			return EDataType::String;
+		if constexpr (std::is_same_v<TType, FilePath>)
+			return EDataType::FilePath;
 	};
 	constexpr auto getRestrictValue = [](const auto& aProto)
 	{
@@ -148,6 +192,12 @@ bool HasRestrictValue(const auto& aProtoList, const auto& aId, const auto& aName
 			return aProto.value_i64();
 		else if constexpr (std::is_same_v<TType, std::string>)
 			return aProto.value_string();
+		else if constexpr (std::is_same_v<TType, FilePath>)
+		{
+			auto& filePath = aProto.value_filepath();
+
+			return FilePath(ConvertFromProto(filePath.location()), filePath.path());
+		}
 	};
 
 	const auto it = aProtoList.find(aId);
@@ -193,21 +243,24 @@ TEST(ConfigurationProtoSerializationTests, serializing_an_empty_configuration_re
 
 TEST(ConfigurationProtoSerializationTests, all_value_types_can_be_serialized_into_proto)
 {
+	const FilePath dummyFilePathValue = FilePath(FilePath::EFolder::Bin, "value");
+
 	Configuration config;
 	ProtoConfigurationRemote::InstanceConfig proto;
 
-	config.Set<bool>(		"id_bool",		true,		EConfigGroup::Application);
-	config.Set<f32>(		"id_f32",		1.f,		EConfigGroup::Application);
-	config.Set<f64>(		"id_f64",		1.,			EConfigGroup::Application);
-	config.Set<u8>(			"id_u8",		1,			EConfigGroup::Application);
-	config.Set<u16>(		"id_u16",		2,			EConfigGroup::Application);
-	config.Set<u32>(		"id_u32",		3,			EConfigGroup::Application);
-	config.Set<u64>(		"id_u64",		4,			EConfigGroup::Application);
-	config.Set<i8>(			"id_i8",		-1,			EConfigGroup::Application);
-	config.Set<i16>(		"id_i16",		-2,			EConfigGroup::Application);
-	config.Set<i32>(		"id_i32",		-3,			EConfigGroup::Application);
-	config.Set<i64>(		"id_i64",		-4,			EConfigGroup::Application);
-	config.Set<std::string>("id_string",	"value",	EConfigGroup::Application);
+	config.Set<bool>(		"id_bool",		true,				EConfigGroup::Application);
+	config.Set<f32>(		"id_f32",		1.f,				EConfigGroup::Application);
+	config.Set<f64>(		"id_f64",		1.,					EConfigGroup::Application);
+	config.Set<u8>(			"id_u8",		1,					EConfigGroup::Application);
+	config.Set<u16>(		"id_u16",		2,					EConfigGroup::Application);
+	config.Set<u32>(		"id_u32",		3,					EConfigGroup::Application);
+	config.Set<u64>(		"id_u64",		4,					EConfigGroup::Application);
+	config.Set<i8>(			"id_i8",		-1,					EConfigGroup::Application);
+	config.Set<i16>(		"id_i16",		-2,					EConfigGroup::Application);
+	config.Set<i32>(		"id_i32",		-3,					EConfigGroup::Application);
+	config.Set<i64>(		"id_i64",		-4,					EConfigGroup::Application);
+	config.Set<std::string>("id_string",	"value",			EConfigGroup::Application);
+	config.Set<FilePath>(	"id_filepath",	dummyFilePathValue,	EConfigGroup::Application);
 
 	SerializeConfigurationToProto(config, proto);
 
@@ -223,6 +276,7 @@ TEST(ConfigurationProtoSerializationTests, all_value_types_can_be_serialized_int
 	EXPECT_TRUE(HasValue<i32>(			proto.configs(), "id_i32",		-3));
 	EXPECT_TRUE(HasValue<i64>(			proto.configs(), "id_i64",		-4));
 	EXPECT_TRUE(HasValue<std::string>(	proto.configs(), "id_string",	"value"));
+	EXPECT_TRUE(HasValue<FilePath>(		proto.configs(), "id_filepath", dummyFilePathValue));
 }
 
 TEST(ConfigurationProtoSerializationTests, all_config_groups_can_be_serialized_into_proto)
@@ -243,21 +297,25 @@ TEST(ConfigurationProtoSerializationTests, all_config_groups_can_be_serialized_i
 
 TEST(ConfigurationProtoSerializationTests, all_override_types_can_be_serialized_into_proto)
 {
+	const FilePath dummyFilePathValue		= FilePath(FilePath::EFolder::User, "value");
+	const FilePath dummyFilePathOverride	= FilePath(FilePath::EFolder::Data, "override");
+
 	Configuration config;
 	ProtoConfigurationRemote::InstanceConfig proto;
 
-	config.Set<bool>(		"id_bool",		true,		EConfigGroup::Application);
-	config.Set<f32>(		"id_f32",		1.f,		EConfigGroup::Application);
-	config.Set<f64>(		"id_f64",		1.,			EConfigGroup::Application);
-	config.Set<u8>(			"id_u8",		1,			EConfigGroup::Application);
-	config.Set<u16>(		"id_u16",		2,			EConfigGroup::Application);
-	config.Set<u32>(		"id_u32",		3,			EConfigGroup::Application);
-	config.Set<u64>(		"id_u64",		4,			EConfigGroup::Application);
-	config.Set<i8>(			"id_i8",		-1,			EConfigGroup::Application);
-	config.Set<i16>(		"id_i16",		-2,			EConfigGroup::Application);
-	config.Set<i32>(		"id_i32",		-3,			EConfigGroup::Application);
-	config.Set<i64>(		"id_i64",		-4,			EConfigGroup::Application);
-	config.Set<std::string>("id_string",	"value",	EConfigGroup::Application);
+	config.Set<bool>(		"id_bool",		true,				EConfigGroup::Application);
+	config.Set<f32>(		"id_f32",		1.f,				EConfigGroup::Application);
+	config.Set<f64>(		"id_f64",		1.,					EConfigGroup::Application);
+	config.Set<u8>(			"id_u8",		1,					EConfigGroup::Application);
+	config.Set<u16>(		"id_u16",		2,					EConfigGroup::Application);
+	config.Set<u32>(		"id_u32",		3,					EConfigGroup::Application);
+	config.Set<u64>(		"id_u64",		4,					EConfigGroup::Application);
+	config.Set<i8>(			"id_i8",		-1,					EConfigGroup::Application);
+	config.Set<i16>(		"id_i16",		-2,					EConfigGroup::Application);
+	config.Set<i32>(		"id_i32",		-3,					EConfigGroup::Application);
+	config.Set<i64>(		"id_i64",		-4,					EConfigGroup::Application);
+	config.Set<std::string>("id_string",	"value",			EConfigGroup::Application);
+	config.Set<FilePath>(	"id_filepath",	dummyFilePathValue,	EConfigGroup::Application);
 	
 	config.SetOverride<bool>(		"id_bool",		false);
 	config.SetOverride<f32>(		"id_f32",		2.f);
@@ -271,6 +329,7 @@ TEST(ConfigurationProtoSerializationTests, all_override_types_can_be_serialized_
 	config.SetOverride<i32>(		"id_i32",		-7);
 	config.SetOverride<i64>(		"id_i64",		-8);
 	config.SetOverride<std::string>("id_string",	"override");
+	config.SetOverride<FilePath>(	"id_filepath",	dummyFilePathOverride);
 
 	SerializeConfigurationToProto(config, proto);
 
@@ -286,25 +345,36 @@ TEST(ConfigurationProtoSerializationTests, all_override_types_can_be_serialized_
 	EXPECT_TRUE(HasValue<i32>(			proto.configs(), "id_i32",		std::nullopt,	std::nullopt,	-7));
 	EXPECT_TRUE(HasValue<i64>(			proto.configs(), "id_i64",		std::nullopt,	std::nullopt,	-8));
 	EXPECT_TRUE(HasValue<std::string>(	proto.configs(), "id_string",	std::nullopt,	std::nullopt,	"override"));
+	EXPECT_TRUE(HasValue<FilePath>(		proto.configs(), "id_filepath",	std::nullopt,	std::nullopt,	dummyFilePathOverride));
 }
 
 TEST(ConfigurationProtoSerializationTests, all_restrict_types_can_be_serialized_into_proto)
 {
+	const FilePath dummyFilePathValue = FilePath(FilePath::EFolder::Bin, "value");
+
 	Configuration config;
 	ProtoConfigurationRemote::InstanceConfig proto;
 
-	config.Set<bool>(		"id_bool",		true,		EConfigGroup::Application, Configuration::AllowedValues<bool>			{ { { "TRUE", true }, { "FALSE", false } } });
-	config.Set<f32>(		"id_f32",		1.f,		EConfigGroup::Application, Configuration::AllowedValues<f32>			{ { { "ZERO", 0.f }, { "ONE", 1.f } } });
-	config.Set<f64>(		"id_f64",		1.,			EConfigGroup::Application, Configuration::AllowedValues<f64>			{ { { "ZERO", 0. }, { "ONE", 1. } } });
-	config.Set<u8>(			"id_u8",		1,			EConfigGroup::Application, Configuration::AllowedValues<u8>				{ { { "ZERO", 0 }, { "ONE", 1 } } });
-	config.Set<u16>(		"id_u16",		2,			EConfigGroup::Application, Configuration::AllowedValues<u16>			{ { { "ZERO", 0 }, { "ONE", 1 } } });
-	config.Set<u32>(		"id_u32",		3,			EConfigGroup::Application, Configuration::AllowedValues<u32>			{ { { "ZERO", 0 }, { "ONE", 1 } } });
-	config.Set<u64>(		"id_u64",		4,			EConfigGroup::Application, Configuration::AllowedValues<u64>			{ { { "ZERO", 0 }, { "ONE", 1 } } });
-	config.Set<i8>(			"id_i8",		-1,			EConfigGroup::Application, Configuration::AllowedValues<i8>				{ { { "ZERO", 0 }, { "ONE", 1 } } });
-	config.Set<i16>(		"id_i16",		-2,			EConfigGroup::Application, Configuration::AllowedValues<i16>			{ { { "ZERO", 0 }, { "ONE", 1 } } });
-	config.Set<i32>(		"id_i32",		-3,			EConfigGroup::Application, Configuration::AllowedValues<i32>			{ { { "ZERO", 0 }, { "ONE", 1 } } });
-	config.Set<i64>(		"id_i64",		-4,			EConfigGroup::Application, Configuration::AllowedValues<i64>			{ { { "ZERO", 0 }, { "ONE", 1 } } });
-	config.Set<std::string>("id_string",	"value",	EConfigGroup::Application, Configuration::AllowedValues<std::string>	{ { { "FIRST", "one" }, { "SECOND", "two" }, { "THIRD", "three" } } });
+	config.Set<bool>(		"id_bool",		true,				EConfigGroup::Application, Configuration::AllowedValues<bool>			{ { { "TRUE", true }, { "FALSE", false } } });
+	config.Set<f32>(		"id_f32",		1.f,				EConfigGroup::Application, Configuration::AllowedValues<f32>			{ { { "ZERO", 0.f }, { "ONE", 1.f } } });
+	config.Set<f64>(		"id_f64",		1.,					EConfigGroup::Application, Configuration::AllowedValues<f64>			{ { { "ZERO", 0. }, { "ONE", 1. } } });
+	config.Set<u8>(			"id_u8",		1,					EConfigGroup::Application, Configuration::AllowedValues<u8>				{ { { "ZERO", 0 }, { "ONE", 1 } } });
+	config.Set<u16>(		"id_u16",		2,					EConfigGroup::Application, Configuration::AllowedValues<u16>			{ { { "ZERO", 0 }, { "ONE", 1 } } });
+	config.Set<u32>(		"id_u32",		3,					EConfigGroup::Application, Configuration::AllowedValues<u32>			{ { { "ZERO", 0 }, { "ONE", 1 } } });
+	config.Set<u64>(		"id_u64",		4,					EConfigGroup::Application, Configuration::AllowedValues<u64>			{ { { "ZERO", 0 }, { "ONE", 1 } } });
+	config.Set<i8>(			"id_i8",		-1,					EConfigGroup::Application, Configuration::AllowedValues<i8>				{ { { "ZERO", 0 }, { "ONE", 1 } } });
+	config.Set<i16>(		"id_i16",		-2,					EConfigGroup::Application, Configuration::AllowedValues<i16>			{ { { "ZERO", 0 }, { "ONE", 1 } } });
+	config.Set<i32>(		"id_i32",		-3,					EConfigGroup::Application, Configuration::AllowedValues<i32>			{ { { "ZERO", 0 }, { "ONE", 1 } } });
+	config.Set<i64>(		"id_i64",		-4,					EConfigGroup::Application, Configuration::AllowedValues<i64>			{ { { "ZERO", 0 }, { "ONE", 1 } } });
+	config.Set<std::string>("id_string",	"value",			EConfigGroup::Application, Configuration::AllowedValues<std::string>	{ { { "FIRST", "one" }, { "SECOND", "two" }, { "THIRD", "three" } } });
+	config.Set<FilePath>(	"id_filepath",	dummyFilePathValue,	EConfigGroup::Application, Configuration::AllowedValues<FilePath>
+	{
+		{
+			{ "FIRST",	FilePath(FilePath::EFolder::Bin,	"one") },
+			{ "SECOND",	FilePath(FilePath::EFolder::User,	"two") },
+			{ "THIRD",	FilePath(FilePath::EFolder::Data,	"three") }
+		}
+	});
 
 	SerializeConfigurationToProto(config, proto);
 
@@ -320,6 +390,7 @@ TEST(ConfigurationProtoSerializationTests, all_restrict_types_can_be_serialized_
 	EXPECT_EQ(RestrictValueCount(proto.configs(),	"id_i32"),		2);
 	EXPECT_EQ(RestrictValueCount(proto.configs(),	"id_i64"),		2);
 	EXPECT_EQ(RestrictValueCount(proto.configs(),	"id_string"),	3);
+	EXPECT_EQ(RestrictValueCount(proto.configs(),	"id_filepath"),	3);
 
 	EXPECT_TRUE(HasRestrictValue<bool>(			proto.configs(), "id_bool",		"TRUE",		true));
 	EXPECT_TRUE(HasRestrictValue<bool>(			proto.configs(), "id_bool",		"FALSE",	false));
@@ -346,6 +417,9 @@ TEST(ConfigurationProtoSerializationTests, all_restrict_types_can_be_serialized_
 	EXPECT_TRUE(HasRestrictValue<std::string>(	proto.configs(), "id_string",	"FIRST",	"one"));
 	EXPECT_TRUE(HasRestrictValue<std::string>(	proto.configs(), "id_string",	"SECOND",	"two"));
 	EXPECT_TRUE(HasRestrictValue<std::string>(	proto.configs(), "id_string",	"THIRD",	"three"));
+	EXPECT_TRUE(HasRestrictValue<FilePath>(		proto.configs(), "id_filepath",	"FIRST",	FilePath(FilePath::EFolder::Bin,	"one")));
+	EXPECT_TRUE(HasRestrictValue<FilePath>(		proto.configs(), "id_filepath",	"SECOND",	FilePath(FilePath::EFolder::User,	"two")));
+	EXPECT_TRUE(HasRestrictValue<FilePath>(		proto.configs(), "id_filepath",	"THIRD",	FilePath(FilePath::EFolder::Data,	"three")));
 }
 
 TEST(ConfigurationProtoSerializationTests, all_memory_unit_ratios_can_be_serialized_into_proto)
@@ -398,24 +472,35 @@ TEST(ConfigurationProtoSerializationTests, deserializing_an_empty_proto_returns_
 
 TEST(ConfigurationProtoSerializationTests, entire_config_proto_can_be_deserialized_into_configuration)
 {
+	const FilePath dummyFilePathValue		= FilePath(FilePath::EFolder::User, "value");
+	const FilePath dummyFilePathOverride	= FilePath(FilePath::EFolder::Data, "override");
+
 	ProtoConfigurationRemote::InstanceConfig proto;
 	Configuration config;
 	Configuration expectedConfig;
 	
-	expectedConfig.Set<bool>(		"id_user",		false,		EConfigGroup::User);
-	expectedConfig.Set<bool>(		"id_device",	false,		EConfigGroup::Device);
-	expectedConfig.Set<bool>(		"id_bool",		true,		EConfigGroup::Application, Configuration::AllowedValues<bool>			{ { { "TRUE", true },	{ "FALSE", false } } });
-	expectedConfig.Set<f32>(		"id_f32",		1.1f,		EConfigGroup::Application, Configuration::AllowedValues<f32>			{ { { "ZERO", 0.f },	{ "ONE", 1.f } } });
-	expectedConfig.Set<f64>(		"id_f64",		1.2,		EConfigGroup::Application, Configuration::AllowedValues<f64>			{ { { "ZERO", 0. },		{ "ONE", 1. } } });
-	expectedConfig.Set<u8>(			"id_u8",		1,			EConfigGroup::Application, Configuration::AllowedValues<u8>				{ { { "ZERO", 0 },		{ "ONE", 1 } } });
-	expectedConfig.Set<u16>(		"id_u16",		2,			EConfigGroup::Application, Configuration::AllowedValues<u16>			{ { { "ZERO", 0 },		{ "ONE", 1 } } });
-	expectedConfig.Set<u32>(		"id_u32",		3,			EConfigGroup::Application, Configuration::AllowedValues<u32>			{ { { "ZERO", 0 },		{ "ONE", 1 } } });
-	expectedConfig.Set<u64>(		"id_u64",		4,			EConfigGroup::Application, Configuration::AllowedValues<u64>			{ { { "ZERO", 0 },		{ "ONE", 1 } } });
-	expectedConfig.Set<i8>(			"id_i8",		-1,			EConfigGroup::Application, Configuration::AllowedValues<i8>				{ { { "ZERO", 0 },		{ "ONE", 1 } } });
-	expectedConfig.Set<i16>(		"id_i16",		-2,			EConfigGroup::Application, Configuration::AllowedValues<i16>			{ { { "ZERO", 0 },		{ "ONE", 1 } } });
-	expectedConfig.Set<i32>(		"id_i32",		-3,			EConfigGroup::Application, Configuration::AllowedValues<i32>			{ { { "ZERO", 0 },		{ "ONE", 1 } } });
-	expectedConfig.Set<i64>(		"id_i64",		-4,			EConfigGroup::Application, Configuration::AllowedValues<i64>			{ { { "ZERO", 0 },		{ "ONE", 1 } } });
-	expectedConfig.Set<std::string>("id_string",	"value",	EConfigGroup::Application, Configuration::AllowedValues<std::string>	{ { { "FIRST", "one" },	{ "SECOND", "two" }, { "THIRD", "three" } } });
+	expectedConfig.Set<bool>(		"id_user",		false,				EConfigGroup::User);
+	expectedConfig.Set<bool>(		"id_device",	false,				EConfigGroup::Device);
+	expectedConfig.Set<bool>(		"id_bool",		true,				EConfigGroup::Application, Configuration::AllowedValues<bool>			{ { { "TRUE", true },	{ "FALSE", false } } });
+	expectedConfig.Set<f32>(		"id_f32",		1.1f,				EConfigGroup::Application, Configuration::AllowedValues<f32>			{ { { "ZERO", 0.f },	{ "ONE", 1.f } } });
+	expectedConfig.Set<f64>(		"id_f64",		1.2,				EConfigGroup::Application, Configuration::AllowedValues<f64>			{ { { "ZERO", 0. },		{ "ONE", 1. } } });
+	expectedConfig.Set<u8>(			"id_u8",		1,					EConfigGroup::Application, Configuration::AllowedValues<u8>				{ { { "ZERO", 0 },		{ "ONE", 1 } } });
+	expectedConfig.Set<u16>(		"id_u16",		2,					EConfigGroup::Application, Configuration::AllowedValues<u16>			{ { { "ZERO", 0 },		{ "ONE", 1 } } });
+	expectedConfig.Set<u32>(		"id_u32",		3,					EConfigGroup::Application, Configuration::AllowedValues<u32>			{ { { "ZERO", 0 },		{ "ONE", 1 } } });
+	expectedConfig.Set<u64>(		"id_u64",		4,					EConfigGroup::Application, Configuration::AllowedValues<u64>			{ { { "ZERO", 0 },		{ "ONE", 1 } } });
+	expectedConfig.Set<i8>(			"id_i8",		-1,					EConfigGroup::Application, Configuration::AllowedValues<i8>				{ { { "ZERO", 0 },		{ "ONE", 1 } } });
+	expectedConfig.Set<i16>(		"id_i16",		-2,					EConfigGroup::Application, Configuration::AllowedValues<i16>			{ { { "ZERO", 0 },		{ "ONE", 1 } } });
+	expectedConfig.Set<i32>(		"id_i32",		-3,					EConfigGroup::Application, Configuration::AllowedValues<i32>			{ { { "ZERO", 0 },		{ "ONE", 1 } } });
+	expectedConfig.Set<i64>(		"id_i64",		-4,					EConfigGroup::Application, Configuration::AllowedValues<i64>			{ { { "ZERO", 0 },		{ "ONE", 1 } } });
+	expectedConfig.Set<std::string>("id_string",	"value",			EConfigGroup::Application, Configuration::AllowedValues<std::string>	{ { { "FIRST", "one" },	{ "SECOND", "two" }, { "THIRD", "three" } } });
+	expectedConfig.Set<FilePath>(	"id_filepath",	dummyFilePathValue,	EConfigGroup::Application, Configuration::AllowedValues<FilePath>
+	{
+		{
+			{ "FIRST",	FilePath(FilePath::EFolder::Bin,	"one") },
+			{ "SECOND",	FilePath(FilePath::EFolder::User,	"two") },
+			{ "THIRD",	FilePath(FilePath::EFolder::Data,	"three") }
+		}
+	});
 	
 	expectedConfig.SetOverride<bool>(		"id_bool",		false);
 	expectedConfig.SetOverride<f32>(		"id_f32",		2.1f);
@@ -429,6 +514,7 @@ TEST(ConfigurationProtoSerializationTests, entire_config_proto_can_be_deserializ
 	expectedConfig.SetOverride<i32>(		"id_i32",		-7);
 	expectedConfig.SetOverride<i64>(		"id_i64",		-8);
 	expectedConfig.SetOverride<std::string>("id_string",	"override");
+	expectedConfig.SetOverride<FilePath>(	"id_filepath",	dummyFilePathOverride);
 
 	{
 		auto& protoConfig = (*proto.mutable_configs())["id_user"];
@@ -703,10 +789,49 @@ TEST(ConfigurationProtoSerializationTests, entire_config_proto_can_be_deserializ
 			allowedValue.set_value_string("three");
 		}
 	}
+	{
+		auto& protoConfig = (*proto.mutable_configs())["id_filepath"];
+
+		protoConfig.set_id("id_filepath");
+		protoConfig.set_value_data_type(EDataType::FilePath);
+		auto& filePathValue = *protoConfig.mutable_config_filepath();
+		protoConfig.set_config_group(ProtoConfigurationRemote::EConfigGroup::Application);
+		protoConfig.set_override_string("override");
+		auto& filePathOverride = *protoConfig.mutable_override_filepath();
+		auto& restrictedValue = *protoConfig.mutable_restriction_allowed_values();
+
+		filePathValue.set_path("value");
+		filePathValue.set_location(ProtoConfigurationRemote::FilePathT_EFolder_User);
+		filePathOverride.set_path("override");
+		filePathOverride.set_location(ProtoConfigurationRemote::FilePathT_EFolder_Data);
+
+		{
+			auto& allowedValue = (*restrictedValue.mutable_allowed_values())["FIRST"];
+
+			auto& filePath = *allowedValue.mutable_value_filepath();
+			
+			filePath.set_path("one");
+			filePath.set_location(ProtoConfigurationRemote::FilePathT_EFolder_Bin);
+		}
+		{
+			auto& allowedValue = (*restrictedValue.mutable_allowed_values())["SECOND"];
+
+			auto& filePath = *allowedValue.mutable_value_filepath();
+
+			filePath.set_path("two");
+			filePath.set_location(ProtoConfigurationRemote::FilePathT_EFolder_User);
+		}
+		{
+			auto& allowedValue = (*restrictedValue.mutable_allowed_values())["THIRD"];
+
+			auto& filePath = *allowedValue.mutable_value_filepath();
+
+			filePath.set_path("three");
+			filePath.set_location(ProtoConfigurationRemote::FilePathT_EFolder_Data);
+		}
+	}
 
 	DeserializeConfigurationFromProto(proto, config);
-
-	const auto& configValues = config.GetConfigs();
 
 	EXPECT_EQ(config, expectedConfig);
 }

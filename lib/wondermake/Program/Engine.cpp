@@ -84,9 +84,8 @@ namespace Engine
 					ConfigurationEngine::Configure(
 						*config,
 						aInfo.Configuration.OverrideFileApplication.string(),
-						aInfo.Configuration.OverrideFileDevice.string(),
-						aInfo.Configuration.OverrideFileUser.string(),
-						aInfo.Configuration.OverrideFileUserLocation == EOverrideFileUserLocation::User ? ConfigurationEngine::EOverrideFileUserLocation::User : ConfigurationEngine::EOverrideFileUserLocation::UserData,
+						aInfo.Configuration.OverrideFileDevice,
+						aInfo.Configuration.OverrideFileUser,
 						aInfo.Headless);
 
 					return config;
@@ -145,9 +144,9 @@ namespace Engine
 						if (!aResult)
 							return MakeCanceledFuture<ReadFileJob::Output>();
 
-						auto path = configurationSystem.Get<std::string>(ConfigurationEngine::OverrideFileDevice, aInfo.Configuration.OverrideFileDevice.string());
+						auto path = configurationSystem.Get<FilePath>(ConfigurationEngine::OverrideFileDevice, aInfo.Configuration.OverrideFileDevice);
 
-						return jobSystem->StartJob<ReadFileJob>(FilePath(FilePath::EFolder::Data, std::move(path)));
+						return jobSystem->StartJob<ReadFileJob>(std::move(path));
 					}))
 				.ThenApply(InlineExecutor(), FutureApplyResult([jobSystem](auto aResult)
 					{
@@ -163,12 +162,9 @@ namespace Engine
 						if (!aResult)
 							return MakeCanceledFuture<ReadFileJob::Output>();
 
-						const auto userLocation = configurationSystem.Get<ConfigurationEngine::EOverrideFileUserLocation>(ConfigurationEngine::OverrideFileUserLocation, ConfigurationEngine::EOverrideFileUserLocation::UserData);
+						auto path = configurationSystem.Get<FilePath>(ConfigurationEngine::OverrideFileUser, aInfo.Configuration.OverrideFileUser);
 
-						const auto folderLocation = userLocation == ConfigurationEngine::EOverrideFileUserLocation::User ? FilePath::EFolder::User : FilePath::EFolder::UserData;
-						auto path = configurationSystem.Get<std::string>(ConfigurationEngine::OverrideFileUser, aInfo.Configuration.OverrideFileUser.string());
-
-						return jobSystem->StartJob<ReadFileJob>(FilePath(folderLocation, std::move(path)));
+						return jobSystem->StartJob<ReadFileJob>(std::move(path));
 					}))
 				.ThenApply(InlineExecutor(), FutureApplyResult([jobSystem](auto aResult)
 					{
@@ -334,35 +330,21 @@ namespace Engine
 						if (!groupOpt)
 							return;
 
-						const auto				group = *groupOpt;
-						std::filesystem::path	path;
-						FilePath::EFolder		folder = FilePath::EFolder::Bin;
+						const auto	group = *groupOpt;
+						FilePath	path;
 
 						switch (group)
 						{
-						case EConfigGroup::Application:	path = configSys.Get<std::string>(ConfigurationEngine::OverrideFileApplication, aInfo.Configuration.OverrideFileApplication.string());	break;
-						case EConfigGroup::Device:		path = configSys.Get<std::string>(ConfigurationEngine::OverrideFileDevice, aInfo.Configuration.OverrideFileDevice.string());			break;
-						case EConfigGroup::User:		path = configSys.Get<std::string>(ConfigurationEngine::OverrideFileUser, aInfo.Configuration.OverrideFileUser.string());				break;
+						case EConfigGroup::Application:	path = FilePath(FilePath::EFolder::Bin, configSys.Get<std::string>(ConfigurationEngine::OverrideFileApplication, aInfo.Configuration.OverrideFileApplication.string()));	break;
+						case EConfigGroup::Device:		path = configSys.Get<FilePath>(ConfigurationEngine::OverrideFileDevice, aInfo.Configuration.OverrideFileDevice);															break;
+						case EConfigGroup::User:		path = configSys.Get<FilePath>(ConfigurationEngine::OverrideFileUser, aInfo.Configuration.OverrideFileUser);																break;
 						}
-						switch (group)
-						{
-						case EConfigGroup::Application:	folder = FilePath::EFolder::Bin; break;
-						case EConfigGroup::Device:		folder = FilePath::EFolder::Data; break;
-						case EConfigGroup::User:
-						{
-							const auto userLocation = configSys.Get<ConfigurationEngine::EOverrideFileUserLocation>(ConfigurationEngine::OverrideFileUserLocation, ConfigurationEngine::EOverrideFileUserLocation::UserData);
-
-							folder = userLocation == ConfigurationEngine::EOverrideFileUserLocation::User ? FilePath::EFolder::User : FilePath::EFolder::UserData;
-
-							break;
-						}
-						}
-
+						
 						jobSys
 							.StartJob<SerializeConfigurationJob>(group)
-							.ThenApply(InlineExecutor(), FutureApplyResult([&jobSys, folder, path = std::move(path)](auto aJsonBlob) mutable
+							.ThenApply(InlineExecutor(), FutureApplyResult([&jobSys, path = std::move(path)](auto aJsonBlob) mutable
 								{
-									return jobSys.StartJob<WriteFileJob>(FilePath(folder, std::move(path)), std::move(aJsonBlob));
+									return jobSys.StartJob<WriteFileJob>(std::move(path), std::move(aJsonBlob));
 								}))
 							.Detach();
 					})

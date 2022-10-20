@@ -103,13 +103,14 @@ TEST(ConfigurationSerializationTests, deserialize_sets_no_override_when_no_confi
 
 TEST(ConfigurationSerializationTests, deserialize_sets_configurations_when_configuration_is_set)
 {
-	constexpr auto dummyJsonString = "{\"overrides\": { \"kalle\": \"hobbe\", \"greger\": 1234, \"sylt\": -1234 } }";
+	constexpr auto dummyJsonString = "{\"overrides\": { \"kalle\": \"hobbe\", \"gorgan\": { \"path\": \"overridden\", \"location\": \"Data\" }, \"greger\": 1234, \"sylt\": -1234 } }";
 
 	ConfigurationSystem::InjectDependencies(std::tie());
 
 	ConfigurationSystem configSystem;
 
 	configSystem.Set<std::string>("kalle", "ruben", locTestConfigGroup);
+	configSystem.Set<FilePath>("gorgan", FilePath(FilePath::EFolder::Bin, "path"), locTestConfigGroup);
 	configSystem.Set<u64>("greger", 5678, locTestConfigGroup);
 	configSystem.Set<i64>("sylt", 5678, locTestConfigGroup);
 
@@ -121,6 +122,7 @@ TEST(ConfigurationSerializationTests, deserialize_sets_configurations_when_confi
 	deserializeJob.Run(std::move(promise), locTestConfigGroup, dummyJsonString);
 
 	EXPECT_EQ(configSystem.Get<std::string>("kalle", ""), "hobbe");
+	EXPECT_EQ(configSystem.Get<FilePath>("gorgan", FilePath()), FilePath(FilePath::EFolder::Data, "overridden"));
 	EXPECT_EQ(configSystem.Get<u64>("greger", 0), 1234);
 	EXPECT_EQ(configSystem.Get<i64>("sylt", 0), -1234);
 }
@@ -190,10 +192,12 @@ TEST(ConfigurationSerializationTests, serialized_outputs_valid_structure)
 	ConfigurationSystem configSystem;
 
 	configSystem.Set<std::string>("kalle", "ruben", locTestConfigGroup);
+	configSystem.Set<FilePath>("gorgan", FilePath(FilePath::EFolder::Bin, "path"), locTestConfigGroup);
 	configSystem.Set<u64>("greger", 5678, locTestConfigGroup);
 	configSystem.Set<i64>("sylt", 5678, locTestConfigGroup);
 
 	configSystem.SetOverride<std::string>("kalle", std::string("hobbe"));
+	configSystem.SetOverride<FilePath>("gorgan", FilePath(FilePath::EFolder::User, "overridden"));
 	configSystem.SetOverride<u64>("greger", 1234);
 	configSystem.SetOverride<i64>("sylt", -1234);
 
@@ -210,8 +214,12 @@ TEST(ConfigurationSerializationTests, serialized_outputs_valid_structure)
 	json expectedOverrides;
 
 	expectedOverrides["kalle"] = "hobbe";
+	expectedOverrides["gorgan"] = {};
 	expectedOverrides["greger"] = 1234;
 	expectedOverrides["sylt"] = -1234;
+
+	expectedOverrides["gorgan"]["path"] = "overridden";
+	expectedOverrides["gorgan"]["location"] = "User";
 
 	EXPECT_EQ(overrides, expectedOverrides);
 }
@@ -258,10 +266,12 @@ TEST(ConfigurationSerializationTests, serialized_output_can_be_deserialized)
 	ConfigurationSystem configSystem;
 
 	configSystem.Set<std::string>("kalle", "ruben", locTestConfigGroup);
+	configSystem.Set<FilePath>("gorgan", FilePath(FilePath::EFolder::Bin, "path"), locTestConfigGroup);
 	configSystem.Set<u64>("greger", 5678, locTestConfigGroup);
 	configSystem.Set<i64>("sylt", 5678, locTestConfigGroup);
 
 	configSystem.SetOverride<std::string>("kalle", std::string("hobbe"));
+	configSystem.SetOverride<FilePath>("gorgan", FilePath(FilePath::EFolder::Data, "overridden"));
 	configSystem.SetOverride<u64>("greger", 1234);
 	configSystem.SetOverride<i64>("sylt", -1234);
 
@@ -273,6 +283,7 @@ TEST(ConfigurationSerializationTests, serialized_output_can_be_deserialized)
 	serializeJob.Run(std::move(promiseSerialize), locTestConfigGroup);
 
 	configSystem.ResetOverride("kalle");
+	configSystem.ResetOverride("gorgan");
 	configSystem.ResetOverride("greger");
 	configSystem.ResetOverride("sylt");
 
@@ -286,6 +297,7 @@ TEST(ConfigurationSerializationTests, serialized_output_can_be_deserialized)
 	EXPECT_TRUE(futureDeserialize.IsCompleted());
 
 	EXPECT_EQ(configSystem.Get<std::string>("kalle", ""), "hobbe");
+	EXPECT_EQ(configSystem.Get<FilePath>("gorgan", FilePath()), FilePath(FilePath::EFolder::Data, "overridden"));
 	EXPECT_EQ(configSystem.Get<u64>("greger", 0), 1234);
 	EXPECT_EQ(configSystem.Get<i64>("sylt", 0), -1234);
 }
@@ -541,4 +553,39 @@ TEST(ConfigurationSerializationTests, string_values_are_serialized_and_deseriali
 
 	EXPECT_EQ(configSystem.Get<std::string>("string_empty",		dummyDefaultValue),	"");
 	EXPECT_EQ(configSystem.Get<std::string>("string_panagram",	dummyDefaultValue),	"sphinx of black quartz, judge my vow.");
+}
+
+TEST(ConfigurationSerializationTests, filepath_values_are_serialized_and_deserialized_correctly)
+{
+	const auto dummyDefaultValue = FilePath(FilePath::EFolder::Bin, "default_path");
+
+	ConfigurationSystem::InjectDependencies(std::tie());
+
+	ConfigurationSystem configSystem;
+
+	configSystem.Set<FilePath>("filepath_empty",	dummyDefaultValue,	locTestConfigGroup);
+	configSystem.Set<FilePath>("filepath_panagram",	dummyDefaultValue,	locTestConfigGroup);
+
+	configSystem.SetOverride<FilePath>("filepath_empty",	FilePath());
+	configSystem.SetOverride<FilePath>("filepath_panagram",	FilePath(FilePath::EFolder::UserData, "sphinx of black quartz, judge my vow."));
+
+	SerializeConfigurationJob::InjectDependencies(std::tie(configSystem));
+
+	SerializeConfigurationJob serializeJob;
+	auto [promiseSerialize, futureSerialize] = MakeAsync<SerializeConfigurationJob::Output>();
+
+	serializeJob.Run(std::move(promiseSerialize), locTestConfigGroup);
+
+	configSystem.ResetOverride("filepath_empty");
+	configSystem.ResetOverride("filepath_panagram");
+
+	DeserializeConfigurationJob::InjectDependencies(std::tie(configSystem));
+
+	DeserializeConfigurationJob deserializeJob;
+	auto [promiseDeserialize, futureDeserialize] = MakeAsync<DeserializeConfigurationJob::Output>();
+
+	deserializeJob.Run(std::move(promiseDeserialize), locTestConfigGroup, *futureSerialize.GetResult());
+
+	EXPECT_EQ(configSystem.Get<FilePath>("filepath_empty",		dummyDefaultValue), FilePath());
+	EXPECT_EQ(configSystem.Get<FilePath>("filepath_panagram",	dummyDefaultValue), FilePath(FilePath::EFolder::UserData, "sphinx of black quartz, judge my vow."));
 }

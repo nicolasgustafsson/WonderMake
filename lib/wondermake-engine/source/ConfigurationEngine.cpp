@@ -9,18 +9,13 @@ namespace ConfigurationEngine
 	void Configure(
 		ConfigurationSystem& aConfigurationSystem,
 		std::string aOverrideFileApplication,
-		std::string aOverrideFileDevice,
-		std::string aOverrideFileUser,
-		EOverrideFileUserLocation aOverrideFileUserLocation,
+		FilePath aOverrideFileDevice,
+		FilePath aOverrideFileUser,
 		bool aIsHeadless)
 	{
 		aConfigurationSystem.Set<std::string>(OverrideFileApplication,					std::move(aOverrideFileApplication),	EConfigGroup::Application);
-		aConfigurationSystem.Set<std::string>(OverrideFileDevice,						std::move(aOverrideFileDevice),			EConfigGroup::Application);
-		aConfigurationSystem.Set<std::string>(OverrideFileUser,							std::move(aOverrideFileUser),			EConfigGroup::Application);
-		aConfigurationSystem.Set<EOverrideFileUserLocation>(OverrideFileUserLocation,	aOverrideFileUserLocation,				EConfigGroup::Application,
-			MakeAllowedValues<EOverrideFileUserLocation>(
-				std::make_pair("User",		EOverrideFileUserLocation::User),
-				std::make_pair("UserData",	EOverrideFileUserLocation::UserData)));
+		aConfigurationSystem.Set<FilePath>(OverrideFileDevice,							std::move(aOverrideFileDevice),			EConfigGroup::Application);
+		aConfigurationSystem.Set<FilePath>(OverrideFileUser,							std::move(aOverrideFileUser),			EConfigGroup::Application);
 		
 		if (!aIsHeadless)
 		{

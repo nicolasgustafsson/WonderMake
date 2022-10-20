@@ -60,28 +60,16 @@ namespace Engine
 		std::optional<LogIpcSocketInfo> IpcSocket;
 	};
 	
-	// EOverrideFileUserLocation represents the directory location that can be used by the ConfigurationInfo.OverrideFileUser field.
-	enum class EOverrideFileUserLocation
-	{
-		// The user directory. On Windows this is usually inside the documents folder.
-		User,
-		// The userdata directory. On Windows this is usually inside the appdata folder.
-		UserData
-	};
-
 	struct ConfigurationInfo
 	{
 		// Path to the json file containing the application configuration overrides. If the path is not absolute, it will be relative to the working directory.
 		std::filesystem::path OverrideFileApplication = "overrides.json";
 
-		// Path to the json file containing the device configuration overrides. If the path is not absolute, it will be relative to the data directory.
-		std::filesystem::path OverrideFileDevice = "device_settings.json";
+		// Path to the json file containing the device configuration overrides.
+		FilePath OverrideFileDevice = FilePath(FilePath::EFolder::Data, "device_settings.json");
 
-		// Path to the json file containing the user configuration overrides. If the path is not absolute, it will be relative to the directory set by UserOverrideFileLocation.
-		std::filesystem::path OverrideFileUser = "user_settings.json";
-
-		// This sets the directory location of OverrideFileUser. Is ignored if OverrideFileUser is set to an absolute path.
-		EOverrideFileUserLocation OverrideFileUserLocation = EOverrideFileUserLocation::UserData;
+		// Path to the json file containing the user configuration overrides.
+		FilePath OverrideFileUser = FilePath(FilePath::EFolder::UserData, "user_settings.json");
 	};
 
 	struct Info

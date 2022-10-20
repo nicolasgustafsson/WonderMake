@@ -1,5 +1,6 @@
 #pragma once
 
+#include "wondermake-utility/FilePath.h"
 #include "wondermake-utility/MemoryUnit.h"
 
 #include <string_view>
@@ -8,16 +9,9 @@ class ConfigurationSystem;
 
 namespace ConfigurationEngine
 {
-	enum class EOverrideFileUserLocation
-	{
-		User,
-		UserData
-	};
-
 	inline constexpr std::string_view OverrideFileApplication		= "wondermake_engine.override_file.application";
 	inline constexpr std::string_view OverrideFileDevice			= "wondermake_engine.override_file.device";
 	inline constexpr std::string_view OverrideFileUser				= "wondermake_engine.override_file.user";
-	inline constexpr std::string_view OverrideFileUserLocation		= "wondermake_engine.override_file.user_location";
 	
 	inline constexpr std::string_view WindowWidth					= "wondermake_engine.window.width";
 	inline constexpr std::string_view WindowHeight					= "wondermake_engine.window.height";
@@ -29,8 +23,7 @@ namespace ConfigurationEngine
 	void Configure(
 		ConfigurationSystem& aConfigurationSystem,
 		std::string aOverrideFileApplication,
-		std::string aOverrideFileDevice,
-		std::string aOverrideFileUser,
-		EOverrideFileUserLocation aOverrideFileUserLocation,
+		FilePath aOverrideFileDevice,
+		FilePath aOverrideFileUser,
 		bool aIsHeadless);
 }

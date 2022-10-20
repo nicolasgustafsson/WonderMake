@@ -7,6 +7,8 @@
 
 #include "json/json.hpp"
 
+#include <magic_enum.hpp>
+
 WM_REGISTER_JOB(DeserializeConfigurationJob);
 
 void DeserializeConfigurationJob::Run(Promise<Output> aPromise, EConfigGroup aConfigGroup, std::string aJsonBlob)
@@ -152,6 +154,22 @@ void DeserializeConfigurationJob::Run(Promise<Output> aPromise, EConfigGroup aCo
 				{
 					if (value.is_string())
 						configuration.SetOverride<std::string, raw>(name, value.get<std::string>());
+					else
+						WmLogWarning(TagWonderMake << TagWmConfiguration << "Expected string value for override: \"" << name << "\".");
+				}
+
+				// FilePath
+				else if constexpr (std::is_same_v<Type, FilePath>)
+				{
+					if (value.is_object())
+					{
+						const auto location = magic_enum::enum_cast<FilePath::EFolder>(value["location"].get<std::string>());
+
+						if (!location)
+							return;
+
+						configuration.SetOverride<FilePath, raw>(name, FilePath(*location, value["path"].get<std::string>()));
+					}
 					else
 						WmLogWarning(TagWonderMake << TagWmConfiguration << "Expected string value for override: \"" << name << "\".");
 				}

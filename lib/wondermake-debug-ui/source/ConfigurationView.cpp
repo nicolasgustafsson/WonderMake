@@ -19,6 +19,7 @@ REGISTER_SYSTEM(ConfigurationView);
 inline constexpr float locFooterHeight = 50.f;
 inline constexpr float locMemoryComboboxWidth = 50.f;
 inline constexpr float locMemoryComboboxPadding = 8.f;
+inline constexpr float locFilePathLocationComboboxWidth = 85.f;
 
 template<CConfigType TConfigType>
 int GetValueIndexInNameList(const std::unordered_map<std::string, TConfigType>& aValueMap, const std::vector<std::string>& aNameList, const TConfigType& aValue)
@@ -332,6 +333,55 @@ void ConfigurationView::UpdateConfigurationList()
 
 							if (ImGui::InputText("", &aConfig.ValueCurrent, ImGuiInputTextFlags_None))
 							{
+								myActions[id] = aConfig.ValueCurrent;
+								baseConfig.IsOverridden = true;
+							}
+
+							ImGui::PopItemWidth();
+						}
+						else if constexpr (std::is_same_v<Type, FilePath>)
+						{
+							std::string filePathId = id + "_FilePath";
+							
+							ImGui::PushID(filePathId.c_str());
+
+							ImGui::PushItemWidth(locFilePathLocationComboboxWidth);
+
+							static int locationIndex;
+							static std::string input;
+							static std::vector<const char*> locationList =
+							{
+								"Unset",
+								"Bin",
+								"Data",
+								"User",
+								"UserData",
+							};
+
+							locationIndex = static_cast<int>(aConfig.ValueCurrent.Location);
+
+							if (ImGui::Combo("", &locationIndex, locationList.data(), static_cast<int>(locationList.size())))
+							{
+								aConfig.ValueCurrent.Location = static_cast<FilePath::EFolder>(locationIndex);
+
+								myActions[id] = aConfig.ValueCurrent;
+								baseConfig.IsOverridden = true;
+							}
+
+							ImGui::PopItemWidth();
+
+							ImGui::PopID();
+
+							ImGui::SameLine();
+
+							ImGui::PushItemWidth(ImGui::GetColumnWidth());
+
+							input = aConfig.ValueCurrent.Path.string();
+
+							if (ImGui::InputText("", &input, ImGuiInputTextFlags_None))
+							{
+								aConfig.ValueCurrent.Path = input;
+
 								myActions[id] = aConfig.ValueCurrent;
 								baseConfig.IsOverridden = true;
 							}

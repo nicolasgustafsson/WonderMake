@@ -61,7 +61,8 @@ private:
 			SConfigData<i16>,
 			SConfigData<i32>,
 			SConfigData<i64>,
-			SConfigData<std::string>>;
+			SConfigData<std::string>,
+			SConfigData<FilePath>>;
 
 		DataType					Data;
 		bool						IsOverridden;
@@ -86,7 +87,8 @@ private:
 		i16,
 		i32,
 		i64,
-		std::string>;
+		std::string,
+		FilePath>;
 	
 	void Tick();
 

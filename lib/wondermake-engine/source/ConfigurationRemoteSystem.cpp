@@ -120,6 +120,47 @@ void ConfigurationRemoteSystem::ConnectTo(std::shared_ptr<Socket> aSocket)
 	UpReadMessage();
 }
 
+void ConfigurationRemoteSystem::SetFilePath(const FilePath& aFilePath, ProtoConfigurationRemote::FilePathT& aOutFilePath)
+{
+	static constexpr auto convertFolderLocation = [](FilePath::EFolder aLocation)
+	{
+		switch (aLocation)
+		{
+		case FilePath::EFolder::Unset:		return ProtoConfigurationRemote::FilePathT_EFolder_Unset;
+		case FilePath::EFolder::Bin:		return ProtoConfigurationRemote::FilePathT_EFolder_Bin;
+		case FilePath::EFolder::Data:		return ProtoConfigurationRemote::FilePathT_EFolder_Data;
+		case FilePath::EFolder::User:		return ProtoConfigurationRemote::FilePathT_EFolder_User;
+		case FilePath::EFolder::UserData:	return ProtoConfigurationRemote::FilePathT_EFolder_UserData;
+		}
+
+		return ProtoConfigurationRemote::FilePathT_EFolder_Unset;
+	};
+
+	aOutFilePath.set_path(aFilePath.Path.string());
+	aOutFilePath.set_location(convertFolderLocation(aFilePath.Location));
+}
+
+FilePath ConfigurationRemoteSystem::GetFilePath(const ProtoConfigurationRemote::FilePathT& aFilePath)
+{
+	static constexpr auto convertFolderLocation = [](ProtoConfigurationRemote::FilePathT_EFolder aLocation)
+	{
+		switch (aLocation)
+		{
+		case ProtoConfigurationRemote::FilePathT_EFolder_Unset:		return FilePath::EFolder::Unset;
+		case ProtoConfigurationRemote::FilePathT_EFolder_Bin:		return FilePath::EFolder::Bin;
+		case ProtoConfigurationRemote::FilePathT_EFolder_Data:		return FilePath::EFolder::Data;
+		case ProtoConfigurationRemote::FilePathT_EFolder_User:		return FilePath::EFolder::User;
+		case ProtoConfigurationRemote::FilePathT_EFolder_UserData:	return FilePath::EFolder::UserData;
+		case ProtoConfigurationRemote::FilePathT_EFolder_FilePathT_EFolder_INT_MIN_SENTINEL_DO_NOT_USE_: break;
+		case ProtoConfigurationRemote::FilePathT_EFolder_FilePathT_EFolder_INT_MAX_SENTINEL_DO_NOT_USE_: break;
+		}
+
+		return FilePath::EFolder::Unset;
+	};
+
+	return FilePath(convertFolderLocation(aFilePath.location()), aFilePath.path());
+}
+
 ConfigurationRemoteSystem::Iterator ConfigurationRemoteSystem::NextIterator(const std::pair<CIteratorDataType, CIteratorConfigType>& aIterators) const noexcept
 {
 	auto [itData, itConfig] = aIterators;
@@ -208,6 +249,8 @@ void ConfigurationRemoteSystem::OnOverrideChanged(const std::string& aId)
 						setOverride.set_config_i64(over);
 					else if constexpr (std::is_same_v<Type, std::string>)
 						setOverride.set_config_string(over);
+					else if constexpr (std::is_same_v<Type, FilePath>)
+						SetFilePath(over, *setOverride.mutable_config_filepath());
 
 				}, it->second);
 
@@ -340,6 +383,8 @@ void ConfigurationRemoteSystem::HandleMessage(const ProtoConfigurationRemote::Pu
 		}
 		else if (aMessage.has_config_string())
 			configSystem.SetOverride<std::string, true>(aMessage.id(), aMessage.config_string());
+		else if (aMessage.has_config_filepath())
+			configSystem.SetOverride<FilePath, true>(aMessage.id(), GetFilePath(aMessage.config_filepath()));
 		else
 			configSystem.ResetOverride(aMessage.id());
 
@@ -551,6 +596,8 @@ void ConfigurationRemoteSystem::HandleMessage(SConfigurationData& aConnectionDat
 	}
 	else if (aMessage.has_config_string())
 		config.SetOverride<std::string, raw>(aMessage.id(), aMessage.config_string());
+	else if (aMessage.has_config_filepath())
+		config.SetOverride<FilePath, raw>(aMessage.id(), GetFilePath(aMessage.config_filepath()));
 	else
 		config.ResetOverride(aMessage.id());
 

@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 3.19)
 
 list(APPEND SourceFiles
     "Tests/ConfigurationProtoSerializationTest.cpp"
+    "Tests/ConfigurationRemoteSystemDressRehearsalTests.cpp"
     "Tests/ConfigurationRemoteSystemTests.cpp"
+    "Tests/ConfigurationRemoteSystemTests.h"
     "Tests/ConfigurationSerializationTests.cpp")
     
 list(APPEND SourceFiles

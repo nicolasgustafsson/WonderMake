@@ -11,6 +11,19 @@ using ProtoConfigurationRemote::EDataType;
 
 void SerializeConfigurationToProto(const Configuration& aConfiguration, ProtoConfigurationRemote::InstanceConfig& aOutProtoConfig)
 {
+	static constexpr auto setFilePath = [](const FilePath& aFilePath, auto& aOutFilePathProto)
+	{
+		aOutFilePathProto.set_path(aFilePath.Path.string());
+
+		switch (aFilePath.Location)
+		{
+		case FilePath::EFolder::Unset:		aOutFilePathProto.set_location(ProtoConfigurationRemote::FilePathT_EFolder_Unset);		break;
+		case FilePath::EFolder::Bin:		aOutFilePathProto.set_location(ProtoConfigurationRemote::FilePathT_EFolder_Bin);		break;
+		case FilePath::EFolder::Data:		aOutFilePathProto.set_location(ProtoConfigurationRemote::FilePathT_EFolder_Data);		break;
+		case FilePath::EFolder::User:		aOutFilePathProto.set_location(ProtoConfigurationRemote::FilePathT_EFolder_User);		break;
+		case FilePath::EFolder::UserData:	aOutFilePathProto.set_location(ProtoConfigurationRemote::FilePathT_EFolder_UserData);	break;
+		}
+	};
 	const auto& configs = aConfiguration.GetConfigs();
 
 	for (const auto&[id, config] : configs)
@@ -60,6 +73,8 @@ void SerializeConfigurationToProto(const Configuration& aConfiguration, ProtoCon
 						return EDataType::I64;
 					if constexpr (std::is_same_v<Type, std::string>)
 						return EDataType::String;
+					if constexpr (std::is_same_v<Type, FilePath>)
+						return EDataType::FilePath;
 				};
 				constexpr auto setConfigValue = [](auto& aProto, const auto& aValue)
 				{
@@ -72,7 +87,9 @@ void SerializeConfigurationToProto(const Configuration& aConfiguration, ProtoCon
 					else if constexpr (std::is_signed_v<Type>)
 						aProto.set_config_i64(aValue);
 					else if constexpr (std::is_same_v<Type, std::string>)
-							aProto.set_config_string(aValue);
+						aProto.set_config_string(aValue);
+					else if constexpr (std::is_same_v<Type, FilePath>)
+						setFilePath(aValue, *aProto.mutable_config_filepath());
 				};
 				constexpr auto setOverrideValue = [](auto& aProto, const auto& aValue)
 				{
@@ -86,6 +103,8 @@ void SerializeConfigurationToProto(const Configuration& aConfiguration, ProtoCon
 						aProto.set_override_i64(aValue);
 					else if constexpr (std::is_same_v<Type, std::string>)
 						aProto.set_override_string(aValue);
+					else if constexpr (std::is_same_v<Type, FilePath>)
+						setFilePath(aValue, *aProto.mutable_override_filepath());
 				};
 				constexpr auto setRestrictionValue = [](auto& aProto, const auto& aValue)
 				{
@@ -99,6 +118,8 @@ void SerializeConfigurationToProto(const Configuration& aConfiguration, ProtoCon
 						aProto.set_value_i64(aValue);
 					else if constexpr (std::is_same_v<Type, std::string>)
 						aProto.set_value_string(aValue);
+					else if constexpr (std::is_same_v<Type, FilePath>)
+						setFilePath(aValue, *aProto.mutable_value_filepath());
 				};
 
 				protoConfig.set_value_data_type(getValueDataType());
@@ -130,7 +151,25 @@ void SerializeConfigurationToProto(const Configuration& aConfiguration, ProtoCon
 
 void DeserializeConfigurationFromProto(const ProtoConfigurationRemote::InstanceConfig& aProtoConfig, Configuration& aOutConfiguration)
 {
-	constexpr auto setConfiguration = [](const auto& aType, const auto& aProto, Configuration& aOutConfiguration)
+	static constexpr auto getFilePath = [](const auto& aFilePathProto) -> FilePath
+	{
+		FilePath::EFolder folder = FilePath::EFolder::Unset;
+
+		switch (aFilePathProto.location())
+		{
+		case ProtoConfigurationRemote::FilePathT_EFolder_Unset:		folder = FilePath::EFolder::Unset;		break;
+		case ProtoConfigurationRemote::FilePathT_EFolder_Bin:		folder = FilePath::EFolder::Bin;		break;
+		case ProtoConfigurationRemote::FilePathT_EFolder_Data:		folder = FilePath::EFolder::Data;		break;
+		case ProtoConfigurationRemote::FilePathT_EFolder_User:		folder = FilePath::EFolder::User;		break;
+		case ProtoConfigurationRemote::FilePathT_EFolder_UserData:	folder = FilePath::EFolder::UserData;	break;
+		case ProtoConfigurationRemote::FilePathT_EFolder_FilePathT_EFolder_INT_MIN_SENTINEL_DO_NOT_USE_:	break;
+		case ProtoConfigurationRemote::FilePathT_EFolder_FilePathT_EFolder_INT_MAX_SENTINEL_DO_NOT_USE_:	break;
+		}
+
+		return FilePath(folder, aFilePathProto.path());
+	};
+
+	static constexpr auto setConfiguration = [](const auto& aType, const auto& aProto, Configuration& aOutConfiguration)
 	{
 		using Type = std::decay_t<decltype(aType)>;
 
@@ -156,6 +195,8 @@ void DeserializeConfigurationFromProto(const ProtoConfigurationRemote::InstanceC
 				return static_cast<Type>(aProto.config_i64());
 			else if constexpr (std::is_same_v<Type, std::string>)
 				return aProto.config_string();
+			else if constexpr (std::is_same_v<Type, FilePath>)
+				return getFilePath(aProto.config_filepath());
 		};
 		constexpr auto getValue = [](const auto& aProto)
 		{
@@ -169,6 +210,8 @@ void DeserializeConfigurationFromProto(const ProtoConfigurationRemote::InstanceC
 				return static_cast<Type>(aProto.value_i64());
 			else if constexpr (std::is_same_v<Type, std::string>)
 				return aProto.value_string();
+			else if constexpr (std::is_same_v<Type, FilePath>)
+				return getFilePath(aProto.value_filepath());
 		};
 		constexpr auto getOverride = [](const auto& aProto) -> std::optional<Type>
 		{
@@ -207,6 +250,13 @@ void DeserializeConfigurationFromProto(const ProtoConfigurationRemote::InstanceC
 				else
 					return std::nullopt;
 			}
+			else if constexpr (std::is_same_v<Type, FilePath>)
+			{
+				if (aProto.has_override_filepath())
+					return getFilePath(aProto.override_filepath());
+				else
+					return std::nullopt;
+			}
 		};
 		
 		const auto& id = aProto.id();
@@ -236,18 +286,19 @@ void DeserializeConfigurationFromProto(const ProtoConfigurationRemote::InstanceC
 	{
 		switch (protoConfig.value_data_type())
 		{
-		case EDataType::Bool:	setConfiguration(bool(),		protoConfig, aOutConfiguration); break;
-		case EDataType::F32:	setConfiguration(f32(),			protoConfig, aOutConfiguration); break;
-		case EDataType::F64: 	setConfiguration(f64(),			protoConfig, aOutConfiguration); break;
-		case EDataType::U8: 	setConfiguration(u8(),			protoConfig, aOutConfiguration); break;
-		case EDataType::U16:	setConfiguration(u16(),			protoConfig, aOutConfiguration); break;
-		case EDataType::U32:	setConfiguration(u32(),			protoConfig, aOutConfiguration); break;
-		case EDataType::U64:	setConfiguration(u64(),			protoConfig, aOutConfiguration); break;
-		case EDataType::I8:		setConfiguration(i8(),			protoConfig, aOutConfiguration); break;
-		case EDataType::I16:	setConfiguration(i16(),			protoConfig, aOutConfiguration); break;
-		case EDataType::I32:	setConfiguration(i32(),			protoConfig, aOutConfiguration); break;
-		case EDataType::I64:	setConfiguration(i64(),			protoConfig, aOutConfiguration); break;
-		case EDataType::String:	setConfiguration(std::string(),	protoConfig, aOutConfiguration); break;
+		case EDataType::Bool:		setConfiguration(bool(),		protoConfig, aOutConfiguration); break;
+		case EDataType::F32:		setConfiguration(f32(),			protoConfig, aOutConfiguration); break;
+		case EDataType::F64: 		setConfiguration(f64(),			protoConfig, aOutConfiguration); break;
+		case EDataType::U8: 		setConfiguration(u8(),			protoConfig, aOutConfiguration); break;
+		case EDataType::U16:		setConfiguration(u16(),			protoConfig, aOutConfiguration); break;
+		case EDataType::U32:		setConfiguration(u32(),			protoConfig, aOutConfiguration); break;
+		case EDataType::U64:		setConfiguration(u64(),			protoConfig, aOutConfiguration); break;
+		case EDataType::I8:			setConfiguration(i8(),			protoConfig, aOutConfiguration); break;
+		case EDataType::I16:		setConfiguration(i16(),			protoConfig, aOutConfiguration); break;
+		case EDataType::I32:		setConfiguration(i32(),			protoConfig, aOutConfiguration); break;
+		case EDataType::I64:		setConfiguration(i64(),			protoConfig, aOutConfiguration); break;
+		case EDataType::String:		setConfiguration(std::string(),	protoConfig, aOutConfiguration); break;
+		case EDataType::FilePath:	setConfiguration(FilePath(),	protoConfig, aOutConfiguration); break;
 		default: continue;
 		}
 	}

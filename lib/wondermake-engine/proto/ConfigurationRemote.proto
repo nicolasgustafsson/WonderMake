@@ -4,18 +4,19 @@ package ProtoConfigurationRemote;
 
 enum EDataType
 {
-    Bool	= 0;
-	F32		= 1;
-	F64		= 2;
-	U8		= 3;
-	U16		= 4;
-	U32		= 5;
-	U64		= 6;
-	I8		= 7;
-	I16		= 8;
-	I32		= 9;
-	I64		= 10;
-	String	= 11;
+    Bool		= 0;
+	F32			= 1;
+	F64			= 2;
+	U8			= 3;
+	U16			= 4;
+	U32			= 5;
+	U64			= 6;
+	I8			= 7;
+	I16			= 8;
+	I32			= 9;
+	I64			= 10;
+	String		= 11;
+	FilePath	= 12;
 }
 
 enum EConfigGroup
@@ -25,15 +26,31 @@ enum EConfigGroup
 	Device		= 2;
 }
 
+message FilePathT
+{
+	enum EFolder
+	{
+		Unset		= 0;
+		Bin			= 1;
+		Data		= 2;
+		User		= 3;
+		UserData	= 4;
+	}
+
+	string	path		= 1;
+	EFolder	location	= 2;
+}
+
 message RestrictionAllowedValue
 {
 	oneof value_type
 	{
-		bool	value_bool		= 1;
-		double	value_f64		= 2;
-		uint64	value_u64		= 3;
-		int64	value_i64		= 4;
-		string	value_string	= 5;
+		bool		value_bool		= 1;
+		double		value_f64		= 2;
+		uint64		value_u64		= 3;
+		int64		value_i64		= 4;
+		string		value_string	= 5;
+		FilePathT	value_filepath	= 6;
 	}
 }
 
@@ -60,24 +77,26 @@ message Config
 		uint64						config_u64					= 6;
 		int64						config_i64					= 7;
 		string						config_string				= 8;
+		FilePathT					config_filepath				= 9;
 	}
 	oneof override_type
 	{
-		bool						override_bool				= 9;
-		double						override_f64				= 10;
-		uint64						override_u64				= 11;
-		int64						override_i64				= 12;
-		string						override_string				= 13;
+		bool						override_bool				= 10;
+		double						override_f64				= 11;
+		uint64						override_u64				= 12;
+		int64						override_i64				= 13;
+		string						override_string				= 14;
+		FilePathT					override_filepath			= 15;
 	}
 
 	oneof restriction
 	{
-		RestrictionAllowedValueList	restriction_allowed_values	= 14;
+		RestrictionAllowedValueList	restriction_allowed_values	= 16;
 	}
 
 	oneof type_data
 	{
-		TypeDataMemoryUnit			type_data_memory_unit		= 15;
+		TypeDataMemoryUnit			type_data_memory_unit		= 17;
 	}
 }
 
@@ -94,11 +113,12 @@ message PushUpSetOverride
 	
 	oneof config_type
 	{
-		bool	config_bool		= 3;
-		double	config_f64		= 4;
-		uint64	config_u64		= 5;
-		int64	config_i64		= 6;
-		string	config_string	= 7;
+		bool		config_bool		= 3;
+		double		config_f64		= 4;
+		uint64		config_u64		= 5;
+		int64		config_i64		= 6;
+		string		config_string	= 7;
+		FilePathT	config_filepath	= 8;
 	}
 }
 
@@ -119,11 +139,12 @@ message PushDownSetOverride
 	
 	oneof config_type
 	{
-		bool	config_bool		= 3;
-		double	config_f64		= 4;
-		uint64	config_u64		= 5;
-		int64	config_i64		= 6;
-		string	config_string	= 7;
+		bool		config_bool		= 3;
+		double		config_f64		= 4;
+		uint64		config_u64		= 5;
+		int64		config_i64		= 6;
+		string		config_string	= 7;
+		FilePathT	config_filepath	= 8;
 	}
 }
 

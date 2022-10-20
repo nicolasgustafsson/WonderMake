@@ -77,6 +77,28 @@ auto MakeSetOverride(auto& aProtoSetOverride, const Guid aInstanceId, const std:
 			aProtoSetOverride.set_config_i64(*aOverrideValue);
 		else if constexpr (std::is_same_v<TType, std::string>)
 			aProtoSetOverride.set_config_string(*aOverrideValue);
+		else if constexpr (std::is_same_v<TType, FilePath>)
+		{
+			static constexpr auto convertFolderLocation = [](FilePath::EFolder aLocation)
+			{
+				switch (aLocation)
+				{
+				case FilePath::EFolder::Unset:		return ProtoConfigurationRemote::FilePathT_EFolder_Unset;
+				case FilePath::EFolder::Bin:		return ProtoConfigurationRemote::FilePathT_EFolder_Bin;
+				case FilePath::EFolder::Data:		return ProtoConfigurationRemote::FilePathT_EFolder_Data;
+				case FilePath::EFolder::User:		return ProtoConfigurationRemote::FilePathT_EFolder_User;
+				case FilePath::EFolder::UserData:	return ProtoConfigurationRemote::FilePathT_EFolder_UserData;
+				}
+
+				return ProtoConfigurationRemote::FilePathT_EFolder_Unset;
+			};
+
+
+			auto& filePath = *aProtoSetOverride.mutable_config_filepath();
+
+			filePath.set_path(aOverrideValue->Path.string());
+			filePath.set_location(convertFolderLocation(aOverrideValue->Location));
+		}
 	}
 }
 
@@ -173,18 +195,19 @@ TEST(ConfigurationRemoteSystemTests, listed_config_have_all_different_values_fro
 
 	Configuration expectedConfiguration;
 
-	expectedConfiguration.Set<bool>(		"test_id_bool",		false,		EConfigGroup::Application);
-	expectedConfiguration.Set<f32>(			"test_id_f32",		1.1f,		EConfigGroup::Application);
-	expectedConfiguration.Set<f64>(			"test_id_f64",		1.2,		EConfigGroup::Application);
-	expectedConfiguration.Set<u8>(			"test_id_u8",		1,			EConfigGroup::Application);
-	expectedConfiguration.Set<u16>(			"test_id_u16",		2,			EConfigGroup::Application);
-	expectedConfiguration.Set<u32>(			"test_id_u32",		3,			EConfigGroup::Application);
-	expectedConfiguration.Set<u64>(			"test_id_u64",		4,			EConfigGroup::Application);
-	expectedConfiguration.Set<i8>(			"test_id_i8",		-1,			EConfigGroup::Application);
-	expectedConfiguration.Set<i16>(			"test_id_i16",		-2,			EConfigGroup::Application);
-	expectedConfiguration.Set<i32>(			"test_id_i32",		-3,			EConfigGroup::Application);
-	expectedConfiguration.Set<i64>(			"test_id_i64",		-4,			EConfigGroup::Application);
-	expectedConfiguration.Set<std::string>(	"test_id_string",	"value",	EConfigGroup::Application);
+	expectedConfiguration.Set<bool>(		"test_id_bool",		false,				EConfigGroup::Application);
+	expectedConfiguration.Set<f32>(			"test_id_f32",		1.1f,				EConfigGroup::Application);
+	expectedConfiguration.Set<f64>(			"test_id_f64",		1.2,				EConfigGroup::Application);
+	expectedConfiguration.Set<u8>(			"test_id_u8",		1,					EConfigGroup::Application);
+	expectedConfiguration.Set<u16>(			"test_id_u16",		2,					EConfigGroup::Application);
+	expectedConfiguration.Set<u32>(			"test_id_u32",		3,					EConfigGroup::Application);
+	expectedConfiguration.Set<u64>(			"test_id_u64",		4,					EConfigGroup::Application);
+	expectedConfiguration.Set<i8>(			"test_id_i8",		-1,					EConfigGroup::Application);
+	expectedConfiguration.Set<i16>(			"test_id_i16",		-2,					EConfigGroup::Application);
+	expectedConfiguration.Set<i32>(			"test_id_i32",		-3,					EConfigGroup::Application);
+	expectedConfiguration.Set<i64>(			"test_id_i64",		-4,					EConfigGroup::Application);
+	expectedConfiguration.Set<std::string>(	"test_id_string",	"value",			EConfigGroup::Application);
+	expectedConfiguration.Set<FilePath>(	"test_id_filepath",	FilePath("value"),	EConfigGroup::Application);
 
 	auto [configSys, guidSys, configRemoteSys] = MakeConfigurationRemoteSystem();
 	auto socketAcceptorMock = MakeSharedReference<NiceMock<SocketAcceptorMock>>();
@@ -389,6 +412,7 @@ TEST(ConfigurationRemoteSystemTests, push_up_set_overrides_sets_overrides)
 	TestPushUpSetOverridesSetsOverrides<i32>			(1);
 	TestPushUpSetOverridesSetsOverrides<i64>			(1);
 	TestPushUpSetOverridesSetsOverrides<std::string>	("override");
+	TestPushUpSetOverridesSetsOverrides<FilePath>		(FilePath(FilePath::EFolder::Bin, "override"));
 }
 
 TEST(ConfigurationRemoteSystemTests, push_up_set_overrides_resets_override)
@@ -497,6 +521,7 @@ TEST(ConfigurationRemoteSystemTests, setting_a_process_override_sends_a_push_dow
 	TestSettingAProcessOverrideSendsAPushDownSetOverrideMessage<i32>			(1);
 	TestSettingAProcessOverrideSendsAPushDownSetOverrideMessage<i64>			(1);
 	TestSettingAProcessOverrideSendsAPushDownSetOverrideMessage<std::string>	("override");
+	TestSettingAProcessOverrideSendsAPushDownSetOverrideMessage<FilePath>		(FilePath(FilePath::EFolder::Bin, "override"));
 }
 
 TEST(ConfigurationRemoteSystemTests, resetting_a_process_override_sends_a_push_down_set_override_message)
@@ -571,6 +596,7 @@ TEST(ConfigurationRemoteSystemTests, setting_an_override_sends_a_push_up_set_ove
 	TestSettingAnOverrideSendsAPushUpSetOverrideMessage<i32>			(1);
 	TestSettingAnOverrideSendsAPushUpSetOverrideMessage<i64>			(1);
 	TestSettingAnOverrideSendsAPushUpSetOverrideMessage<std::string>	("override");
+	TestSettingAnOverrideSendsAPushUpSetOverrideMessage<FilePath>		(FilePath(FilePath::EFolder::Bin, "override"));
 }
 
 TEST(ConfigurationRemoteSystemTests, resetting_an_override_sends_a_push_up_set_override_message)
@@ -635,6 +661,7 @@ TEST(ConfigurationRemoteSystemTests, push_down_set_override_sets_override)
 	TestPushDownSetOverrideSetsOverride<i32>			(1);
 	TestPushDownSetOverrideSetsOverride<i64>			(1);
 	TestPushDownSetOverrideSetsOverride<std::string>	("override");
+	TestPushDownSetOverrideSetsOverride<FilePath>		(FilePath(FilePath::EFolder::Bin, "override"));
 }
 
 TEST(ConfigurationRemoteSystemTests, push_down_set_override_resets_override)
@@ -877,6 +904,7 @@ TEST(ConfigurationRemoteSystemTests, push_up_set_override_is_passed_between_proc
 	TestPushUpSetOverridePassedBetweenProcesses<i32>			(1);
 	TestPushUpSetOverridePassedBetweenProcesses<i64>			(1);
 	TestPushUpSetOverridePassedBetweenProcesses<std::string>	("override");
+	TestPushUpSetOverridePassedBetweenProcesses<FilePath>		(FilePath(FilePath::EFolder::Bin, "override"));
 }
 
 template<typename TType>
@@ -926,4 +954,5 @@ TEST(ConfigurationRemoteSystemTests, push_down_set_override_is_passed_between_pr
 	TestPushDownSetOverridePassedBetweenProcesses<i32>			(1);
 	TestPushDownSetOverridePassedBetweenProcesses<i64>			(1);
 	TestPushDownSetOverridePassedBetweenProcesses<std::string>	("override");
+	TestPushDownSetOverridePassedBetweenProcesses<FilePath>		(FilePath(FilePath::EFolder::Bin, "override"));
 }

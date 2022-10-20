@@ -207,6 +207,8 @@ public:
 				aSetOverrideMessage.set_config_i64(static_cast<i64>(aValue));
 			else if constexpr (std::is_same_v<TConfigType, std::string>)
 				aSetOverrideMessage.set_config_string(std::forward<TArg>(aValue));
+			else if constexpr (std::is_same_v<TConfigType, FilePath>)
+				SetFilePath(aValue, *aSetOverrideMessage.mutable_config_filepath());
 		};
 
 		auto& downSocket = itData->Connection;
@@ -265,6 +267,9 @@ public:
 	}
 
 private:
+	static void SetFilePath(const FilePath& aFilePath, ProtoConfigurationRemote::FilePathT& aOutFilePath);
+	static FilePath GetFilePath(const ProtoConfigurationRemote::FilePathT& aFilePath);
+
 	[[nodiscard]] Iterator NextIterator(const std::pair<CIteratorDataType, CIteratorConfigType>& aIterators) const noexcept;
 	[[nodiscard]] std::optional<std::pair<IteratorDataType, IteratorConfigType>> FindInstance(Guid aInstanceId) noexcept;
 

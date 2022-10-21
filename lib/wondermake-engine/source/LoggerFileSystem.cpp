@@ -32,14 +32,14 @@ bool LoggerFileSystem::OpenLogFile(FilePath aLogPath)
 	return ReopenAndTrimFile();
 }
 
-void LoggerFileSystem::Print(ELogSeverity /*aSeverity*/, ELogLevel /*aLevel*/, std::string aLogMessage)
+void LoggerFileSystem::Print(const SLogLine& aLogLine)
 {
 	std::lock_guard<decltype(myMutex)> lock(myMutex);
 
 	if (!myFileStream.is_open())
 		return;
 
-	myFileStream << std::move(aLogMessage) << '\n';
+	myFileStream << Logger::FormatLine(aLogLine) << '\n';
 
 	myFileStream.flush();
 

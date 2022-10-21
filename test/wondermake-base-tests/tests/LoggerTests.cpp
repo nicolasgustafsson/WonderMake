@@ -4,23 +4,35 @@
 
 #include "Logger.cpp"
 
+MATCHER_P(SLogLineMatcher, aLogLine, "")
+{
+	return ExplainMatchResult(
+		AllOf(
+			Field("Severity",	&SLogLine::Severity,	aLogLine.Severity),
+			Field("Level",		&SLogLine::Level,		aLogLine.Level),
+			Field("Message",	&SLogLine::Message,		aLogLine.Message),
+			Field("File",		&SLogLine::File,		aLogLine.File),
+			Field("Line",		&SLogLine::Line,		aLogLine.Line),
+			Field("Timestamp",	&SLogLine::Timestamp,	aLogLine.Timestamp),
+			Field("ThreadHash",	&SLogLine::ThreadHash,	aLogLine.ThreadHash),
+			Field("LoggerName",	&SLogLine::LoggerName,	aLogLine.LoggerName)),
+		arg, result_listener);
+}
+
 class LoggerMock
 	: public LoggerBase
 {
 public:
-	MOCK_METHOD(void, Print, (
-		ELogSeverity aSeverity,
-		ELogLevel aLevel,
-		std::string aLogMessage), (override));
+	MOCK_METHOD(void, Print, (const SLogLine&), (override));
 };
 
 inline constexpr auto locDummySeverity = ELogSeverity::Info;
 inline constexpr auto locDummyLevel = ELogLevel::Normal;
 inline constexpr auto locDummyFile = "Dummy File";
 inline constexpr auto locDummyLine = 1234;
-inline constexpr auto locDummyLoggerName = "Logger";
 inline constexpr auto locDummyTimepoint = "01-01-1970 00:00:00";
 inline constexpr auto locDummyThreadHash = 0xabcd1234;
+inline constexpr auto locDummyLoggerName = "Logger";
 inline constexpr auto locDummyMessage = "Dummy Message";
 
 TEST(LoggingTests, print_args_are_passed_to_loggers)
@@ -35,10 +47,17 @@ TEST(LoggingTests, print_args_are_passed_to_loggers)
 	logging.AddLogger(loggerMockA);
 	logging.AddLogger(loggerMockB);
 
-	EXPECT_CALL(*loggerMockA, Print(locDummySeverity, locDummyLevel, Eq(locDummyMessage)));
-	EXPECT_CALL(*loggerMockB, Print(locDummySeverity, locDummyLevel, Eq(locDummyMessage)));
+	const SLogLine logLine
+	{
+		locDummySeverity,
+		locDummyLevel,
+		locDummyMessage
+	};
 
-	logging.Print(locDummySeverity, locDummyLevel, locDummyMessage);
+	EXPECT_CALL(*loggerMockA, Print(SLogLineMatcher(logLine)));
+	EXPECT_CALL(*loggerMockB, Print(SLogLineMatcher(logLine)));
+
+	logging.Print(logLine);
 }
 
 TEST(LoggingTests, print_args_are_filtered_based_on_allowed_severities)
@@ -51,13 +70,13 @@ TEST(LoggingTests, print_args_are_filtered_based_on_allowed_severities)
 
 	logging.AddLogger(loggerMock);
 
-	EXPECT_CALL(*loggerMock, Print(ELogSeverity::Success, _, _));
-	EXPECT_CALL(*loggerMock, Print(ELogSeverity::Error, _, _));
+	EXPECT_CALL(*loggerMock, Print(SLogLineMatcher(SLogLine{ ELogSeverity::Success,	locDummyLevel, locDummyMessage })));
+	EXPECT_CALL(*loggerMock, Print(SLogLineMatcher(SLogLine{ ELogSeverity::Error,	locDummyLevel, locDummyMessage })));
 
-	logging.Print(ELogSeverity::Success,	locDummyLevel, locDummyMessage);
-	logging.Print(ELogSeverity::Info,		locDummyLevel, locDummyMessage);
-	logging.Print(ELogSeverity::Warning,	locDummyLevel, locDummyMessage);
-	logging.Print(ELogSeverity::Error,		locDummyLevel, locDummyMessage);
+	logging.Print(SLogLine{ ELogSeverity::Success,	locDummyLevel, locDummyMessage });
+	logging.Print(SLogLine{ ELogSeverity::Info,		locDummyLevel, locDummyMessage });
+	logging.Print(SLogLine{ ELogSeverity::Warning,	locDummyLevel, locDummyMessage });
+	logging.Print(SLogLine{ ELogSeverity::Error,	locDummyLevel, locDummyMessage });
 }
 
 TEST(LoggingTests, print_args_are_filtered_based_on_min_level)
@@ -70,26 +89,33 @@ TEST(LoggingTests, print_args_are_filtered_based_on_min_level)
 
 	logging.AddLogger(loggerMock);
 
-	EXPECT_CALL(*loggerMock, Print(_, ELogLevel::Normal, _));
-	EXPECT_CALL(*loggerMock, Print(_, ELogLevel::Priority, _));
+	EXPECT_CALL(*loggerMock, Print(SLogLineMatcher(SLogLine{ locDummySeverity, ELogLevel::Normal,	locDummyMessage })));
+	EXPECT_CALL(*loggerMock, Print(SLogLineMatcher(SLogLine{ locDummySeverity, ELogLevel::Priority,	locDummyMessage })));
 
-	logging.Print(locDummySeverity, ELogLevel::Debug,		locDummyMessage);
-	logging.Print(locDummySeverity, ELogLevel::Verbose,		locDummyMessage);
-	logging.Print(locDummySeverity, ELogLevel::Normal,		locDummyMessage);
-	logging.Print(locDummySeverity, ELogLevel::Priority,	locDummyMessage);
+	logging.Print(SLogLine{ locDummySeverity, ELogLevel::Debug,		locDummyMessage });
+	logging.Print(SLogLine{ locDummySeverity, ELogLevel::Verbose,	locDummyMessage });
+	logging.Print(SLogLine{ locDummySeverity, ELogLevel::Normal,	locDummyMessage });
+	logging.Print(SLogLine{ locDummySeverity, ELogLevel::Priority,	locDummyMessage });
 }
 
 TEST(LoggingTests, logger_formatline)
 {
-	static constexpr auto expectedMessage = "[Logger]       01-01-1970 00:00:00 [0xabcd1234]         Info    Dummy File(1234)               Dummy Message";
+	static constexpr auto expectedLine = "[Logger]       01-01-1970 00:00:00              [0xabcd1234]         Info    Dummy File(1234)               Dummy Message";
+	const SLogLine logLine
+	{
+		locDummySeverity,
+		locDummyLevel,
+		locDummyMessage,
+		locDummyFile,
+		locDummyLine,
+		locDummyTimepoint,
+		locDummyThreadHash,
+		locDummyLoggerName
+	};
 
-	auto loggerMock = std::make_shared<StrictMock<LoggerMock>>();
+	const auto formattedLine = Logger::FormatLine(logLine);
 
-	Logger logger;
-
-	logger.SetLoggerName(locDummyLoggerName);
-
-	logger.FormatLine(locDummySeverity, locDummyMessage, locDummyFile, locDummyLine, locDummyTimepoint, locDummyThreadHash);
+	EXPECT_EQ(formattedLine, expectedLine);
 }
 
 TEST(LoggingTests, logger_fixedsizelogstream_can_stream_chararrays)

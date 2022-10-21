@@ -21,6 +21,6 @@ class WinLoggerConsoleSystem
 public:
 	void Initialize() override;
 
-	void Print(ELogSeverity aSeverity, ELogLevel aLevel, std::string aLogMessage) override;
+	void Print(const SLogLine& aLogLine) override;
 
 };

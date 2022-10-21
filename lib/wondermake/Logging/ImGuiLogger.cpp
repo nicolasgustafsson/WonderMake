@@ -22,6 +22,19 @@ void ImGuiLogger::Initialize()
 
 void ImGuiLogger::Debug()
 {
+	static constexpr auto getColor = [](ELogSeverity aSeverity)
+	{
+		switch (aSeverity)
+		{
+		case ELogSeverity::Success:	return SColor::Green();
+		case ELogSeverity::Info:	return SColor::White();
+		case ELogSeverity::Warning:	return SColor::Yellow();
+		case ELogSeverity::Error:	return SColor::Red();
+		}
+
+		return SColor::White();
+	};
+
 	ImGui::Begin("Debug Log", 0);
 
 	const float footerHeight = ImGui::GetStyle().ItemSpacing.y + ImGui::GetFrameHeightWithSpacing(); // 1 separator, 1 input text
@@ -29,10 +42,9 @@ void ImGuiLogger::Debug()
 
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1)); // Tighten spacing
 
-
 	for (auto&& logMessage : myLogMessages)
 	{
-		//skip filtered messages
+		 // Skip filtered messages
 		if (!myFilterText.empty())
 		{
 			auto searchResult = std::search(
@@ -42,12 +54,10 @@ void ImGuiLogger::Debug()
 			);
 
 			if (searchResult == logMessage.Message.end())
-			{
 				continue;
-			}
 		}
 
-		ImGui::PushStyleColor(ImGuiCol_Text, logMessage.Color);
+		ImGui::PushStyleColor(ImGuiCol_Text, getColor(logMessage.Severity));
 		ImGui::TextUnformatted(logMessage.Message.c_str());
 		ImGui::PopStyleColor();
 	}
@@ -67,7 +77,6 @@ void ImGuiLogger::Debug()
 
 	ImGuiWindow* window = ImGui::GetCurrentWindow();
 
-
 	myIsAtBottom = ImGui::GetScrollMaxY() == ImGui::GetScrollY() || ImGui::GetScrollMaxY() == window->ScrollTarget.y;
 
 	ImGui::PopStyleVar();
@@ -83,18 +92,8 @@ void ImGuiLogger::Debug()
 	ImGui::End();
 }
 
-void ImGuiLogger::Print(ELogSeverity aSeverity, ELogLevel /*aLevel*/, std::string aLogMessage)
+void ImGuiLogger::Print(const SLogLine& aLogLine)
 {
-	SColor color = SColor::White();
-
-	switch (aSeverity)
-	{
-	case ELogSeverity::Success:	color = SColor::Green(); break;
-	case ELogSeverity::Info:	color = SColor::White(); break;
-	case ELogSeverity::Warning:	color = SColor::Yellow(); break;
-	case ELogSeverity::Error:	color = SColor::Red(); break;
-	}
-
-	myLogMessages.push_back({ color, std::move(aLogMessage) });
+	myLogMessages.emplace_back(aLogLine);
 }
 

@@ -42,7 +42,7 @@ Result<void, IpcConnection::SConnectionError> LoggerRemoteConnection::ConnectIpc
 	return result;
 }
 
-void LoggerRemoteConnection::Print(ELogSeverity aSeverity, ELogLevel aLevel, std::string aLogMessage)
+void LoggerRemoteConnection::Print(const SLogLine& aLogLine)
 {
 	std::lock_guard lock(myMutex);
 
@@ -56,9 +56,14 @@ void LoggerRemoteConnection::Print(ELogSeverity aSeverity, ELogLevel aLevel, std
 
 	auto& logline = *push.mutable_logline();
 
-	logline.set_log(std::move(aLogMessage));
-	logline.set_level(static_cast<LogLine::ELogLevel>(aLevel));
-	logline.set_severity(static_cast<LogLine::ELogSeverity>(aSeverity));
+	logline.set_level(static_cast<LogLine::ELogLevel>(aLogLine.Level));
+	logline.set_severity(static_cast<LogLine::ELogSeverity>(aLogLine.Severity));
+	logline.set_message(aLogLine.Message);
+	logline.set_file(aLogLine.File);
+	logline.set_line(aLogLine.Line);
+	logline.set_timestamp(aLogLine.Timestamp);
+	logline.set_thread_hash(aLogLine.ThreadHash);
+	logline.set_logger_name(aLogLine.LoggerName);
 
 	myConnection->WriteMessage(upstream)
 		.ThenRun(myExecutor, FutureRunResult([](auto aResult)

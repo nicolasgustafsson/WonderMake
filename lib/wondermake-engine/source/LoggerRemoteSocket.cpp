@@ -119,9 +119,21 @@ void LoggerRemoteSocket::OnConnectionMessage(std::weak_ptr<Socket> aConnection, 
 		|| !upstream.push().has_logline())
 		return;
 
-	auto&& logline = upstream.push().logline();
+	auto& protologLine = upstream.push().logline();
 
-	Logger::Get().Print(static_cast<ELogSeverity>(logline.severity()), static_cast<ELogLevel>(logline.level()), logline.log());
+	SLogLine logLine
+	{
+		static_cast<ELogSeverity>(protologLine.severity()),
+		static_cast<ELogLevel>(protologLine.level()),
+		protologLine.message(),
+		protologLine.file(),
+		static_cast<u64>(protologLine.line()),
+		protologLine.timestamp(),
+		static_cast<size_t>(protologLine.thread_hash()),
+		protologLine.logger_name()
+	};
+
+	Logger::Get().Print(logLine);
 	
 	auto future = it->second->ReadMessage();
 

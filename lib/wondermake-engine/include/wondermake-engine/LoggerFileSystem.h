@@ -26,7 +26,7 @@ public:
 
 	bool OpenLogFile(FilePath aLogPath);
 
-	void Print(ELogSeverity aSeverity, ELogLevel aLevel, std::string aLogMessage) override;
+	void Print(const SLogLine& aLogLine) override;
 
 private:
 	bool ReopenAndTrimFile();

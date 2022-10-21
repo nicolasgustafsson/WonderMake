@@ -15,7 +15,7 @@ void WinLoggerConsoleSystem::Initialize()
 	Logger::Get().AddLogger(weak_from_this());
 }
 
-void WinLoggerConsoleSystem::Print(ELogSeverity aSeverity, ELogLevel /*aLevel*/, std::string aLogMessage)
+void WinLoggerConsoleSystem::Print(const SLogLine& aLogLine)
 {
 	auto&& winPlatform = Get<WinPlatformSystem>();
 
@@ -23,7 +23,7 @@ void WinLoggerConsoleSystem::Print(ELogSeverity aSeverity, ELogLevel /*aLevel*/,
 
 	WORD attribute = 7;
 
-	switch (aSeverity)
+	switch (aLogLine.Severity)
 	{
 	case ELogSeverity::Success:
 		attribute = 10;
@@ -41,5 +41,5 @@ void WinLoggerConsoleSystem::Print(ELogSeverity aSeverity, ELogLevel /*aLevel*/,
 
 	(void)winPlatform.SetConsoleTextAttribute(hConsole, attribute);
 
-	std::cout << aLogMessage << std::endl;
+	std::cout << Logger::FormatLine(aLogLine) << std::endl;
 }

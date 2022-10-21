@@ -5,12 +5,6 @@
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/System.h"
 
-struct SImGuiLogMessage
-{
-	SColor Color;
-	std::string Message;
-};
-
 class ImGuiLogger
 	: public Debugged
 	, public LoggerBase
@@ -30,9 +24,9 @@ public:
 private:
 	void Debug() override;
 
-	void Print(ELogSeverity aSeverity, ELogLevel aLevel, std::string aLogMessage) override;
+	void Print(const SLogLine& aLogLine) override;
 
-	std::vector<SImGuiLogMessage> myLogMessages;
+	std::vector<SLogLine> myLogMessages;
 
 	std::string myFilterText;
 

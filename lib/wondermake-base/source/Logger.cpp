@@ -25,47 +25,28 @@ std::string SeverityToString(ELogSeverity aSeverity)
 	return "Unknown Severity(" + std::to_string(static_cast<std::underlying_type_t<ELogSeverity>>(aSeverity)) + ')';
 }
 
-std::string Logger::FormatLine(ELogSeverity aSeverity, std::string aMessage, std::string_view aFile, u64 aLine, std::string aTimestamp, size_t aThreadHash)
+std::string Logger::FormatLine(const SLogLine& aLogLine)
 {
-	auto index = aFile.find_last_of("/");
-
-	if (index == std::string_view::npos)
-		index = aFile.find_last_of("\\");
-
-	if (index != std::string_view::npos)
-		aFile = aFile.substr(index + 1);
-
 	std::stringstream threadHashStream;
 
-	threadHashStream << "[0x" << std::hex << aThreadHash << ']';
+	threadHashStream << "[0x" << std::hex << aLogLine.ThreadHash << ']';
 
 	std::stringstream ss;
 
 	ss
 		<< std::setw(15) << std::setfill(' ') << std::left
-		<< ("[" + GetLoggerName() + "] ")
+		<< ("[" + aLogLine.LoggerName + "] ")
 		<< std::setw(32) << std::setfill(' ') << std::left
-		<< std::move(aTimestamp) << ' '
+		<< aLogLine.Timestamp << ' '
 		<< std::setw(20) << std::setfill(' ') << std::left
 		<< std::move(threadHashStream).str() << ' '
 		<< std::setw(7) << std::setfill(' ') << std::left
-		<< SeverityToString(aSeverity) << ' '
+		<< SeverityToString(aLogLine.Severity) << ' '
 		<< std::setw(30) << std::setfill(' ') << std::left
-		<< (static_cast<std::string>(aFile) + '(' + std::to_string(aLine) + ')') << ' '
-		<< std::move(aMessage);
+		<< (aLogLine.File + '(' + std::to_string(aLogLine.Line) + ')') << ' '
+		<< aLogLine.Message;
 
 	return std::move(ss).str();
-}
-
-std::string Logger::FormatLine(ELogSeverity aSeverity, std::string aMessage, std::string_view aFile, u64 aLine)
-{
-	return FormatLine(
-		aSeverity,
-		std::move(aMessage),
-		aFile,
-		aLine,
-		TimePointToISO8601(std::chrono::floor<std::chrono::seconds>(std::chrono::system_clock::now())).UnwrapOr("[Time-Error]"),
-		std::hash<std::thread::id>{}(std::this_thread::get_id()));
 }
 
 void Logger::SetLoggerName(std::string aName)
@@ -89,12 +70,12 @@ void Logger::AddLogger(std::weak_ptr<LoggerBase> aLogger)
 	myLoggers.emplace_back(std::move(aLogger));
 }
 
-void Logger::Print(ELogSeverity aSeverity, ELogLevel aLevel, std::string aLogMessage)
+void Logger::Print(const SLogLine& aLogLine)
 {
 	using LevelType = std::underlying_type_t<ELogLevel>;
 
-	if (static_cast<LevelType>(myMinLevel) > static_cast<LevelType>(aLevel)
-		|| myAllowedSeverities.find(aSeverity) == myAllowedSeverities.cend())
+	if (static_cast<LevelType>(myMinLevel) > static_cast<LevelType>(aLogLine.Level)
+		|| myAllowedSeverities.find(aLogLine.Severity) == myAllowedSeverities.cend())
 		return;
 
 	for (auto&& logger : myLoggers)
@@ -104,7 +85,7 @@ void Logger::Print(ELogSeverity aSeverity, ELogLevel aLevel, std::string aLogMes
 		if (!ptr)
 			continue;
 
-		ptr->Print(aSeverity, aLevel, aLogMessage);
+		ptr->Print(aLogLine);
 	}
 
 	const auto it = std::partition(myLoggers.begin(), myLoggers.end(), [](const auto& aWeakPtr)
@@ -124,8 +105,28 @@ void WmLog(
 {
 	if constexpr (!IsWmLoggingSuppressed)
 	{
-		auto logLine = aLogger.FormatLine(aSeverity, std::move(aText.Line), aSourceLocation.file_name(), static_cast<u64>(aSourceLocation.line()));
+		std::string_view file = aSourceLocation.file_name();
 
-		aLogger.Print(aSeverity, aLevel, std::move(logLine));
+		auto index = file.find_last_of("/");
+
+		if (index == std::string_view::npos)
+			index = file.find_last_of("\\");
+
+		if (index != std::string_view::npos)
+			file = file.substr(index + 1);
+
+		SLogLine logLine
+		{
+			aSeverity,
+			aLevel,
+			std::move(aText.Line),
+			static_cast<std::string>(file),
+			static_cast<u64>(aSourceLocation.line()),
+			TimePointToISO8601(std::chrono::floor<std::chrono::seconds>(std::chrono::system_clock::now())).UnwrapOr("[Time-Error]"),
+			std::hash<std::thread::id>{}(std::this_thread::get_id()),
+			aLogger.GetLoggerName()
+		};
+
+		aLogger.Print(logLine);
 	}
 }

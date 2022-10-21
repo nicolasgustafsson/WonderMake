@@ -12,11 +12,13 @@ void WinLoggerDebugSystem::Initialize()
 	Logger::Get().AddLogger(weak_from_this());
 }
 
-void WinLoggerDebugSystem::Print(ELogSeverity /*aSeverity*/, ELogLevel /*aLevel*/, std::string aLogMessage)
+void WinLoggerDebugSystem::Print(const SLogLine& aLogLine)
 {
-	std::wstring wMessage(aLogMessage.size() + 1, L'0');
+	auto formattedLine = Logger::FormatLine(aLogLine);
 
-	wMessage = Utility::Utf8Decode(aLogMessage);
+	std::wstring wMessage(formattedLine.size() + 1, L'0');
+
+	wMessage = Utility::Utf8Decode(formattedLine);
 
 	wMessage = wMessage + L'\n';
 

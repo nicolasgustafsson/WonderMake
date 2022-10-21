@@ -21,12 +21,24 @@ namespace SystemTraits
 
 using STLogger = SystemTraits::Logger;
 
+struct SLogLine
+{
+	ELogSeverity	Severity;
+	ELogLevel		Level;
+	std::string		Message;
+	std::string		File;
+	u64				Line = 0;
+	std::string		Timestamp;
+	size_t			ThreadHash = 0;
+	std::string		LoggerName;
+};
+
 class LoggerBase
 {
 public:
 	virtual ~LoggerBase() = default;
 
-	virtual void Print(ELogSeverity aSeverity, ELogLevel aLevel, std::string aLogMessage) = 0;
+	virtual void Print(const SLogLine& aLogLine) = 0;
 
 };
 
@@ -45,8 +57,7 @@ public:
 		std::string Line;
 	};
 
-	std::string FormatLine(ELogSeverity aSeverity, std::string aMessage, std::string_view aFile, u64 aLine, std::string aTimestamp, size_t aThreadHash);
-	std::string FormatLine(ELogSeverity aSeverity, std::string aMessage, std::string_view aFile, u64 aLine);
+	static std::string FormatLine(const SLogLine& aLogLine);
 
 	void SetLoggerName(std::string aName);
 	const std::string& GetLoggerName() const;
@@ -55,7 +66,7 @@ public:
 	
 	void AddLogger(std::weak_ptr<LoggerBase> aLogger);
 
-	void Print(ELogSeverity aSeverity, ELogLevel aLevel, std::string aLogMessage);
+	void Print(const SLogLine& aLogLine);
 
 private:
 	std::string myLoggerName;

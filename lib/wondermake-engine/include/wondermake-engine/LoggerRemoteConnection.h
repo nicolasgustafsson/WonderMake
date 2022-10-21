@@ -29,7 +29,7 @@ public:
 
 	Result<void, IpcConnection::SConnectionError> ConnectIpc(SharedReference<IpcConnection> aConnection, std::string aIpcName);
 
-	void Print(ELogSeverity aSeverity, ELogLevel aLevel, std::string aLogMessage) override;
+	void Print(const SLogLine& aLogLine) override;
 
 private:
 	using SocketType = SocketProtobuf<ProtoLoggerRemote::Upstream, ProtoLoggerRemote::Downstream>;

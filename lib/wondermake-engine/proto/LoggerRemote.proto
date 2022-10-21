@@ -4,39 +4,44 @@ package ProtoLoggerRemote;
 
 message LogLine
 {
-    enum ELogSeverity
-    {
-        Success     = 0;
-        Info        = 1;
-        Warning     = 2;
-        Error       = 3;
-    }
-    enum ELogLevel
-    {
-        Debug       = 0;
-        Verbose     = 1;
-        Normal      = 2;
-        Priority    = 3;
-    };
+	enum ELogSeverity
+	{
+		Success     = 0;
+		Info        = 1;
+		Warning     = 2;
+		Error       = 3;
+	}
+	enum ELogLevel
+	{
+		Debug       = 0;
+		Verbose     = 1;
+		Normal      = 2;
+		Priority    = 3;
+	};
 
-    string          log         = 1;
-    ELogSeverity    severity    = 2;
-    ELogLevel       level       = 3;
+	ELogSeverity	severity	= 1;
+	ELogLevel		level		= 2;
+	string			message		= 3;
+	string			file		= 4;
+	uint64			line		= 5;
+	string			timestamp	= 6;
+	uint64			thread_hash	= 7;
+	string			logger_name	= 8;
 }
 
 message PushUp
 {
 	oneof push
 	{
-        LogLine logLine = 1;
-    }
+		LogLine logLine = 1;
+	}
 }
 
 message Upstream
 {
 	oneof msg
 	{
-		PushUp	push	= 2;
+		PushUp	push	= 3;
 	}
 }
 

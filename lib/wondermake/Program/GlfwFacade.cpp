@@ -95,6 +95,11 @@ void GlfwFacade::SwapBuffers(GLFWwindow* aWindow)
 	glfwSwapBuffers(aWindow);
 }
 
+void GlfwFacade::SwapInterval(i32 aInterval)
+{
+	glfwSwapInterval(static_cast<int>(aInterval));
+}
+
 i32 GlfwFacade::GetKey(GLFWwindow* aWindow, const i32 aKey)
 {
 	return glfwGetKey(aWindow, aKey);

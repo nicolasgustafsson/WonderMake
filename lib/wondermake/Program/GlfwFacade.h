@@ -42,6 +42,8 @@ public:
 
 	void SwapBuffers(GLFWwindow* aWindow);
 
+	void SwapInterval(i32 aInterval);
+
 	[[nodiscard]] i32 GetKey(GLFWwindow* aWindow, const i32 aKey);
 	[[nodiscard]] const unsigned char* GetJoystickButtons(const i32 aJoystickId, int* aCount);
 	[[nodiscard]] i32 GetMouseButton(GLFWwindow* aWindow, const i32 aButton);

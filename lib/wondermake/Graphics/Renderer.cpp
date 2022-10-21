@@ -10,6 +10,9 @@
 #include <any>
 #include "Graphics/RenderTarget.h"
 
+#include "wondermake-engine/ConfigurationEngine.h"
+
+#include "wondermake-base/ConfigurationSystem.h"
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/WmLogTags.h"
 
@@ -46,6 +49,18 @@ Renderer::Renderer() noexcept
 	Get<OpenGLFacade>().SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	Get<OpenGLFacade>().SetDebugMessageCallback(MessageCallback);
+
+	auto& configSys = Get<ConfigurationSystem>();
+
+	const auto updateVSync = [&glfw = Get<GlfwFacade>(), &configSys](auto&&...)
+	{
+		glfw.SwapInterval(configSys.Get<bool>(ConfigurationEngine::VSync, false) ? 1 : 0);
+	};
+
+	updateVSync();
+
+	configSys.OnOverrideChanged<bool>(ConfigurationEngine::VSync, GetExecutor(), updateVSync)
+		.Detach();
 }
 
 void Renderer::SetViewportSize(const SVector2<int> WindowSize)

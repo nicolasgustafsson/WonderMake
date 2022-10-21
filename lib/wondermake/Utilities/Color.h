@@ -32,8 +32,8 @@ public:
 	f32 B = 1.0f;
 	f32 A = 1.0f;
 
-	operator ImColor() { return ImColor(R, G, B, A); }
-	operator ImVec4() { return ImVec4(R, G, B, A); }
+	inline [[nodiscard]] operator ImColor() const noexcept { return ImColor(R, G, B, A); }
+	inline [[nodiscard]] operator ImVec4() const noexcept { return ImVec4(R, G, B, A); }
 
 	constexpr bool operator==(const SColor& aOther) const { return aOther.R == R && aOther.G == G && aOther.B == B && aOther.A == A; }
 	constexpr bool operator!=(const SColor& aOther) const { return !(aOther == *this); }

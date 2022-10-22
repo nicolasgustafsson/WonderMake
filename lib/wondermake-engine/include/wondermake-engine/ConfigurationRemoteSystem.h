@@ -24,13 +24,13 @@
 #include <vector>
 
 class ConfigurationSystem;
-class GuidGeneratorSystem;
+class ProcessSystem;
 
 class ConfigurationRemoteSystem
 	: public System<
 		Policy::Set<
 			PAdd<ConfigurationSystem, PWrite>,
-			PAdd<GuidGeneratorSystem, PWrite>>>
+			PAdd<ProcessSystem, PWrite>>>
 	, public std::enable_shared_from_this<ConfigurationRemoteSystem>
 {
 public:

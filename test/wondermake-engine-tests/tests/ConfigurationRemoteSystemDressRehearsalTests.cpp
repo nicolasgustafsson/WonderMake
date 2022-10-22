@@ -42,8 +42,8 @@ TEST(ConfigurationRemoteSystemTests, dress_rehearsal)
 		};
 	};
 
-	auto [configSysA, guidSysA, configRemoteSysA] = MakeConfigurationRemoteSystem(instanceIdA);
-	auto [configSysB, guidSysB, configRemoteSysB] = MakeConfigurationRemoteSystem(instanceIdB);
+	auto [configSysA, processSysA, configRemoteSysA] = MakeConfigurationRemoteSystem(instanceIdA);
+	auto [configSysB, processSysB, configRemoteSysB] = MakeConfigurationRemoteSystem(instanceIdB);
 	auto socketAcceptorMockA = MakeSharedReference<NiceMock<SocketAcceptorMock>>();
 	auto [socketADn, socketBUp] = MakeLinkedSockets();
 
@@ -81,7 +81,7 @@ TEST(ConfigurationRemoteSystemTests, dress_rehearsal)
 	testConfiguration(configRemoteSysA, instanceIdB, configSysB);
 
 	{
-		auto [configSysC, guidSysC, configRemoteSysC] = MakeConfigurationRemoteSystem(instanceIdC);
+		auto [configSysC, processSysC, configRemoteSysC] = MakeConfigurationRemoteSystem(instanceIdC);
 		auto socketAcceptorMockB = MakeSharedReference<NiceMock<SocketAcceptorMock>>();
 		auto [socketBDn, socketCUp] = MakeLinkedSockets();
 

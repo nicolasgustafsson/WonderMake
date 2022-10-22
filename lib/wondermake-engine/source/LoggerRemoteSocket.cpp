@@ -130,7 +130,8 @@ void LoggerRemoteSocket::OnConnectionMessage(std::weak_ptr<Socket> aConnection, 
 		static_cast<u64>(protologLine.line()),
 		protologLine.timestamp(),
 		static_cast<size_t>(protologLine.thread_hash()),
-		protologLine.logger_name()
+		protologLine.logger_name(),
+		Guid::Parse(protologLine.process_id()).value_or(Guid::Zero())
 	};
 
 	Logger::Get().Print(logLine);

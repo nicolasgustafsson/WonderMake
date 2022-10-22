@@ -64,6 +64,7 @@ void LoggerRemoteConnection::Print(const SLogLine& aLogLine)
 	logline.set_timestamp(aLogLine.Timestamp);
 	logline.set_thread_hash(aLogLine.ThreadHash);
 	logline.set_logger_name(aLogLine.LoggerName);
+	logline.set_process_id(aLogLine.ProcessId.Id().ToFixedSizeString().ToCString());
 
 	myConnection->WriteMessage(upstream)
 		.ThenRun(myExecutor, FutureRunResult([](auto aResult)

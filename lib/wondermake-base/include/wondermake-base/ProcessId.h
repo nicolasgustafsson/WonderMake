@@ -14,6 +14,9 @@ public:
 		myId[2] = static_cast<u8>(0xFF & (aId >> 16));
 		myId[3] = static_cast<u8>(0xFF & (aId >> 24));
 	}
+	inline constexpr ProcessId(Guid aId) noexcept
+		: myId(aId)
+	{}
 
 	[[nodiscard]] inline constexpr bool operator==(const ProcessId&) const noexcept = default;
 

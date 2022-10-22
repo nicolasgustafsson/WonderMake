@@ -36,6 +36,7 @@ std::string Logger::FormatLine(const SLogLine& aLogLine)
 	ss
 		<< std::setw(15) << std::setfill(' ') << std::left
 		<< ("[" + aLogLine.LoggerName + "] ")
+		<< '[' << aLogLine.ProcessId.Id().ToFixedSizeString() << "] "
 		<< std::setw(32) << std::setfill(' ') << std::left
 		<< aLogLine.Timestamp << ' '
 		<< std::setw(20) << std::setfill(' ') << std::left
@@ -47,6 +48,16 @@ std::string Logger::FormatLine(const SLogLine& aLogLine)
 		<< aLogLine.Message;
 
 	return std::move(ss).str();
+}
+
+void Logger::SetProcessId(ProcessId aId) noexcept
+{
+	myProcessId = aId;
+}
+
+[[nodiscard]] ProcessId Logger::GetProcessId() const noexcept
+{
+	return myProcessId;
 }
 
 void Logger::SetLoggerName(std::string aName)
@@ -124,7 +135,8 @@ void WmLog(
 			static_cast<u64>(aSourceLocation.line()),
 			TimePointToISO8601(std::chrono::floor<std::chrono::seconds>(std::chrono::system_clock::now())).UnwrapOr("[Time-Error]"),
 			std::hash<std::thread::id>{}(std::this_thread::get_id()),
-			aLogger.GetLoggerName()
+			aLogger.GetLoggerName(),
+			aLogger.GetProcessId()
 		};
 
 		aLogger.Print(logLine);

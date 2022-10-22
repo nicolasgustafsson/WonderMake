@@ -650,6 +650,8 @@ void ConfigurationRemoteSystem::HandleMessage(SConfigurationData& aConnectionDat
 
 		data.InstanceName = instance.name();
 		DeserializeConfigurationFromProto(instance, data.Configuration);
+
+		WmLogInfo(TagWonderMake << TagWmConfigurationRemote << "Instance added, id: " << instanceId << ", name: " << data.InstanceName << '.');
 	}
 
 	SendUp([&aMessage]()
@@ -685,6 +687,8 @@ void ConfigurationRemoteSystem::HandleMessage(SConfigurationData& aConnectionDat
 
 			continue;
 		}
+
+		WmLogInfo(TagWonderMake << TagWmConfigurationRemote << "Instance removed, id: " << instanceId << ", name: " << it->second.InstanceName << '.');
 
 		aConnectionData.Configurations.erase(it);
 	}

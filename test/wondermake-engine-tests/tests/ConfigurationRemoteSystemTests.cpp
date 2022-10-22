@@ -168,7 +168,7 @@ auto MakeInstancesRemoved(const std::vector<Guid>& aInstanceIds)
 
 TEST(ConfigurationRemoteSystemTests, list_iterators_begin_iterator_is_same_as_end_iterator_when_constructed)
 {
-	auto [configSys, guidSys, configRemoteSys] = MakeConfigurationRemoteSystem();
+	auto [configSys, processSys, configRemoteSys] = MakeConfigurationRemoteSystem();
 
 	auto begin = configRemoteSys->begin();
 	auto end = configRemoteSys->end();
@@ -209,7 +209,7 @@ TEST(ConfigurationRemoteSystemTests, listed_config_have_all_different_values_fro
 	expectedConfiguration.Set<std::string>(	"test_id_string",	"value",			EConfigGroup::Application);
 	expectedConfiguration.Set<FilePath>(	"test_id_filepath",	FilePath("value"),	EConfigGroup::Application);
 
-	auto [configSys, guidSys, configRemoteSys] = MakeConfigurationRemoteSystem();
+	auto [configSys, processSys, configRemoteSys] = MakeConfigurationRemoteSystem();
 	auto socketAcceptorMock = MakeSharedReference<NiceMock<SocketAcceptorMock>>();
 	auto socketMock = MakeSharedReference<NiceMock<SocketMock>>();
 
@@ -243,7 +243,7 @@ TEST(ConfigurationRemoteSystemTests, list_iterators_does_not_list_instances_from
 {
 	static constexpr auto instanceId = *Guid::Parse("38d1d3df-82ba-4f8a-a30e-510110a94a0d");
 
-	auto [configSys, guidSys, configRemoteSys] = MakeConfigurationRemoteSystem();
+	auto [configSys, processSys, configRemoteSys] = MakeConfigurationRemoteSystem();
 	auto socketAcceptorMock = MakeSharedReference<NiceMock<SocketAcceptorMock>>();
 	auto socketMock = MakeSharedReference<NiceMock<SocketMock>>();
 
@@ -268,7 +268,7 @@ TEST(ConfigurationRemoteSystemTests, list_iterators_does_not_list_instances_from
 
 TEST(ConfigurationRemoteSystemTests, list_iterators_does_not_list_instances_from_disconnected_socket)
 {
-	auto [configSys, guidSys, configRemoteSys] = MakeConfigurationRemoteSystem();
+	auto [configSys, processSys, configRemoteSys] = MakeConfigurationRemoteSystem();
 	auto socketAcceptorMock = MakeSharedReference<NiceMock<SocketAcceptorMock>>();
 	auto socketMock = MakeSharedReference<NiceMock<SocketMock>>();
 
@@ -298,7 +298,7 @@ TEST(ConfigurationRemoteSystemTests, list_iterators_does_not_list_instances_from
 
 TEST(ConfigurationRemoteSystemTests, previous_acceptor_is_removed_when_acceptconnectionfrom_is_called_with_nullptr)
 {
-	auto [configSys, guidSys, configRemoteSys] = MakeConfigurationRemoteSystem();
+	auto [configSys, processSys, configRemoteSys] = MakeConfigurationRemoteSystem();
 	auto socketAcceptorMock = std::make_shared<NiceMock<SocketAcceptorMock>>();
 
 	socketAcceptorMock->DelegateToFake();
@@ -321,7 +321,7 @@ TEST(ConfigurationRemoteSystemTests, previous_acceptor_is_removed_when_acceptcon
 
 TEST(ConfigurationRemoteSystemTests, previous_acceptor_is_removed_when_acceptconnectionfrom_is_called_with_new_acceptor)
 {
-	auto [configSys, guidSys, configRemoteSys] = MakeConfigurationRemoteSystem();
+	auto [configSys, processSys, configRemoteSys] = MakeConfigurationRemoteSystem();
 	auto socketAcceptorMock = std::make_shared<NiceMock<SocketAcceptorMock>>();
 
 	socketAcceptorMock->DelegateToFake();
@@ -365,7 +365,7 @@ void TestPushUpSetOverridesSetsOverrides(const TType& aOverrideValue)
 
 	expectedConfiguration.Set<TType>(configId, TType(), EConfigGroup::Application);
 
-	auto [configSys, guidSys, configRemoteSys] = MakeConfigurationRemoteSystem();
+	auto [configSys, processSys, configRemoteSys] = MakeConfigurationRemoteSystem();
 	auto socketAcceptorMock = MakeSharedReference<NiceMock<SocketAcceptorMock>>();
 	auto socketMock = MakeSharedReference<NiceMock<SocketMock>>();
 
@@ -439,7 +439,7 @@ TEST(ConfigurationRemoteSystemTests, push_up_set_overrides_resets_override)
 
 	expectedConfiguration.SetOverride<bool>(configId, true);
 
-	auto [configSys, guidSys, configRemoteSys] = MakeConfigurationRemoteSystem();
+	auto [configSys, processSys, configRemoteSys] = MakeConfigurationRemoteSystem();
 	auto socketAcceptorMock = MakeSharedReference<NiceMock<SocketAcceptorMock>>();
 	auto socketMock = MakeSharedReference<NiceMock<SocketMock>>();
 
@@ -485,7 +485,7 @@ void TestSettingAProcessOverrideSendsAPushDownSetOverrideMessage(const TType& aO
 
 	configuration.Set<TType>(configId, TType(), EConfigGroup::Application);
 
-	auto [configSys, guidSys, configRemoteSys] = MakeConfigurationRemoteSystem();
+	auto [configSys, processSys, configRemoteSys] = MakeConfigurationRemoteSystem();
 	auto socketAcceptorMock = MakeSharedReference<NiceMock<SocketAcceptorMock>>();
 	auto socketMock = MakeSharedReference<NiceMock<SocketMock>>();
 
@@ -536,7 +536,7 @@ TEST(ConfigurationRemoteSystemTests, resetting_a_process_override_sends_a_push_d
 
 	configuration.Set<std::string>(configId, "value", EConfigGroup::Application);
 
-	auto [configSys, guidSys, configRemoteSys] = MakeConfigurationRemoteSystem();
+	auto [configSys, processSys, configRemoteSys] = MakeConfigurationRemoteSystem();
 	auto socketAcceptorMock = MakeSharedReference<NiceMock<SocketAcceptorMock>>();
 	auto socketMock = MakeSharedReference<NiceMock<SocketMock>>();
 
@@ -564,7 +564,7 @@ void TestSettingAnOverrideSendsAPushUpSetOverrideMessage(const TType& aOverrideV
 	static constexpr Guid instanceGuid	= *Guid::Parse("38d1d3df-82ba-4f8a-a30e-510110a94a0d");
 	static constexpr auto configId		= "test_id";
 
-	auto [configSys, guidSys, configRemoteSys] = MakeConfigurationRemoteSystem(instanceGuid);
+	auto [configSys, processSys, configRemoteSys] = MakeConfigurationRemoteSystem(instanceGuid);
 
 	configSys->Set<TType>(configId, TType(), EConfigGroup::Application);
 	
@@ -604,7 +604,7 @@ TEST(ConfigurationRemoteSystemTests, resetting_an_override_sends_a_push_up_set_o
 	static constexpr Guid instanceGuid	= *Guid::Parse("38d1d3df-82ba-4f8a-a30e-510110a94a0d");
 	static constexpr auto configId		= "test_id";
 	
-	auto [configSys, guidSys, configRemoteSys] = MakeConfigurationRemoteSystem(instanceGuid);
+	auto [configSys, processSys, configRemoteSys] = MakeConfigurationRemoteSystem(instanceGuid);
 
 	configSys->Set<std::string>(configId, "value", EConfigGroup::Application);
 	
@@ -630,7 +630,7 @@ void TestPushDownSetOverrideSetsOverride(const TType& aOverrideValue)
 	static constexpr Guid	instanceGuid	= *Guid::Parse("38d1d3df-82ba-4f8a-a30e-510110a94a0d");
 	static constexpr auto	configId		= "test_id";
 
-	auto [configSys, guidSys, configRemoteSys] = MakeConfigurationRemoteSystem(instanceGuid);
+	auto [configSys, processSys, configRemoteSys] = MakeConfigurationRemoteSystem(instanceGuid);
 
 	configSys->Set<TType>(configId, TType(), EConfigGroup::Application);
 	
@@ -670,7 +670,7 @@ TEST(ConfigurationRemoteSystemTests, push_down_set_override_resets_override)
 	static constexpr auto configId				= "test_id";
 	static constexpr auto configValue			= "value";
 	
-	auto [configSys, guidSys, configRemoteSys] = MakeConfigurationRemoteSystem(instanceGuid);
+	auto [configSys, processSys, configRemoteSys] = MakeConfigurationRemoteSystem(instanceGuid);
 
 	configSys->Set<std::string>(configId, configValue, EConfigGroup::Application);
 
@@ -691,7 +691,7 @@ TEST(ConfigurationRemoteSystemTests, push_down_set_override_resets_override)
 
 TEST(ConfigurationRemoteSystemTests, previous_socket_is_removed_when_connectto_is_called_with_nullptr)
 {
-	auto [configSys, guidSys, configRemoteSys] = MakeConfigurationRemoteSystem();
+	auto [configSys, processSys, configRemoteSys] = MakeConfigurationRemoteSystem();
 	auto socketMock = std::make_shared<NiceMock<SocketMock>>();
 
 	socketMock->DelegateToFake();
@@ -714,7 +714,7 @@ TEST(ConfigurationRemoteSystemTests, previous_socket_is_removed_when_connectto_i
 
 TEST(ConfigurationRemoteSystemTests, previous_socket_is_removed_when_connectto_is_called_with_new_socket)
 {
-	auto [configSys, guidSys, configRemoteSys] = MakeConfigurationRemoteSystem();
+	auto [configSys, processSys, configRemoteSys] = MakeConfigurationRemoteSystem();
 	auto socketMock = std::make_shared<NiceMock<SocketMock>>();
 
 	socketMock->DelegateToFake();
@@ -744,7 +744,7 @@ TEST(ConfigurationRemoteSystemTests, all_process_configurations_are_passed_up_be
 	
 	expectedConfiguration.Set<std::string>(configId, "value", EConfigGroup::Application);
 
-	auto [configSys, guidSys, configRemoteSys] = MakeConfigurationRemoteSystem();
+	auto [configSys, processSys, configRemoteSys] = MakeConfigurationRemoteSystem();
 	auto socketAcceptorMock	= MakeSharedReference<NiceMock<SocketAcceptorMock>>();
 	auto socketMockUp		= MakeSharedReference<NiceMock<SocketMock>>();
 	auto socketMockDown		= MakeSharedReference<NiceMock<SocketMock>>();
@@ -785,7 +785,7 @@ TEST(ConfigurationRemoteSystemTests, all_process_configurations_from_newly_added
 		};
 	};
 
-	auto [configSys, guidSys, configRemoteSys] = MakeConfigurationRemoteSystem();
+	auto [configSys, processSys, configRemoteSys] = MakeConfigurationRemoteSystem();
 	auto socketAcceptorMock	= MakeSharedReference<NiceMock<SocketAcceptorMock>>();
 	auto socketMockUp		= MakeSharedReference<NiceMock<SocketMock>>();
 	auto socketMockDown		= MakeSharedReference<NiceMock<SocketMock>>();
@@ -828,7 +828,7 @@ TEST(ConfigurationRemoteSystemTests, all_process_configurations_from_newly_remov
 	
 	expectedConfiguration.Set<std::string>(configId, "value", EConfigGroup::Application);
 
-	auto [configSys, guidSys, configRemoteSys] = MakeConfigurationRemoteSystem();
+	auto [configSys, processSys, configRemoteSys] = MakeConfigurationRemoteSystem();
 	auto socketAcceptorMock	= MakeSharedReference<NiceMock<SocketAcceptorMock>>();
 	auto socketMockUp		= MakeSharedReference<NiceMock<SocketMock>>();
 	auto socketMockDown		= MakeSharedReference<NiceMock<SocketMock>>();
@@ -866,7 +866,7 @@ void TestPushUpSetOverridePassedBetweenProcesses(const TType& aOverrideValue)
 	
 	expectedConfiguration.Set<TType>(configId, TType(), EConfigGroup::Application);
 
-	auto [configSys, guidSys, configRemoteSys] = MakeConfigurationRemoteSystem();
+	auto [configSys, processSys, configRemoteSys] = MakeConfigurationRemoteSystem();
 	auto socketAcceptorMock	= MakeSharedReference<NiceMock<SocketAcceptorMock>>();
 	auto socketMockUp		= MakeSharedReference<NiceMock<SocketMock>>();
 	auto socketMockDown		= MakeSharedReference<NiceMock<SocketMock>>();
@@ -916,7 +916,7 @@ void TestPushDownSetOverridePassedBetweenProcesses(const TType& aOverrideValue)
 	
 	expectedConfiguration.Set<TType>(configId, TType(), EConfigGroup::Application);
 
-	auto [configSys, guidSys, configRemoteSys] = MakeConfigurationRemoteSystem();
+	auto [configSys, processSys, configRemoteSys] = MakeConfigurationRemoteSystem();
 	auto socketAcceptorMock	= MakeSharedReference<NiceMock<SocketAcceptorMock>>();
 	auto socketMockUp		= MakeSharedReference<NiceMock<SocketMock>>();
 	auto socketMockDown		= MakeSharedReference<NiceMock<SocketMock>>();

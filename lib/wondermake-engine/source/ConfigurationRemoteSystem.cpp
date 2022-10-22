@@ -7,7 +7,7 @@
 #include "wondermake-io/SocketProtobufImpl.h"
 
 #include "wondermake-base/ConfigurationSystem.h"
-#include "wondermake-base/GuidGeneratorSystem.h"
+#include "wondermake-base/ProcessSystem.h"
 #include "wondermake-base/SystemGlobal.h"
 
 #include "wondermake-utility/MemoryUnit.h"
@@ -22,7 +22,7 @@ using namespace MemoryUnitLiterals;
 inline constexpr auto locDefaultBufferSize = 4_KiB;
 
 ConfigurationRemoteSystem::ConfigurationRemoteSystem()
-	: myInstanceGuid(*Get<GuidGeneratorSystem>().GenerateNew())
+	: myInstanceGuid(Get<ProcessSystem>().GetCurrentProcessId().Id())
 {
 	myInstanceName = ("Instance:" + myInstanceGuid.ToFixedSizeString())
 		.ToString();

@@ -27,6 +27,7 @@ message LogLine
 	string			timestamp	= 6;
 	uint64			thread_hash	= 7;
 	string			logger_name	= 8;
+	string			process_id	= 9;
 }
 
 message PushUp

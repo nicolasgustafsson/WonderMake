@@ -29,6 +29,7 @@
 #include "wondermake-base/JobSystem.h"
 #include "wondermake-base/JobGlobal.h"
 #include "wondermake-base/Logger.h"
+#include "wondermake-base/ProcessSystem.h"
 #include "wondermake-base/ScheduleSystem.h"
 #include "wondermake-base/SystemGlobal.h"
 #include "wondermake-base/WmLogTags.h"
@@ -96,6 +97,8 @@ namespace Engine
 				return config;
 			});
 
+		ProcessId currentProcessId;
+
 		{
 			SystemRegistry::Filter filter;
 
@@ -107,6 +110,11 @@ namespace Engine
 				return;
 
 			SystemContainer foundationalContainer = std::move(result).Unwrap();
+
+			if (auto processSys = foundationalContainer.TryGet<ProcessSystem>())
+				Logger::Get().SetProcessId(processSys->GetCurrentProcessId());
+
+			currentProcessId = foundationalContainer.Get<ProcessSystem>().GetCurrentProcessId();
 
 			JobSystem::InjectDependencies(std::tie());
 

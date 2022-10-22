@@ -33,6 +33,7 @@ inline constexpr auto locDummyLine = 1234;
 inline constexpr auto locDummyTimepoint = "01-01-1970 00:00:00";
 inline constexpr auto locDummyThreadHash = 0xabcd1234;
 inline constexpr auto locDummyLoggerName = "Logger";
+inline constexpr auto locDummyProcessId = *Guid::Parse("a4930e6b-965f-4341-ba4b-18b569e82fa8");
 inline constexpr auto locDummyMessage = "Dummy Message";
 
 TEST(LoggingTests, print_args_are_passed_to_loggers)
@@ -100,7 +101,7 @@ TEST(LoggingTests, print_args_are_filtered_based_on_min_level)
 
 TEST(LoggingTests, logger_formatline)
 {
-	static constexpr auto expectedLine = "[Logger]       01-01-1970 00:00:00              [0xabcd1234]         Info    Dummy File(1234)               Dummy Message";
+	static constexpr auto expectedLine = "[Logger]       [a4930e6b-965f-4341-ba4b-18b569e82fa8] 01-01-1970 00:00:00              [0xabcd1234]         Info    Dummy File(1234)               Dummy Message";
 	const SLogLine logLine
 	{
 		locDummySeverity,
@@ -110,7 +111,8 @@ TEST(LoggingTests, logger_formatline)
 		locDummyLine,
 		locDummyTimepoint,
 		locDummyThreadHash,
-		locDummyLoggerName
+		locDummyLoggerName,
+		locDummyProcessId
 	};
 
 	const auto formattedLine = Logger::FormatLine(logLine);

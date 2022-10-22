@@ -2,6 +2,7 @@
 
 #include "wondermake-base/LoggerTypes.h"
 #include "wondermake-base/LogTag.h"
+#include "wondermake-base/ProcessId.h"
 #include "wondermake-base/System.h"
 
 #include "wondermake-utility/Singleton.h"
@@ -31,6 +32,7 @@ struct SLogLine
 	std::string		Timestamp;
 	size_t			ThreadHash = 0;
 	std::string		LoggerName;
+	ProcessId		ProcessId;
 };
 
 class LoggerBase
@@ -59,6 +61,8 @@ public:
 
 	static std::string FormatLine(const SLogLine& aLogLine);
 
+	void SetProcessId(ProcessId aId) noexcept;
+	[[nodiscard]] ProcessId GetProcessId() const noexcept;
 	void SetLoggerName(std::string aName);
 	const std::string& GetLoggerName() const;
 
@@ -69,6 +73,7 @@ public:
 	void Print(const SLogLine& aLogLine);
 
 private:
+	ProcessId	myProcessId;
 	std::string myLoggerName;
 	std::unordered_set<ELogSeverity> myAllowedSeverities;
 	ELogLevel myMinLevel = ELogLevel::Normal;

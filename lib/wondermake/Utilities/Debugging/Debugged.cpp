@@ -1,18 +1,15 @@
 #include "pch.h"
 #include "Debugged.h"
 
-#include "wondermake-debug-ui/DebugSettingsSystem.h"
+std::vector<std::pair<std::string, std::function<void()>>> Debugged::ourDebugged;
 
-Debugged::Debugged(const std::string aName) noexcept
-	: myDebugSubscriber(BindHelper(&Debugged::OnDebugMessage, this))
+Debugged::Debugged(std::string aName) noexcept
+	: myDebugName(std::move(aName))
 {
-	myDebugName = "Debug Windows/" + aName;
+	ourDebugged.emplace_back(std::make_pair(myDebugName, [this]() { Debug(); }));
 }
 
-void Debugged::OnDebugMessage(const SDebugMessage&)
+std::vector<std::pair<std::string, std::function<void()>>> Debugged::GetAndResetDebugged()
 {
-	if (!SystemPtr<DebugSettingsSystem>()->GetOrCreateDebugValue<bool>(myDebugName, false))
-		return;
-
-	Debug();
+	return std::exchange(ourDebugged, decltype(ourDebugged)());
 }

@@ -11,6 +11,7 @@
 
 #include "Threads/TaskManager.h"
 
+#include "Utilities/Debugging/Debugged.h"
 #include "Utilities/TimeKeeper.h"
 
 #include "wondermake-engine/ConfigurationEngine.h"
@@ -19,7 +20,7 @@
 #include "wondermake-engine/LoggerRemoteSystem.h"
 #include "wondermake-engine/SerializeConfigurationJob.h"
 
-#include "wondermake-debug-ui/DebugSettingsSystem.h"
+#include "wondermake-debug-ui/DebugSystem.h"
 
 #include "wondermake-io/ConfigurationIo.h"
 #include "wondermake-io/PlatformFilePaths.h"
@@ -397,6 +398,11 @@ namespace Engine
 						auto& imguiWrapper = sysContainer.Get<ImguiWrapper>();
 						auto& debugSys = sysContainer.Get<DebugSystem>();
 						auto& inputSys = sysContainer.Get<InputSystem>();
+
+						auto newDebugged = Debugged::GetAndResetDebugged();
+
+						for (auto& [name, tick] : newDebugged)
+							debugSys.AddDebugWindow(std::move(name), std::move(tick));
 
 						imguiWrapper.StartFrame();
 

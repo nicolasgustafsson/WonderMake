@@ -23,6 +23,7 @@ class DebugSettingsSystem
 public:
 	DebugSettingsSystem();
 
+	void ToggleSettingsWindow();
 	void TickAllWindows();
 
 	void AddDebugWindowTick(const std::string& aWindowName, std::function<void()> aTickCallback);

@@ -18,6 +18,8 @@
 
 REGISTER_SYSTEM(DebugSettingsSystem);
 
+inline constexpr auto locDebugSettingsWindow = "Debug Windows/Debug Settings";
+
 DebugSettingsSystem::DebugSettingsSystem()
 {
 	AddDebugWindowTick("Debug Settings", Bind(&DebugSettingsSystem::Tick, this));
@@ -29,18 +31,27 @@ DebugSettingsSystem::DebugSettingsSystem()
 		.ThenRun(GetExecutor(), FutureRunResult([this, filePath](auto&& aResult)
 			{
 				if (!aResult)
-					WmLogError(TagWonderMake << "Failed to open debug settings file. Error: " << magic_enum::enum_name(aResult.Err()) << ", path: " << filePath << '.');
-				else
 				{
-					auto json = aResult.Unwrap();
+					WmLogError(TagWonderMake << "Failed to open debug settings file. Error: " << magic_enum::enum_name(aResult.Err()) << ", path: " << filePath << '.');
 
-					if (json::accept(json))
-						mySettings = json::parse(json);
+					return;
 				}
+				
+				auto json = aResult.Unwrap();
 
-				SetDebugValue<bool>("Debug Windows/Debug Settings", true);
+				if (json::accept(json))
+					mySettings = json::parse(json);
 			}))
 		.Detach();
+}
+
+void DebugSettingsSystem::ToggleSettingsWindow()
+{
+	const bool isVisible = GetOrCreateDebugValue<bool>(locDebugSettingsWindow, false);
+
+	SetDebugValue<bool>(locDebugSettingsWindow, !isVisible);
+
+	SaveSettings();
 }
 
 void DebugSettingsSystem::TickAllWindows()

@@ -190,18 +190,18 @@ void ImGuiLogger::UpdateLogs()
 					return searchResult != aText.end();
 				};
 
-				bool filtered = false;
+				bool notFiltered = false;
 
-				filtered &= (visibleColumns.LoggerName		|| !filter(logLine.LoggerName));
-				filtered &= (visibleColumns.ProcessId		|| !filter(logLine.ProcessId));
-				filtered &= (visibleColumns.ThreadHash		|| !filter(logLine.ThreadHash));
-				filtered &= (visibleColumns.Timestamp		|| !filter(logLine.Timestamp));
-				filtered &= (visibleColumns.Severity		|| !filter(std::string_view(logLine.Severity)));
-				filtered &= (visibleColumns.Level			|| !filter(std::string_view(logLine.Level)));
-				filtered &= (visibleColumns.File			|| !filter(logLine.FileWithLine));
-				filtered &= (visibleColumns.Message			|| !filter(logLine.Message));
+				notFiltered |= (visibleColumns.LoggerName		&& filter(logLine.LoggerName));
+				notFiltered |= (visibleColumns.ProcessId		&& filter(logLine.ProcessId));
+				notFiltered |= (visibleColumns.ThreadHash		&& filter(logLine.ThreadHash));
+				notFiltered |= (visibleColumns.Timestamp		&& filter(logLine.Timestamp));
+				notFiltered |= (visibleColumns.Severity			&& filter(std::string_view(logLine.Severity)));
+				notFiltered |= (visibleColumns.Level			&& filter(std::string_view(logLine.Level)));
+				notFiltered |= (visibleColumns.File				&& filter(logLine.FileWithLine));
+				notFiltered |= (visibleColumns.Message			&& filter(logLine.Message));
 
-				if (filtered)
+				if (!notFiltered)
 					return false;
 			}
 

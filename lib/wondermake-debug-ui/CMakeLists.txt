@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.10)
 list(APPEND SourceFiles
     "include/wondermake-debug-ui/DebugSettingsSystem.h"
     "include/wondermake-debug-ui/ImguiInclude.h"
+    "source/ConfigurationDebugUi.cpp"
+    "source/ConfigurationDebugUi.h"
     "source/ConfigurationView.cpp"
     "source/ConfigurationView.h"
     "source/DebugSettingsSystem.cpp"

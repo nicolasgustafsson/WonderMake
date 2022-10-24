@@ -45,7 +45,7 @@ public:
 	}
 
 	template<typename TJob>
-	Result<std::vector<Policy>, EGetPoliciesError> GetJobPolicies()
+	Result<std::vector<Policy>, EGetPoliciesError> GetJobPolicies() const
 	{
 		auto it = myJobData.find(typeid(TJob));
 
@@ -56,7 +56,7 @@ public:
 	}
 
 	template<typename TJob>
-	Result<SharedReference<TJob>, SError> Create(SystemContainer& aSystemContainer)
+	Result<SharedReference<TJob>, SError> Create(SystemContainer& aSystemContainer) const
 	{
 		auto it = myJobData.find(typeid(TJob));
 

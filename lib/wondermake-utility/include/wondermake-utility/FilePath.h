@@ -2,6 +2,8 @@
 
 #include "wondermake-utility/FilePathData.h"
 
+#include <ostream>
+
 class FilePath
 {
 public:
@@ -63,3 +65,27 @@ private:
 	const FilePathData* myData;
 
 };
+
+inline static void WmLogStream(std::ostream& aStream, const FilePath& aPath)
+{
+	static constexpr auto folderToString = [](const FilePath::EFolder aLocation) -> std::optional<std::string_view>
+	{
+		switch (aLocation)
+		{
+		case FilePath::EFolder::Unset:		return "Unset";
+		case FilePath::EFolder::Bin:		return "Bin";
+		case FilePath::EFolder::Data:		return "Data";
+		case FilePath::EFolder::User:		return "User";
+		case FilePath::EFolder::UserData:	return "UserData";
+		}
+
+		return std::nullopt;
+	};
+
+	const auto locationText = folderToString(aPath.Location);
+
+	if (locationText)
+		aStream << '[' << *locationText << ']' << aPath.Path;
+	else
+		aStream << "[Unknown(" << static_cast<std::underlying_type_t<FilePath::EFolder>>(aPath.Location) << ")]" << aPath.Path;
+}

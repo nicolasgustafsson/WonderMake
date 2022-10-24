@@ -15,7 +15,10 @@
 #include <memory>
 
 class JobSystem
-	: public System<>
+	: public System<
+		Policy::Set<>,
+		STrait::Set<
+			STSingleton>>
 	, public std::enable_shared_from_this<JobSystem>
 {
 public:

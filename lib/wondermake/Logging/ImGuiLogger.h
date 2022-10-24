@@ -13,14 +13,16 @@
 #include <set>
 #include <vector>
 
+class DebugSettingsSystem;
+
 class ImGuiLogger
 	: public Debugged
 	, public LoggerBase
 	, public System<
-		Policy::Set<>,
+		Policy::Set<
+			PAdd<DebugSettingsSystem, PWrite>>,
 		STrait::Set<
 			STGui,
-			STLogger,
 			STSingleton>>
 	, public std::enable_shared_from_this<ImGuiLogger>
 {

@@ -79,6 +79,8 @@ public:
 		std::pair<nlohmann::json&, std::string> leaf = GetLeaf(aSettingName);
 
 		leaf.first[leaf.second] = std::forward<TSettingType>(aSettingValue);
+
+		SaveSettings();
 	}
 
 	void Tick();

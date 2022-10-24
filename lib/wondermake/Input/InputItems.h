@@ -9,6 +9,7 @@ enum class EKeyboardKey
 	Zero, One, Two, Three, Four, Five, Six, Seven, Eight, Nine,
 	Space, Enter, Escape, Backspace, Comma, Period, Shift, Alt, Ctrl, Tab, Left, Right, Up, Down, Insert, Home, Delete, End, PageUp, PageDown,
 	Break, ScrollLock, PrintScreen, Tilde, CapsLock,
+	F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
 	_Count
 };
 
@@ -27,9 +28,9 @@ enum class EGamepadButton
 	_Count
 };
 
-constexpr u32 KeyboardKeyCount = static_cast<u32>(EKeyboardKey::_Count);
-constexpr u32 MouseButtonCount = static_cast<u32>(EMouseButton::_Count);
-constexpr u32 GamepadButtonCount = static_cast<u32>(EGamepadButton::_Count);
+inline constexpr u32 KeyboardKeyCount = static_cast<u32>(EKeyboardKey::_Count);
+inline constexpr u32 MouseButtonCount = static_cast<u32>(EMouseButton::_Count);
+inline constexpr u32 GamepadButtonCount = static_cast<u32>(EGamepadButton::_Count);
 
 enum class EInputItemState
 {
@@ -167,6 +168,30 @@ namespace InputUtility
 			return "Tilde";
 		case EKeyboardKey::CapsLock:
 			return "Caps Lock";
+		case EKeyboardKey::F1:
+			return "F1";
+		case EKeyboardKey::F2:
+			return "F2";
+		case EKeyboardKey::F3:
+			return "F3";
+		case EKeyboardKey::F4:
+			return "F4";
+		case EKeyboardKey::F5:
+			return "F5";
+		case EKeyboardKey::F6:
+			return "F6";
+		case EKeyboardKey::F7:
+			return "F7";
+		case EKeyboardKey::F8:
+			return "F8";
+		case EKeyboardKey::F9:
+			return "F9";
+		case EKeyboardKey::F10:
+			return "F10";
+		case EKeyboardKey::F11:
+			return "F11";
+		case EKeyboardKey::F12:
+			return "F10";
 		default:
 			return "Unknown Key";
 		}
@@ -298,6 +323,30 @@ namespace InputUtility
 			return GLFW_KEY_GRAVE_ACCENT;
 		case EKeyboardKey::CapsLock:
 			return GLFW_KEY_CAPS_LOCK;
+		case EKeyboardKey::F1:
+			return GLFW_KEY_F1;
+		case EKeyboardKey::F2:
+			return GLFW_KEY_F2;
+		case EKeyboardKey::F3:
+			return GLFW_KEY_F3;
+		case EKeyboardKey::F4:
+			return GLFW_KEY_F4;
+		case EKeyboardKey::F5:
+			return GLFW_KEY_F5;
+		case EKeyboardKey::F6:
+			return GLFW_KEY_F6;
+		case EKeyboardKey::F7:
+			return GLFW_KEY_F7;
+		case EKeyboardKey::F8:
+			return GLFW_KEY_F8;
+		case EKeyboardKey::F9:
+			return GLFW_KEY_F9;
+		case EKeyboardKey::F10:
+			return GLFW_KEY_F10;
+		case EKeyboardKey::F11:
+			return GLFW_KEY_F11;
+		case EKeyboardKey::F12:
+			return GLFW_KEY_F12;
 		default:
 			return -1;
 		}

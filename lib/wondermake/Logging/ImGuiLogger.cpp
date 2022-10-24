@@ -293,15 +293,7 @@ void ImGuiLogger::UpdateLogs()
 			ImGui::PopStyleColor();
 		}
 
-		static const auto getPopupColumns = [columnLoggerName, columnProcessId, columnThreadHash, columnSeverity, columnLevel, columnFile, columnMessage]()
-		{
-			if constexpr (CompactView)
-				return std::array<int, 6>({ columnLoggerName, columnProcessId, columnSeverity, columnLevel, columnFile, columnMessage });
-			else
-				return std::array<int, 7>({ columnLoggerName, columnProcessId, columnThreadHash, columnSeverity, columnLevel, columnFile, columnMessage });
-		};
-
-		static const auto columsWithPopups = getPopupColumns();
+		static const auto columsWithPopups = std::array<int, 7>({ columnLoggerName, columnProcessId, columnThreadHash, columnSeverity, columnLevel, columnFile, columnMessage });
 
 		static constexpr auto beginPopup = [](const auto& aCategories, auto& aFilter)
 		{

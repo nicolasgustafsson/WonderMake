@@ -15,6 +15,9 @@ class TaskManager
 	: public std::enable_shared_from_this<TaskManager>
 {
 public:
+	// Temporary until Systems return initialization future.
+	void SetDeferred();
+
 	// Requires the same thread that created the object
 	void Update();
 
@@ -44,6 +47,7 @@ private:
 	std::mutex myMutex;
 	ThreadChecker myThreadChecker;
 
+	bool myIsDeferred = false;
 	std::vector<Closure> myTasksScheduled;
 	std::vector<Closure> myTasksBuffer;
 

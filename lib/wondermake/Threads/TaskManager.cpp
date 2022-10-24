@@ -1,6 +1,11 @@
 #include "pch.h"
 #include "TaskManager.h"
 
+void TaskManager::SetDeferred()
+{
+	myIsDeferred = true;
+}
+
 void TaskManager::Update()
 {
 	myThreadChecker.RequireThread();
@@ -38,7 +43,10 @@ void TaskManager::Executor::Execute(Closure&& aClosure) const
 	if (!ptr)
 		return;
 
-	ptr->Schedule(std::move(aClosure));
+	if (ptr->myIsDeferred)
+		ptr->Schedule(std::move(aClosure));
+	else
+		std::move(aClosure)();
 }
 
 void TaskManager::Executor::Execute(Closure&& aClosure, std::vector<Policy>&& /*aPolicies*/) const

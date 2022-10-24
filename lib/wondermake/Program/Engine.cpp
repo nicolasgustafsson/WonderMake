@@ -67,7 +67,25 @@ namespace Engine
 				return;
 
 		}
-		
+
+		auto taskManager = std::make_shared<TaskManager>();
+		auto& sysContainer = Global::GetSystemContainer();
+
+		auto scheduleProc = [&taskManager](Closure aTask)
+		{
+			taskManager->Schedule(std::move(aTask));
+		};
+		auto scheduleRepeatingProc = [&taskManager](std::function<void()> aTask)
+		{
+			taskManager->ScheduleRepeating(std::move(aTask));
+		};
+
+		sysRegistry.AddSystem<JobSystem>([&sysContainer, executor = taskManager->GetExecutor()]() -> std::shared_ptr<JobSystem>
+		{
+			static auto jobSys = std::make_shared<JobSystem>(JobGlobal::GetRegistry(), sysContainer, executor);
+
+			return jobSys;
+		});
 		sysRegistry.AddSystem<ConfigurationSystem>([&aInfo]()
 			{
 				const auto create = [&aInfo]()
@@ -109,17 +127,17 @@ namespace Engine
 			if (!result)
 				return;
 
-			SystemContainer foundationalContainer = std::move(result).Unwrap();
+			sysContainer = std::move(result).Unwrap();
 
-			if (auto processSys = foundationalContainer.TryGet<ProcessSystem>())
+			if (auto processSys = sysContainer.TryGet<ProcessSystem>())
 				Logger::Get().SetProcessId(processSys->GetCurrentProcessId());
 
-			currentProcessId = foundationalContainer.Get<ProcessSystem>().GetCurrentProcessId();
+			currentProcessId = sysContainer.Get<ProcessSystem>().GetCurrentProcessId();
 
 			JobSystem::InjectDependencies(std::tie());
 
-			auto jobSystem = std::make_shared<JobSystem>(JobGlobal::GetRegistry(), foundationalContainer, InlineExecutor());
-			auto&& configurationSystem = foundationalContainer.Get<ConfigurationSystem>();
+			auto jobSystem = std::make_shared<JobSystem>(JobGlobal::GetRegistry(), sysContainer, InlineExecutor());
+			auto& configurationSystem = sysContainer.Get<ConfigurationSystem>();
 
 			configurationSystem.OnOverrideChanged<std::string>(ConfigurationIo::ConfigDirectoryData, InlineExecutor(), [](const auto& /*aId*/, const auto& aPath)
 				{
@@ -186,7 +204,6 @@ namespace Engine
 				.Detach();
 		}
 
-		SystemContainer loggerContainer;
 		std::shared_ptr<LoggerRemoteConnection> loggerRemoteConnection;
 		std::shared_ptr<LoggerRemoteSocket> loggerRemoteSocket;
 
@@ -201,13 +218,12 @@ namespace Engine
 				return;
 
 			bool logFileError = false;
-
-			loggerContainer = std::move(result).Unwrap();
+			sysContainer = std::move(result).Unwrap();
 
 			if (aInfo.Logging.File)
 			{
 				auto&& logFileInfo = *aInfo.Logging.File;
-				auto&& fileLogger = loggerContainer.Get<LoggerFileSystem>();
+				auto&& fileLogger = sysContainer.Get<LoggerFileSystem>();
 
 				fileLogger.SetLogSizeLimits(logFileInfo.TrimSize, logFileInfo.MaxSize);
 
@@ -226,7 +242,7 @@ namespace Engine
 
 				WmLogInfo(TagWonderMake << "Opening IPC logging connection, name: " << connectionInfo.Name << '.');
 
-				auto&& loggerRemote = loggerContainer.Get<LoggerRemoteSystem>();
+				auto&& loggerRemote = sysContainer.Get<LoggerRemoteSystem>();
 
 				auto connectionResult = loggerRemote.ConnectIpc(connectionInfo.Name);
 
@@ -244,7 +260,7 @@ namespace Engine
 
 				WmLogInfo(TagWonderMake << "Opening IPC logging socket, name: " << socketInfo.Name << '.');
 
-				auto&& loggerRemote = loggerContainer.Get<LoggerRemoteSystem>();
+				auto&& loggerRemote = sysContainer.Get<LoggerRemoteSystem>();
 
 				auto socketResult = loggerRemote.OpenSocketIpc(socketInfo.Name);
 
@@ -278,30 +294,15 @@ namespace Engine
 			}
 		}
 
+		taskManager->SetDeferred();
+
 		{
 			WmLogInfo(TagWonderMake << "Registering core systems...");
-
-			auto&& sysContainer = Global::GetSystemContainer();
-
-			auto taskManager = std::make_shared<TaskManager>();
-
-			auto scheduleProc = [&taskManager](Closure aTask)
-			{
-				taskManager->Schedule(std::move(aTask));
-			};
-			auto scheduleRepeatingProc = [&taskManager](std::function<void()> aTask)
-			{
-				taskManager->ScheduleRepeating(std::move(aTask));
-			};
 
 			sysRegistry.AddSystem<CmdLineArgsSystem>([cmdLineArgs = aInfo.CommandLineArguments]() -> std::shared_ptr<CmdLineArgsSystem>
 			{
 				return std::make_shared<CmdLineArgsSystem>(cmdLineArgs);
 			});
-			sysRegistry.AddSystem<JobSystem>([&sysContainer, executor = taskManager->GetExecutor()]() -> std::shared_ptr<JobSystem>
-				{
-					return std::make_shared<JobSystem>(JobGlobal::GetRegistry(), sysContainer, executor);
-				});
 			sysRegistry.AddSystem<ScheduleSystem>([&scheduleProc, &scheduleRepeatingProc]() -> std::shared_ptr<ScheduleSystem>
 				{
 					return std::make_shared<ScheduleSystem>(scheduleProc, scheduleRepeatingProc);

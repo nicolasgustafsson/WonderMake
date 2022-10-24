@@ -3,6 +3,8 @@
 
 #include "Graphics/Renderer.h"
 
+#include "Input/InputSystem.h"
+
 #include "Message/DispatchRouter.h"
 
 #include "Program/ImguiWrapper.h"
@@ -363,13 +365,15 @@ namespace Engine
 					.Detach();
 			}
 
-			auto&& timeKeeper = sysContainer.Get<TimeKeeper>();
-
+			auto& timeKeeper	= sysContainer.Get<TimeKeeper>();
+			
 			WmLogSuccess(TagWonderMake << "Engine is up and running.");
 
 			std::move(aCallbacks.OnSetup)();
 
 			WmLogInfo(TagWonderMake << "Starting main loop.");
+
+			bool isF3DownLastFrame = false;
 
 			for (;;)
 			{
@@ -380,26 +384,43 @@ namespace Engine
 
 				RouteMessages();
 
-				if constexpr (Constants::IsDebugging)
-					if (!aInfo.Headless)
-					{
-						auto&& renderer = sysContainer.Get<Renderer>();
-						auto&& imguiWrapper = sysContainer.Get<ImguiWrapper>();
-						auto&& debugSettings = sysContainer.Get<DebugSettingsSystem>();
+				if (!aInfo.Headless)
+				{
+					auto& renderer = sysContainer.Get<Renderer>();
 
-						renderer.FinishFrame();
+					renderer.FinishFrame();
+
+					auto&& router = DispatchRouter::Get();
+
+					if constexpr (Constants::IsDebugging)
+					{
+						auto& imguiWrapper = sysContainer.Get<ImguiWrapper>();
+						auto& debugSettings = sysContainer.Get<DebugSettingsSystem>();
+						auto& inputSys = sysContainer.Get<InputSystem>();
+
 						imguiWrapper.StartFrame();
+
+						const bool isF3Down = inputSys.IsKeyDown(EKeyboardKey::F3);
+
+						if (!isF3DownLastFrame && isF3Down)
+							debugSettings.ToggleSettingsWindow();
+
+						isF3DownLastFrame = isF3Down;
 
 						debugSettings.TickAllWindows();
 
-						auto&& router = DispatchRouter::Get();
-
 						router.RouteDispatchable(SDebugMessage());
+					}
 
-						router.CommitChanges();
+					router.CommitChanges();
+
+					if constexpr (Constants::IsDebugging)
+					{
+						auto& imguiWrapper = sysContainer.Get<ImguiWrapper>();
 
 						imguiWrapper.EndFrame();
 					}
+				}
 			}
 		}
 	}

@@ -10,7 +10,7 @@
 
 class FileSystem;
 
-enum class ReadFileError
+enum class EReadFileError
 {
 	InvalidArguments,
 	FileNotFound,
@@ -22,5 +22,5 @@ class ReadFileJob
 	: public JobAbstracted<
 		JobInputSet<
 			JobInput<FilePath>>,
-		Result<std::vector<u8>, ReadFileError>>
+		Result<std::vector<u8>, EReadFileError>>
 {};

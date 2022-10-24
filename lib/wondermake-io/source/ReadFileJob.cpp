@@ -9,18 +9,18 @@ class ReadFileJobImpl
 	, public ReadFileJob
 {
 public:
-	void Run(Promise<Result<std::vector<u8>, ReadFileError>> aPromise, FilePath aFilePath) override
+	void Run(Promise<Result<std::vector<u8>, EReadFileError>> aPromise, FilePath aFilePath) override
 	{
 		if (!std::filesystem::exists(aFilePath))
 		{
-			aPromise.Complete(Err(ReadFileError::FileNotFound));
+			aPromise.Complete(Err(EReadFileError::FileNotFound));
 
 			return;
 		}
 
 		if (!std::filesystem::is_regular_file(aFilePath))
 		{
-			aPromise.Complete(Err(ReadFileError::NotAFile));
+			aPromise.Complete(Err(EReadFileError::NotAFile));
 
 			return;
 		}
@@ -29,7 +29,7 @@ public:
 
 		if (!file)
 		{
-			aPromise.Complete(Err(ReadFileError::FailedToOpen));
+			aPromise.Complete(Err(EReadFileError::FailedToOpen));
 
 			return;
 		}

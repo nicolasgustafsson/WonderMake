@@ -1,5 +1,6 @@
 #pragma once
 
+#include "wondermake-base/JobSystem.h"
 #include "wondermake-base/System.h"
 
 #include "json/json.hpp"
@@ -8,9 +9,14 @@
 #include <string>
 #include <unordered_map>
 
+class ConfigurationSystem;
+class JobSystem;
+
 class DebugSettingsSystem
 	: public System<
-		Policy::Set<>,
+		Policy::Set<
+			PAdd<ConfigurationSystem, PRead>,
+			PAdd<JobSystem, PWrite>>,
 		STrait::Set<
 			STSingleton>>
 {

@@ -1,14 +1,20 @@
 #include "wondermake-debug-ui/DebugSettingsSystem.h"
 
+#include "ConfigurationDebugUi.h"
 #include "JsonInspector.h"
 
 #include "wondermake-debug-ui/ImguiInclude.h"
 
+#include "wondermake-io/ReadFileJob.h"
+#include "wondermake-io/WriteFileJob.h"
+
+#include "wondermake-base/ConfigurationSystem.h"
+#include "wondermake-base/JobSystem.h"
 #include "wondermake-base/SystemGlobal.h"
 
 #include "wondermake-utility/Bindable.h"
 
-#include <fstream>
+#include <magic_enum.hpp>
 
 REGISTER_SYSTEM(DebugSettingsSystem);
 
@@ -16,15 +22,25 @@ DebugSettingsSystem::DebugSettingsSystem()
 {
 	AddDebugWindowTick("Debug Settings", Bind(&DebugSettingsSystem::Tick, this));
 
-	std::ifstream debugSettingsFile("debugSettings.json", std::fstream::app);
+	auto filePath = Get<ConfigurationSystem>().Get<FilePath>(ConfigurationDebugUi::SettingsFile, FilePath(FilePath::EFolder::Bin, "debugSettings.json"));
 
-	std::string fileContents((std::istreambuf_iterator<char>(debugSettingsFile)),
-		(std::istreambuf_iterator<char>()));
+	Get<JobSystem>()
+		.StartJob<ReadFileJob>(filePath)
+		.ThenRun(GetExecutor(), FutureRunResult([this, filePath](auto&& aResult)
+			{
+				if (!aResult)
+					WmLogError(TagWonderMake << "Failed to open debug settings file. Error: " << magic_enum::enum_name(aResult.Err()) << ", path: " << filePath << '.');
+				else
+				{
+					auto json = aResult.Unwrap();
 
-	if(json::accept(fileContents))
-		mySettings = json::parse(fileContents);
+					if (json::accept(json))
+						mySettings = json::parse(json);
+				}
 
-	SetDebugValue<bool>("Debug Windows/Debug Settings", true);
+				SetDebugValue<bool>("Debug Windows/Debug Settings", true);
+			}))
+		.Detach();
 }
 
 void DebugSettingsSystem::TickAllWindows()
@@ -45,9 +61,16 @@ void DebugSettingsSystem::AddDebugWindowTick(const std::string& aWindowName, std
 
 void DebugSettingsSystem::SaveSettings()
 {
-	std::ofstream debugSettingsFile("debugSettings.json");
+	auto filePath = Get<ConfigurationSystem>().Get<FilePath>(ConfigurationDebugUi::SettingsFile, FilePath(FilePath::EFolder::Bin, "debugSettings.json"));
 
-	debugSettingsFile << mySettings.dump();
+	Get<JobSystem>()
+		.StartJob<WriteFileJob>(filePath, mySettings.dump())
+		.ThenRun(GetExecutor(), FutureRunResult([this, filePath](auto&& aResult)
+			{
+				if (!aResult)
+					WmLogError(TagWonderMake << "Failed to save debug settings file. Error: " << magic_enum::enum_name(aResult.Err()) << ", path: " << filePath << '.');
+			}))
+		.Detach();
 }
 
 void DebugSettingsSystem::Tick()

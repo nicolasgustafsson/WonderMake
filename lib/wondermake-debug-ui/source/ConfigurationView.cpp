@@ -1,6 +1,6 @@
 #include "ConfigurationView.h"
 
-#include "wondermake-debug-ui/DebugSettingsSystem.h"
+#include "wondermake-debug-ui/DebugSystem.h"
 #include "wondermake-debug-ui/ImguiInclude.h"
 
 #include "wondermake-engine/ConfigurationEngine.h"
@@ -61,7 +61,7 @@ void ConfigurationView::Initialize()
 
 	ReconstructSelectionConfigs();
 
-	Get<DebugSettingsSystem>().AddDebugWindowTick("Configuration", Bind(&ConfigurationView::Tick, weak_from_this()));
+	Get<DebugSystem>().AddDebugWindow("Configuration", Bind(&ConfigurationView::Tick, weak_from_this()));
 }
 
 void ConfigurationView::Tick()

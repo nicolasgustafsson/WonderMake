@@ -12,6 +12,7 @@
 
 class ConfigurationRemoteSystem;
 class DebugSettingsSystem;
+class DebugSystem;
 
 class JobSystem;
 
@@ -21,6 +22,7 @@ class ConfigurationView
 			PAdd<ConfigurationSystem, PWrite>,
 			PAdd<ConfigurationRemoteSystem, PWrite>,
 			PAdd<DebugSettingsSystem, PWrite>,
+			PAdd<DebugSystem, PWrite>,
 			PAdd<JobSystem, PWrite>>>
 	, public std::enable_shared_from_this<ConfigurationView>
 {

@@ -395,7 +395,7 @@ namespace Engine
 					if constexpr (Constants::IsDebugging)
 					{
 						auto& imguiWrapper = sysContainer.Get<ImguiWrapper>();
-						auto& debugSettings = sysContainer.Get<DebugSettingsSystem>();
+						auto& debugSys = sysContainer.Get<DebugSystem>();
 						auto& inputSys = sysContainer.Get<InputSystem>();
 
 						imguiWrapper.StartFrame();
@@ -403,11 +403,11 @@ namespace Engine
 						const bool isF3Down = inputSys.IsKeyDown(EKeyboardKey::F3);
 
 						if (!isF3DownLastFrame && isF3Down)
-							debugSettings.ToggleSettingsWindow();
+							debugSys.ToggleToolbar();
 
 						isF3DownLastFrame = isF3Down;
 
-						debugSettings.TickAllWindows();
+						debugSys.Tick();
 
 						router.RouteDispatchable(SDebugMessage());
 					}

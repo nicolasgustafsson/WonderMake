@@ -25,6 +25,7 @@
 #include "wondermake-io/WriteFileJob.h"
 
 #include "wondermake-base/CmdLineArgsSystem.h"
+#include "wondermake-base/ConfigurationGlobal.h"
 #include "wondermake-base/ConfigurationSystem.h"
 #include "wondermake-base/JobSystem.h"
 #include "wondermake-base/JobGlobal.h"
@@ -106,6 +107,8 @@ namespace Engine
 						aInfo.Configuration.OverrideFileDevice,
 						aInfo.Configuration.OverrideFileUser,
 						aInfo.Headless);
+
+					GlobalConfiguration::GetRegistry().Configure(*config);
 
 					return config;
 				};

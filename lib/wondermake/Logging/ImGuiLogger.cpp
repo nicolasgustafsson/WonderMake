@@ -2,6 +2,7 @@
 
 #include "ImGuiLogger.h"
 
+#include "wondermake-debug-ui/DebugSettingsSystem.h"
 #include "wondermake-debug-ui/ImguiInclude.h"
 
 #include "wondermake-utility/Time.h"
@@ -12,6 +13,8 @@
 #include <magic_enum.hpp>
 
 REGISTER_SYSTEM(ImGuiLogger);
+
+inline constexpr auto locCompactSettingName = "Logging/Compact";
 
 template<typename TEnum>
 std::unordered_map<TEnum, std::string> GetEnumNames()
@@ -46,6 +49,8 @@ void ImGuiLogger::Initialize()
 
 void ImGuiLogger::Debug()
 {
+	myCompactView = Get<DebugSettingsSystem>().GetOrCreateDebugValue(locCompactSettingName, false);
+
 	ImGui::Begin("Debug Log", 0);
 
 	if (myCompactView)
@@ -81,7 +86,11 @@ void ImGuiLogger::Debug()
 	ImGui::SameLine();
 
 	if (ImGui::Checkbox("Compact", &myCompactView))
+	{
 		myDirtyCompactCache = true;
+
+		Get<DebugSettingsSystem>().SetDebugValue(locCompactSettingName, myCompactView);
+	}
 
 	ImGui::End();
 }

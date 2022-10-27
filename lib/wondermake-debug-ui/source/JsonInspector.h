@@ -4,7 +4,7 @@
 
 namespace ImGui::JsonInspector
 {
-	void Inspect(nlohmann::json& aJsonDocumentToInspect, const std::string aDocumentName);
+	bool Inspect(nlohmann::json& aJsonDocumentToInspect, const std::string aDocumentName);
 
 	void InspectElement(json::iterator aElement);
 

@@ -1,11 +1,14 @@
 #pragma once
-#include "NodeGraph/NodeTypes.h"
-#include "Imgui/NodeGraphGui.h"
-#include <stack>
-#include <json/json.hpp>
-#include <filesystem>
 
+#include "Imgui/NodeGraphGui.h"
+#include "NodeGraph/NodeTypes.h"
 #include "Resources/Resource.h"
+
+#include "wondermake-utility/FilePath.h"
+
+#include <json/json.hpp>
+
+#include <stack>
 
 struct SRegisteredNode
 {
@@ -22,9 +25,10 @@ struct SCompiledNode
 class NodeGraph : public NonCopyable, public NonMovable, public Resource
 {
 public:
-	NodeGraph(std::filesystem::path aFilePath);
+	NodeGraph(FilePath aFilePath);
+	~NodeGraph();
 
-	void SetNewPath(std::filesystem::path aNewFilePath);
+	void SetNewPath(FilePath aNewFilePath);
 
 	//[Nicos]: This differs from compile in that it will save after compilation if the flag is set
 	void CompileExternal();
@@ -50,8 +54,8 @@ public:
 
 	bool ShouldBeVisible = false;
 
-	[[nodiscard]] std::string GetName() const { return myPath.string(); }
-	[[nodiscard]] std::filesystem::path GetPath() const { return myPath; }
+	inline [[nodiscard]] std::string GetName() const { return myPath; }
+	inline [[nodiscard]] FilePath GetPath() const { return myPath; }
 
 	void Load();
 
@@ -112,7 +116,7 @@ private:
 	std::optional<WmGui::NodeGraphEditor::SNodeGraphState> myNodeGraphGuiState;
 	size_t myUniqueId;
 	SNodeTypeBase* myRootNodeType = nullptr;
-	std::filesystem::path myPath;
+	FilePath myPath;
 	bool myNeedsRecompile = false; 
 };
 

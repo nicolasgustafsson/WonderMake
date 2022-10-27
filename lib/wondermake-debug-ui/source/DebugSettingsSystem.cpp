@@ -61,7 +61,10 @@ void DebugSettingsSystem::Tick()
 
 	std::size_t hash = hasher(mySettings);
 
-	ImGui::JsonInspector::Inspect(mySettings, "Debug Settings");
+	const bool open = ImGui::JsonInspector::Inspect(mySettings, "Debug Settings");
+
+	if (!open)
+		SetDebugValue<bool>("Debug Windows/Debug Settings", false);
 
 	const bool changed = hash != hasher(mySettings);
 

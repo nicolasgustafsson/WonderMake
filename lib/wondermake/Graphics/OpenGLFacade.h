@@ -20,6 +20,7 @@ public:
 
 	void Enable(const GLenum aSetting);
 
+	void SetViewport(const SVector2i aPosition, const SVector2i aSize);
 	void SetViewportSize(const SVector2i aWindowSize);
 
 	void SetBlendFunction(const GLenum aSourceFactor, const GLenum aDestinationFactor);

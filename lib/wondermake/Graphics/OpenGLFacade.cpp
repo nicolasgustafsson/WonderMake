@@ -8,6 +8,11 @@ void OpenGLFacade::Enable(const GLenum aSetting)
 	glEnable(aSetting);
 }
 
+void OpenGLFacade::SetViewport(const SVector2i aPosition, const SVector2i aSize)
+{
+	glViewport(aPosition.X, aPosition.Y, aSize.X, aSize.Y);
+}
+
 void OpenGLFacade::SetViewportSize(const SVector2i aWindowSize)
 {
 	glViewport(0, 0, aWindowSize.X, aWindowSize.Y);

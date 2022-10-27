@@ -2,6 +2,8 @@
 #include "Imgui/FileSelector.h"
 #include "Graphics/RenderSettingsManager.h"
 
+#include "wondermake-utility/Vector.h"
+
 namespace SlotInputEdits
 {
 	template<typename TSlotType>

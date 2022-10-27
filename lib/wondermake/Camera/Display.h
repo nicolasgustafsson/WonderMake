@@ -1,57 +1,80 @@
 #pragma once
-#include "Graphics/RenderNodeGraph/RenderNodeGraph.h"
+
 #include "Graphics/EngineUniformBuffer.h"
+#include "Graphics/RenderNodeGraph/RenderNodeGraph.h"
 #include "Resources/ResourceProxy.h"
 
-class RenderTarget;
+#include "wondermake-utility/Matrix.h"
+#include "wondermake-utility/RestrictTypes.h"
+#include "wondermake-utility/Typedefs.h"
+#include "wondermake-utility/Vector.h"
+
+#include <memory>
+#include <string>
+
 class Camera;
+class GlfwFacade;
+class OpenGLFacade;
+class RenderTarget;
 
-template<typename TResource>
-class ResourceSystem;
-
-//[Nicos]: A Camera has multiple displays; these allow you to show the contents of a camera in different ways(such as debug views, or with a different Post Process setup etc)
 class Display
+	: public NonCopyable
+	, public NonMovable
 {
 public:
-	Display(OpenGLFacade& aOpenGlFacade, ResourceSystem<RenderNodeGraph>& aRenderNodeGraphSystem, const std::string& aName, Camera& aCamera);
+	struct SSettings
+	{
+		SVector2f	Resolution;
+		bool		FitToWindow = true;
+		bool		FixedAspect = true;
+	};
 
-	void FinishDebugFrame();
-	void FinishFrame(); 
+	Display(
+		OpenGLFacade&						aOpenGlFacade,
+		GlfwFacade&							aGlfwFacade,
+		std::string							aName,
+		ResourceProxy<RenderNodeGraph>		aRenderGraph,
+		const SSettings&					aSettings);
 
-	void BindAsTexture();
+	void Render();
 
-	[[nodiscard]] SVector2f ConvertToWorldPosition(const SVector2f aWindowPosition) const noexcept;
+	inline [[nodiscard]] const std::string&				GetName() const noexcept { return myName; }
+	inline void											SetCamera(std::shared_ptr<Camera> aCamera) noexcept { myCamera = std::move(aCamera); }
+	inline [[nodiscard]] std::shared_ptr<Camera>		GetCamera() const noexcept { return myCamera; }
+	void												SetViewportSize(const SVector2f aViewportSize) noexcept;
+	inline [[nodiscard]] SVector2f						GetViewportSize() const noexcept { return myViewportSize; }
+	void												SetResolution(const SVector2f aResolution) noexcept;
+	inline [[nodiscard]] SVector2f						GetResolution() const noexcept { return mySettings.Resolution; }
+	inline void											SetFitToWindow(const bool aFlag) noexcept
+	{
+		mySettings.FitToWindow = aFlag;
+		if (!aFlag)
+			SetViewportSize(mySettings.Resolution);
+	}
+	inline [[nodiscard]] bool							GetFitToWindow() const noexcept { return mySettings.FitToWindow; }
+	inline void											SetFixedAspect(const bool aFlag) noexcept { mySettings.FixedAspect = aFlag; }
+	inline [[nodiscard]] bool							GetFixedAspect() const noexcept { return mySettings.FixedAspect; }
+	inline [[nodiscard]] SSettings						GetSettings() const noexcept { return mySettings; }
 
-	[[nodiscard]] bool HasFocus() const { return myHasFocus; }
+	void												SetRenderGraph(ResourceProxy<RenderNodeGraph> aRenderGraph);
+	inline [[nodiscard]] ResourceProxy<RenderNodeGraph>	GetRenderGraph() const { return myRenderGraph; };
+	[[nodiscard]] RenderTarget*							GetRenderTarget() const noexcept;
 
-	void Focus();
-	
-	void Inspect();
-	void SetViewportSize(const SVector2i aViewportSize) noexcept;
+	[[nodiscard]] SVector2f								ConvertToWorldPosition(const SVector2f aViewPosition, const SVector2f aDefaultPosition = SVector2f::Zero()) const noexcept;
 
 private:
-	void Update();
-	void SetImguiWindowOffset(const SVector2f aImguiOffset) noexcept;
+	GlfwFacade&						myGlfwFacade;
 
-	std::string myName;
-	std::filesystem::path myPath;
+	std::string						myName;
+	DisplayUniformBuffer			myUniformBuffer;
+	ResourceProxy<RenderNodeGraph>	myRenderGraph;
+	SSettings						mySettings;
 
-	SMatrix33f myProjectionMatrix;
-	SMatrix33f myProjectionMatrixInverse;
+	SVector2f						myViewportSize;
+	 // TODO: This should probably be put in Camera.
+	SMatrix33f						myProjectionMatrix;
+	SMatrix33f						myProjectionMatrixInverse;
 
-	RenderTarget* myResultTexture;
+	std::shared_ptr<Camera>			myCamera;
 
-	SVector2f myImguiWindowOffset;
-	SVector2f myViewportSize;
-
-	ResourceProxy<RenderNodeGraph> myRenderGraph;
-
-	DisplayUniformBuffer myUniformBuffer;
-
-	Camera& myCamera;
-
-	const SColor ClearColor = SColor::Grey();
-
-	bool myHasFocus = false;
 };
-

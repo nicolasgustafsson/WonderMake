@@ -125,5 +125,8 @@ inline void ResourceSystem<TResource>::ResourceDeleter(std::filesystem::path aPa
 	}
 	myResources.erase(resourceIt);
 
-	delete aResource;
+	GetExecutor().Execute([aResource]
+		{
+			delete aResource;
+		});
 }

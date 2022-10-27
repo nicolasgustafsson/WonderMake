@@ -1,6 +1,13 @@
 #include "pch.h"
 #include "Engine.h"
 
+#include "Audio/AudioManager.h"
+
+#include "Camera/Camera.h"
+#include "Camera/CameraManager.h"
+#include "Camera/Display.h"
+
+#include "Graphics/EngineUniformBuffer.h"
 #include "Graphics/Renderer.h"
 
 #include "Input/InputSystem.h"
@@ -8,6 +15,7 @@
 #include "Message/DispatchRouter.h"
 
 #include "Program/ImguiWrapper.h"
+#include "Program/Window.h"
 
 #include "Threads/TaskManager.h"
 
@@ -20,6 +28,7 @@
 #include "wondermake-engine/LoggerRemoteSystem.h"
 #include "wondermake-engine/SerializeConfigurationJob.h"
 
+#include "wondermake-debug-ui/DebugSettingsSystem.h"
 #include "wondermake-debug-ui/DebugSystem.h"
 
 #include "wondermake-io/ConfigurationIo.h"
@@ -298,6 +307,8 @@ namespace Engine
 
 				return;
 			}
+
+			sysContainer = std::move(result).Unwrap();
 		}
 
 		taskManager->SetDeferred();
@@ -366,7 +377,7 @@ namespace Engine
 					.Detach();
 			}
 
-			auto& timeKeeper	= sysContainer.Get<TimeKeeper>();
+			auto& timeKeeper = sysContainer.Get<TimeKeeper>();
 			
 			WmLogSuccess(TagWonderMake << "Engine is up and running.");
 
@@ -381,51 +392,65 @@ namespace Engine
 				//update the timekeeper before any threads have run so that delta time can be accessed asynchronously
 				timeKeeper.Update();
 
+				if (!aInfo.Headless)
+				{
+					auto& audioManager			= sysContainer.Get<AudioManager>();
+					auto& inputSys				= sysContainer.Get<InputSystem>();
+					auto& engineUniformBuffer	= sysContainer.Get<EngineUniformBuffer>();
+					auto& window				= sysContainer.Get<Window>();
+					auto& renderer				= sysContainer.Get<Renderer>();
+					auto& imguiWrapper			= sysContainer.Get<ImguiWrapper>();
+
+					audioManager.Update();
+					inputSys.Update();
+
+					engineUniformBuffer.GetBuffer().Time = timeKeeper.GetGameTime();
+
+					engineUniformBuffer.Update();
+
+					window.Update();
+
+					renderer.StartFrame();
+
+					imguiWrapper.StartFrame();
+				}
+
 				taskManager->Update();
 
 				RouteMessages();
 
 				if (!aInfo.Headless)
 				{
-					auto& renderer = sysContainer.Get<Renderer>();
+					auto& debugSys				= sysContainer.Get<DebugSystem>();
+					auto& renderer				= sysContainer.Get<Renderer>();
+					auto& inputSys				= sysContainer.Get<InputSystem>();
+					auto& router				= DispatchRouter::Get();
+					auto& imguiWrapper			= sysContainer.Get<ImguiWrapper>();
+
+					auto newDebugged = Debugged::GetAndResetDebugged();
+
+					for (auto& [name, tick] : newDebugged)
+						debugSys.AddDebugWindow(std::move(name), std::move(tick));
 
 					renderer.FinishFrame();
 
-					auto&& router = DispatchRouter::Get();
+					 // TODO: Move this into DebugSystem.
+					const bool isF3Down = inputSys.IsKeyDown(EKeyboardKey::F3, InputSystem::EFocus::Window);
 
-					if constexpr (Constants::IsDebugging)
-					{
-						auto& imguiWrapper = sysContainer.Get<ImguiWrapper>();
-						auto& debugSys = sysContainer.Get<DebugSystem>();
-						auto& inputSys = sysContainer.Get<InputSystem>();
+					if (!isF3DownLastFrame && isF3Down)
+						debugSys.ToggleToolbar();
 
-						auto newDebugged = Debugged::GetAndResetDebugged();
+					isF3DownLastFrame = isF3Down;
 
-						for (auto& [name, tick] : newDebugged)
-							debugSys.AddDebugWindow(std::move(name), std::move(tick));
-
-						imguiWrapper.StartFrame();
-
-						const bool isF3Down = inputSys.IsKeyDown(EKeyboardKey::F3);
-
-						if (!isF3DownLastFrame && isF3Down)
-							debugSys.ToggleToolbar();
-
-						isF3DownLastFrame = isF3Down;
-
-						debugSys.Tick();
-
-						router.RouteDispatchable(SDebugMessage());
-					}
+					router.RouteDispatchable(SDebugMessage());
 
 					router.CommitChanges();
 
-					if constexpr (Constants::IsDebugging)
-					{
-						auto& imguiWrapper = sysContainer.Get<ImguiWrapper>();
+					debugSys.Tick();
+					
+					imguiWrapper.EndFrame();
 
-						imguiWrapper.EndFrame();
-					}
+					renderer.SwapBuffers();
 				}
 			}
 		}

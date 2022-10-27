@@ -1,18 +1,24 @@
 #pragma once
-#include "RenderObject.h"
-#include "SpriteRenderObject.h"
-#include "RenderTarget.h"
-#include "ScreenPassRenderObject.h"
-#include "wondermake-base/System.h"
+
 #include "Camera/CameraManager.h"
+#include "Debugging/DebugLineDrawer.h"
+#include "Graphics/RenderObject.h"
+#include "Graphics/SpriteRenderObject.h"
+#include "Graphics/RenderTarget.h"
+#include "Graphics/ScreenPassRenderObject.h"
+#include "Graphics/OpenGLFacade.h"
+#include "Graphics/RenderCommandProcessor.h"
 #include "Program/Window.h"
 #include "Utilities/Debugging/Debugged.h"
-#include "Debugging/DebugLineDrawer.h"
-#include "OpenGLFacade.h"
-#include "Graphics/RenderCommandProcessor.h"
 
+#include "wondermake-base/System.h"
+
+class Display;
+class EngineUniformBuffer;
 template<typename TResource>
 class ResourceSystem;
+
+class DebugSystem;
 
 class ConfigurationSystem;
 
@@ -26,11 +32,12 @@ class Renderer
 	: public System<
 		Policy::Set<
 			PAdd<ConfigurationSystem, PWrite>,
+			PAdd<DebugSystem, PRead>,
 			PAdd<ResourceSystem<Shader<EShaderType::Vertex>>, PWrite>,
 			PAdd<ResourceSystem<Shader<EShaderType::Fragment>>, PWrite>,
 			PAdd<ResourceSystem<Shader<EShaderType::Geometry>>, PWrite>,
 			PAdd<EngineUniformBuffer, PWrite>,
-			PAdd<Window, PWrite>,
+			PAdd<Window, PRead>,
 			PAdd<DebugLineDrawer, PWrite>,
 			PAdd<GlfwFacade, PWrite>,
 			PAdd<CameraManager, PWrite>,
@@ -43,18 +50,18 @@ class Renderer
 public:
 	Renderer() noexcept;
 
-	void SetViewportSize(const SVector2<int> WindowSize);
-
 	void StartFrame();
 
 	void FinishFrame();
 
-	bool DebugWindowHasFocus() const noexcept { return myDebugWindowHasFocus; };
+	void SwapBuffers();
 
 private:
 	virtual void Debug() override;
+	void RenderDisplay(const std::shared_ptr<Display>& aDisplay);
 
-	std::optional<ScreenPassRenderObject> myCopyPass;
+	[[nodiscard]] SVector2f GetDisplaySize(Display& aDisplay, const SVector2f aWindowSize);
 
-	bool myDebugWindowHasFocus = true;
+	ScreenPassRenderObject myCopyPass;
+
 };

@@ -1,11 +1,16 @@
 #include "pch.h"
+
 #include "InputSystem.h"
+
 #include "Camera/Camera.h"
-#include <GLFW/glfw3.h>
-#include <algorithm>
-#include "Graphics/Renderer.h"
-#include "Program/GlfwFacade.h"
 #include "Camera/CameraManager.h"
+#include "Camera/Display.h"
+#include "Debugging/DebugSettings.h"
+#include "Program/GlfwFacade.h"
+
+#include <GLFW/glfw3.h>
+
+#include <algorithm>
 
 REGISTER_SYSTEM(InputSystem);
 
@@ -18,35 +23,37 @@ void InputSystem::Update() noexcept
 
 void InputSystem::UpdateKeyboard() noexcept
 {
-	for (u32 i = 0; i < KeyboardKeyCount; i++)
+	for (size_t i = 0; i < KeyboardKeyCount; i++)
 	{
 		const i32 glfwKeyState = Get<GlfwFacade>().GetKey(GetCurrentWindow(), InputUtility::GetGlfwKey(static_cast<EKeyboardKey>(i)));
 
 		const bool bIsPressed = glfwKeyState == GLFW_PRESS;
+		const bool displayKeyboardFocus = DisplayHasKeyboardFocus();
+		const bool windowFocus = Get<Window>().HasFocus();
 
-		const EInputItemState startingState = myKeyboardKeyStates[i];
-
-		myKeyboardKeyStates[i] = GetNewInputState(startingState, bIsPressed);
+		myInputStates[0].Keyboard[i] = GetNewInputState(myInputStates[0].Keyboard[i], bIsPressed && displayKeyboardFocus);
+		myInputStates[1].Keyboard[i] = GetNewInputState(myInputStates[1].Keyboard[i], bIsPressed && windowFocus);
 	}
 }
 
 void InputSystem::UpdateMouse() noexcept
 {
-	for (u32 i = 0; i < MouseButtonCount; i++)
+	for (size_t i = 0; i < MouseButtonCount; i++)
 	{
 		const i32 glfwKeyState = Get<GlfwFacade>().GetMouseButton(GetCurrentWindow(), InputUtility::GetGlfwMouseButton(static_cast<EMouseButton>(i)));
 
 		const bool bIsPressed = glfwKeyState == GLFW_PRESS;
+		const bool displayKeyboardFocus = DisplayHasMouseFocus();
+		const bool windowFocus = Get<Window>().HasFocus();
 
-		const EInputItemState startingState = myMouseButtonStates[i];
-
-		myMouseButtonStates[i] = GetNewInputState(startingState, bIsPressed);
+		myInputStates[0].Mouse[i] = GetNewInputState(myInputStates[0].Mouse[i], bIsPressed && displayKeyboardFocus);
+		myInputStates[1].Mouse[i] = GetNewInputState(myInputStates[1].Mouse[i], bIsPressed && windowFocus);
 	}
 }
 
 void InputSystem::UpdateGamepad() noexcept
 {
-	i32 gamepadButtonCount;
+	int gamepadButtonCount;
 
 	const u8* inputArray = Get<GlfwFacade>().GetJoystickButtons(0, &gamepadButtonCount);
 
@@ -54,21 +61,40 @@ void InputSystem::UpdateGamepad() noexcept
 	if (gamepadButtonCount == 0)
 		return;
 
-	gamepadButtonCount = std::min(static_cast<u32>(gamepadButtonCount), GamepadButtonCount);
+	gamepadButtonCount = std::min(gamepadButtonCount, static_cast<int>(GamepadButtonCount));
 
 	for (u32 i = 0; i < static_cast<u32>(gamepadButtonCount); i++)
 	{
-		const bool isPressed = inputArray[i] == GLFW_PRESS;
+		const bool bIsPressed = inputArray[i] == GLFW_PRESS;
+		const bool displayKeyboardFocus = DisplayHasKeyboardFocus();
+		const bool windowFocus = Get<Window>().HasFocus();
 
-		const EInputItemState startingState = myGamepadButtonStates[i];
-
-		myGamepadButtonStates[i] = GetNewInputState(startingState, isPressed);
+		myInputStates[0].Gamepad[i] = GetNewInputState(myInputStates[0].Gamepad[i], bIsPressed && displayKeyboardFocus);
+		myInputStates[1].Gamepad[i] = GetNewInputState(myInputStates[1].Gamepad[i], bIsPressed && windowFocus);
 	}
 }
 
 SVector2f InputSystem::GetMousePositionInWorld() noexcept
 {
-	return Get<CameraManager>().ConvertToWorldPosition(GetMousePositionOnWindow());
+	auto& cameraManager = Get<CameraManager>();
+
+	const auto inputRect	= cameraManager.GetInputRegion();
+	const auto mousePos		= GetMousePositionOnWindow();
+
+	auto display = cameraManager.GetMainDisplay();
+
+	if (!display)
+		return SVector2f::Zero();
+
+	const SVector2f position(inputRect.X, inputRect.Y);
+	const SVector2f size(inputRect.Z, inputRect.W);
+
+	SVector2f relativePos = mousePos - position;
+
+	relativePos.X /= size.X;
+	relativePos.Y /= size.Y;
+
+	return display->ConvertToWorldPosition(relativePos, SVector2f::Zero());
 }
 
 SVector2f InputSystem::GetMousePositionOnWindow() noexcept
@@ -80,31 +106,21 @@ SVector2f InputSystem::GetMousePositionOnWindow() noexcept
 	return { static_cast<f32>(x), static_cast<f32>(y) };
 }
 
-bool InputSystem::IsKeyDown(const EKeyboardKey aKey) const noexcept
+bool InputSystem::IsKeyDown(const EKeyboardKey aKey, const EFocus aFocus) const noexcept
 {
-	return myKeyboardKeyStates[static_cast<u32>(aKey)] == EInputItemState::Down;
+	return myInputStates[static_cast<size_t>(aFocus)].Keyboard[static_cast<size_t>(aKey)] == EInputItemState::Down;
 }
 
-bool InputSystem::IsMouseButtonPressed(const EMouseButton aMouseButton) const noexcept
+bool InputSystem::IsMouseButtonPressed(const EMouseButton aMouseButton, const EFocus aFocus) const noexcept
 {
-	if (!ShouldCaptureMouseInput())
-		return false;
-
-	return myMouseButtonStates[static_cast<u32>(aMouseButton)] == EInputItemState::Pressed;
+	return myInputStates[static_cast<size_t>(aFocus)].Mouse[static_cast<size_t>(aMouseButton)] == EInputItemState::Down;
 }
 
 GLFWwindow* InputSystem::GetCurrentWindow() const
 {
-	if constexpr (Constants::IsDebugging)
-	{
-		for (auto viewport : ImGui::GetPlatformIO().Viewports)
-		{
-			if (ImGui::GetPlatformIO().Platform_GetWindowFocus(viewport))
-			{
-				return reinterpret_cast<GLFWwindow*>(viewport->PlatformHandle);
-			}
-		}
-	}
+	for (auto viewport : ImGui::GetPlatformIO().Viewports)
+		if (ImGui::GetPlatformIO().Platform_GetWindowFocus(viewport))
+			return reinterpret_cast<GLFWwindow*>(viewport->PlatformHandle);
 
 	return Get<Window>().myGlfwWindow;
 }
@@ -138,10 +154,10 @@ void InputSystem::Debug()
 	if (ImGui::CollapsingHeader("Show Keyboard Keys"))
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.0f, 0.0f));
-		for (u32 i = 0; i < KeyboardKeyCount; i++)
+		for (size_t i = 0; i < KeyboardKeyCount; i++)
 		{
 			const EKeyboardKey key = static_cast<EKeyboardKey>(i);
-			const EInputItemState state = myKeyboardKeyStates[i];
+			const EInputItemState state = myInputStates[0].Keyboard[i];
 
 			std::string keyInfo = std::string(InputUtility::GetNameOfKey(key));
 			keyInfo += ": " + std::string(InputUtility::GetNameOfState(state));
@@ -153,10 +169,10 @@ void InputSystem::Debug()
 	if (ImGui::CollapsingHeader("Show Mouse Buttons"))
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.0f, 0.0f));
-		for (u32 i = 0; i < MouseButtonCount; i++)
+		for (size_t i = 0; i < MouseButtonCount; i++)
 		{
 			const EMouseButton mouseButton = static_cast<EMouseButton>(i);
-			const EInputItemState state = myMouseButtonStates[i];
+			const EInputItemState state = myInputStates[0].Mouse[i];
 
 			std::string mouseInfo = std::string(InputUtility::GetNameOfMouseButton(mouseButton));
 			mouseInfo += ": " + std::string(InputUtility::GetNameOfState(state));
@@ -168,10 +184,10 @@ void InputSystem::Debug()
 	if (ImGui::CollapsingHeader("Show Gamepad Buttons"))
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.0f, 0.0f));
-		for (u32 i = 0; i < GamepadButtonCount; i++)
+		for (size_t i = 0; i < GamepadButtonCount; i++)
 		{
 			const EGamepadButton gamepadButton = static_cast<EGamepadButton>(i);
-			const EInputItemState state = myGamepadButtonStates[i];
+			const EInputItemState state = myInputStates[0].Gamepad[i];
 
 			std::string gamepadButtonInfo = std::string(InputUtility::GetNameOfGamepadButton(gamepadButton));
 			gamepadButtonInfo += ": " + std::string(InputUtility::GetNameOfState(state));
@@ -180,39 +196,52 @@ void InputSystem::Debug()
 		ImGui::PopStyleVar();
 	}
 
+	static constexpr auto listButtons = [](const auto& aInputStates)
+	{
+		ImGui::Indent();
+
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.0f, 0.0f));
+
+		for (size_t i = 0; i < aInputStates.Keyboard.size(); i++)
+			if (aInputStates.Keyboard[i] == EInputItemState::Down || aInputStates.Keyboard[i] == EInputItemState::Pressed)
+				ImGui::Text(std::string(InputUtility::GetNameOfKey(static_cast<EKeyboardKey>(i))).c_str());
+
+		for (size_t i = 0; i < aInputStates.Mouse.size(); i++)
+			if (aInputStates.Mouse[i] == EInputItemState::Down || aInputStates.Mouse[i] == EInputItemState::Pressed)
+				ImGui::Text(std::string(InputUtility::GetNameOfMouseButton(static_cast<EMouseButton>(i))).c_str());
+
+		for (size_t i = 0; i < aInputStates.Gamepad.size(); i++)
+			if (aInputStates.Gamepad[i] == EInputItemState::Down || aInputStates.Gamepad[i] == EInputItemState::Pressed)
+				ImGui::Text(std::string(InputUtility::GetNameOfGamepadButton(static_cast<EGamepadButton>(i))).c_str());
+
+		ImGui::PopStyleVar();
+
+		ImGui::Unindent();
+	};
+
 	ImGui::Text("Currently Pressed Keys");
 
 	ImGui::Separator();
 
-	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.0f, 0.0f));
+	ImGui::Text("Display");
 
-	for (u32 i = 0; i < KeyboardKeyCount; i++)
-	{
-		if (myKeyboardKeyStates[i] == EInputItemState::Down || myKeyboardKeyStates[i] == EInputItemState::Pressed)
-			ImGui::Text(std::string(InputUtility::GetNameOfKey(static_cast<EKeyboardKey>(i))).c_str());
-	}
+	listButtons(myInputStates[0]);
 
-	for (u32 i = 0; i < MouseButtonCount; i++)
-	{
-		if (myMouseButtonStates[i] == EInputItemState::Down || myMouseButtonStates[i] == EInputItemState::Pressed)
-			ImGui::Text(std::string(InputUtility::GetNameOfMouseButton(static_cast<EMouseButton>(i))).c_str());
-	}
+	ImGui::Separator();
 
-	for (u32 i = 0; i < GamepadButtonCount; i++)
-	{
-		if (myGamepadButtonStates[i] == EInputItemState::Down || myGamepadButtonStates[i] == EInputItemState::Pressed)
-			ImGui::Text(std::string(InputUtility::GetNameOfGamepadButton(static_cast<EGamepadButton>(i))).c_str());
-	}
+	ImGui::Text("Window");
 
-	ImGui::PopStyleVar();
+	listButtons(myInputStates[1]);
 
 	ImGui::End();
 }
 
-bool InputSystem::ShouldCaptureMouseInput() const noexcept
+bool InputSystem::DisplayHasMouseFocus() const noexcept
 {
-	if constexpr (!Constants::IsDebugging)
-		return true;
-	else
-		return Get<CameraManager>().AnyDisplayIsFocused();
+	return !Get<CameraManager>().GetInputDisplayMouse().expired();
+}
+
+bool InputSystem::DisplayHasKeyboardFocus() const noexcept
+{
+	return !Get<CameraManager>().GetInputDisplayKeyboard().expired();
 }

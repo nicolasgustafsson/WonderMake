@@ -7,14 +7,12 @@
 
 #include "Functionalities/FunctionalitySystem.h"
 
-#include <pair>
-
 namespace _Impl
 {
 	template<typename... TFunctionalities>
 	using _CreateObjectJobType = Job<
 		NoJobInput,
-		std::pair<Object, Cargo<TFunctionalities...>>
+		std::pair<Object, Cargo<TFunctionalities...>>,
 		Policy::Set<
 			PAdd<FunctionalitySystemDelegate<std::decay_t<TFunctionalities>>, PWrite>...>>;
 }

@@ -311,7 +311,7 @@ void ConfigurationView::UpdateConfigurationList()
 
 							ImGui::PushItemWidth(ImGui::GetColumnWidth());
 
-							if (ImGui::Combo("", &aConfig.CurrentAllowedValueIndex, nameList.data(), static_cast<int>(nameList.size())))
+							if (ImGui::Combo("##", &aConfig.CurrentAllowedValueIndex, nameList.data(), static_cast<int>(nameList.size())))
 							{
 								myActions[id] = aConfig.AllowedValues[nameList[aConfig.CurrentAllowedValueIndex]];
 								baseConfig.IsOverridden = true;
@@ -321,7 +321,7 @@ void ConfigurationView::UpdateConfigurationList()
 						}
 						else if constexpr (std::is_same_v<Type, bool>)
 						{
-							if (ImGui::Checkbox("", &aConfig.ValueCurrent))
+							if (ImGui::Checkbox("##", &aConfig.ValueCurrent))
 							{
 								myActions[id] = aConfig.ValueCurrent;
 								baseConfig.IsOverridden = true;
@@ -331,7 +331,7 @@ void ConfigurationView::UpdateConfigurationList()
 						{
 							ImGui::PushItemWidth(ImGui::GetColumnWidth());
 
-							if (ImGui::InputText("", &aConfig.ValueCurrent, ImGuiInputTextFlags_None))
+							if (ImGui::InputText("##", &aConfig.ValueCurrent, ImGuiInputTextFlags_None))
 							{
 								myActions[id] = aConfig.ValueCurrent;
 								baseConfig.IsOverridden = true;
@@ -360,7 +360,7 @@ void ConfigurationView::UpdateConfigurationList()
 
 							locationIndex = static_cast<int>(aConfig.ValueCurrent.Location);
 
-							if (ImGui::Combo("", &locationIndex, locationList.data(), static_cast<int>(locationList.size())))
+							if (ImGui::Combo("##", &locationIndex, locationList.data(), static_cast<int>(locationList.size())))
 							{
 								aConfig.ValueCurrent.Location = static_cast<FilePath::EFolder>(locationIndex);
 
@@ -422,7 +422,7 @@ void ConfigurationView::UpdateConfigurationList()
 
 							ImGui::PushItemWidth(width);
 
-							if (ImGui::InputScalar("", dataType, &aConfig.ValueCurrent, NULL))
+							if (ImGui::InputScalar("##", dataType, &aConfig.ValueCurrent, NULL))
 							{
 								if (baseConfig.HasMemoryRatio)
 									myActions[id] = aConfig.ValueCurrent * static_cast<Type>(baseConfig.AllowedMemoryRatio[baseConfig.CurrentMemoryRatioIndex]);
@@ -450,7 +450,7 @@ void ConfigurationView::UpdateConfigurationList()
 								ImGui::PushItemWidth(locMemoryComboboxWidth);
 								const int previousIndex = baseConfig.CurrentMemoryRatioIndex;
 
-								if (ImGui::Combo("", &baseConfig.CurrentMemoryRatioIndex, nameList.data(), static_cast<int>(nameList.size())))
+								if (ImGui::Combo("##", &baseConfig.CurrentMemoryRatioIndex, nameList.data(), static_cast<int>(nameList.size())))
 								{
 									Type newValue = aConfig.ValueCurrent * static_cast<Type>(baseConfig.AllowedMemoryRatio[previousIndex]);
 
@@ -540,7 +540,7 @@ void ConfigurationView::UpdateFooter()
 	
 	ImGui::SameLine();
 
-	ImGui::InputText("", &myFilterText, ImGuiInputTextFlags_AutoSelectAll);
+	ImGui::InputText("##", &myFilterText, ImGuiInputTextFlags_AutoSelectAll);
 
 	ImGui::SameLine();
 

@@ -13,19 +13,19 @@ namespace SlotInputEdits
 	template<>
 	inline void EditInputSlot<float>(float& aInput)
 	{
-		ImGui::InputFloat("", &aInput);
+		ImGui::InputFloat("##", &aInput);
 	}
 
 	template<>
 	inline void EditInputSlot<std::string>(std::string& aInput)
 	{
-		ImGui::InputText("", &aInput);
+		ImGui::InputText("##", &aInput);
 	}
 
 	template<>
 	inline void EditInputSlot<bool>(bool& aInput)
 	{
-		ImGui::Checkbox("", &aInput);
+		ImGui::Checkbox("##", &aInput);
 	}
 
 	template<>

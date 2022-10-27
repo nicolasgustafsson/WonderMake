@@ -51,7 +51,7 @@ void ImGuiLogger::Debug()
 {
 	myCompactView = Get<DebugSettingsSystem>().GetOrCreateDebugValue(locCompactSettingName, false);
 
-	ImGui::Begin("Debug Log", 0);
+	ImGui::Begin("Debug Log");
 
 	if (myCompactView)
 		UpdateLogs<true>();
@@ -64,7 +64,7 @@ void ImGuiLogger::Debug()
 	
 	ImGui::SameLine();
 	
-	ImGui::InputText("", &myFilterText, ImGuiInputTextFlags_AutoSelectAll);
+	ImGui::InputText("##", &myFilterText, ImGuiInputTextFlags_AutoSelectAll);
 
 	ImGui::SameLine();
 

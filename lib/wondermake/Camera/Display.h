@@ -6,6 +6,8 @@
 class RenderTarget;
 class Camera;
 
+template<typename TResource>
+class ResourceSystem;
 
 //[Nicos]: A Camera has multiple displays; these allow you to show the contents of a camera in different ways(such as debug views, or with a different Post Process setup etc)
 class Display

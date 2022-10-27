@@ -25,6 +25,34 @@ public:
 	void SaveSettings();
 	
 	template<typename TSettingType>
+	inline [[nodiscard]] TSettingType GetDebugValue(const char* aSettingName, TSettingType aDefault) const noexcept
+	{
+		return GetDebugValue(std::string_view(aSettingName), std::move(aDefault));
+	}
+	template<typename TSettingType>
+	inline [[nodiscard]] TSettingType GetDebugValue(std::string_view aSettingName, TSettingType aDefault) const noexcept
+	{
+		thread_local std::string buffer;
+
+		buffer.reserve(aSettingName.size() + 1);
+
+		buffer.assign(aSettingName.data(), aSettingName.size());
+
+		return GetDebugValue(buffer, std::move(aDefault));
+	}
+	template<typename TSettingType>
+	inline [[nodiscard]] TSettingType GetDebugValue(const std::string& aSettingName, TSettingType aDefault) const noexcept
+	{
+		auto leaf = GetLeaf(aSettingName);
+
+		auto it = leaf.first.find(leaf.second);
+		if (it != leaf.first.end())
+			return (*it).get<TSettingType>();
+
+		return std::move(aDefault);
+	}
+	
+	template<typename TSettingType>
 	inline [[nodiscard]] TSettingType GetOrCreateDebugValue(const char* aSettingName, TSettingType aDefault)
 	{
 		return GetOrCreateDebugValue(std::string_view(aSettingName), std::move(aDefault));
@@ -43,7 +71,7 @@ public:
 	template<typename TSettingType>
 	inline [[nodiscard]] TSettingType GetOrCreateDebugValue(const std::string& aSettingName, TSettingType aDefault)
 	{
-		std::pair<nlohmann::json&, std::string> leaf = GetLeaf(aSettingName);
+		auto leaf = GetLeaf(aSettingName);
 
 		auto it = leaf.first.find(leaf.second);
 		if (it != leaf.first.end())
@@ -87,6 +115,7 @@ public:
 
 protected:
 	std::pair<nlohmann::json&, std::string> GetLeaf(const std::string& aSettingName);
+	std::pair<const nlohmann::json&, std::string> GetLeaf(const std::string& aSettingName) const noexcept;
 
 	nlohmann::json mySettings;
 };

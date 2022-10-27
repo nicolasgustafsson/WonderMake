@@ -118,12 +118,14 @@ public:
 				return !std::filesystem::exists(aAsset.second.myMetadata.Filepath);
 			});
 
+		auto& resourceSys = this->Get<ResourceSystem<TAssetType>>();
+
 		for (auto&& file : std::filesystem::recursive_directory_iterator(std::filesystem::current_path() / myRootPath))
 		{
 			Id assetId = myIdCounter.NextId();
 			auto relativePath = std::filesystem::proximate(file.path(), std::filesystem::current_path());
 			Asset<TAssetType> asset{ relativePath, assetId };
-			asset.LoadAsset();
+			asset.LoadAsset(resourceSys);
 			myAssets.Add(assetId, asset);
 
 		}

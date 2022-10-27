@@ -42,18 +42,10 @@ public:
 			ImGui::TreePop();
 		}
 	}
-
-	ResourceProxy<TAssetType> Get()
-	{
-		if (myResource)
-			return myResource;
-
-		return LoadAsset();
-	}
 	
-	ResourceProxy<TAssetType> LoadAsset()
+	ResourceProxy<TAssetType> LoadAsset(ResourceSystem<TAssetType>& aResourceSystem)
 	{
-		myResource.emplace(SystemPtr<ResourceSystem<TAssetType>>()->GetResource(myMetadata.Filepath));
+		myResource.emplace(aResourceSystem.GetResource(myMetadata.Filepath));
 
 		return *myResource;
 	}

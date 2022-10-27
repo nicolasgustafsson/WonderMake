@@ -31,8 +31,6 @@ protected:
 
 	inline void OnFileChange(const SFileChangedMessage& aFileChangedMessage);
 
-	std::function<void(const std::filesystem::path&)> myStartCreateJob;
-
 	MessageSubscriber mySubscriber;
 	std::mutex myLock;
 	std::unordered_map<std::string, std::weak_ptr<SResource<TResource>>> myResources;
@@ -72,15 +70,8 @@ void ResourceSystem<TResource>::OnFileChange(const SFileChangedMessage& aFileCha
 
 			if (std::shared_ptr<SResource<TResource>> strongResource = weakResource.lock())
 			{
-				if (myStartCreateJob)
-				{
-					myStartCreateJob(strPath);
-				}
-				else
-				{
-					std::lock_guard<decltype(strongResource->myLock)> lock(strongResource->myLock);
-					strongResource->myPointer = std::make_shared<TResource>(aFileChangedMessage.FilePath);
-				}
+				std::lock_guard<decltype(strongResource->myLock)> lock(strongResource->myLock);
+				strongResource->myPointer = std::make_shared<TResource>(aFileChangedMessage.FilePath);
 
 				strongResource->myGeneration++;
 
@@ -115,15 +106,8 @@ ResourceProxy<TResource> ResourceSystem<TResource>::GetResource(const std::files
 		myResources[aPath.string()] = resource;
 	}
 
-	if (myStartCreateJob)
-	{
-		myStartCreateJob(aPath);
-	}
-	else
-	{
-		std::lock_guard<decltype(rawResource->myLock)> lock(rawResource->myLock);
-		rawResource->myPointer = std::make_shared<TResource>(aPath);
-	}
+	std::lock_guard<decltype(rawResource->myLock)> lock(rawResource->myLock);
+	rawResource->myPointer = std::make_shared<TResource>(aPath);
 
 	return ResourceProxy<TResource>(std::move(resource));
 }

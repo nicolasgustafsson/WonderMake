@@ -30,12 +30,15 @@ public:
 	{
 		return myGlfwWindow;
 	}
-
 	inline [[nodiscard]] SVector2i GetSize() const noexcept
 	{
 		return mySize;
 	}
-	
+	inline [[nodiscard]] bool HasFocus() const noexcept
+	{
+		return myHasFocus;
+	}
+
 	template<CExecutor TExecutor, typename TCallable>
 	inline EventSubscriber OnResize(TExecutor&& aExecutor, TCallable&& aCallable)
 		requires(std::is_invocable_v<const TCallable, SVector2i>)
@@ -58,5 +61,6 @@ private:
 	CancelableList<EventTrigger<SVector2i>> myResizeList = { GetExecutor() };
 
 	SVector2i mySize;
+	bool myHasFocus = false;
 
 };

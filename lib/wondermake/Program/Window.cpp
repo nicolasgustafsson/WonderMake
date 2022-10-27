@@ -68,6 +68,8 @@ void Window::Initialize()
 		WmLogError(TagWonderMake << TagWmOpenGL << "Failed to initialize GLAD.");
 	}
 
+	myHasFocus = glfw.GetWindowAttrib(myGlfwWindow, GLFW_FOCUSED) != 0;
+
 	auto closure = std::make_unique<WindowSizeCallback>(Bind(&Window::OnWindowSizeChanged, weak_from_this()))
 		.release();
 
@@ -117,6 +119,8 @@ void Window::Update()
 
 	if (glfw.ShouldWindowClose(myGlfwWindow))
 		quick_exit(0);
+
+	myHasFocus = glfw.GetWindowAttrib(myGlfwWindow, GLFW_FOCUSED) != 0;
 }
 
 void Window::OnWindowSizeChanged(GLFWwindow* /*aWindow*/, i32 aWidth, i32 aHeight)

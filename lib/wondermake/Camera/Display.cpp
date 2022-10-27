@@ -81,12 +81,14 @@ void Display::FinishDebugFrame()
 
 	if (finalRenderTarget)
 	{
-#pragma warning(disable: 4312 26493)
-		ImGui::Image((ImTextureID)finalRenderTarget->GetTexture(),
-			ImVec2(static_cast<f32>(ViewportSize.X), static_cast<f32>(ViewportSize.Y)),
-			ImVec2(0.f, 1.f),
-			ImVec2(1.f, 0.f));
-#pragma warning(default: 4312 26493)
+		const uintptr_t textureIdInteger = finalRenderTarget->GetTexture();
+
+		const ImTextureID textureId = reinterpret_cast<ImTextureID>(textureIdInteger);
+		const ImVec2 size(static_cast<f32>(ViewportSize.X), static_cast<f32>(ViewportSize.Y));
+		static constexpr ImVec2 uv0(0.f, 1.f);
+		static constexpr ImVec2 uv1(1.f, 0.f);
+
+		ImGui::Image(textureId, size, uv0, uv1);
 	}
 
 	SetViewportSize(ViewportSize);

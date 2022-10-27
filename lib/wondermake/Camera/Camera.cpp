@@ -37,7 +37,7 @@ void Camera::SetPosition(const SVector2f aPosition)
 	myPosition = aPosition;
 }
 
-Camera::Camera(OpenGLFacade& aOpenGlFacade, ResourceSystem<RenderNodeGraph>& aRenderNodeGraphSystem, const std::string& aName, [[maybe_unused]] const bool aIsFirst)
+Camera::Camera(OpenGLFacade& aOpenGlFacade, ResourceSystem<RenderNodeGraph>& aRenderNodeGraphSystem, const std::string& aName, const bool aHasFocus)
 	: myName(aName)
 	, myCameraBuffer(aOpenGlFacade)
 {
@@ -46,11 +46,8 @@ Camera::Camera(OpenGLFacade& aOpenGlFacade, ResourceSystem<RenderNodeGraph>& aRe
 		std::forward_as_tuple(displayName),
 		std::forward_as_tuple(aOpenGlFacade, aRenderNodeGraphSystem, displayName, *this));
 
-	if constexpr (!Constants::IsDebugging)
-	{
-		if (aIsFirst)
-			displayIt.first->second.Focus();
-	}
+	if (aHasFocus)
+		displayIt.first->second.Focus();
 }
 
 void Camera::FinishDebugFrame()

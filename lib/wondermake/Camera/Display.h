@@ -17,6 +17,9 @@ public:
 
 	void FinishDebugFrame();
 	void FinishFrame(); 
+
+	void BindAsTexture();
+
 	[[nodiscard]] SVector2f ConvertToWorldPosition(const SVector2f aWindowPosition) const noexcept;
 
 	[[nodiscard]] bool HasFocus() const { return myHasFocus; }

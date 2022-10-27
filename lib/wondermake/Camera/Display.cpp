@@ -101,7 +101,10 @@ void Display::FinishFrame()
 	Update();
 
 	myRenderGraph->Execute();
+}
 
+void Display::BindAsTexture()
+{
 	RenderTarget* const finalRenderTarget = myRenderGraph->GetFinalRenderTarget();
 
 	if (finalRenderTarget)

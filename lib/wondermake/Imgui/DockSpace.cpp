@@ -31,7 +31,7 @@ void DockSpace::OnDebugMessage(const SDebugMessage&)
 	ImGui::Begin("DockSpace", nullptr, windowFlags);
 
 	ImGuiID dockspaceId = ImGui::GetID("DockSpace");
-	ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f));
+	ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
 
 	ImGui::End();
 	ImGui::PopStyleVar(3);

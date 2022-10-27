@@ -5,6 +5,8 @@
 #include <json/json.hpp>
 #include <filesystem>
 
+#include "Resources/Resource.h"
+
 struct SRegisteredNode
 {
 	std::string Name;

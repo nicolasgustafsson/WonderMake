@@ -1,4 +1,9 @@
 #pragma once
+
+#include "wondermake-debug-ui/ImguiInclude.h"
+
+#include "Constants.h"
+
 namespace SlotColors
 {
 	template<typename TSlotType>

@@ -1,6 +1,7 @@
 #pragma once
 #include "Graphics/RenderNodeGraph/RenderNodeGraph.h"
 #include "Graphics/EngineUniformBuffer.h"
+#include "Resources/ResourceProxy.h"
 
 class RenderTarget;
 class Camera;

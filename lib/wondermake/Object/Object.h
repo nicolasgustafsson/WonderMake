@@ -3,6 +3,7 @@
 
 #include "Object/DependencyDestructor.h"
 
+#include <cassert>
 #include <typeindex>
 
 struct SComponent;

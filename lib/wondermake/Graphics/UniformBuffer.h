@@ -1,4 +1,9 @@
 #pragma once
+
+#include "Graphics/OpenGLFacade.h"
+
+#include "wondermake-base/SystemPtr.h"
+
 #include "wondermake-utility/Typedefs.h"
 
 //this assumes that the buffer uses an optimal memory alignment

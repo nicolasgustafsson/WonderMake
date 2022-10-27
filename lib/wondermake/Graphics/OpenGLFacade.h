@@ -1,6 +1,11 @@
 #pragma once
+#include "Utilities/Color.h"
+
 #include "wondermake-base/System.h"
 
+#include "wondermake-utility/Vector.h"
+
+#include <glad/glad.h>
 
 //[Nicos]: Note that this is not a complete facade for openGL; you may need to create your own wrapped functions.
 class OpenGLFacade

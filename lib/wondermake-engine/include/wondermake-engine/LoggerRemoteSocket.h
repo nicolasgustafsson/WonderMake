@@ -37,7 +37,7 @@ private:
 	void OnConnectionMessage(std::weak_ptr<Socket> aConnection, SocketType::ResultTypeRead aResult);
 	void OnConnectionClosed(std::weak_ptr<Socket> aConnection, SocketType::ResultTypeClose aResult);
 
-	std::mutex myMutex;
+	std::recursive_mutex myMutex;
 
 	AnyExecutor myExecutor;
 	std::shared_ptr<IpcAcceptor> myAcceptor;

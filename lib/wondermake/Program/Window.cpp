@@ -112,9 +112,6 @@ void Window::Update()
 {
 	auto& glfw = Get<GlfwFacade>();
 
-	if (glfw.GetKey(myGlfwWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfw.SetWindowShouldClose(myGlfwWindow, true);
-
 	glfw.PollEvents();
 
 	if (glfw.ShouldWindowClose(myGlfwWindow))

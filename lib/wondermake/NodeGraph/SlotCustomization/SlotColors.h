@@ -1,8 +1,9 @@
 #pragma once
 
-#include "wondermake-debug-ui/ImguiInclude.h"
-
+#include "Utilities/Color.h"
 #include "Constants.h"
+
+#include "wondermake-debug-ui/ImguiInclude.h"
 
 namespace SlotColors
 {

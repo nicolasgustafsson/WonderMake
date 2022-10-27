@@ -4,22 +4,32 @@
 
 #include "wondermake-utility/Typedefs.h"
 
-void ImGui::JsonInspector::Inspect(nlohmann::json& aJsonDocumentToInspect, const std::string aDocumentName)
+bool ImGui::JsonInspector::Inspect(nlohmann::json& aJsonDocumentToInspect, const std::string aDocumentName)
 {
-	ImGui::Begin(aDocumentName.c_str());
-	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 2));
-	ImGui::Columns(2);
-	ImGui::Separator();
+	bool open = true;
 
-	for (nlohmann::json::iterator element = aJsonDocumentToInspect.begin(); element != aJsonDocumentToInspect.end(); element++)
+	if (ImGui::Begin(aDocumentName.c_str(), &open))
 	{
-		InspectElement(element);
+		if (open)
+		{
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 2));
+			ImGui::Columns(2);
+			ImGui::Separator();
+
+			for (nlohmann::json::iterator element = aJsonDocumentToInspect.begin(); element != aJsonDocumentToInspect.end(); element++)
+			{
+				InspectElement(element);
+			}
+
+			ImGui::Columns(1);
+			ImGui::Separator();
+			ImGui::PopStyleVar();
+		}
 	}
 
-	ImGui::Columns(1);
-	ImGui::Separator();
-	ImGui::PopStyleVar();
 	ImGui::End();
+
+	return open;
 }
 
 void ImGui::JsonInspector::InspectElement(nlohmann::json::iterator aElementIterator)

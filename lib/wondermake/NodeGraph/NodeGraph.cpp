@@ -6,17 +6,22 @@
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/WmLogTags.h"
 
-NodeGraph::NodeGraph(std::filesystem::path aFilePath)
-	: myPath(aFilePath)
+NodeGraph::NodeGraph(FilePath aFilePath)
+	: myPath(std::move(aFilePath))
 {
 	static size_t uniqueIdCounter = 0;
 	myUniqueId = uniqueIdCounter;
 	uniqueIdCounter++;
 }
 
-void NodeGraph::SetNewPath(std::filesystem::path aNewFilePath)
+NodeGraph::~NodeGraph()
 {
-	myPath = aNewFilePath;
+	myConnections.clear();
+}
+
+void NodeGraph::SetNewPath(FilePath aNewFilePath)
+{
+	myPath = std::move(aNewFilePath);
 
 	Load();
 }
@@ -41,7 +46,7 @@ void NodeGraph::Save()
 
 	file << std::setw(4) << json.dump();
 
-	WmLogSuccess(TagWonderMake << TagWmNodeGraph << "Saved node graph [" << myPath.string() << "].");
+	WmLogSuccess(TagWonderMake << TagWmNodeGraph << "Saved node graph [" << myPath << "].");
 }
 
 void NodeGraph::ExecuteExternal()
@@ -340,7 +345,7 @@ void NodeGraph::CompileNodeGraph(SNode& aRoot, std::vector<SCompiledNode>& aNode
 	}
 
 	if (aIsFirstCompileCall)
-		WmLogSuccess(TagWonderMake << TagWmNodeGraph << "Compiled node graph [" << myPath.string() << "].");
+		WmLogSuccess(TagWonderMake << TagWmNodeGraph << "Compiled node graph [" << myPath << "].");
 }
 
 void NodeGraph::SerializeInlineInputs(SNode& aNode, json& aInputArray)

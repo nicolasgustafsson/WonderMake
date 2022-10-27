@@ -1,8 +1,11 @@
 #pragma once
-#include "Utilities/Debugging/Debugged.h"
-#include "wondermake-base/System.h"
+#include "Input/InputItems.h"
 #include "Program/Window.h"
-#include "InputItems.h"
+#include "Utilities/Debugging/Debugged.h"
+
+#include "wondermake-base/System.h"
+
+#include "magic_enum.hpp"
 
 class Camera;
 class CameraManager;
@@ -14,7 +17,6 @@ class InputSystem
 	: public System<
 		Policy::Set<
 			PAdd<GlfwFacade, PWrite>,
-			PAdd<Renderer, PWrite>,
 			PAdd<CameraManager, PWrite>,
 			PAdd<Window, PWrite>>,
 		STrait::Set<
@@ -22,7 +24,13 @@ class InputSystem
 	, public Debugged
 {
 public:
-	InputSystem()
+	enum class EFocus
+	{
+		Display,
+		Window
+	};
+
+	inline InputSystem()
 		: Debugged("Input") {}
 	void Update() noexcept;
 
@@ -33,10 +41,17 @@ public:
 	[[nodiscard]] SVector2f GetMousePositionInWorld() noexcept;
 	[[nodiscard]] SVector2f GetMousePositionOnWindow() noexcept;
 
-	bool IsKeyDown(const EKeyboardKey aKey) const noexcept;
-	bool IsMouseButtonPressed(const EMouseButton aKey) const noexcept;
+	[[nodiscard]] bool IsKeyDown(const EKeyboardKey aKey, const EFocus aFocus = EFocus::Display) const noexcept;
+	[[nodiscard]] bool IsMouseButtonPressed(const EMouseButton aKey, const EFocus aFocus = EFocus::Display) const noexcept;
 
 private:
+	struct SInputStates
+	{
+		std::array<EInputItemState, KeyboardKeyCount>	Keyboard	{ EInputItemState::Up };
+		std::array<EInputItemState, MouseButtonCount>	Mouse		{ EInputItemState::Up };
+		std::array<EInputItemState, GamepadButtonCount>	Gamepad		{ EInputItemState::Up };
+	};
+
 	GLFWwindow* GetCurrentWindow() const;
 
 	[[nodiscard]] constexpr EInputItemState GetNewInputState(const EInputItemState aOldState, const bool aIsPressed) const noexcept;
@@ -53,9 +68,8 @@ private:
 
 	virtual void Debug() override;
 
-	bool ShouldCaptureMouseInput() const noexcept;
+	bool DisplayHasMouseFocus() const noexcept;
+	bool DisplayHasKeyboardFocus() const noexcept;
 
-	std::array<EInputItemState, KeyboardKeyCount> myKeyboardKeyStates		{ EInputItemState::Up };
-	std::array<EInputItemState, MouseButtonCount> myMouseButtonStates		{ EInputItemState::Up };
-	std::array<EInputItemState, GamepadButtonCount> myGamepadButtonStates	{ EInputItemState::Up };
+	std::array<SInputStates, magic_enum::enum_count<EFocus>()> myInputStates;
 };

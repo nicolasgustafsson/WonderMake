@@ -2,8 +2,6 @@
 
 #include "Graphics/OpenGLFacade.h"
 
-#include "wondermake-base/SystemPtr.h"
-
 #include "wondermake-utility/Typedefs.h"
 
 //this assumes that the buffer uses an optimal memory alignment
@@ -18,31 +16,32 @@ public:
 
 	void Update() noexcept
 	{
-		SystemPtr<OpenGLFacade> openGL;
-		openGL->BindBuffer(GL_UNIFORM_BUFFER, myUniformBufferObject);
-		openGL->UpdateBufferData(GL_UNIFORM_BUFFER, 0, sizeof(TBuffer), &myBuffer);
-		openGL->BindBufferToSlot(GL_UNIFORM_BUFFER, myBufferBindIndex, myUniformBufferObject);
+		myOpenGLFacade.BindBuffer(GL_UNIFORM_BUFFER, myUniformBufferObject);
+		myOpenGLFacade.UpdateBufferData(GL_UNIFORM_BUFFER, 0, sizeof(TBuffer), &myBuffer);
+		myOpenGLFacade.BindBufferToSlot(GL_UNIFORM_BUFFER, myBufferBindIndex, myUniformBufferObject);
 	}
 
 protected:
 	UniformBuffer(OpenGLFacade& aOpenGlFacade, const u32 aBufferBindIndex)
+		: myOpenGLFacade(aOpenGlFacade)
 	{
 		myBufferBindIndex = aBufferBindIndex;
 		
-		myUniformBufferObject = aOpenGlFacade.GenerateBuffer();
-		aOpenGlFacade.BindBuffer(GL_UNIFORM_BUFFER, myUniformBufferObject);
-		aOpenGlFacade.AllocateBufferData(GL_UNIFORM_BUFFER, sizeof(TBuffer), &myBuffer, GL_STATIC_DRAW);
+		myUniformBufferObject = myOpenGLFacade.GenerateBuffer();
+		myOpenGLFacade.BindBuffer(GL_UNIFORM_BUFFER, myUniformBufferObject);
+		myOpenGLFacade.AllocateBufferData(GL_UNIFORM_BUFFER, sizeof(TBuffer), &myBuffer, GL_STATIC_DRAW);
 
-		aOpenGlFacade.BindBufferToSlot(GL_UNIFORM_BUFFER, myBufferBindIndex, myUniformBufferObject);
+		myOpenGLFacade.BindBufferToSlot(GL_UNIFORM_BUFFER, myBufferBindIndex, myUniformBufferObject);
 	}
 
 	~UniformBuffer() noexcept
 	{
-		SystemPtr<OpenGLFacade> openGL;
-		openGL->DeleteBuffer(myUniformBufferObject);
+		myOpenGLFacade.DeleteBuffer(myUniformBufferObject);
 	}
 
 private:
+	OpenGLFacade& myOpenGLFacade;
+
 	TBuffer myBuffer;
 
 	u32 myUniformBufferObject;

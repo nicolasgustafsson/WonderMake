@@ -137,8 +137,6 @@ list(APPEND SourceFiles
     "Program/GlfwFacade.h"
     "Program/ImguiWrapper.cpp"
     "Program/ImguiWrapper.h"
-    "Program/ProgramSystem.cpp"
-    "Program/ProgramSystem.h"
     "Program/Window.cpp"
     "Program/Window.h"
     "Randomizer/Randomizer.cpp"

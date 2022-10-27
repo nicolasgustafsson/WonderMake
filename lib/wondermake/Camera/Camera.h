@@ -1,49 +1,77 @@
 #pragma once
-#include "wondermake-base/System.h"
-#include "Graphics/EngineUniformBuffer.h"
-#include "Message/MessageTypes.h"
-#include "Graphics/RenderTarget.h"
-#include "Graphics/RenderNodeGraph/RenderNodeGraph.h"
-#include "Camera/Display.h"
 
-class Camera final : public NonCopyable, public NonMovable
+#include "Graphics/EngineUniformBuffer.h"
+
+#include "wondermake-utility/Matrix.h"
+#include "wondermake-utility/RestrictTypes.h"
+#include "wondermake-utility/Rotation.h"
+#include "wondermake-utility/Typedefs.h"
+#include "wondermake-utility/Vector.h"
+
+#include <string>
+
+class OpenGLFacade;
+
+class Camera final
+	: public NonCopyable
+	, public NonMovable
 {
 public:
-	Camera(OpenGLFacade& aOpenGlFacade, ResourceSystem<RenderNodeGraph>& aRenderNodeGraphSystem, const std::string& aName, const bool aHasFocus);
+	Camera(
+		OpenGLFacade&	aOpenGlFacade,
+		std::string		aName);
 
-	Camera(Camera&& aOther) = default;
-	void Update();
+	void BindBuffer();
 
-	void SetPosition(const SVector2f aPosition);
+	inline [[nodiscard]] const std::string&	GetName() const noexcept { return myName; }
+	inline void								SetPosition(const SVector2f aPosition) noexcept { myPosition = aPosition; }
+	inline [[nodiscard]] SVector2f			GetPosition() const noexcept { return myPosition; }
+	inline void								SetRotation(const SRadianF32 aRotation) noexcept { myRotation = WmMath::Mod(aRotation, SRadianF32::Full()); }
+	inline [[nodiscard]] SRadianF32			GetRotation() const noexcept { return myRotation; }
+	inline void								SetScale(const f32 aScale) noexcept { myScale = aScale; }
+	inline [[nodiscard]] f32				GetScale() const noexcept { return myScale; }
+	
+	inline [[nodiscard]] SMatrix33f			GetUnscaledViewMatrix() const noexcept
+	{
+		const auto rotationMatrix = SMatrix33f::CreateRotationZ(myRotation);
+		SMatrix33f viewMatrix;
 
-	void FinishFrame();
-	void FinishDebugFrame();
+		viewMatrix = rotationMatrix * viewMatrix;
 
-	[[nodiscard]] SVector2f ConvertToWorldPosition(const SVector2f aScreenPosition) const;
+		viewMatrix.SetPosition(myPosition);
 
-	const SMatrix33f& GetViewMatrix() const noexcept { return myViewMatrix; }
+		return viewMatrix;
+	}
+	inline [[nodiscard]] SMatrix33f			GetViewMatrix() const noexcept
+	{
+		auto viewMatrix = GetUnscaledViewMatrix();
 
-	[[nodiscard]] SRadianF32 GetRotation() const noexcept { return myRotation; }
-	[[nodiscard]] f32 GetScale() const noexcept { return myScale; }
+		viewMatrix[0][0] *= myScale;
+		viewMatrix[0][1] *= myScale;
+		viewMatrix[1][1] *= myScale;
+		viewMatrix[1][0] *= myScale;
 
-	void Inspect();
+		return viewMatrix;
+	}
+	inline [[nodiscard]] SMatrix33f			GetInverseViewMatrix() const noexcept
+	{
+		auto viewMatrix = GetUnscaledViewMatrix();
 
-	[[nodiscard]] Display* GetFocusedDisplay();
-	[[nodiscard]] const Display* GetFocusedDisplay() const;
+		 // viewMatrix.FastInverse();
+
+		viewMatrix[0][0] /= myScale;
+		viewMatrix[0][1] /= myScale;
+		viewMatrix[1][1] /= myScale;
+		viewMatrix[1][0] /= myScale;
+
+		return viewMatrix;
+	}
 
 private:
-	SVector2f myPosition;
-	
-	SRadianF32 myRotation = 0.f;
-	f32 myScale = 1.0f;
-	SMatrix33f myViewMatrix;
+	std::string			myName;
+	CameraUniformBuffer	myCameraBuffer;
 
-	std::unordered_map<std::string, Display> myDisplays;
-
-	std::string myName;
-
-	CameraUniformBuffer myCameraBuffer;
-
-	const SColor ClearColor = SColor::Grey();
+	SVector2f			myPosition	= SVector2f::Zero();
+	SRadianF32			myRotation	= 0.f;
+	f32					myScale		= 1.0f;
 };
-

@@ -5,6 +5,7 @@
 #include "Resources/ResourceSystem.h"
 
 #include "wondermake-base/Logger.h"
+#include "wondermake-base/SystemPtr.h"
 #include "wondermake-base/WmLogTags.h"
 
 #include "wondermake-utility/RestrictTypes.h"

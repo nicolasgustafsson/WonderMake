@@ -2,6 +2,8 @@
 #include "NodeGraph/NodeTypes.h"
 #include "Canvas.h"
 
+#include "wondermake-utility/plf_colony.h"
+
 class NodeGraph;
 struct SNode;
 struct SConnection;

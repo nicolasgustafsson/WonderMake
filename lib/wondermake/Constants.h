@@ -1,4 +1,7 @@
 #pragma once
+
+#include "wondermake-utility/Typedefs.h"
+
 namespace Constants
 {
 #ifdef NDEBUG

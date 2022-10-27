@@ -85,6 +85,11 @@ GLFWwindow* GlfwFacade::CreateGlfwWindow(const i32 aWidth, const i32 aHeight, co
 	return glfwCreateWindow(aWidth, aHeight, aTitle, aMonitor, sharedContextWindow);
 }
 
+i32 GlfwFacade::GetWindowAttrib(GLFWwindow* aWindow, int aAttribute)
+{
+	return glfwGetWindowAttrib(aWindow, aAttribute);
+}
+
 i32 GlfwFacade::InitializeGlad()
 {
 	return gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);

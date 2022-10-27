@@ -23,7 +23,9 @@ template<typename TAssetType>
 class AssetDatabase 
 	: public System<
 		Policy::Set<
-			PAdd<ResourceSystem<TAssetType>, PWrite>>>
+			PAdd<ResourceSystem<TAssetType>, PWrite>>,
+		STrait::Set<
+			STGui>>
 	, public Debugged
 {
 public:

@@ -68,6 +68,7 @@ void Window::Initialize()
 		WmLogError(TagWonderMake << TagWmOpenGL << "Failed to initialize GLAD.");
 	}
 
+	UpdatePosition();
 	myHasFocus = glfw.GetWindowAttrib(myGlfwWindow, GLFW_FOCUSED) != 0;
 
 	auto closure = std::make_unique<WindowSizeCallback>(Bind(&Window::OnWindowSizeChanged, weak_from_this()))
@@ -118,6 +119,7 @@ void Window::Update()
 		quick_exit(0);
 
 	myHasFocus = glfw.GetWindowAttrib(myGlfwWindow, GLFW_FOCUSED) != 0;
+	UpdatePosition();
 }
 
 void Window::OnWindowSizeChanged(GLFWwindow* /*aWindow*/, i32 aWidth, i32 aHeight)
@@ -130,4 +132,16 @@ void Window::OnWindowSizeChanged(GLFWwindow* /*aWindow*/, i32 aWidth, i32 aHeigh
 		onResize.Trigger(executor, SVector2i(aWidth, aHeight));
 
 	executor.ExecuteAll();
+}
+
+void Window::UpdatePosition()
+{
+	auto& glfw = Get<GlfwFacade>();
+	int x = 0;
+	int y = 0;
+
+	glfw.GetWindowPos(myGlfwWindow, &x, &y);
+
+	myPosition.X = static_cast<i32>(x);
+	myPosition.Y = static_cast<i32>(y);
 }

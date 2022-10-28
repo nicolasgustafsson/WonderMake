@@ -34,6 +34,10 @@ public:
 	{
 		return mySize;
 	}
+	inline [[nodiscard]] SVector2i GetPosition() const noexcept
+	{
+		return myPosition;
+	}
 	inline [[nodiscard]] bool HasFocus() const noexcept
 	{
 		return myHasFocus;
@@ -54,6 +58,7 @@ public:
 
 private:
 	void OnWindowSizeChanged(GLFWwindow* aWindow, i32 aWidth, i32 aHeight);
+	void UpdatePosition();
 
 	EventSubscriber mySubscriberSizeWidth;
 	EventSubscriber mySubscriberSizeHeight;
@@ -61,6 +66,7 @@ private:
 	CancelableList<EventTrigger<SVector2i>> myResizeList = { GetExecutor() };
 
 	SVector2i mySize;
+	SVector2i myPosition;
 	bool myHasFocus = false;
 
 };

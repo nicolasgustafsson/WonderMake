@@ -95,8 +95,6 @@ list(APPEND SourceFiles
     "Imgui/AssetBrowser.h"
     "Imgui/Canvas.cpp"
     "Imgui/Canvas.h"
-    "Imgui/DockSpace.cpp"
-    "Imgui/DockSpace.h"
     "Imgui/FileSelector.cpp"
     "Imgui/FileSelector.h"
     "Imgui/NodeGraphGui.cpp"

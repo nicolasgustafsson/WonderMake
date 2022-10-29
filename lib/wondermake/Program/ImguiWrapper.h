@@ -19,4 +19,8 @@ public:
 	void StartFrame();
 
 	void EndFrame();
+
+private:
+	void DockSpace();
+
 };

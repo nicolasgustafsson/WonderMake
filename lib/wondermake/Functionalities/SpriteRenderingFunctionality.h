@@ -12,9 +12,12 @@ template<typename TResource>
 class ResourceSystem;
 class Texture;
 
+class ConfigurationSystem;
+
 class SpriteRenderingFunctionality
 	: public Functionality<
 		Policy::Set<
+			PAdd<ConfigurationSystem, PRead>,
 			PAdd<AssetDatabase<Texture>, PWrite>,
 			PAdd<ResourceSystem<Texture>, PWrite>,
 			PAdd<TransformFunctionality2D, PRead>,

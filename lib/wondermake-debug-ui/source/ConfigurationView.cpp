@@ -641,7 +641,7 @@ void ConfigurationView::ReconstructSelectionConfigs()
 									|| selectedRatio % ratio != 0)
 									return;
 
-								if (WmMath::Mod(valueCurrent, static_cast<Type>(selectedRatio)) == 0)
+								if (WmMath::Mod(static_cast<Type>(valueCurrent * ratio), static_cast<Type>(selectedRatio)) == 0)
 									currentMemoryRatioIndex = static_cast<int>(allowedMemoryRatio.size());
 
 								allowedMemoryRatio.emplace_back(aRatio);
@@ -658,7 +658,7 @@ void ConfigurationView::ReconstructSelectionConfigs()
 							addRatioIfAllowed(EMemoryRatio::GiB,	"GiB");
 							addRatioIfAllowed(EMemoryRatio::TiB,	"TiB");
 
-							valueCurrent /= static_cast<Type>(allowedMemoryRatio[currentMemoryRatioIndex]);
+							valueCurrent /= static_cast<Type>(allowedMemoryRatio[currentMemoryRatioIndex]) / static_cast<Type>(ratio);
 						}
 
 					const auto it = outConfig.find(id);

@@ -10,14 +10,16 @@
 class Object;
 
 template<
-	typename TPolicySet = Policy::Set<>>
+	typename TPolicySet = Policy::Set<>,
+	typename TSystemTraits = SystemTraits::Set<>>
 class Functionality
 	: public _BaseFunctionality
 {
 public:
-	using Super = Functionality<TPolicySet>;
+	using Super = Functionality<TPolicySet, TSystemTraits>;
 	using Dependencies = typename TPolicySet::DependenciesRef;
 	using PolicySet = TPolicySet;
+	using SystemTraits = TSystemTraits;
 
 	inline static void InjectDependencies(Dependencies&& aDependencies)
 	{
@@ -56,5 +58,5 @@ private:
 	Dependencies myDependencies;
 };
 
-template<typename TPolicySet>
-thread_local std::optional<typename Functionality<TPolicySet>::Dependencies> Functionality<TPolicySet>::myInjectedDependencies;
+template<typename TPolicySet, typename TSystemTraits>
+thread_local std::optional<typename Functionality<TPolicySet, TSystemTraits>::Dependencies> Functionality<TPolicySet, TSystemTraits>::myInjectedDependencies;

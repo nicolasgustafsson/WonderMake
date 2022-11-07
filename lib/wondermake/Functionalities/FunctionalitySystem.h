@@ -46,7 +46,7 @@ namespace _Impl
 	using ConvertPolicySet = typename TPolicySet::template ExtractPolicies<CreatePolicySet>;
 
 	template<typename TFunctionality>
-	using GetFunctionalitySystem = System<ConvertPolicySet<typename TFunctionality::PolicySet>>;
+	using GetFunctionalitySystem = System<ConvertPolicySet<typename TFunctionality::PolicySet>, typename TFunctionality::SystemTraits>;
 }
 
 template<typename TFunctionality>
@@ -135,7 +135,7 @@ private:
 };
 
 template<typename TFunctionality>
-using FunctionalitySystemDelegateSystem = System<Policy::Set<PAdd<FunctionalitySystem<TFunctionality>, PWrite>>>;
+using FunctionalitySystemDelegateSystem = System<Policy::Set<PAdd<FunctionalitySystem<TFunctionality>, PWrite>>, typename TFunctionality::SystemTraits>;
 
 template<typename TFunctionality>
 class FunctionalitySystemDelegate final

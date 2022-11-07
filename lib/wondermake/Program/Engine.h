@@ -18,7 +18,7 @@ namespace Engine
 	struct LogFileInfo
 	{
 		// The path to the log file.
-		FilePath Path;
+		FilePath Path = FilePath(FilePath::EFolder::UserData, "log.txt");
 
 		// Size the log file will be trimmed to when launching the engine or when exceeding the max size.
 		MemoryUnit<EMemoryRatio::Bytes, uintmax_t> TrimSize = MemoryUnit<EMemoryRatio::MiB, uintmax_t>(1);
@@ -45,7 +45,7 @@ namespace Engine
 		std::string LoggerName = "WonderMake";
 
 		// Defines the file all logging will be writting to. If not set, no log file will be made.
-		std::optional<LogFileInfo> File;
+		std::optional<LogFileInfo> File = LogFileInfo();
 
 		// The list of allowed severities, any log message that uses a severity not listed here will be discarded and not used.
 		std::unordered_set<ELogSeverity> AllowedSeverities = { ELogSeverity::Success, ELogSeverity::Info, ELogSeverity::Warning, ELogSeverity::Error };
@@ -75,7 +75,19 @@ namespace Engine
 	struct GraphicsInfo
 	{
 		// Path to the texture used by Sprites if their set texture is missing.
-		FilePath MissingTexture;
+		FilePath MissingTexture = FilePath(FilePath::EFolder::Bin, "textures/missing_texture.jpg");
+
+		// Path to the node graph used by default when creating a display.
+		FilePath DefaultRenderGraphPath = FilePath(FilePath::EFolder::Bin, "node_graphs/render/main_display.json");
+
+		// Path to the directory containing the TTF files used by ImGui.
+		FilePath ImguiFontDirectory = FilePath(FilePath::EFolder::Bin, "fonts");
+	};
+
+	struct AudioInfo
+	{
+		// Path to the node graph used to determine what audio is played.
+		FilePath MainNodeGraph = FilePath(FilePath::EFolder::Bin, "node_graphs/audio/main.json");
 	};
 
 	struct Info
@@ -87,7 +99,7 @@ namespace Engine
 		CmdLineArgs CommandLineArguments = CmdLineArgs(std::vector<std::string>());
 
 		// If true, this will turn off all UI elements, such as the Window itself. Intended for applications that is supposed to run in the background.
-		bool Headless = true;
+		bool Headless = false;
 
 		// Directory path that all files and folders used by the engine will be placed in. Consider using name of the creators followed by the application name. Example: "FantasticGamesCorp/SuperJumperTheGame/"
 		std::filesystem::path ProjectFolderNames;
@@ -98,8 +110,11 @@ namespace Engine
 		// All options regarding configuration.
 		ConfigurationInfo Configuration;
 
-		// All options regarding graphics.
-		std::optional<GraphicsInfo> Graphics;
+		// All options regarding graphics. Ignored if Headless is set to true.
+		std::optional<GraphicsInfo> Graphics = GraphicsInfo();
+
+		// All options regarding audio. Ignored if Headless is set to true.
+		std::optional<AudioInfo> Audio = AudioInfo();
 	};
 
 	struct Callbacks

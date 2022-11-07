@@ -114,6 +114,7 @@ namespace Engine
 						if (aInfo.Graphics)
 							graphics.emplace(ConfigurationEngine::SGraphics
 								{
+									(!aInfo.Graphics->WindowTitle.empty() ? aInfo.Graphics->WindowTitle : aInfo.ApplicationName),
 									aInfo.Graphics->MissingTexture,
 									aInfo.Graphics->DefaultRenderGraphPath,
 									aInfo.Graphics->ImguiFontDirectory

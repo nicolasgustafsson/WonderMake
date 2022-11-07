@@ -85,6 +85,11 @@ GLFWwindow* GlfwFacade::CreateGlfwWindow(const i32 aWidth, const i32 aHeight, co
 	return glfwCreateWindow(aWidth, aHeight, aTitle, aMonitor, sharedContextWindow);
 }
 
+void GlfwFacade::SetWindowTitle(GLFWwindow* aWindow, const char* aTitle)
+{
+	glfwSetWindowTitle(aWindow, aTitle);
+}
+
 i32 GlfwFacade::GetWindowAttrib(GLFWwindow* aWindow, int aAttribute)
 {
 	return glfwGetWindowAttrib(aWindow, aAttribute);

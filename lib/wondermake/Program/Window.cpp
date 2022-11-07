@@ -40,8 +40,10 @@ Window::~Window()
 
 void Window::Initialize()
 {
-	auto&& configuration = Get<ConfigurationSystem>();
+	auto&& configSys = Get<ConfigurationSystem>();
 	
+	auto windowName = configSys.Get<std::string>(ConfigurationEngine::WindowTitle, "WonderMake");
+
 	auto& glfw = Get<GlfwFacade>();
 	glfw.SetWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfw.SetWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
@@ -49,11 +51,11 @@ void Window::Initialize()
 
 	mySize =
 	{
-		configuration.Get<i32>(ConfigurationEngine::WindowWidth,	locDefaultWindowSize.X),
-		configuration.Get<i32>(ConfigurationEngine::WindowHeight,	locDefaultWindowSize.Y)
+		configSys.Get<i32>(ConfigurationEngine::WindowWidth,	locDefaultWindowSize.X),
+		configSys.Get<i32>(ConfigurationEngine::WindowHeight,	locDefaultWindowSize.Y)
 	};
 
-	myGlfwWindow = glfw.CreateGlfwWindow(mySize.X, mySize.Y, "WonderMake", NULL, NULL);
+	myGlfwWindow = glfw.CreateGlfwWindow(mySize.X, mySize.Y, windowName.c_str(), NULL, NULL);
 	if (!myGlfwWindow)
 	{
 		WmLogError(TagWonderMake << TagWmOpenGL << "Failed to create GLFW window.");
@@ -84,15 +86,23 @@ void Window::Initialize()
 			callback(aWindow, aWidth, aHeight);
 		});
 
+	auto onTitleChange = [this](auto&&, std::string aTitle)
+	{
+		auto& glfw = Get<GlfwFacade>();
+
+		WmLogInfo(TagWonderMake << TagWmOpenGL << "Window title changed to " << aTitle << '.');
+
+		glfw.SetWindowTitle(myGlfwWindow, aTitle.c_str());
+	};
 	auto onSizeChange = [this](auto&&...)
 	{
-		auto& configuration = Get<ConfigurationSystem>();
+		auto& configSys = Get<ConfigurationSystem>();
 		auto& glfw = Get<GlfwFacade>();
 
 		SVector2i newSize =
 		{
-			configuration.Get<i32>(ConfigurationEngine::WindowWidth,	locDefaultWindowSize.X),
-			configuration.Get<i32>(ConfigurationEngine::WindowHeight,	locDefaultWindowSize.Y)
+			configSys.Get<i32>(ConfigurationEngine::WindowWidth,	locDefaultWindowSize.X),
+			configSys.Get<i32>(ConfigurationEngine::WindowHeight,	locDefaultWindowSize.Y)
 		};
 
 		if (newSize == mySize)
@@ -105,8 +115,9 @@ void Window::Initialize()
 		glfw.SetWindowSize(myGlfwWindow, mySize.X, mySize.Y);
 	};
 
-	mySubscriberSizeWidth	= configuration.OnOverrideChanged<i32>(ConfigurationEngine::WindowWidth,	GetExecutor(), onSizeChange);
-	mySubscriberSizeHeight	= configuration.OnOverrideChanged<i32>(ConfigurationEngine::WindowHeight,	GetExecutor(), onSizeChange);
+	mySubscriberWindowTitle	= configSys.OnOverrideChanged<std::string>(ConfigurationEngine::WindowTitle,	GetExecutor(), onTitleChange);
+	mySubscriberSizeWidth	= configSys.OnOverrideChanged<i32>(ConfigurationEngine::WindowWidth,			GetExecutor(), onSizeChange);
+	mySubscriberSizeHeight	= configSys.OnOverrideChanged<i32>(ConfigurationEngine::WindowHeight,			GetExecutor(), onSizeChange);
 }
 
 void Window::Update()

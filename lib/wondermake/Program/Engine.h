@@ -74,6 +74,9 @@ namespace Engine
 
 	struct GraphicsInfo
 	{
+		// Title used by the Window. Will use Info::ApplicationName if unset.
+		std::string WindowTitle;
+
 		// Path to the texture used by Sprites if their set texture is missing.
 		FilePath MissingTexture = FilePath(FilePath::EFolder::Bin, "textures/missing_texture.jpg");
 

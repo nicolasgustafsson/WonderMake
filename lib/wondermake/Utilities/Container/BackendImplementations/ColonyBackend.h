@@ -62,6 +62,11 @@ public:
 		return this->myBackend.erase(aIt);
 	}
 
+	[[nodiscard]] bool empty() const noexcept
+	{
+		return this->myBackend.empty();
+	}
+
 	IteratorType begin()
 	{
 		return this->myBackend.begin();

@@ -11,7 +11,7 @@ DebugLineRenderObject::DebugLineRenderObject(ResourceSystem<Shader<EShaderType::
 		,	std::filesystem::current_path() / "Shaders/Vertex/Line.vert"
 		,	"" //geometry shader
 		,	std::filesystem::current_path() / "Shaders/Fragment/Line.frag"
-		,	"" //texture
+		,	ResourceProxy<Texture>()
 		,	aLineCount * 2
 		,	GL_LINES })
 {

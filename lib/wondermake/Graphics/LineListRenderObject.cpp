@@ -9,7 +9,7 @@ LineListRenderObject::LineListRenderObject(const std::vector<SVector2f>& aPoints
 		,	std::filesystem::current_path() / "Shaders/Vertex/LineList.vert"
 		,	""
 		,	std::filesystem::current_path() / "Shaders/Fragment/LineList.frag"
-		,	""
+		,	ResourceProxy<Texture>()
 		,	20
 		,   GL_TRIANGLE_STRIP })
 {

@@ -19,13 +19,17 @@ void SpriteRenderingFunctionality::Tick()
 	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Rotation>(0, transform.GetRotation());
 	spriteComponent.RenderObject->Render();
 }
-void SpriteRenderingFunctionality::SetTexture(const std::string_view aAssetLink)
+void SpriteRenderingFunctionality::SetTexture(std::string_view aAssetLink)
 {
-	SSpriteComponent& spriteComponent = Get<SSpriteComponent>();
+	auto& spriteComponent = Get<SSpriteComponent>();
+	auto& textureDatabase = Get<AssetDatabase<Texture>>();
+
+	auto texture = textureDatabase.GetResource(aAssetLink);
+
 	if (spriteComponent.RenderObject)
-		spriteComponent.RenderObject->SetTexture(SystemPtr<AssetDatabase<Texture>>()->GetResource(aAssetLink));
+		spriteComponent.RenderObject->SetTexture(std::move(texture));
 	else
-		spriteComponent.RenderObject.emplace(aAssetLink);
+		spriteComponent.RenderObject.emplace(std::move(texture));
 }
 
 void SpriteRenderingFunctionality::SetScale(const SVector2f aScale)

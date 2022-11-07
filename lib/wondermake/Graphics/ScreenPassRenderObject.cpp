@@ -10,7 +10,7 @@ ScreenPassRenderObject::ScreenPassRenderObject(ResourceSystem<Shader<EShaderType
 		,	std::filesystem::current_path() / "Shaders/Vertex/Pass.vert"
 		,	"" //geometry shader
 		,	aFragmentShader
-		,	"" //texture -- we have to bind the one we want to use manually for now
+		,	ResourceProxy<Texture>() //we have to bind the one we want to use manually for now
 		,	6
 		,	GL_TRIANGLES })
 {

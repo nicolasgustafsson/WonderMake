@@ -7,12 +7,15 @@
 class SpriteRenderingFunctionality
 	: public Functionality<
 		Policy::Set<
+			PAdd<AssetDatabase<Texture>, PWrite>,
 			PAdd<TransformFunctionality2D, PRead>,
-			PAdd<SSpriteComponent, PWrite>>>
+			PAdd<SSpriteComponent, PWrite>>,
+		SystemTraits::Set<
+			STGui>>
 {
 public:
 	void Tick();
-	void SetTexture(const std::string_view aAssetLink);
+	void SetTexture(std::string_view aAssetLink);
 	void SetScale(const SVector2f aScale);
 	void SetRotation(const f32 aRotation);
 	void SetOrigin(const SVector2f aOrigin);

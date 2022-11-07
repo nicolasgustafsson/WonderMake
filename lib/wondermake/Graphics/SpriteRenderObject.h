@@ -10,7 +10,7 @@ class SpriteRenderObject
 		, EVertexAttribute::Rotation>
 {
 public:
-	SpriteRenderObject(const std::string_view aTextureAssetLink);
+	SpriteRenderObject(ResourceProxy<Texture> aTextureAsset);
 
 	void SetColor(const SColor aColor);
 };

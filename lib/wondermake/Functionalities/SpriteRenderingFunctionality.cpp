@@ -1,9 +1,15 @@
 #include "pch.h"
+
 #include "SpriteRenderingFunctionality.h"
-#include "TransformFunctionality.h"
-#include <iostream>
-#include "Resources/AssetDatabase.h"
+
+#include "Functionalities/TransformFunctionality.h"
+
 #include "Graphics/Texture.h"
+
+#include "Resources/AssetDatabase.h"
+#include "Resources/ResourceSystem.h"
+
+#include <iostream>
 
 REGISTER_FUNCTIONALITY(SpriteRenderingFunctionality);
 
@@ -19,17 +25,19 @@ void SpriteRenderingFunctionality::Tick()
 	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Rotation>(0, transform.GetRotation());
 	spriteComponent.RenderObject->Render();
 }
+
 void SpriteRenderingFunctionality::SetTexture(std::string_view aAssetLink)
 {
-	auto& spriteComponent = Get<SSpriteComponent>();
 	auto& textureDatabase = Get<AssetDatabase<Texture>>();
 
-	auto texture = textureDatabase.GetResource(aAssetLink);
+	SetTexture(textureDatabase.GetResource(aAssetLink));
+}
 
-	if (spriteComponent.RenderObject)
-		spriteComponent.RenderObject->SetTexture(std::move(texture));
-	else
-		spriteComponent.RenderObject.emplace(std::move(texture));
+void SpriteRenderingFunctionality::SetTexture(const FilePath& aFilePath)
+{
+	auto& textureResourceSys = Get<ResourceSystem<Texture>>();
+
+	SetTexture(textureResourceSys.GetResource(aFilePath));
 }
 
 void SpriteRenderingFunctionality::SetScale(const SVector2f aScale)
@@ -60,4 +68,14 @@ void SpriteRenderingFunctionality::Hide() noexcept
 void SpriteRenderingFunctionality::Show() noexcept
 {
 	Get<SSpriteComponent>().IsHidden = false;
+}
+
+void SpriteRenderingFunctionality::SetTexture(ResourceProxy<Texture>&& aTexture)
+{
+	auto& spriteComponent = Get<SSpriteComponent>();
+
+	if (spriteComponent.RenderObject)
+		spriteComponent.RenderObject->SetTexture(std::move(aTexture));
+	else
+		spriteComponent.RenderObject.emplace(std::move(aTexture));
 }

@@ -13,6 +13,13 @@ Texture::Texture(const std::filesystem::path& aPath)
 	i32 channelCount;
 	u8* rawPixelData = stbi_load(aPath.string().c_str(), &myWidth, &myHeight, &channelCount, 0);
 
+	if (!rawPixelData)
+	{
+		WmLogError(TagWonderMake << TagWmResources << "Failed to load texture: " << aPath << '.');
+
+		return;
+	}
+
 	SystemPtr<OpenGLFacade> openGL;
 
 	myTextureHandle = openGL->GenerateTexture();
@@ -33,7 +40,9 @@ Texture::Texture(const std::filesystem::path& aPath)
 Texture::~Texture()
 {
 	SystemPtr<OpenGLFacade> openGL;
-	openGL->DeleteTexture(myTextureHandle);
+
+	if (IsValid())
+		openGL->DeleteTexture(myTextureHandle);
 }
 
 void Texture::Bind(const u32 aTextureSlot)

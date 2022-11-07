@@ -6,6 +6,7 @@
 #include "Graphics/VertexTypes.h"
 
 #include "Resources/AssetDatabase.h"
+#include "Resources/ResourceProxy.h"
 
 #include "wondermake-base/SystemPtr.h"
 #include "OpenGLFacade.h"
@@ -20,7 +21,7 @@ struct SRenderObjectInfo
 	std::filesystem::path VertexShaderPath;
 	std::filesystem::path GeometryShaderPath = "";
 	std::filesystem::path FragmentShaderPath;
-	std::string_view TextureAssetLink;
+	ResourceProxy<Texture> TextureAsset;
 	u32 VertexCount = 1;
 	u32 GeometryType = GL_POINTS;
 };
@@ -179,7 +180,7 @@ RenderObject<TAttributes...>::RenderObject(const SRenderObjectInfo& aRenderObjec
 	, myGeometryType(aRenderObjectInfo.GeometryType)
 {
 	myVertexCount = aRenderObjectInfo.VertexCount;
-	if (!aRenderObjectInfo.TextureAssetLink.empty())
-		myTextures.Add(SystemPtr<AssetDatabase<Texture>>()->GetResource(aRenderObjectInfo.TextureAssetLink));
+	if (aRenderObjectInfo.TextureAsset)
+		myTextures.Add(aRenderObjectInfo.TextureAsset);
 }
 

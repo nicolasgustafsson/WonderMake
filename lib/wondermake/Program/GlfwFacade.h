@@ -38,6 +38,8 @@ public:
 	void SetWindowHint(const i32 aHintName, const i32 aHintValue);
 	[[nodiscard]] GLFWwindow* CreateGlfwWindow(const i32 aWidth, const i32 aHeight, const char* aTitle, GLFWmonitor* aMonitor, GLFWwindow* sharedContextWindow);
 
+	void SetWindowTitle(GLFWwindow* aWindow, const char* aTitle);
+
 	[[nodiscard]] i32 GetWindowAttrib(GLFWwindow* aWindow, int aAttribute);
 
 	[[nodiscard]] i32 InitializeGlad();

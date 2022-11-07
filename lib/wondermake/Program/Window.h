@@ -60,6 +60,7 @@ private:
 	void OnWindowSizeChanged(GLFWwindow* aWindow, i32 aWidth, i32 aHeight);
 	void UpdatePosition();
 
+	EventSubscriber mySubscriberWindowTitle;
 	EventSubscriber mySubscriberSizeWidth;
 	EventSubscriber mySubscriberSizeHeight;
 

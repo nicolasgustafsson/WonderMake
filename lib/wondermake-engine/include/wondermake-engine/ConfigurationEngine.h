@@ -14,6 +14,10 @@ namespace ConfigurationEngine
 	inline constexpr std::string_view OverrideFileDevice			= "wondermake_engine.override_file.device";
 	inline constexpr std::string_view OverrideFileUser				= "wondermake_engine.override_file.user";
 	
+	inline constexpr std::string_view WindowTitle					= "wondermake_engine.window.title";
+	inline constexpr std::string_view WindowWidth					= "wondermake_engine.window.width";
+	inline constexpr std::string_view WindowHeight					= "wondermake_engine.window.height";
+	
 	inline constexpr std::string_view ResolutionWidth				= "wondermake_engine.graphics.resolution.width";
 	inline constexpr std::string_view ResolutionHeight				= "wondermake_engine.graphics.resolution.height";
 	inline constexpr std::string_view ResolutionFitToWindow			= "wondermake_engine.graphics.resolution.fit_to_window";
@@ -23,9 +27,6 @@ namespace ConfigurationEngine
 	inline constexpr std::string_view DefaultRenderGraphPath		= "wondermake_engine.graphics.default_render_graph_path";
 	inline constexpr std::string_view MissingTexturePath			= "wondermake_engine.graphics.missing_texture_path";
 
-	inline constexpr std::string_view WindowWidth					= "wondermake_engine.window.width";
-	inline constexpr std::string_view WindowHeight					= "wondermake_engine.window.height";
-	
 	inline constexpr std::string_view ImguiFontDirectory			= "wondermake_engine.imgui.font_directory";
 	
 	inline constexpr std::string_view AudioNodeGraphPath			= "wondermake_engine.audio.audio_node_graph_path";
@@ -36,6 +37,8 @@ namespace ConfigurationEngine
 
 	struct SGraphics
 	{
+		std::string WindowTitle;
+
 		FilePath MissingTexturePath;
 		FilePath DefaultRenderGraphPath;
 

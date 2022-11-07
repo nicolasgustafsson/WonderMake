@@ -24,6 +24,10 @@ namespace ConfigurationEngine
 
 		if (aGraphics)
 		{
+			aConfigurationSystem.Set<std::string>(WindowTitle,			std::move(aGraphics->WindowTitle),				EConfigGroup::Device);
+			aConfigurationSystem.Set<i32>(WindowWidth,					locDefaultSize.X,								EConfigGroup::Device);
+			aConfigurationSystem.Set<i32>(WindowHeight,					locDefaultSize.Y,								EConfigGroup::Device);
+			
 			aConfigurationSystem.Set<i32>(ResolutionWidth,				locDefaultSize.X,								EConfigGroup::Device);
 			aConfigurationSystem.Set<i32>(ResolutionHeight,				locDefaultSize.Y,								EConfigGroup::Device);
 			aConfigurationSystem.Set<bool>(ResolutionFitToWindow,		true,											EConfigGroup::Device);
@@ -33,9 +37,6 @@ namespace ConfigurationEngine
 			aConfigurationSystem.Set<FilePath>(DefaultRenderGraphPath,	std::move(aGraphics->DefaultRenderGraphPath),	EConfigGroup::Application);
 			aConfigurationSystem.Set<FilePath>(MissingTexturePath,		std::move(aGraphics->MissingTexturePath),		EConfigGroup::Application);
 
-			aConfigurationSystem.Set<i32>(WindowWidth,					locDefaultSize.X,								EConfigGroup::Device);
-			aConfigurationSystem.Set<i32>(WindowHeight,					locDefaultSize.Y,								EConfigGroup::Device);
-			
 			aConfigurationSystem.Set<FilePath>(ImguiFontDirectory,		std::move(aGraphics->ImguiFontDirectory),		EConfigGroup::Application);
 		}
 		if (aAudio)

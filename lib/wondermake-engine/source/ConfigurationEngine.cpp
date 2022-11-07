@@ -16,6 +16,7 @@ namespace ConfigurationEngine
 		std::string aOverrideFileApplication,
 		FilePath aOverrideFileDevice,
 		FilePath aOverrideFileUser,
+		FilePath aMissingTexture,
 		bool aIsHeadless)
 	{
 		aConfigurationSystem.Set<std::string>(OverrideFileApplication,					std::move(aOverrideFileApplication),	EConfigGroup::Application);
@@ -24,15 +25,16 @@ namespace ConfigurationEngine
 
 		if (!aIsHeadless)
 		{
-			aConfigurationSystem.Set<i32>(ResolutionWidth,			locDefaultSize.X,	EConfigGroup::Device);
-			aConfigurationSystem.Set<i32>(ResolutionHeight,			locDefaultSize.Y,	EConfigGroup::Device);
-			aConfigurationSystem.Set<bool>(ResolutionFitToWindow,	true,				EConfigGroup::Device);
-			aConfigurationSystem.Set<bool>(ResolutionFixedAspect,	false,				EConfigGroup::Device);
-			aConfigurationSystem.Set<bool>(VSync,					true,				EConfigGroup::Device);
-			aConfigurationSystem.Set<FilePath>(MainRenderGraphPath, locRenderGraphPath,	EConfigGroup::Device);
+			aConfigurationSystem.Set<i32>(ResolutionWidth,			locDefaultSize.X,			EConfigGroup::Device);
+			aConfigurationSystem.Set<i32>(ResolutionHeight,			locDefaultSize.Y,			EConfigGroup::Device);
+			aConfigurationSystem.Set<bool>(ResolutionFitToWindow,	true,						EConfigGroup::Device);
+			aConfigurationSystem.Set<bool>(ResolutionFixedAspect,	false,						EConfigGroup::Device);
+			aConfigurationSystem.Set<bool>(VSync,					true,						EConfigGroup::Device);
+			aConfigurationSystem.Set<FilePath>(MainRenderGraphPath,	locRenderGraphPath,			EConfigGroup::Device);
+			aConfigurationSystem.Set<FilePath>(MissingTexturePath,	std::move(aMissingTexture),	EConfigGroup::Device);
 
-			aConfigurationSystem.Set<i32>(WindowWidth,				locDefaultSize.X,	EConfigGroup::Device);
-			aConfigurationSystem.Set<i32>(WindowHeight,				locDefaultSize.Y,	EConfigGroup::Device);
+			aConfigurationSystem.Set<i32>(WindowWidth,				locDefaultSize.X,			EConfigGroup::Device);
+			aConfigurationSystem.Set<i32>(WindowHeight,				locDefaultSize.Y,			EConfigGroup::Device);
 		}
 
 		aConfigurationSystem.Set<MemoryType>(ConfigurationRemoteBufferSize, 4_KiB, EConfigGroup::Application);

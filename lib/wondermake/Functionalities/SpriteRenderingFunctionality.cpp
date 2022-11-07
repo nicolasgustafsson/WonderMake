@@ -9,6 +9,10 @@
 #include "Resources/AssetDatabase.h"
 #include "Resources/ResourceSystem.h"
 
+#include "wondermake-engine/ConfigurationEngine.h"
+
+#include "wondermake-base/ConfigurationSystem.h"
+
 #include <iostream>
 
 REGISTER_FUNCTIONALITY(SpriteRenderingFunctionality);
@@ -74,8 +78,12 @@ void SpriteRenderingFunctionality::SetTexture(ResourceProxy<Texture>&& aTexture)
 {
 	auto& spriteComponent = Get<SSpriteComponent>();
 
+	auto texture = aTexture && aTexture->IsValid()
+		? std::move(aTexture)
+		: Get<ResourceSystem<Texture>>().GetResource(Get<ConfigurationSystem>().Get<FilePath>(ConfigurationEngine::MissingTexturePath, FilePath()));
+
 	if (spriteComponent.RenderObject)
-		spriteComponent.RenderObject->SetTexture(std::move(aTexture));
+		spriteComponent.RenderObject->SetTexture(std::move(texture));
 	else
-		spriteComponent.RenderObject.emplace(std::move(aTexture));
+		spriteComponent.RenderObject.emplace(std::move(texture));
 }

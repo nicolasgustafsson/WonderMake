@@ -19,6 +19,7 @@ namespace ConfigurationEngine
 	inline constexpr std::string_view ResolutionFixedAspect			= "wondermake_engine.graphics.resolution.fixed_aspect";
 	inline constexpr std::string_view VSync							= "wondermake_engine.graphics.vsync";
 	inline constexpr std::string_view MainRenderGraphPath			= "wondermake_engine.graphics.main_render_graph_path";
+	inline constexpr std::string_view MissingTexturePath			= "wondermake_engine.graphics.missing_texture_path";
 
 	inline constexpr std::string_view WindowWidth					= "wondermake_engine.window.width";
 	inline constexpr std::string_view WindowHeight					= "wondermake_engine.window.height";
@@ -32,5 +33,6 @@ namespace ConfigurationEngine
 		std::string aOverrideFileApplication,
 		FilePath aOverrideFileDevice,
 		FilePath aOverrideFileUser,
+		FilePath aMissingTexture,
 		bool aIsHeadless);
 }

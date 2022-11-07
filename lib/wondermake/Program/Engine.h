@@ -72,6 +72,12 @@ namespace Engine
 		FilePath OverrideFileUser = FilePath(FilePath::EFolder::UserData, "user_settings.json");
 	};
 
+	struct GraphicsInfo
+	{
+		// Path to the texture used by Sprites if their set texture is missing.
+		FilePath MissingTexture;
+	};
+
 	struct Info
 	{
 		// Human readable name intended to be the name of the application.
@@ -91,6 +97,9 @@ namespace Engine
 
 		// All options regarding configuration.
 		ConfigurationInfo Configuration;
+
+		// All options regarding graphics.
+		std::optional<GraphicsInfo> Graphics;
 	};
 
 	struct Callbacks

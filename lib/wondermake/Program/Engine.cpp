@@ -106,6 +106,8 @@ namespace Engine
 					auto config = std::make_shared<ConfigurationSystem>();
 					const auto& filePathData = FilePathData::Get();
 
+					auto graphics = aInfo.Graphics.value_or(GraphicsInfo());
+
 					config->Initialize();
 
 					ConfigurationIo::Configure(
@@ -118,6 +120,7 @@ namespace Engine
 						aInfo.Configuration.OverrideFileApplication.string(),
 						aInfo.Configuration.OverrideFileDevice,
 						aInfo.Configuration.OverrideFileUser,
+						std::move(graphics.MissingTexture),
 						aInfo.Headless);
 
 					GlobalConfiguration::GetRegistry().Configure(*config);

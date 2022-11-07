@@ -106,8 +106,25 @@ namespace Engine
 					auto config = std::make_shared<ConfigurationSystem>();
 					const auto& filePathData = FilePathData::Get();
 
-					auto graphics = aInfo.Graphics.value_or(GraphicsInfo());
+					std::optional<ConfigurationEngine::SGraphics>	graphics;
+					std::optional<ConfigurationEngine::SAudio>		audio;
 
+					if (!aInfo.Headless)
+					{
+						if (aInfo.Graphics)
+							graphics.emplace(ConfigurationEngine::SGraphics
+								{
+									aInfo.Graphics->MissingTexture,
+									aInfo.Graphics->DefaultRenderGraphPath,
+									aInfo.Graphics->ImguiFontDirectory
+								});
+						if (aInfo.Audio)
+							audio.emplace(ConfigurationEngine::SAudio
+								{
+									aInfo.Audio->MainNodeGraph
+								});
+					}
+					
 					config->Initialize();
 
 					ConfigurationIo::Configure(
@@ -120,8 +137,8 @@ namespace Engine
 						aInfo.Configuration.OverrideFileApplication.string(),
 						aInfo.Configuration.OverrideFileDevice,
 						aInfo.Configuration.OverrideFileUser,
-						std::move(graphics.MissingTexture),
-						aInfo.Headless);
+						std::move(graphics),
+						std::move(audio));
 
 					GlobalConfiguration::GetRegistry().Configure(*config);
 

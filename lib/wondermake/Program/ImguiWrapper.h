@@ -5,9 +5,12 @@
 class GlfwFacade;
 class Window;
 
+class ConfigurationSystem;
+
 class ImguiWrapper
 	: public System<
 		Policy::Set<
+			PAdd<ConfigurationSystem, PWrite>,
 			PAdd<GlfwFacade, PWrite>,
 			PAdd<Window, PRead>>,
 		STrait::Set<

@@ -14,12 +14,16 @@
 
 #include "wondermake-debug-ui/DebugSettingsSystem.h"
 
+#include "wondermake-Engine/ConfigurationEngine.h"
+
+#include "wondermake-base/ConfigurationSystem.h"
+
 REGISTER_SYSTEM(AudioManager);
 
 AudioManager::AudioManager()
 	: Debugged("Audio Manager")
 {
-	myAudioMixingNodeGraph = Get<ResourceSystem<AudioMixingNodeGraph>>().GetResource(std::filesystem::path("NodeGraphs") / "Audio" / "AudioNodeGraph.json");
+	myAudioMixingNodeGraph = Get<ResourceSystem<AudioMixingNodeGraph>>().GetResource(Get<ConfigurationSystem>().Get<FilePath>(ConfigurationEngine::AudioNodeGraphPath, FilePath()));
 	mySoloudEngine.init(mySoloudEngine.FLAGS::CLIP_ROUNDOFF, mySoloudEngine.BACKENDS::WASAPI, SoLoud::Soloud::AUTO, 2048, 2);
 	myBusHandle = mySoloudEngine.play(myBus);
 

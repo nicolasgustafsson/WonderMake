@@ -3,6 +3,7 @@
 #include "wondermake-utility/FilePath.h"
 #include "wondermake-utility/MemoryUnit.h"
 
+#include <optional>
 #include <string_view>
 
 class ConfigurationSystem;
@@ -18,21 +19,38 @@ namespace ConfigurationEngine
 	inline constexpr std::string_view ResolutionFitToWindow			= "wondermake_engine.graphics.resolution.fit_to_window";
 	inline constexpr std::string_view ResolutionFixedAspect			= "wondermake_engine.graphics.resolution.fixed_aspect";
 	inline constexpr std::string_view VSync							= "wondermake_engine.graphics.vsync";
-	inline constexpr std::string_view MainRenderGraphPath			= "wondermake_engine.graphics.main_render_graph_path";
+	
+	inline constexpr std::string_view DefaultRenderGraphPath		= "wondermake_engine.graphics.default_render_graph_path";
 	inline constexpr std::string_view MissingTexturePath			= "wondermake_engine.graphics.missing_texture_path";
 
 	inline constexpr std::string_view WindowWidth					= "wondermake_engine.window.width";
 	inline constexpr std::string_view WindowHeight					= "wondermake_engine.window.height";
+	
+	inline constexpr std::string_view ImguiFontDirectory			= "wondermake_engine.imgui.font_directory";
+	
+	inline constexpr std::string_view AudioNodeGraphPath			= "wondermake_engine.audio.audio_node_graph_path";
 
 	using MemoryType												= MemoryUnit<EMemoryRatio::Bytes, size_t>;
 
 	inline constexpr std::string_view ConfigurationRemoteBufferSize	= "wondermake_engine.configuration_remote.buffer_size";
+
+	struct SGraphics
+	{
+		FilePath MissingTexturePath;
+		FilePath DefaultRenderGraphPath;
+
+		FilePath ImguiFontDirectory;
+	};
+	struct SAudio
+	{
+		FilePath MainNodeGraph;
+	};
 
 	void Configure(
 		ConfigurationSystem& aConfigurationSystem,
 		std::string aOverrideFileApplication,
 		FilePath aOverrideFileDevice,
 		FilePath aOverrideFileUser,
-		FilePath aMissingTexture,
-		bool aIsHeadless);
+		std::optional<SGraphics> aGraphics,
+		std::optional<SAudio> aAudio);
 }

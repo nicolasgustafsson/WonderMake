@@ -7,6 +7,10 @@
 #include "wondermake-debug-ui/DebugSettingsSystem.h"
 #include "wondermake-debug-ui/ImguiInclude.h"
 
+#include "wondermake-engine/ConfigurationEngine.h"
+
+#include "wondermake-base/ConfigurationSystem.h"
+
 REGISTER_SYSTEM(ImguiWrapper);
 
 ImguiWrapper::ImguiWrapper()
@@ -17,16 +21,19 @@ ImguiWrapper::ImguiWrapper()
 	// Setup Style
 	ImGui::StyleColorsDark();
 
+	auto& configSys = Get<ConfigurationSystem>();
+
+	const std::filesystem::path fontDirectory = configSys.Get<FilePath>(ConfigurationEngine::ImguiFontDirectory, FilePath());
 	ImGuiIO& io = ImGui::GetIO();
 
-	io.Fonts->AddFontFromFileTTF("Fonts/ProggyClean.ttf", 13.f);
-	io.Fonts->AddFontFromFileTTF("Fonts/Roboto-Medium.ttf", 15.f);
-	io.Fonts->AddFontFromFileTTF("Fonts/DroidSans.ttf", 13.f);
-	io.Fonts->AddFontFromFileTTF("Fonts/Cousine-Regular.ttf", 13.f);
-	io.Fonts->AddFontFromFileTTF("Fonts/Karla-Regular.ttf", 13.f);
-	io.Fonts->AddFontFromFileTTF("Fonts/Cousine-Regular.ttf", 13.f);
-	io.Fonts->AddFontFromFileTTF("Fonts/ProggyTiny.ttf", 13.f);
-	io.Fonts->AddFontFromFileTTF("Fonts/Roboto-Medium.ttf", 13.f);
+	io.Fonts->AddFontFromFileTTF((fontDirectory / "ProggyClean.ttf").string().c_str(),		13.f);
+	io.Fonts->AddFontFromFileTTF((fontDirectory / "Roboto-Medium.ttf").string().c_str(),	15.f);
+	io.Fonts->AddFontFromFileTTF((fontDirectory / "DroidSans.ttf").string().c_str(),		13.f);
+	io.Fonts->AddFontFromFileTTF((fontDirectory / "Cousine-Regular.ttf").string().c_str(),	13.f);
+	io.Fonts->AddFontFromFileTTF((fontDirectory / "Karla-Regular.ttf").string().c_str(),	13.f);
+	io.Fonts->AddFontFromFileTTF((fontDirectory / "Cousine-Regular.ttf").string().c_str(),	13.f);
+	io.Fonts->AddFontFromFileTTF((fontDirectory / "ProggyTiny.ttf").string().c_str(),		13.f);
+	io.Fonts->AddFontFromFileTTF((fontDirectory / "Roboto-Medium.ttf").string().c_str(),	13.f);
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	io.ConfigDockingWithShift = true;

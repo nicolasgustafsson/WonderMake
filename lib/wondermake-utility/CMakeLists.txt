@@ -30,6 +30,7 @@ list(APPEND SourceFiles
     "include/wondermake-utility/Stopwatch.h"
     "include/wondermake-utility/StringUtility.h"
     "include/wondermake-utility/Time.h"
+    "include/wondermake-utility/TimerManager.h"
     "include/wondermake-utility/TupleUtility.h"
     "include/wondermake-utility/Typedefs.h"
     "include/wondermake-utility/UniqueFunction.h"

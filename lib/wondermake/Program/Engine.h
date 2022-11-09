@@ -122,7 +122,7 @@ namespace Engine
 
 	struct Callbacks
 	{
-		Closure OnSetup;
+		Closure OnSetup = []() {};
 	};
 
 	//wroom wroom

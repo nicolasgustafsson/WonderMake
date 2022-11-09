@@ -42,6 +42,11 @@ public:
 		: myState(nullptr)
 		, Value(aValue)
 	{}
+	CancelableMock(const CancelableMock&) = default;
+	CancelableMock(CancelableMock&&) = default;
+
+	CancelableMock& operator=(const CancelableMock&) = default;
+	CancelableMock& operator=(CancelableMock&&) = default;
 
 	void OnCancel(CExecutor auto&& aExecutor, auto&& aOnCancel)
 	{
@@ -338,4 +343,156 @@ TEST(CancelableListTests, dereferenced_const_iterator_has_correct_value)
 
 	EXPECT_EQ((*queue.cbegin()).Value, dummyValue);
 	EXPECT_EQ(queue.cbegin()->Value, dummyValue);
+}
+
+TEST(CancelableListTests, insert_by_const_ref_inserts_at_iterator)
+{
+	static constexpr u32 dummyValueA = 1234;
+	static constexpr u32 dummyValueB = 2345;
+	static constexpr u32 dummyValueC = 3456;
+
+	const auto mockA = CancelableMock(dummyValueA);
+	const auto mockB = CancelableMock(dummyValueB);
+	const auto mockC = CancelableMock(dummyValueC);
+
+	auto list = CancelableList<CancelableMock>(InlineExecutor());
+
+	list.insert(list.end(), mockA);
+
+	auto it = list.begin();
+
+	EXPECT_EQ(it->Value, dummyValueA);
+
+	++it;
+
+	EXPECT_EQ(it, list.end());
+
+	list.insert(list.end(), mockB);
+
+	it = list.begin();
+
+	EXPECT_EQ(it->Value, dummyValueA);
+
+	++it;
+
+	EXPECT_EQ(it->Value, dummyValueB);
+
+	++it;
+
+	EXPECT_EQ(it, list.end());
+
+	list.insert(++list.begin(), mockC);
+
+	it = list.begin();
+
+	EXPECT_EQ(it->Value, dummyValueA);
+
+	++it;
+
+	EXPECT_EQ(it->Value, dummyValueC);
+
+	++it;
+
+	EXPECT_EQ(it->Value, dummyValueB);
+
+	++it;
+
+	EXPECT_EQ(it, list.end());
+}
+
+TEST(CancelableListTests, insert_by_r_ref_inserts_at_iterator)
+{
+	static constexpr u32 dummyValueA = 1234;
+	static constexpr u32 dummyValueB = 2345;
+	static constexpr u32 dummyValueC = 3456;
+
+	auto list = CancelableList<CancelableMock>(InlineExecutor());
+
+	list.insert(list.end(), CancelableMock(dummyValueA));
+
+	auto it = list.begin();
+
+	EXPECT_EQ(it->Value, dummyValueA);
+
+	++it;
+
+	EXPECT_EQ(it, list.end());
+
+	list.insert(list.end(), CancelableMock(dummyValueB));
+
+	it = list.begin();
+
+	EXPECT_EQ(it->Value, dummyValueA);
+
+	++it;
+
+	EXPECT_EQ(it->Value, dummyValueB);
+
+	++it;
+
+	EXPECT_EQ(it, list.end());
+
+	list.insert(++list.begin(), CancelableMock(dummyValueC));
+
+	it = list.begin();
+
+	EXPECT_EQ(it->Value, dummyValueA);
+
+	++it;
+
+	EXPECT_EQ(it->Value, dummyValueC);
+
+	++it;
+
+	EXPECT_EQ(it->Value, dummyValueB);
+
+	++it;
+
+	EXPECT_EQ(it, list.end());
+}
+
+TEST(CancelableListTests, insert_by_const_ref_returns_iterator_to_inserted_cancelable)
+{
+	static constexpr u32 dummyValueA = 1234;
+	static constexpr u32 dummyValueB = 2345;
+	static constexpr u32 dummyValueC = 3456;
+
+	const auto mockA = CancelableMock(dummyValueA);
+	const auto mockB = CancelableMock(dummyValueB);
+	const auto mockC = CancelableMock(dummyValueC);
+
+	auto list = CancelableList<CancelableMock>(InlineExecutor());
+
+	auto insertIt = list.insert(list.end(), mockA);
+
+	EXPECT_EQ(insertIt->Value, dummyValueA);
+
+	insertIt = list.insert(list.end(), mockB);
+
+	EXPECT_EQ(insertIt->Value, dummyValueB);
+
+	insertIt = list.insert(++list.begin(), mockC);
+
+	EXPECT_EQ(insertIt->Value, dummyValueC);
+}
+
+TEST(CancelableListTests, insert_by_r_ref_returns_iterator_to_inserted_cancelable)
+{
+	static constexpr u32 dummyValueA = 1234;
+	static constexpr u32 dummyValueB = 2345;
+	static constexpr u32 dummyValueC = 3456;
+
+	auto list = CancelableList<CancelableMock>(InlineExecutor());
+
+	auto insertIt = list.insert(list.end(), CancelableMock(dummyValueA));
+
+	EXPECT_EQ(insertIt->Value, dummyValueA);
+
+	insertIt = list.insert(list.end(), CancelableMock(dummyValueB));
+
+	EXPECT_EQ(insertIt->Value, dummyValueB);
+
+	insertIt = list.insert(++list.begin(), CancelableMock(dummyValueC));
+
+	EXPECT_EQ(insertIt->Value, dummyValueC);
 }

@@ -15,6 +15,7 @@ list(APPEND SourceFiles
     "Tests/GuidTests.cpp"
     "Tests/MemoryUnitTests.cpp"
     "Tests/ResultTests.cpp"
+    "Tests/TimerManagerTests.cpp"
     "Tests/UniqueFunctionTests.cpp")
     
 list(APPEND SourceFiles

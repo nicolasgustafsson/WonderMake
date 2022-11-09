@@ -50,6 +50,10 @@ public:
 	class Iterator
 	{
 	public:
+		friend CancelableList;
+		template<typename TIterator, bool TIsConst>
+		friend class Iterator;
+
 		using iterator_category	= std::forward_iterator_tag;
 		using difference_type	= std::ptrdiff_t;
 		using value_type		= TCancelable;
@@ -60,7 +64,18 @@ public:
 			: myIterator(std::move(aIterator))
 		{}
 		inline Iterator(const Iterator&) noexcept = default;
+		template<typename TRhsIterator>
+		inline Iterator(const Iterator<TRhsIterator, false>& aRhs) noexcept
+			requires(TIsConst)
+			: myIterator(aRhs.myIterator)
+		{}
+
 		inline Iterator& operator=(const Iterator&) noexcept = default;
+		template<typename TRhsIterator>
+		inline Iterator& operator=(const Iterator<TRhsIterator, false>& aRhs) noexcept
+			requires(TIsConst)
+			: myIterator(aRhs.myIterator)
+		{}
 
 		inline auto operator<=>(const Iterator&) const noexcept = default;
 
@@ -102,39 +117,7 @@ public:
 
 	inline void Emplace(TCancelable aCancelable)
 	{
-		const auto getNextRequestId = [&requestList = myRequests]() -> RequestIdType
-		{
-			for (RequestIdType requestId = 0;; ++requestId)
-			{
-				const auto pred = [requestId](const auto& aRequest)
-				{
-					return aRequest.RequestId == requestId;
-				};
-
-				if (std::find_if(requestList.begin(), requestList.end(), pred) == requestList.end())
-					return requestId;
-			}
-		};
-
-		const auto requestId = getNextRequestId();
-
-		auto& requestData = myRequests.emplace_back(RequestData{ std::move(aCancelable), requestId });
-		auto onCancel = [&requestList = myRequests, requestId]()
-		{
-			const auto pred = [requestId](const auto& aRequest)
-			{
-				return aRequest.RequestId == requestId;
-			};
-
-			const auto it = std::find_if(requestList.begin(), requestList.end(), pred);
-
-			if (it == requestList.end())
-				return;
-
-			requestList.erase(it);
-		};
-
-		WmCallOnCancel(requestData.Cancelable, myExecutor, std::move(onCancel));
+		(void)insert(cend(), std::move(aCancelable));
 	}
 	
 	inline [[nodiscard]] TCancelable Pop() noexcept
@@ -177,6 +160,49 @@ public:
 	inline [[nodiscard]] const_iterator cend() const noexcept
 	{
 		return myRequests.cend();
+	}
+
+	inline iterator insert(const_iterator aWhere, const TCancelable& aCancelable) noexcept
+	{
+		return insert(aWhere, TCancelable(aCancelable));
+	}
+	inline iterator insert(const_iterator aWhere, TCancelable&& aCancelable) noexcept
+	{
+		const auto getNextRequestId = [&requestList = myRequests]() -> RequestIdType
+		{
+			for (RequestIdType requestId = 0;; ++requestId)
+			{
+				const auto pred = [requestId](const auto& aRequest)
+				{
+					return aRequest.RequestId == requestId;
+				};
+
+				if (std::find_if(requestList.begin(), requestList.end(), pred) == requestList.end())
+					return requestId;
+			}
+		};
+
+		const auto requestId = getNextRequestId();
+
+		const auto it = myRequests.insert(aWhere.myIterator, RequestData{ std::move(aCancelable), requestId });
+		auto onCancel = [&requestList = myRequests, requestId]()
+		{
+			const auto pred = [requestId](const auto& aRequest)
+			{
+				return aRequest.RequestId == requestId;
+			};
+
+			const auto it = std::find_if(requestList.begin(), requestList.end(), pred);
+
+			if (it == requestList.end())
+				return;
+
+			requestList.erase(it);
+		};
+
+		WmCallOnCancel(it->Cancelable, myExecutor, std::move(onCancel));
+
+		return it;
 	}
 
 };

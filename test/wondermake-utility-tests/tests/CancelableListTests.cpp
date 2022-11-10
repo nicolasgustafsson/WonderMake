@@ -496,3 +496,109 @@ TEST(CancelableListTests, insert_by_r_ref_returns_iterator_to_inserted_cancelabl
 
 	EXPECT_EQ(insertIt->Value, dummyValueC);
 }
+
+TEST(CancelableListTests, erase_removes_cancelable_at_iterator)
+{
+	static constexpr u32 dummyValueA = 1234;
+	static constexpr u32 dummyValueB = 2345;
+	static constexpr u32 dummyValueC = 2345;
+
+	auto list = CancelableList<CancelableMock>(InlineExecutor());
+
+	list.Emplace(CancelableMock(dummyValueA));
+
+	list.Emplace(CancelableMock(dummyValueB));
+
+	list.Emplace(CancelableMock(dummyValueC));
+
+	list.erase(++list.begin());
+	
+	auto it = list.begin();
+
+	EXPECT_EQ(it->Value, dummyValueA);
+
+	++it;
+
+	EXPECT_EQ(it->Value, dummyValueC);
+
+	++it;
+
+	EXPECT_EQ(it, list.end());
+}
+
+TEST(CancelableListTests, erase_removes_range_of_cancelables_between_iterators)
+{
+	static constexpr u32 dummyValueA = 1234;
+	static constexpr u32 dummyValueB = 2345;
+	static constexpr u32 dummyValueC = 2345;
+
+	auto list = CancelableList<CancelableMock>(InlineExecutor());
+
+	list.Emplace(CancelableMock(dummyValueA));
+
+	list.Emplace(CancelableMock(dummyValueB));
+	list.Emplace(CancelableMock(dummyValueB));
+	list.Emplace(CancelableMock(dummyValueB));
+
+	list.Emplace(CancelableMock(dummyValueC));
+
+	auto itFirst = ++list.begin();
+	auto itLast = ++++++++list.begin();
+
+	list.erase(itFirst, itLast);
+
+	auto it = list.begin();
+
+	EXPECT_EQ(it->Value, dummyValueA);
+
+	++it;
+
+	EXPECT_EQ(it->Value, dummyValueC);
+
+	++it;
+
+	EXPECT_EQ(it, list.end());
+}
+
+TEST(CancelableListTests, erase_returns_element_after_last)
+{
+	static constexpr u32 dummyValueA = 1234;
+	static constexpr u32 dummyValueB = 2345;
+	static constexpr u32 dummyValueC = 2345;
+
+	auto list = CancelableList<CancelableMock>(InlineExecutor());
+
+	list.Emplace(CancelableMock(dummyValueA));
+
+	list.Emplace(CancelableMock(dummyValueB));
+
+	list.Emplace(CancelableMock(dummyValueC));
+
+	auto it = list.erase(++list.begin());
+
+	EXPECT_EQ(it->Value, dummyValueC);
+}
+
+TEST(CancelableListTests, erase_range_returns_element_after_last)
+{
+	static constexpr u32 dummyValueA = 1234;
+	static constexpr u32 dummyValueB = 2345;
+	static constexpr u32 dummyValueC = 2345;
+
+	auto list = CancelableList<CancelableMock>(InlineExecutor());
+
+	list.Emplace(CancelableMock(dummyValueA));
+
+	list.Emplace(CancelableMock(dummyValueB));
+	list.Emplace(CancelableMock(dummyValueB));
+	list.Emplace(CancelableMock(dummyValueB));
+
+	list.Emplace(CancelableMock(dummyValueC));
+
+	auto itFirst = ++list.begin();
+	auto itLast = ++++++++list.begin();
+
+	auto it = list.erase(itFirst, itLast);
+
+	EXPECT_EQ(it->Value, dummyValueC);
+}

@@ -205,4 +205,13 @@ public:
 		return it;
 	}
 
+	inline iterator erase(const_iterator aWhere) noexcept
+	{
+		return myRequests.erase(aWhere.myIterator);
+	}
+	inline iterator erase(const_iterator aFirst, const_iterator aLast) noexcept
+	{
+		return myRequests.erase(aFirst.myIterator, aLast.myIterator);
+	}
+
 };

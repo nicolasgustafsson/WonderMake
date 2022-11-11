@@ -7,9 +7,9 @@ REGISTER_SYSTEM(TimeKeeper);
 
 float TimeKeeper::Update() noexcept
 {
-	myPreviousDeltaSecondsPrecise = std::min(myStopwatch.Restart() * myTimeDilation, myMaxDeltaTime);
+	myPreviousDeltaSecondsPrecise = std::min(myStopwatch.Restart().count() * myTimeDilation, myMaxDeltaTime);
 
-	myTotalTimePassedPrecise = myTotalTimeStopwatch.GetElapsedTime();
+	myTotalTimePassedPrecise = myTotalTimeStopwatch.GetElapsedTime().count();
 
 	myPreviousDeltaSeconds = static_cast<f32>(myPreviousDeltaSecondsPrecise);
 	myTotalTimePassed = static_cast<f32>(myTotalTimePassedPrecise);

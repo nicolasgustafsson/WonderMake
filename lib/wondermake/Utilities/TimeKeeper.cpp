@@ -1,44 +1,41 @@
 #include "pch.h"
+
 #include "TimeKeeper.h"
 
 #include "wondermake-debug-ui/DebugSettingsSystem.h"
 
+#include "wondermake-utility/Math.h"
+
 REGISTER_SYSTEM(TimeKeeper);
 
-float TimeKeeper::Update() noexcept
+inline constexpr auto locMaxDeltaTime = std::chrono::duration_cast<std::chrono::high_resolution_clock::duration>(WmChrono::dSeconds(1.0 / 10.0));
+
+void TimeKeeper::Update() noexcept
 {
-	myPreviousDeltaSecondsPrecise = std::min(myStopwatch.Restart().count() * myTimeDilation, myMaxDeltaTime);
+	myPreviousDeltaTimeReal = myStopwatchDeltaTime.Restart<Duration>();
 
-	myTotalTimePassedPrecise = myTotalTimeStopwatch.GetElapsedTime().count();
+	myPreviousDeltaTime = WmMath::Min(std::chrono::duration_cast<Duration>(myPreviousDeltaTimeReal * myTimeDilation), locMaxDeltaTime);
 
-	myPreviousDeltaSeconds = static_cast<f32>(myPreviousDeltaSecondsPrecise);
-	myTotalTimePassed = static_cast<f32>(myTotalTimePassedPrecise);
-	
-
-	return GetDeltaSeconds();
-}
-
-f32 TimeKeeper::TimeSince(const f32 aTime) const noexcept
-{
-	return GetGameTime() - aTime;
-}
-
-f64 TimeKeeper::TimeSincePrecise(const f64 aTime) const noexcept
-{
-	return GetGameTimePrecise() - aTime;
+	myTimePassed		+= myPreviousDeltaTime;
+	myTimePassedReal	+= myPreviousDeltaTimeReal;
 }
 
 void TimeKeeper::Debug()
 {
 	ImGui::Begin("Time Keeper");
 
-	ImGui::Text("FPS: %i", static_cast<i32>(1.0 / myPreviousDeltaSecondsPrecise));
+	const auto deltaTime = GetDeltaTime();
+	const auto totalTime = GetTotalTime();
+	const auto deltaTimeReal = GetDeltaTimeReal();
+	const auto totalTimeReal = GetTotalTimeReal();
 
-	ImGui::Text("f32: Current deltatime: %f", myPreviousDeltaSecondsPrecise);
-	ImGui::Text("f32: total time passed: %f", myTotalTimePassedPrecise);
+	ImGui::Text("FPS: %i", static_cast<i32>(1.0 / deltaTimeReal.count()));
 
-	ImGui::Text("f64: Current deltatime: %f", myPreviousDeltaSecondsPrecise);
-	ImGui::Text("f64: total time passed: %f", myTotalTimePassedPrecise);
+	ImGui::Text("Current deltatime: %f", deltaTime.count());
+	ImGui::Text("Total time passed: %f", totalTime.count());
+
+	ImGui::Text("Current real deltatime: %f", deltaTimeReal.count());
+	ImGui::Text("Real total time passed: %f", totalTimeReal.count());
 
 	ImGui::SliderFloat("Time dilation", &myTimeDilation, 0.001f, 100.f, "%.3f", ImGuiSliderFlags_Logarithmic);
 

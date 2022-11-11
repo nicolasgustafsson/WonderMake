@@ -1,60 +1,60 @@
 #pragma once
-#include "wondermake-base/System.h"
+
 #include "Utilities/Debugging/Debugged.h"
+
+#include "wondermake-base/System.h"
+
 #include "wondermake-utility/Stopwatch.h"
+
+#include <chrono>
 
 class TimeKeeper
 	: public System<>
 	, public Debugged
 {
 public:
-	TimeKeeper()
+	using Duration = std::chrono::high_resolution_clock::duration;
+
+	inline TimeKeeper() noexcept
 		: Debugged("Time Keeper")
 	{}
-	~TimeKeeper() = default;
 
-	f32 Update() noexcept;
+	void Update() noexcept;
 
-	[[nodiscard]] f32 TimeSince(const f32 aTime) const noexcept;
-	[[nodiscard]] f64 TimeSincePrecise(const f64 aTime) const noexcept;
-
-	[[nodiscard]] __forceinline f32 GetDeltaSeconds() const noexcept;
-	[[nodiscard]] __forceinline f64 GetDeltaSecondsPrecise() const noexcept;
-
-	[[nodiscard]] __forceinline f32 GetGameTime() const noexcept;
-	[[nodiscard]] __forceinline f64 GetGameTimePrecise() const noexcept;
+	template<typename TDuration = WmChrono::dSeconds>
+	inline [[nodiscard]] TDuration GetDeltaTime() const noexcept
+	{
+		return std::chrono::duration_cast<TDuration>(myPreviousDeltaTime);
+	}
+	template<typename TDuration = WmChrono::dSeconds>
+	inline [[nodiscard]] TDuration GetDeltaTimeReal() const noexcept
+	{
+		return std::chrono::duration_cast<TDuration>(myPreviousDeltaTimeReal);
+	}
+	
+	template<typename TDuration = WmChrono::dSeconds>
+	inline [[nodiscard]] TDuration GetTotalTime() const noexcept
+	{
+		return std::chrono::duration_cast<TDuration>(myTimePassed);
+	}
+	template<typename TDuration = WmChrono::dSeconds>
+	inline [[nodiscard]] TDuration GetTotalTimeReal() const noexcept
+	{
+		return std::chrono::duration_cast<TDuration>(myTimePassedReal);
+	}
 
 protected:
 	virtual void Debug() override;
 
-	Stopwatch<> myStopwatch;
-	Stopwatch<> myTotalTimeStopwatch;
+	Stopwatch<>	myStopwatchDeltaTime;
+	Stopwatch<>	myStopwatchTotalTime;
 
-	f64 myPreviousDeltaSecondsPrecise = 0.0;
-	f64 myTotalTimePassedPrecise = 0.0;
-	f32 myPreviousDeltaSeconds = 0.f;
-	f32 myTotalTimePassed = 0.f;
+	Duration	myPreviousDeltaTime		= Duration(0);
+	Duration	myPreviousDeltaTimeReal	= Duration(0);
+
+	Duration	myTimePassed		= Duration(0);
+	Duration	myTimePassedReal	= Duration(0);
+
 	f32 myTimeDilation = 1.f;
 
-	constexpr static f64 myMaxDeltaTime = 1.0 / 10.0;
 };
-
-[[nodiscard]] __forceinline f32 TimeKeeper::GetDeltaSeconds() const noexcept
-{
-	return myPreviousDeltaSeconds;
-}
-
-[[nodiscard]] __forceinline f64 TimeKeeper::GetDeltaSecondsPrecise() const noexcept
-{
-	return myPreviousDeltaSecondsPrecise;
-}
-
-[[nodiscard]] __forceinline f32 TimeKeeper::GetGameTime() const noexcept
-{
-	return myTotalTimePassed;
-}
-
-[[nodiscard]] __forceinline f64 TimeKeeper::GetGameTimePrecise() const noexcept
-{
-	return myTotalTimePassedPrecise;
-}

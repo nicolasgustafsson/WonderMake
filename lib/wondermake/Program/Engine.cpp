@@ -425,7 +425,7 @@ namespace Engine
 					audioManager.Update();
 					inputSys.Update();
 
-					engineUniformBuffer.GetBuffer().Time = timeKeeper.GetGameTime();
+					engineUniformBuffer.GetBuffer().Time = timeKeeper.GetTotalTime<WmChrono::fSeconds>().count();
 
 					engineUniformBuffer.Update();
 

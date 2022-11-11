@@ -94,7 +94,7 @@ void EasingTester::Lerps()
 
 void EasingTester::Movement()
 {
-	auto deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
+	auto deltaTime = SystemPtr<TimeKeeper>()->GetDeltaTime<WmChrono::fSeconds>().count();
 	static WmGui::SCanvasState canvasState;
 
 	static SVector2f aLocation = SVector2f(100.f, 100.f) + SVector2f(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
@@ -160,7 +160,7 @@ void EasingTester::Movement()
 
 void EasingTester::ContinuousMovement()
 {
-	auto deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
+	auto deltaTime = SystemPtr<TimeKeeper>()->GetDeltaTime<WmChrono::fSeconds>().count();
 	static WmGui::SCanvasState canvasState;
 
 	static SVector2f location = SVector2f(100.f, 100.f) + SVector2f(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
@@ -300,7 +300,7 @@ void EasingTester::CurveEditor2D()
 
 void EasingTester::UpdateGhosts(WmGui::SCanvasState& aCanvas, std::vector<SPointGhost>& aGhosts)
 {
-	auto deltaTime = SystemPtr<TimeKeeper>()->GetDeltaSeconds();
+	auto deltaTime = SystemPtr<TimeKeeper>()->GetDeltaTime<WmChrono::fSeconds>().count();
 	for (auto it = aGhosts.begin(); it != aGhosts.end(); )
 	{
 		auto&& ghost = *it;

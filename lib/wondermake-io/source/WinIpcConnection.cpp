@@ -531,8 +531,6 @@ void WinIpcConnection::OnRead(std::vector<u8> aBuffer)
 
 			executor.ExecuteAll();
 
-			NextRead()();
-
 			return;
 		}
 

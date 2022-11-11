@@ -64,6 +64,21 @@ namespace WmMath
 	template <class TLhs, class TRhs>
 	concept Comparable = ComparableEquality<TLhs, TRhs> && ComparableStrong<TLhs, TRhs>;
 
+	template <typename TLhs, typename TRhs>
+		requires(ComparableLess<TLhs, TRhs>)
+	inline [[nodiscard]] constexpr TLhs Min(TLhs&& aLhs, TRhs&& aRhs)
+		noexcept(std::is_nothrow_move_constructible_v<TLhs> && std::is_nothrow_constructible_v<TLhs, decltype(std::forward<TRhs>(aRhs))>)
+	{
+		return aLhs < aRhs ? std::forward<TLhs>(aLhs) : std::forward<TRhs>(aRhs);
+	}
+	template <typename TLhs, typename TRhs>
+		requires(ComparableGreater<TLhs, TRhs>)
+	inline [[nodiscard]] constexpr TLhs Max(TLhs&& aLhs, TRhs&& aRhs)
+		noexcept(std::is_nothrow_move_constructible_v<TLhs>&& std::is_nothrow_constructible_v<TLhs, decltype(std::forward<TRhs>(aRhs))>)
+	{
+		return aLhs > aRhs ? std::forward<TLhs>(aLhs) : std::forward<TRhs>(aRhs);
+	}
+
 	template <Interpolable T>
 	inline [[nodiscard]] constexpr T Lerp(const T aStart, const T aEnd, const f32 aProgress) noexcept
 	{

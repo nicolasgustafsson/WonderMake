@@ -75,7 +75,7 @@ void WinFileWatcher::Watch()
 					continue;
 				}
 
-				auto currentTime = watch.GetElapsedTime();
+				auto currentTime = watch.GetElapsedTime().count();
 				auto&& lastTimeIt = lastTime.find(fileName);
 
 				if (lastTime.find(fileName) == lastTime.end() ||

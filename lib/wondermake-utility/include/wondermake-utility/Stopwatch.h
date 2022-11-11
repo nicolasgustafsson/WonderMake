@@ -1,51 +1,110 @@
 #pragma once
-#include <chrono>
 #include "Typedefs.h"
 
-template
-	< typename TTime = WmChrono::dSeconds
-	, typename TClock = std::chrono::high_resolution_clock>
+#include <chrono>
+#include <type_traits>
+
+template<
+	typename TClock = std::chrono::high_resolution_clock>
 	class Stopwatch
 {
 public:
-	using TDurationRep = typename TTime::rep;
-
-	__forceinline Stopwatch() noexcept
+	inline constexpr Stopwatch() noexcept
+		requires(std::is_empty_v<TClock> || std::is_default_constructible_v<TClock>)
+	{
+		Start();
+	}
+	inline constexpr Stopwatch(TClock aClock) noexcept
+		requires(!std::is_empty_v<TClock> && std::is_move_constructible_v<TClock>)
+		: myClockBody(SClockBody<TClock>{ std::move(aClock) })
 	{
 		Start();
 	}
 
-	__forceinline void Start() noexcept
+	inline constexpr void Start() noexcept
 	{
+		if (myIsRunning)
+			return;
+
+		if (myStart == myEnd)
+			myStart = myEnd = Now();
+		else
+			myStart = myEnd = Now() - (myEnd - myStart);
 		myIsRunning = true;
-		myStart = myEnd = TClock::now();
 	}
-
-	__forceinline TDurationRep Stop() noexcept
+	template<typename TDuration = WmChrono::dSeconds>
+	inline constexpr TDuration Stop() noexcept
 	{
-		myEnd = TClock::now();
+		if (myIsRunning)
+		{
+			myEnd = Now();
+			myIsRunning = false;
+		}
+
+		return GetElapsedTime<TDuration>();
+	}
+	template<typename TDuration = WmChrono::dSeconds>
+	inline constexpr TDuration Reset() noexcept
+	{
+		if (myIsRunning)
+			myEnd = Now();
+
+		const auto elapsedTime = std::chrono::duration_cast<TDuration>(myEnd - myStart);
 		myIsRunning = false;
-		return GetElapsedTime();
-	}
 
-	__forceinline TDurationRep Restart() noexcept
+		myStart = myEnd;
+
+		return elapsedTime;
+	}
+	template<typename TDuration = WmChrono::dSeconds>
+	inline constexpr TDuration Restart() noexcept
 	{
-		TDurationRep elapsedTime = Stop();
-		Start();
+		if (myIsRunning)
+			myEnd = Now();
+
+		const auto elapsedTime = std::chrono::duration_cast<TDuration>(myEnd - myStart);
+
+		myStart = myEnd;
+		myIsRunning = true;
+
 		return elapsedTime;
 	}
 
-	[[nodiscard]] __forceinline TDurationRep GetElapsedTime() const noexcept
+	template<typename TDuration = WmChrono::dSeconds>
+	inline constexpr [[nodiscard]] TDuration GetElapsedTime() const noexcept
 	{
-		const std::chrono::time_point<TClock> end = myIsRunning ? TClock::now() : myEnd;
+		const auto end = myIsRunning ? Now() : myEnd;
 
-		const TTime duration = end - myStart;
-
-		return duration.count();
+		return std::chrono::duration_cast<TDuration>(end - myStart);
 	}
 
 private:
-	std::chrono::time_point<TClock> myStart;
-	std::chrono::time_point<TClock> myEnd;
-	bool myIsRunning = false;
+	template<typename TClock>
+	struct SClockBody;
+
+	template<typename TClock>
+		requires(std::is_empty_v<TClock>)
+	struct SClockBody<TClock>
+	{};
+	template<typename TClock>
+		requires(!std::is_empty_v<TClock>)
+	struct SClockBody<TClock>
+	{
+		TClock Clock;
+	};
+
+	inline constexpr [[nodiscard]] auto Now() const noexcept
+	{
+		if constexpr (std::is_empty_v<TClock>)
+			return TClock::now();
+		else
+			return myClockBody.Clock.now();
+	}
+
+	TClock::time_point	myStart;
+	TClock::time_point	myEnd;
+
+	SClockBody<TClock>	myClockBody;
+	bool				myIsRunning = false;
+
 };

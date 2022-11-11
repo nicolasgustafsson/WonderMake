@@ -18,6 +18,9 @@ void TimeKeeper::Update() noexcept
 
 	myTimePassed		+= myPreviousDeltaTime;
 	myTimePassedReal	+= myPreviousDeltaTimeReal;
+
+	myTimerManager.RunExpiredTimers(TimePoint(myTimePassed));
+	myTimerManagerReal.RunExpiredTimers(TimePoint(myTimePassedReal));
 }
 
 void TimeKeeper::Debug()

@@ -5,6 +5,7 @@
 #include "wondermake-base/System.h"
 
 #include "wondermake-utility/Stopwatch.h"
+#include "wondermake-utility/TimerManager.h"
 
 #include <chrono>
 
@@ -13,10 +14,13 @@ class TimeKeeper
 	, public Debugged
 {
 public:
-	using Duration = std::chrono::high_resolution_clock::duration;
+	using Duration	= std::chrono::high_resolution_clock::duration;
+	using TimePoint	= std::chrono::high_resolution_clock::time_point;
 
 	inline TimeKeeper() noexcept
 		: Debugged("Time Keeper")
+		, myTimerManager(GetExecutor())
+		, myTimerManagerReal(GetExecutor())
 	{}
 
 	void Update() noexcept;
@@ -43,11 +47,25 @@ public:
 		return std::chrono::duration_cast<TDuration>(myTimePassedReal);
 	}
 
+	template<typename TDuration>
+	inline [[nodiscard]] Future<void> StartTimer(const TDuration& aDuration)
+	{
+		return myTimerManager.AddTimer(TimePoint(myTimePassed + std::chrono::duration_cast<Duration>(aDuration)));
+	}
+	template<typename TDuration>
+	inline [[nodiscard]] Future<void> StartTimerReal(const TDuration& aDuration)
+	{
+		return myTimerManagerReal.AddTimer(TimePoint(myTimePassedReal + std::chrono::duration_cast<Duration>(aDuration)));
+	}
+
 protected:
 	virtual void Debug() override;
 
 	Stopwatch<>	myStopwatchDeltaTime;
 	Stopwatch<>	myStopwatchTotalTime;
+
+	TimerManager<> myTimerManager;
+	TimerManager<> myTimerManagerReal;
 
 	Duration	myPreviousDeltaTime		= Duration(0);
 	Duration	myPreviousDeltaTimeReal	= Duration(0);

@@ -974,14 +974,22 @@ inline [[nodiscard]] auto FutureRunResult(TCallable&& aCallable)
 	};
 };
 
+namespace _Impl
+{
+	// The reason this is a struct instead of just implemented in FutureApplyResult is that MSVC seem to want to
+	// deduce certain types in if constexpr blocks, which results in compiler errors.
 	template<typename TCallable>
-inline [[nodiscard]] auto FutureApplyResult(TCallable&& aCallable)
+	struct SFutureApplyCallable
 	{
-	return [callable = std::forward<TCallable>(aCallable)](auto&& aFuture) mutable -> auto
+		TCallable Callable;
+
+		template<typename TFuture>
+		inline auto operator()(TFuture&& aFuture) && noexcept
+			requires(!std::is_void_v<typename TFuture::Type>)
 		{
 			if constexpr (CWeakBindedCallable<TCallable>)
 			{
-			using FutureType = std::decay_t<decltype(std::move(callable)(*aFuture.GetResult()))>::SuccessType;
+				using FutureType = std::decay_t<decltype(std::move(Callable)(*aFuture.GetResult()))>::SuccessType;
 
 				using FutureResultType = typename FutureType::Type;
 
@@ -993,13 +1001,13 @@ inline [[nodiscard]] auto FutureApplyResult(TCallable&& aCallable)
 				if (!result)
 					return MakeCanceledFuture<FutureResultType>();
 
-			return FutureType((std::move(callable)(std::move(*result)))
+				return FutureType((std::move(Callable)(std::move(*result)))
 					.AndThen([](auto& aFuture) { return std::move(aFuture); })
 					.OrElse([](auto&) { return MakeCanceledFuture<FutureResultType>(); }));
 			}
 			else
 			{
-			using FutureType = std::decay_t<decltype(std::move(callable)(*aFuture.GetResult()))>;
+				using FutureType = std::decay_t<decltype(std::move(Callable)(*aFuture.GetResult()))>;
 
 				using FutureResultType = typename FutureType::Type;
 
@@ -1011,7 +1019,43 @@ inline [[nodiscard]] auto FutureApplyResult(TCallable&& aCallable)
 				if (!result)
 					return MakeCanceledFuture<FutureResultType>();
 
-			return std::move(callable)(std::move(*result));
+				return std::move(Callable)(std::move(*result));
+			}
+		}
+		template<typename TFuture>
+		inline auto operator()(TFuture&& aFuture) && noexcept
+			requires(std::is_void_v<typename TFuture::Type>)
+		{
+			if constexpr (CWeakBindedCallable<TCallable>)
+			{
+				using FutureType = std::decay_t<decltype(std::move(Callable)())>::SuccessType;
+
+				using FutureResultType = typename FutureType::Type;
+
+				if (!aFuture.IsCompleted())
+					return MakeCanceledFuture<FutureResultType>();
+
+				return FutureType((std::move(Callable)())
+					.AndThen([](auto& aFuture) { return std::move(aFuture); })
+					.OrElse([](auto&) { return MakeCanceledFuture<FutureResultType>(); }));
+			}
+			else
+			{
+				using FutureType = std::decay_t<decltype(std::move(Callable)())>;
+
+				using FutureResultType = typename FutureType::Type;
+
+				if (!aFuture.IsCompleted())
+					return MakeCanceledFuture<FutureResultType>();
+
+				return std::move(Callable)();
+			}
 		}
 	};
+}
+
+template<typename TCallable>
+inline [[nodiscard]] auto FutureApplyResult(TCallable&& aCallable)
+{
+	return _Impl::SFutureApplyCallable<TCallable>{ std::forward<TCallable>(aCallable) };
 };

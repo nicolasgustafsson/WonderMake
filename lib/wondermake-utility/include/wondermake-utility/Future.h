@@ -960,51 +960,56 @@ inline [[nodiscard]] auto FutureRunResult(TCallable&& aCallable)
 		if (!aFuture.IsCompleted())
 			return;
 
-		auto result = std::move(aFuture).GetResult();
+		if constexpr (std::is_void_v<std::decay_t<decltype(aFuture)>::Type>)
+			std::move(callable)();
+		else
+		{
+			auto result = std::move(aFuture).GetResult();
 
-		if (!result)
-			return;
+			if (!result)
+				return;
 
-		std::move(callable)(std::move(*result));
+			std::move(callable)(std::move(*result));
+		}
 	};
 };
 
-template<typename TCallable>
+	template<typename TCallable>
 inline [[nodiscard]] auto FutureApplyResult(TCallable&& aCallable)
-{
-	return [callable = std::forward<TCallable>(aCallable)](auto&& aFuture) mutable -> auto
 	{
-		if constexpr (CWeakBindedCallable<TCallable>)
+	return [callable = std::forward<TCallable>(aCallable)](auto&& aFuture) mutable -> auto
 		{
+			if constexpr (CWeakBindedCallable<TCallable>)
+			{
 			using FutureType = std::decay_t<decltype(std::move(callable)(*aFuture.GetResult()))>::SuccessType;
 
-			using FutureResultType = typename FutureType::Type;
+				using FutureResultType = typename FutureType::Type;
 
-			if (!aFuture.IsCompleted())
-				return MakeCanceledFuture<FutureResultType>();
+				if (!aFuture.IsCompleted())
+					return MakeCanceledFuture<FutureResultType>();
 
-			auto result = std::move(aFuture).GetResult();
+				auto result = std::move(aFuture).GetResult();
 
-			if (!result)
-				return MakeCanceledFuture<FutureResultType>();
+				if (!result)
+					return MakeCanceledFuture<FutureResultType>();
 
 			return FutureType((std::move(callable)(std::move(*result)))
-				.AndThen([](auto& aFuture) { return std::move(aFuture); })
-				.OrElse([](auto&) { return MakeCanceledFuture<FutureResultType>(); }));
-		}
-		else
-		{
+					.AndThen([](auto& aFuture) { return std::move(aFuture); })
+					.OrElse([](auto&) { return MakeCanceledFuture<FutureResultType>(); }));
+			}
+			else
+			{
 			using FutureType = std::decay_t<decltype(std::move(callable)(*aFuture.GetResult()))>;
 
-			using FutureResultType = typename FutureType::Type;
+				using FutureResultType = typename FutureType::Type;
 
-			if (!aFuture.IsCompleted())
-				return MakeCanceledFuture<FutureResultType>();
+				if (!aFuture.IsCompleted())
+					return MakeCanceledFuture<FutureResultType>();
 
-			auto result = std::move(aFuture).GetResult();
+				auto result = std::move(aFuture).GetResult();
 
-			if (!result)
-				return MakeCanceledFuture<FutureResultType>();
+				if (!result)
+					return MakeCanceledFuture<FutureResultType>();
 
 			return std::move(callable)(std::move(*result));
 		}

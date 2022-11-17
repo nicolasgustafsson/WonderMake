@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.19)
 
-list(APPEND SourceFiles
+list(APPEND IncludeFiles
     "include/wondermake-io/ConfigurationIo.h"
     "include/wondermake-io/FileTypes.h"
     "include/wondermake-io/IpcAcceptor.h"
@@ -13,7 +13,9 @@ list(APPEND SourceFiles
     "include/wondermake-io/SocketDecorator.h"
     "include/wondermake-io/SocketProtobuf.h"
     "include/wondermake-io/SocketProtobufImpl.h"
-    "include/wondermake-io/WriteFileJob.h"
+    "include/wondermake-io/WriteFileJob.h")
+
+list(APPEND SourceFiles
     "source/ConfigurationIo.cpp"
     "source/ReadFileJob.cpp"
     "source/SocketDecorator.cpp"
@@ -26,10 +28,19 @@ list(APPEND SourceFiles
     "source/WinPlatformFilePaths.cpp"
     "source/WriteFileJob.cpp")
 
-add_library(WonderMakeIo STATIC ${SourceFiles})
+list(APPEND TargetDependencies WonderMakeBase WonderMakeUtility magic_enum::magic_enum)
 
-set_pedantic_warning_level(WonderMakeIo)
-set_whole_archive(WonderMakeIo)
-target_include_directories(WonderMakeIo PUBLIC "include")
-
-target_link_libraries(WonderMakeIo WonderMakeBase WonderMakeUtility magic_enum::magic_enum)
+if (NOT WonderMake_ImportLibraries)
+    add_library(WonderMakeIo STATIC ${IncludeFiles} ${SourceFiles})
+    
+    set_pedantic_warning_level(WonderMakeIo)
+    set_whole_archive(WonderMakeIo PUBLIC)
+    target_include_directories(WonderMakeIo PUBLIC "include")
+    target_link_libraries(WonderMakeIo ${TargetDependencies})
+else()
+    add_library(WonderMakeIo STATIC IMPORTED GLOBAL ${IncludeFiles})
+    
+    set_whole_archive(WonderMakeIo INTERFACE)
+    target_include_directories(WonderMakeIo INTERFACE "include")
+    target_link_libraries(WonderMakeIo INTERFACE ${TargetDependencies})
+endif()

@@ -24,7 +24,7 @@ bool LoggerFileSystem::OpenLogFile(FilePath aLogPath)
 
 	myLogPath = std::move(aLogPath);
 
-	std::filesystem::path directory = myLogPath.Path.parent_path();
+	std::filesystem::path directory = static_cast<std::filesystem::path>(myLogPath).parent_path();
 
 	if (!directory.empty())
 		std::filesystem::create_directories(directory);

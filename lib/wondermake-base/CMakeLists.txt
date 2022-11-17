@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.19)
 
-list(APPEND SourceFiles
+list(APPEND IncludeFiles
     "include/wondermake-base/Cargo.h"
     "include/wondermake-base/CmdLineArgsSystem.h"
     "include/wondermake-base/Configuration.h"
@@ -28,7 +28,9 @@ list(APPEND SourceFiles
     "include/wondermake-base/SystemTraits.h"
     "include/wondermake-base/WinEventSystem.h"
     "include/wondermake-base/WinPlatformSystem.h"
-    "include/wondermake-base/WmLogTags.h"
+    "include/wondermake-base/WmLogTags.h")
+
+list(APPEND SourceFiles
     "source/CmdLineArgsSystem.cpp"
     "source/Configuration.cpp"
     "source/ConfigurationGlobal.cpp"
@@ -55,10 +57,19 @@ list(APPEND SourceFiles
     "source/WinProgram.cpp"
     "source/WinProgram.h")
 
-add_library(WonderMakeBase STATIC ${SourceFiles})
+list(APPEND TargetDependencies WonderMakeUtility)
 
-set_pedantic_warning_level(WonderMakeBase)
-set_whole_archive(WonderMakeBase)
-target_include_directories(WonderMakeBase PUBLIC "include")
-
-target_link_libraries(WonderMakeBase WonderMakeUtility)
+if (NOT WonderMake_ImportLibraries)
+    add_library(WonderMakeBase STATIC ${IncludeFiles} ${SourceFiles})
+    
+    set_pedantic_warning_level(WonderMakeBase)
+    set_whole_archive(WonderMakeBase PUBLIC)
+    target_include_directories(WonderMakeBase PUBLIC "include")
+    target_link_libraries(WonderMakeBase ${TargetDependencies})
+else()
+    add_library(WonderMakeBase STATIC IMPORTED GLOBAL ${IncludeFiles})
+    
+    set_whole_archive(WonderMakeBase INTERFACE)
+    target_include_directories(WonderMakeBase INTERFACE "include")
+    target_link_libraries(WonderMakeBase INTERFACE ${TargetDependencies})
+endif()

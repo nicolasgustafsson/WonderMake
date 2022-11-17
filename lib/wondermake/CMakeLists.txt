@@ -1,115 +1,68 @@
 cmake_minimum_required(VERSION 3.19)
 
-list(APPEND SourceFiles
-    "Audio/AudioFile.cpp"
+list(APPEND IncludeFiles
     "Audio/AudioFile.h"
-    "Audio/AudioManager.cpp"
     "Audio/AudioManager.h"
-    "Audio/AudioMixingNodeGraph.cpp"
     "Audio/AudioMixingNodeGraph.h"
-    "Audio/AudioNodeTypes.cpp"
     "Audio/AudioNodeTypes.h"
     "Audio/AudioStructs.h"
-    "Audio/SoundEffectNodeGraph.cpp"
     "Audio/SoundEffectNodeGraph.h"
-    "Camera/Camera.cpp"
     "Camera/Camera.h"
-    "Camera/CameraManager.cpp"
     "Camera/CameraManager.h"
-    "Camera/Display.cpp"
     "Camera/Display.h"
-    "Collision/ColliderDebug.cpp"
     "Collision/ColliderDebug.h"
     "Collision/Colliders.h"
-    "Collision/CollisionComponent.cpp"
     "Collision/CollisionComponent.h"
-    "Collision/CollisionFunctionality.cpp"
     "Collision/CollisionFunctionality.h"
-    "Collision/CollisionSystem.cpp"
     "Collision/CollisionSystem.h"
-    "Components/Component.cpp"
     "Components/Component.h"
     "Components/ComponentSystem.h"
     "Components/SpriteComponent.h"
     "Components/TransformComponent.h"
     "Debugging/DebugLine.h"
-    "Debugging/DebugLineDrawer.cpp"
     "Debugging/DebugLineDrawer.h"
-    "Debugging/DebugLineRenderObject.cpp"
     "Debugging/DebugLineRenderObject.h"
-    "EngineTools/EasingTester.cpp"
     "EngineTools/EasingTester.h"
-    "EngineTools/EngineTools.cpp"
     "EngineTools/EngineTools.h"
-    "FileSystem/WinFileWatcher.cpp"
     "FileSystem/WinFileWatcher.h"
     "Functionalities/BaseFunctionality.h"
     "Functionalities/Functionality.h"
     "Functionalities/FunctionalitySystem.h"
-    "Functionalities/SpriteRenderingFunctionality.cpp"
     "Functionalities/SpriteRenderingFunctionality.h"
-    "Functionalities/TimerFunctionality.cpp"
     "Functionalities/TimerFunctionality.h"
-    "Functionalities/TransformFunctionality.cpp"
     "Functionalities/TransformFunctionality.h"
-    "Graphics/RenderNodeGraph/RenderNodeGraph.cpp"
     "Graphics/RenderNodeGraph/RenderNodeGraph.h"
-    "Graphics/RenderNodeGraph/RenderNodeTypes.cpp"
     "Graphics/RenderNodeGraph/RenderNodeTypes.h"
-    "Graphics/EngineUniformBuffer.cpp"
     "Graphics/EngineUniformBuffer.h"
-    "Graphics/LineListRenderObject.cpp"
     "Graphics/LineListRenderObject.h"
-    "Graphics/OpenGLFacade.cpp"
     "Graphics/OpenGLFacade.h"
-    "Graphics/RenderCommandProcessor.cpp"
     "Graphics/RenderCommandProcessor.h"
-    "Graphics/Renderer.cpp"
     "Graphics/Renderer.h"
-    "Graphics/RenderHandle.cpp"
     "Graphics/RenderHandle.h"
-    "Graphics/RenderObject.cpp"
     "Graphics/RenderObject.h"
-    "Graphics/RenderSettingsManager.cpp"
     "Graphics/RenderSettingsManager.h"
-    "Graphics/RenderTarget.cpp"
     "Graphics/RenderTarget.h"
-    "Graphics/ScreenPassRenderObject.cpp"
     "Graphics/ScreenPassRenderObject.h"
-    "Graphics/Shader.cpp"
     "Graphics/Shader.h"
-    "Graphics/ShaderParser.cpp"
     "Graphics/ShaderParser.h"
-    "Graphics/ShaderProgram.cpp"
     "Graphics/ShaderProgram.h"
-    "Graphics/SpriteRenderObject.cpp"
     "Graphics/SpriteRenderObject.h"
-    "Graphics/Texture.cpp"
     "Graphics/Texture.h"
     "Graphics/UniformBuffer.h"
     "Graphics/VertexAttributes.h"
     "Graphics/VertexBuffer.h"
     "Graphics/VertexBufferArray.h"
     "Graphics/VertexTypes.h"
-    "Imgui/AssetBrowser.cpp"
     "Imgui/AssetBrowser.h"
-    "Imgui/Canvas.cpp"
     "Imgui/Canvas.h"
-    "Imgui/FileSelector.cpp"
     "Imgui/FileSelector.h"
-    "Imgui/NodeGraphGui.cpp"
     "Imgui/NodeGraphGui.h"
     "Input/InputItems.h"
-    "Input/InputSystem.cpp"
     "Input/InputSystem.h"
-    "Logging/ImGuiLogger.cpp"
     "Logging/ImGuiLogger.h"
-    "Message/DispatchableBuffer.cpp"
     "Message/DispatchableBuffer.h"
-    "Message/DispatchRouter.cpp"
     "Message/DispatchRouter.h"
     "Message/Messages.h"
-    "Message/MessageSubscriber.cpp"
     "Message/MessageSubscriber.h"
     "Message/MessageTypes.h"
     "NodeGraph/SlotCustomization/SlotColors.h"
@@ -117,27 +70,17 @@ list(APPEND SourceFiles
     "NodeGraph/SlotCustomization/SlotInputEdits.h"
     "NodeGraph/SlotCustomization/SlotSerialization.h"
     "NodeGraph/CommonNodes.h"
-    "NodeGraph/NodeGraph.cpp"
     "NodeGraph/NodeGraph.h"
     "NodeGraph/Nodegraph.md"
-    "NodeGraph/NodeTypes.cpp"
     "NodeGraph/NodeTypes.h"
     "Object/CreateObjectJob.h"
-    "Object/DependencyDestructor.cpp"
     "Object/DependencyDestructor.h"
-    "Object/Object.cpp"
     "Object/Object.h"
-    "Policies/Scheduler.cpp"
     "Policies/Scheduler.h"
-    "Program/Engine.cpp"
     "Program/Engine.h"
-    "Program/GlfwFacade.cpp"
     "Program/GlfwFacade.h"
-    "Program/ImguiWrapper.cpp"
     "Program/ImguiWrapper.h"
-    "Program/Window.cpp"
     "Program/Window.h"
-    "Randomizer/Randomizer.cpp"
     "Randomizer/Randomizer.h"
     "Resources/Asset.h"
     "Resources/AssetDatabase.h"
@@ -145,7 +88,6 @@ list(APPEND SourceFiles
     "Resources/Resource.h"
     "Resources/ResourceProxy.h"
     "Resources/ResourceSystem.h"
-    "Threads/TaskManager.cpp"
     "Threads/TaskManager.h"
     "Threads/ThreadChecker.h"
     "Utilities/Container/BackendImplementations/ColonyBackend.h"
@@ -157,7 +99,6 @@ list(APPEND SourceFiles
     "Utilities/Container/Traits/TraitList.h"
     "Utilities/Container/Container.h"
     "Utilities/Container/ContainerBackend.h"
-    "Utilities/Debugging/Debugged.cpp"
     "Utilities/Debugging/Debugged.h"
     "Utilities/Easing/EasingFunctions.h"
     "Utilities/Json/JsonExtensions.h"
@@ -165,33 +106,112 @@ list(APPEND SourceFiles
     "Utilities/TypeTraits/ContainsType.h"
     "Utilities/TypeTraits/ParameterPack.h"
     "Utilities/TypeTraits/TypeTraits.h"
-    "Utilities/BezierCurve.cpp"
     "Utilities/BezierCurve.h"
     "Utilities/Color.h"
-    "Utilities/Id.cpp"
     "Utilities/Id.h"
-    "Utilities/Platform.cpp"
     "Utilities/Platform.h"
-    "Utilities/TimeKeeper.cpp"
     "Utilities/TimeKeeper.h"
     "Constants.h"
-    "glad.c"
-    "pch.cpp"
     "pch.h")
 
-set_source_files_properties("glad.c" PROPERTIES LANGUAGE CXX)
+list(APPEND SourceFiles
+    "Audio/AudioFile.cpp"
+    "Audio/AudioManager.cpp"
+    "Audio/AudioMixingNodeGraph.cpp"
+    "Audio/AudioNodeTypes.cpp"
+    "Audio/SoundEffectNodeGraph.cpp"
+    "Camera/Camera.cpp"
+    "Camera/CameraManager.cpp"
+    "Camera/Display.cpp"
+    "Collision/ColliderDebug.cpp"
+    "Collision/CollisionComponent.cpp"
+    "Collision/CollisionFunctionality.cpp"
+    "Collision/CollisionSystem.cpp"
+    "Components/Component.cpp"
+    "Debugging/DebugLineDrawer.cpp"
+    "Debugging/DebugLineRenderObject.cpp"
+    "EngineTools/EasingTester.cpp"
+    "EngineTools/EngineTools.cpp"
+    "FileSystem/WinFileWatcher.cpp"
+    "Functionalities/SpriteRenderingFunctionality.cpp"
+    "Functionalities/TimerFunctionality.cpp"
+    "Functionalities/TransformFunctionality.cpp"
+    "Graphics/RenderNodeGraph/RenderNodeGraph.cpp"
+    "Graphics/RenderNodeGraph/RenderNodeTypes.cpp"
+    "Graphics/EngineUniformBuffer.cpp"
+    "Graphics/LineListRenderObject.cpp"
+    "Graphics/OpenGLFacade.cpp"
+    "Graphics/RenderCommandProcessor.cpp"
+    "Graphics/Renderer.cpp"
+    "Graphics/RenderHandle.cpp"
+    "Graphics/RenderObject.cpp"
+    "Graphics/RenderSettingsManager.cpp"
+    "Graphics/RenderTarget.cpp"
+    "Graphics/ScreenPassRenderObject.cpp"
+    "Graphics/Shader.cpp"
+    "Graphics/ShaderParser.cpp"
+    "Graphics/ShaderProgram.cpp"
+    "Graphics/SpriteRenderObject.cpp"
+    "Graphics/Texture.cpp"
+    "Imgui/AssetBrowser.cpp"
+    "Imgui/Canvas.cpp"
+    "Imgui/FileSelector.cpp"
+    "Imgui/NodeGraphGui.cpp"
+    "Input/InputSystem.cpp"
+    "Logging/ImGuiLogger.cpp"
+    "Message/DispatchableBuffer.cpp"
+    "Message/DispatchRouter.cpp"
+    "Message/MessageSubscriber.cpp"
+    "NodeGraph/SlotCustomization/SlotCustomization.md"
+    "NodeGraph/NodeGraph.cpp"
+    "NodeGraph/Nodegraph.md"
+    "NodeGraph/NodeTypes.cpp"
+    "Object/DependencyDestructor.cpp"
+    "Object/Object.cpp"
+    "Policies/Scheduler.cpp"
+    "Program/Engine.cpp"
+    "Program/GlfwFacade.cpp"
+    "Program/ImguiWrapper.cpp"
+    "Program/Window.cpp"
+    "Randomizer/Randomizer.cpp"
+    "Threads/TaskManager.cpp"
+    "Utilities/Debugging/Debugged.cpp"
+    "Utilities/BezierCurve.cpp"
+    "Utilities/Id.cpp"
+    "Utilities/Platform.cpp"
+    "Utilities/TimeKeeper.cpp"
+    "glad.c"
+    "pch.cpp")
 
-add_library(WonderMake STATIC ${SourceFiles})
+list(APPEND TargetDependencies Imgui NlohmannJson SoLoud Stb WonderMakeBase WonderMakeDebugUi WonderMakeUtility WonderMakeIo WonderMakeEngine)
 
-set_pedantic_warning_level(WonderMake)
-set_whole_archive(WonderMake)
-target_include_directories(WonderMake PUBLIC ".")
-target_link_libraries(WonderMake Imgui NlohmannJson SoLoud Stb WonderMakeBase WonderMakeDebugUi WonderMakeUtility WonderMakeIo WonderMakeEngine)
+if (NOT WonderMake_ImportLibraries)
+    set_source_files_properties("glad.c" PROPERTIES LANGUAGE CXX)
+    
+    add_library(WonderMake STATIC ${IncludeFiles} ${SourceFiles})
+    
+    set_pedantic_warning_level(WonderMake)
+    set_whole_archive(WonderMake PUBLIC)
+    target_include_directories(WonderMake PUBLIC ".")
+    target_link_libraries(WonderMake ${TargetDependencies})
+    
+    #Temporary until GLFW include is fixed.
+    target_link_libraries(WonderMake "${CMAKE_CURRENT_LIST_DIR}/../../External/glfw-3.3/Lib/glfw3_x64_${CMAKE_BUILD_TYPE}.lib")
+
+    #Temporary until SoLoud include is fixed.
+    target_link_libraries(WonderMake "${CMAKE_CURRENT_LIST_DIR}/../../External/SoLoud/Lib/soloud_x64_${CMAKE_BUILD_TYPE}.lib")
+else()
+    add_library(WonderMake STATIC IMPORTED GLOBAL ${IncludeFiles})
+    
+    set_whole_archive(WonderMake INTERFACE)
+    target_link_libraries(WonderMake INTERFACE ${TargetDependencies})
+    target_include_directories(WonderMake INTERFACE ".")
+
+    #Temporary until GLFW include is fixed.
+    target_link_libraries(WonderMake INTERFACE "${CMAKE_CURRENT_LIST_DIR}/../../External/glfw-3.3/Lib/glfw3_x64_${CMAKE_BUILD_TYPE}.lib")
+
+    #Temporary until SoLoud include is fixed.
+    target_link_libraries(WonderMake INTERFACE "${CMAKE_CURRENT_LIST_DIR}/../../External/SoLoud/Lib/soloud_x64_${CMAKE_BUILD_TYPE}.lib")
+endif()
 
 add_compile_definitions("IMGUI_DEFINE_MATH_OPERATORS")
-
-#Temporary until GLFW include is fixed.
-target_link_libraries(WonderMake "${CMAKE_CURRENT_LIST_DIR}/../../External/glfw-3.3/Lib/glfw3_x64_${CMAKE_BUILD_TYPE}.lib")
-
-#Temporary until SoLoud include is fixed.
-target_link_libraries(WonderMake "${CMAKE_CURRENT_LIST_DIR}/../../External/SoLoud/Lib/soloud_x64_${CMAKE_BUILD_TYPE}.lib")

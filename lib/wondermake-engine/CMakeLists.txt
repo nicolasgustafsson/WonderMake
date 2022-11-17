@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.19)
 
 add_subdirectory("proto")
 
-list(APPEND SourceFiles
+list(APPEND IncludeFiles
     "include/wondermake-engine/ConfigurationEngine.h"
     "include/wondermake-engine/ConfigurationRemoteSystem.h"
     "include/wondermake-engine/DeserializeConfigurationJob.h"
@@ -10,7 +10,9 @@ list(APPEND SourceFiles
     "include/wondermake-engine/LoggerRemoteConnection.h"
     "include/wondermake-engine/LoggerRemoteSocket.h"
     "include/wondermake-engine/LoggerRemoteSystem.h"
-    "include/wondermake-engine/SerializeConfigurationJob.h"
+    "include/wondermake-engine/SerializeConfigurationJob.h")
+
+list(APPEND SourceFiles
     "source/ConfigurationEngine.cpp"
     "source/ConfigurationProtoSerialization.cpp"
     "source/ConfigurationProtoSerialization.h"
@@ -22,10 +24,19 @@ list(APPEND SourceFiles
     "source/LoggerRemoteSystem.cpp"
     "source/SerializeConfigurationJob.cpp")
 
-add_library(WonderMakeEngine STATIC ${SourceFiles})
+list(APPEND TargetDependencies WonderMakeEngineProto WonderMakeBase WonderMakeUtility WonderMakeIo NlohmannJson)
 
-set_pedantic_warning_level(WonderMakeEngine)
-set_whole_archive(WonderMakeEngine)
-target_include_directories(WonderMakeEngine PUBLIC "Include")
-
-target_link_libraries(WonderMakeEngine WonderMakeEngineProto WonderMakeBase WonderMakeUtility WonderMakeIo NlohmannJson)
+if (NOT WonderMake_ImportLibraries)
+    add_library(WonderMakeEngine STATIC ${IncludeFiles} ${SourceFiles})
+    
+    set_pedantic_warning_level(WonderMakeEngine)
+    set_whole_archive(WonderMakeEngine PUBLIC)
+    target_include_directories(WonderMakeEngine PUBLIC "include")
+    target_link_libraries(WonderMakeEngine ${TargetDependencies})
+else()
+    add_library(WonderMakeEngine STATIC IMPORTED GLOBAL ${IncludeFiles})
+    
+    set_whole_archive(WonderMakeEngine INTERFACE)
+    target_include_directories(WonderMakeEngine INTERFACE "include")
+    target_link_libraries(WonderMakeEngine INTERFACE ${TargetDependencies})
+endif()

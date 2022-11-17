@@ -9,6 +9,18 @@ option(WonderMake_TestingLegacy			"Toggles all Legacy Unit Tests."							OFF)
 option(WonderMake_SetCxxStandard		"Makes CMake set the c++ standard."							ON)
 option(WonderMake_SetConfigurationTypes	"Makes CMake set the configurations."						ON)
 
+# Turning this on makes it so most WonderMake targets use INTERFACE instead of STATIC when calling
+# add_library, meaning that it won't link against any libraries. You'll need to supply the static
+# libraries yourself. This is done by setting the IMPORTED_LOCATION property of these targets:
+# Imgui WonderMake WonderMakeBase WonderMakeDebugUi WonderMakeEngine WonderMakeIo WonderMakeUtility
+#
+# Note that this not apply to Protobuf targets. They are still compiled and linked towards.
+#
+# The reason for this is because I was unable to get Github Actions to perform incremental
+# compiling when caching the output. So this is far more intrusive than I would have wanted.
+#
+option(WonderMake_ImportLibraries		"Makes WonderMake import target libraries."					OFF)
+
 if(WonderMake_SetCxxStandard)
 	set(CMAKE_CXX_STANDARD 20)
 endif()

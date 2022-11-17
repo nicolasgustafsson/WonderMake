@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.19)
 
-list(APPEND SourceFiles
+list(APPEND IncludeFiles
     "include/wondermake-utility/Alias.h"
     "include/wondermake-utility/AnyExecutor.h"
     "include/wondermake-utility/AutoRegister.h"
@@ -37,14 +37,22 @@ list(APPEND SourceFiles
     "include/wondermake-utility/UniqueValue.h"
     "include/wondermake-utility/Utility.h"
     "include/wondermake-utility/Vector.h"
-    "include/wondermake-utility/WinPlatform.h"
+    "include/wondermake-utility/WinPlatform.h")
+
+list(APPEND SourceFiles
     "source/AnyExecutor.cpp"
     "source/CmdLineArgs.cpp"
     "source/DependencyInjector.cpp"
     "source/Time.cpp"
     "source/WinStringUtility.cpp")
 
-add_library(WonderMakeUtility STATIC ${SourceFiles})
-
-set_pedantic_warning_level(WonderMakeUtility)
-target_include_directories(WonderMakeUtility PUBLIC "Include")
+if (NOT WonderMake_ImportLibraries)
+    add_library(WonderMakeUtility STATIC ${IncludeFiles} ${SourceFiles})
+    
+    set_pedantic_warning_level(WonderMakeUtility)
+    target_include_directories(WonderMakeUtility PUBLIC "include")
+else()
+    add_library(WonderMakeUtility STATIC IMPORTED GLOBAL ${IncludeFiles})
+    
+    target_include_directories(WonderMakeUtility INTERFACE "include")
+endif()

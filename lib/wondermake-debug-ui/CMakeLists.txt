@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 3.10)
 
-list(APPEND SourceFiles
+list(APPEND IncludeFiles
     "include/wondermake-debug-ui/DebugSettingsSystem.h"
     "include/wondermake-debug-ui/DebugSystem.h"
-    "include/wondermake-debug-ui/ImguiInclude.h"
+    "include/wondermake-debug-ui/ImguiInclude.h")
+
+list(APPEND SourceFiles
     "source/ConfigurationDebugUi.cpp"
     "source/ConfigurationDebugUi.h"
     "source/ConfigurationView.cpp"
@@ -13,10 +15,19 @@ list(APPEND SourceFiles
     "source/JsonInspector.cpp"
     "source/JsonInspector.h")
 
-add_library(WonderMakeDebugUi STATIC ${SourceFiles})
+list(APPEND TargetDependencies Imgui WonderMakeBase WonderMakeEngine WonderMakeIo WonderMakeUtility)
 
-set_pedantic_warning_level(WonderMakeDebugUi)
-set_whole_archive(WonderMakeDebugUi)
-target_include_directories(WonderMakeDebugUi PUBLIC "include")
-
-target_link_libraries(WonderMakeDebugUi Imgui WonderMakeBase WonderMakeEngine WonderMakeIo WonderMakeUtility)
+if (NOT WonderMake_ImportLibraries)
+    add_library(WonderMakeDebugUi STATIC ${IncludeFiles} ${SourceFiles})
+    
+    set_pedantic_warning_level(WonderMakeDebugUi)
+    set_whole_archive(WonderMakeDebugUi PUBLIC)
+    target_include_directories(WonderMakeDebugUi PUBLIC "include")
+    target_link_libraries(WonderMakeDebugUi ${TargetDependencies})
+else()
+    add_library(WonderMakeDebugUi STATIC IMPORTED GLOBAL ${IncludeFiles})
+    
+    set_whole_archive(WonderMakeDebugUi INTERFACE)
+    target_include_directories(WonderMakeDebugUi INTERFACE "include")
+    target_link_libraries(WonderMakeDebugUi INTERFACE ${TargetDependencies})
+endif()

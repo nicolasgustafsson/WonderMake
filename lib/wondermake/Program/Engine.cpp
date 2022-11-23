@@ -313,6 +313,8 @@ namespace Engine
 				WmLogError(TagWonderMake << "Failed to open log file.");
 		}
 
+		WmLogInfo(TagWonderMake << "Version: " << aInfo.Version << '.');
+
 		{
 			WmLogInfo(TagWonderMake << "Creating single instance systems...");
 

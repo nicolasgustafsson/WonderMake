@@ -98,6 +98,9 @@ namespace Engine
 		// Human readable name intended to be the name of the application.
 		std::string ApplicationName = "WonderMake";
 
+		// Version of your application. Only used at the start to print the version to the log.
+		std::string Version = "1.0.0";
+
 		// Command line args to be passed to the CmdLineArgsSystem, allowing them to be easily accessed by the application. WonderMake itself does not make use of them.
 		CmdLineArgs CommandLineArguments = CmdLineArgs(std::vector<std::string>());
 

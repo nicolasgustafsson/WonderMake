@@ -4,6 +4,7 @@ list(APPEND IncludeFiles
     "include/wondermake-base/Cargo.h"
     "include/wondermake-base/CmdLineArgsSystem.h"
     "include/wondermake-base/Configuration.h"
+    "include/wondermake-base/ConfigurationConcepts.h"
     "include/wondermake-base/ConfigurationGlobal.h"
     "include/wondermake-base/ConfigurationSystem.h"
     "include/wondermake-base/GuidGeneratorSystem.h"

@@ -1,10 +1,12 @@
 #pragma once
 
+#include "wondermake-base/ConfigurationConcepts.h"
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/WmLogTags.h"
 
 #include "wondermake-utility/FilePath.h"
 #include "wondermake-utility/MemoryUnit.h"
+#include "wondermake-utility/Result.h"
 #include "wondermake-utility/Typedefs.h"
 
 #include <optional>
@@ -13,32 +15,6 @@
 #include <typeindex>
 #include <unordered_map>
 #include <variant>
-
-template<typename TConfig>
-concept CConfigType =
-	!std::is_const_v<TConfig> && 
-	!std::is_reference_v<TConfig> && (
-		std::is_arithmetic_v<TConfig> ||
-		std::is_enum_v<TConfig> ||
-		CMemoryUnit<TConfig> ||
-		std::is_same_v<TConfig, FilePath> ||
-		std::is_same_v<std::string, TConfig>);
-
-template<typename TConfig>
-concept CConfigRaw =
-	std::is_arithmetic_v<std::remove_const_t<TConfig>> ||
-	std::is_same_v<std::decay_t<TConfig>, std::string> ||
-	std::is_same_v<std::decay_t<TConfig>, FilePath>;
-
-template<typename TConfig>
-concept CConfig =
-	std::is_arithmetic_v<std::remove_const_t<TConfig>> ||
-	std::is_enum_v<std::remove_const_t<TConfig>> ||
-	CMemoryUnit<TConfig> ||
-	std::is_same_v<TConfig, FilePath> ||
-	std::is_constructible_v<std::string, TConfig> ||
-	std::is_convertible_v<TConfig, std::string> ||
-	CConfigRaw<TConfig>;
 
 enum class EConfigGroup
 {
@@ -131,6 +107,19 @@ public:
 
 					return retVal;
 				}
+				else if constexpr (CConfigurableValue<TConfigType>)
+				{
+					using RawType = decltype(WmConfig<TConfigType>::To(aValue));
+
+					std::unordered_map<std::string, RawType> retVal;
+
+					retVal.reserve(aRestrict.Map.size());
+
+					for (auto&& [name, value] : aRestrict.Map)
+						retVal.emplace(std::make_pair(name, WmConfig<TConfigType>::To(value)));
+
+					return retVal;
+				}
 				else if constexpr (CMemoryUnit<TConfigType>)
 				{
 					std::unordered_map<std::string, typename TConfigType::Rep> retVal;
@@ -149,6 +138,8 @@ public:
 			{
 				if constexpr (std::is_enum_v<TConfigType>)
 					return std::unordered_map<std::string, std::underlying_type_t<TConfigType>>();
+				else if constexpr (CConfigurableValue<TConfigType>)
+					return std::unordered_map<std::string, decltype(WmConfig<TConfigType>::To(aValue))>();
 				else if constexpr (CMemoryUnit<TConfigType>)
 					return std::unordered_map<std::string, typename TConfigType::Rep>();
 				else
@@ -164,6 +155,25 @@ public:
 				{
 					{},
 					static_cast<std::underlying_type_t<TConfigType>>(aValue),
+					std::nullopt,
+					getAllowedValuesMap(),
+					aGroup
+				},
+				typeid(TConfigType)
+			};
+
+			myConfigs.insert(std::make_pair(static_cast<std::string>(std::forward<TId>(aId)), std::move(data)));
+		}
+		else if constexpr (CConfigurableValue<TConfigType>)
+		{
+			using RawType = decltype(WmConfig<TConfigType>::To(aValue));
+
+			ConfigDataRaw data =
+			{
+				ConfigData<RawType>
+				{
+					{},
+					WmConfig<TConfigType>::To(aValue),
 					std::nullopt,
 					getAllowedValuesMap(),
 					aGroup
@@ -304,6 +314,21 @@ public:
 			
 			config.Override = static_cast<RawType>(aValue);
 		}
+		else if constexpr (CConfigurableValue<TConfigType>)
+		{
+			using RawType = decltype(WmConfig<TConfigType>::To(aValue));
+
+			if (!std::holds_alternative<ConfigData<RawType>>(configRaw.Config))
+			{
+				WmLogError(TagWonderMake << TagWmConfiguration << "Config type mismatch, attempted to set override type " << overrideType.name() << " for id " << aId << ". Set type: " << configRaw.Type.name() << '.');
+
+				return;
+			}
+
+			auto&& config = std::get<ConfigData<RawType>>(configRaw.Config);
+
+			config.Override = WmConfig<TConfigType>::To(aValue);
+		}
 		else if constexpr (CMemoryUnit<TConfigType>)
 		{
 			using RawType = typename TConfigType::Rep;
@@ -417,6 +442,12 @@ public:
 
 				if constexpr (std::is_enum_v<TConfigType>)
 					return std::underlying_type_t<TConfigType>();
+				else if constexpr (CConfigurableValue<TConfigType>)
+				{
+					static constexpr auto to = [](const auto& aValue) { return WmConfig<TConfigType>::To(aValue); };
+
+					return std::invoke_result_t<decltype(to), const TConfigType&>();
+				}
 				else if constexpr (CMemoryUnit<TConfigType>)
 					return typename TConfigType::Rep();
 				else
@@ -519,6 +550,40 @@ public:
 
 			return static_cast<TConfigType>(config.Value);
 		}
+		else if constexpr (CConfigurableValue<TConfigType>)
+		{
+			static constexpr auto to = [](const auto& aValue) { return WmConfig<TConfigType>::To(aValue); };
+
+			using RawType = std::invoke_result_t<decltype(to), const TConfigType&>;
+
+			if (!std::holds_alternative<ConfigData<RawType>>(configRaw.Config))
+			{
+				WmLogError(TagWonderMake << TagWmConfiguration << "Config element type mismatch, attempted to get type " << configFetchType.name() << " from id " << aId << ". Set type: " << configRaw.Type.name() << '.');
+
+				return std::move(aDefaultValue);
+			}
+
+			auto&& config = std::get<ConfigData<RawType>>(configRaw.Config);
+
+			if (config.Override)
+			{
+				auto result = WmConfig<TConfigType>::From(*config.Override);
+
+				if (result)
+					return result.Unwrap();
+
+				WmLogError(TagWonderMake << TagWmConfiguration << "Failed to convert configurable type, attempted to get type " << configFetchType.name() << " from id " << aId << ". Set override: " << *config.Override << '.');
+			}
+
+			auto result = WmConfig<TConfigType>::From(config.Value);
+
+			if (result)
+				return result.Unwrap();
+
+			WmLogError(TagWonderMake << TagWmConfiguration << "Failed to convert configurable type, attempted to get type " << configFetchType.name() << " from id " << aId << ". Set value: " << config.Value << '.');
+
+			return std::move(aDefaultValue);
+		}
 		else if constexpr (CMemoryUnit<TConfigType>)
 		{
 			using RawType = typename TConfigType::Rep;
@@ -600,6 +665,12 @@ public:
 			{
 				if constexpr (std::is_enum_v<TConfigType>)
 					return std::underlying_type_t<TConfigType>();
+				else if constexpr (CConfigurableValue<TConfigType>)
+				{
+					static constexpr auto to = [](const auto& aValue) { return WmConfig<TConfigType>::To(aValue); };
+
+					return std::invoke_result_t<decltype(to), const TConfigType&>();
+				}
 				else if constexpr (CMemoryUnit<TConfigType>)
 					return typename TConfigType::Rep();
 				else
@@ -618,7 +689,19 @@ public:
 		if (!config.Override)
 			return std::nullopt;
 
-		return TConfigType(*config.Override);
+		if constexpr (CConfigurableValue<TConfigType>)
+		{
+			auto result = WmConfig<TConfigType>::From(*config.Override);
+
+			if (!result)
+				return result.Unwrap();
+
+			WmLogError(TagWonderMake << TagWmConfiguration << "Failed to convert configurable type, attempted to get type " << configFetchType.name() << " from id " << aId << ". Set override: " << *config.Override << '.');
+
+			return std::nullopt;
+		}
+		else
+			return TConfigType(*config.Override);
 	}
 
 	void ResetOverride(const std::string& aId);

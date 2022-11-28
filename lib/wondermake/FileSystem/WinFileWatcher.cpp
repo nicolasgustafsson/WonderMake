@@ -3,7 +3,7 @@
 
 #include <Windows.h>
 
-REGISTER_SYSTEM(WinFileWatcher);
+WM_REGISTER_SYSTEM(WinFileWatcher);
 
 WinFileWatcher::WinFileWatcher()
 {

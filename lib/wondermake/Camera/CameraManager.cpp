@@ -10,7 +10,7 @@
 #include "wondermake-base/ConfigurationSystem.h"
 #include "wondermake-base/SystemGlobal.h"
 
-REGISTER_SYSTEM(CameraManager);
+WM_REGISTER_SYSTEM(CameraManager);
 
 template<typename T>
 inline constexpr auto MakeColonyDeleter(CExecutor auto aExecutor, plf::colony<T>& aColony, typename plf::colony<T>::iterator aIt, auto&&... aMeta)

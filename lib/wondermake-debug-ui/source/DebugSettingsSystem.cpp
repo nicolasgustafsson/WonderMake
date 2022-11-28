@@ -16,7 +16,7 @@
 
 #include <magic_enum.hpp>
 
-REGISTER_SYSTEM(DebugSettingsSystem);
+WM_REGISTER_SYSTEM(DebugSettingsSystem);
 
 DebugSettingsSystem::DebugSettingsSystem()
 {

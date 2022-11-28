@@ -2,7 +2,7 @@
 
 #include "Randomizer.h"
 
-REGISTER_SYSTEM(Randomizer);
+WM_REGISTER_SYSTEM(Randomizer);
 
 Randomizer::Randomizer()
 	: myRandomGenerator(myRandomDevice())

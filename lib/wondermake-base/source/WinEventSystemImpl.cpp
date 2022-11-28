@@ -8,7 +8,7 @@
 
 #include <algorithm>
 
-REGISTER_SYSTEM_MASKED(WinEventSystemImpl, WinEventSystem);
+WM_REGISTER_SYSTEM_MASKED(WinEventSystemImpl, WinEventSystem);
 
 WinEventSystemImpl::WinEventSystemImpl() noexcept
 {

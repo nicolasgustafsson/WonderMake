@@ -3,7 +3,7 @@
 #include "GLFW/glfw3.h"
 #include <glad/glad.h>
 
-REGISTER_SYSTEM(GlfwFacade);
+WM_REGISTER_SYSTEM(GlfwFacade);
 
 GlfwFacade::GlfwFacade()
 {

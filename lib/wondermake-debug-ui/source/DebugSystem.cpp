@@ -7,7 +7,7 @@
 
 #include "wondermake-utility/Bindable.h"
 
-REGISTER_SYSTEM(DebugSystem);
+WM_REGISTER_SYSTEM(DebugSystem);
 
 inline constexpr std::string_view locToolbarSettingName			= "Main Toolbar";
 inline constexpr std::string_view locDebugWindowSettingPrefix	= "Debug Windows/";

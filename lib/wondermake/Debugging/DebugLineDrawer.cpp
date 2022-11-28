@@ -2,7 +2,7 @@
 #include "DebugLineDrawer.h"
 #include "wondermake-utility/Utility.h"
 
-REGISTER_SYSTEM(DebugLineDrawer);
+WM_REGISTER_SYSTEM(DebugLineDrawer);
 
 DebugLineDrawer::DebugLineDrawer() noexcept
 	: mySubscriber(BindHelper(&DebugLineDrawer::OnGotDebugLineMessage, this))

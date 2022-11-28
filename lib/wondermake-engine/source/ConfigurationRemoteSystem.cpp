@@ -12,7 +12,7 @@
 
 #include "wondermake-utility/MemoryUnit.h"
 
-REGISTER_SYSTEM(ConfigurationRemoteSystem);
+WM_REGISTER_SYSTEM(ConfigurationRemoteSystem);
 
 using ProtoConfigurationRemote::Upstream;
 using ProtoConfigurationRemote::Downstream;

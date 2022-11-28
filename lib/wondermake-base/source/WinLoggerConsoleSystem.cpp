@@ -8,7 +8,7 @@
 #include <iostream>
 #include <sstream>
 
-REGISTER_SYSTEM(WinLoggerConsoleSystem);
+WM_REGISTER_SYSTEM(WinLoggerConsoleSystem);
 
 void WinLoggerConsoleSystem::Initialize()
 {

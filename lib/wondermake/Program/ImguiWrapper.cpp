@@ -11,7 +11,7 @@
 
 #include "wondermake-base/ConfigurationSystem.h"
 
-REGISTER_SYSTEM(ImguiWrapper);
+WM_REGISTER_SYSTEM(ImguiWrapper);
 
 ImguiWrapper::ImguiWrapper()
 {

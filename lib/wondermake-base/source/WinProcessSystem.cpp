@@ -10,7 +10,7 @@
 
 #include "wondermake-utility/Bindable.h"
 
-REGISTER_SYSTEM_MASKED(WinProcessSystem, ProcessSystem);
+WM_REGISTER_SYSTEM_MASKED(WinProcessSystem, ProcessSystem);
 
 ProcessId WinProcessSystem::GetCurrentProcessId()
 {

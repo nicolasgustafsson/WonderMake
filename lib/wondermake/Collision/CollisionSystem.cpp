@@ -8,7 +8,7 @@
 #include "wondermake-base/ScheduleSystem.h"
 #include "wondermake-base/WmLogTags.h"
 
-REGISTER_SYSTEM(CollisionSystem);
+WM_REGISTER_SYSTEM(CollisionSystem);
 
 CollisionSystem::CollisionSystem() noexcept
 {

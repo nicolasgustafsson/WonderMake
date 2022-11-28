@@ -7,7 +7,7 @@
 #include "WinIpcAcceptor.h"
 #include "WinIpcConnection.h"
 
-REGISTER_SYSTEM_MASKED(WinIpcSystem, IpcSystem);
+WM_REGISTER_SYSTEM_MASKED(WinIpcSystem, IpcSystem);
 
 SharedReference<IpcAcceptor> WinIpcSystem::CreateAcceptor()
 {

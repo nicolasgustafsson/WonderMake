@@ -4,7 +4,7 @@
 #include "wondermake-base/ScheduleSystem.h"
 #include "wondermake-base/WinEventSystem.h"
 
-REGISTER_SYSTEM(WinProgram);
+WM_REGISTER_SYSTEM(WinProgram);
 
 WinProgram::WinProgram()
 {

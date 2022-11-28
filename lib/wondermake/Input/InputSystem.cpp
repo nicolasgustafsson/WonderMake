@@ -12,7 +12,7 @@
 
 #include <algorithm>
 
-REGISTER_SYSTEM(InputSystem);
+WM_REGISTER_SYSTEM(InputSystem);
 
 void InputSystem::Update() noexcept
 {

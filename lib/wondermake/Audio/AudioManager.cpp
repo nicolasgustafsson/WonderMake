@@ -18,7 +18,7 @@
 
 #include "wondermake-base/ConfigurationSystem.h"
 
-REGISTER_SYSTEM(AudioManager);
+WM_REGISTER_SYSTEM(AudioManager);
 
 AudioManager::AudioManager()
 	: Debugged("Audio Manager")

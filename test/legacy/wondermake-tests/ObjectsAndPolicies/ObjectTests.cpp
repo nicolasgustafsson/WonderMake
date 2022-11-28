@@ -1,11 +1,8 @@
 #include <catch2/catch.hpp>
 
-#include "Components/Component.h"
-
-#include "Functionalities/Functionality.h"
-
-#include "Object/Object.h"
-
+#include "wondermake-base/Component.h"
+#include "wondermake-base/Functionality.h"
+#include "wondermake-base/Object.h"
 #include "wondermake-base/ScheduleSystem.h"
 
 struct SCatComponent

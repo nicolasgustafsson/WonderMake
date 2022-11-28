@@ -1,8 +1,11 @@
 #pragma once
-#include <optional>
+
 #include "Graphics/SpriteRenderObject.h"
-#include "Component.h"
 #include "Resources/AssetLink.h"
+
+#include "wondermake-base/Component.h"
+
+#include <optional>
 
 struct SSpriteComponent 
 	: public SComponent

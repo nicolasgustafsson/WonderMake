@@ -4,9 +4,10 @@
 
 #include "Utilities/Debugging/Debugged.h"
 
-#include "Functionalities/Functionality.h"
 #include "Functionalities/TransformFunctionality.h"
 #include "Collision/CollisionSystem.h"
+
+#include "wondermake-base/Functionality.h"
 
 class DebugSettingsSystem;
 

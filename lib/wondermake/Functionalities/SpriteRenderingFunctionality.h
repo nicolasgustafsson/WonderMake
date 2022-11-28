@@ -1,8 +1,9 @@
 #pragma once
-#include "Functionality.h"
 
 #include "Components/SpriteComponent.h"
 #include "Functionalities/TransformFunctionality.h"
+
+#include "wondermake-base/Functionality.h"
 
 #include "wondermake-utility/FilePath.h"
 

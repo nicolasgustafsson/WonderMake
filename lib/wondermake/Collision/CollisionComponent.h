@@ -2,7 +2,7 @@
 
 #include "Collision/Colliders.h"
 
-#include "Components/Component.h"
+#include "wondermake-base/Component.h"
 
 #include <vector>
 

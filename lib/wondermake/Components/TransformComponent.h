@@ -1,5 +1,7 @@
 #pragma once
-#include "Component.h"
+
+#include "wondermake-base/Component.h"
+
 #include "wondermake-utility/Vector.h"
 
 template<typename TRepPosition, typename TRepRotation>

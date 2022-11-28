@@ -9,10 +9,10 @@ class Object;
 struct SComponent;
 class _BaseFunctionality;
 
-class DependencyDestructor
+class ObjectDependencyDestructor
 {
 public:
-	DependencyDestructor(std::function<void(Object& , void*)> aDestroyFunc) noexcept;
+	ObjectDependencyDestructor(std::function<void(Object& , void*)> aDestroyFunc) noexcept;
 
 	void Destroy(Object& aObject, SComponent& aComponent);
 	void Destroy(Object& aObject, _BaseFunctionality& aFunctionality);

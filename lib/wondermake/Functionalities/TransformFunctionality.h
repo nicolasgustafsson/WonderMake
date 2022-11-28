@@ -1,8 +1,9 @@
 #pragma once
-#include "Functionalities/Functionality.h"
 #include "Components/TransformComponent.h"
 
 #include "wondermake-debug-ui/ImguiInclude.h"
+
+#include "wondermake-base/Functionality.h"
 
 #include "wondermake-utility/Matrix.h"
 

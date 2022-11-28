@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Functionalities/BaseFunctionality.h"
-#include "Functionalities/FunctionalitySystem.h"
+#include "wondermake-base/BaseFunctionality.h"
+#include "wondermake-base/FunctionalitySystem.h"
 
 #include <optional>
 

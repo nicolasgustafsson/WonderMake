@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Components/ComponentSystem.h"
+#include "wondermake-base/ComponentSystem.h"
 
 #include "wondermake-utility/RestrictTypes.h"
 

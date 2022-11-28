@@ -1,7 +1,6 @@
-#include "pch.h"
-#include "Object.h"
+#include "wondermake-base/Object.h"
 
-#include "Functionalities/BaseFunctionality.h"
+#include "wondermake-base/BaseFunctionality.h"
 
 Object::~Object() noexcept
 {

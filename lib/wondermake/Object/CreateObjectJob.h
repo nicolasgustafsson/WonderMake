@@ -3,9 +3,8 @@
 #include "wondermake-base/Cargo.h"
 #include "wondermake-base/JobBase.h"
 
-#include "Object/Object.h"
-
-#include "Functionalities/FunctionalitySystem.h"
+#include "wondermake-base/FunctionalitySystem.h"
+#include "wondermake-base/Object.h"
 
 namespace _Impl
 {

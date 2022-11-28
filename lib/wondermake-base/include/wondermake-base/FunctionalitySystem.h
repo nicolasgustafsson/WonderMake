@@ -1,13 +1,10 @@
 #pragma once
-#include "Components/ComponentSystem.h"
 
-#include "Functionalities/BaseFunctionality.h"
-
-#include "Object/DependencyDestructor.h"
-#include "Object/Object.h"
-
+#include "wondermake-base/BaseFunctionality.h"
+#include "wondermake-base/ComponentSystem.h"
+#include "wondermake-base/Object.h"
+#include "wondermake-base/ObjectDependencyDestructor.h"
 #include "wondermake-base/ScheduleSystem.h"
-
 #include "wondermake-base/System.h"
 #include "wondermake-base/SystemGlobal.h"
 
@@ -98,7 +95,7 @@ public:
 
 private:
 	plf::colony<TFunctionality>	myFunctionalities;
-	DependencyDestructor		myDependencyDestructor;
+	ObjectDependencyDestructor	myDependencyDestructor;
 
 	template<typename... TDependencies>
 	struct DependencyWrapper {};

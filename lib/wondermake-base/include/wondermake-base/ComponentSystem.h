@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Object/DependencyDestructor.h"
-#include "Object/Object.h"
-
+#include "wondermake-base/Object.h"
+#include "wondermake-base/ObjectDependencyDestructor.h"
 #include "wondermake-base/System.h"
 
 #include "wondermake-utility/plf_colony.h"
@@ -22,8 +21,8 @@ public:
 	bool IsEmpty() const;
 
 private:
-	plf::colony<TData>		myData;
-	DependencyDestructor	myDependencyDestructor;
+	plf::colony<TData>			myData;
+	ObjectDependencyDestructor	myDependencyDestructor;
 };
 
 #define REGISTER_COMPONENT_SYSTEM(aComponent) _REGISTER_SYSTEM_IMPL(ComponentSystem<aComponent>, aComponent)

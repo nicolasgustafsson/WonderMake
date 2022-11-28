@@ -2,7 +2,7 @@
 
 #include "WinPlatformSystemImpl.h"
 
-REGISTER_SYSTEM_MASKED(WinPlatformSystemImpl, WinPlatformSystem);
+WM_REGISTER_SYSTEM_MASKED(WinPlatformSystemImpl, WinPlatformSystem);
 
 DWORD WinPlatformSystemImpl::GetLastError()
 {

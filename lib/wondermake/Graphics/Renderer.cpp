@@ -23,7 +23,7 @@
 
 #include <any>
 
-REGISTER_SYSTEM(Renderer);
+WM_REGISTER_SYSTEM(Renderer);
 
 void GLAPIENTRY
 MessageCallback([[maybe_unused]] GLenum source,

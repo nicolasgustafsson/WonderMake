@@ -6,7 +6,7 @@
 
 #include "wondermake-utility/Math.h"
 
-REGISTER_SYSTEM(TimeKeeper);
+WM_REGISTER_SYSTEM(TimeKeeper);
 
 inline constexpr auto locMaxDeltaTime = std::chrono::duration_cast<std::chrono::high_resolution_clock::duration>(WmChrono::dSeconds(1.0 / 10.0));
 

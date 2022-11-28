@@ -50,17 +50,17 @@ inline TSystem& GetSystem()
 	return Global::GetSystemContainer().Get<TSystem>();
 }
 
-#define _REGISTER_SYSTEM_CLASS(aSystem, aBaseSystem) _RegisterSystem<aSystem, aBaseSystem>
+#define _WM_REGISTER_SYSTEM_CLASS(aSystem, aBaseSystem) _RegisterSystem<aSystem, aBaseSystem>
 
-#define _REGISTER_SYSTEM_MASKED_IMPL(aSystem, aBaseSystem, aSystemName) WM_AUTO_REGISTER(_REGISTER_SYSTEM_CLASS(aSystem, aBaseSystem), aSystemName)
-#define _REGISTER_SYSTEM_IMPL(aSystem, aSystemName) _REGISTER_SYSTEM_MASKED_IMPL(aSystem, aSystem, aSystemName)
+#define _WM_REGISTER_SYSTEM_MASKED_IMPL(aSystem, aBaseSystem, aSystemName) WM_AUTO_REGISTER(_WM_REGISTER_SYSTEM_CLASS(aSystem, aBaseSystem), aSystemName)
+#define _WM_REGISTER_SYSTEM_IMPL(aSystem, aSystemName) _WM_REGISTER_SYSTEM_MASKED_IMPL(aSystem, aSystem, aSystemName)
 
-#define REGISTER_SYSTEM_MASKED(aSystem, aBaseSystem) _REGISTER_SYSTEM_MASKED_IMPL(aSystem, aBaseSystem, aSystem)
-#define REGISTER_SYSTEM(aSystem) _REGISTER_SYSTEM_IMPL(aSystem, aSystem)
+#define WM_REGISTER_SYSTEM_MASKED(aSystem, aBaseSystem) _WM_REGISTER_SYSTEM_MASKED_IMPL(aSystem, aBaseSystem, aSystem)
+#define WM_REGISTER_SYSTEM(aSystem) _WM_REGISTER_SYSTEM_IMPL(aSystem, aSystem)
 
 #else
 
-#define REGISTER_SYSTEM_MASKED(aSystem, aBaseSystem)
-#define REGISTER_SYSTEM(aSystem)
+#define WM_REGISTER_SYSTEM_MASKED(aSystem, aBaseSystem)
+#define WM_REGISTER_SYSTEM(aSystem)
 
 #endif

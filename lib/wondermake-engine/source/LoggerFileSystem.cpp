@@ -8,7 +8,7 @@
 #include <chrono>
 #include <thread>
 
-REGISTER_SYSTEM(LoggerFileSystem);
+WM_REGISTER_SYSTEM(LoggerFileSystem);
 
 void LoggerFileSystem::SetLogSizeLimits(MemoryUnit<EMemoryRatio::Bytes, uintmax_t> aTrimSize, MemoryUnit<EMemoryRatio::Bytes, uintmax_t> aMaxSize)
 {

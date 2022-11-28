@@ -2,7 +2,7 @@
 #include "EngineTools.h"
 #include "EasingTester.h"
 
-REGISTER_SYSTEM(EngineTools);
+WM_REGISTER_SYSTEM(EngineTools);
 
 void EngineTools::Debug()
 {

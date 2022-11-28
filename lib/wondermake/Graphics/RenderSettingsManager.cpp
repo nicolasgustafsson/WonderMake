@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "RenderSettingsManager.h"
 
-REGISTER_SYSTEM(RenderSettingsManager);
+WM_REGISTER_SYSTEM(RenderSettingsManager);
 
 void SRenderSettings::Append(const SRenderSettings& aOther)
 {

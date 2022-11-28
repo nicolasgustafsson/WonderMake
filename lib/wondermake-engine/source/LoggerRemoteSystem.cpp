@@ -9,7 +9,7 @@
 
 #include "wondermake-utility/SharedReference.h"
 
-REGISTER_SYSTEM(LoggerRemoteSystem);
+WM_REGISTER_SYSTEM(LoggerRemoteSystem);
 
 Result<SharedReference<LoggerRemoteSocket>, IpcAcceptor::SOpenError> LoggerRemoteSystem::OpenSocketIpc(std::string aName)
 {

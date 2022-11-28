@@ -2,4 +2,4 @@
 
 #include "wondermake-base/SystemGlobal.h"
 
-REGISTER_SYSTEM(PopulateObjectSystem);
+WM_REGISTER_SYSTEM(PopulateObjectSystem);

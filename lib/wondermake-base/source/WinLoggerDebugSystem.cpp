@@ -5,7 +5,7 @@
 
 #include "wondermake-utility/StringUtility.h"
 
-REGISTER_SYSTEM(WinLoggerDebugSystem);
+WM_REGISTER_SYSTEM(WinLoggerDebugSystem);
 
 void WinLoggerDebugSystem::Initialize()
 {

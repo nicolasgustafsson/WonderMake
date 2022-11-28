@@ -14,7 +14,7 @@
 #include "wondermake-utility/Bindable.h"
 #include "wondermake-utility/Math.h"
 
-REGISTER_SYSTEM(ConfigurationView);
+WM_REGISTER_SYSTEM(ConfigurationView);
 
 inline constexpr float locFooterHeight = 50.f;
 inline constexpr float locMemoryComboboxWidth = 50.f;

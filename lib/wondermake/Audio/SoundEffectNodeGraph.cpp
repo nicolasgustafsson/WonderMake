@@ -2,7 +2,7 @@
 #include "SoundEffectNodeGraph.h"
 #include "Audio/AudioNodeTypes.h"
 
-_REGISTER_SYSTEM_IMPL(ResourceSystem<SoundEffectNodeGraph>, SoundEffectNodeGraphResource);
+_WM_REGISTER_SYSTEM_IMPL(ResourceSystem<SoundEffectNodeGraph>, SoundEffectNodeGraphResource);
 
 SoundEffectNodeGraph::SoundEffectNodeGraph(std::filesystem::path aPath)
 	: NodeGraph(std::move(aPath))

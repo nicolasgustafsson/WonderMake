@@ -36,7 +36,7 @@ protected:
 	std::unordered_map<std::string, std::weak_ptr<SResource<TResource>>> myResources;
 };
 
-#define REGISTER_RESOURCE_SYSTEM(aResource) _REGISTER_SYSTEM_IMPL(ResourceSystem<aResource>, aResource)
+#define REGISTER_RESOURCE_SYSTEM(aResource) _WM_REGISTER_SYSTEM_IMPL(ResourceSystem<aResource>, aResource)
 
 template<typename TResource>
 plf::colony<ResourceProxy<TResource>> ResourceSystem<TResource>::GetAllResources() const

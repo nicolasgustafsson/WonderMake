@@ -19,7 +19,7 @@
 
 #include <fstream>
 
-REGISTER_SYSTEM(Window);
+WM_REGISTER_SYSTEM(Window);
 
 using WindowSizeCallback = std::function<void(GLFWwindow*, int, int)>;
 

@@ -12,7 +12,7 @@
 
 #include <magic_enum.hpp>
 
-REGISTER_SYSTEM(ImGuiLogger);
+WM_REGISTER_SYSTEM(ImGuiLogger);
 
 inline constexpr auto locCompactSettingName = "Logging/Compact";
 

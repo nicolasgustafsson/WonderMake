@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "EngineUniformBuffer.h"
 
-REGISTER_SYSTEM(EngineUniformBuffer);
+WM_REGISTER_SYSTEM(EngineUniformBuffer);
 
 EngineUniformBuffer::EngineUniformBuffer()
 	: UniformBuffer<SEngineUniformBufferData>(Get<OpenGLFacade>(), 0)

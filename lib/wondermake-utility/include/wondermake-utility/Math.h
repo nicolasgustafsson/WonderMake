@@ -36,6 +36,18 @@ namespace WmMath
 	concept Addable = requires (T x) { x + x; };
 	template <class T>
 	concept Subtractable = requires (T x) { x - x; };
+	template <class T>
+	concept Multipliable = requires (T x) { x * x; };
+	template <class T>
+	concept Divisible = requires (T x) { x / x; };
+
+	template <class T>
+	concept Arithmetic =
+		Addable<T> &&
+		Subtractable<T> &&
+		Multipliable<T> &&
+		Divisible<T>;
+
 	template <class T> //[Nicos]: TODO make y be any floating point number
 	concept Progressable = requires (T x, f32 y) { x * y; };
 	template <class T>

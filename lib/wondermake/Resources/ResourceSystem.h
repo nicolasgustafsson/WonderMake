@@ -1,4 +1,6 @@
 #pragma once
+#include "Message/MessageTypes.h"
+#include "Message/MessageSubscriber.h"
 #include "Resources/Resource.h"
 #include "Resources/ResourceProxy.h"
 
@@ -6,13 +8,13 @@
 #include "wondermake-base/System.h"
 #include "wondermake-base/WmLogTags.h"
 
+#include "wondermake-utility/plf_colony.h"
+
 #include <filesystem>
 #include <functional>
 #include <memory>
 #include <mutex>
 #include <unordered_map>
-#include "Message/MessageTypes.h"
-#include "Message/MessageSubscriber.h"
 
 template<typename TResource>
 class ResourceSystem

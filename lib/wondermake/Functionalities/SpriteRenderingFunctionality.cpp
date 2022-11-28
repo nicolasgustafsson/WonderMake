@@ -64,6 +64,11 @@ void SpriteRenderingFunctionality::SetColor(const SColor aColor)
 	Get<SSpriteComponent>().RenderObject->SetColor(aColor);
 }
 
+void SpriteRenderingFunctionality::SetRenderLayer(std::string_view aRenderLayer)
+{
+	Get<SSpriteComponent>().RenderObject->SetRenderLayer(std::move(aRenderLayer));
+}
+
 void SpriteRenderingFunctionality::Hide() noexcept
 {
 	Get<SSpriteComponent>().IsHidden = true;

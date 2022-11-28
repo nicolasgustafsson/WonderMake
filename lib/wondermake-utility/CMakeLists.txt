@@ -16,6 +16,7 @@ list(APPEND IncludeFiles
     "include/wondermake-utility/FilePathData.h"
     "include/wondermake-utility/FixedSizeString.h"
     "include/wondermake-utility/Future.h"
+    "include/wondermake-utility/Geometry.h"
     "include/wondermake-utility/Guid.h"
     "include/wondermake-utility/Line.h"
     "include/wondermake-utility/Math.h"

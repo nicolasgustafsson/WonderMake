@@ -73,7 +73,6 @@ list(APPEND IncludeFiles
     "NodeGraph/NodeGraph.h"
     "NodeGraph/Nodegraph.md"
     "NodeGraph/NodeTypes.h"
-    "Object/CreateObjectJob.h"
     "Policies/Scheduler.h"
     "Program/Engine.h"
     "Program/GlfwFacade.h"

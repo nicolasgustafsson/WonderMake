@@ -13,4 +13,4 @@ SoLoud::Wav& AudioFile::GetSource()
 	return mySource;
 }
 
-REGISTER_RESOURCE(AudioFile);
+WM_REGISTER_RESOURCE(AudioFile);

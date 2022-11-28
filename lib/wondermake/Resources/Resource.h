@@ -1,6 +1,6 @@
 #pragma once
 
-#define REGISTER_RESOURCE(aResource) REGISTER_RESOURCE_SYSTEM(aResource) REGISTER_ASSET_DATABASE(aResource)
+#define REGISTER_RESOURCE(aResource) REGISTER_RESOURCE_SYSTEM(aResource) WM_REGISTER_ASSET_DATABASE(aResource)
 
 class Resource
 {

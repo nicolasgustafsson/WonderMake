@@ -221,4 +221,4 @@ private:
 	IdCounter myIdCounter;
 };
 
-#define REGISTER_ASSET_DATABASE(aAsset) _WM_REGISTER_SYSTEM_IMPL(AssetDatabase<aAsset>, aAsset##Asset)
+#define WM_REGISTER_ASSET_DATABASE(aAsset) _WM_REGISTER_SYSTEM_IMPL(AssetDatabase<aAsset>, aAsset##Asset)

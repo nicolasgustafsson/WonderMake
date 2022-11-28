@@ -6,7 +6,7 @@
 
 #include "wondermake-debug-ui/DebugSettingsSystem.h"
 
-REGISTER_FUNCTIONALITY(CollisionFunctionality);
+WM_REGISTER_FUNCTIONALITY(CollisionFunctionality);
 
 CollisionFunctionality::CollisionFunctionality()
 	: Debugged("Collision")

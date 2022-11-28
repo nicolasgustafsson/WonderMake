@@ -90,5 +90,9 @@ void SpriteRenderingFunctionality::SetTexture(ResourceProxy<Texture>&& aTexture)
 	if (spriteComponent.RenderObject)
 		spriteComponent.RenderObject->SetTexture(std::move(texture));
 	else
-		spriteComponent.RenderObject.emplace(std::move(texture));
+		spriteComponent.RenderObject.emplace(
+			Get<ResourceSystem<Shader<EShaderType::Vertex>>>(),
+			Get<ResourceSystem<Shader<EShaderType::Fragment>>>(),
+			Get<ResourceSystem<Shader<EShaderType::Geometry>>>(),
+			std::move(texture));
 }

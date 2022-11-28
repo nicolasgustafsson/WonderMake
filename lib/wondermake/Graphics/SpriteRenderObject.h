@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Graphics/RenderObject.h"
 
 class SpriteRenderObject 
@@ -10,7 +11,11 @@ class SpriteRenderObject
 		, EVertexAttribute::Rotation>
 {
 public:
-	SpriteRenderObject(ResourceProxy<Texture> aTextureAsset);
+	SpriteRenderObject(
+		ResourceSystem<Shader<EShaderType::Vertex>>& aVsSystem,
+		ResourceSystem<Shader<EShaderType::Fragment>>& aFsSystem,
+		ResourceSystem<Shader<EShaderType::Geometry>>& aGsSystem,
+		ResourceProxy<Texture> aTextureAsset);
 
 	void SetColor(const SColor aColor);
 };

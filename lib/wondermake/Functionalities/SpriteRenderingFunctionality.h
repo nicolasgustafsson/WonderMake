@@ -21,6 +21,9 @@ class SpriteRenderingFunctionality
 			PAdd<ConfigurationSystem, PRead>,
 			PAdd<AssetDatabase<Texture>, PWrite>,
 			PAdd<ResourceSystem<Texture>, PWrite>,
+			PAdd<ResourceSystem<Shader<EShaderType::Vertex>>, PWrite>,
+			PAdd<ResourceSystem<Shader<EShaderType::Fragment>>, PWrite>,
+			PAdd<ResourceSystem<Shader<EShaderType::Geometry>>, PWrite>,
 			PAdd<TransformFunctionality2D, PRead>,
 			PAdd<SSpriteComponent, PWrite>>,
 		SystemTraits::Set<

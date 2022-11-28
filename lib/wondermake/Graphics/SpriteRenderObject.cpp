@@ -1,11 +1,16 @@
 #include "pch.h"
+
 #include "SpriteRenderObject.h"
 
-SpriteRenderObject::SpriteRenderObject(ResourceProxy<Texture> aTextureAsset)
-	:RenderObject(SRenderObjectInfo
-		{	*SystemPtr<ResourceSystem<Shader<EShaderType::Vertex>>>()
-		,	*SystemPtr<ResourceSystem<Shader<EShaderType::Fragment>>>()
-		,	*SystemPtr<ResourceSystem<Shader<EShaderType::Geometry>>>()
+SpriteRenderObject::SpriteRenderObject(
+	ResourceSystem<Shader<EShaderType::Vertex>>& aVsSystem,
+	ResourceSystem<Shader<EShaderType::Fragment>>& aFsSystem,
+	ResourceSystem<Shader<EShaderType::Geometry>>& aGsSystem,
+	ResourceProxy<Texture> aTextureAsset)
+	: RenderObject(SRenderObjectInfo
+		{	aVsSystem
+		,	aFsSystem
+		,	aGsSystem
 		,	std::filesystem::current_path() / "Shaders/Vertex/Sprite.vert"
 		,	std::filesystem::current_path() / "Shaders/Geometry/Sprite.geom"
 		,	std::filesystem::current_path() / "Shaders/Fragment/Sprite.frag"

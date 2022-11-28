@@ -23,6 +23,7 @@ list(APPEND IncludeFiles
     "include/wondermake-base/Object.h"
     "include/wondermake-base/ObjectDependencyDestructor.h"
     "include/wondermake-base/PopulatedSystem.h"
+    "include/wondermake-base/PopulateObjectSystem.h"
     "include/wondermake-base/Process.h"
     "include/wondermake-base/ProcessId.h"
     "include/wondermake-base/ProcessSystem.h"
@@ -38,7 +39,7 @@ list(APPEND IncludeFiles
     "include/wondermake-base/WinEventSystem.h"
     "include/wondermake-base/WinPlatformSystem.h"
     "include/wondermake-base/WmLogTags.h")
-
+    
 list(APPEND SourceFiles
     "source/CmdLineArgsSystem.cpp"
     "source/Configuration.cpp"
@@ -48,6 +49,7 @@ list(APPEND SourceFiles
     "source/Logger.cpp"
     "source/Object.cpp"
     "source/ObjectDependencyDestructor.cpp"
+    "source/PopulateObjectSystem.cpp"
     "source/ScheduleSystem.cpp"
     "source/SystemGlobal.cpp"
     "source/SystemRegistry.cpp"

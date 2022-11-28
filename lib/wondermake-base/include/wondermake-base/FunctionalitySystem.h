@@ -156,4 +156,4 @@ private:
 	std::function<TFunctionality& (Object&, const bool)> myFunctionalityConstructor;
 };
 
-#define REGISTER_FUNCTIONALITY_SYSTEM(aFunctionality) _WM_REGISTER_SYSTEM_IMPL(FunctionalitySystem<aFunctionality>, aFunctionality) _WM_REGISTER_SYSTEM_IMPL(FunctionalitySystemDelegate<aFunctionality>, aFunctionality##_Delegate) 
+#define WM_REGISTER_FUNCTIONALITY_SYSTEM(aFunctionality) _WM_REGISTER_SYSTEM_IMPL(FunctionalitySystem<aFunctionality>, aFunctionality) _WM_REGISTER_SYSTEM_IMPL(FunctionalitySystemDelegate<aFunctionality>, aFunctionality##_Delegate) 

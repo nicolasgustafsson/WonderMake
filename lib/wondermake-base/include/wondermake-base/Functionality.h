@@ -5,7 +5,7 @@
 
 #include <optional>
 
-#define REGISTER_FUNCTIONALITY(aFunctionality) REGISTER_FUNCTIONALITY_SYSTEM(aFunctionality)
+#define WM_REGISTER_FUNCTIONALITY(aFunctionality) WM_REGISTER_FUNCTIONALITY_SYSTEM(aFunctionality)
 
 class Object;
 

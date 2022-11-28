@@ -1,4 +1,4 @@
 #include "pch.h"
 #include "TransformFunctionality.h"
 
-REGISTER_FUNCTIONALITY(TransformFunctionality2D);
+WM_REGISTER_FUNCTIONALITY(TransformFunctionality2D);

@@ -15,7 +15,7 @@
 
 #include <iostream>
 
-REGISTER_FUNCTIONALITY(SpriteRenderingFunctionality);
+WM_REGISTER_FUNCTIONALITY(SpriteRenderingFunctionality);
 
 void SpriteRenderingFunctionality::Tick()
 {

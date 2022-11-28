@@ -3,7 +3,7 @@
 #include "Utilities/TimeKeeper.h"
 
 REGISTER_COMPONENT(STimerComponent);
-REGISTER_FUNCTIONALITY(TimerFunctionality);
+WM_REGISTER_FUNCTIONALITY(TimerFunctionality);
 
 void TimerFunctionality::AddTimer(const f32 aDuration, Closure aClosure)
 {

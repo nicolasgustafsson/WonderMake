@@ -2,6 +2,8 @@
 
 #include "Resources/Resource.h"
 
+#include "wondermake-utility/RestrictTypes.h"
+
 class Texture
 	: public Resource
 	, private NonCopyable

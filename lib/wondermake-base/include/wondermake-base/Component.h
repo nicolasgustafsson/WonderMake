@@ -4,7 +4,7 @@
 
 #include "wondermake-utility/RestrictTypes.h"
 
-#define REGISTER_COMPONENT(aComponent) REGISTER_COMPONENT_SYSTEM(aComponent)
+#define WM_REGISTER_COMPONENT(aComponent) WM_REGISTER_COMPONENT_SYSTEM(aComponent)
 
 struct SComponent : public NonCopyable
 {

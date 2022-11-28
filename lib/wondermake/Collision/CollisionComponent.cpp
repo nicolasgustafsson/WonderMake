@@ -2,4 +2,4 @@
 
 #include "CollisionComponent.h"
 
-REGISTER_COMPONENT(SCollisionComponent);
+WM_REGISTER_COMPONENT(SCollisionComponent);

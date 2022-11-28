@@ -25,7 +25,7 @@ private:
 	ObjectDependencyDestructor	myDependencyDestructor;
 };
 
-#define REGISTER_COMPONENT_SYSTEM(aComponent) _WM_REGISTER_SYSTEM_IMPL(ComponentSystem<aComponent>, aComponent)
+#define WM_REGISTER_COMPONENT_SYSTEM(aComponent) _WM_REGISTER_SYSTEM_IMPL(ComponentSystem<aComponent>, aComponent)
 
 template<typename TData>
 ComponentSystem<TData>::ComponentSystem()

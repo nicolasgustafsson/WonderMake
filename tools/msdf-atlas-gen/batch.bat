@@ -1,0 +1,1 @@
+msdf-atlas-gen.exe -font Bebas-Regular.ttf -imageout bebas.png -json bebaslayout.json -shadronpreview test.shadron "the quick brown fox jumps over the lazy dog THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG"

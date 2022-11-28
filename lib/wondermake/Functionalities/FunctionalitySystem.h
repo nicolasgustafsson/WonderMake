@@ -9,6 +9,7 @@
 #include "wondermake-base/ScheduleSystem.h"
 
 #include "wondermake-base/System.h"
+#include "wondermake-base/SystemGlobal.h"
 
 #include "wondermake-utility/plf_colony.h"
 

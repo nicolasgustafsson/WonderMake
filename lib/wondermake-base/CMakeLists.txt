@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.19)
 
 list(APPEND IncludeFiles
     "include/wondermake-base/BaseFunctionality.h"
-    "include/wondermake-base/Cargo.h"
     "include/wondermake-base/CmdLineArgsSystem.h"
     "include/wondermake-base/Component.h"
     "include/wondermake-base/ComponentSystem.h"

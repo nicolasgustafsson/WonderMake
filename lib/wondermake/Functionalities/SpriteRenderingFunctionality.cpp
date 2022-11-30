@@ -69,6 +69,11 @@ void SpriteRenderingFunctionality::SetRenderLayer(std::string_view aRenderLayer)
 	Get<SSpriteComponent>().RenderObject->SetRenderLayer(std::move(aRenderLayer));
 }
 
+void SpriteRenderingFunctionality::SetRenderOrder(i32 aRenderOrder)
+{
+	Get<SSpriteComponent>().RenderObject->SetRenderOrder(aRenderOrder);
+}
+
 void SpriteRenderingFunctionality::Hide() noexcept
 {
 	Get<SSpriteComponent>().IsHidden = true;

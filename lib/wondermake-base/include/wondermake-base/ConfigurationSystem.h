@@ -226,6 +226,31 @@ public:
 			{
 				if constexpr (std::is_enum_v<TConfig>)
 					callable(aOverrideData.Id, static_cast<TConfig>(std::get<std::underlying_type_t<TConfig>>(aOverrideData.Value)));
+				else if constexpr (CConfigurableValue<TConfig>)
+				{
+					static constexpr auto to = [](const auto& aValue) { return WmConfig<TConfig>::To(aValue); };
+
+					using RawType = std::invoke_result_t<decltype(to), const TConfig&>;
+
+					const auto& value = std::get<RawType>(aOverrideData.Value);
+
+					auto result = WmConfig<TConfig>::From(value);
+
+					if (!result)
+					{
+						WmLogError(TagWonderMake << TagWmConfiguration << "Failed to call override on change callback; failed to convert value " << value << " to type: " << typeid(TConfig).name() << '.');
+
+						return;
+					}
+
+					callable(aOverrideData.Id, result.Unwrap());
+				}
+				else if constexpr (CMemoryUnit<TConfig>)
+				{
+					using RawType = typename TConfig::Rep;
+
+					callable(aOverrideData.Id, TConfig(std::get<RawType>(aOverrideData.Value)));
+				}
 				else
 					callable(aOverrideData.Id, std::get<TConfig>(aOverrideData.Value));
 			});
@@ -247,7 +272,7 @@ public:
 private:
 	struct SOverrideData
 	{
-		using ValueType = std::variant<bool, f32, f64, u8, u16, u32, u64, i8, i16, i32, i64, std::string>;
+		using ValueType = std::variant<bool, f32, f64, u8, u16, u32, u64, i8, i16, i32, i64, std::string, FilePath>;
 
 		std::string	Id;
 		ValueType	Value;

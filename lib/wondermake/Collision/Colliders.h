@@ -27,7 +27,7 @@ namespace Colliders
 
 	struct SBase
 	{
-		_BaseFunctionality*			Functionality;
+		_BaseFunctionality*			Functionality = nullptr;
 		SVector2f					Position;
 
 		size_t						Identifier;
@@ -37,20 +37,18 @@ namespace Colliders
 	struct SSphere
 		: public SBase
 	{
-		SSphere() noexcept
-			: SBase({ nullptr })
-		{}
-
 		f32							Radius = 0.f;
+	};
+
+	struct SAxisAlignedBoundingBox
+		: public SBase
+	{
+		SVector2f					Dimensions;
 	};
 
 	struct SCollisionLine
 		: public SBase
 	{
-		SCollisionLine() noexcept
-			: SBase({ nullptr })
-		{}
-
 		inline [[nodiscard]] SVector2f GetLineEnd() const noexcept;
 
 		SVector2f					EndOffsetFromPosition = SVector2f::Zero();
@@ -64,7 +62,7 @@ namespace Colliders
 		return Position + temp.RotateCounterClockwise(Rotation);
 	}
 
-	typedef std::variant<SSphere, SCollisionLine>	Shape;
+	typedef std::variant<SSphere, SAxisAlignedBoundingBox, SCollisionLine>	Shape;
 
 	struct SCollisionInfo
 	{

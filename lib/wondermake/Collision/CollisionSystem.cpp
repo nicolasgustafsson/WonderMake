@@ -8,6 +8,8 @@
 #include "wondermake-base/ScheduleSystem.h"
 #include "wondermake-base/WmLogTags.h"
 
+#include "wondermake-utility/Geometry.h"
+
 WM_REGISTER_SYSTEM(CollisionSystem);
 
 CollisionSystem::CollisionSystem() noexcept
@@ -56,17 +58,13 @@ bool CollisionSystem::TestCollision(const Colliders::Shape& aColliderA, const Co
 			using T = std::decay_t<decltype(aCollider)>;
 
 			if constexpr (std::is_same_v<T, Colliders::SSphere>)
-			{
 				return TestSphereCollision(aCollider, aColliderB);
-			}
+			else if constexpr (std::is_same_v<T, Colliders::SAxisAlignedBoundingBox>)
+				return TestAABBCollision(aCollider, aColliderB);
 			else if constexpr (std::is_same_v<T, Colliders::SCollisionLine>)
-			{
 				return TestLineCollision(aCollider, aColliderB);
-			}
 			else
-			{
 				static_assert(std::false_type::value, "Collider not implemented!");
-			}
 		}, aColliderA);
 }
 
@@ -77,17 +75,30 @@ bool CollisionSystem::TestSphereCollision(const Colliders::SSphere& aSphere, con
 			using T = std::decay_t<decltype(aCollider)>;
 
 			if constexpr (std::is_same_v<T, Colliders::SSphere>)
-			{
 				return TestSphereVsSphereCollision(aSphere, aCollider);
-			}
+			else if constexpr (std::is_same_v<T, Colliders::SAxisAlignedBoundingBox>)
+				return TestSphereVsAABBCollision(aSphere, aCollider);
 			else if constexpr (std::is_same_v<T, Colliders::SCollisionLine>)
-			{
 				return TestSphereVsLineCollision(aSphere, aCollider);
-			}
 			else
-			{
 				static_assert(std::false_type::value, "Collider not implemented!");
-			}
+		}, aCollider);
+}
+
+bool CollisionSystem::TestAABBCollision(const Colliders::SAxisAlignedBoundingBox& aAABB, const Colliders::Shape& aCollider) noexcept
+{
+	return std::visit([aAABB](const auto& aCollider)
+		{
+			using T = std::decay_t<decltype(aCollider)>;
+
+			if constexpr (std::is_same_v<T, Colliders::SSphere>)
+				return TestSphereVsAABBCollision(aCollider, aAABB);
+			else if constexpr (std::is_same_v<T, Colliders::SAxisAlignedBoundingBox>)
+				return false; // Not implememted.
+			else if constexpr (std::is_same_v<T, Colliders::SCollisionLine>)
+				return false; // Not implememted.
+			else
+				static_assert(std::false_type::value, "Collider not implemented!");
 		}, aCollider);
 }
 
@@ -98,25 +109,14 @@ bool CollisionSystem::TestLineCollision(const Colliders::SCollisionLine& aLine, 
 			using T = std::decay_t<decltype(aCollider)>;
 
 			if constexpr (std::is_same_v<T, Colliders::SCollisionLine>)
-			{
 				return TestLineVsLineCollision(aCollider, aLine);
-			}
+			else if constexpr (std::is_same_v<T, Colliders::SAxisAlignedBoundingBox>)
+				return false; // Not implememted.
 			else if constexpr (std::is_same_v<T, Colliders::SSphere>)
-			{
 				return TestSphereVsLineCollision(aCollider, aLine);
-			}
 			else
-			{
 				static_assert(std::false_type::value, "Collider not implemented!");
-			}
 		}, aCollider);
-}
-
-bool CollisionSystem::TestSphereVsSphereCollision(const Colliders::SSphere& aSphereA, const Colliders::SSphere& aSphereB) noexcept
-{
-	const auto delta = aSphereA.Position - aSphereB.Position;
-	
-	return (delta.LengthSquared() <= std::powf(aSphereA.Radius + aSphereB.Radius, 2));
 }
 
 void CollisionSystem::OverlapAgainstFunctionalityInternal(const Colliders::Shape& aCollider, const Colliders::SReaction& aReaction)
@@ -135,10 +135,57 @@ void CollisionSystem::OverlapAgainstFunctionalityInternal(const Colliders::Shape
 			std::visit([&](auto&& aShape)
 				{
 					Colliders::SCollisionInfo collisionInfo{ aCollider, shape };
+
 					aReaction.Callback(*aShape.Functionality, collisionInfo);
 				}, shape);
 		}
 	}
+}
+
+bool CollisionSystem::TestSphereVsSphereCollision(const Colliders::SSphere& aSphereA, const Colliders::SSphere& aSphereB) noexcept
+{
+	const auto delta = aSphereA.Position - aSphereB.Position;
+
+	return (delta.LengthSquared() <= std::powf(aSphereA.Radius + aSphereB.Radius, 2));
+}
+
+bool CollisionSystem::TestSphereVsAABBCollision(const Colliders::SSphere& aSphere, const Colliders::SAxisAlignedBoundingBox& aAABB) noexcept
+{
+	static constexpr auto getClosestPoint = [](SVector2f aPoint, const SRectangleF& aRectangle) -> SVector2f
+	{
+		static constexpr auto getX = [](SVector2f aPoint, const SRectangleF& aRectangle) -> f32
+		{
+			if (aPoint.X <= aRectangle.Left)
+				return aRectangle.Left;
+			if (aPoint.X >= aRectangle.Right)
+				return aRectangle.Right;
+
+			return aPoint.X;
+		};
+		static constexpr auto getY = [](SVector2f aPoint, const SRectangleF& aRectangle) -> f32
+		{
+			if (aPoint.Y <= aRectangle.Bottom)
+				return aRectangle.Bottom;
+			if (aPoint.Y >= aRectangle.Top)
+				return aRectangle.Top;
+
+			return aPoint.Y;
+		};
+
+		return { getX(aPoint, aRectangle), getY(aPoint, aRectangle) };
+	};
+
+	const SRectangleF rect
+	{
+		.Left	= aAABB.Position.X,
+		.Top	= aAABB.Position.Y + aAABB.Dimensions.Y,
+		.Right	= aAABB.Position.X + aAABB.Dimensions.X,
+		.Bottom	= aAABB.Position.Y
+	};
+	
+	const auto closestPoint = getClosestPoint(aSphere.Position, rect);
+
+	return IsPointWithinSphere(aSphere, closestPoint);
 }
 
 bool CollisionSystem::TestSphereVsLineCollision(const Colliders::SSphere& aSphereA, const Colliders::SCollisionLine& aLineB) noexcept

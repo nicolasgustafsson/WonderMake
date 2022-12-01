@@ -6,6 +6,7 @@
 
 #include "wondermake-debug-ui/DebugSettingsSystem.h"
 
+WM_REGISTER_COMPONENT(SCollisionComponent);
 WM_REGISTER_FUNCTIONALITY(CollisionFunctionality);
 
 CollisionFunctionality::CollisionFunctionality()
@@ -30,6 +31,7 @@ void CollisionFunctionality::Tick()
 		return;
 
 	auto& collisionComponent = Get<SCollisionComponent>();
+
 	for (auto& collider : collisionComponent.Colliders)
 	{
 		if (!collider.Collider)
@@ -49,9 +51,7 @@ void CollisionFunctionality::Debug()
 	for (auto& collider : collisionComponent.Colliders)
 	{
 		if (!collider.Collider)
-		{
 			continue;
-		}
 
 		ImGui::SliderFloat2("Offset", &collider.Offset.X, -1000.f, 1000.f);
 
@@ -60,17 +60,14 @@ void CollisionFunctionality::Debug()
 				using T = std::decay_t<decltype(aCollider)>;
 				
 				if constexpr (std::is_same_v<T, Colliders::SSphere>)
-				{
 					ImGui::SliderFloat("Radius", &aCollider.Radius, 0, 500);
-				}
+				else if constexpr (std::is_same_v<T, Colliders::SAxisAlignedBoundingBox>)
+					ImGui::SliderFloat2("End Offset", &aCollider.Dimensions.X, 0, 500);
 				else if constexpr (std::is_same_v<T, Colliders::SCollisionLine>)
-				{
 					ImGui::SliderFloat2("End Offset", &aCollider.EndOffsetFromPosition.X, 0, 500);
-				}
 				else
-				{
 					static_assert(std::false_type::value, "Collider not implemented!");
-				}
+
 			}, *collider.Collider);
 
 		DrawCollider(*collider.Collider);
@@ -99,9 +96,7 @@ void CollisionFunctionality::UpdateCollisionTransforms()
 				aCollider.Position = collider.Offset * transformation;
 
 				if constexpr (std::is_same_v<T, Colliders::SCollisionLine>)
-				{
 					aCollider.Rotation = rotation;
-				}
 
 			}, *collider.Collider);
 	}

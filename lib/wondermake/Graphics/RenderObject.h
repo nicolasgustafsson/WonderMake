@@ -83,6 +83,14 @@ public:
 	void SetTexture(ResourceProxy<Texture> aResource);
 	void SetTexture(const std::string_view aAssetLinkName);
 
+	inline [[nodiscard]] ResourceProxy<Texture> GetTexture(size_t aIndex) const noexcept
+	{
+		if (aIndex >= myTextures.Count())
+			return ResourceProxy<Texture>();
+
+		return myTextures[aIndex];
+	}
+
 	void BindTextures();
 
 	void SetRenderCount(const u32 aRenderCount);

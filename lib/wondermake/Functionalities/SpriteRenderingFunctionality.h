@@ -35,6 +35,8 @@ public:
 	void SetTexture(std::string_view aAssetLink);
 	void SetTexture(const FilePath& aFilePath);
 
+	[[nodiscard]] SVector2u GetTextureSize() const noexcept;
+
 	void SetScale(const SVector2f aScale);
 	void SetRotation(const f32 aRotation);
 	void SetOrigin(const SVector2f aOrigin);

@@ -44,6 +44,23 @@ void SpriteRenderingFunctionality::SetTexture(const FilePath& aFilePath)
 	SetTexture(textureResourceSys.GetResource(aFilePath));
 }
 
+[[nodiscard]] SVector2u SpriteRenderingFunctionality::GetTextureSize() const noexcept
+{
+	auto& spriteComponent = Get<SSpriteComponent>();
+
+	if (!spriteComponent.RenderObject)
+		return SVector2u::Zero();
+
+	auto texture = spriteComponent.RenderObject->GetTexture(0);
+
+	if (!texture)
+		return SVector2u::Zero();
+
+	return SVector2u(
+		static_cast<u32>(texture->GetWidth()),
+		static_cast<u32>(texture->GetHeight()));
+}
+
 void SpriteRenderingFunctionality::SetScale(const SVector2f aScale)
 {
 	Get<SSpriteComponent>().RenderObject->SetAttribute<EVertexAttribute::Scale>(0, aScale);

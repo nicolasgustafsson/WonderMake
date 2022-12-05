@@ -41,8 +41,9 @@ public:
 	[[nodiscard]] SVector2f GetMousePositionInWorld() noexcept;
 	[[nodiscard]] SVector2f GetMousePositionOnWindow() noexcept;
 
-	[[nodiscard]] bool IsKeyDown(const EKeyboardKey aKey, const EFocus aFocus = EFocus::Display) const noexcept;
-	[[nodiscard]] bool IsMouseButtonPressed(const EMouseButton aKey, const EFocus aFocus = EFocus::Display) const noexcept;
+	[[nodiscard]] EInputItemState GetKeyState(const EKeyboardKey aKey, const EFocus aFocus = EFocus::Display) const noexcept;
+	[[nodiscard]] EInputItemState GetMouseButtonState(const EMouseButton aMouseButton, const EFocus aFocus = EFocus::Display) const noexcept;
+	[[nodiscard]] EInputItemState GetGamepadButtonState(const EGamepadButton aGamepadButton, const EFocus aFocus = EFocus::Display) const noexcept;
 
 private:
 	struct SInputStates

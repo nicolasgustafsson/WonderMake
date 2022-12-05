@@ -458,7 +458,7 @@ namespace Engine
 					renderer.FinishFrame();
 
 					 // TODO: Move this into DebugSystem.
-					const bool isF3Down = inputSys.IsKeyDown(EKeyboardKey::F3, InputSystem::EFocus::Window);
+					const bool isF3Down = inputSys.GetKeyState(EKeyboardKey::F3, InputSystem::EFocus::Window) == EInputItemState::Released;
 
 					if (!isF3DownLastFrame && isF3Down)
 						debugSys.ToggleToolbar();

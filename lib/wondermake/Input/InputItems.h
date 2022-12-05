@@ -30,7 +30,7 @@ enum class EGamepadButton
 
 inline constexpr size_t KeyboardKeyCount	= magic_enum::enum_count<EKeyboardKey>();
 inline constexpr size_t MouseButtonCount	= magic_enum::enum_count<EMouseButton>();
-inline constexpr size_t GamepadButtonCount	= magic_enum::enum_count<EMouseButton>();
+inline constexpr size_t GamepadButtonCount	= magic_enum::enum_count<EGamepadButton>();
 
 enum class EInputItemState
 {

@@ -80,17 +80,6 @@ class RenderObject : public BaseRenderObject
 public:
 	RenderObject(const SRenderObjectInfo& aRenderObjectInfo);
 
-	void SetTexture(ResourceProxy<Texture> aResource);
-	void SetTexture(const std::string_view aAssetLinkName);
-
-	inline [[nodiscard]] ResourceProxy<Texture> GetTexture(size_t aIndex) const noexcept
-	{
-		if (aIndex >= myTextures.Count())
-			return ResourceProxy<Texture>();
-
-		return myTextures[aIndex];
-	}
-
 	void BindTextures();
 
 	void SetRenderCount(const u32 aRenderCount);
@@ -134,21 +123,6 @@ void RenderObject<TAttributes...>::RenderInternal()
 
 	SystemPtr<OpenGLFacade>()->DrawArrays(myGeometryType, 0, renderCount);
 }
-
-template<EVertexAttribute... TAttributes>
-void RenderObject<TAttributes...>::SetTexture(ResourceProxy<Texture> aResourceProxy)
-{
-	myTextures.Clear();
-	if (aResourceProxy.IsValid())
-		myTextures.Add(aResourceProxy);
-}
-
-template<EVertexAttribute... TAttributes>
-void RenderObject<TAttributes...>::SetTexture(const std::string_view aAssetLinkName)
-{
-	SetTexture(SystemPtr<AssetDatabase<Texture>>()->GetResource(aAssetLinkName));
-}
-
 
 template<EVertexAttribute... TAttributes>
 void RenderObject<TAttributes...>::SetRenderCount(const u32 aRenderCount)

@@ -106,14 +106,19 @@ SVector2f InputSystem::GetMousePositionOnWindow() noexcept
 	return { static_cast<f32>(x), static_cast<f32>(y) };
 }
 
-bool InputSystem::IsKeyDown(const EKeyboardKey aKey, const EFocus aFocus) const noexcept
+EInputItemState InputSystem::GetKeyState(const EKeyboardKey aKey, const EFocus aFocus) const noexcept
 {
-	return myInputStates[static_cast<size_t>(aFocus)].Keyboard[static_cast<size_t>(aKey)] == EInputItemState::Down;
+	return myInputStates[static_cast<size_t>(aFocus)].Keyboard[static_cast<size_t>(aKey)];
 }
 
-bool InputSystem::IsMouseButtonPressed(const EMouseButton aMouseButton, const EFocus aFocus) const noexcept
+EInputItemState InputSystem::GetMouseButtonState(const EMouseButton aMouseButton, const EFocus aFocus) const noexcept
 {
-	return myInputStates[static_cast<size_t>(aFocus)].Mouse[static_cast<size_t>(aMouseButton)] == EInputItemState::Down;
+	return myInputStates[static_cast<size_t>(aFocus)].Mouse[static_cast<size_t>(aMouseButton)];
+}
+
+EInputItemState InputSystem::GetGamepadButtonState(const EGamepadButton aGamepadButton, const EFocus aFocus) const noexcept
+{
+	return myInputStates[static_cast<size_t>(aFocus)].Gamepad[static_cast<size_t>(aGamepadButton)];
 }
 
 GLFWwindow* InputSystem::GetCurrentWindow() const

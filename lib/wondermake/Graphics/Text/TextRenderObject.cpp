@@ -21,7 +21,7 @@ TextRenderObject::TextRenderObject(
 {
 	myFont = std::move(aFont);
 	SetSize(mySize);
-	SetTexture(myFont->GetTexture());
+	myTextures.Add(myFont->GetTexture());
 	UpdateVertices();
 }
 

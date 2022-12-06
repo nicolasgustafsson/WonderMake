@@ -12,49 +12,49 @@ struct SRange
 namespace WmEasings
 {
 
-	inline [[nodiscard]] constexpr f32 Flip(const f32 aProgress) noexcept
+	inline constexpr [[nodiscard]] f32 Flip(const f32 aProgress) noexcept
 	{
 		return 1.f - aProgress;
 	}
 
 	template <WmMath::Interpolable T>
-	inline [[nodiscard]] constexpr T Lerp(const SRange<T>& aRange, const f32 aProgress) noexcept
+	inline constexpr [[nodiscard]] T Lerp(const SRange<T>& aRange, const f32 aProgress) noexcept
 	{
 		return WmMath::Lerp(aRange.Start, aRange.End, aProgress);
 	}
 
 	template <u32 Power = 2, WmMath::Interpolable T>
-	inline [[nodiscard]] constexpr T SmoothStart(const SRange<T>& aRange, const f32 aProgress) noexcept
+	inline constexpr [[nodiscard]] T SmoothStart(const SRange<T>& aRange, const f32 aProgress) noexcept
 	{
 		return Lerp(aRange, WmMath::Pow(aProgress, Power));
 	}
 
 	template <u32 Power = 2, WmMath::Interpolable T>
-	inline [[nodiscard]] constexpr T SmoothStop(const SRange<T>& aRange, const f32 aProgress) noexcept
+	inline constexpr [[nodiscard]] T SmoothStop(const SRange<T>& aRange, const f32 aProgress) noexcept
 	{
 		return Lerp(aRange, Flip(WmMath::Pow(Flip(aProgress), Power)));
 	}
 
 	template <WmMath::Interpolable T>
-	inline [[nodiscard]] constexpr T Mix(const SRange<T>& aRange, T(*aFirstFunction)(const SRange<T>&, const f32), T(*aSecondFunction)(const SRange<T>&, const f32), const f32 aBlend, const f32 aProgress) noexcept
+	inline constexpr [[nodiscard]] T Mix(const SRange<T>& aRange, T(*aFirstFunction)(const SRange<T>&, const f32), T(*aSecondFunction)(const SRange<T>&, const f32), const f32 aBlend, const f32 aProgress) noexcept
 	{
 		return Lerp(SRange<T>{ aFirstFunction(aRange, aProgress), aSecondFunction(aRange, aProgress) }, aBlend);
 	}
 
 	template <WmMath::Interpolable T>
-	inline [[nodiscard]] constexpr T Crossfade(const SRange<T>& aRange, T(*aFirstFunction)(const SRange<T>&, const f32), T(*aSecondFunction)(const SRange<T>&, const f32), const f32 aProgress) noexcept
+	inline constexpr [[nodiscard]] T Crossfade(const SRange<T>& aRange, T(*aFirstFunction)(const SRange<T>&, const f32), T(*aSecondFunction)(const SRange<T>&, const f32), const f32 aProgress) noexcept
 	{
 		return Mix(aRange, aFirstFunction, aSecondFunction, aProgress, aProgress);
 	}
 
 	template <u32 Power, WmMath::Interpolable T> requires (Power == 1)
-	inline [[nodiscard]] constexpr T SmoothStep(const SRange<T>& aRange, const f32 aProgress) noexcept
+	inline constexpr [[nodiscard]] T SmoothStep(const SRange<T>& aRange, const f32 aProgress) noexcept
 	{
 		return Lerp(SRange<T>{aRange}, aProgress);
 	}
 
 	template <u32 Power = 3, WmMath::Interpolable T> requires (Power % 2 == 1 && Power > 1)
-	inline [[nodiscard]] constexpr T SmoothStep(const SRange<T>& aRange, const f32 aProgress) noexcept
+	inline constexpr [[nodiscard]] T SmoothStep(const SRange<T>& aRange, const f32 aProgress) noexcept
 	{
 		//return aProgress * aProgress * aProgress * (aProgress * (aProgress * T(6.0) - T(15.0)) + T(10.0));
 		//return Crossfade<T>(aRange, SmoothStart<(Power - 1) / 2 + 1>, SmoothStop<(Power - 1) / 2 + 1>, aProgress);
@@ -65,32 +65,32 @@ namespace WmEasings
 	}
 
 	template <u32 Power, WmMath::Interpolable T> requires (Power % 2 == 0 && Power > 3)
-		inline [[nodiscard]] constexpr T SmoothStep(const SRange<T>& aRange, const f32 aProgress) noexcept
+	inline constexpr [[nodiscard]] T SmoothStep(const SRange<T>& aRange, const f32 aProgress) noexcept
 	{
 		return Mix<T>(aRange, SmoothStep<Power - 1>, SmoothStep<Power + 1>, 0.5f, aProgress);
 	}
 
 	template <WmMath::Interpolable T>
-	inline [[nodiscard]] constexpr T Scale(const SRange<T>& aRange, T(*aFunction)(const SRange<T>&, const f32), const f32 aProgress) noexcept
+	inline constexpr [[nodiscard]] T Scale(const SRange<T>& aRange, T(*aFunction)(const SRange<T>&, const f32), const f32 aProgress) noexcept
 	{
 		return aFunction(aRange, aProgress) * aProgress;
 	}
 
 	template <WmMath::Interpolable T>
-	inline [[nodiscard]] constexpr T ReverseScale(const SRange<T>& aRange, T(*aFunction)(const SRange<T>&, const f32), const f32 aProgress) noexcept
+	inline constexpr [[nodiscard]] T ReverseScale(const SRange<T>& aRange, T(*aFunction)(const SRange<T>&, const f32), const f32 aProgress) noexcept
 	{
 		return aFunction(aRange, aProgress) * Flip(aProgress);
 	}
 
 	template <u32 Power = 2, WmMath::Interpolable T> requires (Power % 2 == 0)
-	inline [[nodiscard]] constexpr T BellCurve(const SRange<T>& aRange, const f32 aProgress) noexcept
+	inline constexpr [[nodiscard]] T BellCurve(const SRange<T>& aRange, const f32 aProgress) noexcept
 	{
 		return SmoothStart<Power / 2>(aRange, aProgress) * Flip(SmoothStop<Power / 2>(aRange, aProgress));
 	}
 
 
 	template <WmMath::Interpolable T>
-	inline [[nodiscard]] constexpr T QuadraticBezier(const SRange<T>& aRange, const T& aControl, const f32 aProgress) noexcept
+	inline constexpr [[nodiscard]] T QuadraticBezier(const SRange<T>& aRange, const T& aControl, const f32 aProgress) noexcept
 	{
 		SRange<T> newRange = { Lerp<T>({ aRange.Start, aControl }, aProgress), Lerp<T>({aControl, aRange.End}, aProgress)};
 
@@ -98,7 +98,7 @@ namespace WmEasings
 	}
 
 	template <WmMath::Interpolable T>
-	inline [[nodiscard]] constexpr T CubicBezier(const SRange<T>& aRange, const T& aControlFirst, const T& aControlSecond, const f32 aProgress) noexcept
+	inline constexpr [[nodiscard]] T CubicBezier(const SRange<T>& aRange, const T& aControlFirst, const T& aControlSecond, const f32 aProgress) noexcept
 	{
 		SRange<T> newRange = { QuadraticBezier<T>({ aRange.Start, aControlSecond }, aControlFirst, aProgress), QuadraticBezier<T>({ aControlFirst, aRange.End}, aControlSecond, aProgress) };
 

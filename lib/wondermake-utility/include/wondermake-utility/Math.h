@@ -78,27 +78,28 @@ namespace WmMath
 
 	template <typename TLhs, typename TRhs>
 		requires(ComparableLess<TLhs, TRhs>)
-	inline [[nodiscard]] constexpr TLhs Min(TLhs&& aLhs, TRhs&& aRhs)
+	inline constexpr [[nodiscard]] TLhs Min(TLhs&& aLhs, TRhs&& aRhs)
 		noexcept(std::is_nothrow_move_constructible_v<TLhs> && std::is_nothrow_constructible_v<TLhs, decltype(std::forward<TRhs>(aRhs))>)
 	{
 		return aLhs < aRhs ? std::forward<TLhs>(aLhs) : std::forward<TRhs>(aRhs);
 	}
 	template <typename TLhs, typename TRhs>
 		requires(ComparableGreater<TLhs, TRhs>)
-	inline [[nodiscard]] constexpr TLhs Max(TLhs&& aLhs, TRhs&& aRhs)
+	inline constexpr [[nodiscard]] TLhs Max(TLhs&& aLhs, TRhs&& aRhs)
 		noexcept(std::is_nothrow_move_constructible_v<TLhs>&& std::is_nothrow_constructible_v<TLhs, decltype(std::forward<TRhs>(aRhs))>)
 	{
 		return aLhs > aRhs ? std::forward<TLhs>(aLhs) : std::forward<TRhs>(aRhs);
 	}
 
 	template <Interpolable T>
-	inline [[nodiscard]] constexpr T Lerp(const T aStart, const T aEnd, const f32 aProgress) noexcept
+	inline constexpr [[nodiscard]] T Lerp(const T aStart, const T aEnd, const f32 aProgress) noexcept
 	{
 		return aStart + ((aEnd - aStart) * aProgress);
 	}
 
-	template <class T> requires std::totally_ordered<T>
-	inline [[nodiscard]] constexpr T Clamp(const T aMin, const T aMax, const T aValue) noexcept
+	template <class T>
+		requires std::totally_ordered<T>
+	inline constexpr [[nodiscard]] T Clamp(const T aMin, const T aMax, const T aValue) noexcept
 	{
 		if (aValue < aMin)
 			return aMin;
@@ -110,68 +111,68 @@ namespace WmMath
 	}
 
 	template<typename T>
-	inline [[nodiscard]] constexpr T Pow(const T aBase, const uintmax_t aExponent) noexcept
+	inline constexpr [[nodiscard]] T Pow(const T aBase, const uintmax_t aExponent) noexcept
 	{
 		return aExponent == 0 ? 1 : aBase * Pow(aBase, aExponent - 1);
 	}
 
 	template<typename T>
-	inline [[nodiscard]] constexpr T Square(const T aBase) noexcept
+	inline constexpr [[nodiscard]] T Square(const T aBase) noexcept
 	{
 		return Pow(aBase, 2);
 	}
 
 	template<typename T>
-	inline [[nodiscard]] constexpr T Cube(const T aBase) noexcept
+	inline constexpr [[nodiscard]] T Cube(const T aBase) noexcept
 	{
 		return Pow(aBase, 3);
 	}
 
 	template<typename T>
-	requires has_floating_representation_v<T>
-		inline [[nodiscard]] FloatingRepresentation<T> Atan(const T aRotation) noexcept
+		requires has_floating_representation_v<T>
+	inline [[nodiscard]] FloatingRepresentation<T> Atan(const T aRotation) noexcept
 	{
 		return std::atan(static_cast<FloatingRepresentation<T>>(aRotation));
 	}
 
 	template<typename T>
-	requires has_floating_representation_v<T>
-		inline [[nodiscard]] FloatingRepresentation<T> Atan2(const T aY, const T aX) noexcept
+		requires has_floating_representation_v<T>
+	inline [[nodiscard]] FloatingRepresentation<T> Atan2(const T aY, const T aX) noexcept
 	{
 		return std::atan2(static_cast<FloatingRepresentation<T>>(aY), static_cast<FloatingRepresentation<T>>(aX));
 	}
 
 	template<typename T>
-	requires has_floating_representation_v<T>
-		inline [[nodiscard]] FloatingRepresentation<T> Cos(const T aRotation) noexcept
+		requires has_floating_representation_v<T>
+	inline [[nodiscard]] FloatingRepresentation<T> Cos(const T aRotation) noexcept
 	{
 		return std::cos(static_cast<FloatingRepresentation<T>>(aRotation));
 	}
 
 	template<typename T>
-	requires has_floating_representation_v<T>
-		inline [[nodiscard]] FloatingRepresentation<T> Sin(const T aRotation) noexcept
+		requires has_floating_representation_v<T>
+	inline [[nodiscard]] FloatingRepresentation<T> Sin(const T aRotation) noexcept
 	{
 		return std::sin(static_cast<FloatingRepresentation<T>>(aRotation));
 	}
 
 	template<typename T>
-	requires std::is_floating_point_v<T>
-		inline [[nodiscard]] T Mod(const T aDividend, const T aDivisor) noexcept
+		requires std::is_floating_point_v<T>
+	inline [[nodiscard]] T Mod(const T aDividend, const T aDivisor) noexcept
 	{
 		return std::fmod(aDividend, aDivisor);
 	}
 
 	template<typename T>
-	requires std::is_integral_v<T>
-		inline [[nodiscard]] T Mod(const T aDividend, const T aDivisor) noexcept
+		requires std::is_integral_v<T>
+	inline [[nodiscard]] T Mod(const T aDividend, const T aDivisor) noexcept
 	{
 		return aDividend % aDivisor;
 	}
 
 	template<typename T>
-	requires std::is_floating_point_v<T>
-		inline [[nodiscard]] T Remainder(const T aDividend, const T aDivisor) noexcept
+		requires std::is_floating_point_v<T>
+	inline [[nodiscard]] T Remainder(const T aDividend, const T aDivisor) noexcept
 	{
 		return std::remainder(aDividend, aDivisor);
 	}

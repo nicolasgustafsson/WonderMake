@@ -1711,7 +1711,7 @@ TEST(ConfigurationTests, set_memory_ratio_sets_ratio)
 	static constexpr auto dummyId = "dummy_id";
 	static constexpr auto getRatio = [](const auto& aConfig) -> std::optional<EMemoryRatio>
 	{
-		if constexpr (Configuration::ConfigCanBeMemoryUnit<std::decay_t<decltype(aConfig)>::ConfigType>)
+		if constexpr (Configuration::ConfigCanBeMemoryUnit<typename std::decay_t<decltype(aConfig)>::ConfigType>)
 			return aConfig.MemoryRatio;
 		else
 			return std::nullopt;

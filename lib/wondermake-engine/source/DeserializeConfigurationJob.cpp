@@ -175,7 +175,7 @@ void DeserializeConfigurationJob::Run(Promise<Output> aPromise, EConfigGroup aCo
 				}
 
 				else
-					static_assert(false, "Unknown configuration type.");
+					[]<bool flag = false> { static_assert(flag, "Unknown configuration type."); }();
 
 			}, itConfig->second);
 	}

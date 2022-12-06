@@ -66,7 +66,7 @@ void CollisionFunctionality::Debug()
 				else if constexpr (std::is_same_v<T, Colliders::SCollisionLine>)
 					ImGui::SliderFloat2("End Offset", &aCollider.EndOffsetFromPosition.X, 0, 500);
 				else
-					static_assert(std::false_type::value, "Collider not implemented!");
+					[]<bool flag = false> { static_assert(flag, "Collider not implemented."); }();
 
 			}, *collider.Collider);
 

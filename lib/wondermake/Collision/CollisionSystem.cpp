@@ -64,7 +64,7 @@ bool CollisionSystem::TestCollision(const Colliders::Shape& aColliderA, const Co
 			else if constexpr (std::is_same_v<T, Colliders::SCollisionLine>)
 				return TestLineCollision(aCollider, aColliderB);
 			else
-				static_assert(std::false_type::value, "Collider not implemented!");
+				[]<bool flag = false> { static_assert(flag, "Collider not implemented."); }();
 		}, aColliderA);
 }
 
@@ -81,7 +81,7 @@ bool CollisionSystem::TestSphereCollision(const Colliders::SSphere& aSphere, con
 			else if constexpr (std::is_same_v<T, Colliders::SCollisionLine>)
 				return TestSphereVsLineCollision(aSphere, aCollider);
 			else
-				static_assert(std::false_type::value, "Collider not implemented!");
+				[]<bool flag = false> { static_assert(flag, "Collider not implemented."); }();
 		}, aCollider);
 }
 
@@ -98,7 +98,7 @@ bool CollisionSystem::TestAABBCollision(const Colliders::SAxisAlignedBoundingBox
 			else if constexpr (std::is_same_v<T, Colliders::SCollisionLine>)
 				return false; // Not implememted.
 			else
-				static_assert(std::false_type::value, "Collider not implemented!");
+				[]<bool flag = false> { static_assert(flag, "Collider not implemented."); }();
 		}, aCollider);
 }
 
@@ -115,7 +115,7 @@ bool CollisionSystem::TestLineCollision(const Colliders::SCollisionLine& aLine, 
 			else if constexpr (std::is_same_v<T, Colliders::SSphere>)
 				return TestSphereVsLineCollision(aCollider, aLine);
 			else
-				static_assert(std::false_type::value, "Collider not implemented!");
+				[]<bool flag = false> { static_assert(flag, "Collider not implemented."); }();
 		}, aCollider);
 }
 

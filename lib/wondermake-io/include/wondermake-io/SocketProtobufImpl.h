@@ -9,6 +9,7 @@
 #include "wondermake-utility/Result.h"
 #include "wondermake-utility/SharedReference.h"
 
+#include <mutex>
 #include <span>
 
 template<typename TProtobufWriteMessage, typename TProtobufReadMessage>

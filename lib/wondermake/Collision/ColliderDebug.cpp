@@ -82,7 +82,7 @@ void DrawCollider(const Colliders::Shape& aCollider, const SColor& aColor)
 			else if constexpr (std::is_same_v<T, Colliders::SCollisionLine>)
 				DrawLine(aCollider, aColor);
 			else
-				static_assert(std::false_type::value, "Collider not implemented!");
+				[]<bool flag = false> { static_assert(flag, "Collider not implemented."); }();
 
 		}, aCollider);
 }

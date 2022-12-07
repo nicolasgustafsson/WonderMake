@@ -295,9 +295,9 @@ TEST_F(WinProcessTest, error_code_is_passed_to_onexit_when_process_exits_and_err
 	const auto futureExit = process->OnExit();
 
 	EXPECT_CALL(myWinPlatformSystem, GetExitCodeProcess)
-		.WillOnce([exitCode](auto, LPDWORD lpExitCode)
+		.WillOnce([exitCode](HANDLE, LPDWORD lpExitCode) -> BOOL
 			{
-				*lpExitCode = exitCode;
+				*lpExitCode = static_cast<DWORD>(exitCode);
 
 				return TRUE;
 			});
@@ -324,9 +324,9 @@ TEST_F(WinProcessTest, error_code_is_passed_to_onexit_when_process_exits_and_err
 	const auto futureExit = process->OnExit();
 
 	EXPECT_CALL(myWinPlatformSystem, GetExitCodeProcess)
-		.WillOnce([exitCode](auto, LPDWORD lpExitCode)
+		.WillOnce([exitCode](HANDLE, LPDWORD lpExitCode) -> BOOL
 			{
-				*lpExitCode = exitCode;
+				*lpExitCode = static_cast<DWORD>(exitCode);
 
 				return TRUE;
 			});
@@ -353,9 +353,9 @@ TEST_F(WinProcessTest, error_code_is_passed_to_onexit_when_process_exits_and_err
 	const auto futureExit = process->OnExit();
 
 	EXPECT_CALL(myWinPlatformSystem, GetExitCodeProcess)
-		.WillOnce([exitCode](auto, LPDWORD lpExitCode)
+		.WillOnce([exitCode](HANDLE, LPDWORD lpExitCode) -> BOOL
 			{
-				*lpExitCode = exitCode;
+				*lpExitCode = static_cast<DWORD>(exitCode);
 
 				return TRUE;
 			});

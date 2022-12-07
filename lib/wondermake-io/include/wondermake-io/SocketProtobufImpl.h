@@ -109,7 +109,7 @@ private:
 		if (!result)
 		{
 			if (myReadBuffer.size() >= maxBytes)
-				return MakeCompletedFuture<ResultTypeRead>(Err(Socket::SReadError{ Socket::EReadError::MessageToBig }));
+				return MakeCompletedFuture<ResultTypeRead>(Err(Socket::SReadError{ Socket::EReadError::MessageToBig, 0 }));
 
 			return mySocket->Read()
 				.ThenApply(myExecutor, makeThenApply());

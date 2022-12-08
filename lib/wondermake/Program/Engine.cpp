@@ -78,7 +78,6 @@ namespace Engine
 
 			if (!SetupPlatformFilePaths(platformContainer, aInfo.ProjectFolderNames))
 				return;
-
 		}
 
 		auto taskManager = std::make_shared<TaskManager>();
@@ -149,6 +148,14 @@ namespace Engine
 				static auto config = create();
 
 				return config;
+			});
+		sysRegistry.AddSystem<CmdLineArgsSystem>([cmdLineArgs = aInfo.CommandLineArguments]()->std::shared_ptr<CmdLineArgsSystem>
+		{
+			return std::make_shared<CmdLineArgsSystem>(cmdLineArgs);
+		});
+		sysRegistry.AddSystem<ScheduleSystem>([&scheduleProc, &scheduleRepeatingProc]() -> std::shared_ptr<ScheduleSystem>
+			{
+				return std::make_shared<ScheduleSystem>(scheduleProc, scheduleRepeatingProc);
 			});
 
 		ProcessId currentProcessId;
@@ -246,7 +253,7 @@ namespace Engine
 		{
 			SystemRegistry::Filter filter;
 
-			filter.RequiredAnyTraits = { STrait::Set<STFoundational, STLogger>::ToObject() };
+			filter.RequiredAnyTraits = { STrait::Set<STFoundational>::ToObject(), STrait::Set<STLogger>::ToObject() };
 
 			auto result = sysRegistry.CreateSystems(filter);
 
@@ -320,7 +327,7 @@ namespace Engine
 
 			SystemRegistry::Filter filter;
 
-			filter.RequiredAnyTraits = { STrait::ToObject<STSingleton>() };
+			filter.RequiredAnyTraits = { STrait::Set<STSingleton>::ToObject() };
 
 			auto result = sysRegistry.CreateSystems(filter);
 
@@ -338,15 +345,6 @@ namespace Engine
 
 		{
 			WmLogInfo(TagWonderMake << "Registering core systems...");
-
-			sysRegistry.AddSystem<CmdLineArgsSystem>([cmdLineArgs = aInfo.CommandLineArguments]() -> std::shared_ptr<CmdLineArgsSystem>
-			{
-				return std::make_shared<CmdLineArgsSystem>(cmdLineArgs);
-			});
-			sysRegistry.AddSystem<ScheduleSystem>([&scheduleProc, &scheduleRepeatingProc]() -> std::shared_ptr<ScheduleSystem>
-				{
-					return std::make_shared<ScheduleSystem>(scheduleProc, scheduleRepeatingProc);
-				});
 
 			WmLogInfo(TagWonderMake << "Setting up filters...");
 

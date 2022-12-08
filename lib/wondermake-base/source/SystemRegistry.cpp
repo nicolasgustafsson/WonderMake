@@ -8,14 +8,18 @@ Result<SystemContainer, SystemRegistry::SError> SystemRegistry::CreateSystems(co
 
 	const auto requiredFilter = [&filter = aFilter.RequiredAnyTraits](auto&& aSystemInfo)
 	{
-		if (!filter)
+		if (filter.empty())
 			return true;
 
-		for (auto&& trait : *filter)
-			if (aSystemInfo.TraitSet.find(trait) != aSystemInfo.TraitSet.cend())
-				return true;
+		const auto pred = [&aSystemInfo](const auto& aTraitList) -> bool
+		{
+			return std::ranges::all_of(aTraitList, [&aSystemInfo](const auto& aTrait)
+				{
+					return aSystemInfo.TraitSet.find(aTrait) != aSystemInfo.TraitSet.cend();
+				});
+		};
 
-		return false;
+		return std::ranges::any_of(filter, pred);
 	};
 	const auto disallowedFilter = [&filter = aFilter.DisallowedTraits](auto&& aSystemInfo)
 	{
@@ -32,9 +36,7 @@ Result<SystemContainer, SystemRegistry::SError> SystemRegistry::CreateSystems(co
 	for (auto&& system : std::views::all(mySystemList)
 		| std::views::filter(requiredFilter)
 		| std::views::filter(disallowedFilter))
-	{
 		system.InjectFunc();
-	}
 
 	auto result = myDependencyInjector.CreateAll();
 

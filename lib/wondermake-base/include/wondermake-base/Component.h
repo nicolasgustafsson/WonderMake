@@ -6,9 +6,13 @@
 
 #define WM_REGISTER_COMPONENT(aComponent) WM_REGISTER_COMPONENT_SYSTEM(aComponent)
 
-struct SComponent : public NonCopyable
+struct SComponent
+	: public NonCopyable
+{};
+
+template<typename TSystemTraits>
+struct STraitedComponent
+	: public SComponent
 {
-public:
-	SComponent() = default;
-	virtual ~SComponent() = default;
+	using SystemTraits = TSystemTraits;
 };

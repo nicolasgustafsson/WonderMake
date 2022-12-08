@@ -8,50 +8,61 @@
 
 class Object;
 
-template<typename TData>
+template<typename TComponent>
+concept CTraitedComponent = requires()
+{
+	typename TComponent::SystemTraits;
+};
+
+namespace _Impl
+{
+	template<typename TComponent>
+	struct SComponentSystemTraits
+	{
+		using Set = STrait::Set<>;
+	};
+
+	template<CTraitedComponent TComponent>
+	struct SComponentSystemTraits<TComponent>
+	{
+		using Set = typename TComponent::SystemTraits;
+	};
+}
+
+template<typename TComponent>
 class ComponentSystem
-	: public System<>
+	: public System<
+		Policy::Set<>,
+		typename _Impl::SComponentSystemTraits<TComponent>::Set>
 {
 public:
-	ComponentSystem();
+	inline ComponentSystem()
+		: myDependencyDestructor([this](Object& /*aObject*/, auto* aComponent)
+			{
+				RemoveComponent(*static_cast<TComponent*>(aComponent));
+			})
+	{}
 
-	TData& AddComponent(Object& aObject, const bool aExplicitlyAdded = true);
-	void RemoveComponent(TData& aComponent);
+	inline TComponent& AddComponent(Object& aObject, const bool aExplicitlyAdded = true)
+	{
+		return aObject.Add<TComponent>([this](auto& /*aObject*/) -> auto&
+		{
+			return *myData.emplace();
+		}, myDependencyDestructor, aExplicitlyAdded);
+	}
+	inline void RemoveComponent(TComponent& aComponent)
+	{
+		myData.erase(myData.get_iterator_from_pointer(&aComponent));
+	}
 
-	bool IsEmpty() const;
+	inline [[nodiscard]] bool IsEmpty() const noexcept
+	{
+		return myData.empty();
+	}
 
 private:
-	plf::colony<TData>			myData;
+	plf::colony<TComponent>		myData;
 	ObjectDependencyDestructor	myDependencyDestructor;
 };
 
 #define WM_REGISTER_COMPONENT_SYSTEM(aComponent) _WM_REGISTER_SYSTEM_IMPL(ComponentSystem<aComponent>, aComponent)
-
-template<typename TData>
-ComponentSystem<TData>::ComponentSystem()
-	: myDependencyDestructor([this](Object& /*aObject*/, auto* aComponent)
-		{
-			RemoveComponent(*static_cast<TData*>(aComponent));
-		})
-{}
-
-template<typename TData>
-typename TData& ComponentSystem<TData>::AddComponent(Object& aObject, const bool aExplicitlyAdded)
-{
-	return aObject.Add<TData>([this](auto& /*aObject*/) -> auto&
-		{
-			return *myData.emplace();
-		}, myDependencyDestructor, aExplicitlyAdded);
-}
-
-template<typename TData>
-void ComponentSystem<TData>::RemoveComponent(TData& aComponent)
-{
-	myData.erase(myData.get_iterator_from_pointer(&aComponent));
-}
-
-template<typename TData>
-bool ComponentSystem<TData>::IsEmpty() const
-{
-	return myData.empty();
-}

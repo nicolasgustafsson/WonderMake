@@ -1,6 +1,7 @@
 #pragma once
 
 #include "wondermake-base/LoggerTypes.h"
+#include "wondermake-base/SystemTraits.h"
 
 #include "wondermake-utility/CmdLineArgs.h"
 #include "wondermake-utility/FilePath.h"
@@ -121,6 +122,9 @@ namespace Engine
 
 		// All options regarding audio. Ignored if Headless is set to true.
 		std::optional<AudioInfo> Audio = AudioInfo();
+
+		// If not empty, the WonderMake will only create the systems with these traits when calling Start. WonderMake systems are always created.
+		SystemTraits::SetList RequiredSystemTraits;
 	};
 
 	struct Callbacks

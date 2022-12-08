@@ -67,7 +67,9 @@ namespace Engine
 		{
 			SystemRegistry::Filter filter;
 
-			filter.RequiredAnyTraits = { STrait::Set<STPlatform>::ToObject() };
+			filter.RequiredAnyTraits = { STrait::Set<STPlatform, STWonderMake>::ToObject() };
+			if (aInfo.Headless)
+				filter.DisallowedTraits = { STrait::ToObject<STGui>() };
 
 			auto result = sysRegistry.CreateSystems(filter);
 
@@ -163,7 +165,9 @@ namespace Engine
 		{
 			SystemRegistry::Filter filter;
 
-			filter.RequiredAnyTraits = { STrait::Set<STFoundational>::ToObject() };
+			filter.RequiredAnyTraits = { STrait::Set<STFoundational, STWonderMake>::ToObject() };
+			if (aInfo.Headless)
+				filter.DisallowedTraits = { STrait::ToObject<STGui>() };
 
 			auto result = sysRegistry.CreateSystems(filter);
 
@@ -253,7 +257,9 @@ namespace Engine
 		{
 			SystemRegistry::Filter filter;
 
-			filter.RequiredAnyTraits = { STrait::Set<STFoundational>::ToObject(), STrait::Set<STLogger>::ToObject() };
+			filter.RequiredAnyTraits = { STrait::Set<STFoundational, STWonderMake>::ToObject(), STrait::Set<STLogger, STWonderMake>::ToObject() };
+			if (aInfo.Headless)
+				filter.DisallowedTraits = { STrait::ToObject<STGui>() };
 
 			auto result = sysRegistry.CreateSystems(filter);
 
@@ -327,7 +333,9 @@ namespace Engine
 
 			SystemRegistry::Filter filter;
 
-			filter.RequiredAnyTraits = { STrait::Set<STSingleton>::ToObject() };
+			filter.RequiredAnyTraits = { STrait::Set<STSingleton, STWonderMake>::ToObject() };
+			if (aInfo.Headless)
+				filter.DisallowedTraits = { STrait::ToObject<STGui>() };
 
 			auto result = sysRegistry.CreateSystems(filter);
 
@@ -350,6 +358,8 @@ namespace Engine
 
 			SystemRegistry::Filter filter;
 
+			if (!aInfo.RequiredSystemTraits.empty())
+				filter.RequiredAnyTraits = { STrait::Set<STWonderMake>::ToObject(), aInfo.RequiredSystemTraits };
 			if (aInfo.Headless)
 				filter.DisallowedTraits = { STrait::ToObject<STGui>() };
 

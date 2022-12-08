@@ -1,6 +1,7 @@
 #pragma once
 
 #include <typeinfo>
+#include <typeindex>
 #include <type_traits>
 #include <unordered_set>
 
@@ -31,16 +32,18 @@ namespace SystemTraits
 	};
 
 	struct Foundational : public Trait {};
+	struct Gui : public Trait {};
 	struct Platform : public Trait {};
 	struct Singleton : public Trait {};
 	struct Threadsafe : public Trait {};
-	struct Gui : public Trait {};
+	struct WonderMake : public Trait {};
 }
 
 namespace STrait = SystemTraits;
 
 using STFoundational		= SystemTraits::Foundational;
-using STPlatform			= SystemTraits::Platform;
 using STGui					= SystemTraits::Gui;
+using STPlatform			= SystemTraits::Platform;
 using STSingleton			= SystemTraits::Singleton;
 using STThreadsafe			= SystemTraits::Threadsafe;
+using STWonderMake			= SystemTraits::WonderMake;

@@ -17,7 +17,8 @@ class DebugSettingsSystem
 			PAdd<ConfigurationSystem, PRead>,
 			PAdd<JobSystem, PWrite>>,
 		STrait::Set<
-			STSingleton>>
+			STSingleton,
+			STWonderMake>>
 {
 public:
 	DebugSettingsSystem();

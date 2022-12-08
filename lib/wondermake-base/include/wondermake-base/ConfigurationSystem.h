@@ -15,7 +15,8 @@ class ConfigurationSystem
 		Policy::Set<>,
 		SystemTraits::Set<
 			STFoundational,
-			STSingleton>>
+			STSingleton,
+			STWonderMake>>
 {
 public:
 	inline ConfigurationSystem() noexcept

@@ -14,7 +14,9 @@ class ScheduleSystem;
 class WinFileWatcher
 	: public System<
 		Policy::Set<
-			PAdd<ScheduleSystem, PWrite>>>
+			PAdd<ScheduleSystem, PWrite>>,
+		STrait::Set<
+			STWonderMake>>
 {
 public:
 	WinFileWatcher();

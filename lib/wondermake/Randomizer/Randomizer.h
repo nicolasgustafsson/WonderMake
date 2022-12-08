@@ -5,7 +5,10 @@
 #include <random>
 
 class Randomizer
-	: public System<>
+	: public System<
+		Policy::Set<>,
+		STrait::Set<
+			STWonderMake>>
 {
 public:
 	Randomizer();

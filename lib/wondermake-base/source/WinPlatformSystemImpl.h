@@ -9,7 +9,8 @@ class WinPlatformSystemImpl
 			STFoundational,
 			STPlatform,
 			STThreadsafe,
-			STSingleton>>
+			STSingleton,
+			STWonderMake>>
 	, public WinPlatformSystem
 {
 public:

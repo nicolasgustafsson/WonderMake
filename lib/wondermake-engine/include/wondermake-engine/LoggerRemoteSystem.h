@@ -19,7 +19,8 @@ class LoggerRemoteSystem
 			PAdd<IpcSystem, PWrite>>,
 		STrait::Set<
 			STLogger,
-			STSingleton>>
+			STSingleton,
+			STWonderMake>>
 {
 public:
 	Result<SharedReference<LoggerRemoteSocket>, IpcAcceptor::SOpenError> OpenSocketIpc(std::string aName);

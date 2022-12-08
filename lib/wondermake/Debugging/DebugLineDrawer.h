@@ -20,7 +20,8 @@ class DebugLineDrawer
 			PAdd<ResourceSystem<Shader<EShaderType::Geometry>>, PWrite>,
 			PAdd<TimeKeeper, PRead>>,
 		STrait::Set<
-			STGui>>
+			STGui,
+			STWonderMake>>
 {
 public:
 	DebugLineDrawer() noexcept;

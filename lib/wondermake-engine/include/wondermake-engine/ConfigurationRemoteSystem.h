@@ -30,7 +30,9 @@ class ConfigurationRemoteSystem
 	: public System<
 		Policy::Set<
 			PAdd<ConfigurationSystem, PWrite>,
-			PAdd<ProcessSystem, PWrite>>>
+			PAdd<ProcessSystem, PWrite>>,
+		STrait::Set<
+			STWonderMake>>
 	, public std::enable_shared_from_this<ConfigurationRemoteSystem>
 {
 public:

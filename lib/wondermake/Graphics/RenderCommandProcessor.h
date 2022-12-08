@@ -22,7 +22,8 @@ class RenderCommandProcessor
 	: public System<
 		Policy::Set<>,
 		STrait::Set<
-			STGui>>
+			STGui,
+			STWonderMake>>
 {
 public:
 	RenderLayer& GetRenderLayer(std::string_view aRenderLayerName);

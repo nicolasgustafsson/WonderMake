@@ -22,7 +22,9 @@ class CollisionFunctionality final
 			PAdd<CollisionSystem, PWrite>,
 			PAdd<DebugSettingsSystem, PWrite>,
 			PAdd<SCollisionComponent, PWrite>,
-			PAdd<TransformFunctionality2D, PRead>>>
+			PAdd<TransformFunctionality2D, PRead>>,
+		STrait::Set<
+			STWonderMake>>
 	, public Debugged
 {
 public:

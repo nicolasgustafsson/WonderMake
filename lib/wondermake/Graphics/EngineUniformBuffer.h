@@ -77,7 +77,8 @@ class EngineUniformBuffer
 			PAdd<Window, PWrite>,
 			PAdd<OpenGLFacade, PWrite>>,
 		STrait::Set<
-			STGui>>
+			STGui,
+			STWonderMake>>
 	
 {
 public:

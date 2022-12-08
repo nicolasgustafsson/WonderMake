@@ -10,7 +10,8 @@ class GlfwFacade
 		STrait::Set<
 			STGui,
 			STSingleton,
-			STThreadsafe>>
+			STThreadsafe,
+			STWonderMake>>
 {
 public:
 	GlfwFacade();

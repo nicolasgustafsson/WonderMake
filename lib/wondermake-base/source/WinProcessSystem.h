@@ -17,7 +17,8 @@ class WinProcessSystem
 		STrait::Set<
 			STFoundational,
 			STSingleton,
-			STThreadsafe>>
+			STThreadsafe,
+			STWonderMake>>
 	, public ProcessSystem
 	, public std::enable_shared_from_this<WinProcessSystem>
 {

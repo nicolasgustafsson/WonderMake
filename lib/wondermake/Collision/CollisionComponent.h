@@ -13,7 +13,9 @@ struct SCollider
 };
 
 struct SCollisionComponent final
-	: public SComponent
+	: public STraitedComponent<
+		STrait::Set<
+			STWonderMake>>
 {
 	plf::colony<SCollider>	Colliders;
 };

@@ -18,7 +18,8 @@ class WinEventSystemImpl
 			STFoundational,
 			STPlatform,
 			STSingleton,
-			STThreadsafe>>
+			STThreadsafe,
+			STWonderMake>>
 	, public WinEventSystem
 	, public std::enable_shared_from_this<WinEventSystemImpl>
 {

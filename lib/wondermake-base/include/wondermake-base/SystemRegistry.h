@@ -32,7 +32,7 @@ public:
 
 	struct Filter
 	{
-		std::optional<SystemTraits::SetList> RequiredAnyTraits;
+		std::vector<SystemTraits::SetList> RequiredAnyTraits;
 		std::optional<SystemTraits::SetList> DisallowedTraits;
 	};
 

@@ -11,7 +11,9 @@
 class PopulateObjectSystem
 	: public System<
 		Policy::Set<
-			PAdd<ScheduleSystem, PWrite>>>
+			PAdd<ScheduleSystem, PWrite>>,
+		STrait::Set<
+			STWonderMake>>
 {
 public:
 	template<typename TFunctionality>

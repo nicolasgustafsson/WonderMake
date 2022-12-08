@@ -16,7 +16,8 @@ class Window
 			PAdd<ConfigurationSystem, PWrite>,
 			PAdd<GlfwFacade, PWrite>>,
 		STrait::Set<
-			STGui>>
+			STGui,
+			STWonderMake>>
 	, public std::enable_shared_from_this<Window>
 {
 public:

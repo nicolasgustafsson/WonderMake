@@ -6,7 +6,9 @@
 
 template<typename TRepPosition, typename TRepRotation>
 struct _STransformComponent2D
-	: public SComponent
+	: public STraitedComponent<
+		STrait::Set<
+			STWonderMake>>
 {
 	using RepPosition = TRepPosition;
 	using RepRotation = TRepRotation;

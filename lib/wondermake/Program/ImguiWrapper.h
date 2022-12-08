@@ -14,7 +14,8 @@ class ImguiWrapper
 			PAdd<GlfwFacade, PWrite>,
 			PAdd<Window, PRead>>,
 		STrait::Set<
-			STGui>>
+			STGui,
+			STWonderMake>>
 {
 public:
 	ImguiWrapper();

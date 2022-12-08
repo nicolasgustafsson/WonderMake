@@ -14,7 +14,9 @@ class ScheduleSystem;
 class CollisionSystem final
 	: public System<
 		Policy::Set<
-			PAdd<ScheduleSystem, PWrite>>>
+			PAdd<ScheduleSystem, PWrite>>,
+		STrait::Set<
+			STWonderMake>>
 {
 public:
 	CollisionSystem() noexcept;

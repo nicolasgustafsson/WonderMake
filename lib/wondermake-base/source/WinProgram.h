@@ -9,7 +9,9 @@ class WinProgram
 	: public System<
 		Policy::Set<
 			PAdd<ScheduleSystem, PWrite>,
-			PAdd<WinEventSystem, PWrite>>>
+			PAdd<WinEventSystem, PWrite>>,
+		STrait::Set<
+			STWonderMake>>
 {
 public:
 	WinProgram();

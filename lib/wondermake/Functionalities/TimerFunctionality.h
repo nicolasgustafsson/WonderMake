@@ -7,7 +7,9 @@
 class TimeKeeper;
 
 struct STimerComponent
-	: public SComponent
+	: public STraitedComponent<
+		STrait::Set<
+			STWonderMake>>
 {
 	struct STimer
 	{
@@ -22,7 +24,9 @@ class TimerFunctionality
 	: public Functionality<
 		Policy::Set<
 			PAdd<TimeKeeper, PRead>,
-			PAdd<STimerComponent, PWrite>>>
+			PAdd<STimerComponent, PWrite>>,
+		STrait::Set<
+			STWonderMake>>
 {
 public:
 	void AddTimer(const f32 aDuration, Closure aClosure);

@@ -17,7 +17,8 @@ class LoggerFileSystem
 		STrait::Set<
 			STLogger,
 			STThreadsafe,
-			STSingleton>>
+			STSingleton,
+			STWonderMake>>
 	, public LoggerBase
 	, public std::enable_shared_from_this<LoggerFileSystem>
 {

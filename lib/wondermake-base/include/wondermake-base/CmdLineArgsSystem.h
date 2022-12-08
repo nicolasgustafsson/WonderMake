@@ -5,7 +5,10 @@
 #include "wondermake-utility/CmdLineArgs.h"
 
 class CmdLineArgsSystem
-	: public System<>
+	: public System<
+		Policy::Set<>,
+		STrait::Set<
+			STWonderMake>>
 	, public CmdLineArgs
 {
 public:

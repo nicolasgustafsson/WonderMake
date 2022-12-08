@@ -8,7 +8,9 @@
 #include <optional>
 
 struct SSpriteComponent 
-	: public SComponent
+	: public STraitedComponent<
+		STrait::Set<
+			STWonderMake>>
 {
 	std::optional<SpriteRenderObject> RenderObject;
 	bool IsHidden = false;

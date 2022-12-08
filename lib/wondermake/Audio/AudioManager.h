@@ -21,7 +21,8 @@ class AudioManager
 			PAdd<ResourceSystem<AudioMixingNodeGraph>, PWrite>,
 			PAdd<DebugSettingsSystem, PWrite>>,
 		STrait::Set<
-			STGui>>,
+			STGui,
+			STWonderMake>>,
 		Debugged
 {
 public:

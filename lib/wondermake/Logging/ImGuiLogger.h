@@ -23,7 +23,8 @@ class ImGuiLogger
 			PAdd<DebugSettingsSystem, PWrite>>,
 		STrait::Set<
 			STGui,
-			STSingleton>>
+			STSingleton,
+			STWonderMake>>
 	, public std::enable_shared_from_this<ImGuiLogger>
 {
 public:

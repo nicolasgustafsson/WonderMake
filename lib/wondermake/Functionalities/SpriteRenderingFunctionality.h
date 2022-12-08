@@ -27,7 +27,8 @@ class SpriteRenderingFunctionality
 			PAdd<TransformFunctionality2D, PRead>,
 			PAdd<SSpriteComponent, PWrite>>,
 		SystemTraits::Set<
-			STGui>>
+			STGui,
+			STWonderMake>>
 {
 public:
 	void Tick();

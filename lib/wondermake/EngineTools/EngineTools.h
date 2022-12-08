@@ -5,7 +5,8 @@ class EngineTools
 	: public System<
 		Policy::Set<>,
 		STrait::Set<
-			STGui>>
+			STGui,
+			STWonderMake>>
 	, public Debugged
 {
 public:

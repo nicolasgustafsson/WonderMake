@@ -13,7 +13,8 @@ class OpenGLFacade
 		Policy::Set<>,
 		STrait::Set<
 			STSingleton,
-			STGui>>
+			STGui,
+			STWonderMake>>
 {
 public:
 	using Super::Super;

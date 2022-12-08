@@ -8,7 +8,10 @@
 #include <functional>
 
 class ScheduleSystem
-	: public System<>
+	: public System<
+		Policy::Set<>,
+		STrait::Set<
+			STWonderMake>>
 {
 public:
 	using ScheduleProc = std::function<void(Closure)>;

@@ -25,7 +25,8 @@ class AssetDatabase
 		Policy::Set<
 			PAdd<ResourceSystem<TAssetType>, PWrite>>,
 		STrait::Set<
-			STGui>>
+			STGui,
+			STWonderMake>>
 	, public Debugged
 {
 public:

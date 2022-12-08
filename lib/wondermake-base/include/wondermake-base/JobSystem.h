@@ -18,7 +18,8 @@ class JobSystem
 	: public System<
 		Policy::Set<>,
 		STrait::Set<
-			STSingleton>>
+			STSingleton,
+			STWonderMake>>
 	, public std::enable_shared_from_this<JobSystem>
 {
 public:

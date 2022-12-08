@@ -10,7 +10,10 @@
 #include <chrono>
 
 class TimeKeeper
-	: public System<>
+	: public System<
+		Policy::Set<>,
+		STrait::Set<
+			STWonderMake>>
 	, public Debugged
 {
 public:

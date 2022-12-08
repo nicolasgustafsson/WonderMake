@@ -20,7 +20,8 @@ class InputSystem
 			PAdd<CameraManager, PWrite>,
 			PAdd<Window, PWrite>>,
 		STrait::Set<
-			STGui>>
+			STGui,
+			STWonderMake>>
 	, public Debugged
 {
 public:

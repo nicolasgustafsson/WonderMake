@@ -36,7 +36,8 @@ class CameraManager
 			PAdd<Window, PWrite>,
 			PAdd<DebugSystem, PRead>>,
 		STrait::Set<
-			STGui>>
+			STGui,
+			STWonderMake>>
 	, public Debugged
 {
 public:

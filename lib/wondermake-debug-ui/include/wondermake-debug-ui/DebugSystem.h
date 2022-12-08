@@ -13,7 +13,8 @@ class DebugSystem
 		Policy::Set<
 			PAdd<DebugSettingsSystem, PWrite>>,
 		STrait::Set<
-			STSingleton>>
+			STSingleton,
+			STWonderMake>>
 {
 public:
 	void Initialize() override;

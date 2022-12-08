@@ -39,7 +39,8 @@ class RenderSettingsManager
 		Policy::Set<
 			PAdd<OpenGLFacade, PWrite>>,
 		STrait::Set<
-			STGui>>
+			STGui,
+			STWonderMake>>
 {
 public:
 	RenderSettingsManager();

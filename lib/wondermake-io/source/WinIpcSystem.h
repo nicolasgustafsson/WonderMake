@@ -15,7 +15,8 @@ class WinIpcSystem
 			PAdd<WinPlatformSystem, PWrite>>,
 		STrait::Set<
 			STFoundational,
-			STSingleton>>
+			STSingleton,
+			STWonderMake>>
 {
 public:
 	SharedReference<IpcAcceptor>	CreateAcceptor() override;

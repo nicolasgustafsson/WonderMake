@@ -11,7 +11,9 @@ template<typename TRepVector, typename TRepRotation>
 class _TransformFunctionality2D
 	: public Functionality<
 		Policy::Set<
-			PAdd<STransformComponent2D, PWrite>>>
+			PAdd<STransformComponent2D, PWrite>>,
+		STrait::Set<
+			STWonderMake>>
 {
 public:
 	using RepVector		= TRepVector;

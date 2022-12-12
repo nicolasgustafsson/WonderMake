@@ -1,16 +1,20 @@
 #pragma once
+
 #include "Utilities/Debugging/Debugged.h"
+
+class TimeKeeper;
 
 class EngineTools
 	: public System<
-		Policy::Set<>,
+		Policy::Set<
+			PAdd<TimeKeeper, PRead>>,
 		STrait::Set<
 			STGui,
 			STWonderMake>>
 	, public Debugged
 {
 public:
-	EngineTools()
+	inline EngineTools()
 		: Debugged("Engine Tools")
 	{}
 

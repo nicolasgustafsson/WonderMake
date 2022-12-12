@@ -30,7 +30,7 @@ void Test(TFunction aFunction, const char* aName)
 	Plot(points, aName);
 }
 
-void EasingTester::TestEasings()
+void EasingTester::TestEasings(WmChrono::fSeconds aDeltaTime)
 {
 	static bool showEasings = true;
 
@@ -40,12 +40,12 @@ void EasingTester::TestEasings()
 
 	static bool showMovement = true;
 	ImGui::Begin("Movement", &showMovement);
-	Movement();
+	Movement(aDeltaTime);
 	ImGui::End();
 
 	static bool showContinuousMovement = true;
 	ImGui::Begin("Continuous Movement", &showContinuousMovement);
-	ContinuousMovement();
+	ContinuousMovement(aDeltaTime);
 	ImGui::End();
 
 	static bool showCurveEditor = true;
@@ -92,9 +92,9 @@ void EasingTester::Lerps()
 	Test([&](const f32 t) {return WmEasings::BellCurve<20>(range, t); }, "Bellcurve20   ");
 }
 
-void EasingTester::Movement()
+void EasingTester::Movement(WmChrono::fSeconds aDeltaTime)
 {
-	auto deltaTime = SystemPtr<TimeKeeper>()->GetDeltaTime<WmChrono::fSeconds>().count();
+	const auto deltaTime = aDeltaTime.count();
 	static WmGui::SCanvasState canvasState;
 
 	static SVector2f aLocation = SVector2f(100.f, 100.f) + SVector2f(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
@@ -116,7 +116,7 @@ void EasingTester::Movement()
 	
 	static std::vector<SPointGhost> ghosts;
 
-	UpdateGhosts(canvasState, ghosts);
+	UpdateGhosts(canvasState, ghosts, aDeltaTime);
 
 	WmGui::DrawCirleOnCanvas(&canvasState, nextLocation, goalColor, 8.f, false);
 	WmGui::DrawCirleOnCanvas(&canvasState, aLocation, SColor::ImperialRed(), 8.f, false);
@@ -158,9 +158,9 @@ void EasingTester::Movement()
 	WmGui::EndCanvas();
 }
 
-void EasingTester::ContinuousMovement()
+void EasingTester::ContinuousMovement(WmChrono::fSeconds aDeltaTime)
 {
-	auto deltaTime = SystemPtr<TimeKeeper>()->GetDeltaTime<WmChrono::fSeconds>().count();
+	const auto deltaTime = aDeltaTime.count();
 	static WmGui::SCanvasState canvasState;
 
 	static SVector2f location = SVector2f(100.f, 100.f) + SVector2f(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
@@ -179,7 +179,7 @@ void EasingTester::ContinuousMovement()
 
 	static std::vector<SPointGhost> ghosts;
 
-	UpdateGhosts(canvasState, ghosts);
+	UpdateGhosts(canvasState, ghosts, aDeltaTime);
 
 	WmGui::DrawCirleOnCanvas(&canvasState, nextLocation, goalColor, 8.f, false);
 	WmGui::DrawCirleOnCanvas(&canvasState, location, SColor::ImperialRed(), 8.f, false);
@@ -298,9 +298,10 @@ void EasingTester::CurveEditor2D()
 	WmGui::EndCanvas();
 }
 
-void EasingTester::UpdateGhosts(WmGui::SCanvasState& aCanvas, std::vector<SPointGhost>& aGhosts)
+void EasingTester::UpdateGhosts(WmGui::SCanvasState& aCanvas, std::vector<SPointGhost>& aGhosts, WmChrono::fSeconds aDeltaTime)
 {
-	auto deltaTime = SystemPtr<TimeKeeper>()->GetDeltaTime<WmChrono::fSeconds>().count();
+	const auto deltaTime = aDeltaTime.count();
+
 	for (auto it = aGhosts.begin(); it != aGhosts.end(); )
 	{
 		auto&& ghost = *it;

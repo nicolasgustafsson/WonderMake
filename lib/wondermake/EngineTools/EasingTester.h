@@ -1,5 +1,8 @@
 #pragma once
+
 #include "Imgui/Canvas.h"
+
+#include "wondermake-utility/Typedefs.h"
 
 namespace EasingTester
 {
@@ -10,13 +13,13 @@ namespace EasingTester
 	};
 
 
-	void TestEasings();
+	void TestEasings(WmChrono::fSeconds aDeltaTime);
 
 	void Lerps();
-	void Movement();
-	void ContinuousMovement();
+	void Movement(WmChrono::fSeconds aDeltaTime);
+	void ContinuousMovement(WmChrono::fSeconds aDeltaTime);
 	void CurveEditor();
 	void CurveEditor2D();
 
-	void UpdateGhosts( WmGui::SCanvasState& aCanvas, std::vector<SPointGhost>& aGhosts);
+	void UpdateGhosts(WmGui::SCanvasState& aCanvas, std::vector<SPointGhost>& aGhosts, WmChrono::fSeconds aDeltaTime);
 };

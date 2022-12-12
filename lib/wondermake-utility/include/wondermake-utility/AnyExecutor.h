@@ -20,6 +20,9 @@ public:
 	AnyExecutor(const AnyExecutor&) noexcept = default;
 	AnyExecutor(AnyExecutor&&) noexcept = default;
 
+	AnyExecutor& operator=(const AnyExecutor&) noexcept = default;
+	AnyExecutor& operator=(AnyExecutor&&) noexcept = default;
+
 	void Execute(Closure&& aClosure) const;
 
 private:

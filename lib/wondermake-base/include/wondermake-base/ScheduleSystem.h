@@ -2,6 +2,9 @@
 
 #include "wondermake-base/System.h"
 
+#include "wondermake-utility/AnyExecutor.h"
+#include "wondermake-utility/EventSubscriber.h"
+#include "wondermake-utility/Future.h"
 #include "wondermake-utility/Typedefs.h"
 #include "wondermake-utility/UniqueFunction.h"
 
@@ -14,21 +17,21 @@ class ScheduleSystem
 			STWonderMake>>
 {
 public:
-	using ScheduleProc = std::function<void(Closure)>;
-	using ScheduleRepeatingProc = std::function<void(std::function<void()>)>;
+	using ScheduleProc			= std::function<Future<void>(AnyExecutor, Closure)>;
+	using ScheduleRepeatingProc	= std::function<EventSubscriber(AnyExecutor, std::function<void()>)>;
 
 	ScheduleSystem(ScheduleProc aScheduleProc, ScheduleRepeatingProc aScheduleRepeatingProc) noexcept;
 
 	// TODO(Kevin): Take policies into consideration.
 	template<typename TPolicySet = Policy::Set<>>
-	inline void Schedule(Closure&& aTask)
+	inline Future<void> Schedule(AnyExecutor aExecutor, Closure&& aTask)
 	{
-		myScheduleProc(std::move(aTask));
+		return myScheduleProc(std::move(aExecutor), std::move(aTask));
 	}
 	template<typename TPolicySet = Policy::Set<>>
-	inline void ScheduleRepeating(std::function<void()>&& aTask)
+	inline EventSubscriber ScheduleRepeating(AnyExecutor aExecutor, std::function<void()>&& aTask)
 	{
-		myScheduleRepeatingProc(std::move(aTask));
+		return myScheduleRepeatingProc(std::move(aExecutor), std::move(aTask));
 	}
 
 private:

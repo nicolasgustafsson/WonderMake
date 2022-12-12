@@ -21,10 +21,13 @@ public:
 	{
 		auto [promise, future] = MakeAsync<std::reference_wrapper<TFunctionality>>();
 
-		Get<ScheduleSystem>().Schedule([promise = std::move(promise), &aObject]() mutable
-		{
-			promise.Complete(SystemPtr<FunctionalitySystemDelegate<std::decay_t<TFunctionality>>>()->AddFunctionality(aObject));
-		});
+		using FunctionalityDelegate = FunctionalitySystemDelegate<std::decay_t<TFunctionality>>;
+
+		Get<ScheduleSystem>().Schedule<FunctionalityDelegate>(GetExecutor(), [promise = std::move(promise), &aObject]() mutable
+			{
+				promise.Complete(SystemPtr<FunctionalityDelegate>()->AddFunctionality(aObject));
+			})
+			.Detach();
 
 		return std::move(future);
 	}

@@ -85,18 +85,31 @@ namespace Engine
 		auto taskManager = std::make_shared<TaskManager>();
 		auto& sysContainer = Global::GetSystemContainer();
 
-		auto scheduleProc = [&taskManager](Closure aTask)
+		auto scheduleProc = [&taskManager](AnyExecutor aExecutor, Closure aTask) -> auto
 		{
-			taskManager->Schedule(std::move(aTask));
+			return taskManager->Schedule(std::move(aExecutor), std::move(aTask));
 		};
-		auto scheduleRepeatingProc = [&taskManager](std::function<void()> aTask)
+		auto scheduleRepeatingProc = [&taskManager](AnyExecutor aExecutor, std::function<void()> aTask) -> auto
 		{
-			taskManager->ScheduleRepeating(std::move(aTask));
+			return taskManager->ScheduleRepeating(std::move(aExecutor), std::move(aTask));
 		};
 
-		sysRegistry.AddSystem<JobSystem>([&sysContainer, executor = taskManager->GetExecutor()]() -> std::shared_ptr<JobSystem>
+		sysRegistry.AddSystem<JobSystem>([&sysContainer, &taskManager]() -> std::shared_ptr<JobSystem>
 		{
-			static auto jobSys = std::make_shared<JobSystem>(JobGlobal::GetRegistry(), sysContainer, executor);
+			struct SScheduleExecutor
+			{
+				std::function<void(Closure)> Executor;
+
+				void Execute(Closure&& aCallable) const
+				{
+					Executor(std::move(aCallable));
+				}
+			};
+
+			static auto jobSys = std::make_shared<JobSystem>(JobGlobal::GetRegistry(), sysContainer, SScheduleExecutor
+				{
+					.Executor = [taskManager](Closure aCallable) { taskManager->Schedule(InlineExecutor(), std::move(aCallable)).Detach(); }
+				});
 
 			return jobSys;
 		});
@@ -349,7 +362,7 @@ namespace Engine
 			sysContainer = std::move(result).Unwrap();
 		}
 
-		taskManager->SetDeferred();
+		taskManager->SetImmediate(false);
 
 		{
 			WmLogInfo(TagWonderMake << "Registering core systems...");

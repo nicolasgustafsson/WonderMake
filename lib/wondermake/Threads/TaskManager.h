@@ -5,6 +5,9 @@
 #include "Threads/ThreadChecker.h"
 
 #include "wondermake-utility/AnyExecutor.h"
+#include "wondermake-utility/CancelableList.h"
+#include "wondermake-utility/EventSubscriber.h"
+#include "wondermake-utility/Future.h"
 #include "wondermake-utility/Typedefs.h"
 
 #include <functional>
@@ -13,44 +16,42 @@
 
 class TaskManager
 	: public std::enable_shared_from_this<TaskManager>
+	, public NonCopyable
+	, public NonMovable
 {
 public:
 	// Temporary until Systems return initialization future.
-	void SetDeferred();
+	void SetImmediate(bool aFlag);
 
 	// Requires the same thread that created the object
 	void Update();
 
 	// Threadsafe
-	AnyExecutor GetExecutor();
-
-	// Threadsafe
-	void Schedule(Closure aTask);
-	void ScheduleRepeating(std::function<void()> aTask);
+	Future<void> Schedule(AnyExecutor aExecutor, Closure aTask);
+	EventSubscriber ScheduleRepeating(AnyExecutor aExecutor, std::function<void()> aTask);
 
 private:
-	class Executor
+	struct STask
 	{
-	public:
-		Executor(std::weak_ptr<TaskManager> aTaskManager);
+		AnyExecutor		Executor;
+		Closure			Callable;
+		Promise<void>	Promise;
 
-		void Execute(Closure&& aClosure) const;
-		void Execute(Closure&& aClosure, std::vector<Policy>&& aPolicies) const;
+		void OnCancel(AnyExecutor aExecutor, Closure aOnCancel);
+	};
+	struct STaskRepeating
+	{
+		std::shared_ptr<EventTrigger<void>>	Event;
 
-	private:
-		std::weak_ptr<TaskManager> myTaskManager;
-
+		void OnCancel(AnyExecutor aExecutor, Closure aOnCancel);
 	};
 
 	void ProcessTasks();
 
-	std::mutex myMutex;
 	ThreadChecker myThreadChecker;
 
-	bool myIsDeferred = false;
-	std::vector<Closure> myTasksScheduled;
-	std::vector<Closure> myTasksBuffer;
+	bool myIsImmediate = true;
 
-	std::vector<std::function<void()>> myTasksRepeatingScheduled;
-	std::vector<std::function<void()>> myTasksRepeatingBuffer;
+	CancelableList<STask>			myScheduledTasks			= CancelableList<STask>(InlineExecutor());
+	CancelableList<STaskRepeating>	myScheduledTaskRepeating	= CancelableList<STaskRepeating>(InlineExecutor());;
 };

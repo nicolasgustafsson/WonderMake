@@ -14,7 +14,9 @@ WM_REGISTER_SYSTEM(CollisionSystem);
 
 CollisionSystem::CollisionSystem() noexcept
 {
-	Get<ScheduleSystem>().ScheduleRepeating<>([this](){ Tick(); });
+	Get<ScheduleSystem>()
+		.ScheduleRepeating(GetExecutor(), [this](){ Tick(); })
+		.Detach();
 }
 
 void CollisionSystem::Tick()

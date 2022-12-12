@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "TaskManager.h"
 
-void TaskManager::SetDeferred()
+void TaskManager::SetImmediate(bool aFlag)
 {
-	myIsDeferred = true;
+	myIsImmediate = aFlag;
 }
 
 void TaskManager::Update()
@@ -13,67 +13,70 @@ void TaskManager::Update()
 	ProcessTasks();
 }
 
-AnyExecutor TaskManager::GetExecutor()
+Future<void> TaskManager::Schedule(AnyExecutor aExecutor, Closure aTask)
 {
-	return Executor(weak_from_this());
+	if (myIsImmediate)
+	{
+		aExecutor.Execute(std::move(aTask));
+
+		return MakeCompletedFuture<void>();
+	}
+
+	auto [promise, future] = MakeAsync<void>();
+
+	myScheduledTasks.Emplace(
+		STask
+		{
+			.Executor			= std::move(aExecutor),
+			.Callable			= std::move(aTask),
+			.Promise			= std::move(promise)
+		});
+
+	return std::move(future);
 }
 
-void TaskManager::Schedule(Closure aTask)
+EventSubscriber TaskManager::ScheduleRepeating(AnyExecutor aExecutor, std::function<void()> aTask)
 {
-	std::lock_guard<decltype(myMutex)> lock(myMutex);
+	auto [trigger, subscriber] = MakeEventTrigger<void>(std::move(aExecutor), std::move(aTask));
 
-	myTasksScheduled.emplace_back(std::move(aTask));
+	myScheduledTaskRepeating.Emplace(
+		STaskRepeating
+		{
+			.Event				= std::make_shared<EventTrigger<void>>(std::move(trigger))
+		});
+
+	return std::move(subscriber);
 }
 
-void TaskManager::ScheduleRepeating(std::function<void()> aTask)
+void TaskManager::STask::OnCancel(AnyExecutor aExecutor, Closure aOnCancel)
 {
-	std::lock_guard<decltype(myMutex)> lock(myMutex);
-
-	myTasksRepeatingScheduled.emplace_back(std::move(aTask));
+	Promise.OnCancel(std::move(aExecutor), [onCancel = std::move(aOnCancel)]() mutable
+		{
+			std::move(onCancel)();
+		});
 }
 
-TaskManager::Executor::Executor(std::weak_ptr<TaskManager> aTaskManager)
-	: myTaskManager(std::move(aTaskManager))
-{}
-
-void TaskManager::Executor::Execute(Closure&& aClosure) const
+void TaskManager::STaskRepeating::OnCancel(AnyExecutor aExecutor, Closure aOnCancel)
 {
-	auto ptr = myTaskManager.lock();
-
-	if (!ptr)
-		return;
-
-	if (ptr->myIsDeferred)
-		ptr->Schedule(std::move(aClosure));
-	else
-		std::move(aClosure)();
-}
-
-void TaskManager::Executor::Execute(Closure&& aClosure, std::vector<Policy>&& /*aPolicies*/) const
-{
-	// TODO(Kevin): Take policies into consideration.
-	Execute(std::move(aClosure));
+	Event->OnCancel()
+		.ThenRun(std::move(aExecutor), FutureRunResult([onCancel = std::move(aOnCancel)]() mutable
+		{
+			std::move(onCancel)();
+		}))
+		.Detach();
 }
 
 void TaskManager::ProcessTasks()
 {
+	while (!myScheduledTasks.IsEmpty())
 	{
-		std::lock_guard<decltype(myMutex)> lock(myMutex);
+		auto task = myScheduledTasks.Pop();
 
-		std::swap(myTasksBuffer, myTasksScheduled);
-		for (auto&& task : myTasksRepeatingScheduled)
-		{
-			myTasksRepeatingBuffer.emplace_back(std::move(task));
-		}
+		task.Executor.Execute(std::move(task.Callable));
 
-		myTasksRepeatingScheduled.clear();
+		task.Promise.Complete();
 	}
 
-	for (auto&& task : myTasksBuffer)
-		std::move(task)();
-
-	for (auto&& task : myTasksRepeatingBuffer)
-		task();
-
-	myTasksBuffer.clear();
+	for (auto& task : myScheduledTaskRepeating)
+		task.Event->Trigger();
 }

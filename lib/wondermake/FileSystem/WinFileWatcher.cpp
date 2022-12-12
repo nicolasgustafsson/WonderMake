@@ -9,7 +9,9 @@ WinFileWatcher::WinFileWatcher()
 {
 	if constexpr (Constants::EnableAssetHotReload)
 	{
-		Get<ScheduleSystem>().ScheduleRepeating<>([this]() { UpdateFileChanges(); });
+		Get<ScheduleSystem>()
+			.ScheduleRepeating(GetExecutor(), [this]() { UpdateFileChanges(); })
+			.Detach();
 
 		myShouldStop.store(false);
 

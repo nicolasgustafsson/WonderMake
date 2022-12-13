@@ -62,7 +62,7 @@ public:
 	{}
 	
 protected:
-	ClockImpl myClock;
+	NiceMock<ClockImpl> myClock;
 
 	Stopwatch<ClockMock> myStopwatch;
 

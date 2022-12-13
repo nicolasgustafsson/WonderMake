@@ -8,6 +8,7 @@ class CmdLineArgsSystem
 	: public System<
 		Policy::Set<>,
 		STrait::Set<
+			STSingleton,
 			STWonderMake>>
 	, public CmdLineArgs
 {

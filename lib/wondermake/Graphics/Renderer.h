@@ -45,6 +45,7 @@ class Renderer
 			PAdd<OpenGLFacade, PWrite>>,
 		STrait::Set<
 			STGui,
+			STSingleton,
 			STWonderMake>>
 	, public Debugged
 {

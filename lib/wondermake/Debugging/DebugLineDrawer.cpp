@@ -1,5 +1,9 @@
 #include "pch.h"
+
 #include "DebugLineDrawer.h"
+
+#include "Utilities/TimeKeeper.h"
+
 #include "wondermake-utility/Utility.h"
 
 WM_REGISTER_SYSTEM(DebugLineDrawer);
@@ -23,7 +27,7 @@ void DebugLineDrawer::Render()
 
 void DebugLineDrawer::Update()
 {
-	const float deltaTime = Get<TimeKeeper>().GetDeltaTime<WmChrono::fSeconds>().count();
+	const float deltaTime = Get<TimeKeeperSingleton>().GetDeltaTime<WmChrono::fSeconds>().count();
 
 	for (i32 i = static_cast<i32>(myDebugLines.size()) - 1; i >= 0; i--)
 	{

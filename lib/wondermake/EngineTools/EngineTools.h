@@ -2,14 +2,15 @@
 
 #include "Utilities/Debugging/Debugged.h"
 
-class TimeKeeper;
+class TimeKeeperSingleton;
 
 class EngineTools
 	: public System<
 		Policy::Set<
-			PAdd<TimeKeeper, PRead>>,
+			PAdd<TimeKeeperSingleton, PRead>>,
 		STrait::Set<
 			STGui,
+			STSingleton,
 			STWonderMake>>
 	, public Debugged
 {

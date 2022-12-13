@@ -40,6 +40,7 @@ class RenderSettingsManager
 			PAdd<OpenGLFacade, PWrite>>,
 		STrait::Set<
 			STGui,
+			STSingleton,
 			STWonderMake>>
 {
 public:

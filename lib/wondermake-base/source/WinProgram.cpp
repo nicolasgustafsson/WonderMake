@@ -8,7 +8,7 @@ WM_REGISTER_SYSTEM(WinProgram);
 
 WinProgram::WinProgram()
 {
-	Get<ScheduleSystem>()
+	Get<ScheduleSystemSingleton>()
 		.ScheduleRepeating(GetExecutor(), [this]() { Tick(); })
 		.Detach();
 }

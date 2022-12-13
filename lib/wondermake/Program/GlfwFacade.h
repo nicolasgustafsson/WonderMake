@@ -8,6 +8,7 @@ class GlfwFacade
 	: public System<
 		Policy::Set<>,
 		STrait::Set<
+			STFoundational,
 			STGui,
 			STSingleton,
 			STThreadsafe,

@@ -9,13 +9,14 @@
 
 //[Nicos]: Also it's windows specific, so we will have to turn it off on linux :(
 
-class ScheduleSystem;
+class ScheduleSystemSingleton;
 
 class WinFileWatcher
 	: public System<
 		Policy::Set<
-			PAdd<ScheduleSystem, PWrite>>,
+			PAdd<ScheduleSystemSingleton, PWrite>>,
 		STrait::Set<
+			STSingleton,
 			STWonderMake>>
 {
 public:

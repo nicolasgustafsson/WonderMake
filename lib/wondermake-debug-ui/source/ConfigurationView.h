@@ -25,6 +25,7 @@ class ConfigurationView
 			PAdd<DebugSystem, PWrite>,
 			PAdd<JobSystem, PWrite>>,
 		STrait::Set<
+			STSingleton,
 			STWonderMake>>
 	, public std::enable_shared_from_this<ConfigurationView>
 {

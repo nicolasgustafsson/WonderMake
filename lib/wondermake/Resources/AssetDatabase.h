@@ -26,6 +26,7 @@ class AssetDatabase
 			PAdd<ResourceSystem<TAssetType>, PWrite>>,
 		STrait::Set<
 			STGui,
+			STSingleton,
 			STWonderMake>>
 	, public Debugged
 {

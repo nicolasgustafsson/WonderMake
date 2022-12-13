@@ -23,6 +23,7 @@ class RenderCommandProcessor
 		Policy::Set<>,
 		STrait::Set<
 			STGui,
+			STSingleton,
 			STWonderMake>>
 {
 public:

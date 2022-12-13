@@ -427,7 +427,7 @@ namespace Engine
 					.Detach();
 			}
 
-			auto& timeKeeper = sysContainer.Get<TimeKeeper>();
+			auto& timeKeeper = sysContainer.Get<TimeKeeperSingleton>();
 			
 			WmLogSuccess(TagWonderMake << "Engine is up and running.");
 

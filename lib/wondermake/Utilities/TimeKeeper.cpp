@@ -4,13 +4,16 @@
 
 #include "wondermake-debug-ui/DebugSettingsSystem.h"
 
+#include "wondermake-base/ScheduleSystem.h"
+
 #include "wondermake-utility/Math.h"
 
+WM_REGISTER_SYSTEM(TimeKeeperSingleton);
 WM_REGISTER_SYSTEM(TimeKeeper);
 
 inline constexpr auto locMaxDeltaTime = std::chrono::duration_cast<std::chrono::high_resolution_clock::duration>(WmChrono::dSeconds(1.0 / 10.0));
 
-void TimeKeeper::Update() noexcept
+void TimeKeeperSingleton::Update() noexcept
 {
 	myPreviousDeltaTimeReal = myStopwatchDeltaTime.Restart<Duration>();
 
@@ -23,7 +26,7 @@ void TimeKeeper::Update() noexcept
 	myTimerManagerReal.RunExpiredTimers(TimePoint(myTimePassedReal));
 }
 
-void TimeKeeper::Debug()
+void TimeKeeperSingleton::Debug()
 {
 	ImGui::Begin("Time Keeper");
 
@@ -43,4 +46,23 @@ void TimeKeeper::Debug()
 	ImGui::SliderFloat("Time dilation", &myTimeDilation, 0.001f, 100.f, "%.3f", ImGuiSliderFlags_Logarithmic);
 
 	ImGui::End();
+}
+
+void TimeKeeper::Initialize()
+{
+	myStartTime = Get<TimeKeeperSingleton>()
+		.GetTotalTime<Duration>();
+	myStartTimeReal = Get<TimeKeeperSingleton>()
+		.GetTotalTimeReal<Duration>();
+	myEventTick = Get<ScheduleSystem>()
+		.ScheduleRepeating(GetExecutor(), Bind(&TimeKeeper::Tick, this));
+}
+
+void TimeKeeper::Tick()
+{
+	const auto now		= TimePoint(GetTotalTime<Duration>());
+	const auto nowReal	= TimePoint(GetTotalTimeReal<Duration>());
+
+	myTimerManager.RunExpiredTimers(now);
+	myTimerManagerReal.RunExpiredTimers(nowReal);
 }

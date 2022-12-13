@@ -9,5 +9,5 @@ WM_REGISTER_SYSTEM(EngineTools);
 
 void EngineTools::Debug()
 {
-	EasingTester::TestEasings(Get<TimeKeeper>().GetDeltaTime());
+	EasingTester::TestEasings(Get<TimeKeeperSingleton>().GetDeltaTime());
 }

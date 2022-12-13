@@ -22,6 +22,7 @@ class ResourceSystem
 		Policy::Set<>,
 		STrait::Set<
 			STGui,
+			STSingleton,
 			STWonderMake>>
 {
 public:

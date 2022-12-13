@@ -2,15 +2,16 @@
 
 #include "wondermake-base/System.h"
 
-class ScheduleSystem;
+class ScheduleSystemSingleton;
 class WinEventSystem;
 
 class WinProgram
 	: public System<
 		Policy::Set<
-			PAdd<ScheduleSystem, PWrite>,
+			PAdd<ScheduleSystemSingleton, PWrite>,
 			PAdd<WinEventSystem, PWrite>>,
 		STrait::Set<
+			STSingleton,
 			STWonderMake>>
 {
 public:

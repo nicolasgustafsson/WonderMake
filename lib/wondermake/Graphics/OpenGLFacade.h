@@ -12,8 +12,9 @@ class OpenGLFacade
 	: public System<
 		Policy::Set<>,
 		STrait::Set<
-			STSingleton,
+			STFoundational,
 			STGui,
+			STSingleton,
 			STWonderMake>>
 {
 public:

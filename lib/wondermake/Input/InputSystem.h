@@ -21,6 +21,7 @@ class InputSystem
 			PAdd<Window, PWrite>>,
 		STrait::Set<
 			STGui,
+			STSingleton,
 			STWonderMake>>
 	, public Debugged
 {

@@ -9,7 +9,7 @@ WinFileWatcher::WinFileWatcher()
 {
 	if constexpr (Constants::EnableAssetHotReload)
 	{
-		Get<ScheduleSystem>()
+		Get<ScheduleSystemSingleton>()
 			.ScheduleRepeating(GetExecutor(), [this]() { UpdateFileChanges(); })
 			.Detach();
 

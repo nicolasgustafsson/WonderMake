@@ -1,12 +1,13 @@
 #pragma once
+
 #include "DebugLine.h"
 #include "DebugLineRenderObject.h"
 #include "Graphics/Shader.h"
 #include "wondermake-base/System.h"
-#include "Utilities/TimeKeeper.h"
 
 template<typename TResource>
 class ResourceSystem;
+class TimeKeeperSingleton;
 
 template class ResourceSystem<Shader<EShaderType::Vertex>>;
 template class ResourceSystem<Shader<EShaderType::Fragment>>;
@@ -18,9 +19,10 @@ class DebugLineDrawer
 			PAdd<ResourceSystem<Shader<EShaderType::Vertex>>, PWrite>,
 			PAdd<ResourceSystem<Shader<EShaderType::Fragment>>, PWrite>,
 			PAdd<ResourceSystem<Shader<EShaderType::Geometry>>, PWrite>,
-			PAdd<TimeKeeper, PRead>>,
+			PAdd<TimeKeeperSingleton, PRead>>,
 		STrait::Set<
 			STGui,
+			STSingleton,
 			STWonderMake>>
 {
 public:

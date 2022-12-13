@@ -78,6 +78,7 @@ class EngineUniformBuffer
 			PAdd<OpenGLFacade, PWrite>>,
 		STrait::Set<
 			STGui,
+			STSingleton,
 			STWonderMake>>
 	
 {

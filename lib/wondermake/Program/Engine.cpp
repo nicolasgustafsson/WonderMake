@@ -166,7 +166,9 @@ namespace Engine
 			});
 		sysRegistry.AddSystem<CmdLineArgsSystem>([cmdLineArgs = aInfo.CommandLineArguments]()->std::shared_ptr<CmdLineArgsSystem>
 		{
-			return std::make_shared<CmdLineArgsSystem>(cmdLineArgs);
+			static auto instance = std::make_shared<CmdLineArgsSystem>(cmdLineArgs);
+
+			return instance;
 		});
 		sysRegistry.AddSystem<ScheduleSystemSingleton>([&scheduleProc, &scheduleRepeatingProc]() -> std::shared_ptr<ScheduleSystemSingleton>
 			{

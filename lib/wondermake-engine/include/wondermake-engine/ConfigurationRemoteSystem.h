@@ -32,6 +32,7 @@ class ConfigurationRemoteSystem
 			PAdd<ConfigurationSystem, PWrite>,
 			PAdd<ProcessSystem, PWrite>>,
 		STrait::Set<
+			STSingleton,
 			STWonderMake>>
 	, public std::enable_shared_from_this<ConfigurationRemoteSystem>
 {

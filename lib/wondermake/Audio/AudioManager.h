@@ -22,6 +22,7 @@ class AudioManager
 			PAdd<DebugSettingsSystem, PWrite>>,
 		STrait::Set<
 			STGui,
+			STSingleton,
 			STWonderMake>>,
 		Debugged
 {

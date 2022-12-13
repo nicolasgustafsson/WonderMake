@@ -49,7 +49,6 @@ list(APPEND SourceFiles
     "source/Object.cpp"
     "source/ObjectDependencyDestructor.cpp"
     "source/PopulateObjectSystem.cpp"
-    "source/ScheduleSystem.cpp"
     "source/SystemGlobal.cpp"
     "source/SystemRegistry.cpp"
     "source/WinEventSystemImpl.cpp"

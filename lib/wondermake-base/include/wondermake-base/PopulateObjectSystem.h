@@ -1,17 +1,21 @@
 #pragma once
 
 #include "wondermake-base/FunctionalitySystem.h"
+#include "wondermake-base/DependencySystem.h"
+#include "wondermake-base/Logger.h"
 #include "wondermake-base/Object.h"
-#include "wondermake-base/ScheduleSystem.h"
 #include "wondermake-base/System.h"
 #include "wondermake-base/SystemPtr.h"
+#include "wondermake-base/WmLogTags.h"
 
 #include "wondermake-utility/Future.h"
+
+inline constexpr auto TagWmPopulate = MakeLogTag("WmPopulate");
 
 class PopulateObjectSystem
 	: public System<
 		Policy::Set<
-			PAdd<ScheduleSystem, PWrite>>,
+			PAdd<DependencySystem, PWrite>>,
 		STrait::Set<
 			STWonderMake>>
 {
@@ -19,17 +23,19 @@ public:
 	template<typename TFunctionality>
 	inline Future<std::reference_wrapper<TFunctionality>> AddFunctionality(Object& aObject)
 	{
-		auto [promise, future] = MakeAsync<std::reference_wrapper<TFunctionality>>();
-
 		using FunctionalityDelegate = FunctionalitySystemDelegate<std::decay_t<TFunctionality>>;
 
-		Get<ScheduleSystem>().Schedule<FunctionalityDelegate>(GetExecutor(), [promise = std::move(promise), &aObject]() mutable
-			{
-				promise.Complete(SystemPtr<FunctionalityDelegate>()->AddFunctionality(aObject));
-			})
-			.Detach();
+		return Get<DependencySystem>()
+			.Fetch<FunctionalityDelegate>()
+			.ThenApply(GetExecutor(), FutureApplyResult([&aObject](auto aResult) -> Future<std::reference_wrapper<TFunctionality>>
+				{
+					if (aResult)
+						return MakeCompletedFuture<std::reference_wrapper<TFunctionality>>(aResult.Unwrap().get().AddFunctionality(aObject));
 
-		return std::move(future);
+					WmLogError(TagWonderMake << TagWmPopulate << "Failed to fetch functionality system: " << typeid(TFunctionality).name() << ", error: " << aResult.Err() << '.');
+					
+					return MakeCanceledFuture<std::reference_wrapper<TFunctionality>>();
+				}));
 	}
 
 };

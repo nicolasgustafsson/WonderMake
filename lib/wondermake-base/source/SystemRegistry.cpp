@@ -1,10 +1,8 @@
 #include "wondermake-base/SystemRegistry.h"
 
-thread_local SystemContainer::InternalRep SystemRegistry::myConstructingContainer;
-
 Result<SystemContainer, SystemRegistry::SError> SystemRegistry::CreateSystems(const Filter& aFilter)
 {
-	myDependencyInjector = DependencyInjector();
+	DependencyInjector dependencyInjector;
 
 	const auto requiredFilter = [&filter = aFilter.RequiredAnyTraits](auto&& aSystemInfo)
 	{
@@ -36,9 +34,9 @@ Result<SystemContainer, SystemRegistry::SError> SystemRegistry::CreateSystems(co
 	for (auto&& system : std::views::all(mySystemList)
 		| std::views::filter(requiredFilter)
 		| std::views::filter(disallowedFilter))
-		system.InjectFunc();
+		system.InjectFunc(*this, dependencyInjector);
 
-	auto result = myDependencyInjector.CreateAll();
+	auto result = dependencyInjector.CreateAll();
 
 	if (!result)
 	{
@@ -54,9 +52,9 @@ Result<SystemContainer, SystemRegistry::SError> SystemRegistry::CreateSystems(co
 		return Err(SError{ ECreateError::InternalError, "Unknown error; " + std::to_string(errorCode) });
 	}
 
-	SystemContainer::InternalRep internalRep;
+	SystemContainer container;
 
-	std::swap(internalRep, myConstructingContainer);
+	std::swap(container, myConstructingContainer);
 
-	return Ok(std::move(internalRep));
+	return Ok(std::move(container));
 }

@@ -44,7 +44,7 @@ public:
 		AddSystemHelper<TSystem, TBaseSystem>(std::forward<TCreateFunc>(aCreateFunc), TupleWrapper<typename TSystem::Dependencies>());
 	}
 
-	Result<SystemContainer, SError> CreateSystems(const Filter& aFilter);
+	[[nodiscard]] Result<SystemContainer, SError> CreateSystems(const Filter& aFilter);
 
 private:
 	template<typename TDependencyTuple>
@@ -53,7 +53,7 @@ private:
 	struct SystemElement
 	{
 		SystemTraits::SetList TraitSet;
-		std::function<void()> InjectFunc;
+		std::function<void(SystemRegistry&, DependencyInjector&)> InjectFunc;
 	};
 
 	template<typename TSystem, typename TBaseSystem, typename TCreateFunc, typename ...TDependencies>
@@ -62,29 +62,26 @@ private:
 		mySystemList.emplace_back(
 			SystemElement {
 				TSystem::template TraitSet::ToObject(),
-				[this, createFunc = std::move(aCreateFunc)] ()
+				[createFunc = std::move(aCreateFunc)] (SystemRegistry& aSelf, DependencyInjector& aDI)
 				{
-					auto construct = [this, createFunc = std::move(createFunc)](std::reference_wrapper<std::decay_t<TDependencies>>... aDependencies) -> TBaseSystem&
+					auto construct = [&self = aSelf, createFunc = std::move(createFunc)](std::shared_ptr<std::decay_t<TDependencies>>... aDependencies) -> std::shared_ptr<TBaseSystem>
 					{
-						TSystem::InjectDependencies(std::tie(aDependencies...));
+						TSystem::InjectDependencies(std::tie(*aDependencies...));
 
 						auto ptr = createFunc();
 
-						auto&& system = *ptr;
+						self.myConstructingContainer.Add<TBaseSystem>(ptr, { std::static_pointer_cast<SystemAbstracted>(std::move(aDependencies))... });
 
-						myConstructingContainer.emplace(std::make_pair<std::type_index, std::shared_ptr<SystemAbstracted>>(typeid(TBaseSystem), std::move(ptr)));
-
-						return system;
+						return ptr;
 					};
 
-					myDependencyInjector.Add<TBaseSystem, decltype(construct), std::decay_t<TDependencies>...>(std::move(construct));
+					aDI.Add<std::shared_ptr<TBaseSystem>, decltype(construct), std::shared_ptr<std::decay_t<TDependencies>>...>(std::move(construct));
 				}
 			});
 	}
 
-	static thread_local SystemContainer::InternalRep myConstructingContainer;
+	SystemContainer myConstructingContainer;
 
-	DependencyInjector myDependencyInjector;
 	std::vector<SystemElement> mySystemList;
 
 };

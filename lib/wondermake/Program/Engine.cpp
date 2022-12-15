@@ -63,7 +63,7 @@ namespace Engine
 		Logger::Get().SetLoggerName(aInfo.Logging.LoggerName);
 		Logger::Get().SetFilters(aInfo.Logging.AllowedSeverities, aInfo.Logging.Level);
 
-		auto&& sysRegistry = Global::GetSystemRegistry();
+		auto& sysRegistryRef = Global::GetSystemRegistry();
 
 		{
 			SystemRegistry::Filter filter;
@@ -72,7 +72,7 @@ namespace Engine
 			if (aInfo.Headless)
 				filter.DisallowedTraits = { STrait::ToObject<STGui>() };
 
-			auto result = sysRegistry.CreateSystems(filter);
+			auto result = sysRegistryRef.CreateSystems(filter);
 
 			if (!result)
 				return;
@@ -95,7 +95,7 @@ namespace Engine
 			return taskManager->ScheduleRepeating(std::move(aExecutor), std::move(aTask));
 		};
 
-		sysRegistry.AddSystem<JobSystem>([&sysContainer, &taskManager]() -> std::shared_ptr<JobSystem>
+		sysRegistryRef.AddSystem<JobSystem>([&sysContainer, &taskManager]() -> std::shared_ptr<JobSystem>
 		{
 			struct SScheduleExecutor
 			{
@@ -114,7 +114,7 @@ namespace Engine
 
 			return jobSys;
 		});
-		sysRegistry.AddSystem<ConfigurationSystem>([&aInfo]()
+		sysRegistryRef.AddSystem<ConfigurationSystem>([&aInfo]()
 			{
 				const auto create = [&aInfo]()
 				{
@@ -165,18 +165,21 @@ namespace Engine
 
 				return config;
 			});
-		sysRegistry.AddSystem<CmdLineArgsSystem>([cmdLineArgs = aInfo.CommandLineArguments]()->std::shared_ptr<CmdLineArgsSystem>
+		sysRegistryRef.AddSystem<CmdLineArgsSystem>([cmdLineArgs = aInfo.CommandLineArguments]()->std::shared_ptr<CmdLineArgsSystem>
 		{
 			static auto instance = std::make_shared<CmdLineArgsSystem>(cmdLineArgs);
 
 			return instance;
 		});
-		sysRegistry.AddSystem<ScheduleSystemSingleton>([&scheduleProc, &scheduleRepeatingProc]() -> std::shared_ptr<ScheduleSystemSingleton>
+		sysRegistryRef.AddSystem<ScheduleSystemSingleton>([&scheduleProc, &scheduleRepeatingProc]() -> std::shared_ptr<ScheduleSystemSingleton>
 			{
 				static auto instance = std::make_shared<ScheduleSystemSingleton>(scheduleProc, scheduleRepeatingProc);
 
 				return instance;
 			});
+
+		auto sysRegistry = sysRegistryRef;
+
 		sysRegistry.AddSystem<ScheduleSystem>([&scheduleProc, &scheduleRepeatingProc]() -> std::shared_ptr<ScheduleSystem>
 			{
 				return std::make_shared<ScheduleSystem>(scheduleProc, scheduleRepeatingProc);

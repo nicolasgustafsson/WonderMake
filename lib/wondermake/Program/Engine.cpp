@@ -39,6 +39,7 @@
 #include "wondermake-base/CmdLineArgsSystem.h"
 #include "wondermake-base/ConfigurationGlobal.h"
 #include "wondermake-base/ConfigurationSystem.h"
+#include "wondermake-base/DependencySystem.h"
 #include "wondermake-base/JobSystem.h"
 #include "wondermake-base/JobGlobal.h"
 #include "wondermake-base/Logger.h"
@@ -427,6 +428,15 @@ namespace Engine
 							.Detach();
 					})
 					.Detach();
+			}
+
+			{
+				auto* dependencySys = sysContainer.TryGet<DependencySystem>();
+
+				if (dependencySys)
+					dependencySys->SetSystems(sysContainer);
+				else
+					WmLogError(TagWonderMake << "Failed to get DependencySystem.");
 			}
 
 			auto& timeKeeper = sysContainer.Get<TimeKeeperSingleton>();

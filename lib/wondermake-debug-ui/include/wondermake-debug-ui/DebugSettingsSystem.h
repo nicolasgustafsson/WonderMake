@@ -46,8 +46,12 @@ public:
 	{
 		auto leaf = GetLeaf(aSettingName);
 
-		auto it = leaf.first.find(leaf.second);
-		if (it != leaf.first.end())
+		if (!leaf.first)
+			return std::move(aDefault);
+
+		auto it = leaf.first->find(leaf.second);
+
+		if (it != leaf.first->end())
 			return (*it).get<TSettingType>();
 
 		return std::move(aDefault);
@@ -116,7 +120,7 @@ public:
 
 protected:
 	std::pair<nlohmann::json&, std::string> GetLeaf(const std::string& aSettingName);
-	std::pair<const nlohmann::json&, std::string> GetLeaf(const std::string& aSettingName) const noexcept;
+	std::pair<const nlohmann::json*, std::string> GetLeaf(const std::string& aSettingName) const noexcept;
 
 	nlohmann::json mySettings;
 };

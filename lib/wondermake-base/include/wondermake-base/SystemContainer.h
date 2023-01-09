@@ -3,49 +3,57 @@
 #include <memory>
 #include <typeindex>
 #include <unordered_map>
+#include <unordered_set>
 
 class SystemAbstracted;
-class SystemRegistry;
 
 class SystemContainer
 {
-private:
-	// So both can use InternalRep
-	friend SystemRegistry;
-
-	using InternalRep = std::unordered_map<std::type_index, std::shared_ptr<SystemAbstracted>>;
-
 public:
 	SystemContainer() noexcept = default;
-	inline SystemContainer(InternalRep&& aMap)
-		: myMap(std::move(aMap))
-	{}
-
+	
 	template<typename TSystem>
 	inline [[nodiscard]] TSystem* TryGet() const
 	{
-		auto it = myMap.find(typeid(TSystem));
+		auto it = mySystems.find(typeid(TSystem));
 
-		if (it == myMap.cend())
-		{
+		if (it == mySystems.cend())
 			return nullptr;
-		}
 
-		return static_cast<TSystem*>(it->second.get());
+		return static_cast<TSystem*>(it->second.Self.get());
 	}
 	template<typename TSystem>
 	inline [[nodiscard]] TSystem& Get() const
 	{
-		return *static_cast<TSystem*>(myMap.find(typeid(TSystem))->second.get());
+		return *static_cast<TSystem*>(mySystems.find(typeid(TSystem))->second.Self.get());
 	}
-
+	
 	template<typename TSystem>
-	inline void Add(std::shared_ptr<TSystem> aSystem)
+	inline void Add(std::shared_ptr<TSystem> aSystem, std::unordered_set<std::shared_ptr<SystemAbstracted>> aDependencies = {})
 	{
-		myMap.emplace(std::make_pair<std::type_index, std::shared_ptr<SystemAbstracted>>(typeid(TSystem), std::move(aSystem)));
+		mySystems.emplace(std::make_pair<std::type_index, SSystem>(
+			typeid(TSystem),
+			SSystem
+			{
+				.Dependencies = std::move(aDependencies),
+				.Self = std::move(aSystem)
+			}));
 	}
 
 private:
-	InternalRep myMap;
+	struct SSystem
+	{
+		inline ~SSystem()
+		{
+			Self.reset();
+
+			Dependencies.clear();
+		}
+
+		std::unordered_set<std::shared_ptr<SystemAbstracted>> Dependencies;
+		std::shared_ptr<SystemAbstracted> Self;
+	};
+
+	std::unordered_map<std::type_index, SSystem> mySystems;
 
 };

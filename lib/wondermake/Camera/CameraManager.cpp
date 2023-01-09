@@ -3,7 +3,10 @@
 #include "CameraManager.h"
 
 #include "Resources/ResourceSystem.h"
+#include "Program/GlfwFacade.h"
 #include "Program/Window.h"
+
+#include "wondermake-debug-ui/DebugSystem.h"
 
 #include "wondermake-engine/ConfigurationEngine.h"
 

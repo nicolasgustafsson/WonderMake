@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "EngineUniformBuffer.h"
 
+#include "Graphics/OpenGLFacade.h"
+#include "Program/Window.h"
+
 WM_REGISTER_SYSTEM(EngineUniformBuffer);
 
 EngineUniformBuffer::EngineUniformBuffer()

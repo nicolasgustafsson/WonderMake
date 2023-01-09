@@ -1,5 +1,6 @@
 #include "ConfigurationView.h"
 
+#include "wondermake-debug-ui/DebugSettingsSystem.h"
 #include "wondermake-debug-ui/DebugSystem.h"
 #include "wondermake-debug-ui/ImguiInclude.h"
 

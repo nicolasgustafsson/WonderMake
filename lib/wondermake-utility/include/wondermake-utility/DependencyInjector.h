@@ -4,6 +4,7 @@
 #include "UniqueFunction.h"
 #include "Utility.h"
 
+#include <any>
 #include <functional>
 #include <optional>
 #include <typeindex>
@@ -43,14 +44,14 @@ public:
 			if (errResult)
 				return *errResult;
 
-			auto&& dependency = std::apply([createFunc = std::move(createFunc)](auto... aResults) -> TType&
+			SDependency dependency = std::apply([createFunc = std::move(createFunc)](auto... aResults) -> SDependency
 			{
 				return CreateDependencyHelper<TType>(createFunc, aResults...);
 			}, results);
 
-			void* const dependencyPtr = (void*)&dependency;
+			void* const dependencyPtr = dependency.DataPtr;
 
-			aThis.myDependencies.emplace(typeid(Key<std::decay_t<TType>>), dependencyPtr);
+			aThis.myDependencies.emplace(typeid(Key<std::decay_t<TType>>), std::move(dependency));
 
 			return Ok(dependencyPtr);
 		});
@@ -69,9 +70,14 @@ private:
 	struct Key {};
 
 	using CreateFunc = UniqueFunction<Result<void*, SError> (DependencyInjector&)>;
+	struct SDependency
+	{
+		std::any					Data;
+		void*						DataPtr;
+	};
 
-	std::unordered_map<std::type_index, CreateFunc>	myCreateFuncs;
-	std::unordered_map<std::type_index, void*>		myDependencies;
+	std::unordered_map<std::type_index, CreateFunc>		myCreateFuncs;
+	std::unordered_map<std::type_index, SDependency>	myDependencies;
 
 	template<typename TType>
 	Result<std::reference_wrapper<TType>, SError> GetDependency()
@@ -82,7 +88,7 @@ private:
 
 		if (depIt != myDependencies.cend())
 		{
-			return Ok(std::ref(*((TType*)depIt->second)));
+			return Ok(std::ref(*((TType*)depIt->second.DataPtr)));
 		}
 
 		const auto createIt = myCreateFuncs.find(typeIndex);
@@ -101,8 +107,24 @@ private:
 	}
 
 	template<typename TDependency, typename TCreateFunc, typename... TDependencies>
-	static TDependency& CreateDependencyHelper(TCreateFunc&& aCreateFunc, Result<std::reference_wrapper<TDependencies>, SError>... aDependencies)
+	static SDependency CreateDependencyHelper(TCreateFunc&& aCreateFunc, Result<std::reference_wrapper<TDependencies>, SError>... aDependencies)
 	{
-		return std::move(aCreateFunc)(static_cast<TDependencies&>(aDependencies.Unwrap())...);
+		static constexpr bool owned = !std::is_reference_v<std::invoke_result_t<decltype(std::move(aCreateFunc)), decltype(static_cast<TDependencies&>(aDependencies.Unwrap()))...>>;
+
+		if constexpr (owned)
+		{
+			auto ptr = std::make_shared<TDependency>(std::move(aCreateFunc)(static_cast<TDependencies&>(aDependencies.Unwrap())...));
+
+			return SDependency
+			{
+				.Data		= ptr,
+				.DataPtr	= ptr.get(),
+			};
+		}
+		else
+			return SDependency
+			{
+				.DataPtr	= &std::move(aCreateFunc)(static_cast<TDependencies&>(aDependencies.Unwrap())...),
+			};
 	}
 };

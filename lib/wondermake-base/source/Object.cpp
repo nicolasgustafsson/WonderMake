@@ -18,22 +18,22 @@ void Object::Destroy()
 				return counter.RefCount == 0;
 			});
 
-		assert(it != myFunctionalities.cend() && "blo");
+		assert(it != myFunctionalities.cend() && "Functionalities still have lingering references.");
 
 		const auto& [index, counter] = *it;
 
 		auto& ref = *counter.Reference;
-		auto& destructor = *counter.Destructor;
+		auto destructor = std::move(counter.Destructor);
 
 		myFunctionalities.erase(it);
 
-		destructor.Destroy(*this, ref);
+		if (destructor)
+			destructor->Destroy(*this, ref);
 	}
 
 	for (const auto&[index, counter] : myComponents)
-	{
-		counter.Destructor->Destroy(*this, *counter.Reference);
-	}
+		if (counter.Destructor)
+			counter.Destructor->Destroy(*this, *counter.Reference);
 	
 	myComponents.clear();
 }

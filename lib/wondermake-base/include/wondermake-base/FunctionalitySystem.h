@@ -9,8 +9,10 @@
 #include "wondermake-base/SystemGlobal.h"
 
 #include "wondermake-utility/plf_colony.h"
+#include "wondermake-utility/SharedReference.h"
 
 #include <functional>
+#include <memory>
 #include <type_traits>
 
 struct SComponent;
@@ -50,6 +52,7 @@ namespace _Impl
 template<typename TFunctionality>
 class FunctionalitySystem final
 	: public _Impl::GetFunctionalitySystem<TFunctionality>
+	, public std::enable_shared_from_this<FunctionalitySystem<TFunctionality>>
 {
 public:
 	using Super = _Impl::GetFunctionalitySystem<TFunctionality>;
@@ -77,7 +80,7 @@ public:
 			TFunctionality::InjectDependencies(PopulateDependencies(aObject));
 
 			return *myFunctionalities.emplace();
-		}, myDependencyDestructor, aExplicitlyAdded);
+		}, std::shared_ptr<ObjectDependencyDestructor>(this->shared_from_this(), &myDependencyDestructor), aExplicitlyAdded);
 	}
 	inline void RemoveFunctionality(TFunctionality& aFunctionality)
 	{

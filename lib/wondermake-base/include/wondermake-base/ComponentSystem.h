@@ -5,6 +5,9 @@
 #include "wondermake-base/System.h"
 
 #include "wondermake-utility/plf_colony.h"
+#include "wondermake-utility/SharedReference.h"
+
+#include <memory>
 
 class Object;
 
@@ -34,6 +37,7 @@ class ComponentSystem
 	: public System<
 		Policy::Set<>,
 		typename _Impl::SComponentSystemTraits<TComponent>::Set>
+	, public std::enable_shared_from_this<ComponentSystem<TComponent>>
 {
 public:
 	inline ComponentSystem()
@@ -48,7 +52,7 @@ public:
 		return aObject.Add<TComponent>([this](auto& /*aObject*/) -> auto&
 		{
 			return *myData.emplace();
-		}, myDependencyDestructor, aExplicitlyAdded);
+		}, std::shared_ptr<ObjectDependencyDestructor>(this->shared_from_this(), &myDependencyDestructor), aExplicitlyAdded);
 	}
 	inline void RemoveComponent(TComponent& aComponent)
 	{

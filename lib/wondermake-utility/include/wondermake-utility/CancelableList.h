@@ -42,8 +42,9 @@ private:
 		RequestIdType	RequestId;
 	};
 
-	AnyExecutor myExecutor;
-	std::vector<RequestData> myRequests;
+	AnyExecutor					myExecutor;
+	std::vector<RequestData>	myRequests;
+	RequestIdType				myNextId = 0;
 
 public:
 	template<typename TIterator, bool TIsConst>
@@ -168,9 +169,9 @@ public:
 	}
 	inline iterator insert(const_iterator aWhere, TCancelable&& aCancelable) noexcept
 	{
-		const auto getNextRequestId = [&requestList = myRequests]() -> RequestIdType
+		const auto getNextRequestId = [&requestList = myRequests, &nextId = myNextId]() -> RequestIdType
 		{
-			for (RequestIdType requestId = 0;; ++requestId)
+			for (RequestIdType requestId = nextId;; ++requestId)
 			{
 				const auto pred = [requestId](const auto& aRequest)
 				{
@@ -178,7 +179,11 @@ public:
 				};
 
 				if (std::find_if(requestList.begin(), requestList.end(), pred) == requestList.end())
+				{
+					nextId = requestId + 1;
+
 					return requestId;
+				}
 			}
 		};
 
@@ -196,6 +201,10 @@ public:
 
 			if (it == requestList.end())
 				return;
+
+			auto cancelable = std::move(*it);
+
+			cancelable;
 
 			requestList.erase(it);
 		};

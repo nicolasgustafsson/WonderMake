@@ -14,6 +14,9 @@
 
 WM_REGISTER_SYSTEM(InputSystem);
 
+inline static size_t locDisplayIndex	= static_cast<size_t>(InputSystem::EFocus::Display);
+inline static size_t locWindowIndex		= static_cast<size_t>(InputSystem::EFocus::Window);
+
 void InputSystem::Update() noexcept
 {
 	UpdateKeyboard();
@@ -31,8 +34,8 @@ void InputSystem::UpdateKeyboard() noexcept
 		const bool displayKeyboardFocus = DisplayHasKeyboardFocus();
 		const bool windowFocus = Get<Window>().HasFocus();
 
-		myInputStates[0].Keyboard[i] = GetNewInputState(myInputStates[0].Keyboard[i], bIsPressed && displayKeyboardFocus);
-		myInputStates[1].Keyboard[i] = GetNewInputState(myInputStates[1].Keyboard[i], bIsPressed && windowFocus);
+		myInputStates[locDisplayIndex].Keyboard[i]	= GetNewInputState(myInputStates[locDisplayIndex].Keyboard[i], bIsPressed && displayKeyboardFocus);
+		myInputStates[locWindowIndex].Keyboard[i]	= GetNewInputState(myInputStates[locWindowIndex].Keyboard[i], bIsPressed && windowFocus);
 	}
 }
 
@@ -43,11 +46,11 @@ void InputSystem::UpdateMouse() noexcept
 		const i32 glfwKeyState = Get<GlfwFacade>().GetMouseButton(GetCurrentWindow(), InputUtility::GetGlfwMouseButton(static_cast<EMouseButton>(i)));
 
 		const bool bIsPressed = glfwKeyState == GLFW_PRESS;
-		const bool displayKeyboardFocus = DisplayHasMouseFocus();
+		const bool displayMouseFocus = DisplayHasMouseFocus();
 		const bool windowFocus = Get<Window>().HasFocus();
 
-		myInputStates[0].Mouse[i] = GetNewInputState(myInputStates[0].Mouse[i], bIsPressed && displayKeyboardFocus);
-		myInputStates[1].Mouse[i] = GetNewInputState(myInputStates[1].Mouse[i], bIsPressed && windowFocus);
+		myInputStates[locDisplayIndex].Mouse[i]	= GetNewInputState(myInputStates[locDisplayIndex].Mouse[i], bIsPressed && displayMouseFocus);
+		myInputStates[locWindowIndex].Mouse[i]	= GetNewInputState(myInputStates[locWindowIndex].Mouse[i], bIsPressed && windowFocus);
 	}
 }
 
@@ -69,8 +72,8 @@ void InputSystem::UpdateGamepad() noexcept
 		const bool displayKeyboardFocus = DisplayHasKeyboardFocus();
 		const bool windowFocus = Get<Window>().HasFocus();
 
-		myInputStates[0].Gamepad[i] = GetNewInputState(myInputStates[0].Gamepad[i], bIsPressed && displayKeyboardFocus);
-		myInputStates[1].Gamepad[i] = GetNewInputState(myInputStates[1].Gamepad[i], bIsPressed && windowFocus);
+		myInputStates[locDisplayIndex].Gamepad[i]	= GetNewInputState(myInputStates[locDisplayIndex].Gamepad[i], bIsPressed && displayKeyboardFocus);
+		myInputStates[locWindowIndex].Gamepad[i]	= GetNewInputState(myInputStates[locWindowIndex].Gamepad[i], bIsPressed && windowFocus);
 	}
 }
 
@@ -162,7 +165,7 @@ void InputSystem::Debug()
 		for (size_t i = 0; i < KeyboardKeyCount; i++)
 		{
 			const EKeyboardKey key = static_cast<EKeyboardKey>(i);
-			const EInputItemState state = myInputStates[0].Keyboard[i];
+			const EInputItemState state = myInputStates[locDisplayIndex].Keyboard[i];
 
 			std::string keyInfo = std::string(InputUtility::GetNameOfKey(key));
 			keyInfo += ": " + std::string(InputUtility::GetNameOfState(state));
@@ -177,7 +180,7 @@ void InputSystem::Debug()
 		for (size_t i = 0; i < MouseButtonCount; i++)
 		{
 			const EMouseButton mouseButton = static_cast<EMouseButton>(i);
-			const EInputItemState state = myInputStates[0].Mouse[i];
+			const EInputItemState state = myInputStates[locDisplayIndex].Mouse[i];
 
 			std::string mouseInfo = std::string(InputUtility::GetNameOfMouseButton(mouseButton));
 			mouseInfo += ": " + std::string(InputUtility::GetNameOfState(state));
@@ -192,7 +195,7 @@ void InputSystem::Debug()
 		for (size_t i = 0; i < GamepadButtonCount; i++)
 		{
 			const EGamepadButton gamepadButton = static_cast<EGamepadButton>(i);
-			const EInputItemState state = myInputStates[0].Gamepad[i];
+			const EInputItemState state = myInputStates[locDisplayIndex].Gamepad[i];
 
 			std::string gamepadButtonInfo = std::string(InputUtility::GetNameOfGamepadButton(gamepadButton));
 			gamepadButtonInfo += ": " + std::string(InputUtility::GetNameOfState(state));
@@ -230,13 +233,13 @@ void InputSystem::Debug()
 
 	ImGui::Text("Display");
 
-	listButtons(myInputStates[0]);
+	listButtons(myInputStates[locDisplayIndex]);
 
 	ImGui::Separator();
 
 	ImGui::Text("Window");
 
-	listButtons(myInputStates[1]);
+	listButtons(myInputStates[locWindowIndex]);
 
 	ImGui::End();
 }

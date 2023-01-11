@@ -21,21 +21,15 @@
 
 WM_REGISTER_SYSTEM(Window);
 
-using WindowSizeCallback = std::function<void(GLFWwindow*, int, int)>;
-
 inline constexpr SVector2i locDefaultWindowSize = { 1280, 720 };
 
 Window::~Window()
 {
 	auto& glfw = Get<GlfwFacade>();
 
-	auto meta = glfw.GetWindowUserPointer(myGlfwWindow);
-
-	if (meta)
-		delete static_cast<WindowSizeCallback*>(meta);
-
 	glfw.SetWindowUserPointer(myGlfwWindow, nullptr);
 	glfw.SetFramebufferSizeCallback(myGlfwWindow, nullptr);
+	glfw.SetScrollCallback(myGlfwWindow, nullptr);
 }
 
 void Window::Initialize()
@@ -73,17 +67,22 @@ void Window::Initialize()
 	UpdatePosition();
 	myHasFocus = glfw.GetWindowAttrib(myGlfwWindow, GLFW_FOCUSED) != 0;
 
-	auto closure = std::make_unique<WindowSizeCallback>(Bind(&Window::OnWindowSizeChanged, weak_from_this()))
-		.release();
-
-	glfw.SetWindowUserPointer(myGlfwWindow, closure);
+	glfw.SetWindowUserPointer(myGlfwWindow, this);
 	glfw.SetFramebufferSizeCallback(myGlfwWindow, [](GLFWwindow* aWindow, int aWidth, int aHeight) -> void
 		{
 			GlfwFacade& glfw = GetSystem<GlfwFacade>();
 
-			const auto& callback = *static_cast<WindowSizeCallback*>(glfw.GetWindowUserPointer(aWindow));
+			auto& window = *static_cast<Window*>(glfw.GetWindowUserPointer(aWindow));
 
-			callback(aWindow, aWidth, aHeight);
+			window.OnWindowSizeChanged(aWindow, aWidth, aHeight);
+		});
+	glfw.SetScrollCallback(myGlfwWindow, [](GLFWwindow* aWindow, double aDeltaX, double aDeltaY) -> void
+		{
+			GlfwFacade& glfw = GetSystem<GlfwFacade>();
+
+			auto& window = *static_cast<Window*>(glfw.GetWindowUserPointer(aWindow));
+
+			window.OnScroll(aWindow, aDeltaX, aDeltaY);
 		});
 
 	auto onTitleChange = [this](auto&&, std::string aTitle)
@@ -141,6 +140,18 @@ void Window::OnWindowSizeChanged(GLFWwindow* /*aWindow*/, i32 aWidth, i32 aHeigh
 
 	for (auto& onResize : myResizeList)
 		onResize.Trigger(executor, SVector2i(aWidth, aHeight));
+
+	executor.ExecuteAll();
+}
+
+void Window::OnScroll(GLFWwindow* /*aWindow*/, double aDeltaX, double aDeltaY)
+{
+	const SVector2f delta(aDeltaX, aDeltaY);
+
+	BufferExecutor executor;
+
+	for (auto& onScroll : myScrollList)
+		onScroll.Trigger(executor, delta);
 
 	executor.ExecuteAll();
 }

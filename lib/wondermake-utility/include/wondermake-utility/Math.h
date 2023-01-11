@@ -78,14 +78,14 @@ namespace WmMath
 
 	template <typename TLhs, typename TRhs>
 		requires(ComparableLess<TLhs, TRhs>)
-	inline constexpr [[nodiscard]] TLhs Min(TLhs&& aLhs, TRhs&& aRhs)
+	inline constexpr [[nodiscard]] std::decay_t<TLhs> Min(TLhs&& aLhs, TRhs&& aRhs)
 		noexcept(std::is_nothrow_move_constructible_v<TLhs> && std::is_nothrow_constructible_v<TLhs, decltype(std::forward<TRhs>(aRhs))>)
 	{
 		return aLhs < aRhs ? std::forward<TLhs>(aLhs) : std::forward<TRhs>(aRhs);
 	}
 	template <typename TLhs, typename TRhs>
 		requires(ComparableGreater<TLhs, TRhs>)
-	inline constexpr [[nodiscard]] TLhs Max(TLhs&& aLhs, TRhs&& aRhs)
+	inline constexpr [[nodiscard]] std::decay_t<TLhs> Max(TLhs&& aLhs, TRhs&& aRhs)
 		noexcept(std::is_nothrow_move_constructible_v<TLhs>&& std::is_nothrow_constructible_v<TLhs, decltype(std::forward<TRhs>(aRhs))>)
 	{
 		return aLhs > aRhs ? std::forward<TLhs>(aLhs) : std::forward<TRhs>(aRhs);

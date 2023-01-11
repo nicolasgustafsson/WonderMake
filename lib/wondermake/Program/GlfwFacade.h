@@ -3,6 +3,7 @@ struct GLFWmonitor;
 struct GLFWwindow;
 
 typedef void (*GLFWframebuffersizefun)(GLFWwindow*, int, int);
+typedef void (*GLFWscrollfun)(GLFWwindow*, double, double);
 
 class GlfwFacade
 	: public System<
@@ -27,7 +28,8 @@ public:
 	void GetWindowSize(GLFWwindow* aWindow, int* aWidth, int* aHeight);
 	void SetWindowSize(GLFWwindow* aWindow, i32 aWidth, i32 aHeight);
 
-	void SetFramebufferSizeCallback(GLFWwindow* aWindow, GLFWframebuffersizefun aCallback);
+	GLFWframebuffersizefun SetFramebufferSizeCallback(GLFWwindow* aWindow, GLFWframebuffersizefun aCallback);
+	GLFWscrollfun SetScrollCallback(GLFWwindow* aWindow, GLFWscrollfun aCallback);
 
 	void SetWindowUserPointer(GLFWwindow* aWindow, void* aPointer);
 	[[nodiscard]] void* GetWindowUserPointer(GLFWwindow* aWindow);

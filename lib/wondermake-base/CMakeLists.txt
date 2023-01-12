@@ -22,6 +22,7 @@ list(APPEND IncludeFiles
     "include/wondermake-base/LogTag.h"
     "include/wondermake-base/Object.h"
     "include/wondermake-base/ObjectDependencyDestructor.h"
+    "include/wondermake-base/PopulatedFunctionality.h"
     "include/wondermake-base/PopulatedSystem.h"
     "include/wondermake-base/PopulateObjectSystem.h"
     "include/wondermake-base/Process.h"

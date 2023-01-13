@@ -23,9 +23,12 @@ ImguiWrapper::ImguiWrapper()
 
 	auto& configSys = Get<ConfigurationSystem>();
 
+	myIniFileLocation = configSys.Get<FilePath>(ConfigurationEngine::ImguiIniLocation, FilePath(FilePath::EFolder::UserData, "imgui.ini"));
 	const std::filesystem::path fontDirectory = configSys.Get<FilePath>(ConfigurationEngine::ImguiFontDirectory, FilePath());
+
 	ImGuiIO& io = ImGui::GetIO();
 
+	io.IniFilename = myIniFileLocation.c_str();
 	io.Fonts->AddFontFromFileTTF((fontDirectory / "ProggyClean.ttf").string().c_str(),		13.f);
 	io.Fonts->AddFontFromFileTTF((fontDirectory / "Roboto-Medium.ttf").string().c_str(),	15.f);
 	io.Fonts->AddFontFromFileTTF((fontDirectory / "DroidSans.ttf").string().c_str(),		13.f);

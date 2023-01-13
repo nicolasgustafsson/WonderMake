@@ -28,4 +28,6 @@ public:
 private:
 	void DockSpace();
 
+	std::string myIniFileLocation;
+
 };

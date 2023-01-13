@@ -129,10 +129,11 @@ namespace Engine
 						if (aInfo.Graphics)
 							graphics.emplace(ConfigurationEngine::SGraphics
 								{
-									(!aInfo.Graphics->WindowTitle.empty() ? aInfo.Graphics->WindowTitle : aInfo.ApplicationName),
-									aInfo.Graphics->MissingTexture,
-									aInfo.Graphics->DefaultRenderGraphPath,
-									aInfo.Graphics->ImguiFontDirectory
+									.WindowTitle			= (!aInfo.Graphics->WindowTitle.empty() ? aInfo.Graphics->WindowTitle : aInfo.ApplicationName),
+									.MissingTexturePath		= aInfo.Graphics->MissingTexture,
+									.DefaultRenderGraphPath	= aInfo.Graphics->DefaultRenderGraphPath,
+									.ImguiIniLocation		= aInfo.Graphics->ImguiIniLocation,
+									.ImguiFontDirectory		= aInfo.Graphics->ImguiFontDirectory
 								});
 						if (aInfo.Audio)
 							audio.emplace(ConfigurationEngine::SAudio

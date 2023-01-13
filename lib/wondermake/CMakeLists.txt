@@ -180,7 +180,7 @@ list(APPEND SourceFiles
     "glad.c"
     "pch.cpp")
 
-list(APPEND TargetDependencies Imgui NlohmannJson SoLoud Stb WonderMakeBase WonderMakeDebugUi WonderMakeUtility WonderMakeIo WonderMakeEngine)
+list(APPEND TargetDependencies Glad Glfw Khr Imgui NlohmannJson SoLoud Stb WonderMakeBase WonderMakeDebugUi WonderMakeUtility WonderMakeIo WonderMakeEngine)
 
 if (NOT WonderMake_ImportLibraries)
     set_source_files_properties("glad.c" PROPERTIES LANGUAGE CXX)

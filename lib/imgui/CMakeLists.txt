@@ -23,6 +23,8 @@ list(APPEND SourceFiles
     "Source/stdafx.cpp"
     "Source/stdafx.h")
 
+list(APPEND TargetDependencies Glad Glfw Khr)
+
 if (NOT WonderMake_ImportLibraries)
     add_library(Imgui STATIC ${IncludeFiles} ${SourceFiles})
     
@@ -33,11 +35,12 @@ if (NOT WonderMake_ImportLibraries)
             "Include"
         PRIVATE
             "Include/Imgui")
-    target_link_libraries(Imgui Glad Glfw Khr)
+    target_link_libraries(Imgui ${TargetDependencies})
 else()
     add_library(Imgui STATIC IMPORTED GLOBAL ${IncludeFiles})
     
     set_whole_archive(Imgui INTERFACE)
+    target_link_libraries(Imgui INTERFACE ${TargetDependencies})
     target_include_directories(Imgui INTERFACE "Include")
 endif()
 

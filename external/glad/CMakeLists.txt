@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.19)
 
 list(APPEND SourceFiles
-    "Inc/Glad/glad.h")
+    "Inc/glad/glad.h")
 
 add_library(Glad INTERFACE ${SourceFiles})
 

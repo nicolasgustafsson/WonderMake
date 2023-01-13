@@ -237,15 +237,20 @@ namespace Engine
 
 						return jobSystem->StartJob<DeserializeConfigurationJob>(EConfigGroup::Application, std::string(jsonBlob.begin(), jsonBlob.end()));
 					}))
-				.ThenApply(InlineExecutor(), FutureApplyResult([jobSystem, &configurationSystem, &aInfo](auto aResult)
+				.ThenApply(InlineExecutor(), [jobSystem, &configurationSystem, &aInfo](auto aFuture)
 					{
-						if (!aResult)
-							return MakeCanceledFuture<ReadFileJob::Output>();
+						if (aFuture.IsCompleted())
+						{
+							auto resultOpt = std::move(aFuture).GetResult();
+
+							if (resultOpt && !resultOpt.value())
+								WmLogError(TagWonderMake << "Failed to deserialize application override file. Error: " << resultOpt->Err() << '.');
+						}
 
 						auto path = configurationSystem.Get<FilePath>(ConfigurationEngine::OverrideFileDevice, aInfo.Configuration.OverrideFileDevice);
 
 						return jobSystem->StartJob<ReadFileJob>(std::move(path));
-					}))
+					})
 				.ThenApply(InlineExecutor(), FutureApplyResult([jobSystem](auto aResult)
 					{
 						if (!aResult)
@@ -255,15 +260,20 @@ namespace Engine
 
 						return jobSystem->StartJob<DeserializeConfigurationJob>(EConfigGroup::Device, std::string(jsonBlob.begin(), jsonBlob.end()));
 					}))
-				.ThenApply(InlineExecutor(), FutureApplyResult([jobSystem, &configurationSystem, &aInfo](auto aResult)
+				.ThenApply(InlineExecutor(), [jobSystem, &configurationSystem, &aInfo](auto aFuture)
 					{
-						if (!aResult)
-							return MakeCanceledFuture<ReadFileJob::Output>();
+						if (aFuture.IsCompleted())
+						{
+							auto resultOpt = std::move(aFuture).GetResult();
+
+							if (resultOpt && !resultOpt.value())
+								WmLogError(TagWonderMake << "Failed to deserialize device override file. Error: " << resultOpt->Err() << '.');
+						}
 
 						auto path = configurationSystem.Get<FilePath>(ConfigurationEngine::OverrideFileUser, aInfo.Configuration.OverrideFileUser);
 
 						return jobSystem->StartJob<ReadFileJob>(std::move(path));
-					}))
+					})
 				.ThenApply(InlineExecutor(), FutureApplyResult([jobSystem](auto aResult)
 					{
 						if (!aResult)
@@ -273,6 +283,16 @@ namespace Engine
 
 						return jobSystem->StartJob<DeserializeConfigurationJob>(EConfigGroup::User, std::string(jsonBlob.begin(), jsonBlob.end()));
 					}))
+				.ThenRun(InlineExecutor(), [](auto aFuture)
+					{
+						if (aFuture.IsCompleted())
+						{
+							auto resultOpt = std::move(aFuture).GetResult();
+
+							if (resultOpt && !resultOpt.value())
+								WmLogError(TagWonderMake << "Failed to deserialize user override file. Error: " << resultOpt->Err() << '.');
+						}
+					})
 				.Detach();
 		}
 

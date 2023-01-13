@@ -27,6 +27,7 @@ namespace ConfigurationEngine
 	inline constexpr std::string_view DefaultRenderGraphPath		= "wondermake_engine.graphics.default_render_graph_path";
 	inline constexpr std::string_view MissingTexturePath			= "wondermake_engine.graphics.missing_texture_path";
 
+	inline constexpr std::string_view ImguiIniLocation				= "wondermake_engine.imgui.ini_location";
 	inline constexpr std::string_view ImguiFontDirectory			= "wondermake_engine.imgui.font_directory";
 	
 	inline constexpr std::string_view AudioNodeGraphPath			= "wondermake_engine.audio.audio_node_graph_path";
@@ -42,6 +43,7 @@ namespace ConfigurationEngine
 		FilePath MissingTexturePath;
 		FilePath DefaultRenderGraphPath;
 
+		FilePath ImguiIniLocation;
 		FilePath ImguiFontDirectory;
 	};
 	struct SAudio

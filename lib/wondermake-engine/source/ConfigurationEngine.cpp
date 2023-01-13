@@ -37,6 +37,7 @@ namespace ConfigurationEngine
 			aConfigurationSystem.Set<FilePath>(DefaultRenderGraphPath,	std::move(aGraphics->DefaultRenderGraphPath),	EConfigGroup::Application);
 			aConfigurationSystem.Set<FilePath>(MissingTexturePath,		std::move(aGraphics->MissingTexturePath),		EConfigGroup::Application);
 
+			aConfigurationSystem.Set<FilePath>(ImguiIniLocation,		std::move(aGraphics->ImguiIniLocation),			EConfigGroup::Application);
 			aConfigurationSystem.Set<FilePath>(ImguiFontDirectory,		std::move(aGraphics->ImguiFontDirectory),		EConfigGroup::Application);
 		}
 		if (aAudio)

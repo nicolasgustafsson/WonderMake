@@ -84,6 +84,9 @@ namespace Engine
 		// Path to the node graph used by default when creating a display.
 		FilePath DefaultRenderGraphPath = FilePath(FilePath::EFolder::Bin, "node_graphs/render/main_display.json");
 
+		// Path to the imgui.ini file.
+		FilePath ImguiIniLocation = FilePath(FilePath::EFolder::UserData, "imgui.ini");
+
 		// Path to the directory containing the TTF files used by ImGui.
 		FilePath ImguiFontDirectory = FilePath(FilePath::EFolder::Bin, "fonts");
 	};

@@ -223,7 +223,7 @@ TEST_F(WinIpcAcceptorTest, onconnection_returns_valid_non_completed_future)
 	EXPECT_CALL(myWinPlatformSystem, ConnectNamedPipe);
 	EXPECT_CALL(myWinPlatformSystem, GetLastError)
 		.WillOnce(Return(ERROR_IO_PENDING));
-	EXPECT_CALL(myWinEventSystem, RegisterEvent(pipeHandle));
+	EXPECT_CALL(myWinEventSystem, RegisterEvent(Eq(pipeHandle)));
 
 	const auto future = ipcAcceptor->OnConnection();
 

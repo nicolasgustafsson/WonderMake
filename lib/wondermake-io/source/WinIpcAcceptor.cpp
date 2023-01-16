@@ -56,6 +56,8 @@ IpcAcceptor::ResultTypeOpen WinIpcAcceptor::Open(std::string aName)
 		return Err(SOpenError{ EOpenError::InternalError, err });
 	}
 
+	myPipeOverlappedEvent = WinEventHandle(myPipeOverlapped.hEvent, myWinPlatform);
+
 	myState = EState::Open;
 
 	return Ok();
@@ -194,7 +196,7 @@ WinIpcAcceptor::EState WinIpcAcceptor::GetState() const noexcept
 	if (err != ERROR_IO_PENDING)
 		return completeNextPromise(Err(winErrorToConnectionError(err)));
 
-	myPipeFuture = myWinEvent.RegisterEvent(myPipeOverlapped.hEvent)
+	myPipeFuture = myWinEvent.RegisterEvent(myPipeOverlappedEvent)
 		.ThenRun(myExecutor, [callback = Bind(&WinIpcAcceptor::OnNewConnection, weak_from_this())](auto&&) mutable
 			{
 				std::move(callback)();
@@ -210,7 +212,7 @@ void WinIpcAcceptor::OnNewConnection()
 		std::lock_guard lock(myMutex);
 
 		myPipeFuture.Reset();
-		myWinPlatform.ResetEvent(myPipeOverlapped.hEvent);
+		myWinPlatform.ResetEvent(myPipeOverlappedEvent.Get());
 
 		BufferExecutor executor;
 		auto result = CreateIpcConnection();
@@ -308,12 +310,7 @@ Closure WinIpcAcceptor::Reset()
 
 	if (myPipeHandle != INVALID_HANDLE_VALUE)
 		(void)myWinPlatform.CloseHandle(myPipeHandle);
-	if (myPipeOverlapped.hEvent != NULL)
-	{
-		(void)myWinPlatform.CloseHandle(myPipeOverlapped.hEvent);
-
-		myPipeOverlapped.hEvent = NULL;
-	}
+	myPipeOverlappedEvent = WinEventHandle();
 
 	myPipeName = L"";
 	myState = EState::Closed;

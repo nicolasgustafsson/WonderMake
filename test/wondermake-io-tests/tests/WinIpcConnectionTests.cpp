@@ -498,7 +498,7 @@ TEST_F(WinIpcConnectionTest, read_returns_asynchronous)
 	EXPECT_CALL(myWinPlatformSystem, GetLastError)
 		.WillOnce(Return(ERROR_IO_PENDING));
 
-	EXPECT_CALL(myWinEventSystem, RegisterEvent(dummyReadHandle));
+	EXPECT_CALL(myWinEventSystem, RegisterEvent(Eq(dummyReadHandle)));
 
 	const auto future = ipcConnection->Read();
 
@@ -1145,7 +1145,7 @@ TEST_F(WinIpcConnectionTest, write_returns_asynchronous)
 	EXPECT_CALL(myWinPlatformSystem, GetLastError)
 		.WillOnce(Return(ERROR_IO_PENDING));
 
-	EXPECT_CALL(myWinEventSystem, RegisterEvent(dummyWriteHandle));
+	EXPECT_CALL(myWinEventSystem, RegisterEvent(Eq(dummyWriteHandle)));
 
 	const auto future = ipcConnection->Write(locDummyData);
 

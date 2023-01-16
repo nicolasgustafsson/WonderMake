@@ -2,6 +2,8 @@
 
 #include "wondermake-io/IpcConnection.h"
 
+#include "wondermake-base/WinEventHandle.h"
+
 #include "wondermake-utility/AnyExecutor.h"
 #include "wondermake-utility/UniqueFunction.h"
 #include "wondermake-utility/WinPlatform.h"
@@ -72,15 +74,17 @@ private:
 	std::atomic<EState> myState = EState::Closed;
 	HANDLE myFileHandle = INVALID_HANDLE_VALUE;
 
-	bool myCurrentlyWriting = false;
-	std::optional<Promise<ResultTypeWrite>> myCurrentWritePromise;
-	OVERLAPPED myWriteOverlapped = {};
-	std::queue<WriteData> myWriteQueue;
+	bool									myCurrentlyWriting = false;
+	std::optional<Promise<ResultTypeWrite>>	myCurrentWritePromise;
+	OVERLAPPED								myWriteOverlapped = {};
+	WinEventHandle							myWriteOverlappedEvent;
+	std::queue<WriteData>					myWriteQueue;
 
-	bool myCurrentlyReading = false;
-	std::vector<u8> myReadBuffer;
-	OVERLAPPED myReadOverlapped = {};
-	std::deque<ReadData> myReadQueue;
+	bool					myCurrentlyReading = false;
+	std::vector<u8>			myReadBuffer;
+	OVERLAPPED				myReadOverlapped = {};
+	WinEventHandle			myReadOverlappedEvent;
+	std::deque<ReadData>	myReadQueue;
 
 	std::vector<Promise<ResultTypeClose>> myClosePromises;
 

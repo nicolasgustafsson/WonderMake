@@ -2,6 +2,8 @@
 
 #include "wondermake-io/IpcAcceptor.h"
 
+#include "wondermake-base/WinEventHandle.h"
+
 #include "wondermake-utility/AnyExecutor.h"
 #include "wondermake-utility/WinPlatform.h"
 
@@ -58,6 +60,7 @@ private:
 	Future<void>			myPipeFuture;
 	HANDLE					myPipeHandle = INVALID_HANDLE_VALUE;
 	OVERLAPPED				myPipeOverlapped = {};
+	WinEventHandle			myPipeOverlappedEvent;
 
 	std::deque<SOnConnectionData>	myOnConnectionQueue;
 	std::vector<Promise<void>>		myOnClosePromises;

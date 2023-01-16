@@ -1,6 +1,7 @@
 #pragma once
 
 #include "wondermake-base/Process.h"
+#include "wondermake-base/WinEventHandle.h"
 
 #include "wondermake-utility/AnyExecutor.h"
 #include "wondermake-utility/Future.h"
@@ -16,7 +17,7 @@ class WinProcess final
 	, public std::enable_shared_from_this<WinProcess>
 {
 public:
-	WinProcess(AnyExecutor aExecutor, WinEventSystem& aWinEvent, WinPlatformSystem& aWinPlatform, HANDLE aProcessHandle, HANDLE aThreadHandle) noexcept;
+	WinProcess(AnyExecutor aExecutor, WinEventSystem& aWinEvent, WinPlatformSystem& aWinPlatform, WinEventHandle aProcessHandle, HANDLE aThreadHandle) noexcept;
 	~WinProcess();
 
 	void Initialize();
@@ -36,7 +37,7 @@ private:
 	WinEventSystem& myWinEvent;
 	WinPlatformSystem& myWinPlatform;
 
-	HANDLE myProcessHandle = NULL;
+	WinEventHandle myProcessHandle;
 	HANDLE myThreadHandle = NULL;
 
 	EState myState = EState::Running;

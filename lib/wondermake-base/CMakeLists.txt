@@ -38,6 +38,7 @@ list(APPEND IncludeFiles
     "include/wondermake-base/SystemPtr.h"
     "include/wondermake-base/SystemRegistry.h"
     "include/wondermake-base/SystemTraits.h"
+    "include/wondermake-base/WinEventHandle.h"
     "include/wondermake-base/WinEventSystem.h"
     "include/wondermake-base/WinPlatformSystem.h"
     "include/wondermake-base/WmLogTags.h")

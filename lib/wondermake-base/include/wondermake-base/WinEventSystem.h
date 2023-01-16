@@ -1,6 +1,7 @@
 #pragma once
 
 #include "wondermake-base/System.h"
+#include "wondermake-base/WinEventHandle.h"
 
 #include "wondermake-utility/UniqueFunction.h"
 #include "wondermake-utility/WinPlatform.h"
@@ -11,7 +12,7 @@ class WinEventSystem
 {
 public:
 	virtual Future<void> RegisterEvent(
-		HANDLE aEventHandle) = 0;
+		WinEventHandle aEventHandle) = 0;
 
 	virtual void WaitForEvent(
 		DWORD aTimeoutMs) = 0;

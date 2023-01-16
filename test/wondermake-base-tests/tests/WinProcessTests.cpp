@@ -51,34 +51,34 @@ const HANDLE locDummyHandle = (HANDLE)0x00010000;
 
 TEST_F(WinProcessTest, passed_handles_are_closed_when_deconstruted)
 {
-	const HANDLE dummyProcessHandle	= (HANDLE)0x00010001;
+	const WinEventHandle dummyProcessHandle((HANDLE)0x00010001, myWinPlatformSystem);
 	const HANDLE dummyThreadHandle	= (HANDLE)0x00010002;
 
 	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, dummyProcessHandle, dummyThreadHandle);
 
-	EXPECT_CALL(myWinPlatformSystem, CloseHandle(dummyProcessHandle));
+	EXPECT_CALL(myWinPlatformSystem, CloseHandle(dummyProcessHandle.Get()));
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle(dummyThreadHandle));
 }
 
 TEST_F(WinProcessTest, passed_process_handle_is_passed_to_terminateprocess_when_deconstruted)
 {
-	const HANDLE dummyProcessHandle	= (HANDLE)0x00010001;
+	const WinEventHandle dummyProcessHandle((HANDLE)0x00010001, myWinPlatformSystem);
 	const HANDLE dummyThreadHandle	= (HANDLE)0x00010002;
 
 	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, dummyProcessHandle, dummyThreadHandle);
 
-	EXPECT_CALL(myWinPlatformSystem, TerminateProcess(dummyProcessHandle, _));
+	EXPECT_CALL(myWinPlatformSystem, TerminateProcess(dummyProcessHandle.Get(), _));
 }
 
 TEST_F(WinProcessTest, passed_handles_are_closed_when_terminated)
 {
-	const HANDLE dummyProcessHandle	= (HANDLE)0x00010001;
+	const WinEventHandle dummyProcessHandle((HANDLE)0x00010001, myWinPlatformSystem);
 	const HANDLE dummyThreadHandle	= (HANDLE)0x00010002;
 	constexpr i64 exitCode = 0;
 
 	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, dummyProcessHandle, dummyThreadHandle);
 
-	EXPECT_CALL(myWinPlatformSystem, CloseHandle(dummyProcessHandle));
+	EXPECT_CALL(myWinPlatformSystem, CloseHandle(dummyProcessHandle.Get()));
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle(dummyThreadHandle));
 
 	process->Terminate(exitCode);
@@ -86,21 +86,22 @@ TEST_F(WinProcessTest, passed_handles_are_closed_when_terminated)
 
 TEST_F(WinProcessTest, passed_process_handle_is_passed_to_terminateprocess_when_terminated)
 {
-	const HANDLE dummyProcessHandle	= (HANDLE)0x00010001;
+	const WinEventHandle dummyProcessHandle((HANDLE)0x00010001, myWinPlatformSystem);
 	constexpr i64 exitCode = 0;
 
 	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, dummyProcessHandle, locDummyHandle);
 
-	EXPECT_CALL(myWinPlatformSystem, TerminateProcess(dummyProcessHandle, _));
+	EXPECT_CALL(myWinPlatformSystem, TerminateProcess(dummyProcessHandle.Get(), _));
 
 	process->Terminate(exitCode);
 }
 
 TEST_F(WinProcessTest, exit_code_is_passed_to_terminateprocess_and_error_code_is_zero)
 {
+	const WinEventHandle dummyProcessHandle((HANDLE)0x00010000, myWinPlatformSystem);
 	constexpr i64 exitCode = 0;
 
-	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, locDummyHandle, locDummyHandle);
+	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, dummyProcessHandle, locDummyHandle);
 
 	EXPECT_CALL(myWinPlatformSystem, TerminateProcess(_, exitCode));
 
@@ -109,9 +110,10 @@ TEST_F(WinProcessTest, exit_code_is_passed_to_terminateprocess_and_error_code_is
 
 TEST_F(WinProcessTest, exit_code_is_passed_to_terminateprocess_and_error_code_is_dword_max)
 {
+	const WinEventHandle dummyProcessHandle((HANDLE)0x00010000, myWinPlatformSystem);
 	constexpr i64 exitCode = std::numeric_limits<DWORD>::max();
 
-	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, locDummyHandle, locDummyHandle);
+	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, dummyProcessHandle, locDummyHandle);
 
 	EXPECT_CALL(myWinPlatformSystem, TerminateProcess(_, exitCode));
 
@@ -120,9 +122,10 @@ TEST_F(WinProcessTest, exit_code_is_passed_to_terminateprocess_and_error_code_is
 
 TEST_F(WinProcessTest, exit_code_is_passed_to_terminateprocess_and_error_code_is_dword_min)
 {
+	const WinEventHandle dummyProcessHandle((HANDLE)0x00010000, myWinPlatformSystem);
 	constexpr i64 exitCode = std::numeric_limits<DWORD>::min();
 
-	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, locDummyHandle, locDummyHandle);
+	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, dummyProcessHandle, locDummyHandle);
 
 	EXPECT_CALL(myWinPlatformSystem, TerminateProcess(_, exitCode));
 
@@ -131,7 +134,9 @@ TEST_F(WinProcessTest, exit_code_is_passed_to_terminateprocess_and_error_code_is
 
 TEST_F(WinProcessTest, onexit_returns_a_valid_non_completed_future)
 {
-	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, locDummyHandle, locDummyHandle);
+	const WinEventHandle dummyProcessHandle((HANDLE)0x00010000, myWinPlatformSystem);
+
+	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, dummyProcessHandle, locDummyHandle);
 
 	const auto future = process->OnExit();
 
@@ -144,7 +149,9 @@ TEST_F(WinProcessTest, onexit_is_called_when_deconstructed)
 {
 	const auto perform = [this]()
 	{
-		auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, locDummyHandle, locDummyHandle);
+		const WinEventHandle dummyProcessHandle((HANDLE)0x00010000, myWinPlatformSystem);
+
+		auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, dummyProcessHandle, locDummyHandle);
 
 		return process->OnExit();
 	};
@@ -158,9 +165,10 @@ TEST_F(WinProcessTest, onexit_is_called_when_deconstructed)
 
 TEST_F(WinProcessTest, onexit_is_called_when_terminated)
 {
+	const WinEventHandle dummyProcessHandle((HANDLE)0x00010000, myWinPlatformSystem);
 	constexpr i64 exitCode = 0;
 
-	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, locDummyHandle, locDummyHandle);
+	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, dummyProcessHandle, locDummyHandle);
 
 	const auto future = process->OnExit();
 
@@ -173,9 +181,10 @@ TEST_F(WinProcessTest, onexit_is_called_when_terminated)
 
 TEST_F(WinProcessTest, exit_code_is_passed_to_onexit_when_terminated_and_error_code_is_zero)
 {
+	const WinEventHandle dummyProcessHandle((HANDLE)0x00010000, myWinPlatformSystem);
 	constexpr i64 exitCode = 0;
 
-	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, locDummyHandle, locDummyHandle);
+	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, dummyProcessHandle, locDummyHandle);
 
 	const auto future = process->OnExit();
 
@@ -188,9 +197,10 @@ TEST_F(WinProcessTest, exit_code_is_passed_to_onexit_when_terminated_and_error_c
 
 TEST_F(WinProcessTest, exit_code_is_passed_to_onexit_when_terminated_and_error_code_is_dword_max)
 {
+	const WinEventHandle dummyProcessHandle((HANDLE)0x00010000, myWinPlatformSystem);
 	constexpr i64 exitCode = std::numeric_limits<DWORD>::max();
 
-	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, locDummyHandle, locDummyHandle);
+	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, dummyProcessHandle, locDummyHandle);
 
 	const auto future = process->OnExit();
 
@@ -203,9 +213,10 @@ TEST_F(WinProcessTest, exit_code_is_passed_to_onexit_when_terminated_and_error_c
 
 TEST_F(WinProcessTest, exit_code_is_passed_to_onexit_when_terminated_and_error_code_is_dword_min)
 {
+	const WinEventHandle dummyProcessHandle((HANDLE)0x00010000, myWinPlatformSystem);
 	constexpr i64 exitCode = std::numeric_limits<DWORD>::min();
 
-	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, locDummyHandle, locDummyHandle);
+	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, dummyProcessHandle, locDummyHandle);
 
 	const auto future = process->OnExit();
 
@@ -218,18 +229,20 @@ TEST_F(WinProcessTest, exit_code_is_passed_to_onexit_when_terminated_and_error_c
 
 TEST_F(WinProcessTest, process_handle_is_passed_to_register_event_when_initialized)
 {
-	const HANDLE dummyProcessHandle = (HANDLE)0x00010001;
+	const HANDLE dummyHandle = (HANDLE)0x00010001;
+
+	const WinEventHandle dummyProcessHandle(dummyHandle, myWinPlatformSystem);
 
 	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, dummyProcessHandle, locDummyHandle);
 
-	EXPECT_CALL(myWinEventSystem, RegisterEvent(dummyProcessHandle));
+	EXPECT_CALL(myWinEventSystem, RegisterEvent(Eq(dummyHandle)));
 
 	process->Initialize();
 }
 
 TEST_F(WinProcessTest, passed_handles_are_closed_when_process_exits)
 {
-	const HANDLE dummyProcessHandle = (HANDLE)0x00010001;
+	const WinEventHandle dummyProcessHandle((HANDLE)0x00010001, myWinPlatformSystem);
 	const HANDLE dummyThreadHandle = (HANDLE)0x00010002;
 
 	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, dummyProcessHandle, dummyThreadHandle);
@@ -240,7 +253,7 @@ TEST_F(WinProcessTest, passed_handles_are_closed_when_process_exits)
 
 	process->Initialize();
 
-	EXPECT_CALL(myWinPlatformSystem, CloseHandle(dummyProcessHandle));
+	EXPECT_CALL(myWinPlatformSystem, CloseHandle(dummyProcessHandle.Get()));
 	EXPECT_CALL(myWinPlatformSystem, CloseHandle(dummyThreadHandle));
 
 	promise.Complete();
@@ -248,7 +261,7 @@ TEST_F(WinProcessTest, passed_handles_are_closed_when_process_exits)
 
 TEST_F(WinProcessTest, process_handle_is_passed_to_getexitcodeprocess_when_process_exits)
 {
-	const HANDLE dummyProcessHandle = (HANDLE)0x00010001;
+	const WinEventHandle dummyProcessHandle((HANDLE)0x00010001, myWinPlatformSystem);
 
 	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, dummyProcessHandle, locDummyHandle);
 	auto [promise, future] = MakeAsync<void>();
@@ -258,14 +271,16 @@ TEST_F(WinProcessTest, process_handle_is_passed_to_getexitcodeprocess_when_proce
 
 	process->Initialize();
 
-	EXPECT_CALL(myWinPlatformSystem, GetExitCodeProcess(dummyProcessHandle, _));
+	EXPECT_CALL(myWinPlatformSystem, GetExitCodeProcess(dummyProcessHandle.Get(), _));
 
 	promise.Complete();
 }
 
 TEST_F(WinProcessTest, onexit_is_called_when_process_exits)
 {
-	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, locDummyHandle, locDummyHandle);
+	const WinEventHandle dummyProcessHandle((HANDLE)0x00010000, myWinPlatformSystem);
+
+	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, dummyProcessHandle, locDummyHandle);
 	auto [promise, future] = MakeAsync<void>();
 
 	EXPECT_CALL(myWinEventSystem, RegisterEvent)
@@ -282,9 +297,10 @@ TEST_F(WinProcessTest, onexit_is_called_when_process_exits)
 
 TEST_F(WinProcessTest, error_code_is_passed_to_onexit_when_process_exits_and_error_code_is_zero)
 {
+	const WinEventHandle dummyProcessHandle((HANDLE)0x00010000, myWinPlatformSystem);
 	constexpr i64 exitCode = 0;
 
-	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, locDummyHandle, locDummyHandle);
+	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, dummyProcessHandle, locDummyHandle);
 	auto [promise, future] = MakeAsync<void>();
 
 	EXPECT_CALL(myWinEventSystem, RegisterEvent)
@@ -311,9 +327,10 @@ TEST_F(WinProcessTest, error_code_is_passed_to_onexit_when_process_exits_and_err
 
 TEST_F(WinProcessTest, error_code_is_passed_to_onexit_when_process_exits_and_error_code_is_dword_max)
 {
+	const WinEventHandle dummyProcessHandle((HANDLE)0x00010000, myWinPlatformSystem);
 	constexpr i64 exitCode = std::numeric_limits<DWORD>::max();
 
-	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, locDummyHandle, locDummyHandle);
+	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, dummyProcessHandle, locDummyHandle);
 	auto [promise, future] = MakeAsync<void>();
 
 	EXPECT_CALL(myWinEventSystem, RegisterEvent)
@@ -340,9 +357,10 @@ TEST_F(WinProcessTest, error_code_is_passed_to_onexit_when_process_exits_and_err
 
 TEST_F(WinProcessTest, error_code_is_passed_to_onexit_when_process_exits_and_error_code_is_dword_min)
 {
+	const WinEventHandle dummyProcessHandle((HANDLE)0x00010000, myWinPlatformSystem);
 	constexpr i64 exitCode = std::numeric_limits<DWORD>::min();
 
-	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, locDummyHandle, locDummyHandle);
+	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, dummyProcessHandle, locDummyHandle);
 	auto [promise, future] = MakeAsync<void>();
 
 	EXPECT_CALL(myWinEventSystem, RegisterEvent)
@@ -369,9 +387,10 @@ TEST_F(WinProcessTest, error_code_is_passed_to_onexit_when_process_exits_and_err
 
 TEST_F(WinProcessTest, internal_error_is_passed_to_onexit_when_unable_to_get_exit_code)
 {
+	const WinEventHandle dummyProcessHandle((HANDLE)0x00010000, myWinPlatformSystem);
 	constexpr DWORD errorCode = NO_ERROR;
 
-	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, locDummyHandle, locDummyHandle);
+	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, dummyProcessHandle, locDummyHandle);
 	auto [promise, future] = MakeAsync<void>();
 
 	EXPECT_CALL(myWinEventSystem, RegisterEvent)
@@ -395,9 +414,10 @@ TEST_F(WinProcessTest, internal_error_is_passed_to_onexit_when_unable_to_get_exi
 
 TEST_F(WinProcessTest, onexit_is_called_immediately_when_process_is_already_stopped)
 {
+	const WinEventHandle dummyProcessHandle((HANDLE)0x00010000, myWinPlatformSystem);
 	constexpr i64 exitCode = 0;
 
-	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, locDummyHandle, locDummyHandle);
+	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, dummyProcessHandle, locDummyHandle);
 
 	process->Terminate(exitCode);
 
@@ -410,7 +430,9 @@ TEST_F(WinProcessTest, onexit_is_called_immediately_when_process_is_already_stop
 
 TEST_F(WinProcessTest, get_state_returns_running)
 {
-	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, locDummyHandle, locDummyHandle);
+	const WinEventHandle dummyProcessHandle((HANDLE)0x00010000, myWinPlatformSystem);
+
+	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, dummyProcessHandle, locDummyHandle);
 
 	process->Initialize();
 
@@ -419,7 +441,9 @@ TEST_F(WinProcessTest, get_state_returns_running)
 
 TEST_F(WinProcessTest, get_state_returns_stopped_when_terminated)
 {
-	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, locDummyHandle, locDummyHandle);
+	const WinEventHandle dummyProcessHandle((HANDLE)0x00010000, myWinPlatformSystem);
+
+	auto process = std::make_shared<WinProcess>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem, dummyProcessHandle, locDummyHandle);
 	constexpr i64 exitCode = 0;
 
 	process->Terminate(exitCode);

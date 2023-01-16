@@ -23,9 +23,9 @@ WinEventSystemImpl::~WinEventSystemImpl() noexcept
 }
 
 Future<void> WinEventSystemImpl::RegisterEvent(
-	HANDLE aEventHandle)
+	WinEventHandle aEventHandle)
 {
-	if (aEventHandle == NULL)
+	if (aEventHandle.Get() == NULL)
 		return MakeCanceledFuture<void>();
 
 	auto [promise, future] = MakeAsync<void>();
@@ -36,7 +36,7 @@ Future<void> WinEventSystemImpl::RegisterEvent(
 		myHandleData.emplace_back(HandleData{ aEventHandle, std::move(promise) });
 	}
 
-	future.OnCancel(GetExecutor(), Bind(&WinEventSystemImpl::UnregisterEvent, weak_from_this(), aEventHandle));
+	future.OnCancel(GetExecutor(), Bind(&WinEventSystemImpl::UnregisterEvent, weak_from_this(), aEventHandle.Get()));
 
 	TriggerWaitInterruption();
 
@@ -65,11 +65,20 @@ void WinEventSystemImpl::WaitForEvent(
 
 		std::transform(myHandleData.begin(), endIt, myHandles.begin() + 1, [](const auto& aHandleData)
 			{
-				return aHandleData.Handle;
+				return aHandleData.Handle.Get();
 			});
 	}
 
 	const DWORD result = winPlatformSystem.WaitForMultipleObjects(static_cast<DWORD>(myHandles.size()), myHandles.data(), FALSE, aTimeoutMs);
+
+	if (result == WAIT_FAILED)
+	{
+		auto error = winPlatformSystem.GetLastError();
+
+		error;
+
+		return;
+	}
 
 	if (result < WAIT_OBJECT_0 || result >= WAIT_OBJECT_0 + myHandles.size())
 		return;
@@ -89,7 +98,7 @@ void WinEventSystemImpl::WaitForEvent(
 
 		const auto itBegin = std::partition(myHandleData.begin(), myHandleData.end(), [&signaledEvents](const auto& aHandleData)
 			{
-				return std::find(signaledEvents.begin(), signaledEvents.end(), aHandleData.Handle) == signaledEvents.end();
+				return std::find(signaledEvents.begin(), signaledEvents.end(), aHandleData.Handle.Get()) == signaledEvents.end();
 			});
 
 		for (auto it = itBegin; it != myHandleData.end(); ++it)
@@ -115,7 +124,7 @@ void WinEventSystemImpl::UnregisterEvent(
 
 		const auto it = std::find_if(myHandleData.begin(), myHandleData.end(), [aEventHandle](auto& aHandleData)
 			{
-				return aHandleData.Handle == aEventHandle;
+				return aHandleData.Handle.Get() == aEventHandle;
 			});
 
 		if (it == myHandleData.cend())

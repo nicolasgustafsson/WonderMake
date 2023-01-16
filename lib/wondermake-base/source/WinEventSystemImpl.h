@@ -28,7 +28,7 @@ public:
 	~WinEventSystemImpl() noexcept;
 
 	Future<void> RegisterEvent(
-		HANDLE aEventHandle) override;
+		WinEventHandle aEventHandle) override;
 
 	void WaitForEvent(
 		DWORD aTimeoutMs) override;
@@ -36,8 +36,8 @@ public:
 private:
 	struct HandleData
 	{
-		HANDLE Handle;
-		Promise<void> Promise;
+		WinEventHandle	Handle;
+		Promise<void>	Promise;
 	};
 
 	void TriggerWaitInterruption();

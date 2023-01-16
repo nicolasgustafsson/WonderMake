@@ -202,6 +202,8 @@ Result<void, IpcConnection::SConnectionError> WinIpcConnection::Setup()
 		return Err(SConnectionError{ err == ERROR_NOT_ENOUGH_MEMORY ? EConnectionError::OutOfMemory : EConnectionError::InternalError, err });
 	}
 
+	myWriteOverlappedEvent = WinEventHandle(myWriteOverlapped.hEvent, myWinPlatform);
+
 	myReadOverlapped.hEvent = myWinPlatform.CreateEventW(lpEventAttributes, bManualReset, bInitialState, lpName);
 
 	if (myReadOverlapped.hEvent == NULL)
@@ -212,6 +214,8 @@ Result<void, IpcConnection::SConnectionError> WinIpcConnection::Setup()
 
 		return Err(SConnectionError{ err == ERROR_NOT_ENOUGH_MEMORY ? EConnectionError::OutOfMemory : EConnectionError::InternalError, err });
 	}
+
+	myReadOverlappedEvent = WinEventHandle(myReadOverlapped.hEvent, myWinPlatform);
 
 	myState = EState::Open;
 
@@ -268,9 +272,9 @@ Closure WinIpcConnection::PerformWrite(std::vector<u8>&& aBuffer, Promise<Result
 		myCurrentlyWriting = true;
 		myCurrentWritePromise.emplace(std::move(aPromise));
 
-		return[&executor = myExecutor, &winEvent = myWinEvent, eventHandle = myWriteOverlapped.hEvent, callback = Bind(&WinIpcConnection::OnWrite, weak_from_this(), std::move(aBuffer))]() mutable
+		return[&executor = myExecutor, &winEvent = myWinEvent, eventHandle = myWriteOverlappedEvent, callback = Bind(&WinIpcConnection::OnWrite, weak_from_this(), std::move(aBuffer))]() mutable
 		{
-			winEvent.RegisterEvent(eventHandle)
+			winEvent.RegisterEvent(std::move(eventHandle))
 				.ThenRun(executor, [callback = std::move(callback)](auto&&) mutable
 				{
 					std::move(callback)();
@@ -441,9 +445,9 @@ Closure WinIpcConnection::PerformRead(Promise<ResultTypeRead>&& aPromise, Reques
 		myCurrentlyReading = true;
 		myReadQueue.emplace_back(ReadData{ std::move(aPromise), aRequestId });
 
-		return [&executor = myExecutor, &winEvent = myWinEvent, eventHandle = myReadOverlapped.hEvent, callback = Bind(&WinIpcConnection::OnRead, weak_from_this(), std::move(readBuffer))]() mutable
+		return [&executor = myExecutor, &winEvent = myWinEvent, eventHandle = myReadOverlappedEvent, callback = Bind(&WinIpcConnection::OnRead, weak_from_this(), std::move(readBuffer))]() mutable
 		{
-			winEvent.RegisterEvent(eventHandle)
+			winEvent.RegisterEvent(std::move(eventHandle))
 				.ThenRun(executor, [callback = std::move(callback)](auto&&) mutable
 					{
 						std::move(callback)();
@@ -596,10 +600,8 @@ Closure WinIpcConnection::Reset(Result<SCloseLocation, SCloseError> aResult)
 
 	if (myFileHandle != INVALID_HANDLE_VALUE)
 		(void)myWinPlatform.CloseHandle(myFileHandle);
-	if (myReadOverlapped.hEvent != NULL)
-		(void)myWinPlatform.CloseHandle(myReadOverlapped.hEvent);
-	if (myWriteOverlapped.hEvent != NULL)
-		(void)myWinPlatform.CloseHandle(myWriteOverlapped.hEvent);
+	myReadOverlappedEvent = WinEventHandle();
+	myWriteOverlappedEvent = WinEventHandle();
 
 	myState = EState::Closed;
 	myFileHandle = INVALID_HANDLE_VALUE;

@@ -5,7 +5,7 @@
 
 #include "wondermake-utility/Bindable.h"
 
-WinProcess::WinProcess(AnyExecutor aExecutor, WinEventSystem& aWinEvent, WinPlatformSystem& aWinPlatform, HANDLE aProcessHandle, HANDLE aThreadHandle) noexcept
+WinProcess::WinProcess(AnyExecutor aExecutor, WinEventSystem& aWinEvent, WinPlatformSystem& aWinPlatform, WinEventHandle aProcessHandle, HANDLE aThreadHandle) noexcept
 	: myExecutor(std::move(aExecutor))
 	, myWinEvent(aWinEvent)
 	, myWinPlatform(aWinPlatform)
@@ -36,8 +36,8 @@ void WinProcess::Terminate(i64 aExitCode)
 	if (myState == EState::Stopped)
 		return;
 
-	if (myProcessHandle)
-		(void)myWinPlatform.TerminateProcess(myProcessHandle, static_cast<UINT>(aExitCode));
+	if (myProcessHandle.Get())
+		(void)myWinPlatform.TerminateProcess(myProcessHandle.Get(), static_cast<UINT>(aExitCode));
 
 	Reset(Err(SExitError{ EExitError::Terminated, aExitCode }));
 }
@@ -61,7 +61,7 @@ void WinProcess::OnClose()
 
 	DWORD exitCode = 0;
 
-	const BOOL result = myWinPlatform.GetExitCodeProcess(myProcessHandle, &exitCode);
+	const BOOL result = myWinPlatform.GetExitCodeProcess(myProcessHandle.Get(), &exitCode);
 
 	if (result)
 		Reset(Ok(exitCode));
@@ -78,12 +78,10 @@ void WinProcess::Reset(Result<i64, SExitError> aResult)
 	myState = EState::Stopped;
 	myCloseFuture.Reset();
 
-	if (myProcessHandle)
-		(void)myWinPlatform.CloseHandle(myProcessHandle);
 	if (myThreadHandle)
 		(void)myWinPlatform.CloseHandle(myThreadHandle);
 
-	myProcessHandle = NULL;
+	myProcessHandle = WinEventHandle();
 	myThreadHandle = NULL;
 
 	auto onExitPromises = std::exchange(myOnExitPromises, decltype(myOnExitPromises)());

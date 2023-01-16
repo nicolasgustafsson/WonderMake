@@ -66,7 +66,7 @@ Result<std::shared_ptr<Process>, ProcessSystem::SStartError> WinProcessSystem::S
         return Err(SStartError{ EStartError::InternalError, err });
     }
 
-    auto process = std::make_shared<WinProcess>(GetExecutor(), Get<WinEventSystem>(), Get<WinPlatformSystem>(), proccessInformation.hProcess, proccessInformation.hThread);
+    auto process = std::make_shared<WinProcess>(GetExecutor(), Get<WinEventSystem>(), Get<WinPlatformSystem>(), WinEventHandle(proccessInformation.hProcess, winPlatform), proccessInformation.hThread);
 
     process->Initialize();
 

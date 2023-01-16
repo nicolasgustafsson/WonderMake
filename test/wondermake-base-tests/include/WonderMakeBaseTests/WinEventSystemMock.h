@@ -9,7 +9,7 @@ class WinEventSystemMock
 {
 public:
 	MOCK_METHOD(Future<void>, RegisterEvent, (
-		HANDLE aEventHandle), (override));
+		WinEventHandle aEventHandle), (override));
 	
 	MOCK_METHOD(void, WaitForEvent, (
 		DWORD aTimeoutMs), (override));

@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "NodeGraphGui.h"
 #include "NodeGraph/NodeGraph.h"
 #include "NodeGraph/NodeTypes.h"

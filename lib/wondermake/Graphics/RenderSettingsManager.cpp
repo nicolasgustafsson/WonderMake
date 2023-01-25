@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "RenderSettingsManager.h"
 
 #include "Graphics/OpenGLFacade.h"

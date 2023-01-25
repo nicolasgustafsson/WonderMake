@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "LineListRenderObject.h"
 
 #include "Message/Messages.h"

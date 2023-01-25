@@ -109,8 +109,7 @@ list(APPEND IncludeFiles
     "Utilities/Id.h"
     "Utilities/Platform.h"
     "Utilities/TimeKeeper.h"
-    "Constants.h"
-    "pch.h")
+    "Constants.h")
 
 list(APPEND SourceFiles
     "Audio/AudioFile.cpp"
@@ -176,8 +175,7 @@ list(APPEND SourceFiles
     "Utilities/Id.cpp"
     "Utilities/Platform.cpp"
     "Utilities/TimeKeeper.cpp"
-    "glad.c"
-    "pch.cpp")
+    "glad.c")
 
 list(APPEND TargetDependencies Glad Glfw Khr Imgui NlohmannJson SoLoud Stb WonderMakeBase WonderMakeDebugUi WonderMakeUtility WonderMakeIo WonderMakeEngine)
 

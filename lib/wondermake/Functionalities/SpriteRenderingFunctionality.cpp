@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "SpriteRenderingFunctionality.h"
 
 #include "Functionalities/TransformFunctionality.h"

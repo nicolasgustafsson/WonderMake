@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "EngineUniformBuffer.h"
 
 #include "Graphics/OpenGLFacade.h"

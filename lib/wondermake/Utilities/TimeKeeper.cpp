@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "TimeKeeper.h"
 
 #include "wondermake-debug-ui/DebugSettingsSystem.h"

@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "RenderTarget.h"
 #include "OpenGLFacade.h"
 

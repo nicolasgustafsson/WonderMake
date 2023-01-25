@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "Shader.h"
 #include "Resources/AssetDatabase.h"
 

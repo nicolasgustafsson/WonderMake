@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "OpenGLFacade.h"
 
 #include "wondermake-base/SystemGlobal.h"

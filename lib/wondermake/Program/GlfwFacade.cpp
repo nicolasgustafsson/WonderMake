@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "GlfwFacade.h"
 
 #include <glad/glad.h>

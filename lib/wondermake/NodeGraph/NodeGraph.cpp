@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "NodeGraph.h"
 
 #include "wondermake-debug-ui/DebugSettingsSystem.h"

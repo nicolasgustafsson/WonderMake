@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "EasingTester.h"
 
 #include "Imgui/Canvas.h"

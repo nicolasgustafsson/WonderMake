@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "InputSystem.h"
 
 #include "Camera/Camera.h"

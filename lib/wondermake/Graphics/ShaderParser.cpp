@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "ShaderParser.h"
 
 #include "wondermake-base/Logger.h"

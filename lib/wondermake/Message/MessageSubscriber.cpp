@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "MessageSubscriber.h"
 
 #include "DispatchRouter.h"

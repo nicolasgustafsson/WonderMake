@@ -2,8 +2,6 @@
 
 #include "Collision/CollisionComponent.h"
 
-#include "Utilities/Debugging/Debugged.h"
-
 #include "Functionalities/TransformFunctionality.h"
 #include "Collision/CollisionSystem.h"
 
@@ -25,11 +23,8 @@ class CollisionFunctionality final
 			PAdd<TransformFunctionality2D, PRead>>,
 		STrait::Set<
 			STWonderMake>>
-	, public Debugged
 {
 public:
-
-	CollisionFunctionality();
 	~CollisionFunctionality();
 
 	void Tick();
@@ -94,6 +89,4 @@ public:
 	{
 		Get<CollisionSystem>().AddReaction<TFunctionalityToReactAgainst>(*aCollider.Collider, aCallback);
 	}
-
-	void Debug() override;
 };

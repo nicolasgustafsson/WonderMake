@@ -7,10 +7,6 @@
 WM_REGISTER_COMPONENT(SCollisionComponent);
 WM_REGISTER_FUNCTIONALITY(CollisionFunctionality);
 
-CollisionFunctionality::CollisionFunctionality()
-	: Debugged("Collision")
-{}
-
 CollisionFunctionality::~CollisionFunctionality()
 {
 	auto& collisionComponent = Get<SCollisionComponent>();
@@ -38,40 +34,6 @@ void CollisionFunctionality::Tick()
 		}
 		DrawCollider(*collider.Collider);
 	}
-}
-
-void CollisionFunctionality::Debug()
-{
-	auto& collisionComponent = Get<SCollisionComponent>();
-
-	ImGui::Begin("Enemy Collision");
-
-	for (auto& collider : collisionComponent.Colliders)
-	{
-		if (!collider.Collider)
-			continue;
-
-		ImGui::SliderFloat2("Offset", &collider.Offset.X, -1000.f, 1000.f);
-
-		std::visit([](auto& aCollider)
-			{
-				using T = std::decay_t<decltype(aCollider)>;
-				
-				if constexpr (std::is_same_v<T, Colliders::SSphere>)
-					ImGui::SliderFloat("Radius", &aCollider.Radius, 0, 500);
-				else if constexpr (std::is_same_v<T, Colliders::SAxisAlignedBoundingBox>)
-					ImGui::SliderFloat2("End Offset", &aCollider.Dimensions.X, 0, 500);
-				else if constexpr (std::is_same_v<T, Colliders::SCollisionLine>)
-					ImGui::SliderFloat2("End Offset", &aCollider.EndOffsetFromPosition.X, 0, 500);
-				else
-					[]<bool flag = false> { static_assert(flag, "Collider not implemented."); }();
-
-			}, *collider.Collider);
-
-		DrawCollider(*collider.Collider);
-	}
-
-	ImGui::End();
 }
 
 void CollisionFunctionality::UpdateCollisionTransforms()

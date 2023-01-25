@@ -8,6 +8,7 @@
 
 #include <functional>
 #include <string>
+#include <map>
 #include <vector>
 
 class DebugSettingsSystem;
@@ -21,6 +22,8 @@ class DebugSystem
 			STWonderMake>>
 {
 public:
+	DebugSystem();
+
 	void Initialize() override;
 
 	void ToggleToolbar();
@@ -33,6 +36,7 @@ private:
 	struct SWindowData
 	{
 		std::string			Name;
+		std::string			NameReal;
 		EventTrigger<void>	Trigger;
 
 		inline void OnCancel(CExecutor auto&& aExecutor, auto&& aOnCancel)
@@ -41,8 +45,19 @@ private:
 		}
 	};
 
-	void TickAllWindows();
+	struct SWindowCategory
+	{
+		std::map<std::string, SWindowCategory>	Categories;
+		CancelableList<SWindowData>				Windows;
+	};
 
-	CancelableList<SWindowData> myWindows = GetExecutor();
+	void TickAllWindows();
+	void TickCategory(SWindowCategory& aCategory);
+
+	void TickCategoryToolbar(SWindowCategory& aCategory);
+
+	static std::pair<std::vector<std::string>, std::string> GetCategories(std::string_view aName) noexcept;
+
+	SWindowCategory	myWindows;
 
 };

@@ -1,6 +1,8 @@
 #pragma once
 #include "wondermake-utility/Typedefs.h"
 
+#include <glad/glad.h>
+
 #include <GLFW/glfw3.h>
 
 #include <magic_enum.hpp>

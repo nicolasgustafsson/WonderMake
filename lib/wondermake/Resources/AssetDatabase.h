@@ -1,23 +1,23 @@
 #pragma once
 
-#include <filesystem>
-#include <json/json.hpp>
-#include <Imgui/imgui_stdlib.h>
-
-#include "Asset.h"
-#include "ResourceSystem.h"
-
+#include "Imgui/AssetBrowser.h"
+#include "Imgui/FileSelector.h"
+#include "Resources/Asset.h"
+#include "Resources/AssetLink.h"
+#include "Resources/ResourceSystem.h"
 #include "Utilities/Debugging/Debugged.h"
 #include "Utilities/Container/Container.h"
 #include "Utilities/Id.h"
 
-#include "Imgui/AssetBrowser.h"
-#include "Imgui/FileSelector.h"
-
-#include "AssetLink.h"
-
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/WmLogTags.h"
+
+#include <Imgui/imgui_stdlib.h>
+
+#include <json/json.hpp>
+
+#include <filesystem>
+#include <fstream>
 
 template<typename TAssetType>
 class AssetDatabase 
@@ -32,14 +32,14 @@ class AssetDatabase
 {
 public:
 	AssetDatabase() 
-		: Debugged("Asset Databases/" + GetAssetTypeName()) 
+		: Debugged("Asset Databases/" + GetResourceTypeName<TAssetType>())
 	{
 		Load();
 	}
 
 	void Load()
 	{
-		std::ifstream file("AssetDatabases\\" + GetAssetTypeName() + ".json", std::fstream::app);
+		std::ifstream file("AssetDatabases\\" + GetResourceTypeName<TAssetType>() + ".json", std::fstream::app);
 
 		std::string fileContents((std::istreambuf_iterator<char>(file)),
 			(std::istreambuf_iterator<char>()));
@@ -98,7 +98,7 @@ public:
 	{
 		nlohmann::json serialized = Serialize();
 
-		std::ofstream file("AssetDatabases\\" + GetAssetTypeName() + ".json");
+		std::ofstream file("AssetDatabases\\" + GetResourceTypeName<TAssetType>() + ".json");
 
 		file << std::setw(4) << serialized.dump();
 	}
@@ -137,7 +137,7 @@ public:
 
 	virtual void Debug() override
 	{
-		std::string assetDatabaseName = GetAssetTypeName() + " Database";
+		std::string assetDatabaseName = GetResourceTypeName<TAssetType>() + " Database";
 		ImGui::Begin(assetDatabaseName.c_str());
 		
 		if (ImGui::Button("Scan assets"))
@@ -191,29 +191,6 @@ public:
 	}
 
 private:
-	constexpr std::string GetAssetTypeName() const
-	{
-		//[Nicos]: Special case shaders cause otherwise they show up as Shader<0> etc
-		if constexpr (std::is_same_v<TAssetType, Shader<EShaderType::Fragment>>)
-			return "Fragment Shader";
-		else if constexpr (std::is_same_v<TAssetType, Shader<EShaderType::Vertex>>)
-			return "Vertex Shader";
-		else if constexpr (std::is_same_v<TAssetType, Shader<EShaderType::Geometry>>)
-			return "Geometry Shader";
-		else
-		{
-			std::string assetTypeName = typeid(TAssetType).name();
-
-			if (assetTypeName.starts_with("class "))
-				assetTypeName.erase(assetTypeName.begin(), assetTypeName.begin() + 6);
-
-			if (assetTypeName.starts_with("struct "))
-				assetTypeName.erase(assetTypeName.begin(), assetTypeName.begin() + 7);
-
-			return assetTypeName;
-		}
-	}
-	
 	Container<Asset<TAssetType>, Key<Id>, Iterable, StableElements> myAssets;
 
 	Container<SAssetLink<TAssetType>, Key<std::string>, Iterable> myAssetLinks;

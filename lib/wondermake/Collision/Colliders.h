@@ -2,6 +2,7 @@
 
 #include "wondermake-utility/Vector.h"
 
+#include <functional>
 #include <variant>
 
 class _BaseFunctionality;

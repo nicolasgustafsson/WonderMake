@@ -1,7 +1,11 @@
 #include "pch.h"
+
 #include "ShaderParser.h"
 
+#include "wondermake-base/Logger.h"
 #include "wondermake-base/WmLogTags.h"
+
+#include <fstream>
 
 namespace ShaderParser
 {

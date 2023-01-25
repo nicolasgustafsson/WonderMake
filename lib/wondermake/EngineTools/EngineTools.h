@@ -2,6 +2,8 @@
 
 #include "Utilities/Debugging/Debugged.h"
 
+#include "wondermake-base/System.h"
+
 class TimeKeeperSingleton;
 
 class EngineTools

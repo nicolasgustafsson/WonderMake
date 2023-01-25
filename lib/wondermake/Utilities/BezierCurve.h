@@ -1,5 +1,7 @@
 #pragma once
 
+#include "wondermake-utility/Vector.h"
+
 #include <optional>
 
 struct SCachedBezierConstantLocation

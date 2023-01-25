@@ -1,5 +1,9 @@
 #pragma once
+
+#include "wondermake-utility/Typedefs.h"
+
 #include <json/json.hpp>
+
 class Id
 {
 public:

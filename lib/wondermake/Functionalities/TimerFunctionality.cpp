@@ -1,5 +1,7 @@
 #include "pch.h"
+
 #include "TimerFunctionality.h"
+
 #include "Utilities/TimeKeeper.h"
 
 WM_REGISTER_COMPONENT(STimerComponent);

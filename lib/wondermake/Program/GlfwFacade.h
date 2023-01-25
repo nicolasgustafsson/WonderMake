@@ -1,4 +1,9 @@
 #pragma once
+
+#include "wondermake-base/System.h"
+
+#include "wondermake-utility/Typedefs.h"
+
 struct GLFWmonitor;
 struct GLFWwindow;
 

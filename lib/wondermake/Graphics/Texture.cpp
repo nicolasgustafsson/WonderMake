@@ -1,9 +1,14 @@
 #include "pch.h"
+
 #include "Texture.h"
+
+#include "Graphics/OpenGLFacade.h"
+#include "Resources/AssetDatabase.h"
+
+#include "wondermake-base/SystemPtr.h"
+
 #define STB_IMAGE_IMPLEMENTATION
 #include <std\stb_image.h>
-#include "OpenGLFacade.h"
-#include "Resources/AssetDatabase.h"
 
 WM_REGISTER_RESOURCE(Texture);
 

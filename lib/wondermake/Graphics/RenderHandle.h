@@ -1,5 +1,7 @@
 #pragma once
 
+#include "wondermake-utility/Typedefs.h"
+
 class RenderLayer;
 
 class RenderHandle

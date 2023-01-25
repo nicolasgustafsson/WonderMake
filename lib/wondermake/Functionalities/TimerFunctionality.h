@@ -1,6 +1,7 @@
 #pragma once
 
 #include "wondermake-base/Functionality.h"
+#include "wondermake-base/Component.h"
 
 #include "wondermake-utility/Typedefs.h"
 

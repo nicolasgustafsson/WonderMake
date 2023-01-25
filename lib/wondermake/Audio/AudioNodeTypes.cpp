@@ -1,6 +1,11 @@
 #include "pch.h"
+
 #include "AudioNodeTypes.h"
+
 #include "Audio/AudioManager.h"
+
+#include "wondermake-base/SystemPtr.h"
+
 #include <soloud_echofilter.h>
 
 namespace NodeTypes

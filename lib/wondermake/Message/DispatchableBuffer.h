@@ -1,7 +1,9 @@
 #pragma once
-#include "wondermake-utility/Typedefs.h"
+
+#include "Message/MessageTypes.h"
 
 #include "wondermake-utility/Singleton.h"
+#include "wondermake-utility/Typedefs.h"
 
 #include <vector>
 

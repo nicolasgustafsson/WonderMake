@@ -6,6 +6,8 @@
 
 #include "wondermake-utility/plf_colony.h"
 
+#include <functional>
+
 class CollisionFunctionality;
 class ScheduleSystem;
 

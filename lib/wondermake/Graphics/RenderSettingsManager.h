@@ -1,5 +1,10 @@
 #pragma once
 
+#include "wondermake-base/System.h"
+
+#include <optional>
+#include <vector>
+
 class OpenGLFacade;
 
 enum class EBlendMode

@@ -122,7 +122,6 @@ list(APPEND SourceFiles
     "Camera/CameraManager.cpp"
     "Camera/Display.cpp"
     "Collision/ColliderDebug.cpp"
-    "Collision/CollisionComponent.cpp"
     "Collision/CollisionFunctionality.cpp"
     "Collision/CollisionSystem.cpp"
     "Components/Component.cpp"

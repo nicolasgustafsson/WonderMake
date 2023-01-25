@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "TextRenderObject.h"
 #include "Font.h"
 #include "Resources/ResourceSystem.h"

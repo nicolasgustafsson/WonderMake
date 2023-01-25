@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "CollisionFunctionality.h"
 #include "CollisionSystem.h"
 #include "ColliderDebug.h"

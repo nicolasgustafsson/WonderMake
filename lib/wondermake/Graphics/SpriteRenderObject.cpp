@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "SpriteRenderObject.h"
 
 SpriteRenderObject::SpriteRenderObject(

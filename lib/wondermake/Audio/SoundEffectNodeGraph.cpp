@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "SoundEffectNodeGraph.h"
 #include "Audio/AudioNodeTypes.h"
 

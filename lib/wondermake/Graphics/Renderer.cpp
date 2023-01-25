@@ -1,5 +1,4 @@
-﻿#include "pch.h"
-#include "Renderer.h"
+﻿#include "Renderer.h"
 
 #include "VertexAttributes.h"
 #include "EngineUniformBuffer.h"

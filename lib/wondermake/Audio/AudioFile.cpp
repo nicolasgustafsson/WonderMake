@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "AudioFile.h"
 
 AudioFile::AudioFile(const std::filesystem::path& aPath)

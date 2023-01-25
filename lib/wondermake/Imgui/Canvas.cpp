@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "Canvas.h"
 
 void WmGui::BeginCanvas(SCanvasState* aCanvasState, bool aAllowMovement /*= true*/, bool aShowGrid /*= true*/)

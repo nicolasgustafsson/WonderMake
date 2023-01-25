@@ -1,5 +1,4 @@
-﻿#include "pch.h"
-#include "BezierCurve.h"
+﻿#include "BezierCurve.h"
 #include "wondermake-utility/Math.h"
 #include "Easing/EasingFunctions.h"
 

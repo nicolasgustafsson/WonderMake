@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "Debugged.h"
 
 std::vector<std::pair<std::string, std::function<void()>>> Debugged::ourDebugged;

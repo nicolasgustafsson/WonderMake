@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "WinFileWatcher.h"
 
 #include "Message/Messages.h"

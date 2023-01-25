@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "Font.h"
 
 #include "Resources/Resource.h"

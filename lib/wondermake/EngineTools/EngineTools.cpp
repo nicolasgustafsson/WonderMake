@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "EngineTools.h"
 #include "EasingTester.h"
 

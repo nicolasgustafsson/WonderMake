@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "Display.h"
 
 #include "Camera/Camera.h"

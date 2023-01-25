@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "CameraManager.h"
 
 #include "Resources/ResourceSystem.h"

@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "DebugLineDrawer.h"
 
 #include "Utilities/TimeKeeper.h"

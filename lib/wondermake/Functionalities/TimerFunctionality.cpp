@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "TimerFunctionality.h"
 
 #include "Utilities/TimeKeeper.h"

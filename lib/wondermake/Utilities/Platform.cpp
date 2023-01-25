@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "Utilities/Platform.h"
 
 #include "wondermake-utility/WinPlatform.h"

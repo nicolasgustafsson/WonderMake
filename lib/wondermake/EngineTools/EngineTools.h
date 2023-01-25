@@ -18,7 +18,7 @@ class EngineTools
 {
 public:
 	inline EngineTools()
-		: Debugged("Engine Tools")
+		: Debugged("Engine Tools", GetExecutor())
 	{}
 
 	virtual void Debug() override;

@@ -25,7 +25,7 @@ public:
 	using TimePoint	= std::chrono::high_resolution_clock::time_point;
 
 	inline TimeKeeperSingleton() noexcept
-		: Debugged("Time Keeper")
+		: Debugged("Time Keeper", GetExecutor())
 	{}
 
 	void Update() noexcept;

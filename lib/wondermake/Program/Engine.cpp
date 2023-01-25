@@ -508,8 +508,12 @@ namespace Engine
 
 					auto newDebugged = Debugged::GetAndResetDebugged();
 
-					for (auto& [name, tick] : newDebugged)
-						debugSys.AddDebugWindow(std::move(name), std::move(tick));
+					for (auto& debugData : newDebugged)
+					{
+						auto sub = debugSys.AddDebugWindow(std::move(debugData.Name), std::move(debugData.Executor), std::move(debugData.TickFunc));
+
+						debugData.SetSubscriberFunc(std::move(sub));
+					}
 
 					renderer.FinishFrame();
 

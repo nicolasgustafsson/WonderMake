@@ -16,10 +16,11 @@ const std::string locDebugWindowSettingPrefixString = static_cast<std::string>(l
 
 void DebugSystem::Initialize()
 {
-	AddDebugWindow("Debug Settings", [this]()
+	AddDebugWindow("Debug Settings", GetExecutor(), [this]()
 		{
 			Get<DebugSettingsSystem>().Tick();
-		});
+		})
+		.Detach();
 }
 
 void DebugSystem::ToggleToolbar()
@@ -67,9 +68,18 @@ void DebugSystem::Tick()
 	TickAllWindows();
 }
 
-void DebugSystem::AddDebugWindow(std::string aWindowName, std::function<void()> aTickCallback)
+EventSubscriber DebugSystem::AddDebugWindow(std::string aWindowName, AnyExecutor aExecutor, std::function<void()> aTickCallback)
 {
-	myWindows.emplace_back(SWindowData{ std::move(aWindowName), std::move(aTickCallback) });
+	auto [trigger, subscriber] = MakeEventTrigger<void>(std::move(aExecutor), std::move(aTickCallback));
+
+	myWindows.Emplace(
+		SWindowData
+		{
+			.Name		= std::move(aWindowName),
+			.Trigger	= std::move(trigger)
+		});
+
+	return std::move(subscriber);
 }
 
 [[nodiscard]] bool DebugSystem::IsDebugWindowVisible(std::string_view aWindowName) const noexcept
@@ -82,11 +92,11 @@ void DebugSystem::AddDebugWindow(std::string aWindowName, std::function<void()> 
 
 void DebugSystem::TickAllWindows()
 {
-	for (const auto& windowData : myWindows)
+	for (auto& windowData : myWindows)
 	{
 		if (!Get<DebugSettingsSystem>().GetOrCreateDebugValue(locDebugWindowSettingPrefixString + windowData.Name, false))
 			continue;
 
-		Utility::Invoke(windowData.TickFunc);
+		windowData.Trigger.Trigger();
 	}
 }

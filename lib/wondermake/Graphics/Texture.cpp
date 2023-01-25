@@ -35,6 +35,8 @@ Texture::Texture(const std::filesystem::path& aPath)
 
 	openGL->UploadTextureData(GL_TEXTURE_2D, 0, format, myWidth, myHeight, format, GL_UNSIGNED_BYTE, rawPixelData);
 	openGL->GenerateMipMapForCurrentTexture(GL_TEXTURE_2D);
+
+	stbi_image_free(rawPixelData);
 }
 
 Texture::~Texture()

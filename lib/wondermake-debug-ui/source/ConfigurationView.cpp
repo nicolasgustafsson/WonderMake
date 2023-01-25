@@ -62,7 +62,8 @@ void ConfigurationView::Initialize()
 
 	ReconstructSelectionConfigs();
 
-	Get<DebugSystem>().AddDebugWindow("Configuration", Bind(&ConfigurationView::Tick, weak_from_this()));
+	Get<DebugSystem>().AddDebugWindow("Configuration", GetExecutor(), Bind(&ConfigurationView::Tick, weak_from_this()))
+		.Detach();
 }
 
 void ConfigurationView::Tick()

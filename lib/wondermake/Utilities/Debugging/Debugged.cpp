@@ -1,14 +1,20 @@
 #include "Debugged.h"
 
-std::vector<std::pair<std::string, std::function<void()>>> Debugged::ourDebugged;
+std::vector<Debugged::SDebugData> Debugged::ourDebugged;
 
-Debugged::Debugged(std::string aName) noexcept
-	: myDebugName(std::move(aName))
+Debugged::Debugged(std::string aName, AnyExecutor aExecutor)
 {
-	ourDebugged.emplace_back(std::make_pair(myDebugName, [this]() { Debug(); }));
+	ourDebugged.emplace_back(
+		SDebugData
+		{
+			.Name				= std::move(aName),
+			.Executor			= std::move(aExecutor),
+			.TickFunc			= [this]() { Debug(); },
+			.SetSubscriberFunc	= [this](EventSubscriber aSub) { myTickSubscriber = std::move(aSub); }
+		});
 }
 
-std::vector<std::pair<std::string, std::function<void()>>> Debugged::GetAndResetDebugged()
+std::vector<Debugged::SDebugData> Debugged::GetAndResetDebugged()
 {
 	return std::exchange(ourDebugged, decltype(ourDebugged)());
 }

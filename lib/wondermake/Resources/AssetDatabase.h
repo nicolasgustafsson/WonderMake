@@ -32,7 +32,7 @@ class AssetDatabase
 {
 public:
 	AssetDatabase() 
-		: Debugged("Asset Databases/" + GetResourceTypeName<TAssetType>())
+		: Debugged("Asset Databases/" + GetResourceTypeName<TAssetType>(), this->GetExecutor())
 	{
 		Load();
 	}

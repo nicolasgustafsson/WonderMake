@@ -31,7 +31,7 @@ static const auto locSeverityNames	= GetEnumNames<ELogSeverity>();
 static const auto locLevelNames		= GetEnumNames<ELogLevel>();
 
 ImGuiLogger::ImGuiLogger()
-	: Debugged("Output Log")
+	: Debugged("Output Log", GetExecutor())
 {
 	for (const auto& [en, name] : locSeverityNames)
 		myCategoryValues.Severity.emplace(name);

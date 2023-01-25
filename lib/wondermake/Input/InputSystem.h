@@ -33,7 +33,7 @@ public:
 	};
 
 	inline InputSystem()
-		: Debugged("Input") {}
+		: Debugged("Input", GetExecutor()) {}
 	void Update() noexcept;
 
 	void UpdateKeyboard() noexcept;

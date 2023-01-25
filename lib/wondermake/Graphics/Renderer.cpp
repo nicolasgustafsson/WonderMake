@@ -42,7 +42,7 @@ MessageCallback([[maybe_unused]] GLenum source,
 }
 
 Renderer::Renderer() noexcept
-	: Debugged("Renderer")
+	: Debugged("Renderer", GetExecutor())
 	, myCopyPass(
 			Get<ResourceSystem<Shader<EShaderType::Vertex>>>(),
 			Get<ResourceSystem<Shader<EShaderType::Fragment>>>(),

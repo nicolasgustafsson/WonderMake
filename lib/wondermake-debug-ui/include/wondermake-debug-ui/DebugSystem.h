@@ -2,6 +2,10 @@
 
 #include "wondermake-base/System.h"
 
+#include "wondermake-utility/AnyExecutor.h"
+#include "wondermake-utility/CancelableList.h"
+#include "wondermake-utility/EventSubscriber.h"
+
 #include <functional>
 #include <string>
 #include <vector>
@@ -22,18 +26,23 @@ public:
 	void ToggleToolbar();
 	void Tick();
 
-	void AddDebugWindow(std::string aWindowName, std::function<void()> aTickCallback);
+	[[nodiscard]] EventSubscriber AddDebugWindow(std::string aWindowName, AnyExecutor aExecutor, std::function<void()> aTickCallback);
 	[[nodiscard]] bool IsDebugWindowVisible(std::string_view aWindowName) const noexcept;
 
 private:
 	struct SWindowData
 	{
-		std::string				Name;
-		std::function<void()>	TickFunc;
+		std::string			Name;
+		EventTrigger<void>	Trigger;
+
+		inline void OnCancel(CExecutor auto&& aExecutor, auto&& aOnCancel)
+		{
+			WmOnCancel(Trigger, std::forward<decltype(aExecutor)>(aExecutor), std::forward<decltype(aOnCancel)>(aOnCancel));
+		}
 	};
 
 	void TickAllWindows();
 
-	std::vector<SWindowData> myWindows;
+	CancelableList<SWindowData> myWindows = GetExecutor();
 
 };

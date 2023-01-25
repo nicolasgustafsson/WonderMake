@@ -28,7 +28,7 @@ inline constexpr auto MakeColonyDeleter(CExecutor auto aExecutor, plf::colony<T>
 };
 
 CameraManager::CameraManager()
-	: Debugged("Camera Manager")
+	: Debugged("Camera Manager", GetExecutor())
 {}
 
 std::shared_ptr<Display> CameraManager::CreateDisplay(

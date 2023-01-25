@@ -1,22 +1,26 @@
 #include "pch.h"
+
 #include "AudioManager.h"
-#include <soloud.h>
-#include <commdlg.h>
-#include <filesystem>
-#include "Imgui/FileSelector.h"
-#include <soloud_wav.h>
+
 #include "Audio/AudioFile.h"
-#include "Resources/ResourceSystem.h"
-#include "Audio/AudioStructs.h"
-#include <soloud_speech.h>
-#include "Imgui/NodeGraphGui.h"
 #include "Audio/AudioMixingNodeGraph.h"
+#include "Audio/AudioStructs.h"
+#include "Imgui/FileSelector.h"
+#include "Imgui/NodeGraphGui.h"
+#include "Resources/ResourceSystem.h"
 
 #include "wondermake-debug-ui/DebugSettingsSystem.h"
 
 #include "wondermake-Engine/ConfigurationEngine.h"
 
 #include "wondermake-base/ConfigurationSystem.h"
+#include "wondermake-base/SystemPtr.h"
+
+#include <soloud.h>
+#include <soloud_speech.h>
+#include <soloud_wav.h>
+
+#include <filesystem>
 
 WM_REGISTER_SYSTEM(AudioManager);
 

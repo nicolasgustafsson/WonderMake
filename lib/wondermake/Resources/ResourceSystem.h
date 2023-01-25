@@ -1,11 +1,12 @@
 #pragma once
 #include "Message/MessageTypes.h"
 #include "Message/MessageSubscriber.h"
-#include "Resources/Resource.h"
+
 #include "Resources/ResourceProxy.h"
 
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/System.h"
+#include "wondermake-base/SystemGlobal.h"
 #include "wondermake-base/WmLogTags.h"
 
 #include "wondermake-utility/plf_colony.h"

@@ -5,6 +5,7 @@
 #include "wondermake-utility/Executor.h"
 #include "wondermake-utility/EventSubscriber.h"
 #include "wondermake-utility/CancelableList.h"
+#include "wondermake-utility/Vector.h"
 
 class ConfigurationSystem;
 class GlfwFacade;

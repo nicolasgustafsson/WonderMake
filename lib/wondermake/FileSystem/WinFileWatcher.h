@@ -2,7 +2,13 @@
 
 #include "wondermake-base/System.h"
 
+#include "wondermake-utility/Typedefs.h"
+
+#include <atomic>
+#include <mutex>
 #include <queue>
+#include <thread>
+#include <unordered_map>
 
 //[Nicos]: Basically stolen from my TGA engine project :P
 //[Nicos]: We *do* use a separate thread for this, but it's spending most of its time snoozing.

@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "OpenGLFacade.h"
 
+#include "wondermake-base/SystemGlobal.h"
+
 WM_REGISTER_SYSTEM(OpenGLFacade);
 
 void OpenGLFacade::Enable(const GLenum aSetting)

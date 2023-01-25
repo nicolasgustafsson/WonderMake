@@ -4,6 +4,7 @@
 #include "wondermake-debug-ui/DebugSettingsSystem.h"
 
 #include "wondermake-base/Logger.h"
+#include "wondermake-base/SystemPtr.h"
 #include "wondermake-base/WmLogTags.h"
 
 NodeGraph::NodeGraph(FilePath aFilePath)

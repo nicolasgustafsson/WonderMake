@@ -2,6 +2,8 @@
 
 #include "wondermake-base/System.h"
 
+#include <string>
+
 class GlfwFacade;
 class Window;
 

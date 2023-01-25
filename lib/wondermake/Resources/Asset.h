@@ -1,6 +1,8 @@
 #pragma once
-#include <filesystem>
+#include "Resources/ResourceSystem.h"
 #include "Utilities/Id.h"
+
+#include <filesystem>
 
 struct SAssetMetadata
 {

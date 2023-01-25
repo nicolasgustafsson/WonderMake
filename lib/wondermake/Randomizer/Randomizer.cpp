@@ -2,6 +2,8 @@
 
 #include "Randomizer.h"
 
+#include "wondermake-base/SystemGlobal.h"
+
 WM_REGISTER_SYSTEM(Randomizer);
 
 Randomizer::Randomizer()

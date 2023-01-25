@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Resources/AssetDatabase.h"
+#include "Resources/ResourceSystem.h"
+
 #define WM_REGISTER_RESOURCE(aResource) WM_REGISTER_RESOURCE_SYSTEM(aResource) WM_REGISTER_ASSET_DATABASE(aResource)
 
 class Resource
@@ -11,3 +14,17 @@ public:
 
 	virtual void Inspect() {};
 };
+
+template<typename TResource>
+inline [[nodiscard]] std::string GetResourceTypeName()
+{
+	std::string resTypeName = typeid(TResource).name();
+
+	if (resTypeName.starts_with("class "))
+		resTypeName.erase(resTypeName.begin(), resTypeName.begin() + 6);
+
+	if (resTypeName.starts_with("struct "))
+		resTypeName.erase(resTypeName.begin(), resTypeName.begin() + 7);
+
+	return resTypeName;
+}

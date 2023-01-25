@@ -70,3 +70,19 @@ public:
 
 	u32 myShaderHandle;
 };
+
+template<>
+inline [[nodiscard]] std::string GetResourceTypeName<Shader<EShaderType::Vertex>>()
+{
+	return "Vertex Shader";
+}
+template<>
+inline [[nodiscard]] std::string GetResourceTypeName<Shader<EShaderType::Fragment>>()
+{
+	return "Fragment Shader";
+}
+template<>
+inline [[nodiscard]] std::string GetResourceTypeName<Shader<EShaderType::Geometry>>()
+{
+	return "Geometry Shader";
+}

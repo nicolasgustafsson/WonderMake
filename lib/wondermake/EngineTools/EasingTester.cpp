@@ -1,7 +1,13 @@
 #include "pch.h"
+
 #include "EasingTester.h"
+
 #include "Imgui/Canvas.h"
 #include "Utilities/Easing/EasingFunctions.h"
+
+#include "wondermake-debug-ui/ImguiInclude.h"
+
+#include "wondermake-utility/Vector.h"
 
 enum class EInterpolationMethod
 {

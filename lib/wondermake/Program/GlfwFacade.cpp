@@ -1,7 +1,12 @@
 #include "pch.h"
+
 #include "GlfwFacade.h"
-#include "GLFW/glfw3.h"
+
 #include <glad/glad.h>
+
+#include "GLFW/glfw3.h"
+
+#include "wondermake-base/SystemGlobal.h"
 
 WM_REGISTER_SYSTEM(GlfwFacade);
 

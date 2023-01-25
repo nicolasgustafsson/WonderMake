@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "LineListRenderObject.h"
 
+#include "Message/Messages.h"
+
 LineListRenderObject::LineListRenderObject(const std::vector<SVector2f>& aPoints, const f32 innerThickness/* = 1.0f*/, const f32 outerThickness/* = 1.0f*/, const SColor aColor /*= SColor::RaisinBlack*/)
 	:RenderObject(SRenderObjectInfo
 		{	*SystemPtr<ResourceSystem<Shader<EShaderType::Vertex>>>()

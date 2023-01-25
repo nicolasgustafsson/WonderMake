@@ -2,6 +2,8 @@
 #include "AudioMixingNodeGraph.h"
 #include "Audio/AudioNodeTypes.h"
 
+#include "wondermake-base/SystemGlobal.h"
+
 _WM_REGISTER_SYSTEM_IMPL(ResourceSystem<AudioMixingNodeGraph>, AudioMixingResource);
 
 AudioMixingNodeGraph::AudioMixingNodeGraph(std::filesystem::path aPath)

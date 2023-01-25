@@ -1,7 +1,12 @@
 #include "pch.h"
 
 #include "ColliderDebug.h"
-#include "Colliders.h"
+
+#include "Collision/Colliders.h"
+#include "Debugging/DebugLine.h"
+#include "Message/Messages.h"
+#include "Constants.h"
+
 
 void DrawSphere(const Colliders::SSphere& aCollider, const SColor& aColor)
 {

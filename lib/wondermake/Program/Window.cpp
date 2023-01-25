@@ -8,6 +8,7 @@
 
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/ConfigurationSystem.h"
+#include "wondermake-base/SystemGlobal.h"
 #include "wondermake-base/WmLogTags.h"
 
 #include "wondermake-utility/Bindable.h"

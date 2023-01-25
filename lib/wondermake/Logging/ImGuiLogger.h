@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Utilities/Color.h"
 #include "Utilities/Debugging/Debugged.h"
 
 #include "wondermake-base/Logger.h"

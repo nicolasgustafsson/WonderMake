@@ -1,5 +1,10 @@
 #include "pch.h"
+
 #include "RenderSettingsManager.h"
+
+#include "Graphics/OpenGLFacade.h"
+
+#include "wondermake-base/SystemGlobal.h"
 
 WM_REGISTER_SYSTEM(RenderSettingsManager);
 

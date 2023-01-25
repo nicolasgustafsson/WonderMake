@@ -2,10 +2,11 @@
 
 #include "Utilities/Platform.h"
 
+#include "wondermake-utility/WinPlatform.h"
+
 #include <processthreadsapi.h>
 #include <string>
 #include <time.h>
-#include <windows.h>
 
 namespace Platform
 {
@@ -22,7 +23,7 @@ namespace Platform
 #pragma pack(pop)
 
 
-	void SetThreadName(const u32 aThreadId, const std::string& threadName)
+	void SetThreadName(const DWORD aThreadId, const std::string& threadName)
 	{
 		THREADNAME_INFO info;
 		info.dwType = 0x1000;

@@ -1,7 +1,15 @@
 #include "pch.h"
+
 #include "WinFileWatcher.h"
 
-#include <Windows.h>
+#include "Message/Messages.h"
+#include "Constants.h"
+
+#include "wondermake-base/ScheduleSystem.h"
+#include "wondermake-base/SystemGlobal.h"
+
+#include "wondermake-utility/Stopwatch.h"
+#include "wondermake-utility/WinPlatform.h"
 
 WM_REGISTER_SYSTEM(WinFileWatcher);
 

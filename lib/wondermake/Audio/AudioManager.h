@@ -1,9 +1,16 @@
 #pragma once
-#include <soloud.h>
-#include <soloud_wav.h>
+
 #include "Audio/AudioStructs.h"
 #include "Audio/AudioMixingNodeGraph.h"
 #include "Audio/SoundEffectNodeGraph.h"
+
+// Used for dialog boxes.
+// soloud.h includes the windows header, which causes Windows macros to bleed into other includes.
+// Including WinPlatform fixes that issue.
+#include "wondermake-utility/WinPlatform.h"
+
+#include <soloud.h>
+#include <soloud_wav.h>
 
 template<typename TResource>
 class ResourceSystem;

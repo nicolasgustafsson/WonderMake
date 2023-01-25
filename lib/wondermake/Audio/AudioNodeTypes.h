@@ -1,6 +1,13 @@
 #pragma once
+
 #include "NodeGraph/NodeTypes.h"
+
+// soloud.h includes the windows header, which causes Windows macros to bleed into other includes.
+// Including WinPlatform fixes that issue.
+#include "wondermake-utility/WinPlatform.h"
+
 #include <soloud.h>
+
 #include <filesystem>
 
 namespace NodeTypes

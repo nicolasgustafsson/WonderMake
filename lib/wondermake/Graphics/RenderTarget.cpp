@@ -3,6 +3,7 @@
 #include "OpenGLFacade.h"
 
 #include "wondermake-base/Logger.h"
+#include "wondermake-base/SystemPtr.h"
 #include "wondermake-base/WmLogTags.h"
 
 std::string ToString(const SRenderTargetSettings& aSettings)

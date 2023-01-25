@@ -5,6 +5,8 @@
 #include "wondermake-debug-ui/DebugSettingsSystem.h"
 #include "wondermake-debug-ui/ImguiInclude.h"
 
+#include "wondermake-base/SystemGlobal.h"
+
 #include "wondermake-utility/Time.h"
 
 #include <sstream>

@@ -1,5 +1,8 @@
 #pragma once
+
+#include "wondermake-utility/RestrictTypes.h"
 #include "wondermake-utility/Typedefs.h"
+#include "wondermake-utility/Vector.h"
 
 struct SRenderTargetSettings
 {

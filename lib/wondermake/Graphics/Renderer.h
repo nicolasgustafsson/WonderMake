@@ -59,7 +59,7 @@ public:
 	void SwapBuffers();
 
 private:
-	virtual void Debug() override;
+	virtual void Debug(bool& aIsOpen) override;
 	void RenderDisplay(const std::shared_ptr<Display>& aDisplay);
 
 	[[nodiscard]] SVector2f GetDisplaySize(Display& aDisplay, const SVector2f aWindowSize);

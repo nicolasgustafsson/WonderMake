@@ -112,9 +112,9 @@ void AudioManager::RemoveNonPlayingFiles()
 	}
 }
 
-void AudioManager::Debug()
+void AudioManager::Debug(bool& aIsOpen)
 {
-	ImGui::Begin("Audio Manager");
+	ImGui::Begin("Audio Manager", &aIsOpen);
 
 	f32 volume = Get<DebugSettingsSystem>().GetOrCreateDebugValue("Audio/GlobalVolume", 0.1f);
 
@@ -187,5 +187,5 @@ I will shit fury all over you and you will drown in it. You're fucking dead, kid
 		ImGui::PopID();
 	}
 
-	ImGui::End(); 
+	ImGui::End();
 }

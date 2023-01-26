@@ -147,9 +147,9 @@ constexpr EInputItemState InputSystem::GetNewInputState(const EInputItemState aO
 	return EInputItemState::Up;
 }
 
-void InputSystem::Debug()
+void InputSystem::Debug(bool& aIsOpen)
 {
-	ImGui::Begin("InputSystem");
+	ImGui::Begin("InputSystem", &aIsOpen);
 
 	const SVector2f mousePositionOnScreen = GetMousePositionOnWindow();
 	const SVector2f mousePositionInWorld = GetMousePositionInWorld();

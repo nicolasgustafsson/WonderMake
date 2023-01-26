@@ -47,11 +47,11 @@ void ImGuiLogger::Initialize()
 	Logger::Get().AddLogger(weak_from_this());
 }
 
-void ImGuiLogger::Debug()
+void ImGuiLogger::Debug(bool& aIsOpen)
 {
 	myCompactView = Get<DebugSettingsSystem>().GetOrCreateDebugValue(locCompactSettingName, false);
 
-	ImGui::Begin("Debug Log");
+	ImGui::Begin("Debug Log", &aIsOpen);
 
 	if (myCompactView)
 		UpdateLogs<true>();

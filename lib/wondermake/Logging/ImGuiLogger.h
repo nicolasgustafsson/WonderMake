@@ -79,7 +79,7 @@ private:
 		bool operator==(const SVisibleColumns&) const = default;
 	};
 
-	void Debug() override;
+	void Debug(bool& aIsOpen) override;
 	template<bool CompactView>
 	void UpdateLogs();
 

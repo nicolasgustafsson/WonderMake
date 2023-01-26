@@ -21,5 +21,5 @@ public:
 		: Debugged("Engine Tools", GetExecutor())
 	{}
 
-	virtual void Debug() override;
+	virtual void Debug(bool& aIsOpen) override;
 };

@@ -26,9 +26,9 @@ void TimeKeeperSingleton::Update() noexcept
 	myTimerManagerReal.RunExpiredTimers(TimePoint(myTimePassedReal));
 }
 
-void TimeKeeperSingleton::Debug()
+void TimeKeeperSingleton::Debug(bool& aIsOpen)
 {
-	ImGui::Begin("Time Keeper");
+	ImGui::Begin("Time Keeper", &aIsOpen);
 
 	const auto deltaTime = GetDeltaTime();
 	const auto totalTime = GetTotalTime();

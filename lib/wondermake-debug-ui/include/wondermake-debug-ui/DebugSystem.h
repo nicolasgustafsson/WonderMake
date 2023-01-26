@@ -29,7 +29,7 @@ public:
 	void ToggleToolbar();
 	void Tick();
 
-	[[nodiscard]] EventSubscriber AddDebugWindow(std::string aWindowName, AnyExecutor aExecutor, std::function<void()> aTickCallback);
+	[[nodiscard]] EventSubscriber AddDebugWindow(std::string aWindowName, AnyExecutor aExecutor, std::function<void(bool&)> aTickCallback);
 	[[nodiscard]] bool IsDebugWindowVisible(std::string_view aWindowName) const noexcept;
 
 private:
@@ -37,7 +37,7 @@ private:
 	{
 		std::string			Name;
 		std::string			NameReal;
-		EventTrigger<void>	Trigger;
+		EventTrigger<bool*>	Trigger;
 
 		inline void OnCancel(CExecutor auto&& aExecutor, auto&& aOnCancel)
 		{

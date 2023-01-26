@@ -62,15 +62,15 @@ void ConfigurationView::Initialize()
 
 	ReconstructSelectionConfigs();
 
-	Get<DebugSystem>().AddDebugWindow("Settings/Configuration", GetExecutor(), Bind(&ConfigurationView::Tick, weak_from_this()))
+	Get<DebugSystem>().AddDebugWindow("Settings/Configuration", GetExecutor(), Bind(&ConfigurationView::Debug, weak_from_this()))
 		.Detach();
 }
 
-void ConfigurationView::Tick()
+void ConfigurationView::Debug(bool& aIsOpen)
 {
 	UpdateInstanceList();
 
-	ImGui::Begin("Configuration");
+	ImGui::Begin("Configuration", &aIsOpen);
 
 	const float footerHeight = ImGui::GetStyle().ItemSpacing.y + ImGui::GetFrameHeightWithSpacing(); // 1 separator, buttons and text input
 

@@ -95,7 +95,7 @@ private:
 		std::string,
 		FilePath>;
 	
-	void Tick();
+	void Debug(bool& aIsOpen);
 
 	void UpdateInstanceList();
 	void UpdateInstanceSelection();

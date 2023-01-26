@@ -7,7 +7,7 @@
 
 WM_REGISTER_SYSTEM(EngineTools);
 
-void EngineTools::Debug()
+void EngineTools::Debug(bool& /*aIsOpen*/)
 {
 	EasingTester::TestEasings(Get<TimeKeeperSingleton>().GetDeltaTime());
 }

@@ -135,10 +135,10 @@ public:
 		Save();
 	}
 
-	virtual void Debug() override
+	virtual void Debug(bool& aIsOpen) override
 	{
 		std::string assetDatabaseName = GetResourceTypeName<TAssetType>() + " Database";
-		ImGui::Begin(assetDatabaseName.c_str());
+		ImGui::Begin(assetDatabaseName.c_str(), &aIsOpen);
 		
 		if (ImGui::Button("Scan assets"))
 		{

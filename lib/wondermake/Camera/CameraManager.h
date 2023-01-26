@@ -80,7 +80,7 @@ public:
 	inline [[nodiscard]] std::weak_ptr<Display> GetInputDisplayKeyboard() const noexcept { return myInputDisplayKeyboard; };
 
 protected:
-	void Debug() override;
+	void Debug(bool& aIsOpen) override;
 
 private:
 	void InspectDisplays();

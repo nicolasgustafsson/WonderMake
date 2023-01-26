@@ -132,7 +132,7 @@ std::shared_ptr<Camera> CameraManager::CreateCamera(
 	return camera;
 }
 
-void CameraManager::Debug()
+void CameraManager::Debug(bool& aIsOpen)
 {
 	const auto getScreenDisplay = [this]()
 	{
@@ -151,7 +151,7 @@ void CameraManager::Debug()
 		};
 	};
 
-	ImGui::Begin("Camera Manager");
+	ImGui::Begin("Camera Manager", &aIsOpen);
 
 	ImGui::Text("%s", "Displays");
 

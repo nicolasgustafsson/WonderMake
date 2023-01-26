@@ -66,7 +66,7 @@ public:
 	}
 
 protected:
-	virtual void Debug() override;
+	virtual void Debug(bool& aIsOpen) override;
 
 	Stopwatch<>	myStopwatchDeltaTime;
 	Stopwatch<>	myStopwatchTotalTime;

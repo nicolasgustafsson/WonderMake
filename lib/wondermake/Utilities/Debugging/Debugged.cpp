@@ -9,7 +9,7 @@ Debugged::Debugged(std::string aName, AnyExecutor aExecutor)
 		{
 			.Name				= std::move(aName),
 			.Executor			= std::move(aExecutor),
-			.TickFunc			= [this]() { Debug(); },
+			.TickFunc			= [this](bool& aIsOpen) { return Debug(aIsOpen); },
 			.SetSubscriberFunc	= [this](EventSubscriber aSub) { myTickSubscriber = std::move(aSub); }
 		});
 }

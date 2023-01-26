@@ -25,7 +25,7 @@ DebugSystem::DebugSystem()
 
 void DebugSystem::Initialize()
 {
-	AddDebugWindow("Settings/Debug", GetExecutor(), [this]()
+	AddDebugWindow("Settings/Debug", GetExecutor(), [this](bool&)
 		{
 			Get<DebugSettingsSystem>().Tick();
 		})
@@ -61,9 +61,9 @@ void DebugSystem::Tick()
 	TickAllWindows();
 }
 
-EventSubscriber DebugSystem::AddDebugWindow(std::string aWindowName, AnyExecutor aExecutor, std::function<void()> aTickCallback)
+EventSubscriber DebugSystem::AddDebugWindow(std::string aWindowName, AnyExecutor aExecutor, std::function<void(bool&)> aTickCallback)
 {
-	auto [trigger, subscriber] = MakeEventTrigger<void>(std::move(aExecutor), std::move(aTickCallback));
+	auto [trigger, subscriber] = MakeEventTrigger<bool*>(std::move(aExecutor), [callback = std::move(aTickCallback)](bool* aIsOpen) { callback(*aIsOpen); });
 
 	auto [categories, name] = GetCategories(aWindowName);
 	SWindowCategory* category = &myWindows;
@@ -111,12 +111,21 @@ void DebugSystem::TickCategory(SWindowCategory& aCategory)
 	for (auto& [_, category] : aCategory.Categories)
 		TickCategory(category);
 
+	std::string settingsName;
+
 	for (auto& windowData : aCategory.Windows)
 	{
-		if (!Get<DebugSettingsSystem>().GetOrCreateDebugValue(locDebugWindowSettingPrefixString + windowData.NameReal, false))
+		settingsName = locDebugWindowSettingPrefixString + windowData.NameReal;
+
+		if (!Get<DebugSettingsSystem>().GetOrCreateDebugValue(settingsName, false))
 			continue;
 
-		windowData.Trigger.Trigger();
+		bool isOpen = true;
+
+		windowData.Trigger.Trigger(&isOpen);
+
+		if (!isOpen)
+			Get<DebugSettingsSystem>().SetDebugValue(settingsName, false);
 	}
 }
 

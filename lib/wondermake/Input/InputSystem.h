@@ -69,7 +69,7 @@ private:
 		return !IsStateDown(aState);
 	}
 
-	virtual void Debug() override;
+	virtual void Debug(bool& aIsOpen) override;
 
 	bool DisplayHasMouseFocus() const noexcept;
 	bool DisplayHasKeyboardFocus() const noexcept;

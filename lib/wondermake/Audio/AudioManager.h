@@ -50,7 +50,7 @@ protected:
 	void TryPlayQueuedAudioFiles();
 	void RemoveNonPlayingFiles();
 
-	virtual void Debug() override;
+	virtual void Debug(bool& aIsOpen) override;
 
 	bool myHasInitializedAudio = false;
 

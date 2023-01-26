@@ -16,7 +16,7 @@ public:
 	{
 		std::string								Name;
 		AnyExecutor								Executor;
-		std::function<void()>					TickFunc;
+		std::function<void(bool&)>				TickFunc;
 		std::function<void(EventSubscriber)>	SetSubscriberFunc;
 	};
 
@@ -26,7 +26,7 @@ public:
 	static std::vector<SDebugData> GetAndResetDebugged();
 
 protected:
-	virtual void Debug() = 0;
+	virtual void Debug(bool&) = 0;
 
 private:
 	static std::vector<SDebugData> ourDebugged;
@@ -34,4 +34,3 @@ private:
 	EventSubscriber myTickSubscriber;
 
 };
-

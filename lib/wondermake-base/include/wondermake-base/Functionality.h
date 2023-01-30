@@ -7,6 +7,12 @@
 
 #define WM_REGISTER_FUNCTIONALITY(aFunctionality) WM_REGISTER_FUNCTIONALITY_SYSTEM(aFunctionality)
 
+template<typename TFunctionality, typename... TInitializeArgs>
+concept CFunctionalityInitializable = requires(TFunctionality& aFunctionality, TInitializeArgs... aArgs)
+{
+	{ aFunctionality.Initialize(std::move(aArgs)...) };
+};
+
 class Object;
 
 template<

@@ -20,21 +20,33 @@ class PopulateObjectSystem
 			STWonderMake>>
 {
 public:
-	template<typename TFunctionality>
-	inline Future<std::reference_wrapper<TFunctionality>> AddFunctionality(Object& aObject)
+	template<typename TFunctionality, typename... TInitializeArgs>
+	inline Future<std::reference_wrapper<TFunctionality>> AddFunctionality(Object& aObject, TInitializeArgs&&... aInitializeArgs)
 	{
 		using FunctionalityDelegate = FunctionalitySystemDelegate<std::decay_t<TFunctionality>>;
 
 		return Get<DependencySystem>()
 			.Fetch<FunctionalityDelegate>()
-			.ThenApply(GetExecutor(), FutureApplyResult([&aObject](auto aResult) -> Future<std::reference_wrapper<TFunctionality>>
+			.ThenApply(GetExecutor(), FutureApplyResult([&aObject, ...args = std::forward<TInitializeArgs>(aInitializeArgs)](auto aResult) mutable -> Future<std::reference_wrapper<TFunctionality>>
 				{
-					if (aResult)
-						return MakeCompletedFuture<std::reference_wrapper<TFunctionality>>(aResult.Unwrap().get().AddFunctionality(aObject));
+					if (!aResult)
+					{
+						WmLogError(TagWonderMake << TagWmPopulate << "Failed to fetch functionality system: " << typeid(TFunctionality).name() << ", error: " << aResult.Err() << '.');
 
-					WmLogError(TagWonderMake << TagWmPopulate << "Failed to fetch functionality system: " << typeid(TFunctionality).name() << ", error: " << aResult.Err() << '.');
-					
-					return MakeCanceledFuture<std::reference_wrapper<TFunctionality>>();
+						return MakeCanceledFuture<std::reference_wrapper<TFunctionality>>();
+					}
+
+					TFunctionality& functionality = aResult.Unwrap().get().AddFunctionality(aObject);
+
+					static constexpr bool initializable = CFunctionalityInitializable<TFunctionality, TInitializeArgs...>;
+					static constexpr bool hasArgs = sizeof...(args);
+
+					static_assert(initializable || !hasArgs, "No Initialize function which takes the specified arguments.");
+
+					if constexpr (initializable)
+						functionality.Initialize(std::move(args)...);
+
+					return MakeCompletedFuture<std::reference_wrapper<TFunctionality>>(functionality);
 				}));
 	}
 

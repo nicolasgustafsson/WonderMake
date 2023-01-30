@@ -6,6 +6,7 @@
 #include "wondermake-base/Functionality.h"
 
 #include "wondermake-utility/FilePath.h"
+#include "wondermake-utility/Rotation.h"
 
 template<typename TResource>
 class ResourceProxy;
@@ -31,6 +32,18 @@ class SpriteRenderingFunctionality
 			STWonderMake>>
 {
 public:
+	struct SInitializationInfo
+	{
+		FilePath			FilePath;
+		SVector2f			Scale		= SVector2f::One();
+		SVector2f			Origin;
+		SColor				Color;
+		std::string_view	RenderLayer;
+		i32					RenderOrder	= 0;
+	};
+
+	void Initialize(SInitializationInfo aInfo);
+
 	void Tick();
 
 	void SetTexture(std::string_view aAssetLink);
@@ -39,7 +52,6 @@ public:
 	[[nodiscard]] SVector2u GetTextureSize() const noexcept;
 
 	void SetScale(const SVector2f aScale);
-	void SetRotation(const f32 aRotation);
 	void SetOrigin(const SVector2f aOrigin);
 	void SetColor(const SColor aColor);
 	void SetRenderLayer(std::string_view aRenderLayer);

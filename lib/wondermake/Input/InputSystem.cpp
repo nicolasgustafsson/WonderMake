@@ -15,6 +15,19 @@ WM_REGISTER_SYSTEM(InputSystem);
 inline static size_t locDisplayIndex	= static_cast<size_t>(InputSystem::EFocus::Display);
 inline static size_t locWindowIndex		= static_cast<size_t>(InputSystem::EFocus::Window);
 
+InputSystem::InputSystem()
+	: Debugged("Input", GetExecutor())
+{
+	myWindowSubscriberScroll = Get<Window>().OnScroll(GetExecutor(), [this](SVector2f aScrollDelta)
+		{
+			if (!DisplayHasMouseFocus())
+				return;
+
+			for (auto& onScroll : myScrollList)
+				onScroll.Trigger(aScrollDelta);
+		});
+}
+
 void InputSystem::Update() noexcept
 {
 	UpdateKeyboard();

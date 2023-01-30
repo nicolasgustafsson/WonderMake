@@ -15,6 +15,17 @@
 
 WM_REGISTER_FUNCTIONALITY(SpriteRenderingFunctionality);
 
+void SpriteRenderingFunctionality::Initialize(SInitializationInfo aInfo)
+{
+	SetTexture(std::move(aInfo.FilePath));
+
+	SetScale(aInfo.Scale);
+	SetColor(aInfo.Color);
+	SetOrigin(aInfo.Origin);
+	SetRenderLayer(aInfo.RenderLayer);
+	SetRenderOrder(aInfo.RenderOrder);
+}
+
 void SpriteRenderingFunctionality::Tick()
 {
 	auto& spriteComponent = Get<SSpriteComponent>();
@@ -62,11 +73,6 @@ void SpriteRenderingFunctionality::SetTexture(const FilePath& aFilePath)
 void SpriteRenderingFunctionality::SetScale(const SVector2f aScale)
 {
 	Get<SSpriteComponent>().RenderObject->SetAttribute<EVertexAttribute::Scale>(0, aScale);
-}
-
-void SpriteRenderingFunctionality::SetRotation(const f32 aRotation)
-{
-	Get<SSpriteComponent>().RenderObject->SetAttribute<EVertexAttribute::Rotation>(0, aRotation);
 }
 
 void SpriteRenderingFunctionality::SetOrigin(const SVector2f aOrigin)

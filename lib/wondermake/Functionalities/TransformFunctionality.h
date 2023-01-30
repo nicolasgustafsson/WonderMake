@@ -20,6 +20,16 @@ public:
 	using RepPosition	= TRepVector;
 	using RepRotation	= TRepRotation;
 
+	void Initialize(const RepPosition aPosition)
+	{
+		SetPosition(aPosition);
+	}
+	void Initialize(const RepPosition aPosition, const RepVector aDirection)
+	{
+		SetPosition(aPosition);
+		SetDirection(aDirection);
+	}
+
 	void SetPosition(const RepPosition aPosition) noexcept
 	{
 		Get<STransformComponent2D>().Position = aPosition;

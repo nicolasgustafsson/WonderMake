@@ -208,7 +208,7 @@ void Renderer::RenderDisplay(const std::shared_ptr<Display>& aDisplay)
 
 	ImGui::SetCursorPos(imguiWindowPosition);
 	cameraManager.SetInputRegion(SVector4f(screenPosition.x - windowPos.X, screenPosition.y - windowPos.Y, renderSize.X, renderSize.Y));
-	cameraManager.SetInputDisplayMouse(ImGui::IsWindowFocused() ? aDisplay : std::weak_ptr<Display>());
+	cameraManager.SetInputDisplayMouse(ImGui::IsWindowHovered() ? aDisplay : std::weak_ptr<Display>());
 	cameraManager.SetInputDisplayKeyboard(ImGui::IsWindowFocused() ? aDisplay : std::weak_ptr<Display>());
 
 	ImGui::Image(textureId, size, uv0, uv1);

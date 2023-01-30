@@ -68,6 +68,27 @@ public:
 	constexpr Guid(std::array<u8, 16>&& aData) noexcept
 		: std::array<u8, 16>(aData)
 	{}
+	constexpr Guid(u64 aHigh, u64 aLow) noexcept
+		: std::array<u8, 16>(
+			{
+				static_cast<u8>(aHigh >> 56),
+				static_cast<u8>(aHigh >> 48),
+				static_cast<u8>(aHigh >> 40),
+				static_cast<u8>(aHigh >> 32),
+				static_cast<u8>(aHigh >> 24),
+				static_cast<u8>(aHigh >> 16),
+				static_cast<u8>(aHigh >> 8),
+				static_cast<u8>(aHigh),
+				static_cast<u8>(aLow >> 56),
+				static_cast<u8>(aLow >> 48),
+				static_cast<u8>(aLow >> 40),
+				static_cast<u8>(aLow >> 32),
+				static_cast<u8>(aLow >> 24),
+				static_cast<u8>(aLow >> 16),
+				static_cast<u8>(aLow >> 8),
+				static_cast<u8>(aLow)
+			})
+	{}
 
 	constexpr Guid& operator=(const Guid& aRhs) noexcept
 	{
@@ -116,6 +137,25 @@ public:
 	inline explicit operator std::string() const
 	{
 		return ToFixedSizeString().ToString();
+	}
+
+	constexpr [[nodiscard]] u64 Low() const noexcept
+	{
+		u64 retVal = 0;
+
+		for (size_t i = 8; i < 16; ++i)
+			retVal += u64(*(begin() + i)) << ((15 - i) * 8);
+
+		return retVal;
+	}
+	constexpr [[nodiscard]] u64 High() const noexcept
+	{
+		u64 retVal = 0;
+
+		for (size_t i = 0; i < 8; ++i)
+			retVal += u64(*(begin() + i)) << ((7 - i) * 8);
+
+		return retVal;
 	}
 
 	[[nodiscard]] inline constexpr size_t Hash() const noexcept

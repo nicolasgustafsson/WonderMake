@@ -5,6 +5,9 @@
 
 #include "wondermake-base/System.h"
 
+#include "wondermake-utility/EventSubscriber.h"
+#include "wondermake-utility/CancelableList.h"
+
 #include "magic_enum.hpp"
 
 class Camera;
@@ -32,8 +35,8 @@ public:
 		Window
 	};
 
-	inline InputSystem()
-		: Debugged("Input", GetExecutor()) {}
+	InputSystem();
+
 	void Update() noexcept;
 
 	void UpdateKeyboard() noexcept;
@@ -46,6 +49,17 @@ public:
 	[[nodiscard]] EInputItemState GetKeyState(const EKeyboardKey aKey, const EFocus aFocus = EFocus::Display) const noexcept;
 	[[nodiscard]] EInputItemState GetMouseButtonState(const EMouseButton aMouseButton, const EFocus aFocus = EFocus::Display) const noexcept;
 	[[nodiscard]] EInputItemState GetGamepadButtonState(const EGamepadButton aGamepadButton, const EFocus aFocus = EFocus::Display) const noexcept;
+
+	template<CExecutor TExecutor, typename TCallable>
+	inline EventSubscriber OnScroll(TExecutor&& aExecutor, TCallable&& aCallable)
+		requires(std::is_invocable_v<const TCallable, SVector2f>)
+	{
+		auto [trigger, subscriber] = MakeEventTrigger<SVector2f>(std::forward<TExecutor>(aExecutor), std::forward<TCallable>(aCallable));
+
+		myScrollList.Emplace(std::move(trigger));
+
+		return std::move(subscriber);
+	}
 
 private:
 	struct SInputStates
@@ -75,4 +89,8 @@ private:
 	bool DisplayHasKeyboardFocus() const noexcept;
 
 	std::array<SInputStates, magic_enum::enum_count<EFocus>()> myInputStates;
+
+	CancelableList<EventTrigger<SVector2f>> myScrollList = { GetExecutor() };
+	EventSubscriber myWindowSubscriberScroll;
+
 };

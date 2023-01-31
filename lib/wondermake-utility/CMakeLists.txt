@@ -48,7 +48,8 @@ list(APPEND SourceFiles
     "source/WinStringUtility.cpp")
     
 list(APPEND NatvisFiles
-    "Guid.natvis")
+    "Guid.natvis"
+    "Vector.natvis")
 
 if (NOT WonderMake_ImportLibraries)
     add_library(WonderMakeUtility STATIC ${IncludeFiles} ${SourceFiles} $<IF:$<BOOL:${WonderMake_IncludeNatvis}>,${NatvisFiles},>)

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+	<Type Name="SVector&lt;*&gt;">
+		<DisplayString Condition="Size==1">{{X={MemberArray[0]}}}</DisplayString>
+    <DisplayString Condition="Size==2">{{X={MemberArray[0]}, Y={MemberArray[1]}}}</DisplayString>
+    <DisplayString Condition="Size==3">{{X={MemberArray[0]}, Y={MemberArray[1]}, Z={MemberArray[2]}}}</DisplayString>
+    <DisplayString Condition="Size==4">{{X={MemberArray[0]}, Y={MemberArray[1]}, Z={MemberArray[2]}, W={MemberArray[3]}}}</DisplayString>
+	</Type>
+</AutoVisualizer>

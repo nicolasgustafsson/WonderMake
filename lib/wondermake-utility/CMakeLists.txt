@@ -46,9 +46,12 @@ list(APPEND SourceFiles
     "source/DependencyInjector.cpp"
     "source/Time.cpp"
     "source/WinStringUtility.cpp")
+    
+list(APPEND NatvisFiles
+    "Guid.natvis")
 
 if (NOT WonderMake_ImportLibraries)
-    add_library(WonderMakeUtility STATIC ${IncludeFiles} ${SourceFiles})
+    add_library(WonderMakeUtility STATIC ${IncludeFiles} ${SourceFiles} $<IF:$<BOOL:${WonderMake_IncludeNatvis}>,${NatvisFiles},>)
     
     set_pedantic_warning_level(WonderMakeUtility)
     target_include_directories(WonderMakeUtility PUBLIC "include")

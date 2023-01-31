@@ -49,6 +49,7 @@ list(APPEND SourceFiles
     
 list(APPEND NatvisFiles
     "Guid.natvis"
+    "Rotation.natvis"
     "Vector.natvis")
 
 if (NOT WonderMake_ImportLibraries)

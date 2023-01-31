@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+  <Type Name="SRotation&lt;*,std::ratio&lt;360,1&gt;&gt;">
+    <DisplayString>{{{Rotation} Degrees}}</DisplayString>
+  </Type>
+  <Type Name="SRotation&lt;*,std::ratio&lt;6283185585205018624,1000000000000000000&gt;&gt;">
+    <DisplayString>{{{Rotation} Radians}}</DisplayString>
+  </Type>
+</AutoVisualizer>

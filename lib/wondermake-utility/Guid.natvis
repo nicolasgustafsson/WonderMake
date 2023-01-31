@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+	<Type Name="Guid">
+		<DisplayString>{{{_Elems[0],nvoXb}{_Elems[1],nvoXb}{_Elems[2],nvoXb}{_Elems[3],nvoXb}-{_Elems[4],nvoXb}{_Elems[5],nvoXb}-{_Elems[6],nvoXb}{_Elems[7],nvoXb}-{_Elems[8],nvoXb}{_Elems[9],nvoXb}-{_Elems[10],nvoXb}{_Elems[11],nvoXb}{_Elems[12],nvoXb}{_Elems[13],nvoXb}{_Elems[14],nvoXb}{_Elems[15],nvoXb}}}</DisplayString>
+	</Type>
+</AutoVisualizer>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+  <Type Name="Future&lt;*&gt;">
+    <DisplayString Condition="myState._Ptr == nullptr">{{Invalid}}</DisplayString>
+    <DisplayString Condition="myState._Ptr != nullptr">{{{myState._Ptr->myState}}}</DisplayString>
+    <Expand>
+      <Item Name="State" Condition="myState._Ptr != nullptr">myState._Ptr->myState</Item>
+      <Item Name="Continuations" Condition="myState._Ptr != nullptr">myState._Ptr->myContinuations</Item>
+      <Item Name="Cancellations" Condition="myState._Ptr != nullptr">myState._Ptr->myCancellations</Item>
+      <Item Name="Result" Condition="myState._Ptr != nullptr" Optional="true">myState._Ptr->myResult</Item>
+    </Expand>
+  </Type>
+  <Type Name="Promise&lt;*&gt;">
+    <DisplayString Condition="myState._Ptr == nullptr">{{Invalid}}</DisplayString>
+    <DisplayString Condition="myState._Ptr != nullptr">{{{myState._Ptr->myState}}}</DisplayString>
+    <Expand>
+      <Item Name="State" Condition="myState._Ptr != nullptr">myState._Ptr->myState</Item>
+      <Item Name="Continuations" Condition="myState._Ptr != nullptr">myState._Ptr->myContinuations</Item>
+      <Item Name="Cancellations" Condition="myState._Ptr != nullptr">myState._Ptr->myCancellations</Item>
+      <Item Name="Result" Condition="myState._Ptr != nullptr" Optional="true">myState._Ptr->myResult</Item>
+    </Expand>
+  </Type>
+</AutoVisualizer>

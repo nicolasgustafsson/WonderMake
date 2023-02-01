@@ -48,6 +48,7 @@ list(APPEND SourceFiles
     "source/WinStringUtility.cpp")
     
 list(APPEND NatvisFiles
+    "Future.natvis"
     "Guid.natvis"
     "Matrix.natvis"
     "Rotation.natvis"

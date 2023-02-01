@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+	<Type Name="SMatrix&lt;*,2,2&gt;">
+    <DisplayString>{{{MemberArray[0]}, {MemberArray[1]}}}</DisplayString>
+    <Expand>
+      <Synthetic Name="Row 1">
+        <DisplayString>{{{MemberArray[0]}, {MemberArray[1]}}}</DisplayString>
+      </Synthetic>
+      <Synthetic Name="Row 2">
+        <DisplayString>{{{MemberArray[2]}, {MemberArray[3]}}}</DisplayString>
+      </Synthetic>
+    </Expand>
+	</Type>
+	<Type Name="SMatrix&lt;*,3,3&gt;">
+    <DisplayString>{{{MemberArray[0]}, {MemberArray[1]}, {MemberArray[2]}}}</DisplayString>
+    <Expand>
+      <Synthetic Name="Row 1">
+        <DisplayString>{{{MemberArray[0]}, {MemberArray[1]}, {MemberArray[2]}}}</DisplayString>
+      </Synthetic>
+      <Synthetic Name="Row 2">
+        <DisplayString>{{{MemberArray[3]}, {MemberArray[4]}, {MemberArray[5]}}}</DisplayString>
+      </Synthetic>
+      <Synthetic Name="Row 3">
+        <DisplayString>{{{MemberArray[6]}, {MemberArray[7]}, {MemberArray[8]}}}</DisplayString>
+      </Synthetic>
+    </Expand>
+	</Type>
+	<Type Name="SMatrix&lt;*,4,4&gt;">
+    <DisplayString>{{{MemberArray[0]}, {MemberArray[1]}, {MemberArray[2]}, {MemberArray[3]}}}</DisplayString>
+    <Expand>
+      <Synthetic Name="Row 1">
+        <DisplayString>{{{MemberArray[0]}, {MemberArray[1]}, {MemberArray[2]}, {MemberArray[3]}}}</DisplayString>
+      </Synthetic>
+      <Synthetic Name="Row 2">
+        <DisplayString>{{{MemberArray[4]}, {MemberArray[5]}, {MemberArray[6]}, {MemberArray[7]}}}</DisplayString>
+      </Synthetic>
+      <Synthetic Name="Row 3">
+        <DisplayString>{{{MemberArray[8]}, {MemberArray[9]}, {MemberArray[10]}, {MemberArray[11]}}}</DisplayString>
+      </Synthetic>
+      <Synthetic Name="Row 4">
+        <DisplayString>{{{MemberArray[12]}, {MemberArray[13]}, {MemberArray[14]}, {MemberArray[15]}}}</DisplayString>
+      </Synthetic>
+    </Expand>
+	</Type>
+</AutoVisualizer>

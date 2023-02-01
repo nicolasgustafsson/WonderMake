@@ -49,6 +49,7 @@ list(APPEND SourceFiles
     
 list(APPEND NatvisFiles
     "Guid.natvis"
+    "Matrix.natvis"
     "Rotation.natvis"
     "Vector.natvis")
 

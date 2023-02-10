@@ -98,6 +98,13 @@ public:
 	
 	void Initialize() override;
 
+	inline void SetTotalTime(Duration aTotalTime) noexcept
+	{
+		const auto now = Get<TimeKeeperSingleton>().GetTotalTime<Duration>();
+
+		myStartTime = now - aTotalTime;
+	}
+
 	template<typename TDuration = WmChrono::dSeconds>
 	inline [[nodiscard]] TDuration GetDeltaTime() const noexcept
 	{

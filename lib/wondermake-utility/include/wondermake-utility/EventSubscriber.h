@@ -304,6 +304,13 @@ private:
 	std::shared_ptr<_Impl::EventSharedStateBase> myState;
 };
 
+inline void WmOnCancel(EventSubscriber& aCancelable, CExecutor auto&& aExecutor, auto&& aOnCancel)
+{
+	aCancelable.OnCancel()
+		.ThenRun(std::forward<decltype(aExecutor)>(aExecutor), [onCancel = std::move(aOnCancel)](auto&&) { onCancel(); })
+		.Detach();
+}
+
 template<typename TType, CExecutor TExecutor, typename TCallable>
 [[nodiscard]] auto MakeEventTrigger(TExecutor aExecutor, TCallable aCallback) requires(!std::is_void_v<TType>)
 {

@@ -72,34 +72,22 @@ namespace _Impl
 		template<typename TCallable>
 		void Continuation(TCallable&& aContinuation) requires std::is_invocable_v<TCallable, std::shared_ptr<FutureSharedState<TType>>&&>
 		{
-			{
-				std::lock_guard<decltype(myMutex)> lock(myMutex);
+			std::lock_guard<decltype(myMutex)> lock(myMutex);
 
-				if (myState == EFutureState::Uncompleted)
-				{
-					myContinuations.emplace_back(std::forward<TCallable>(aContinuation));
-
-					return;
-				}
-			}
-
-			std::move(aContinuation)(this->shared_from_this());
+			if (myState == EFutureState::Completed)
+				std::move(aContinuation)(this->shared_from_this());
+			if (myState == EFutureState::Uncompleted)
+				myContinuations.emplace_back(std::forward<TCallable>(aContinuation));
 		}
 		template<typename TCallable>
 		void Cancellation(TCallable&& aCancellation) requires std::is_invocable_v<TCallable>
 		{
-			{
-				std::lock_guard<decltype(myMutex)> lock(myMutex);
+			std::lock_guard<decltype(myMutex)> lock(myMutex);
 
-				if (myState == EFutureState::Uncompleted)
-				{
-					myCancellations.emplace_back(std::forward<TCallable>(aCancellation));
-
-					return;
-				}
-			}
-
-			std::move(aCancellation)();
+			if (myState == EFutureState::Canceled)
+				std::move(aCancellation)();
+			if (myState == EFutureState::Uncompleted)
+				myCancellations.emplace_back(std::forward<TCallable>(aCancellation));
 		}
 
 		std::optional<TType> GetResult() requires(std::is_copy_constructible_v<TType>)
@@ -218,34 +206,22 @@ namespace _Impl
 		template<typename TCallable>
 		void Continuation(TCallable&& aContinuation) requires std::is_invocable_v<TCallable, std::shared_ptr<FutureSharedState<void>>&&>
 		{
-			{
-				std::lock_guard<decltype(myMutex)> lock(myMutex);
+			std::lock_guard<decltype(myMutex)> lock(myMutex);
 
-				if (myState == EFutureState::Uncompleted)
-				{
-					myContinuations.emplace_back(std::forward<TCallable>(aContinuation));
-
-					return;
-				}
-			}
-
-			std::move(aContinuation)(this->shared_from_this());
+			if (myState == EFutureState::Completed)
+				std::move(aContinuation)(this->shared_from_this());
+			if (myState == EFutureState::Uncompleted)
+				myContinuations.emplace_back(std::forward<TCallable>(aContinuation));
 		}
 		template<typename TCallable>
 		void Cancellation(TCallable&& aCancellation) requires std::is_invocable_v<TCallable>
 		{
-			{
-				std::lock_guard<decltype(myMutex)> lock(myMutex);
+			std::lock_guard<decltype(myMutex)> lock(myMutex);
 
-				if (myState == EFutureState::Uncompleted)
-				{
-					myCancellations.emplace_back(std::forward<TCallable>(aCancellation));
-
-					return;
-				}
-			}
-
-			std::move(aCancellation)();
+			if (myState == EFutureState::Canceled)
+				std::move(aCancellation)();
+			if (myState == EFutureState::Uncompleted)
+				myCancellations.emplace_back(std::forward<TCallable>(aCancellation));
 		}
 
 	private:

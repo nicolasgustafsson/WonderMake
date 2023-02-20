@@ -63,6 +63,18 @@ void StaticTest_Guid_Copy()
 	static_assert(copyConstructed == *Guid::Parse("4ae5a5f8-4ab7-4fe7-a48f-323d89b1925b"));
 }
 
+void StaticTest_Guid_HighLow()
+{
+	constexpr auto guid = *Guid::Parse("4ae5a5f8-4ab7-4fe7-a48f-323d89b1925b");
+
+	static_assert(guid.Low()	== 0xa48f323d89b1925b);
+	static_assert(guid.High()	== 0x4ae5a5f84ab74fe7);
+
+	constexpr auto constructed = Guid(guid.High(), guid.Low());
+
+	static_assert(constructed == guid);
+}
+
 // Since the hash output is not defined, there's nothing to test except if the same input always gives the same output.
 // So if something weird is going on, hope one of these ten cases will catch it.
 void StaticTest_Guid_Hash()

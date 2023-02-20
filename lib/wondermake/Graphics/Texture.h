@@ -14,6 +14,7 @@ public:
 
 	void Bind(const u32 aTextureSlot = 0);
 
+	inline [[nodiscard]] u32 GetTextureHandle() const noexcept { return myTextureHandle; }
 	inline bool IsValid() const noexcept { return myTextureHandle != 0; }
 
 	inline i32 GetWidth() const noexcept { return myWidth; }

@@ -31,6 +31,42 @@ namespace SystemTraits
 		}
 	};
 
+	namespace _Impl
+	{
+		template<typename TTuple>
+		struct TupleTraits
+		{};
+		template<typename... TTraits>
+		struct TupleTraits<std::tuple<TTraits...>>
+		{
+			using type = Set<TTraits...>;
+		};
+		inline constexpr auto ConcatTuples = [](auto&&... aTuples)
+		{
+			return std::tuple_cat(aTuples...);
+		};
+		template<typename TTraitSet>
+		struct TraitSetTuple
+		{};
+		template<typename... TTraits>
+		struct TraitSetTuple<Set<TTraits...>>
+		{
+			using type = std::tuple<TTraits...>;
+		};
+
+		template<typename TTraitSet>
+		using TraitSetTuple_t = TraitSetTuple<TTraitSet>::type;
+
+		template<typename... TTraitSets>
+		struct ConcatTraitSets
+		{
+			using type = TupleTraits<std::decay_t<std::invoke_result_t<decltype(ConcatTuples), TraitSetTuple_t<TTraitSets>...>>>::type;
+		};
+	}
+
+	template<typename... TTraitSets>
+	using Concat = typename _Impl::ConcatTraitSets<TTraitSets...>::type;
+
 	struct Foundational : public Trait {};
 	struct Gui : public Trait {};
 	struct Platform : public Trait {};

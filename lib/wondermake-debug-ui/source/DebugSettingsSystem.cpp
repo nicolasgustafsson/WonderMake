@@ -55,7 +55,7 @@ void DebugSettingsSystem::SaveSettings()
 		.Detach();
 }
 
-void DebugSettingsSystem::Tick()
+bool DebugSettingsSystem::Tick()
 {
 	std::hash<json> hasher;
 
@@ -63,13 +63,12 @@ void DebugSettingsSystem::Tick()
 
 	const bool open = ImGui::JsonInspector::Inspect(mySettings, "Debug Settings");
 
-	if (!open)
-		SetDebugValue<bool>("Debug Windows/Debug Settings", false);
-
 	const bool changed = hash != hasher(mySettings);
 
 	if (changed)
 		SaveSettings();
+
+	return open;
 }
 
 std::pair<nlohmann::json&, std::string> DebugSettingsSystem::GetLeaf(const std::string& aSettingName)

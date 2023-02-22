@@ -116,7 +116,7 @@ public:
 		SaveSettings();
 	}
 
-	void Tick();
+	bool Tick();
 
 protected:
 	std::pair<nlohmann::json&, std::string> GetLeaf(const std::string& aSettingName);

@@ -25,9 +25,9 @@ DebugSystem::DebugSystem()
 
 void DebugSystem::Initialize()
 {
-	AddDebugWindow("Settings/Debug", GetExecutor(), [this](bool&)
+	AddDebugWindow("Settings/Debug", GetExecutor(), [this](bool& aIsOpen)
 		{
-			Get<DebugSettingsSystem>().Tick();
+			aIsOpen = Get<DebugSettingsSystem>().Tick();
 		})
 		.Detach();
 }

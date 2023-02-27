@@ -35,7 +35,8 @@ void Window::Initialize()
 {
 	auto&& configSys = Get<ConfigurationSystem>();
 	
-	auto windowName = configSys.Get<std::string>(ConfigurationEngine::WindowTitle, "WonderMake");
+	auto windowName	= configSys.Get<std::string>(ConfigurationEngine::WindowTitle, "WonderMake");
+	bool maximized	= configSys.Get<bool>(ConfigurationEngine::WindowMaximized, false);
 
 	auto& glfw = Get<GlfwFacade>();
 	glfw.SetWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -55,6 +56,9 @@ void Window::Initialize()
 		glfw.Terminate();
 		return;
 	}
+
+	if (maximized)
+		glfw.MaximizeWindow(myGlfwWindow);
 
 	glfw.MakeContextCurrent(myGlfwWindow);
 
@@ -112,10 +116,35 @@ void Window::Initialize()
 
 		glfw.SetWindowSize(myGlfwWindow, mySize.X, mySize.Y);
 	};
+	auto onMaximizeChange = [this](auto&&...)
+	{
+		auto& configSys = Get<ConfigurationSystem>();
+		auto& glfw = Get<GlfwFacade>();
+
+		const bool maximizedConf	= configSys.Get<bool>(ConfigurationEngine::WindowMaximized, false);
+		const bool maximizedWin		= glfw.GetWindowAttrib(myGlfwWindow, GLFW_MAXIMIZED) == GLFW_TRUE;
+
+		if (maximizedConf == maximizedWin)
+			return;
+
+		if (maximizedConf)
+		{
+			glfw.MaximizeWindow(myGlfwWindow);
+
+			WmLogInfo(TagWonderMake << TagWmOpenGL << "Window maximized.");
+		}
+		else
+		{
+			glfw.RestoreWindow(myGlfwWindow);
+
+			WmLogInfo(TagWonderMake << TagWmOpenGL << "Window restored.");
+		}
+	};
 
 	mySubscriberWindowTitle	= configSys.OnOverrideChanged<std::string>(ConfigurationEngine::WindowTitle,	GetExecutor(), onTitleChange);
 	mySubscriberSizeWidth	= configSys.OnOverrideChanged<i32>(ConfigurationEngine::WindowWidth,			GetExecutor(), onSizeChange);
 	mySubscriberSizeHeight	= configSys.OnOverrideChanged<i32>(ConfigurationEngine::WindowHeight,			GetExecutor(), onSizeChange);
+	mySubscriberMaximized	= configSys.OnOverrideChanged<bool>(ConfigurationEngine::WindowMaximized,		GetExecutor(), onMaximizeChange);
 }
 
 void Window::Update()

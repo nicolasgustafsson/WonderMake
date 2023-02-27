@@ -48,6 +48,16 @@ void GlfwFacade::SetWindowSize(GLFWwindow* aWindow, i32 aWidth, i32 aHeight)
 	glfwSetWindowSize(aWindow, aWidth, aHeight);
 }
 
+void GlfwFacade::MaximizeWindow(GLFWwindow* aWindow)
+{
+	glfwMaximizeWindow(aWindow);
+}
+
+void GlfwFacade::RestoreWindow(GLFWwindow* aWindow)
+{
+	glfwRestoreWindow(aWindow);
+}
+
 GLFWframebuffersizefun GlfwFacade::SetFramebufferSizeCallback(GLFWwindow* aWindow, GLFWframebuffersizefun aCallback)
 {
 	return glfwSetFramebufferSizeCallback(aWindow, aCallback);

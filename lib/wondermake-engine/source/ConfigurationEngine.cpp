@@ -27,6 +27,7 @@ namespace ConfigurationEngine
 			aConfigurationSystem.Set<std::string>(WindowTitle,			std::move(aGraphics->WindowTitle),				EConfigGroup::Device);
 			aConfigurationSystem.Set<i32>(WindowWidth,					locDefaultSize.X,								EConfigGroup::Device);
 			aConfigurationSystem.Set<i32>(WindowHeight,					locDefaultSize.Y,								EConfigGroup::Device);
+			aConfigurationSystem.Set<bool>(WindowMaximized,				false,											EConfigGroup::Device);
 			
 			aConfigurationSystem.Set<i32>(ResolutionWidth,				locDefaultSize.X,								EConfigGroup::Device);
 			aConfigurationSystem.Set<i32>(ResolutionHeight,				locDefaultSize.Y,								EConfigGroup::Device);

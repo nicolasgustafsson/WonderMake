@@ -77,6 +77,7 @@ private:
 	EventSubscriber mySubscriberWindowTitle;
 	EventSubscriber mySubscriberSizeWidth;
 	EventSubscriber mySubscriberSizeHeight;
+	EventSubscriber mySubscriberMaximized;
 
 	CancelableList<EventTrigger<SVector2i>> myResizeList = { GetExecutor() };
 	CancelableList<EventTrigger<SVector2f>> myScrollList = { GetExecutor() };

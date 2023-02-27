@@ -33,6 +33,9 @@ public:
 	void GetWindowSize(GLFWwindow* aWindow, int* aWidth, int* aHeight);
 	void SetWindowSize(GLFWwindow* aWindow, i32 aWidth, i32 aHeight);
 
+	void MaximizeWindow(GLFWwindow* aWindow);
+	void RestoreWindow(GLFWwindow* aWindow);
+
 	GLFWframebuffersizefun SetFramebufferSizeCallback(GLFWwindow* aWindow, GLFWframebuffersizefun aCallback);
 	GLFWscrollfun SetScrollCallback(GLFWwindow* aWindow, GLFWscrollfun aCallback);
 

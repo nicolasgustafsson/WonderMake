@@ -17,6 +17,7 @@ namespace ConfigurationEngine
 	inline constexpr std::string_view WindowTitle					= "wondermake_engine.window.title";
 	inline constexpr std::string_view WindowWidth					= "wondermake_engine.window.width";
 	inline constexpr std::string_view WindowHeight					= "wondermake_engine.window.height";
+	inline constexpr std::string_view WindowMaximized				= "wondermake_engine.window.maximized";
 	
 	inline constexpr std::string_view ResolutionWidth				= "wondermake_engine.graphics.resolution.width";
 	inline constexpr std::string_view ResolutionHeight				= "wondermake_engine.graphics.resolution.height";

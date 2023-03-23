@@ -10,6 +10,7 @@ list(APPEND SourceFiles
     "Tests/DependencyInjectionTests.cpp"
     "Tests/EventSubscriberTests.cpp"
     "Tests/FilePathTests.cpp"
+    "Tests/FixedMapTests.cpp"
     "Tests/FixedSizeStringTests.cpp"
     "Tests/FutureTests.cpp"
     "Tests/GuidTests.cpp"

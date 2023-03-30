@@ -49,6 +49,8 @@ void ImGuiLogger::Initialize()
 
 void ImGuiLogger::Debug(bool& aIsOpen)
 {
+	std::lock_guard lock(myMutex);
+
 	myCompactView = Get<DebugSettingsSystem>().GetOrCreateDebugValue(locCompactSettingName, false);
 
 	ImGui::Begin("Debug Log", &aIsOpen);
@@ -475,6 +477,8 @@ void ImGuiLogger::Print(const SLogLine& aLogLine)
 
 		return "Unknown";
 	};
+
+	std::lock_guard lock(myMutex);
 
 	std::stringstream threadHashStream;
 

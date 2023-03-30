@@ -8,6 +8,7 @@
 
 #include "wondermake-utility/Guid.h"
 
+#include <mutex>
 #include <optional>
 #include <string>
 #include <string_view>
@@ -89,6 +90,8 @@ private:
 	void Print(const SLogLine& aLogLine) override;
 
 	static std::vector<std::string> ExtractLogTags(std::string_view aMessage);
+
+	std::mutex							myMutex;
 
 	SCategoryValues						myCategoryValues;
 	std::vector<SImGuiLogLine>			myLogMessages;

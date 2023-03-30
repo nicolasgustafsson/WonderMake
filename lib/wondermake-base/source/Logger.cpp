@@ -52,37 +52,51 @@ std::string Logger::FormatLine(const SLogLine& aLogLine)
 
 void Logger::SetProcessId(ProcessId aId) noexcept
 {
+	std::lock_guard lock(myMutex);
+
 	myProcessId = aId;
 }
 
 [[nodiscard]] ProcessId Logger::GetProcessId() const noexcept
 {
+	std::lock_guard lock(myMutex);
+
 	return myProcessId;
 }
 
 void Logger::SetLoggerName(std::string aName)
 {
+	std::lock_guard lock(myMutex);
+
 	myLoggerName = std::move(aName);
 }
 
 const std::string& Logger::GetLoggerName() const
 {
+	std::lock_guard lock(myMutex);
+
 	return myLoggerName;
 }
 
 void Logger::SetFilters(std::unordered_set<ELogSeverity> aAllowedSeverities, ELogLevel aMinLevel)
 {
+	std::lock_guard lock(myMutex);
+
 	myAllowedSeverities = std::move(aAllowedSeverities);
 	myMinLevel = aMinLevel;
 }
 
 void Logger::AddLogger(std::weak_ptr<LoggerBase> aLogger)
 {
+	std::lock_guard lock(myMutex);
+
 	myLoggers.emplace_back(std::move(aLogger));
 }
 
 void Logger::Print(const SLogLine& aLogLine)
 {
+	std::lock_guard lock(myMutex);
+
 	using LevelType = std::underlying_type_t<ELogLevel>;
 
 	if (static_cast<LevelType>(myMinLevel) > static_cast<LevelType>(aLogLine.Level)

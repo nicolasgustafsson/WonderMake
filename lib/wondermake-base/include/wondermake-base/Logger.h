@@ -10,6 +10,7 @@
 
 #include <chrono>
 #include <memory>
+#include <mutex>
 #include <source_location>
 #include <sstream>
 #include <unordered_set>
@@ -73,12 +74,13 @@ public:
 	void Print(const SLogLine& aLogLine);
 
 private:
-	ProcessId	myProcessId;
-	std::string myLoggerName;
-	std::unordered_set<ELogSeverity> myAllowedSeverities;
-	ELogLevel myMinLevel = ELogLevel::Normal;
+	mutable std::recursive_mutex			myMutex;
+	ProcessId								myProcessId;
+	std::string								myLoggerName;
+	std::unordered_set<ELogSeverity>		myAllowedSeverities;
+	ELogLevel								myMinLevel = ELogLevel::Normal;
 
-	std::vector<std::weak_ptr<LoggerBase>> myLoggers;
+	std::vector<std::weak_ptr<LoggerBase>>	myLoggers;
 
 };
 

@@ -1564,3 +1564,55 @@ TEST_F(WinIpcConnectionTest, canceled_write_will_still_complete)
 
 	promise.Complete();
 }
+
+TEST_F(WinIpcConnectionTest, asynchronous_write_followed_by_synchronous_write_continues_write_queue)
+{
+	auto ipcConnection = std::make_shared<WinIpcConnection>(InlineExecutor(), myWinEventSystem, myWinPlatformSystem);
+	constexpr auto pipeName = "test";
+	const HANDLE dummyHandle = (HANDLE)0x1234ABCD;
+
+	EXPECT_CALL(myWinPlatformSystem, CreateFileW)
+		.WillOnce(Return(dummyHandle));
+	EXPECT_CALL(myWinPlatformSystem, CreateEventW)
+		.Times(2)
+		.WillRepeatedly(Return(dummyHandle));
+	EXPECT_CALL(myWinPlatformSystem, CloseHandle)
+		.Times(3);
+
+	(void)ipcConnection->Connect(pipeName);
+
+	EXPECT_CALL(myWinPlatformSystem, WriteFile)
+		.WillOnce(Return(FALSE));
+	EXPECT_CALL(myWinPlatformSystem, GetLastError)
+		.WillOnce(Return(ERROR_IO_PENDING));
+
+	auto [promiseAsync, futureAsync] = MakeAsync<void>();
+
+	EXPECT_CALL(myWinEventSystem, RegisterEvent)
+		.WillOnce(Return(ByMove(std::move(futureAsync))));
+
+	(void)ipcConnection->Write(locDummyData);
+	(void)ipcConnection->Write(locDummyData);
+	(void)ipcConnection->Write(locDummyData);
+
+	EXPECT_CALL(myWinPlatformSystem, GetOverlappedResult)
+		.WillOnce([&dummyData = locDummyData](auto&&, auto&&, LPDWORD lpNumberOfBytesTransferred, auto&&)
+			{
+				*lpNumberOfBytesTransferred = static_cast<DWORD>(dummyData.size());
+
+				return TRUE;
+			});
+	EXPECT_CALL(myWinPlatformSystem, GetLastError)
+		.WillOnce(Return(ERROR_SUCCESS));
+	EXPECT_CALL(myWinPlatformSystem, ResetEvent);
+	EXPECT_CALL(myWinPlatformSystem, WriteFile)
+		.Times(2)
+		.WillRepeatedly([&dummyData = locDummyData](auto&&, auto&&, auto&&, LPDWORD lpNumberOfBytesWritten, auto&&)
+			{
+				*lpNumberOfBytesWritten = static_cast<DWORD>(dummyData.size());
+
+				return TRUE;
+			});
+
+	promiseAsync.Complete();
+}

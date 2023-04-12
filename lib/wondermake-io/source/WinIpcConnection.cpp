@@ -260,10 +260,16 @@ Closure WinIpcConnection::PerformWrite(std::vector<u8>&& aBuffer, Promise<Result
 	}
 
 	if (result)
-		return[promise = std::move(aPromise)]() mutable
+	{
+		auto closure = NextWrite();
+
+		return[promise = std::move(aPromise), closure = std::move(closure)]() mutable
 		{
 			promise.Complete(Ok());
+
+			std::move(closure)();
 		};
+	}
 
 	const DWORD err = myWinPlatform.GetLastError();
 

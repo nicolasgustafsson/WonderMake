@@ -30,6 +30,15 @@ public:
 
 	void Update() noexcept;
 
+	inline void SetTimeWarp(f32 aWarp) noexcept
+	{
+		myTimeWarp = aWarp;
+	}
+	inline [[nodiscard]] f32 GetTimeWarp() const noexcept
+	{
+		return myTimeWarp;
+	}
+
 	template<typename TDuration = WmChrono::dSeconds>
 	inline [[nodiscard]] TDuration GetDeltaTime() const noexcept
 	{
@@ -80,7 +89,7 @@ protected:
 	Duration	myTimePassed		= Duration(0);
 	Duration	myTimePassedReal	= Duration(0);
 
-	f32 myTimeDilation = 1.f;
+	f32			myTimeWarp = 1.f;
 
 };
 

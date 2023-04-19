@@ -17,7 +17,7 @@ void TimeKeeperSingleton::Update() noexcept
 {
 	myPreviousDeltaTimeReal = myStopwatchDeltaTime.Restart<Duration>();
 
-	myPreviousDeltaTime = WmMath::Min(std::chrono::duration_cast<Duration>(myPreviousDeltaTimeReal * myTimeDilation), locMaxDeltaTime);
+	myPreviousDeltaTime = WmMath::Min(std::chrono::duration_cast<Duration>(myPreviousDeltaTimeReal * myTimeWarp), locMaxDeltaTime);
 
 	myTimePassed		+= myPreviousDeltaTime;
 	myTimePassedReal	+= myPreviousDeltaTimeReal;
@@ -43,7 +43,7 @@ void TimeKeeperSingleton::Debug(bool& aIsOpen)
 	ImGui::Text("Current real deltatime: %f", deltaTimeReal.count());
 	ImGui::Text("Real total time passed: %f", totalTimeReal.count());
 
-	ImGui::SliderFloat("Time dilation", &myTimeDilation, 0.001f, 100.f, "%.3f", ImGuiSliderFlags_Logarithmic);
+	ImGui::SliderFloat("Time warp", &myTimeWarp, 0.001f, 100.f, "%.3f", ImGuiSliderFlags_Logarithmic);
 
 	ImGui::End();
 }

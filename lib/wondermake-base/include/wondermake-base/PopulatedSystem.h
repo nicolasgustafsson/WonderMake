@@ -14,7 +14,16 @@ using PopulatedSystemPolicySet
 		PAdd<PopulateObjectSystem, PWrite>>;
 
 template<typename TPolicySet = Policy::Set<>, typename TTraitSet = SystemTraits::Set<>>
-using PopulatedSystem
-	= System<
+class PopulatedSystem
+	: public System<
 		Policy::Concat<TPolicySet, PopulatedSystemPolicySet>,
-		TTraitSet>;
+		TTraitSet>
+{
+protected:
+	template<CConfigType TConfigType, typename TDefaultArg>
+	[[nodiscard]] inline TConfigType GetConfig(const auto& aId, TDefaultArg&& aDefaultValue)
+	{
+		return this->Get<ConfigurationSystem>().Get<TConfigType>(aId, std::forward<TDefaultArg>(aDefaultValue));
+	}
+
+};

@@ -44,9 +44,9 @@ public:
 			if (errResult)
 				return *errResult;
 
-			SDependency dependency = std::apply([createFunc = std::move(createFunc)](auto... aResults) -> SDependency
+			SDependency dependency = std::apply([createFunc = std::move(createFunc)](auto... aResults) mutable -> SDependency
 			{
-				return CreateDependencyHelper<TType>(createFunc, aResults...);
+				return CreateDependencyHelper<TType>(std::move(createFunc), aResults...);
 			}, results);
 
 			void* const dependencyPtr = dependency.DataPtr;
@@ -87,16 +87,12 @@ private:
 		const auto depIt = myDependencies.find(typeIndex);
 
 		if (depIt != myDependencies.cend())
-		{
 			return Ok(std::ref(*((TType*)depIt->second.DataPtr)));
-		}
 
 		const auto createIt = myCreateFuncs.find(typeIndex);
 
 		if (createIt == myCreateFuncs.cend())
-		{
 			return Err(SError{ ECreateError::MissingDependency, typeIndex.name() });
-		}
 
 		auto result = std::move(createIt->second)(*this);
 
@@ -109,11 +105,11 @@ private:
 	template<typename TDependency, typename TCreateFunc, typename... TDependencies>
 	static SDependency CreateDependencyHelper(TCreateFunc&& aCreateFunc, Result<std::reference_wrapper<TDependencies>, SError>... aDependencies)
 	{
-		static constexpr bool owned = !std::is_reference_v<std::invoke_result_t<decltype(std::move(aCreateFunc)), decltype(static_cast<TDependencies&>(aDependencies.Unwrap()))...>>;
+		static constexpr bool owned = !std::is_reference_v<std::invoke_result_t<decltype(std::forward<TCreateFunc>(aCreateFunc)), decltype(static_cast<TDependencies&>(aDependencies.Unwrap()))...>>;
 
 		if constexpr (owned)
 		{
-			auto ptr = std::make_shared<TDependency>(std::move(aCreateFunc)(static_cast<TDependencies&>(aDependencies.Unwrap())...));
+			auto ptr = std::make_shared<TDependency>(std::forward<TCreateFunc>(aCreateFunc)(static_cast<TDependencies&>(aDependencies.Unwrap())...));
 
 			return SDependency
 			{
@@ -124,7 +120,7 @@ private:
 		else
 			return SDependency
 			{
-				.DataPtr	= &std::move(aCreateFunc)(static_cast<TDependencies&>(aDependencies.Unwrap())...),
+				.DataPtr	= &std::forward<TCreateFunc>(aCreateFunc)(static_cast<TDependencies&>(aDependencies.Unwrap())...),
 			};
 	}
 };

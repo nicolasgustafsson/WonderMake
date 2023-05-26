@@ -110,11 +110,11 @@ private:
 	{
 		// TODO(Kevin): This is currently not thread-safe, to make it threadsafe it needs to be run from a job with the same dependencies, but write permission on them.
 		if constexpr (std::is_base_of_v<_BaseFunctionality, TDependency>)
-			return std::get<FunctionalitySystemDelegate<std::decay_t<TDependency>>&>(this->myDependencies).AddFunctionality(aObject, false);
+			return std::get<SharedReference<FunctionalitySystemDelegate<TDependency>>>(this->myDependencies)->AddFunctionality(aObject, false);
 		else if constexpr (std::is_base_of_v<SComponent, TDependency>)
-			return std::get<ComponentSystem<std::decay_t<TDependency>>&>(this->myDependencies).AddComponent(aObject, false);
+			return std::get<SharedReference<ComponentSystem<TDependency>>>(this->myDependencies)->AddComponent(aObject, false);
 		else
-			return std::get<std::decay_t<TDependency>&>(this->myDependencies);
+			return *std::get<SharedReference<TDependency>>(this->myDependencies);
 	}
 	template<typename... TDependencies>
 	inline [[nodiscard]] typename TFunctionality::Dependencies PopulateDependencies(DependencyWrapper<std::tuple<TDependencies...>>, Object& aObject) noexcept
@@ -138,11 +138,11 @@ private:
 };
 
 template<typename TFunctionality>
-using FunctionalitySystemDelegateSystem = System<Policy::Set<PAdd<FunctionalitySystem<TFunctionality>, PWrite>>, typename TFunctionality::SystemTraits>;
-
-template<typename TFunctionality>
 class FunctionalitySystemDelegate final
-	: public FunctionalitySystemDelegateSystem<TFunctionality>
+	: public System<
+		Policy::Set<
+			PAdd<FunctionalitySystem<TFunctionality>, PWrite>>,
+		typename TFunctionality::SystemTraits>
 {
 public:
 	inline FunctionalitySystemDelegate() noexcept

@@ -56,26 +56,26 @@ private:
 		std::function<void(SystemRegistry&, DependencyInjector&)> InjectFunc;
 	};
 
-	template<typename TSystem, typename TBaseSystem, typename TCreateFunc, typename ...TDependencies>
-	inline void AddSystemHelper(TCreateFunc&& aCreateFunc, TupleWrapper<std::tuple<TDependencies...>>&&)
+	template<typename TSystem, typename TBaseSystem, typename TCreateFunc, typename... TDependencies>
+	inline void AddSystemHelper(TCreateFunc&& aCreateFunc, TupleWrapper<std::tuple<SharedReference<TDependencies>...>>&&)
 	{
 		mySystemList.emplace_back(
 			SystemElement {
 				TSystem::template TraitSet::ToObject(),
 				[createFunc = std::move(aCreateFunc)] (SystemRegistry& aSelf, DependencyInjector& aDI)
 				{
-					auto construct = [&self = aSelf, createFunc = std::move(createFunc)](std::shared_ptr<std::decay_t<TDependencies>>... aDependencies) -> std::shared_ptr<TBaseSystem>
+					auto construct = [&self = aSelf, createFunc = std::move(createFunc)](SharedReference<std::decay_t<TDependencies>>... aDependencies)
 					{
-						TSystem::InjectDependencies(std::tie(*aDependencies...));
+						TSystem::InjectDependencies(std::make_tuple(std::move(aDependencies)...));
 
-						auto ptr = createFunc();
+						auto ref = createFunc();
 
-						self.myConstructingContainer.Add<TBaseSystem>(ptr, { std::static_pointer_cast<SystemAbstracted>(std::move(aDependencies))... });
+						self.myConstructingContainer.Add<TBaseSystem>(ref);
 
-						return ptr;
+						return ref;
 					};
 
-					aDI.Add<std::shared_ptr<TBaseSystem>, decltype(construct), std::shared_ptr<std::decay_t<TDependencies>>...>(std::move(construct));
+					aDI.Add<SharedReference<TBaseSystem>, decltype(construct), SharedReference<std::decay_t<TDependencies>>...>(std::move(construct));
 				}
 			});
 	}

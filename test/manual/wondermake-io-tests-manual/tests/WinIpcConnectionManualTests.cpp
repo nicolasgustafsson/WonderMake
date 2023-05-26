@@ -47,15 +47,11 @@ constexpr auto onRead = [](auto& aMock)
 
 TEST(WinIpcConnectionManualTests, connection_fails_when_no_acceptor_exists)
 {
-	WinPlatformSystemImpl::InjectDependencies(std::tie());
+	auto winPlatform = MakeSystem<WinPlatformSystemImpl>(std::make_tuple());
 
-	WinPlatformSystemImpl winPlatform;
+	auto winEvent = MakeSystem<WinEventSystemImpl>(std::make_tuple(winPlatform));
 
-	WinEventSystemImpl::InjectDependencies(std::tie(winPlatform));
-
-	WinEventSystemImpl winEvent;
-
-	auto ipcConnection = std::make_shared<WinIpcConnection>(InlineExecutor(), winEvent, winPlatform);
+	auto ipcConnection = std::make_shared<WinIpcConnection>(InlineExecutor(), *winEvent, *winPlatform);
 
 	auto connectResult = ipcConnection->Connect("wondermake__manual_test_connection");
 
@@ -66,16 +62,12 @@ TEST(WinIpcConnectionManualTests, connection_fails_when_no_acceptor_exists)
 
 TEST(WinIpcConnectionManualTests, connection_connects_when_acceptor_exists)
 {
-	WinPlatformSystemImpl::InjectDependencies(std::tie());
+	auto winPlatform = MakeSystem<WinPlatformSystemImpl>(std::make_tuple());
 
-	WinPlatformSystemImpl winPlatform;
+	auto winEvent = MakeSystem<WinEventSystemImpl>(std::make_tuple(winPlatform));
 
-	WinEventSystemImpl::InjectDependencies(std::tie(winPlatform));
-
-	WinEventSystemImpl winEvent;
-
-	auto ipcAcceptor = std::make_shared<WinIpcAcceptor>(InlineExecutor(), winEvent, winPlatform);
-	auto ipcConnection = std::make_shared<WinIpcConnection>(InlineExecutor(), winEvent, winPlatform);
+	auto ipcAcceptor = std::make_shared<WinIpcAcceptor>(InlineExecutor(), *winEvent, *winPlatform);
+	auto ipcConnection = std::make_shared<WinIpcConnection>(InlineExecutor(), *winEvent, *winPlatform);
 
 	auto openResult = ipcAcceptor->Open("wondermake__manual_test_connection");
 
@@ -88,22 +80,18 @@ TEST(WinIpcConnectionManualTests, connection_connects_when_acceptor_exists)
 
 	ASSERT_TRUE(connectResult);
 
-	winEvent.WaitForEvent(0);
+	winEvent->WaitForEvent(0);
 }
 
 TEST(WinIpcConnectionManualTests, acceptor_accepts_multiple_connections)
 {
-	WinPlatformSystemImpl::InjectDependencies(std::tie());
+	auto winPlatform = MakeSystem<WinPlatformSystemImpl>(std::make_tuple());
 
-	WinPlatformSystemImpl winPlatform;
+	auto winEvent = MakeSystem<WinEventSystemImpl>(std::make_tuple(winPlatform));
 
-	WinEventSystemImpl::InjectDependencies(std::tie(winPlatform));
-
-	WinEventSystemImpl winEvent;
-
-	auto ipcAcceptor = std::make_shared<WinIpcAcceptor>(InlineExecutor(), winEvent, winPlatform);
-	auto ipcConnectionA = std::make_shared<WinIpcConnection>(InlineExecutor(), winEvent, winPlatform);
-	auto ipcConnectionB = std::make_shared<WinIpcConnection>(InlineExecutor(), winEvent, winPlatform);
+	auto ipcAcceptor = std::make_shared<WinIpcAcceptor>(InlineExecutor(), *winEvent, *winPlatform);
+	auto ipcConnectionA = std::make_shared<WinIpcConnection>(InlineExecutor(), *winEvent, *winPlatform);
+	auto ipcConnectionB = std::make_shared<WinIpcConnection>(InlineExecutor(), *winEvent, *winPlatform);
 
 	auto openResult = ipcAcceptor->Open("wondermake__manual_test_connection");
 
@@ -115,7 +103,7 @@ TEST(WinIpcConnectionManualTests, acceptor_accepts_multiple_connections)
 
 	ASSERT_TRUE(connectResultA);
 
-	winEvent.WaitForEvent(0);
+	winEvent->WaitForEvent(0);
 
 	ASSERT_TRUE(acceptorConnectionFuture.GetResult());
 
@@ -127,7 +115,7 @@ TEST(WinIpcConnectionManualTests, acceptor_accepts_multiple_connections)
 
 	ASSERT_TRUE(connectResultB);
 
-	winEvent.WaitForEvent(0);
+	winEvent->WaitForEvent(0);
 
 	ASSERT_TRUE(acceptorConnectionFuture.IsCompleted());
 }
@@ -136,16 +124,12 @@ TEST(WinIpcConnectionManualTests, connection_closes_when_other_connection_is_clo
 {
 	constexpr auto pipeName = "wondermake__manual_test_connection";
 
-	WinPlatformSystemImpl::InjectDependencies(std::tie());
+	auto winPlatform = MakeSystem<WinPlatformSystemImpl>(std::make_tuple());
 
-	WinPlatformSystemImpl winPlatform;
+	auto winEvent = MakeSystem<WinEventSystemImpl>(std::make_tuple(winPlatform));
 
-	WinEventSystemImpl::InjectDependencies(std::tie(winPlatform));
-
-	WinEventSystemImpl winEvent;
-
-	auto ipcAcceptor = std::make_shared<WinIpcAcceptor>(InlineExecutor(), winEvent, winPlatform);
-	auto ipcConnectionClient = std::make_shared<WinIpcConnection>(InlineExecutor(), winEvent, winPlatform);
+	auto ipcAcceptor = std::make_shared<WinIpcAcceptor>(InlineExecutor(), *winEvent, *winPlatform);
+	auto ipcConnectionClient = std::make_shared<WinIpcConnection>(InlineExecutor(), *winEvent, *winPlatform);
 	
 	auto openResult = ipcAcceptor->Open(pipeName);
 
@@ -157,7 +141,7 @@ TEST(WinIpcConnectionManualTests, connection_closes_when_other_connection_is_clo
 
 	ASSERT_TRUE(connectResult);
 
-	winEvent.WaitForEvent(0);
+	winEvent->WaitForEvent(0);
 
 	ASSERT_TRUE(acceptorConnectionFuture.GetResult());
 
@@ -168,11 +152,11 @@ TEST(WinIpcConnectionManualTests, connection_closes_when_other_connection_is_clo
 	ipcConnectionClient->Read()
 		.Detach();
 
-	winEvent.WaitForEvent(0);
+	winEvent->WaitForEvent(0);
 
 	ipcConnectionServer->Close();
 
-	winEvent.WaitForEvent(0);
+	winEvent->WaitForEvent(0);
 
 	EXPECT_EQ(ipcConnectionClient->GetState(), Socket::EState::Closed);
 }
@@ -186,16 +170,12 @@ TEST(WinIpcConnectionManualTests, connection_can_read_and_write)
 	const std::vector<u8> dummyDataA = { 34, 12, 198, 201 };
 	const std::vector<u8> dummyDataB = { 65, 35, 212, 98 };
 
-	WinPlatformSystemImpl::InjectDependencies(std::tie());
+	auto winPlatform = MakeSystem<WinPlatformSystemImpl>(std::make_tuple());
 
-	WinPlatformSystemImpl winPlatform;
+	auto winEvent = MakeSystem<WinEventSystemImpl>(std::make_tuple(winPlatform));
 
-	WinEventSystemImpl::InjectDependencies(std::tie(winPlatform));
-
-	WinEventSystemImpl winEvent;
-
-	auto ipcAcceptor = std::make_shared<WinIpcAcceptor>(InlineExecutor(), winEvent, winPlatform);
-	auto ipcConnectionClient = std::make_shared<WinIpcConnection>(InlineExecutor(), winEvent, winPlatform);
+	auto ipcAcceptor = std::make_shared<WinIpcAcceptor>(InlineExecutor(), *winEvent, *winPlatform);
+	auto ipcConnectionClient = std::make_shared<WinIpcConnection>(InlineExecutor(), *winEvent, *winPlatform);
 
 	EXPECT_CALL(callbackMockClient, OnWrite(WriteResultMatcher(Ok())));
 	EXPECT_CALL(callbackMockServer, OnRead(ReadResultMatcher(Ok(dummyDataA))));
@@ -210,7 +190,7 @@ TEST(WinIpcConnectionManualTests, connection_can_read_and_write)
 
 	ASSERT_TRUE(connectResult);
 
-	winEvent.WaitForEvent(0);
+	winEvent->WaitForEvent(0);
 
 	ASSERT_TRUE(acceptorConnectionFuture.GetResult());
 
@@ -223,7 +203,7 @@ TEST(WinIpcConnectionManualTests, connection_can_read_and_write)
 	ipcConnectionServer->Read()
 		.ThenRun(InlineExecutor(), FutureRunResult(onRead(callbackMockServer)));
 
-	winEvent.WaitForEvent(0);
+	winEvent->WaitForEvent(0);
 
 	EXPECT_CALL(callbackMockServer, OnWrite(WriteResultMatcher(Ok())));
 	EXPECT_CALL(callbackMockClient, OnRead(ReadResultMatcher(Ok(dummyDataB))));
@@ -233,5 +213,5 @@ TEST(WinIpcConnectionManualTests, connection_can_read_and_write)
 	ipcConnectionClient->Read()
 		.ThenRun(InlineExecutor(), FutureRunResult(onRead(callbackMockClient)));
 
-	winEvent.WaitForEvent(0);
+	winEvent->WaitForEvent(0);
 }

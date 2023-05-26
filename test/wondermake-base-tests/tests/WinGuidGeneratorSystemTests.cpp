@@ -10,27 +10,29 @@ class WinGuidGeneratorSystemTest
 	: public ::testing::Test
 {
 public:
+	WinGuidGeneratorSystemTest()
+		: myWinPlatformSystem(MakeSharedReference<NiceMock<WinPlatformSystemMock>>())
+	{}
+
 	void SetUp() override
 	{
-		myWinPlatformSystem.DelegateToFake();
+		myWinPlatformSystem->DelegateToFake();
 	}
 
 	void CreateWinGuidGeneratorSystem()
 	{
-		WinGuidGeneratorSystem::InjectDependencies(std::tie(myWinPlatformSystem));
-
-		myWinGuidGeneratorSystem = std::make_shared<WinGuidGeneratorSystem>();
+		myWinGuidGeneratorSystem = MakeSystem<WinGuidGeneratorSystem>(std::make_tuple(myWinPlatformSystem));
 	}
 
-	NiceMock<WinPlatformSystemMock>			myWinPlatformSystem;
-	std::shared_ptr<WinGuidGeneratorSystem>	myWinGuidGeneratorSystem;
+	SharedReference<NiceMock<WinPlatformSystemMock>>	myWinPlatformSystem;
+	std::shared_ptr<WinGuidGeneratorSystem>				myWinGuidGeneratorSystem;
 };
 
 TEST_F(WinGuidGeneratorSystemTest, generatenew_returns_a_valid_guid)
 {
 	CreateWinGuidGeneratorSystem();
 
-	EXPECT_CALL(myWinPlatformSystem, CoCreateGuid)
+	EXPECT_CALL(*myWinPlatformSystem, CoCreateGuid)
 		.WillOnce([](GUID* pguid) -> HRESULT
 			{
 				memcpy(pguid, GuidData.data(), GuidData.size());

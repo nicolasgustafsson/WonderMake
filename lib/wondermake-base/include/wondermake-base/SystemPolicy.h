@@ -42,17 +42,7 @@ struct Policy final
 	template<typename... TPolicies>
 	struct Set
 	{
-	private:
-		template<typename TPolicy>
-		using ExtractDependency = typename TPolicy::Dependency;
-
 	public:
-		using Dependencies = std::tuple<ExtractDependency<TPolicies>...>;
-		using DependenciesRef = std::tuple<ExtractDependency<TPolicies>&...>;
-
-		template<template<typename> typename TExpectedType>
-		using ExtractDependencies = std::tuple<TExpectedType<ExtractDependency<TPolicies>>...>;
-
 		template<template<typename...> typename TPolicyContainer>
 		using ExtractPolicies = TPolicyContainer<TPolicies...>;
 

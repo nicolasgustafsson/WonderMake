@@ -19,22 +19,22 @@ static void _RegisterSystem()
 {
 	static_assert(std::is_same_v<TBaseSystem, TSystem> || std::is_base_of_v<TBaseSystem, TSystem>, "Registered system must inherit from the base system.");
 
-	Global::GetSystemRegistry().AddSystem<TSystem, TBaseSystem>([]() -> std::shared_ptr<TSystem>
+	Global::GetSystemRegistry().AddSystem<TSystem, TBaseSystem>([]() -> SharedReference<TSystem>
 		{
 			constexpr auto createSystem = []()
 			{
-				auto ptr = std::make_shared<TSystem>();
+				auto ref = MakeSharedReference<TSystem>();
 
-				ptr->Initialize();
+				ref->Initialize();
 
-				return ptr;
+				return ref;
 			};
 
 			if constexpr (TSystem::TraitSet::template HasTrait<STSingleton>)
 			{
-				static auto ptr = createSystem();
+				static auto ref = createSystem();
 
-				return ptr;
+				return ref;
 			}
 			else
 				return createSystem();

@@ -4,6 +4,7 @@
 
 #include "wondermake-utility/Future.h"
 #include "wondermake-utility/RestrictTypes.h"
+#include "wondermake-utility/SharedReference.h"
 #include "wondermake-utility/Typedefs.h"
 
 #include <optional>
@@ -85,10 +86,23 @@ template<
 	typename TPolicySet = Policy::Set<>>
 class JobSub
 {
+private:
+	template<typename TPolicySet>
+	struct SDependencyTuple
+	{
+		using type = std::tuple<>;
+	};
+
+	template<typename... TPolicies>
+	struct SDependencyTuple<Policy::Set<TPolicies...>>
+	{
+		using type = std::tuple<SharedReference<typename TPolicies::Dependency>...>;
+	};
+
 public:
 	using PolicySet = TPolicySet;
 
-	using Dependencies = typename PolicySet::template DependenciesRef;
+	using Dependencies = SDependencyTuple<TPolicySet>::type;
 
 	inline static void InjectDependencies(Dependencies&& aDependencies)
 	{
@@ -106,14 +120,14 @@ protected:
 		requires(PolicySet::template HasPolicy_v<TDependency, PWrite>)
 	__forceinline [[nodiscard]] TDependency& Get() noexcept
 	{
-		return std::get<std::decay_t<TDependency>&>(myDependencies);
+		return *std::get<SharedReference<std::decay_t<TDependency>>>(myDependencies);
 	}
 
 	template<typename TDependency>
 		requires(PolicySet::template HasDependency_v<TDependency>)
 	__forceinline [[nodiscard]] const TDependency& Get() const noexcept
 	{
-		return std::get<std::decay_t<TDependency>&>(myDependencies);
+		return *std::get<SharedReference<std::decay_t<TDependency>>>(myDependencies);
 	}
 
 private:

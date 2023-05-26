@@ -123,7 +123,7 @@ TEST(JobSystemTests, starting_a_job_with_dependencies_should_call_the_run_functi
 
 	SystemDepdenency::InjectDependencies(std::tie());
 
-	systemContainer.Add(std::make_shared<SystemDepdenency>());
+	systemContainer.Add(MakeSharedReference<SystemDepdenency>());
 	jobRegistry.AddJob<StrictMock<JobTestSubWithDependencies>, JobTestBase>([](auto&& aDependencies)
 		{
 			StrictMock<JobTestSubWithDependencies>::InjectDependencies(std::move(aDependencies));

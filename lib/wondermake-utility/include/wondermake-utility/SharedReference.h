@@ -44,22 +44,20 @@ public:
 		return *this;
 	}
 
-	bool operator==(const SharedReference&) const noexcept = default;
+	inline bool operator==(const SharedReference& aRhs) const noexcept
+	{
+		return myPointer == aRhs.myPointer;
+	}
+	inline bool operator!=(const SharedReference& aRhs) const noexcept
+	{
+		return myPointer != aRhs.myPointer;
+	}
 
-	inline [[nodiscard]] TType* operator->() noexcept
+	inline [[nodiscard]] TType* operator->() const noexcept
 	{
 		return myPointer.get();
 	}
-	inline [[nodiscard]] TType& operator*() noexcept
-	{
-		return *myPointer;
-	}
-
-	inline [[nodiscard]] const TType* operator->() const noexcept
-	{
-		return myPointer.get();
-	}
-	inline [[nodiscard]] const TType& operator*() const noexcept
+	inline [[nodiscard]] TType& operator*() const noexcept
 	{
 		return *myPointer;
 	}

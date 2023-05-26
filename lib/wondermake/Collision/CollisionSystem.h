@@ -7,6 +7,7 @@
 #include "wondermake-utility/plf_colony.h"
 
 #include <functional>
+#include <memory>
 
 class CollisionFunctionality;
 class ScheduleSystem;
@@ -19,6 +20,7 @@ class CollisionSystem final
 			PAdd<ScheduleSystem, PWrite>>,
 		STrait::Set<
 			STWonderMake>>
+	, public std::enable_shared_from_this<CollisionSystem>
 {
 public:
 	CollisionSystem() noexcept;

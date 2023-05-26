@@ -6,6 +6,8 @@
 
 #include <vector>
 
+class CollisionSystem;
+
 struct SCollider
 {
 	SVector2f				Offset;
@@ -17,5 +19,10 @@ struct SCollisionComponent final
 		STrait::Set<
 			STWonderMake>>
 {
+	// Have to keep this here as the order of operation when destoying
+	// systems is wrong, making it possible for collision functionalities
+	// to be destroyed after the CollisionSystem.
+	std::weak_ptr<CollisionSystem>	System;
+
 	plf::colony<SCollider>	Colliders;
 };

@@ -38,6 +38,8 @@ public:
 		const auto& transformFunctionality = Get<TransformFunctionality2D>();
 		auto& collisionSystem = Get<CollisionSystem>();
 
+		collisionComponent.System = collisionSystem.weak_from_this();
+
 		const auto transformation = transformFunctionality.GetMatrix();
 
 		SVector2f position = aOffset * transformation;

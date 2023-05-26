@@ -11,8 +11,18 @@ CollisionFunctionality::~CollisionFunctionality()
 {
 	auto& collisionComponent = Get<SCollisionComponent>();
 
-	for (auto& collider : collisionComponent.Colliders)
-		Get<CollisionSystem>().DestroyCollider(*collider.Collider);
+	auto collisionSys = collisionComponent.System.lock();
+
+	// Can't use Get here as the order of operation when destoying
+	// systems is wrong, making it possible for collision
+	// functionalities to be destroyed after the CollisionSystem.
+	if (collisionSys)
+	{
+		auto& ref = *collisionSys;
+
+		for (auto& collider : collisionComponent.Colliders)
+			ref.DestroyCollider(*collider.Collider);
+	}
 
 	collisionComponent.Colliders.clear();
 }

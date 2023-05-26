@@ -11,21 +11,24 @@ class WinProcessSystemTest
 	: public ::testing::Test
 {
 protected:
+	WinProcessSystemTest()
+		: myWinEventSystem(MakeSharedReference<NiceMock<WinEventSystemMock>>())
+		, myWinPlatformSystem(MakeSharedReference<NiceMock<WinPlatformSystemMock>>())
+	{}
+
 	void SetUp()
 	{
-		myWinPlatformSystem.DelegateToFake();
+		myWinPlatformSystem->DelegateToFake();
 	}
 
 	void CreateWinProcessSystem()
 	{
-		WinProcessSystem::InjectDependencies(std::tie(myWinEventSystem, myWinPlatformSystem));
-
-		myWinProcessSystem = std::make_shared<WinProcessSystem>();
+		myWinProcessSystem = MakeSystem<WinProcessSystem>(std::make_tuple(myWinEventSystem, myWinPlatformSystem));
 	}
 
-	NiceMock<WinEventSystemMock>		myWinEventSystem;
-	NiceMock<WinPlatformSystemMock>		myWinPlatformSystem;
-	std::shared_ptr<WinProcessSystem>	myWinProcessSystem;
+	SharedReference<NiceMock<WinEventSystemMock>>		myWinEventSystem;
+	SharedReference<NiceMock<WinPlatformSystemMock>>	myWinPlatformSystem;
+	std::shared_ptr<WinProcessSystem>					myWinProcessSystem;
 
 };
 
@@ -43,7 +46,7 @@ TEST_F(WinProcessSystemTest, parameters_are_passed_to_createprocess)
 
 	CreateWinProcessSystem();
 
-	EXPECT_CALL(myWinPlatformSystem, CreateProcessW(Eq(locDummyApplicationFilePath), Eq(expectedCommandLine), _, _, _, _, _, _, _, _));
+	EXPECT_CALL(*myWinPlatformSystem, CreateProcessW(Eq(locDummyApplicationFilePath), Eq(expectedCommandLine), _, _, _, _, _, _, _, _));
 
 	(void)myWinProcessSystem->StartProcess(locDummyApplicationFilePath, locDummyCommandLine);
 }
@@ -52,9 +55,9 @@ TEST_F(WinProcessSystemTest, returns_file_not_found_when_createprocess_fails_wit
 {
 	CreateWinProcessSystem();
 
-	EXPECT_CALL(myWinPlatformSystem, CreateProcessW)
+	EXPECT_CALL(*myWinPlatformSystem, CreateProcessW)
 		.WillOnce(Return(FALSE));
-	EXPECT_CALL(myWinPlatformSystem, GetLastError)
+	EXPECT_CALL(*myWinPlatformSystem, GetLastError)
 		.WillOnce(Return(ERROR_FILE_NOT_FOUND));
 
 	const auto result = myWinProcessSystem->StartProcess(locDummyApplicationFilePath, locDummyCommandLine);
@@ -71,9 +74,9 @@ TEST_F(WinProcessSystemTest, returns_internal_error_when_createprocess_fails_wit
 {
 	CreateWinProcessSystem();
 	
-	EXPECT_CALL(myWinPlatformSystem, CreateProcessW)
+	EXPECT_CALL(*myWinPlatformSystem, CreateProcessW)
 		.WillOnce(Return(FALSE));
-	EXPECT_CALL(myWinPlatformSystem, GetLastError)
+	EXPECT_CALL(*myWinPlatformSystem, GetLastError)
 		.WillOnce(Return(ERROR_INVALID_FUNCTION));
 
 	const auto result = myWinProcessSystem->StartProcess(locDummyApplicationFilePath, locDummyCommandLine);
@@ -90,7 +93,7 @@ TEST_F(WinProcessSystemTest, returns_success_when_createprocess_returns_true)
 {
 	CreateWinProcessSystem();
 
-	EXPECT_CALL(myWinPlatformSystem, CreateProcessW)
+	EXPECT_CALL(*myWinPlatformSystem, CreateProcessW)
 		.WillOnce(Return(TRUE));
 
 	const auto result = myWinProcessSystem->StartProcess(locDummyApplicationFilePath, locDummyCommandLine);

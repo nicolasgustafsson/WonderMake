@@ -51,9 +51,9 @@ Future<Result<std::shared_ptr<SystemContainer>, SystemRegistry::SError>> SystemF
 		auto scheduleFunc = getScheduleFunc();
 		auto scheduleRepeatingFunc = getScheduleRepeatingFunc();
 
-		registry.AddSystem<ScheduleSystem>([&scheduleFunc, &scheduleRepeatingFunc]() -> std::shared_ptr<ScheduleSystem>
+		registry.AddSystem<ScheduleSystem>([&scheduleFunc, &scheduleRepeatingFunc]() -> SharedReference<ScheduleSystem>
 			{
-				return std::make_shared<ScheduleSystem>(std::move(scheduleFunc), std::move(scheduleRepeatingFunc));
+				return MakeSharedReference<ScheduleSystem>(std::move(scheduleFunc), std::move(scheduleRepeatingFunc));
 			});
 
 		auto result = registry

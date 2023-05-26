@@ -20,9 +20,7 @@ inline auto MakeConfigurationRemoteSystem(std::optional<Guid> aInstanceId = std:
 		.WillOnce(Return(*aInstanceId))
 		.WillRepeatedly(DoDefault());
 
-	ConfigurationRemoteSystem::InjectDependencies(std::tie(*configSys, *processSys));
-
-	auto configRemoteSys = MakeSharedReference<ConfigurationRemoteSystem>();
+	auto configRemoteSys = MakeSystem<ConfigurationRemoteSystem>(std::make_tuple(configSys, processSys));
 
 	configRemoteSys->Initialize();
 

@@ -1,9 +1,10 @@
 #pragma once
 
+#include "wondermake-utility/SharedReference.h"
+
 #include <memory>
 #include <typeindex>
 #include <unordered_map>
-#include <unordered_set>
 
 class SystemAbstracted;
 
@@ -13,6 +14,16 @@ public:
 	SystemContainer() noexcept = default;
 	
 	template<typename TSystem>
+	inline [[nodiscard]] std::shared_ptr<TSystem> GetPtr() const
+	{
+		auto it = mySystems.find(typeid(TSystem));
+
+		if (it == mySystems.cend())
+			return nullptr;
+
+		return std::static_pointer_cast<TSystem>(static_cast<std::shared_ptr<SystemAbstracted>>(it->second));
+	}
+	template<typename TSystem>
 	inline [[nodiscard]] TSystem* TryGet() const
 	{
 		auto it = mySystems.find(typeid(TSystem));
@@ -20,40 +31,21 @@ public:
 		if (it == mySystems.cend())
 			return nullptr;
 
-		return static_cast<TSystem*>(it->second.Self.get());
+		return &static_cast<TSystem&>(*it->second);
 	}
 	template<typename TSystem>
 	inline [[nodiscard]] TSystem& Get() const
 	{
-		return *static_cast<TSystem*>(mySystems.find(typeid(TSystem))->second.Self.get());
+		return static_cast<TSystem&>(*mySystems.find(typeid(TSystem))->second);
 	}
 	
 	template<typename TSystem>
-	inline void Add(std::shared_ptr<TSystem> aSystem, std::unordered_set<std::shared_ptr<SystemAbstracted>> aDependencies = {})
+	inline void Add(SharedReference<TSystem> aSystem)
 	{
-		mySystems.emplace(std::make_pair<std::type_index, SSystem>(
-			typeid(TSystem),
-			SSystem
-			{
-				.Dependencies = std::move(aDependencies),
-				.Self = std::move(aSystem)
-			}));
+		mySystems.emplace(std::make_pair<std::type_index, SharedReference<SystemAbstracted>>(typeid(TSystem), std::move(aSystem)));
 	}
 
 private:
-	struct SSystem
-	{
-		inline ~SSystem()
-		{
-			Self.reset();
-
-			Dependencies.clear();
-		}
-
-		std::unordered_set<std::shared_ptr<SystemAbstracted>> Dependencies;
-		std::shared_ptr<SystemAbstracted> Self;
-	};
-
-	std::unordered_map<std::type_index, SSystem> mySystems;
+	std::unordered_map<std::type_index, SharedReference<SystemAbstracted>> mySystems;
 
 };

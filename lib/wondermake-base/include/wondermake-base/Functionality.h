@@ -21,9 +21,22 @@ template<
 class Functionality
 	: public _BaseFunctionality
 {
+private:
+	template<typename TPolicySet>
+	struct SDependencyTuple
+	{
+		using type = std::tuple<>;
+	};
+
+	template<typename... TPolicies>
+	struct SDependencyTuple<Policy::Set<TPolicies...>>
+	{
+		using type = std::tuple<typename TPolicies::Dependency&...>;
+	};
+
 public:
 	using Super = Functionality<TPolicySet, TSystemTraits>;
-	using Dependencies = typename TPolicySet::DependenciesRef;
+	using Dependencies = SDependencyTuple<TPolicySet>::type;
 	using PolicySet = TPolicySet;
 	using SystemTraits = TSystemTraits;
 

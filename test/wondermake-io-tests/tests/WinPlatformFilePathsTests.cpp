@@ -19,7 +19,7 @@ constexpr auto CreateSetPath = [](PWSTR aPath, HRESULT aResult)
 TEST(WinPlatformFilePathsTests, getfolderlocation_returns_bin_folder)
 {
 	SystemContainer container;
-	auto winPlatformSys = std::make_shared<NiceMock<WinPlatformSystemMock>>();
+	auto winPlatformSys = MakeSharedReference<NiceMock<WinPlatformSystemMock>>();
 
 	container.Add<WinPlatformSystem>(winPlatformSys);
 
@@ -40,7 +40,7 @@ TEST(WinPlatformFilePathsTests, getfolderlocation_returns_data_folder)
 	std::wstring				expectedPath	= L"TEST";
 
 	SystemContainer container;
-	auto winPlatformSys = std::make_shared<NiceMock<WinPlatformSystemMock>>();
+	auto winPlatformSys = MakeSharedReference<NiceMock<WinPlatformSystemMock>>();
 
 	container.Add<WinPlatformSystem>(winPlatformSys);
 
@@ -65,7 +65,7 @@ TEST(WinPlatformFilePathsTests, getfolderlocation_returns_user_folder)
 	std::wstring				expectedPath	= L"TEST";
 
 	SystemContainer container;
-	auto winPlatformSys = std::make_shared<NiceMock<WinPlatformSystemMock>>();
+	auto winPlatformSys = MakeSharedReference<NiceMock<WinPlatformSystemMock>>();
 
 	container.Add<WinPlatformSystem>(winPlatformSys);
 
@@ -90,7 +90,7 @@ TEST(WinPlatformFilePathsTests, getfolderlocation_returns_user_data_folder)
 	std::wstring				expectedPath	= L"TEST";
 
 	SystemContainer container;
-	auto winPlatformSys = std::make_shared<NiceMock<WinPlatformSystemMock>>();
+	auto winPlatformSys = MakeSharedReference<NiceMock<WinPlatformSystemMock>>();
 
 	container.Add<WinPlatformSystem>(winPlatformSys);
 
@@ -106,7 +106,7 @@ TEST(WinPlatformFilePathsTests, getfolderlocation_returns_user_data_folder)
 TEST(WinPlatformFilePathsTests, getfolderlocation_returns_nullopt_on_failure_when_getting_data_folder)
 {
 	SystemContainer container;
-	auto winPlatformSys = std::make_shared<StrictMock<WinPlatformSystemMock>>();
+	auto winPlatformSys = MakeSharedReference<StrictMock<WinPlatformSystemMock>>();
 
 	container.Add<WinPlatformSystem>(winPlatformSys);
 
@@ -121,7 +121,7 @@ TEST(WinPlatformFilePathsTests, getfolderlocation_returns_nullopt_on_failure_whe
 TEST(WinPlatformFilePathsTests, getfolderlocation_returns_nullopt_on_failure_when_getting_user_folder)
 {
 	SystemContainer container;
-	auto winPlatformSys = std::make_shared<StrictMock<WinPlatformSystemMock>>();
+	auto winPlatformSys = MakeSharedReference<StrictMock<WinPlatformSystemMock>>();
 
 	container.Add<WinPlatformSystem>(winPlatformSys);
 
@@ -136,7 +136,7 @@ TEST(WinPlatformFilePathsTests, getfolderlocation_returns_nullopt_on_failure_whe
 TEST(WinPlatformFilePathsTests, getfolderlocation_returns_nullopt_on_failure_when_getting_user_data_folder)
 {
 	SystemContainer container;
-	auto winPlatformSys = std::make_shared<StrictMock<WinPlatformSystemMock>>();
+	auto winPlatformSys = MakeSharedReference<StrictMock<WinPlatformSystemMock>>();
 
 	container.Add<WinPlatformSystem>(winPlatformSys);
 

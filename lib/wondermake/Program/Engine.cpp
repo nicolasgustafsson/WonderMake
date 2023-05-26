@@ -88,7 +88,7 @@ namespace Engine
 			return taskManager->ScheduleRepeating(std::move(aExecutor), std::move(aTask));
 		};
 
-		sysRegistryRef.AddSystem<JobSystem>([&sysContainer, &taskManager]() -> std::shared_ptr<JobSystem>
+		sysRegistryRef.AddSystem<JobSystem>([&sysContainer, &taskManager]() -> SharedReference<JobSystem>
 		{
 			struct SScheduleExecutor
 			{
@@ -100,7 +100,7 @@ namespace Engine
 				}
 			};
 
-			static auto jobSys = std::make_shared<JobSystem>(JobGlobal::GetRegistry(), sysContainer, SScheduleExecutor
+			static auto jobSys = MakeSharedReference<JobSystem>(JobGlobal::GetRegistry(), sysContainer, SScheduleExecutor
 				{
 					.Executor = [taskManager](Closure aCallable) { taskManager->Schedule(InlineExecutor(), std::move(aCallable)).Detach(); }
 				});
@@ -111,7 +111,7 @@ namespace Engine
 			{
 				const auto create = [&aInfo]()
 				{
-					auto config = std::make_shared<ConfigurationSystem>();
+					auto config = MakeSharedReference<ConfigurationSystem>();
 					const auto& filePathData = FilePathData::Get();
 
 					std::optional<ConfigurationEngine::SGraphics>	graphics;
@@ -159,24 +159,24 @@ namespace Engine
 
 				return config;
 			});
-		sysRegistryRef.AddSystem<CmdLineArgsSystem>([cmdLineArgs = aInfo.CommandLineArguments]()->std::shared_ptr<CmdLineArgsSystem>
+		sysRegistryRef.AddSystem<CmdLineArgsSystem>([cmdLineArgs = aInfo.CommandLineArguments]() -> SharedReference<CmdLineArgsSystem>
 		{
-			static auto instance = std::make_shared<CmdLineArgsSystem>(cmdLineArgs);
+			static auto instance = MakeSharedReference<CmdLineArgsSystem>(cmdLineArgs);
 
 			return instance;
 		});
-		sysRegistryRef.AddSystem<ScheduleSystemSingleton>([&scheduleProc, &scheduleRepeatingProc]() -> std::shared_ptr<ScheduleSystemSingleton>
+		sysRegistryRef.AddSystem<ScheduleSystemSingleton>([&scheduleProc, &scheduleRepeatingProc]() -> SharedReference<ScheduleSystemSingleton>
 			{
-				static auto instance = std::make_shared<ScheduleSystemSingleton>(scheduleProc, scheduleRepeatingProc);
+				static auto instance = MakeSharedReference<ScheduleSystemSingleton>(scheduleProc, scheduleRepeatingProc);
 
 				return instance;
 			});
 
 		auto sysRegistry = sysRegistryRef;
 
-		sysRegistry.AddSystem<ScheduleSystem>([&scheduleProc, &scheduleRepeatingProc]() -> std::shared_ptr<ScheduleSystem>
+		sysRegistry.AddSystem<ScheduleSystem>([&scheduleProc, &scheduleRepeatingProc]() -> SharedReference<ScheduleSystem>
 			{
-				return std::make_shared<ScheduleSystem>(scheduleProc, scheduleRepeatingProc);
+				return MakeSharedReference<ScheduleSystem>(scheduleProc, scheduleRepeatingProc);
 			});
 
 		ProcessId currentProcessId;

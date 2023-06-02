@@ -1,5 +1,6 @@
 #pragma once
 
+#include "wondermake-utility/Bindable.h"
 #include "wondermake-utility/Executor.h"
 #include "wondermake-utility/RestrictTypes.h"
 #include "wondermake-utility/UniqueFunction.h"

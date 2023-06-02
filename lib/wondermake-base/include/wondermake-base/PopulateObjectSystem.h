@@ -1,5 +1,6 @@
 #pragma once
 
+#include "wondermake-base/Functionality.h"
 #include "wondermake-base/FunctionalitySystem.h"
 #include "wondermake-base/DependencySystem.h"
 #include "wondermake-base/Logger.h"

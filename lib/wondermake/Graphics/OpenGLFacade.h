@@ -100,29 +100,21 @@ private:
 
 };
 
-template <typename F, typename S, typename... T>
-struct impl_is_one_of
+namespace _Impl
 {
-	static constexpr bool value =
-		std::is_same<F, S>::value || is_one_of<F, T...>::value;
-};
+	template <typename F, typename... T>
+	struct is_one_of
+	{
+		static constexpr bool value = (std::is_same_v<F, T> || ...);
+	};
+}
 
 template<typename TVariableType>
 void OpenGLFacade::SetUniformVariable(const u32 aLocation, TVariableType aProperty)
 {
 	using Type = std::decay_t<TVariableType>;
 
-	static_assert(
-		std::is_same_v<Type, i32> || 
-		std::is_same_v<Type, f32> || 
-		std::is_same_v<Type, bool> || 
-		std::is_same_v<Type, f64> || 
-		std::is_same_v<Type, SVector2f> || 
-		std::is_same_v<Type, SVector2i> || 
-		std::is_same_v<Type, SVector3f> || 
-		std::is_same_v<Type, SVector4f> || 
-		std::is_same_v<Type, SColor>,
-		"Uniform variable type is not supported!");
+	static_assert(_Impl::is_one_of<Type, i32, f32, bool, f64, SVector2f, SVector2i, SVector3f, SVector4f, SColor>::value, "Uniform variable type is not supported!");
 
 	if constexpr (std::is_same_v<Type, i32>)
 		glUniform1i(aLocation, aProperty);

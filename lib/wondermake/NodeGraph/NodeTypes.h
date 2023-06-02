@@ -78,6 +78,9 @@ struct SInputSlotInstanceBase : public SSlotInstanceBase
 	}
 };
 
+template<typename TSlotType>
+struct SSlotType;
+
 template<typename T>
 struct SInputSlotInstance : public SInputSlotInstanceBase
 {

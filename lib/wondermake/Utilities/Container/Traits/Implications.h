@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Utilities/Container/Traits/TraitList.h"
+#include "Utilities/Typetraits/ContainsType.h"
+
 template<typename TExistingTraits, typename TFirst, typename TSecond>
 constexpr auto TwoWayImplication()
 {

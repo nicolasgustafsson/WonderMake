@@ -8,6 +8,7 @@
       <Item Name="Continuations" Condition="myState._Ptr != nullptr">myState._Ptr->myContinuations</Item>
       <Item Name="Cancellations" Condition="myState._Ptr != nullptr">myState._Ptr->myCancellations</Item>
       <Item Name="Result" Condition="myState._Ptr != nullptr" Optional="true">myState._Ptr->myResult</Item>
+      <Item Name="Source" Condition="myState._Ptr != nullptr">myState._Ptr->mySourceLocation</Item>
     </Expand>
   </Type>
   <Type Name="Promise&lt;*&gt;">
@@ -18,6 +19,7 @@
       <Item Name="Continuations" Condition="myState._Ptr != nullptr">myState._Ptr->myContinuations</Item>
       <Item Name="Cancellations" Condition="myState._Ptr != nullptr">myState._Ptr->myCancellations</Item>
       <Item Name="Result" Condition="myState._Ptr != nullptr" Optional="true">myState._Ptr->myResult</Item>
+      <Item Name="Source" Condition="myState._Ptr != nullptr">myState._Ptr->mySourceLocation</Item>
     </Expand>
   </Type>
 </AutoVisualizer>

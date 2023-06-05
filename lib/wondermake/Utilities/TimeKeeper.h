@@ -9,6 +9,7 @@
 #include "wondermake-utility/TimerManager.h"
 
 #include <chrono>
+#include <source_location>
 
 class ScheduleSystem;
 
@@ -62,16 +63,18 @@ public:
 	}
 
 	template<typename TDuration>
-	inline [[nodiscard]] Future<void> StartTimer(const TDuration& aDuration)
+	inline [[nodiscard]] Future<void> StartTimer(const TDuration& aDuration, std::source_location aSourceLocation = std::source_location::current())
 	{
 		return myTimerManager.AddTimer(
-			TimePoint(myTimePassed + std::chrono::duration_cast<Duration>(aDuration)));
+			TimePoint(myTimePassed + std::chrono::duration_cast<Duration>(aDuration)),
+			std::move(aSourceLocation));
 	}
 	template<typename TDuration>
-	inline [[nodiscard]] Future<void> StartTimerReal(const TDuration& aDuration)
+	inline [[nodiscard]] Future<void> StartTimerReal(const TDuration& aDuration, std::source_location aSourceLocation = std::source_location::current())
 	{
 		return myTimerManagerReal.AddTimer(
-			TimePoint(myTimePassedReal + std::chrono::duration_cast<Duration>(aDuration)));
+			TimePoint(myTimePassedReal + std::chrono::duration_cast<Duration>(aDuration)),
+			std::move(aSourceLocation));
 	}
 
 protected:
@@ -141,16 +144,18 @@ public:
 	}
 
 	template<typename TDuration>
-	inline [[nodiscard]] Future<void> StartTimer(const TDuration& aDuration)
+	inline [[nodiscard]] Future<void> StartTimer(const TDuration& aDuration, std::source_location aSourceLocation = std::source_location::current())
 	{
 		return myTimerManager.AddTimer(
-			TimePoint(GetTotalTime<Duration>() + std::chrono::duration_cast<Duration>(aDuration)));
+			TimePoint(GetTotalTime<Duration>() + std::chrono::duration_cast<Duration>(aDuration)),
+			std::move(aSourceLocation));
 	}
 	template<typename TDuration>
-	inline [[nodiscard]] Future<void> StartTimerReal(const TDuration& aDuration)
+	inline [[nodiscard]] Future<void> StartTimerReal(const TDuration& aDuration, std::source_location aSourceLocation = std::source_location::current())
 	{
 		return myTimerManagerReal.AddTimer(
-			TimePoint(GetTotalTimeReal<Duration>() + std::chrono::duration_cast<Duration>(aDuration)));
+			TimePoint(GetTotalTimeReal<Duration>() + std::chrono::duration_cast<Duration>(aDuration)),
+			std::move(aSourceLocation));
 	}
 
 private:

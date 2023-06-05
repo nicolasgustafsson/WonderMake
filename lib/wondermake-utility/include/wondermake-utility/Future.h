@@ -8,6 +8,7 @@
 #include <optional>
 #include <mutex>
 #include <memory>
+#include <source_location>
 #include <type_traits>
 #include <vector>
 
@@ -25,6 +26,9 @@ namespace _Impl
 		: public std::enable_shared_from_this<FutureSharedState<TType>>
 	{
 	public:
+		inline FutureSharedState(std::source_location aSourceLocation)
+			: mySourceLocation(std::move(aSourceLocation))
+		{}
 		inline ~FutureSharedState()
 		{
 			std::unique_lock lock(myMutex);
@@ -113,6 +117,11 @@ namespace _Impl
 			return result;
 		}
 
+		const std::source_location& GetSourceLocation() const noexcept
+		{
+			return mySourceLocation;
+		}
+
 	private:
 		template<CExecutor TExecutor>
 		void Resolve(TExecutor& aExecutor, EFutureState aState, std::unique_lock<std::recursive_mutex> aLock, std::shared_ptr<FutureSharedState> aOwningPointer)
@@ -149,6 +158,8 @@ namespace _Impl
 
 		std::recursive_mutex myMutex;
 		
+		std::source_location mySourceLocation;
+
 		EFutureState myState = EFutureState::Uncompleted;
 		std::optional<TType> myResult;
 
@@ -161,6 +172,9 @@ namespace _Impl
 		: public std::enable_shared_from_this<FutureSharedState<void>>
 	{
 	public:
+		inline FutureSharedState(std::source_location aSourceLocation)
+			: mySourceLocation(std::move(aSourceLocation))
+		{}
 		inline ~FutureSharedState()
 		{
 			std::unique_lock lock(myMutex);
@@ -225,6 +239,11 @@ namespace _Impl
 				myCancellations.emplace_back(std::forward<TCallable>(aCancellation));
 		}
 
+		const std::source_location& GetSourceLocation() const noexcept
+		{
+			return mySourceLocation;
+		}
+
 	private:
 		template<CExecutor TExecutor>
 		void Resolve(TExecutor& aExecutor, EFutureState aState, std::unique_lock<std::recursive_mutex> aLock, std::shared_ptr<FutureSharedState> aOwningPointer)
@@ -260,7 +279,9 @@ namespace _Impl
 		}
 
 		std::recursive_mutex myMutex;
-		
+
+		std::source_location mySourceLocation;
+
 		EFutureState myState = EFutureState::Uncompleted;
 
 		std::vector<UniqueFunction<void(std::shared_ptr<FutureSharedState<void>>&&)>> myContinuations;
@@ -628,7 +649,7 @@ private:
 		if (!myState)
 			return Future<std::decay_t<TNewType>>();
 
-		auto [promise, future] = MakeAsync<std::decay_t<TNewType>>();
+		auto [promise, future] = MakeAsync<std::decay_t<TNewType>>(myState->GetSourceLocation());
 
 		promise.AddOwnership(*this);
 
@@ -662,7 +683,7 @@ private:
 };
 
 template<>
-class Future<void> final
+class Future<void>
 {
 public:
 	using Type = void;
@@ -783,7 +804,7 @@ private:
 		if (!myState)
 			return Future<std::decay_t<TNewType>>();
 
-		auto [promise, future] = MakeAsync<std::decay_t<TNewType>>();
+		auto [promise, future] = MakeAsync<std::decay_t<TNewType>>(myState->GetSourceLocation());
 
 		promise.AddOwnership(*this);
 
@@ -817,9 +838,9 @@ private:
 };
 
 template<typename TType>
-auto MakeAsync()
+auto MakeAsync(std::source_location aSourceLocation = std::source_location::current())
 {
-	auto sharedState = std::make_shared<_Impl::FutureSharedState<TType>>();
+	auto sharedState = std::make_shared<_Impl::FutureSharedState<TType>>(std::move(aSourceLocation));
 
 	Promise<TType> promise(sharedState);
 
@@ -829,12 +850,12 @@ auto MakeAsync()
 }
 
 template<typename TFutureType>
-Future<TFutureType> MakeCompletedFuture();
+Future<TFutureType> MakeCompletedFuture(std::source_location aSourceLocation = std::source_location::current());
 
 template<typename TFutureType, typename TArg>
-inline Future<TFutureType> MakeCompletedFuture(TArg&& aArgs)
+inline Future<TFutureType> MakeCompletedFuture(TArg&& aArgs, std::source_location aSourceLocation = std::source_location::current())
 {
-	auto sharedState = std::make_shared<_Impl::FutureSharedState<TFutureType>>();
+	auto sharedState = std::make_shared<_Impl::FutureSharedState<TFutureType>>(std::move(aSourceLocation));
 	InlineExecutor executor;
 
 	sharedState->Complete(executor, std::forward<TArg>(aArgs));
@@ -843,9 +864,9 @@ inline Future<TFutureType> MakeCompletedFuture(TArg&& aArgs)
 }
 
 template<>
-inline Future<void> MakeCompletedFuture<void>(void)
+inline Future<void> MakeCompletedFuture<void>(std::source_location aSourceLocation)
 {
-	auto sharedState = std::make_shared<_Impl::FutureSharedState<void>>();
+	auto sharedState = std::make_shared<_Impl::FutureSharedState<void>>(std::move(aSourceLocation));
 	InlineExecutor executor;
 
 	sharedState->Complete(executor);
@@ -854,9 +875,9 @@ inline Future<void> MakeCompletedFuture<void>(void)
 }
 
 template<typename TArg>
-inline Future<TArg> MakeCanceledFuture()
+inline Future<TArg> MakeCanceledFuture(std::source_location aSourceLocation = std::source_location::current())
 {
-	auto sharedState = std::make_shared<_Impl::FutureSharedState<std::decay_t<TArg>>>();
+	auto sharedState = std::make_shared<_Impl::FutureSharedState<std::decay_t<TArg>>>(std::move(aSourceLocation));
 	InlineExecutor executor;
 
 	sharedState->Cancel(executor);
@@ -864,70 +885,84 @@ inline Future<TArg> MakeCanceledFuture()
 	return std::move(sharedState);
 }
 
-template<typename... TTypes>
-inline [[nodiscard]] Future<void> WaitForAll(Future<TTypes>... aFutures)
+template<typename... TFutures>
+struct [[nodiscard]] WaitForAll
+	: Future<void>
 {
-	class PromiseWrapper
+	WaitForAll(TFutures... aFutures, std::source_location aSourceLocation = std::source_location::current())
 	{
-	public:
-		inline PromiseWrapper(Promise<void>&& aPromise)
-			: myPromise(std::move(aPromise))
-		{}
-		inline ~PromiseWrapper()
+		class PromiseWrapper
 		{
-			myPromise.Complete();
-		}
+		public:
+			inline PromiseWrapper(Promise<void>&& aPromise)
+				: myPromise(std::move(aPromise))
+			{}
+			inline ~PromiseWrapper()
+			{
+				myPromise.Complete();
+			}
 
-		Promise<void> myPromise;
-	};
+			Promise<void> myPromise;
+		};
 
-	auto [promise, future] = MakeAsync<void>();
+		auto [promise, future] = MakeAsync<void>(std::move(aSourceLocation));
 
-	auto sharedPromise = std::make_shared<PromiseWrapper>(std::move(promise));
+		auto sharedPromise = std::make_shared<PromiseWrapper>(std::move(promise));
 
-	(aFutures.ThenRun(InlineExecutor(), [sharedPromise](auto&&) {}), ...);
+		(aFutures.ThenRun(InlineExecutor(), [sharedPromise](auto&&) {}), ...);
 
-	(sharedPromise->myPromise.AddOwnership(std::move(aFutures)), ...);
+		(sharedPromise->myPromise.AddOwnership(std::move(aFutures)), ...);
 
-	return future;
+		this->Future<void>::operator=(std::move(future));
+	}
 };
 
-template<typename... TTypes>
-inline [[nodiscard]] Future<void> WaitForAny(Future<TTypes>... aFutures)
+template <typename... TFutures>
+WaitForAll(TFutures&&...) -> WaitForAll<TFutures...>;
+
+template<typename... TFutures>
+struct [[nodiscard]] WaitForAny
+	: Future<void>
 {
-	constexpr auto waitFor = [](auto& aFuture, auto& aSharedPromise)
+	WaitForAny(TFutures... aFutures, std::source_location aSourceLocation = std::source_location::current())
 	{
-		aFuture.ThenRun(InlineExecutor(), [promise = std::weak_ptr(aSharedPromise)](auto&&)
+		constexpr auto waitFor = [](auto& aFuture, auto& aSharedPromise)
 		{
-			auto ptr = promise.lock();
+			aFuture.ThenRun(InlineExecutor(), [promise = std::weak_ptr(aSharedPromise)](auto&&)
+			{
+				auto ptr = promise.lock();
 
-			if (!ptr)
-				return;
+				if (!ptr)
+					return;
 
-			ptr->Complete();
-		});
-		aFuture.OnCancel(InlineExecutor(), [promise = std::weak_ptr(aSharedPromise)]()
-		{
-			auto ptr = promise.lock();
+				ptr->Complete();
+			});
+			aFuture.OnCancel(InlineExecutor(), [promise = std::weak_ptr(aSharedPromise)]()
+			{
+				auto ptr = promise.lock();
 
-			if (!ptr)
-				return;
+				if (!ptr)
+					return;
 
-			ptr->Complete();
-		});
-	};
-	auto [promise, future] = MakeAsync<void>();
+				ptr->Complete();
+			});
+		};
+		auto [promise, future] = MakeAsync<void>(std::move(aSourceLocation));
 
-	auto sharedPromise = std::make_shared<Promise<void>>(std::move(promise));
+		auto sharedPromise = std::make_shared<Promise<void>>(std::move(promise));
 
-	(waitFor(aFutures, sharedPromise), ...);
+		(waitFor(aFutures, sharedPromise), ...);
 
-	(sharedPromise->AddOwnership(std::move(aFutures)), ...);
+		(sharedPromise->AddOwnership(std::move(aFutures)), ...);
 
-	future.ThenRun(InlineExecutor(), [sharedPromise](auto&&) {});
+		future.ThenRun(InlineExecutor(), [sharedPromise](auto&&) {});
 
-	return future;
+		this->Future<void>::operator=(std::move(future));
+	}
 };
+
+template <typename... TFutures>
+WaitForAny(TFutures&&...) -> WaitForAny<TFutures...>;
 
 template<typename TCallable>
 inline [[nodiscard]] auto FutureRunResult(TCallable&& aCallable)
@@ -959,6 +994,7 @@ namespace _Impl
 	struct SFutureApplyCallable
 	{
 		TCallable Callable;
+		std::source_location SourceLocation;
 
 		template<typename TFuture>
 		inline auto operator()(TFuture&& aFuture) && noexcept
@@ -971,16 +1007,16 @@ namespace _Impl
 				using FutureResultType = typename FutureType::Type;
 
 				if (!aFuture.IsCompleted())
-					return MakeCanceledFuture<FutureResultType>();
+					return MakeCanceledFuture<FutureResultType>(std::move(SourceLocation));
 
 				auto result = std::move(aFuture).GetResult();
 
 				if (!result)
-					return MakeCanceledFuture<FutureResultType>();
+					return MakeCanceledFuture<FutureResultType>(std::move(SourceLocation));
 
 				return FutureType((std::move(Callable)(std::move(*result)))
 					.AndThen([](auto& aFuture) { return std::move(aFuture); })
-					.OrElse([](auto&) { return MakeCanceledFuture<FutureResultType>(); }));
+					.OrElse([sl = SourceLocation](auto&) mutable { return MakeCanceledFuture<FutureResultType>(std::move(sl)); }));
 			}
 			else
 			{
@@ -989,12 +1025,12 @@ namespace _Impl
 				using FutureResultType = typename FutureType::Type;
 
 				if (!aFuture.IsCompleted())
-					return MakeCanceledFuture<FutureResultType>();
+					return MakeCanceledFuture<FutureResultType>(std::move(SourceLocation));
 
 				auto result = std::move(aFuture).GetResult();
 
 				if (!result)
-					return MakeCanceledFuture<FutureResultType>();
+					return MakeCanceledFuture<FutureResultType>(std::move(SourceLocation));
 
 				return std::move(Callable)(std::move(*result));
 			}
@@ -1010,11 +1046,11 @@ namespace _Impl
 				using FutureResultType = typename FutureType::Type;
 
 				if (!aFuture.IsCompleted())
-					return MakeCanceledFuture<FutureResultType>();
+					return MakeCanceledFuture<FutureResultType>(std::move(SourceLocation));
 
 				return FutureType((std::move(Callable)())
 					.AndThen([](auto& aFuture) { return std::move(aFuture); })
-					.OrElse([](auto&) { return MakeCanceledFuture<FutureResultType>(); }));
+					.OrElse([sl = SourceLocation](auto&) mutable { return MakeCanceledFuture<FutureResultType>(std::move(sl)); }));
 			}
 			else
 			{
@@ -1023,7 +1059,7 @@ namespace _Impl
 				using FutureResultType = typename FutureType::Type;
 
 				if (!aFuture.IsCompleted())
-					return MakeCanceledFuture<FutureResultType>();
+					return MakeCanceledFuture<FutureResultType>(std::move(SourceLocation));
 
 				return std::move(Callable)();
 			}
@@ -1032,7 +1068,7 @@ namespace _Impl
 }
 
 template<typename TCallable>
-inline [[nodiscard]] auto FutureApplyResult(TCallable&& aCallable)
+inline [[nodiscard]] auto FutureApplyResult(TCallable&& aCallable, std::source_location aSourceLocation = std::source_location::current())
 {
-	return _Impl::SFutureApplyCallable<TCallable>{ std::forward<TCallable>(aCallable) };
+	return _Impl::SFutureApplyCallable<TCallable>{ std::forward<TCallable>(aCallable), std::move(aSourceLocation) };
 };

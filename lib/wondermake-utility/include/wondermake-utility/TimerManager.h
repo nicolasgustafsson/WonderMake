@@ -6,6 +6,7 @@
 #include "wondermake-utility/Math.h"
 
 #include <chrono>
+#include <source_location>
 #include <type_traits>
 #include <vector>
 
@@ -23,7 +24,7 @@ public:
 		: myTimers(std::forward<TExecutor>(aExecutor))
 	{}
 
-	inline [[nodiscard]] Future<void> AddTimer(TTimePoint aExpiryPoint)
+	inline [[nodiscard]] Future<void> AddTimer(TTimePoint aExpiryPoint, std::source_location aSourceLocation = std::source_location::current())
 	{
 		const auto pred = [&aExpiryPoint](const auto& aTimer)
 		{
@@ -31,7 +32,7 @@ public:
 		};
 
 		auto it = std::find_if(myTimers.begin(), myTimers.end(), pred);
-		auto [promise, future] = MakeAsync<void>();
+		auto [promise, future] = MakeAsync<void>(std::move(aSourceLocation));
 
 		myTimers.insert(it, STimer{ std::move(promise), std::move(aExpiryPoint) });
 

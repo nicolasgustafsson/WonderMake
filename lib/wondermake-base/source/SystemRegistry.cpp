@@ -4,6 +4,11 @@ Result<SystemContainer, SystemRegistry::SError> SystemRegistry::CreateSystems(co
 {
 	DependencyInjector dependencyInjector;
 
+	dependencyInjector.Add<DependencyInjector>([&dependencyInjector]() -> auto&
+		{
+			return dependencyInjector;
+		});
+
 	const auto requiredFilter = [&filter = aFilter.RequiredAnyTraits](auto&& aSystemInfo)
 	{
 		if (filter.empty())

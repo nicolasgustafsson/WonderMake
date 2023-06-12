@@ -60,22 +60,39 @@ private:
 	inline void AddSystemHelper(TCreateFunc&& aCreateFunc, TupleWrapper<std::tuple<SharedReference<TDependencies>...>>&&)
 	{
 		mySystemList.emplace_back(
-			SystemElement {
+			SystemElement
+			{
 				TSystem::template TraitSet::ToObject(),
 				[createFunc = std::move(aCreateFunc)] (SystemRegistry& aSelf, DependencyInjector& aDI)
 				{
-					auto construct = [&self = aSelf, createFunc = std::move(createFunc)](SharedReference<std::decay_t<TDependencies>>... aDependencies)
+					auto construct = [&aSelf, createFunc = std::move(createFunc)](SharedReference<std::decay_t<TDependencies>>... aDependencies)
 					{
 						TSystem::InjectDependencies(std::make_tuple(std::move(aDependencies)...));
 
 						auto ref = createFunc();
 
-						self.myConstructingContainer.Add<TBaseSystem>(ref);
+						aSelf.myConstructingContainer.Add<TSystem>(ref);
 
 						return ref;
 					};
 
-					aDI.Add<SharedReference<TBaseSystem>, decltype(construct), SharedReference<std::decay_t<TDependencies>>...>(std::move(construct));
+					aDI.Add<SharedReference<TSystem>, decltype(construct), SharedReference<std::decay_t<TDependencies>>...>(std::move(construct));
+
+					if constexpr (!std::is_same_v<TSystem, TBaseSystem>)
+					{
+						auto constructBase = [&aSelf](DependencyInjector& aDI)
+						{
+							SharedReference<TSystem> ref = aDI.Get<SharedReference<TSystem>>()
+								.Unwrap()
+								.get();
+
+							aSelf.myConstructingContainer.Add<TBaseSystem>(ref);
+
+							return ref;
+						};
+
+						aDI.Add<SharedReference<TBaseSystem>, decltype(constructBase), DependencyInjector>(std::move(constructBase));
+					}
 				}
 			});
 	}

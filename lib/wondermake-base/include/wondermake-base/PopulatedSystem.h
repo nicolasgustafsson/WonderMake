@@ -27,3 +27,18 @@ protected:
 	}
 
 };
+
+template<typename TPolicySet = Policy::Set<>, typename TTraitSet = SystemTraits::Set<>>
+class PopulatedSystemSub
+	: public SystemSub<
+		Policy::Concat<TPolicySet, PopulatedSystemPolicySet>,
+		TTraitSet>
+{
+protected:
+	template<CConfigType TConfigType, typename TDefaultArg>
+	[[nodiscard]] inline TConfigType GetConfig(const auto& aId, TDefaultArg&& aDefaultValue)
+	{
+		return this->Get<ConfigurationSystem>().Get<TConfigType>(aId, std::forward<TDefaultArg>(aDefaultValue));
+	}
+
+};

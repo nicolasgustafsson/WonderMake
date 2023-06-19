@@ -4,14 +4,14 @@
 
 #include <random>
 
-class Randomizer
+class RandomSystem
 	: public System<
 		Policy::Set<>,
 		STrait::Set<
 			STWonderMake>>
 {
 public:
-	Randomizer();
+	RandomSystem();
 
 	template <typename T = f32>
 	T GetRandomNumber(T aMin = 0, T aMax = 1);
@@ -37,7 +37,7 @@ private:
 };
 
 template <typename T /*= f32*/>
-T Randomizer::GetRandomNumber(T aMin, T aMax)
+T RandomSystem::GetRandomNumber(T aMin, T aMax)
 {
 	if constexpr (std::is_integral_v<T>)
 	{

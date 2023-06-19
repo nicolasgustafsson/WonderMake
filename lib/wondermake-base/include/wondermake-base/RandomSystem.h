@@ -2,7 +2,7 @@
 
 #include "wondermake-base/System.h"
 
-#include <random>
+#include "wondermake-utility/Randomizer.h"
 
 class RandomSystem
 	: public System<
@@ -11,42 +11,22 @@ class RandomSystem
 			STWonderMake>>
 {
 public:
-	RandomSystem();
-
 	template <typename T = f32>
-	T GetRandomNumber(T aMin = 0, T aMax = 1);
-
-	bool GetRandomBool();
-
-	template <typename T, T... TOptions>
-	T SelectOne()
+	[[nodiscard]] inline T GetRandomNumber(T aMin = 0, T aMax = 1)
 	{
-		const size_t numberOfOptions = sizeof...(TOptions);
-
-		const size_t selectedOption = GetRandomNumber<size_t>(0, numberOfOptions - 1);
-
-		std::array<T, numberOfOptions> optionsAsArray = { { TOptions... } };
-
-		return optionsAsArray[selectedOption];
+		return myRnd.GetRandomNumber<T>(aMin, aMax);
 	}
-
+	[[nodiscard]] inline bool GetRandomBool()
+	{
+		return myRnd.GetRandomBool();
+	}
+	template<typename TEnum>
+	[[nodiscard]] inline TEnum SelectEnum()
+	{
+		return myRnd.SelectEnum<TEnum>();
+	}
 
 private:
-	std::random_device myRandomDevice;
-	std::mt19937 myRandomGenerator;
-};
+	Randomizer myRnd;
 
-template <typename T /*= f32*/>
-T RandomSystem::GetRandomNumber(T aMin, T aMax)
-{
-	if constexpr (std::is_integral_v<T>)
-	{
-		std::uniform_int_distribution<T> distribution(aMin, aMax);
-		return distribution(myRandomGenerator);
-	}
-	else
-	{
-		std::uniform_real_distribution<T> distribution(aMin, aMax);
-		return distribution(myRandomGenerator);
-	}
-}
+};

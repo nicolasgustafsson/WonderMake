@@ -24,6 +24,7 @@ list(APPEND IncludeFiles
     "include/wondermake-utility/Matrix.h"
     "include/wondermake-utility/MemoryUnit.h"
     "include/wondermake-utility/plf_colony.h"
+    "include/wondermake-utility/Randomizer.h"
     "include/wondermake-utility/RestrictTypes.h"
     "include/wondermake-utility/Result.h"
     "include/wondermake-utility/Rotation.h"

@@ -4,12 +4,13 @@
 #include "Debugging/DebugLineDrawer.h"
 #include "Graphics/RenderObject.h"
 #include "Graphics/SpriteRenderObject.h"
-#include "Graphics/RenderTarget.h"
 #include "Graphics/ScreenPassRenderObject.h"
-#include "Graphics/OpenGLFacade.h"
 #include "Graphics/RenderCommandProcessor.h"
-#include "Program/Window.h"
 #include "Utilities/Debugging/Debugged.h"
+
+#include "wondermake-ui/OpenGLFacade.h"
+#include "wondermake-ui/RenderTarget.h"
+#include "wondermake-ui/Window.h"
 
 #include "wondermake-base/System.h"
 

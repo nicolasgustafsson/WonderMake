@@ -1,6 +1,8 @@
 #pragma once
+
+#include "wondermake-ui/OpenGLFacade.h"
+
 #include <glad/glad.h>
-#include "OpenGLFacade.h"
 
 template <typename TVertexData>
 class VertexBuffer : NonCopyable
@@ -51,10 +53,10 @@ void VertexBuffer<TVertexData>::SetData(const TContainer& aData)
 	SystemPtr<OpenGLFacade> openGL;
 	openGL->BindBuffer(GL_ARRAY_BUFFER, myBufferHandle);
 
-	if (myVertexCount != static_cast<u32>(aData.Count()))
-		ResizeBuffer(static_cast<u32>(aData.Count()));
+	if (myVertexCount != static_cast<u32>(aData.size()))
+		ResizeBuffer(static_cast<u32>(aData.size()));
 
-	openGL->UpdateBufferData(GL_ARRAY_BUFFER, 0, sizeof(TVertexData) * myVertexCount, &aData[0]);
+	openGL->UpdateBufferData(GL_ARRAY_BUFFER, 0, sizeof(TVertexData) * myVertexCount, &aData.front());
 }
 
 template <typename TVertexData>

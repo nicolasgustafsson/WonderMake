@@ -1,8 +1,7 @@
-#include "GlfwFacade.h"
+#include "wondermake-ui/GlfwFacade.h"
 
 #include <glad/glad.h>
-
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 
 #include "wondermake-base/SystemGlobal.h"
 

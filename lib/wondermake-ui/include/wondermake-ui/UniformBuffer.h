@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/OpenGLFacade.h"
+#include "wondermake-ui/OpenGLFacade.h"
 
 #include "wondermake-utility/Typedefs.h"
 

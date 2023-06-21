@@ -1,6 +1,7 @@
 #pragma once
 #include "RenderObject.h"
-#include "RenderTarget.h"
+
+#include "wondermake-ui/RenderTarget.h"
 
 class ScreenPassRenderObject : public RenderObject
 	<EVertexAttribute::Position,

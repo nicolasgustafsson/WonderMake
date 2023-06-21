@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-#include "Program/GlfwFacade.h"
+#include "wondermake-ui/GlfwFacade.h"
 
 Camera::Camera(
 	OpenGLFacade&	aOpenGlFacade,

@@ -1,6 +1,6 @@
-#include "Window.h"
+#include "wondermake-ui/Window.h"
 
-#include "Program/GlfwFacade.h"
+#include "wondermake-ui/GlfwFacade.h"
 
 #include "wondermake-engine/ConfigurationEngine.h"
 
@@ -12,7 +12,7 @@
 #include "wondermake-utility/Bindable.h"
 #include "wondermake-utility/BufferExecutor.h"
 
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 
 #include "Json/json.hpp"
 

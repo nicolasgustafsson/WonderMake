@@ -1,10 +1,12 @@
-#include "ImguiWrapper.h"
-#include "Window.h"
-#include "GLFW/glfw3.h"
-#include "Program/GlfwFacade.h"
+#include "wondermake-debug-ui/ImguiWrapper.h"
 
 #include "wondermake-debug-ui/DebugSettingsSystem.h"
 #include "wondermake-debug-ui/ImguiInclude.h"
+
+#include "wondermake-ui/GlfwFacade.h"
+#include "wondermake-ui/Window.h"
+
+#include <GLFW/glfw3.h>
 
 #include "wondermake-engine/ConfigurationEngine.h"
 

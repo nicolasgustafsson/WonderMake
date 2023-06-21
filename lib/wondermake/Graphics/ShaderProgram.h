@@ -1,11 +1,13 @@
 #pragma once
 #include "Graphics/Shader.h"
 #include "Resources/ResourceProxy.h"
+
+#include "wondermake-ui/OpenGLFacade.h"
+
 #include "wondermake-utility/Vector.h"
 
 #include <filesystem>
 #include <optional>
-#include "OpenGLFacade.h"
 
 template<typename TResource>
 class ResourceSystem;

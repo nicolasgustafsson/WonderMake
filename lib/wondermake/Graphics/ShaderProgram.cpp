@@ -1,13 +1,16 @@
 #include "ShaderProgram.h"
-#include <type_traits>
-#include "VertexBuffer.h"
+
 #include "Resources/ResourceSystem.h"
 #include "Texture.h"
-#include "OpenGLFacade.h"
+
+#include "wondermake-ui/OpenGLFacade.h"
+#include "wondermake-ui/VertexBuffer.h"
 
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/SystemPtr.h"
 #include "wondermake-base/WmLogTags.h"
+
+#include <type_traits>
 
 ShaderProgram::ShaderProgram(
 	ResourceSystem<Shader<EShaderType::Vertex>>& aVsSystem, ResourceSystem<Shader<EShaderType::Fragment>>& aFsSystem, ResourceSystem<Shader<EShaderType::Geometry>>& aGsSystem,

@@ -1,4 +1,4 @@
-#include "ShaderParser.h"
+#include "wondermake-ui/ShaderParser.h"
 
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/WmLogTags.h"

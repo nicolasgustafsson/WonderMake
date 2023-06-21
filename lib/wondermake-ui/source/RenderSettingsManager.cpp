@@ -1,6 +1,6 @@
-#include "RenderSettingsManager.h"
+#include "wondermake-ui/RenderSettingsManager.h"
 
-#include "Graphics/OpenGLFacade.h"
+#include "wondermake-ui/OpenGLFacade.h"
 
 #include "wondermake-base/SystemGlobal.h"
 

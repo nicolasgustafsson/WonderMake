@@ -1,6 +1,7 @@
 #pragma once
 #include "Imgui/FileSelector.h"
-#include "Graphics/RenderSettingsManager.h"
+
+#include "wondermake-ui/RenderSettingsManager.h"
 
 #include "wondermake-utility/Vector.h"
 

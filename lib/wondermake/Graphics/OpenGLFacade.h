@@ -1,8 +1,8 @@
 #pragma once
-#include "Utilities/Color.h"
 
 #include "wondermake-base/System.h"
 
+#include "wondermake-utility/Color.h"
 #include "wondermake-utility/Vector.h"
 
 #include <glad/glad.h>

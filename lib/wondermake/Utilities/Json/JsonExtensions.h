@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Graphics/Text/FontMetrics.h"
-#include "Utilities/Color.h"
 
+#include "wondermake-utility/Color.h"
 #include "wondermake-utility/Vector.h"
 
 #include <json/json.hpp>

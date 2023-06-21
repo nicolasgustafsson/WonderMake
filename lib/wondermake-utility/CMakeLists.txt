@@ -8,6 +8,7 @@ list(APPEND IncludeFiles
     "include/wondermake-utility/BufferExecutor.h"
     "include/wondermake-utility/CancelableList.h"
     "include/wondermake-utility/CmdLineArgs.h"
+    "include/wondermake-utility/Color.h"
     "include/wondermake-utility/DependencyInjector.h"
     "include/wondermake-utility/Endian.h"
     "include/wondermake-utility/EventSubscriber.h"

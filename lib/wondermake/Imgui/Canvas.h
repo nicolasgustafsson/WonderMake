@@ -1,9 +1,8 @@
 #pragma once
 
-#include "Utilities/Color.h"
-
 #include "wondermake-debug-ui/ImguiInclude.h"
 
+#include "wondermake-utility/Color.h"
 #include "wondermake-utility/Vector.h"
 
 namespace WmGui

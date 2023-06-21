@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Utilities/Color.h"
 #include "Utilities/Debugging/Debugged.h"
 
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/System.h"
 
+#include "wondermake-utility/Color.h"
 #include "wondermake-utility/Guid.h"
 
 #include <mutex>

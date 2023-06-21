@@ -1,7 +1,7 @@
 #pragma once
 #include "Message/MessageTypes.h"
 
-#include "Utilities/Color.h"
+#include "wondermake-utility/Color.h"
 #include "wondermake-utility/Vector.h"
 
 struct SDebugLine

@@ -104,7 +104,6 @@ list(APPEND IncludeFiles
     "Utilities/TypeTraits/ParameterPack.h"
     "Utilities/TypeTraits/TypeTraits.h"
     "Utilities/BezierCurve.h"
-    "Utilities/Color.h"
     "Utilities/Id.h"
     "Utilities/Platform.h"
     "Utilities/TimeKeeper.h"

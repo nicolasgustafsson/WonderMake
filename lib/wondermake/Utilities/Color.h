@@ -1,42 +1,42 @@
 #pragma once
 
-#include "wondermake-debug-ui/ImguiInclude.h"
-
 #include "wondermake-utility/Typedefs.h"
 
 struct SColor
 {
 public:
-	constexpr SColor() = default;
+	constexpr SColor() noexcept = default;
 
-	constexpr SColor(const i32 aHexadecimalValue, f32 aAlpha = 1.0f)
-		: SColor(static_cast<u8>((aHexadecimalValue >> 16) & 0xFF), static_cast<u8>((aHexadecimalValue >> 8) & 0xFF), static_cast<u8>((aHexadecimalValue) & 0xFF), (u8)(aAlpha * 255.f))
-	{
+	constexpr SColor(const u32 aHexadecimalValue, f32 aAlpha = 1.0f) noexcept
+		: SColor(
+			static_cast<u8>((aHexadecimalValue >> 16) & 0xFF),
+			static_cast<u8>((aHexadecimalValue >> 8) & 0xFF),
+			static_cast<u8>((aHexadecimalValue) & 0xFF),
+			(u8)(aAlpha * 255.f))
+	{}
 
-	}
+	constexpr SColor(
+		const u8 aRed,
+		const u8 aGreen,
+		const u8 aBlue,
+		const u8 aAlpha = 255) noexcept
+		: SColor(
+			static_cast<f32>(aRed) / 255.f,
+			static_cast<f32>(aGreen) / 255.f,
+			static_cast<f32>(aBlue) / 255.f,
+			static_cast<f32>(aAlpha) / 255.f)
+	{}
 
-	constexpr SColor(const u8 aRed, const u8 aGreen, const u8 aBlue, const u8 aAlpha = 255)
-		: SColor(static_cast<f32>(aRed) / 255.f, static_cast<f32>(aGreen) / 255.f, static_cast<f32>(aBlue) / 255.f, static_cast<f32>(aAlpha) / 255.f)
-	{
-
-	}
-
-	constexpr SColor(const f32 aRed, const f32 aGreen, const f32 aBlue, const f32 aAlpha = 1.0f) 
-		: R(aRed), G(aGreen), B(aBlue), A(aAlpha)
-	{
-	
-	}
-
-	f32 R = 1.0f;
-	f32 G = 1.0f;
-	f32 B = 1.0f;
-	f32 A = 1.0f;
-
-	inline [[nodiscard]] operator ImColor() const noexcept { return ImColor(R, G, B, A); }
-	inline [[nodiscard]] operator ImVec4() const noexcept { return ImVec4(R, G, B, A); }
-
-	constexpr bool operator==(const SColor& aOther) const { return aOther.R == R && aOther.G == G && aOther.B == B && aOther.A == A; }
-	constexpr bool operator!=(const SColor& aOther) const { return !(aOther == *this); }
+	constexpr SColor(
+		const f32 aRed,
+		const f32 aGreen,
+		const f32 aBlue,
+		const f32 aAlpha = 1.0f) noexcept
+		: R(aRed)
+		, G(aGreen)
+		, B(aBlue)
+		, A(aAlpha)
+	{}
 
 	[[nodiscard]] constexpr static SColor CornflowerBlue(const f32 aAlpha = 1.0f)	noexcept { return { 100.f / 255.f, 149.f / 255.f, 237.f / 255.f, aAlpha }; }
 	[[nodiscard]] constexpr static SColor Grey(const f32 aAlpha = 1.0f)				noexcept { return { 0.85f, 0.85f, 0.85f, aAlpha }; }
@@ -64,4 +64,19 @@ public:
 	[[nodiscard]] constexpr static SColor SeaGreenCrayola(f32 aAlpha = 1.0f)		noexcept { return SColor(0x2AE5BF, aAlpha); }
 	[[nodiscard]] constexpr static SColor MiddleYellow(const f32 aAlpha = 1.0f)		noexcept { return SColor(0xFFE921, aAlpha); }
 	[[nodiscard]] constexpr static SColor EerieBlack(const f32 aAlpha = 1.0f)		noexcept { return SColor(0x151514, aAlpha); }
+
+	[[nodiscard]] constexpr bool operator==(const SColor& aOther) const noexcept
+	{
+		return aOther.R == R && aOther.G == G && aOther.B == B && aOther.A == A;
+	}
+	[[nodiscard]] constexpr bool operator!=(const SColor& aOther) const noexcept
+	{
+		return !(aOther == *this);
+	}
+
+	f32 R = 1.0f;
+	f32 G = 1.0f;
+	f32 B = 1.0f;
+	f32 A = 1.0f;
+
 };

@@ -2,7 +2,7 @@
 #include "Resources/AssetLink.h"
 #include "Utilities/Id.h"
 
-#include "wondermake-debug-ui/ImguiInclude.h"
+#include "wondermake-ui/ImguiInclude.h"
 
 namespace WmGui
 {

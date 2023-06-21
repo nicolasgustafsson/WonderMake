@@ -12,9 +12,10 @@
 #include "Utilities/Debugging/Debugged.h"
 #include "Utilities/TimeKeeper.h"
 
-#include "wondermake-debug-ui/ImguiWrapper.h"
-
+#include "wondermake-ui/DebugSettingsSystem.h"
+#include "wondermake-ui/DebugSystem.h"
 #include "wondermake-ui/EngineUniformBuffer.h"
+#include "wondermake-ui/ImguiWrapper.h"
 #include "wondermake-ui/Window.h"
 
 #include "wondermake-engine/ConfigurationEngine.h"
@@ -22,9 +23,6 @@
 #include "wondermake-engine/LoggerFileSystem.h"
 #include "wondermake-engine/LoggerRemoteSystem.h"
 #include "wondermake-engine/SerializeConfigurationJob.h"
-
-#include "wondermake-debug-ui/DebugSettingsSystem.h"
-#include "wondermake-debug-ui/DebugSystem.h"
 
 #include "wondermake-io/ConfigurationIo.h"
 #include "wondermake-io/PlatformFilePaths.h"

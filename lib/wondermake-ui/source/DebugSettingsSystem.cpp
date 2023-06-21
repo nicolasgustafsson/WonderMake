@@ -1,9 +1,9 @@
-#include "wondermake-debug-ui/DebugSettingsSystem.h"
+#include "wondermake-ui/DebugSettingsSystem.h"
 
 #include "ConfigurationDebugUi.h"
 #include "JsonInspector.h"
 
-#include "wondermake-debug-ui/ImguiInclude.h"
+#include "wondermake-ui/ImguiInclude.h"
 
 #include "wondermake-io/ReadFileJob.h"
 #include "wondermake-io/WriteFileJob.h"

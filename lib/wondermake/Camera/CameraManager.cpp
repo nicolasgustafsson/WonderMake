@@ -2,8 +2,7 @@
 
 #include "Resources/ResourceSystem.h"
 
-#include "wondermake-debug-ui/DebugSystem.h"
-
+#include "wondermake-ui/DebugSystem.h"
 #include "wondermake-ui/GlfwFacade.h"
 #include "wondermake-ui/Window.h"
 

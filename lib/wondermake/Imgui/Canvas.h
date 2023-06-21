@@ -1,6 +1,6 @@
 #pragma once
 
-#include "wondermake-debug-ui/ImguiInclude.h"
+#include "wondermake-ui/ImguiInclude.h"
 
 #include "wondermake-utility/Color.h"
 #include "wondermake-utility/Vector.h"

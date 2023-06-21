@@ -1,8 +1,8 @@
 #include "ConfigurationView.h"
 
-#include "wondermake-debug-ui/DebugSettingsSystem.h"
-#include "wondermake-debug-ui/DebugSystem.h"
-#include "wondermake-debug-ui/ImguiInclude.h"
+#include "wondermake-ui/DebugSettingsSystem.h"
+#include "wondermake-ui/DebugSystem.h"
+#include "wondermake-ui/ImguiInclude.h"
 
 #include "wondermake-engine/ConfigurationEngine.h"
 #include "wondermake-engine/ConfigurationRemoteSystem.h"

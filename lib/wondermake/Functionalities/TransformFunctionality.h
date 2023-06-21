@@ -1,7 +1,7 @@
 #pragma once
 #include "Components/TransformComponent.h"
 
-#include "wondermake-debug-ui/ImguiInclude.h"
+#include "wondermake-ui/ImguiInclude.h"
 
 #include "wondermake-base/Functionality.h"
 

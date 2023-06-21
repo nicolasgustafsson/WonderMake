@@ -1,6 +1,7 @@
 #include "ImGuiLogger.h"
 
 #include "wondermake-debug-ui/DebugSettingsSystem.h"
+#include "wondermake-debug-ui/DebugSystem.h"
 #include "wondermake-debug-ui/ImguiInclude.h"
 
 #include "wondermake-base/SystemGlobal.h"
@@ -36,7 +37,6 @@ static const auto locSeverityNames	= GetEnumNames<ELogSeverity>();
 static const auto locLevelNames		= GetEnumNames<ELogLevel>();
 
 ImGuiLogger::ImGuiLogger()
-	: Debugged("Output Log", GetExecutor())
 {
 	for (const auto& [en, name] : locSeverityNames)
 		myCategoryValues.Severity.emplace(name);
@@ -50,6 +50,9 @@ ImGuiLogger::ImGuiLogger()
 void ImGuiLogger::Initialize()
 {
 	Logger::Get().AddLogger(weak_from_this());
+
+	Get<DebugSystem>().AddDebugWindow("Output Log", GetExecutor(), Bind(&ImGuiLogger::Debug, weak_from_this()))
+		.Detach();
 }
 
 void ImGuiLogger::Debug(bool& aIsOpen)

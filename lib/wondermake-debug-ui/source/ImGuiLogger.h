@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Utilities/Debugging/Debugged.h"
-
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/System.h"
 
@@ -16,13 +14,14 @@
 #include <vector>
 
 class DebugSettingsSystem;
+class DebugSystem;
 
 class ImGuiLogger
-	: public Debugged
-	, public LoggerBase
+	: public LoggerBase
 	, public System<
 		Policy::Set<
-			PAdd<DebugSettingsSystem, PWrite>>,
+			PAdd<DebugSettingsSystem, PWrite>,
+			PAdd<DebugSystem, PWrite>>,
 		STrait::Set<
 			STGui,
 			STSingleton,
@@ -80,7 +79,7 @@ private:
 		bool operator==(const SVisibleColumns&) const = default;
 	};
 
-	void Debug(bool& aIsOpen) override;
+	void Debug(bool& aIsOpen);
 	template<bool CompactView>
 	void UpdateLogs();
 

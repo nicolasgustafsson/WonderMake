@@ -12,6 +12,8 @@ list(APPEND SourceFiles
     "source/ConfigurationView.h"
     "source/DebugSystem.cpp"
     "source/DebugSettingsSystem.cpp"
+    "source/ImGuiLogger.cpp"
+    "source/ImGuiLogger.h"
     "source/JsonInspector.cpp"
     "source/JsonInspector.h")
 

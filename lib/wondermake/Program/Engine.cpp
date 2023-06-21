@@ -4,16 +4,18 @@
 #include "Camera/Camera.h"
 #include "Camera/CameraManager.h"
 #include "Camera/Display.h"
-#include "Graphics/EngineUniformBuffer.h"
 #include "Graphics/Renderer.h"
 #include "Input/InputSystem.h"
 #include "Message/DispatchRouter.h"
 #include "Message/Messages.h"
-#include "Program/ImguiWrapper.h"
-#include "Program/Window.h"
 #include "Threads/TaskManager.h"
 #include "Utilities/Debugging/Debugged.h"
 #include "Utilities/TimeKeeper.h"
+
+#include "wondermake-debug-ui/ImguiWrapper.h"
+
+#include "wondermake-ui/EngineUniformBuffer.h"
+#include "wondermake-ui/Window.h"
 
 #include "wondermake-engine/ConfigurationEngine.h"
 #include "wondermake-engine/DeserializeConfigurationJob.h"

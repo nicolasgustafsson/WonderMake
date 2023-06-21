@@ -4,6 +4,9 @@
 #include "Resources/Resource.h"
 #include "Resources/ResourceSystem.h"
 
+#include "wondermake-ui/OpenGLFacade.h"
+#include "wondermake-ui/ShaderParser.h"
+
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/SystemPtr.h"
 #include "wondermake-base/WmLogTags.h"
@@ -11,8 +14,6 @@
 #include "wondermake-utility/RestrictTypes.h"
 
 #include <glad/glad.h>
-#include "OpenGLFacade.h"
-#include "Graphics/ShaderParser.h"
 
 enum class EShaderType
 {

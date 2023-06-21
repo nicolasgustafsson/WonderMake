@@ -1,7 +1,7 @@
-#include "EngineUniformBuffer.h"
+#include "wondermake-ui/EngineUniformBuffer.h"
 
-#include "Graphics/OpenGLFacade.h"
-#include "Program/Window.h"
+#include "wondermake-ui/OpenGLFacade.h"
+#include "wondermake-ui/Window.h"
 
 #include "wondermake-base/SystemGlobal.h"
 

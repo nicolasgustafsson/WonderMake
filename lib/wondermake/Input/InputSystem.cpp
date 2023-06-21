@@ -4,7 +4,8 @@
 #include "Camera/CameraManager.h"
 #include "Camera/Display.h"
 #include "Debugging/DebugSettings.h"
-#include "Program/GlfwFacade.h"
+
+#include "wondermake-ui/GlfwFacade.h"
 
 #include <GLFW/glfw3.h>
 

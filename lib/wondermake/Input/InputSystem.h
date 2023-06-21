@@ -1,7 +1,8 @@
 #pragma once
 #include "Input/InputItems.h"
-#include "Program/Window.h"
 #include "Utilities/Debugging/Debugged.h"
+
+#include "wondermake-ui/Window.h"
 
 #include "wondermake-base/System.h"
 

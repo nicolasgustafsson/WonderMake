@@ -1,16 +1,16 @@
 ﻿#include "Renderer.h"
 
-#include "VertexAttributes.h"
-#include "EngineUniformBuffer.h"
 #include "Camera/Camera.h"
 #include "Camera/Display.h"
 #include "Debugging/DebugSettings.h"
-#include "Program/GlfwFacade.h"
-#include "Graphics/EngineUniformBuffer.h"
 #include "Graphics/RenderCommandProcessor.h"
-#include "Graphics/RenderTarget.h"
 
 #include "wondermake-debug-ui/DebugSystem.h"
+
+#include "wondermake-ui/EngineUniformBuffer.h"
+#include "wondermake-ui/GlfwFacade.h"
+#include "wondermake-ui/RenderTarget.h"
+#include "wondermake-ui/VertexAttributes.h"
 
 #include "wondermake-engine/ConfigurationEngine.h"
 

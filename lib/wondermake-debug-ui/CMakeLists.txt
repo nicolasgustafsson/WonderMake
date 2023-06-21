@@ -3,21 +3,23 @@ cmake_minimum_required(VERSION 3.10)
 list(APPEND IncludeFiles
     "include/wondermake-debug-ui/DebugSettingsSystem.h"
     "include/wondermake-debug-ui/DebugSystem.h"
-    "include/wondermake-debug-ui/ImguiInclude.h")
+    "include/wondermake-debug-ui/ImguiInclude.h"
+    "include/wondermake-debug-ui/ImguiWrapper.h")
 
 list(APPEND SourceFiles
     "source/ConfigurationDebugUi.cpp"
     "source/ConfigurationDebugUi.h"
     "source/ConfigurationView.cpp"
     "source/ConfigurationView.h"
-    "source/DebugSystem.cpp"
     "source/DebugSettingsSystem.cpp"
     "source/ImGuiLogger.cpp"
     "source/ImGuiLogger.h"
+    "source/DebugSystem.cpp"
+    "source/ImguiWrapper.cpp"
     "source/JsonInspector.cpp"
     "source/JsonInspector.h")
 
-list(APPEND TargetDependencies Imgui WonderMakeBase WonderMakeEngine WonderMakeIo WonderMakeUtility)
+list(APPEND TargetDependencies Imgui WonderMakeBase WonderMakeEngine WonderMakeIo WonderMakeUtility WonderMakeUi)
 
 if (NOT WonderMake_ImportLibraries)
     add_library(WonderMakeDebugUi STATIC ${IncludeFiles} ${SourceFiles})

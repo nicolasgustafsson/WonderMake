@@ -1,5 +1,6 @@
-#include "RenderTarget.h"
-#include "OpenGLFacade.h"
+#include "wondermake-ui/RenderTarget.h"
+
+#include "wondermake-ui/OpenGLFacade.h"
 
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/SystemPtr.h"

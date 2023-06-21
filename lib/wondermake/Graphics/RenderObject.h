@@ -1,16 +1,19 @@
 #pragma once
+
+#include "Graphics/RenderHandle.h"
 #include "Graphics/ShaderProgram.h"
 #include "Graphics/Texture.h"
-#include "Graphics/VertexAttributes.h"
-#include "Graphics/VertexBufferArray.h"
-#include "Graphics/VertexTypes.h"
 
 #include "Resources/AssetDatabase.h"
 #include "Resources/ResourceProxy.h"
 
+#include "wondermake-ui/OpenGLFacade.h"
+#include "wondermake-ui/VertexAttributes.h"
+#include "wondermake-ui/VertexBufferArray.h"
+#include "wondermake-ui/VertexTypes.h"
+
 #include "wondermake-base/SystemPtr.h"
-#include "OpenGLFacade.h"
-#include "Graphics/RenderHandle.h"
+
 
 //everything needed to create a renderobject
 struct SRenderObjectInfo

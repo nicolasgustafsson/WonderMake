@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/EngineUniformBuffer.h"
+#include "wondermake-ui/EngineUniformBuffer.h"
 
 #include "wondermake-utility/Matrix.h"
 #include "wondermake-utility/RestrictTypes.h"

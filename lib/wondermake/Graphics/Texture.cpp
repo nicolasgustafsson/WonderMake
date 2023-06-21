@@ -1,7 +1,8 @@
 #include "Texture.h"
 
-#include "Graphics/OpenGLFacade.h"
 #include "Resources/AssetDatabase.h"
+
+#include "wondermake-ui/OpenGLFacade.h"
 
 #include "wondermake-base/SystemPtr.h"
 

@@ -1,10 +1,12 @@
 #pragma once
-#include "VertexAttributes.h"
-#include "VertexBuffer.h"
+
+#include "wondermake-ui/OpenGLFacade.h"
+#include "wondermake-ui/VertexAttributes.h"
+#include "wondermake-ui/VertexBuffer.h"
 
 #include "wondermake-utility/TupleUtility.h"
-#include "OpenGLFacade.h"
-#include "Utilities/Container/Container.h"
+
+#include <vector>
 
 template<EVertexAttribute TAttribute>
 class SVertexAttributeContainer final
@@ -15,7 +17,7 @@ private:
 public:
 	void Resize(const u32 aSize)
 	{
-		myContainer.Resize(aSize);
+		myContainer.resize(aSize);
 		myVertexBuffer.ResizeBuffer(aSize);
 	}
 
@@ -47,7 +49,7 @@ public:
 
 private:
 	VertexBuffer<ValueType> myVertexBuffer;
-	Container<ValueType, ContiguousElements, Resizable, Indexable> myContainer;
+	std::vector<ValueType> myContainer;
 	u32 myVertexAttributeIndex;
 	bool myIsDirty = true;
 };

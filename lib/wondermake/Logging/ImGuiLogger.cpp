@@ -12,6 +12,11 @@
 
 #include <magic_enum.hpp>
 
+[[nodiscard]] inline ImVec4 ToImVec4(SColor aColor) noexcept
+{
+	return ImVec4(aColor.R, aColor.G, aColor.B, aColor.A);
+}
+
 WM_REGISTER_SYSTEM(ImGuiLogger);
 
 inline constexpr auto locCompactSettingName = "Logging/Compact";
@@ -253,7 +258,7 @@ void ImGuiLogger::UpdateLogs()
 
 			ImGui::TableNextRow();
 
-			ImGui::PushStyleColor(ImGuiCol_Text, logLine.Color);
+			ImGui::PushStyleColor(ImGuiCol_Text, ToImVec4(logLine.Color));
 
 			ImGui::TableSetColumnIndex(columnLoggerName);
 

@@ -151,7 +151,7 @@ list(APPEND SourceFiles
     "Utilities/TimeKeeper.cpp"
     "glad.c")
 
-list(APPEND TargetDependencies Glad Glfw Khr Imgui NlohmannJson SoLoud Stb WonderMakeBase WonderMakeDebugUi WonderMakeUtility WonderMakeIo WonderMakeEngine WonderMakeUi)
+list(APPEND TargetDependencies Glad Glfw Khr Imgui NlohmannJson SoLoud Stb WonderMakeBase WonderMakeUtility WonderMakeIo WonderMakeEngine WonderMakeUi)
 
 if (NOT WonderMake_ImportLibraries)
     set_source_files_properties("glad.c" PROPERTIES LANGUAGE CXX)

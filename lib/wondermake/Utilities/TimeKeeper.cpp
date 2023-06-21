@@ -1,7 +1,7 @@
 #include "TimeKeeper.h"
 
-#include "wondermake-debug-ui/DebugSettingsSystem.h"
-#include "wondermake-debug-ui/ImguiInclude.h"
+#include "wondermake-ui/DebugSettingsSystem.h"
+#include "wondermake-ui/ImguiInclude.h"
 
 #include "wondermake-base/ScheduleSystem.h"
 #include "wondermake-base/SystemGlobal.h"

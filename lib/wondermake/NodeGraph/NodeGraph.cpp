@@ -1,6 +1,6 @@
 #include "NodeGraph.h"
 
-#include "wondermake-debug-ui/DebugSettingsSystem.h"
+#include "wondermake-ui/DebugSettingsSystem.h"
 
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/SystemPtr.h"

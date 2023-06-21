@@ -3,7 +3,7 @@
 #include "Imgui/Canvas.h"
 #include "Utilities/Easing/EasingFunctions.h"
 
-#include "wondermake-debug-ui/ImguiInclude.h"
+#include "wondermake-ui/ImguiInclude.h"
 
 #include "wondermake-utility/Vector.h"
 

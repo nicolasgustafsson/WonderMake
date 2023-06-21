@@ -5,8 +5,7 @@
 #include "Debugging/DebugSettings.h"
 #include "Graphics/RenderCommandProcessor.h"
 
-#include "wondermake-debug-ui/DebugSystem.h"
-
+#include "wondermake-ui/DebugSystem.h"
 #include "wondermake-ui/EngineUniformBuffer.h"
 #include "wondermake-ui/GlfwFacade.h"
 #include "wondermake-ui/RenderTarget.h"

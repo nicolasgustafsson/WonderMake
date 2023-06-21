@@ -1,6 +1,6 @@
 #include "JsonInspector.h"
 
-#include "wondermake-debug-ui/ImguiInclude.h"
+#include "wondermake-ui/ImguiInclude.h"
 
 #include "wondermake-utility/Typedefs.h"
 

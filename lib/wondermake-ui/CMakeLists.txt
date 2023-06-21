@@ -1,8 +1,11 @@
 cmake_minimum_required(VERSION 3.19)
 
 list(APPEND IncludeFiles
+    "include/wondermake-ui/DebugSettingsSystem.h"
+    "include/wondermake-ui/DebugSystem.h"
     "include/wondermake-ui/EngineUniformBuffer.h"
     "include/wondermake-ui/GlfwFacade.h"
+    "include/wondermake-ui/ImguiInclude.h"
     "include/wondermake-ui/ImguiWrapper.h"
     "include/wondermake-ui/OpenGLFacade.h"
     "include/wondermake-ui/RenderSettingsManager.h"
@@ -16,15 +19,26 @@ list(APPEND IncludeFiles
     "include/wondermake-ui/Window.h")
 
 list(APPEND SourceFiles
+    "source/ConfigurationDebugUi.cpp"
+    "source/ConfigurationDebugUi.h"
+    "source/ConfigurationView.cpp"
+    "source/ConfigurationView.h"
+    "source/DebugSettingsSystem.cpp"
+    "source/DebugSystem.cpp"
     "source/EngineUniformBuffer.cpp"
     "source/GlfwFacade.cpp"
+    "source/ImGuiLogger.cpp"
+    "source/ImGuiLogger.h"
+    "source/ImguiWrapper.cpp"
+    "source/JsonInspector.cpp"
+    "source/JsonInspector.h"
     "source/OpenGLFacade.cpp"
     "source/RenderSettingsManager.cpp"
     "source/RenderTarget.cpp"
     "source/ShaderParser.cpp"
     "source/Window.cpp")
 
-list(APPEND TargetDependencies WonderMakeEngine WonderMakeIo WonderMakeBase WonderMakeUtility magic_enum::magic_enum Glad Glfw Khr)
+list(APPEND TargetDependencies WonderMakeEngine WonderMakeIo WonderMakeBase WonderMakeUtility magic_enum::magic_enum Glad Glfw Khr Imgui)
 
 if (NOT WonderMake_ImportLibraries)
     add_library(WonderMakeUi STATIC ${IncludeFiles} ${SourceFiles})

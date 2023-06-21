@@ -7,9 +7,9 @@
 #include "Imgui/NodeGraphGui.h"
 #include "Resources/ResourceSystem.h"
 
-#include "wondermake-debug-ui/DebugSettingsSystem.h"
+#include "wondermake-ui/DebugSettingsSystem.h"
 
-#include "wondermake-Engine/ConfigurationEngine.h"
+#include "wondermake-engine/ConfigurationEngine.h"
 
 #include "wondermake-base/ConfigurationSystem.h"
 #include "wondermake-base/SystemPtr.h"

@@ -2,7 +2,7 @@
 #include "CollisionSystem.h"
 #include "ColliderDebug.h"
 
-#include "wondermake-debug-ui/DebugSettingsSystem.h"
+#include "wondermake-ui/DebugSettingsSystem.h"
 
 WM_REGISTER_COMPONENT(SCollisionComponent);
 WM_REGISTER_FUNCTIONALITY(CollisionFunctionality);

@@ -2,7 +2,7 @@
 #include "Resources/ResourceSystem.h"
 #include "Utilities/Id.h"
 
-#include "wondermake-debug-ui/ImguiInclude.h"
+#include "wondermake-ui/ImguiInclude.h"
 
 #include <filesystem>
 

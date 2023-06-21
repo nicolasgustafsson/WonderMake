@@ -238,7 +238,7 @@ void ImGuiLogger::UpdateLogs()
 				return false;
 			if (visibleColumns.File				&& !filterCategory.File.contains(logLine.File))
 				return false;
-			if (visibleColumns.Message			&& std::ranges::none_of(logLine.LogTags, predHasTag))
+			if (visibleColumns.Message			&& !std::ranges::all_of(logLine.LogTags, predHasTag))
 				return false;
 
 			return true;
@@ -482,6 +482,35 @@ void ImGuiLogger::Print(const SLogLine& aLogLine)
 
 		return "Unknown";
 	};
+	static constexpr auto extractLogTags = [](std::string_view aMessage)
+	{
+		std::vector<std::string> retVal;
+
+		if (aMessage.empty()
+			|| aMessage[0] != '[')
+			return retVal;
+
+		size_t index = 0;
+
+		for (;;)
+		{
+			auto i = aMessage.find_first_of(']', index);
+
+			if (i == std::string_view::npos)
+				break;
+
+			retVal.emplace_back(std::string(aMessage.begin() + index, aMessage.begin() + i + 1));
+
+			if (aMessage.size() <= i + 2
+				|| aMessage[i + 1] != ' '
+				|| aMessage[i + 2] != '[')
+				break;
+
+			index = i + 2;
+		}
+
+		return retVal;
+	};
 
 	std::lock_guard lock(myMutex);
 
@@ -493,7 +522,7 @@ void ImGuiLogger::Print(const SLogLine& aLogLine)
 	auto nameLevel		= getName(locLevelNames,	aLogLine.Level);
 	auto fileWithLine	= aLogLine.File + '(' + std::to_string(aLogLine.Line) + ')';
 	auto threadHash		= std::move(threadHashStream).str();
-	auto tags			= ExtractLogTags(aLogLine.Message);
+	auto tags			= extractLogTags(aLogLine.Message);
 
 	const bool allFile			= myCategoryValues.File			== myFilterCategoryValues.File;
 	const bool allThreadHash	= myCategoryValues.ThreadHash	== myFilterCategoryValues.ThreadHash;
@@ -515,51 +544,21 @@ void ImGuiLogger::Print(const SLogLine& aLogLine)
 
 	SImGuiLogLine logLine
 	{
-		getColor(aLogLine.Severity),
-		nameSeverity,
-		nameLevel,
-		aLogLine.Message,
-		aLogLine.File,
-		std::move(fileWithLine),
-		aLogLine.Timestamp,
-		std::move(threadHash),
-		aLogLine.LoggerName,
-		static_cast<std::string>(aLogLine.ProcessId.Id()),
-		std::move(tags)
+		.Color			= getColor(aLogLine.Severity),
+		.Severity		= nameSeverity,
+		.Level			= nameLevel,
+		.Message		= aLogLine.Message,
+		.File			= aLogLine.File,
+		.FileWithLine	= std::move(fileWithLine),
+		.Timestamp		= aLogLine.Timestamp,
+		.ThreadHash		= std::move(threadHash),
+		.LoggerName		= aLogLine.LoggerName,
+		.ProcessId		= static_cast<std::string>(aLogLine.ProcessId.Id()),
+		.LogTags		= std::move(tags)
 	};
 	
 	if (!myDirtyCompactCache)
 		AddLogLineToCompactCache(logLine);
 
 	myLogMessages.emplace_back(std::move(logLine));
-}
-
-std::vector<std::string> ImGuiLogger::ExtractLogTags(std::string_view aMessage)
-{
-	std::vector<std::string> retVal;
-
-	if (aMessage.empty()
-		|| aMessage[0] != '[')
-		return retVal;
-	
-	size_t index = 0;
-
-	for (;;)
-	{
-		auto i = aMessage.find_first_of(']', index);
-
-		if (i == std::string_view::npos)
-			break;
-
-		retVal.emplace_back(std::string(aMessage.begin() + index, aMessage.begin() + i + 1));
-
-		if (aMessage.size() <= i + 2
-			|| aMessage[i + 1] != ' '
-			|| aMessage[i + 2] != '[')
-			break;
-
-		index = i + 2;
-	}
-
-	return retVal;
 }

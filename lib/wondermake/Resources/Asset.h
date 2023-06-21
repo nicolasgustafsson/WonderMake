@@ -2,6 +2,8 @@
 #include "Resources/ResourceSystem.h"
 #include "Utilities/Id.h"
 
+#include "wondermake-debug-ui/ImguiInclude.h"
+
 #include <filesystem>
 
 struct SAssetMetadata

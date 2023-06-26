@@ -66,6 +66,18 @@ private:
 
 };
 
+namespace std
+{
+	template<>
+	struct hash<FilePath>
+	{
+		inline [[nodiscard]] size_t operator()(const FilePath& aPath) const noexcept
+		{
+			return std::filesystem::hash_value(aPath.Path) ^ static_cast<size_t>(aPath.Location);
+		}
+	};
+}
+
 inline static void WmLogStream(std::ostream& aStream, const FilePath& aPath)
 {
 	static constexpr auto folderToString = [](const FilePath::EFolder aLocation) -> std::optional<std::string_view>

@@ -4,7 +4,6 @@
 
 #include "Graphics/Texture.h"
 
-#include "Resources/AssetDatabase.h"
 #include "Resources/ResourceSystem.h"
 
 #include "wondermake-engine/ConfigurationEngine.h"
@@ -37,13 +36,6 @@ void SpriteRenderingFunctionality::Tick()
 	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Position>(0, transform.GetPosition());
 	spriteComponent.RenderObject->SetAttribute<EVertexAttribute::Rotation>(0, transform.GetRotation());
 	spriteComponent.RenderObject->Render();
-}
-
-void SpriteRenderingFunctionality::SetTexture(std::string_view aAssetLink)
-{
-	auto& textureDatabase = Get<AssetDatabase<Texture>>();
-
-	SetTexture(textureDatabase.GetResource(aAssetLink));
 }
 
 void SpriteRenderingFunctionality::SetTexture(const FilePath& aFilePath)

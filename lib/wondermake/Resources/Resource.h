@@ -1,9 +1,8 @@
 #pragma once
 
-#include "Resources/AssetDatabase.h"
 #include "Resources/ResourceSystem.h"
 
-#define WM_REGISTER_RESOURCE(aResource) WM_REGISTER_RESOURCE_SYSTEM(aResource) WM_REGISTER_ASSET_DATABASE(aResource)
+#define WM_REGISTER_RESOURCE(aResource) WM_REGISTER_RESOURCE_SYSTEM(aResource)
 
 class Resource
 {

@@ -4,8 +4,9 @@
 #include "Graphics/ShaderProgram.h"
 #include "Graphics/Texture.h"
 
-#include "Resources/AssetDatabase.h"
 #include "Resources/ResourceProxy.h"
+
+#include "Utilities/Container/Container.h"
 
 #include "wondermake-ui/OpenGLFacade.h"
 #include "wondermake-ui/VertexAttributes.h"

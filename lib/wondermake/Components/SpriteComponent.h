@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Graphics/SpriteRenderObject.h"
-#include "Resources/AssetLink.h"
 
 #include "wondermake-base/Component.h"
 

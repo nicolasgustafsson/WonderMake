@@ -4,6 +4,8 @@
 #include "Audio/AudioMixingNodeGraph.h"
 #include "Audio/SoundEffectNodeGraph.h"
 
+#include "Utilities/Debugging/Debugged.h"
+
 // Used for dialog boxes.
 // soloud.h includes the windows header, which causes Windows macros to bleed into other includes.
 // Including WinPlatform fixes that issue.

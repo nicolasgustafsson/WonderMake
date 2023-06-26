@@ -8,6 +8,7 @@ list(APPEND SourceFiles
     "Include/WonderMakeIoTests/SocketAcceptorMock.h"
     "Include/WonderMakeIoTests/SocketMock.h"
     "Include/WonderMakeIoTests/WriteFileJobMock.h"
+    "Tests/FileResourceTests.cpp"
     "Tests/FileWatcherSystemTests.cpp"
     "Tests/SocketDecoratorTests.cpp"
     "Tests/SocketProtobufImplTests.cpp"
@@ -18,6 +19,7 @@ list(APPEND SourceFiles
 list(APPEND SourceFiles
     "../../lib/wondermake-base/source/Configuration.cpp"
     "../../lib/wondermake-base/source/Logger.cpp"
+    "../../lib/wondermake-io/source/FileResource.cpp"
     "../../lib/wondermake-io/source/FileWatcherSystem.cpp"
     "../../lib/wondermake-io/source/SocketDecorator.cpp"
     "../../lib/wondermake-io/source/WinIpcAcceptor.cpp"

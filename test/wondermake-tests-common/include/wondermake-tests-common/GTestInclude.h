@@ -19,6 +19,7 @@ using ::testing::AllOf;
 using ::testing::Eq;
 using ::testing::Ge;
 using ::testing::StrEq;
+using ::testing::Ref;
 
 using ::testing::Field;
 

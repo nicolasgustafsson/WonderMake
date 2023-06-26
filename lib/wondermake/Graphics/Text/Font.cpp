@@ -1,12 +1,15 @@
 #include "Font.h"
 
 #include "Resources/Resource.h"
+#include "Utilities/Json/JsonExtensions.h"
 #include "Utilities/Json/JsonUtility.h"
 
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/SystemGlobal.h"
 #include "wondermake-base/SystemPtr.h"
 #include "wondermake-base/WmLogTags.h"
+
+#include <json/json.hpp>
 
 WM_REGISTER_RESOURCE(Font);
 

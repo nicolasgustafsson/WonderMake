@@ -6,6 +6,10 @@
 #include "wondermake-base/SystemPtr.h"
 #include "wondermake-base/WmLogTags.h"
 
+#include <json/json.hpp>
+
+#include <fstream>
+
 NodeGraph::NodeGraph(FilePath aFilePath)
 	: myPath(std::move(aFilePath))
 {

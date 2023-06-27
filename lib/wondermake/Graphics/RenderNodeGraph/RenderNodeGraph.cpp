@@ -1,7 +1,6 @@
 #include "RenderNodeGraph.h"
-#include "Graphics/RenderNodeGraph/RenderNodeTypes.h"
 
-_WM_REGISTER_SYSTEM_IMPL(ResourceSystem<RenderNodeGraph>, RenderNodeGraphResource);
+#include "Graphics/RenderNodeGraph/RenderNodeTypes.h"
 
 RenderNodeGraph::RenderNodeGraph(std::filesystem::path aPath)
 	: NodeGraph(std::move(aPath))

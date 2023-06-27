@@ -2,7 +2,8 @@
 
 #include "Imgui/NodeGraphGui.h"
 #include "NodeGraph/NodeTypes.h"
-#include "Resources/Resource.h"
+
+#include "wondermake-io/FileResource.h"
 
 #include "wondermake-utility/FilePath.h"
 
@@ -22,13 +23,12 @@ struct SCompiledNode
 	SNode& Node;
 };
 
-class NodeGraph : public NonCopyable, public NonMovable, public Resource
+class NodeGraph
+	: public FileResource<NotReloadable>
 {
 public:
 	NodeGraph(FilePath aFilePath);
 	~NodeGraph();
-
-	void SetNewPath(FilePath aNewFilePath);
 
 	//[Nicos]: This differs from compile in that it will save after compilation if the flag is set
 	void CompileExternal();

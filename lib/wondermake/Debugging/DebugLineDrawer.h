@@ -2,23 +2,21 @@
 
 #include "DebugLine.h"
 #include "DebugLineRenderObject.h"
-#include "Graphics/Shader.h"
+
+#include "Message/MessageSubscriber.h"
+
 #include "wondermake-base/System.h"
 
-template<typename TResource>
-class ResourceSystem;
+#include "wondermake-utility/Future.h"
+
 class TimeKeeperSingleton;
 
-template class ResourceSystem<Shader<EShaderType::Vertex>>;
-template class ResourceSystem<Shader<EShaderType::Fragment>>;
-template class ResourceSystem<Shader<EShaderType::Geometry>>;
+class ShaderResourceSystem;
 
 class DebugLineDrawer
 	: public System<
 		Policy::Set<
-			PAdd<ResourceSystem<Shader<EShaderType::Vertex>>, PWrite>,
-			PAdd<ResourceSystem<Shader<EShaderType::Fragment>>, PWrite>,
-			PAdd<ResourceSystem<Shader<EShaderType::Geometry>>, PWrite>,
+			PAdd<ShaderResourceSystem, PWrite>,
 			PAdd<TimeKeeperSingleton, PRead>>,
 		STrait::Set<
 			STGui,
@@ -35,6 +33,7 @@ private:
 
 	void OnGotDebugLineMessage(const SDebugLineMessage& aDebugLineMessage);
 
+	Future<void> myOnShaderProgram;
 	MessageSubscriber mySubscriber;
 	std::optional<DebugLineRenderObject> myRenderObject;
 	std::vector<SDebugLine> myDebugLines;

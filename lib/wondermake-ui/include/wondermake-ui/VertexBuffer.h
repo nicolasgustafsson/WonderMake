@@ -2,6 +2,8 @@
 
 #include "wondermake-ui/OpenGLFacade.h"
 
+#include "wondermake-base/SystemPtr.h"
+
 #include <glad/glad.h>
 
 template <typename TVertexData>

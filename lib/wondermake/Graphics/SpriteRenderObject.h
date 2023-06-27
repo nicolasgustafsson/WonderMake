@@ -2,6 +2,10 @@
 
 #include "Graphics/RenderObject.h"
 
+#include "wondermake-utility/SharedReference.h"
+
+class TextureResource;
+
 class SpriteRenderObject 
 	: public RenderObject
 		< EVertexAttribute::Position
@@ -11,31 +15,42 @@ class SpriteRenderObject
 		, EVertexAttribute::Rotation>
 {
 public:
-	SpriteRenderObject(
-		ResourceSystem<Shader<EShaderType::Vertex>>& aVsSystem,
-		ResourceSystem<Shader<EShaderType::Fragment>>& aFsSystem,
-		ResourceSystem<Shader<EShaderType::Geometry>>& aGsSystem,
-		ResourceProxy<Texture> aTextureAsset);
+	SpriteRenderObject(ShaderResourceSystem& aShaderSystem, std::shared_ptr<ShaderProgram> aShaderProgram);
 	
-	inline void SetTexture(ResourceProxy<Texture> aResource)
+	inline void SetTexture(FileResourceRef<TextureResource> aResource)
 	{
 		myTextures.Clear();
 
-		if (aResource.IsValid())
-			myTextures.Add(aResource);
+		const auto textureSize = aResource->Size();
 
-		if (!myTextures.empty() && myTextures[0].IsValid())
-			myShaderProgram.SetProperty("TextureSize", SVector2f{ static_cast<f32>(myTextures[0]->GetWidth()), static_cast<f32>(myTextures[0]->GetHeight()) });
+		myTextures.Add(std::move(aResource));
+
+		myShaderSystem.SetProgramProperty(myShaderProgram, "TextureSize", SVector2f{ static_cast<f32>(textureSize.X), static_cast<f32>(textureSize.Y) });
 	}
 
-	inline [[nodiscard]] ResourceProxy<Texture> GetTexture(size_t aIndex) const noexcept
+	inline [[nodiscard]] FileResourcePtr<TextureResource> GetTexture(size_t aIndex) const noexcept
 	{
 		if (aIndex >= myTextures.Count())
-			return ResourceProxy<Texture>();
+			return nullptr;
 
 		return myTextures[aIndex];
 	}
 
 	void SetColor(const SColor aColor);
-};
 
+protected:
+	virtual void RenderInternal() override
+	{
+		if (!myTextures.empty())
+		{
+			const auto textureSize = myTextures[0]->Size();
+
+			myShaderSystem.SetProgramProperty(myShaderProgram, "TextureSize", SVector2f{ static_cast<f32>(textureSize.X), static_cast<f32>(textureSize.Y) });
+		}
+
+		using Parent = RenderObject<EVertexAttribute::Position, EVertexAttribute::Origin, EVertexAttribute::Scale, EVertexAttribute::Color, EVertexAttribute::Rotation>;
+
+		Parent::RenderInternal();
+	}
+
+};

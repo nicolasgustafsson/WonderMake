@@ -2,17 +2,45 @@
 
 #include "Functionalities/TransformFunctionality.h"
 
-#include "Graphics/Texture.h"
+#include "Graphics/SpriteRenderObject.h"
 
-#include "Resources/ResourceSystem.h"
+#include "wondermake-ui/ShaderResourceSystem.h"
+#include "wondermake-ui/TextureResourceSystem.h"
 
 #include "wondermake-engine/ConfigurationEngine.h"
 
+#include "wondermake-base/Component.h"
 #include "wondermake-base/ConfigurationSystem.h"
 
 #include <iostream>
+#include <optional>
 
+WM_REGISTER_COMPONENT(SSpriteComponent);
 WM_REGISTER_FUNCTIONALITY(SpriteRenderingFunctionality);
+
+struct SSpriteComponent 
+	: public STraitedComponent<
+		STrait::Set<
+			STWonderMake>>
+{
+	std::optional<SpriteRenderObject>	RenderObject;
+	bool								IsHidden = false;
+	Future<void>						OnInitialized;
+};
+
+SpriteRenderingFunctionality::SpriteRenderingFunctionality()
+{
+	auto& spriteComponent = Get<SSpriteComponent>();
+
+	spriteComponent.OnInitialized = Get<ShaderResourceSystem>()
+		.CreateProgram(FilePath(FilePath::EFolder::Bin, "Shaders/Vertex/Sprite.vert"), FilePath(FilePath::EFolder::Bin, "Shaders/Fragment/Sprite.frag"), FilePath(FilePath::EFolder::Bin, "Shaders/Geometry/Sprite.geom"))
+		.ThenApply(GetExecutor(), FutureApplyResult([this](auto aProgram)
+			{
+				Get<SSpriteComponent>().RenderObject.emplace(Get<ShaderResourceSystem>(), std::move(aProgram));
+
+				return MakeCompletedFuture<void>();
+			}));
+}
 
 void SpriteRenderingFunctionality::Initialize(SInitializationInfo aInfo)
 {
@@ -40,9 +68,13 @@ void SpriteRenderingFunctionality::Tick()
 
 void SpriteRenderingFunctionality::SetTexture(const FilePath& aFilePath)
 {
-	auto& textureResourceSys = Get<ResourceSystem<Texture>>();
-
-	SetTexture(textureResourceSys.GetResource(aFilePath));
+	Get<TextureResourceSystem>()
+		.GetTexture(aFilePath)
+		.ThenRun(GetExecutor(), FutureRunResult([this](auto aRef)
+			{
+				SetTexture(std::move(aRef));
+			}))
+		.Detach();
 }
 
 [[nodiscard]] SVector2u SpriteRenderingFunctionality::GetTextureSize() const noexcept
@@ -58,33 +90,58 @@ void SpriteRenderingFunctionality::SetTexture(const FilePath& aFilePath)
 		return SVector2u::Zero();
 
 	return SVector2u(
-		static_cast<u32>(texture->GetWidth()),
-		static_cast<u32>(texture->GetHeight()));
+		static_cast<u32>(texture->Size().X),
+		static_cast<u32>(texture->Size().Y));
 }
 
 void SpriteRenderingFunctionality::SetScale(const SVector2f aScale)
 {
-	Get<SSpriteComponent>().RenderObject->SetAttribute<EVertexAttribute::Scale>(0, aScale);
+	Get<SSpriteComponent>()
+		.OnInitialized
+		.ThenRun(GetExecutor(), FutureRunResult([this, aScale]()
+			{
+				Get<SSpriteComponent>().RenderObject->SetAttribute<EVertexAttribute::Scale>(0, aScale);
+			}));
 }
 
 void SpriteRenderingFunctionality::SetOrigin(const SVector2f aOrigin)
 {
-	Get<SSpriteComponent>().RenderObject->SetAttribute<EVertexAttribute::Origin>(0, aOrigin);
+	Get<SSpriteComponent>()
+		.OnInitialized
+		.ThenRun(GetExecutor(), FutureRunResult([this, aOrigin]()
+			{
+				Get<SSpriteComponent>().RenderObject->SetAttribute<EVertexAttribute::Origin>(0, aOrigin);
+			}));
 }
 
 void SpriteRenderingFunctionality::SetColor(const SColor aColor)
 {
-	Get<SSpriteComponent>().RenderObject->SetColor(aColor);
+	Get<SSpriteComponent>()
+		.OnInitialized
+		.ThenRun(GetExecutor(), FutureRunResult([this, aColor]()
+			{
+				Get<SSpriteComponent>().RenderObject->SetColor(aColor);
+			}));
 }
 
 void SpriteRenderingFunctionality::SetRenderLayer(std::string_view aRenderLayer)
 {
-	Get<SSpriteComponent>().RenderObject->SetRenderLayer(std::move(aRenderLayer));
+	Get<SSpriteComponent>()
+		.OnInitialized
+		.ThenRun(GetExecutor(), FutureRunResult([this, aRenderLayer]()
+			{
+				Get<SSpriteComponent>().RenderObject->SetRenderLayer(aRenderLayer);
+			}));
 }
 
 void SpriteRenderingFunctionality::SetRenderOrder(i32 aRenderOrder)
 {
-	Get<SSpriteComponent>().RenderObject->SetRenderOrder(aRenderOrder);
+	Get<SSpriteComponent>()
+		.OnInitialized
+		.ThenRun(GetExecutor(), FutureRunResult([this, aRenderOrder]()
+			{
+				Get<SSpriteComponent>().RenderObject->SetRenderOrder(aRenderOrder);
+			}));
 }
 
 void SpriteRenderingFunctionality::Hide() noexcept
@@ -97,20 +154,27 @@ void SpriteRenderingFunctionality::Show() noexcept
 	Get<SSpriteComponent>().IsHidden = false;
 }
 
-void SpriteRenderingFunctionality::SetTexture(ResourceProxy<Texture>&& aTexture)
+void SpriteRenderingFunctionality::SetTexture(FileResourceRef<TextureResource>&& aTexture)
 {
-	auto& spriteComponent = Get<SSpriteComponent>();
+	const auto setTexture = [this](auto aTexture)
+	{
+		Get<SSpriteComponent>()
+			.OnInitialized
+			.ThenRun(GetExecutor(), FutureRunResult([this, texture = std::move(aTexture)]() mutable
+				{
+					Get<SSpriteComponent>().RenderObject->SetTexture(std::move(texture));
+				}));
+	};
 
-	auto texture = aTexture && aTexture->IsValid()
-		? std::move(aTexture)
-		: Get<ResourceSystem<Texture>>().GetResource(Get<ConfigurationSystem>().Get<FilePath>(ConfigurationEngine::MissingTexturePath, FilePath()));
+	if (aTexture->IsValid())
+	{
+		setTexture(std::move(aTexture));
 
-	if (spriteComponent.RenderObject)
-		spriteComponent.RenderObject->SetTexture(std::move(texture));
-	else
-		spriteComponent.RenderObject.emplace(
-			Get<ResourceSystem<Shader<EShaderType::Vertex>>>(),
-			Get<ResourceSystem<Shader<EShaderType::Fragment>>>(),
-			Get<ResourceSystem<Shader<EShaderType::Geometry>>>(),
-			std::move(texture));
+		return;
+	}
+	
+	Get<TextureResourceSystem>()
+		.GetTexture(Get<ConfigurationSystem>().Get<FilePath>(ConfigurationEngine::MissingTexturePath, FilePath()))
+		.ThenRun(GetExecutor(), FutureRunResult(setTexture))
+		.Detach();
 }

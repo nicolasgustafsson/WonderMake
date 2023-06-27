@@ -2,6 +2,8 @@
 
 #include "NodeGraph/NodeTypes.h"
 
+#include "wondermake-utility/Future.h"
+
 // soloud.h includes the windows header, which causes Windows macros to bleed into other includes.
 // Including WinPlatform fixes that issue.
 #include "wondermake-utility/WinPlatform.h"
@@ -79,6 +81,8 @@ namespace NodeTypes
 		}
 
 		virtual void ExecuteNode(SNode& aNode) override;
+
+		Future<void> OnLoadSource;
 	};
 }
 

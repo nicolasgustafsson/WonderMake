@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Graphics/RenderNodeGraph/RenderNodeGraph.h"
-#include "Resources/ResourceProxy.h"
 
 #include "wondermake-ui/EngineUniformBuffer.h"
+
+#include "wondermake-io/FileResourceProxy.h"
 
 #include "wondermake-utility/Matrix.h"
 #include "wondermake-utility/RestrictTypes.h"
@@ -34,7 +35,7 @@ public:
 		OpenGLFacade&						aOpenGlFacade,
 		GlfwFacade&							aGlfwFacade,
 		std::string							aName,
-		ResourceProxy<RenderNodeGraph>		aRenderGraph,
+		FileResourcePtr<RenderNodeGraph>	aRenderGraph,
 		const SSettings&					aSettings);
 
 	void Render();
@@ -57,25 +58,25 @@ public:
 	inline [[nodiscard]] bool							GetFixedAspect() const noexcept { return mySettings.FixedAspect; }
 	inline [[nodiscard]] SSettings						GetSettings() const noexcept { return mySettings; }
 
-	void												SetRenderGraph(ResourceProxy<RenderNodeGraph> aRenderGraph);
-	inline [[nodiscard]] ResourceProxy<RenderNodeGraph>	GetRenderGraph() const { return myRenderGraph; };
+	void												SetRenderGraph(FileResourcePtr<RenderNodeGraph> aRenderGraph);
+	inline [[nodiscard]] FileResourcePtr<RenderNodeGraph>	GetRenderGraph() const { return myRenderGraph; };
 	[[nodiscard]] RenderTarget*							GetRenderTarget() const noexcept;
 
 	[[nodiscard]] SVector2f								ConvertToWorldPosition(const SVector2f aViewPosition, const SVector2f aDefaultPosition = SVector2f::Zero()) const noexcept;
 
 private:
-	GlfwFacade&						myGlfwFacade;
+	GlfwFacade&							myGlfwFacade;
 
-	std::string						myName;
-	DisplayUniformBuffer			myUniformBuffer;
-	ResourceProxy<RenderNodeGraph>	myRenderGraph;
-	SSettings						mySettings;
+	std::string							myName;
+	DisplayUniformBuffer				myUniformBuffer;
+	FileResourcePtr<RenderNodeGraph>	myRenderGraph;
+	SSettings							mySettings;
 
-	SVector2f						myViewportSize;
+	SVector2f							myViewportSize;
 	 // TODO: This should probably be put in Camera.
-	SMatrix33f						myProjectionMatrix;
-	SMatrix33f						myProjectionMatrixInverse;
+	SMatrix33f							myProjectionMatrix;
+	SMatrix33f							myProjectionMatrixInverse;
 
-	std::shared_ptr<Camera>			myCamera;
+	std::shared_ptr<Camera>				myCamera;
 
 };

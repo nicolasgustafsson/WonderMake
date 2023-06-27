@@ -3,7 +3,6 @@
 #include "Camera/CameraManager.h"
 #include "Debugging/DebugLineDrawer.h"
 #include "Graphics/RenderObject.h"
-#include "Graphics/SpriteRenderObject.h"
 #include "Graphics/ScreenPassRenderObject.h"
 #include "Graphics/RenderCommandProcessor.h"
 #include "Utilities/Debugging/Debugged.h"
@@ -16,27 +15,20 @@
 
 class Display;
 class EngineUniformBuffer;
-template<typename TResource>
-class ResourceSystem;
 
 class DebugSystem;
 
-class ConfigurationSystem;
-
-template class ResourceSystem<Shader<EShaderType::Vertex>>;
-template class ResourceSystem<Shader<EShaderType::Fragment>>;
-template class ResourceSystem<Shader<EShaderType::Geometry>>;
-
 class GlfwFacade;
+class ShaderResourceSystem;
+
+class ConfigurationSystem;
 
 class Renderer
 	: public System<
 		Policy::Set<
 			PAdd<ConfigurationSystem, PWrite>,
 			PAdd<DebugSystem, PRead>,
-			PAdd<ResourceSystem<Shader<EShaderType::Vertex>>, PWrite>,
-			PAdd<ResourceSystem<Shader<EShaderType::Fragment>>, PWrite>,
-			PAdd<ResourceSystem<Shader<EShaderType::Geometry>>, PWrite>,
+			PAdd<ShaderResourceSystem, PWrite>,
 			PAdd<EngineUniformBuffer, PWrite>,
 			PAdd<Window, PRead>,
 			PAdd<DebugLineDrawer, PWrite>,
@@ -65,6 +57,6 @@ private:
 
 	[[nodiscard]] SVector2f GetDisplaySize(Display& aDisplay, const SVector2f aWindowSize);
 
-	ScreenPassRenderObject myCopyPass;
+	std::optional<ScreenPassRenderObject> myCopyPass;
 
 };

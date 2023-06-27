@@ -6,6 +6,8 @@
 
 #include "Utilities/Debugging/Debugged.h"
 
+#include "wondermake-io/FileResourceProxy.h"
+
 // Used for dialog boxes.
 // soloud.h includes the windows header, which causes Windows macros to bleed into other includes.
 // Including WinPlatform fixes that issue.
@@ -14,13 +16,12 @@
 #include <soloud.h>
 #include <soloud_wav.h>
 
-template<typename TResource>
-class ResourceSystem;
 class AudioMixingNodeGraph;
 
-template class ResourceSystem<AudioMixingNodeGraph>;
 class DebugSettingsSystem;
 class FileSelectSystem;
+
+class FileResourceSystem;
 
 class ConfigurationSystem;
 
@@ -28,8 +29,8 @@ class AudioManager
 	: public System<
 		Policy::Set<
 			PAdd<ConfigurationSystem, PRead>,
+			PAdd<FileResourceSystem, PWrite>,
 			PAdd<FileSelectSystem, PWrite>,
-			PAdd<ResourceSystem<AudioMixingNodeGraph>, PWrite>,
 			PAdd<DebugSettingsSystem, PWrite>>,
 		STrait::Set<
 			STGui,
@@ -49,7 +50,7 @@ public:
 	SoLoud::Soloud& GetSoloudEngine();
 
 protected:
-	void PlayAudio(ResourceProxy<AudioFile> aAudioFileToPlay);
+	void PlayAudio(const FileResourceRef<AudioResource>& aAudioFileToPlay);
 
 	void TryPlayQueuedAudioFiles();
 	void RemoveNonPlayingFiles();
@@ -66,9 +67,9 @@ protected:
 	plf::colony<SPlayingAudioFile> myCurrentlyPlayingAudioFiles;
 	plf::colony<SQueuedAudioFile> myQueuedAudioFiles;
 
-	ResourceProxy<AudioMixingNodeGraph> myAudioMixingNodeGraph;
+	FileResourcePtr<AudioMixingNodeGraph> myAudioMixingNodeGraph;
 
-	plf::colony<ResourceProxy<SoundEffectNodeGraph>> mySoundEffects;
+	plf::colony<FileResourcePtr<SoundEffectNodeGraph>> mySoundEffects;
 
 	std::unordered_map<std::string, SoLoud::Bus> myBusses;
 };

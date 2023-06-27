@@ -1,18 +1,15 @@
 #include "DebugLineRenderObject.h"
 #include "DebugLine.h"
 
-
-DebugLineRenderObject::DebugLineRenderObject(ResourceSystem<Shader<EShaderType::Vertex>>& aVsSystem, ResourceSystem<Shader<EShaderType::Fragment>>& aFsSystem, ResourceSystem<Shader<EShaderType::Geometry>>& aGsSystem, const u32 aLineCount)
+DebugLineRenderObject::DebugLineRenderObject(ShaderResourceSystem& aShaderSystem, std::shared_ptr<ShaderProgram> aShaderProgram, const u32 aLineCount)
 	: RenderObject(SRenderObjectInfo
-		{	aVsSystem
-		,	aFsSystem
-		,	aGsSystem
-		,	std::filesystem::current_path() / "Shaders/Vertex/Line.vert"
-		,	"" //geometry shader
-		,	std::filesystem::current_path() / "Shaders/Fragment/Line.frag"
-		,	ResourceProxy<Texture>()
-		,	aLineCount * 2
-		,	GL_LINES })
+		{
+			.ShaderSystem	= aShaderSystem,
+			.ShaderProgram	= std::move(aShaderProgram),
+			.TextureAsset	= nullptr,
+			.VertexCount	= aLineCount * 2,
+			.GeometryType	= GL_LINES
+		})
 {
 
 }

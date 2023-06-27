@@ -1,10 +1,6 @@
 #include "SoundEffectNodeGraph.h"
 #include "Audio/AudioNodeTypes.h"
 
-#include "wondermake-base/SystemGlobal.h"
-
-_WM_REGISTER_SYSTEM_IMPL(ResourceSystem<SoundEffectNodeGraph>, SoundEffectNodeGraphResource);
-
 SoundEffectNodeGraph::SoundEffectNodeGraph(std::filesystem::path aPath)
 	: NodeGraph(std::move(aPath))
 {

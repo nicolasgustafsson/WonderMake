@@ -3,7 +3,8 @@
 
 class RenderTarget;
 
-class RenderNodeGraph : public NodeGraph
+class RenderNodeGraph
+	: public NodeGraph
 {
 public:
 	RenderNodeGraph(std::filesystem::path aPath);

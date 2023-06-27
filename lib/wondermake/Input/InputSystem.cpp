@@ -7,6 +7,8 @@
 
 #include "wondermake-ui/GlfwFacade.h"
 
+#include "wondermake-base/SystemGlobal.h"
+
 #include <GLFW/glfw3.h>
 
 #include <algorithm>

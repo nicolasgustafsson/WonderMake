@@ -1,15 +1,16 @@
 #include "AudioManager.h"
 
-#include "Audio/AudioFile.h"
 #include "Audio/AudioMixingNodeGraph.h"
 #include "Audio/AudioStructs.h"
 #include "Imgui/NodeGraphGui.h"
-#include "Resources/ResourceSystem.h"
 
+#include "wondermake-ui/AudioResource.h"
 #include "wondermake-ui/DebugSettingsSystem.h"
 #include "wondermake-ui/FileSelectSystem.h"
 
 #include "wondermake-engine/ConfigurationEngine.h"
+
+#include "wondermake-io/FileResourceSystem.h"
 
 #include "wondermake-base/ConfigurationSystem.h"
 #include "wondermake-base/SystemPtr.h"
@@ -25,7 +26,14 @@ WM_REGISTER_SYSTEM(AudioManager);
 AudioManager::AudioManager()
 	: Debugged("Audio Manager", GetExecutor())
 {
-	myAudioMixingNodeGraph = Get<ResourceSystem<AudioMixingNodeGraph>>().GetResource(Get<ConfigurationSystem>().Get<FilePath>(ConfigurationEngine::AudioNodeGraphPath, FilePath()));
+	Get<FileResourceSystem>()
+		.GetResource<AudioMixingNodeGraph>(Get<ConfigurationSystem>().Get<FilePath>(ConfigurationEngine::AudioNodeGraphPath, FilePath()))
+		.ThenRun(GetExecutor(), FutureRunResult([this](FileResourceRef<AudioMixingNodeGraph> aAudioMixing)
+			{
+				myAudioMixingNodeGraph = std::move(aAudioMixing);
+			}))
+		.Detach();
+
 	mySoloudEngine.init(mySoloudEngine.FLAGS::CLIP_ROUNDOFF, mySoloudEngine.BACKENDS::WASAPI, SoLoud::Soloud::AUTO, 2048, 2);
 	myBusHandle = mySoloudEngine.play(myBus);
 
@@ -39,7 +47,7 @@ AudioManager::~AudioManager()
 
 void AudioManager::Update() noexcept
 {
-	if (!myHasInitializedAudio)
+	if (myAudioMixingNodeGraph && !myHasInitializedAudio)
 	{
 		myAudioMixingNodeGraph->ExecuteExternal();
 		myHasInitializedAudio = true;
@@ -50,20 +58,26 @@ void AudioManager::Update() noexcept
 
 void AudioManager::PlayAudio(const std::filesystem::path& aAudioPath)
 {
-	auto it = std::find_if(mySoundEffects.begin(), mySoundEffects.end(), [aAudioPath](const ResourceProxy<SoundEffectNodeGraph>& aSoundEffect) 
-		{ 
-			return std::filesystem::equivalent(aAudioPath, aSoundEffect->GetPath());
-		});
+	Get<FileResourceSystem>()
+		.GetResource<SoundEffectNodeGraph>(Get<ConfigurationSystem>().Get<FilePath>(ConfigurationEngine::AudioNodeGraphPath, FilePath()))
+		.ThenRun(GetExecutor(), FutureRunResult([this, aAudioPath](FileResourceRef<SoundEffectNodeGraph> aSoundEffect)
+			{
+				auto it = std::find_if(mySoundEffects.begin(), mySoundEffects.end(), [aAudioPath](const auto& aSoundEffect)
+					{
+						return std::filesystem::equivalent(aAudioPath, aSoundEffect->GetPath());
+					});
 
-	if (it == mySoundEffects.end())
-		it = mySoundEffects.insert(SystemPtr<ResourceSystem<SoundEffectNodeGraph>>()->GetResource(aAudioPath));
+				if (it == mySoundEffects.end())
+					it = mySoundEffects.insert(aSoundEffect);
 
-	(*it)->Execute();
+				(*it)->Execute();
+			}))
+		.Detach();
 }
 
-void AudioManager::PlayAudio(ResourceProxy<AudioFile> aAudioFileToPlay)
+void AudioManager::PlayAudio(const FileResourceRef<AudioResource>& aAudioFileToPlay)
 {
-	auto handle = myBusses["Gameplay"].play(aAudioFileToPlay->GetSource());
+	auto handle = myBusses["Gameplay"].play(aAudioFileToPlay->Source());
 	myCurrentlyPlayingAudioFiles.insert({ handle, aAudioFileToPlay });
 }
 
@@ -83,15 +97,10 @@ void AudioManager::TryPlayQueuedAudioFiles()
 	while (it != myQueuedAudioFiles.end())
 	{
 		SQueuedAudioFile& queuedFile = *it;
-		if (queuedFile.AudioResource.IsValid())
-		{
-			PlayAudio(queuedFile.AudioResource);
-			it = myQueuedAudioFiles.erase(it);
-		}
-		else
-		{
-			it++;
-		}
+
+		PlayAudio(queuedFile.AudioResource);
+
+		it = myQueuedAudioFiles.erase(it);
 	}
 }
 

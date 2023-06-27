@@ -1,8 +1,8 @@
 #pragma once
 
+#include "wondermake-utility/FilePath.h"
 #include "wondermake-utility/Typedefs.h"
 
-#include <filesystem>
 #include <unordered_map>
 
 struct SFontAtlasMetrics
@@ -43,11 +43,12 @@ struct SGlyphMetrics
 
 struct SFontInfo
 {
-	std::filesystem::path AtlasPath;
-	SFontAtlasMetrics AtlasMetrics;
-	SFontMetrics FontMetrics;
+	using GlyphMap		= std::unordered_map<u32, SGlyphMetrics>;
+	using KerningMap	= std::unordered_map<u32, std::unordered_map<u32, f32>>;
 
-	std::unordered_map<u32, SGlyphMetrics> GlyphMetrics;
-
-	std::unordered_map<u32, std::unordered_map<u32, f32>> Kerning;
+	FilePath			AtlasPath;
+	SFontAtlasMetrics	AtlasMetrics;
+	SFontMetrics		FontMetrics;
+	GlyphMap			GlyphMetrics;
+	KerningMap			Kerning;
 };

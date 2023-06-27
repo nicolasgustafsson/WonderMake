@@ -1,13 +1,13 @@
 #include "CameraManager.h"
 
-#include "Resources/ResourceSystem.h"
-
 #include "wondermake-ui/DebugSystem.h"
 #include "wondermake-ui/FileSelectSystem.h"
 #include "wondermake-ui/GlfwFacade.h"
 #include "wondermake-ui/Window.h"
 
 #include "wondermake-engine/ConfigurationEngine.h"
+
+#include "wondermake-io/FileResourceSystem.h"
 
 #include "wondermake-base/ConfigurationSystem.h"
 #include "wondermake-base/SystemGlobal.h"
@@ -39,15 +39,6 @@ std::shared_ptr<Display> CameraManager::CreateDisplay(
 {
 	auto& configSys = Get<ConfigurationSystem>();
 
-	auto& resSysRenderNodeGraph = Get<ResourceSystem<RenderNodeGraph>>();
-
-	auto renderGraph = aRenderGraphPath
-		? resSysRenderNodeGraph.GetResource(*aRenderGraphPath)
-		: resSysRenderNodeGraph.GetResource(configSys.Get<FilePath>(ConfigurationEngine::DefaultRenderGraphPath, FilePath()));
-
-	if (renderGraph.IsValid())
-		renderGraph->Load();
-
 	const auto getScreenDisplay = [this]()
 	{
 		auto& configSys = Get<ConfigurationSystem>();
@@ -69,7 +60,7 @@ std::shared_ptr<Display> CameraManager::CreateDisplay(
 
 	auto it = myDisplays.emplace();
 
-	auto display = new Display(Get<OpenGLFacade>(), Get<GlfwFacade>(), std::move(aName), std::move(renderGraph), settings);
+	auto display = new Display(Get<OpenGLFacade>(), Get<GlfwFacade>(), std::move(aName), nullptr, settings);
 
 	if (aSettings)
 	{
@@ -110,6 +101,43 @@ std::shared_ptr<Display> CameraManager::CreateDisplay(
 	auto retVal = std::shared_ptr<Display>(display, MakeColonyDeleter(GetExecutor(), myDisplays, it, std::move(meta)));
 
 	*it = retVal;
+	
+	{
+		std::weak_ptr<Display> wDisplay = retVal;
+
+		auto& fileResSys = Get<FileResourceSystem>();
+
+		fileResSys.GetResource<RenderNodeGraph>(*aRenderGraphPath)
+			.OnCancel(GetExecutor(), [this, &configSys, &fileResSys, wDisplay]()
+				{
+					fileResSys
+						.GetResource<RenderNodeGraph>(configSys.Get<FilePath>(ConfigurationEngine::DefaultRenderGraphPath, FilePath()))
+						.ThenRun(GetExecutor(), FutureRunResult([wDisplay](FileResourceRef<RenderNodeGraph> aNodeGraph)
+							{
+								auto display = wDisplay.lock();
+
+								if (!display)
+									return;
+
+								aNodeGraph->Load();
+
+								display->SetRenderGraph(std::move(aNodeGraph));
+							}))
+						.Detach();
+				})
+			.ThenRun(GetExecutor(), FutureRunResult([wDisplay](FileResourceRef<RenderNodeGraph> aNodeGraph)
+				{
+					auto display = wDisplay.lock();
+
+					if (!display)
+						return;
+
+					aNodeGraph->Load();
+
+					display->SetRenderGraph(std::move(aNodeGraph));
+				}))
+			.Detach();
+	}
 
 	return retVal;
 }
@@ -244,23 +272,23 @@ void CameraManager::InspectDisplays()
 			{
 				Get<FileSelectSystem>()
 					.OpenFileBrowser("Select camera node graph", path)
-					.ThenRun(GetExecutor(), FutureRunResult([this, displayWeak](FilePath aPath)
+					.ThenApply(GetExecutor(), FutureApplyResult([this](FilePath aPath)
+						{
+							return Get<FileResourceSystem>()
+								.GetResource<RenderNodeGraph>(aPath);
+						}))
+					.ThenRun(GetExecutor(), FutureRunResult([this, displayWeak](FileResourceRef<RenderNodeGraph> aRenderNodeGraph)
 						{
 							auto display = displayWeak.lock();
 
 							if (!display)
 								return;
 
-							auto& resSysRenderNodeGraph = Get<ResourceSystem<RenderNodeGraph>>();
-
-							auto newRenderGraph = resSysRenderNodeGraph.GetResource(aPath);
 							auto renderGraph = display->GetRenderGraph();
 
-							newRenderGraph->Load();
+							aRenderNodeGraph->Load();
 
-							renderGraph = newRenderGraph;
-
-							display->SetRenderGraph(std::move(newRenderGraph));
+							display->SetRenderGraph(std::move(aRenderNodeGraph));
 						}))
 					.Detach();
 			}

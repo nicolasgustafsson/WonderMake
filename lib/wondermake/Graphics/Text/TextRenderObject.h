@@ -1,10 +1,18 @@
 #pragma once
 
-#include "Graphics/Text/Font.h"
 #include "Graphics/RenderObject.h"
 
+#include "wondermake-io/FileResourceProxy.h"
+
 #include "wondermake-utility/Geometry.h"
+#include "wondermake-utility/SharedReference.h"
 #include "wondermake-utility/Vector.h"
+
+#include <memory>
+
+class FontResource;
+class ShaderProgram;
+class ShaderResourceSystem;
 
 class TextRenderObject
 	: public RenderObject<
@@ -12,11 +20,7 @@ class TextRenderObject
 		EVertexAttribute::TexCoord>
 {
 public:
-	TextRenderObject(
-		ResourceSystem<Shader<EShaderType::Vertex>>& aVsSystem,
-		ResourceSystem<Shader<EShaderType::Fragment>>& aFsSystem,
-		ResourceSystem<Shader<EShaderType::Geometry>>& aGsSystem,
-		ResourceProxy<Font> aFont);
+	TextRenderObject(ShaderResourceSystem& aShaderSystem, std::shared_ptr<ShaderProgram> aShaderProgram, FileResourceRef<FontResource> aFont);
 
 	void SetText(const std::string& aText);
 	void SetSize(const f32 aSize);
@@ -35,8 +39,8 @@ private:
 	SRectangleF CalculateBoundingBox() const;
 	f32 GetAscent() const;
 
-	SRectangleF			myBoundingBox;
-	ResourceProxy<Font>	myFont;
+	SRectangleF						myBoundingBox;
+	FileResourceRef<FontResource>	myFont;
 	
 	std::string myText;
 

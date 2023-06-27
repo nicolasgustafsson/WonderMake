@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/Text/FontMetrics.h"
+#include "wondermake-ui/FontMetrics.h"
 
 #include "wondermake-utility/Color.h"
 #include "wondermake-utility/Vector.h"
@@ -106,7 +106,7 @@ inline void from_json(const json& aJson, SGlyphMetrics& aMetrics)
 
 inline void from_json(const json& aJson, SFontInfo& aFontInfo)
 {
-	aFontInfo.AtlasPath = aJson["image"].get<std::string>();
+	aFontInfo.AtlasPath = FilePath(aJson["image"].get<std::string>());
 	aFontInfo.AtlasMetrics = aJson["atlas"].get<SFontAtlasMetrics>();
 	aFontInfo.FontMetrics = aJson["metrics"].get<SFontMetrics>();
 

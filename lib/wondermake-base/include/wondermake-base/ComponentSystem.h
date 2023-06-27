@@ -3,6 +3,7 @@
 #include "wondermake-base/Object.h"
 #include "wondermake-base/ObjectDependencyDestructor.h"
 #include "wondermake-base/System.h"
+#include "wondermake-base/SystemGlobal.h"
 
 #include "wondermake-utility/plf_colony.h"
 #include "wondermake-utility/SharedReference.h"

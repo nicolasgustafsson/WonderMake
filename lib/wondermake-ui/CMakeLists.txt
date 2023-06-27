@@ -1,17 +1,25 @@
 cmake_minimum_required(VERSION 3.19)
 
 list(APPEND IncludeFiles
+    "include/wondermake-ui/AudioResource.h"
     "include/wondermake-ui/DebugSettingsSystem.h"
     "include/wondermake-ui/DebugSystem.h"
     "include/wondermake-ui/EngineUniformBuffer.h"
     "include/wondermake-ui/FileSelectSystem.h"
+    "include/wondermake-ui/FontMetrics.h"
+    "include/wondermake-ui/FontResource.h"
+    "include/wondermake-ui/FontResourceSystem.h"
     "include/wondermake-ui/GlfwFacade.h"
     "include/wondermake-ui/ImguiInclude.h"
     "include/wondermake-ui/ImguiWrapper.h"
     "include/wondermake-ui/OpenGLFacade.h"
     "include/wondermake-ui/RenderSettingsManager.h"
     "include/wondermake-ui/RenderTarget.h"
-    "include/wondermake-ui/ShaderParser.h"
+    "include/wondermake-ui/ShaderProgram.h"
+    "include/wondermake-ui/ShaderResource.h"
+    "include/wondermake-ui/ShaderResourceSystem.h"
+    "include/wondermake-ui/TextureResource.h"
+    "include/wondermake-ui/TextureResourceSystem.h"
     "include/wondermake-ui/UniformBuffer.h"
     "include/wondermake-ui/VertexAttributes.h"
     "include/wondermake-ui/VertexBuffer.h"
@@ -20,6 +28,8 @@ list(APPEND IncludeFiles
     "include/wondermake-ui/Window.h")
 
 list(APPEND SourceFiles
+    "source/AudioResourceFactory.cpp"
+    "source/AudioResourceFactory.h"
     "source/ConfigurationDebugUi.cpp"
     "source/ConfigurationDebugUi.h"
     "source/ConfigurationView.cpp"
@@ -28,19 +38,33 @@ list(APPEND SourceFiles
     "source/DebugSystem.cpp"
     "source/EngineUniformBuffer.cpp"
     "source/FileSelectSystem.cpp"
+    "source/FontResourceFactory.cpp"
+    "source/FontResourceFactory.h"
+    "source/FontResourceSystem.cpp"
     "source/GlfwFacade.cpp"
     "source/ImGuiLogger.cpp"
     "source/ImGuiLogger.h"
     "source/ImguiWrapper.cpp"
     "source/JsonInspector.cpp"
     "source/JsonInspector.h"
+    "source/JsonExtensions.h"
+    "source/JsonUtility.cpp"
+    "source/JsonUtility.h"
     "source/OpenGLFacade.cpp"
     "source/RenderSettingsManager.cpp"
     "source/RenderTarget.cpp"
+    "source/ShaderResourceFactory.cpp"
+    "source/ShaderResourceFactory.h"
+    "source/ShaderResourceSystem.cpp"
     "source/ShaderParser.cpp"
+    "source/ShaderParser.h"
+    "source/StbImplementation.cpp"
+    "source/TextureResourceFactory.cpp"
+    "source/TextureResourceFactory.h"
+    "source/TextureResourceSystem.cpp"
     "source/Window.cpp")
 
-list(APPEND TargetDependencies WonderMakeEngine WonderMakeIo WonderMakeBase WonderMakeUtility magic_enum::magic_enum Glad Glfw Khr Imgui)
+list(APPEND TargetDependencies WonderMakeEngine WonderMakeIo WonderMakeBase WonderMakeUtility magic_enum::magic_enum Glad Glfw Khr Imgui Stb SoLoud)
 
 if (NOT WonderMake_ImportLibraries)
     add_library(WonderMakeUi STATIC ${IncludeFiles} ${SourceFiles})

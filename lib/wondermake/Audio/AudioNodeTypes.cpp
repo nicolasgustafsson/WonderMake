@@ -2,6 +2,10 @@
 
 #include "Audio/AudioManager.h"
 
+#include "wondermake-ui/AudioResource.h"
+
+#include "wondermake-io/FileResourceSystem.h"
+
 #include "wondermake-base/SystemPtr.h"
 
 #include <soloud_echofilter.h>
@@ -102,22 +106,26 @@ namespace NodeTypes
 	{
 		const std::filesystem::path audioEffectName = aNode.GetInput<std::filesystem::path>(0);
 
-		SystemPtr<ResourceSystem<AudioFile>> audioFileResource;
+		SystemPtr<FileResourceSystem> fileResourceSys;
 
-		ResourceProxy<AudioFile> audioFile = audioFileResource->GetResource(audioEffectName);
+		OnLoadSource = fileResourceSys->GetResource<AudioResource>(audioEffectName)
+			.ThenApply(InlineExecutor(), FutureApplyResult([&aNode](auto aAudioRef)
+				{
+					std::any& resourceSave = aNode.NodeData["resource"];
 
-		std::any& resourceSave = aNode.NodeData["resource"];
+					auto& ref = resourceSave.emplace<FileResourceRef<AudioResource>>(std::move(aAudioRef));
 
-		resourceSave.emplace<ResourceProxy<AudioFile>>(audioFile);
-		
-		SoLoud::Wav& wav = audioFile->GetSource();
+					SoLoud::Wav& wav = ref->Source();
 
-		wav.setFilter(0, nullptr);
-		wav.setFilter(1, nullptr);
-		wav.setFilter(2, nullptr);
-		wav.setFilter(3, nullptr);
-		//wav.setSingleInstance(true);
+					wav.setFilter(0, nullptr);
+					wav.setFilter(1, nullptr);
+					wav.setFilter(2, nullptr);
+					wav.setFilter(3, nullptr);
+					//wav.setSingleInstance(true);
 
-		aNode.SetOutput<SoLoud::AudioSource*>(0, &wav);
+					aNode.SetOutput<SoLoud::AudioSource*>(0, &wav);
+
+					return MakeCompletedFuture<void>();
+				}));
 	}
 }

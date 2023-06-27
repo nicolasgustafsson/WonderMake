@@ -1,6 +1,4 @@
 #pragma once
-#include "Message/MessageTypes.h"
-#include "Message/MessageSubscriber.h"
 
 #include "Resources/ResourceProxy.h"
 
@@ -27,16 +25,13 @@ class ResourceSystem
 			STWonderMake>>
 {
 public:
-	ResourceSystem();
+	ResourceSystem() = default;
 	ResourceProxy<TResource> GetResource(const std::filesystem::path& aPath);
 	plf::colony<ResourceProxy<TResource>> GetAllResources() const;
 
 protected:
 	inline void ResourceDeleter(std::filesystem::path aPath, SResource<TResource>* const aResource);
 
-	inline void OnFileChange(const SFileChangedMessage& aFileChangedMessage);
-
-	MessageSubscriber mySubscriber;
 	std::mutex myLock;
 	std::unordered_map<std::string, std::weak_ptr<SResource<TResource>>> myResources;
 };
@@ -53,43 +48,6 @@ plf::colony<ResourceProxy<TResource>> ResourceSystem<TResource>::GetAllResources
 	}
 	return returnVal;
 }
-
-template<typename TResource>
-void ResourceSystem<TResource>::OnFileChange(const SFileChangedMessage& aFileChangedMessage)
-{
-	for (auto&& str : myResources)
-	{
-		std::filesystem::path strPath(str.first);
-		
-		//[Nicos]: The file may have been destroyed(if it is a temporary) which makes equivalent crash, so check it in the hot loop
-		//[Nicos]: TODO: Solve this properly; we should not send file changed messages when a file has been created.
-		if (!std::filesystem::exists(aFileChangedMessage.FilePath))
-			return;
-
-		if (std::filesystem::equivalent(strPath, aFileChangedMessage.FilePath))
-		{
-			if (!GetResource(strPath)->ShouldHotReload())
-				return;
-
-			std::weak_ptr<SResource<TResource>> weakResource = myResources[str.first];
-
-			if (std::shared_ptr<SResource<TResource>> strongResource = weakResource.lock())
-			{
-				std::lock_guard<decltype(strongResource->myLock)> lock(strongResource->myLock);
-				strongResource->myPointer = std::make_shared<TResource>(aFileChangedMessage.FilePath);
-
-				strongResource->myGeneration++;
-
-				WmLogSuccess(TagWonderMake << TagWmResources << "Reloaded asset: " << aFileChangedMessage.FilePath.string() << ".");
-			}
-		}
-	}
-}
-
-template<typename TResource>
-ResourceSystem<TResource>::ResourceSystem()
-	: mySubscriber(BindHelper(&ResourceSystem<TResource>::OnFileChange, this))
-{}
 
 template<typename TResource>
 ResourceProxy<TResource> ResourceSystem<TResource>::GetResource(const std::filesystem::path& aPath)

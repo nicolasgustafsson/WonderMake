@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.19)
 
 list(APPEND IncludeFiles
     "include/wondermake-io/ConfigurationIo.h"
+    "include/wondermake-io/FileResource.h"
+    "include/wondermake-io/FileResourceFactory.h"
+    "include/wondermake-io/FileResourceProxy.h"
+    "include/wondermake-io/FileResourceSystem.h"
     "include/wondermake-io/FileTypes.h"
     "include/wondermake-io/FileWatcherSystem.h"
     "include/wondermake-io/IpcAcceptor.h"
@@ -18,6 +22,8 @@ list(APPEND IncludeFiles
 
 list(APPEND SourceFiles
     "source/ConfigurationIo.cpp"
+    "source/FileResource.cpp"
+    "source/FileResourceSystem.cpp"
     "source/FileWatcherSystem.cpp"
     "source/ReadFileJob.cpp"
     "source/SocketDecorator.cpp"

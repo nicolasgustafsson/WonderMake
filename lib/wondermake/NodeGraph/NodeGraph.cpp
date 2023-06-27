@@ -23,13 +23,6 @@ NodeGraph::~NodeGraph()
 	myConnections.clear();
 }
 
-void NodeGraph::SetNewPath(FilePath aNewFilePath)
-{
-	myPath = std::move(aNewFilePath);
-
-	Load();
-}
-
 void NodeGraph::CompileExternal()
 {
 	Compile();

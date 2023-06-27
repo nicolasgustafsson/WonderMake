@@ -1,8 +1,15 @@
 #pragma once
+
 #include "NodeGraph/NodeTypes.h"
+
+#include "wondermake-utility/Future.h"
+
 #include <filesystem>
+#include <memory>
 
 class RenderTarget;
+
+class ShaderProgram;
 
 namespace NodeTypes
 {
@@ -78,5 +85,7 @@ namespace NodeTypes
 		}
 
 		virtual void ExecuteNode(SNode&) override;
+
+		Future<std::shared_ptr<ShaderProgram>> CreateProgramFuture;
 	};
 }

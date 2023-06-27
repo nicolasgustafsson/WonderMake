@@ -1,18 +1,20 @@
 #pragma once
 
-#include "Components/SpriteComponent.h"
 #include "Functionalities/TransformFunctionality.h"
+
+#include "wondermake-io/FileResourceProxy.h"
 
 #include "wondermake-base/Functionality.h"
 
+#include "wondermake-utility/Color.h"
 #include "wondermake-utility/FilePath.h"
 #include "wondermake-utility/Rotation.h"
 
-template<typename TResource>
-class ResourceProxy;
-template<typename TResource>
-class ResourceSystem;
-class Texture;
+struct SSpriteComponent;
+
+class ShaderResourceSystem;
+class TextureResource;
+class TextureResourceSystem;
 
 class ConfigurationSystem;
 
@@ -20,11 +22,9 @@ class SpriteRenderingFunctionality
 	: public Functionality<
 		Policy::Set<
 			PAdd<ConfigurationSystem, PRead>,
-			PAdd<ResourceSystem<Texture>, PWrite>,
-			PAdd<ResourceSystem<Shader<EShaderType::Vertex>>, PWrite>,
-			PAdd<ResourceSystem<Shader<EShaderType::Fragment>>, PWrite>,
-			PAdd<ResourceSystem<Shader<EShaderType::Geometry>>, PWrite>,
+			PAdd<ShaderResourceSystem, PWrite>,
 			PAdd<TransformFunctionality2D, PRead>,
+			PAdd<TextureResourceSystem, PWrite>,
 			PAdd<SSpriteComponent, PWrite>>,
 		SystemTraits::Set<
 			STGui,
@@ -40,6 +40,8 @@ public:
 		std::string_view	RenderLayer;
 		i32					RenderOrder	= 0;
 	};
+
+	SpriteRenderingFunctionality();
 
 	void Initialize(SInitializationInfo aInfo);
 
@@ -59,6 +61,6 @@ public:
 	void Show() noexcept;
 
 private:
-	void SetTexture(ResourceProxy<Texture>&& aTexture);
+	void SetTexture(FileResourceRef<TextureResource>&& aTexture);
 
 };

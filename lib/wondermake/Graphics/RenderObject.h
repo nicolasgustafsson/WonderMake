@@ -1,33 +1,27 @@
 #pragma once
 
 #include "Graphics/RenderHandle.h"
-#include "Graphics/ShaderProgram.h"
-#include "Graphics/Texture.h"
-
-#include "Resources/ResourceProxy.h"
 
 #include "Utilities/Container/Container.h"
 
 #include "wondermake-ui/OpenGLFacade.h"
+#include "wondermake-ui/ShaderProgram.h"
+#include "wondermake-ui/ShaderResourceSystem.h"
+#include "wondermake-ui/TextureResourceSystem.h"
 #include "wondermake-ui/VertexAttributes.h"
 #include "wondermake-ui/VertexBufferArray.h"
 #include "wondermake-ui/VertexTypes.h"
 
 #include "wondermake-base/SystemPtr.h"
 
-
 //everything needed to create a renderobject
 struct SRenderObjectInfo
 {
-	ResourceSystem<Shader<EShaderType::Vertex>>& VsSystem;
-	ResourceSystem<Shader<EShaderType::Fragment>>& FsSystem;
-	ResourceSystem<Shader<EShaderType::Geometry>>& GsSystem;
-	std::filesystem::path VertexShaderPath;
-	std::filesystem::path GeometryShaderPath = "";
-	std::filesystem::path FragmentShaderPath;
-	ResourceProxy<Texture> TextureAsset;
-	u32 VertexCount = 1;
-	u32 GeometryType = GL_POINTS;
+	ShaderResourceSystem&				ShaderSystem;
+	std::shared_ptr<ShaderProgram>		ShaderProgram;
+	FileResourcePtr<TextureResource>	TextureAsset;
+	u32									VertexCount = 1;
+	u32									GeometryType = GL_POINTS;
 };
 
 class BaseRenderObject
@@ -82,91 +76,71 @@ template<EVertexAttribute... TAttributes>
 class RenderObject : public BaseRenderObject
 {
 public:
-	RenderObject(const SRenderObjectInfo& aRenderObjectInfo);
+	RenderObject(const SRenderObjectInfo& aRenderObjectInfo)
+		: myShaderSystem(aRenderObjectInfo.ShaderSystem)
+		, myShaderProgram(std::move(aRenderObjectInfo.ShaderProgram))
+		, myVertexBufferArray(aRenderObjectInfo.VertexCount)
+		, myGeometryType(aRenderObjectInfo.GeometryType)
+		, myVertexCount(aRenderObjectInfo.VertexCount)
+	{
+		if (aRenderObjectInfo.TextureAsset)
+			myTextures.Add(aRenderObjectInfo.TextureAsset.ToRef());
+	}
 
-	void BindTextures();
+	void BindTextures()
+	{
+		SystemPtr<TextureResourceSystem> texResSys;
 
-	void SetRenderCount(const u32 aRenderCount);
+		for (auto [i, texture] : Utility::Enumerate(myTextures))
+			texResSys->Bind(texture, static_cast<u32>(i));
+	}
+
+	void SetRenderCount(const u32 aRenderCount)
+	{
+		if (aRenderCount > myVertexCount)
+		{
+			myVertexCount = aRenderCount;
+
+			//[Nicos]: reconstruct vertex buffer
+			myVertexBufferArray.~VertexBufferArray();
+			new (&myVertexBufferArray)VertexBufferArray<TAttributes...>(myVertexCount);
+		}
+		myRenderCount = aRenderCount;
+	}
 
 	template<EVertexAttribute TAttribute>
-	void SetAttribute(const u32 aIndex, decltype(GetValueFromAttribute<TAttribute>()) aAttribute);
+	void SetAttribute(const u32 aIndex, decltype(GetValueFromAttribute<TAttribute>()) aAttribute)
+	{
+		myVertexBufferArray.template Set<TAttribute>(aIndex, aAttribute);
+	}
 
 	template<typename TProperty>
-	void SetProperty(std::string_view aName, TProperty aProperty);
+	void SetProperty(const char* aName, TProperty aProperty)
+	{
+		myShaderSystem.SetProgramProperty(myShaderProgram, aName, aProperty);
+	}
 
 protected:
-	virtual void RenderInternal() override;
+	virtual void RenderInternal() override
+	{
+		const bool shaderProgramActivated = myShaderSystem.ActivateProgram(myShaderProgram);
 
-	ShaderProgram myShaderProgram;
-	VertexBufferArray<TAttributes...> myVertexBufferArray;
-	Container<ResourceProxy<Texture>, Indexable> myTextures;
-	std::optional<u32> myRenderCount;
-	u32 myGeometryType;
-	u32 myVertexCount;
+		if (!shaderProgramActivated)
+			return;
+
+		myVertexBufferArray.Render();
+		BindTextures();
+
+		const u32 renderCount = myRenderCount ? *myRenderCount : myVertexCount;
+
+		SystemPtr<OpenGLFacade>()->DrawArrays(myGeometryType, 0, renderCount);
+	}
+
+	ShaderResourceSystem&									myShaderSystem;
+	std::shared_ptr<ShaderProgram>							myShaderProgram;
+	VertexBufferArray<TAttributes...>						myVertexBufferArray;
+	Container<FileResourceRef<TextureResource>, Indexable>	myTextures;
+	std::optional<u32>										myRenderCount;
+	u32														myGeometryType;
+	u32														myVertexCount;
 };
-
-template<EVertexAttribute... TAttributes>
-template<typename TProperty>
-void RenderObject<TAttributes...>::SetProperty(std::string_view aName, TProperty aProperty)
-{
-	myShaderProgram.SetProperty(aName, aProperty);
-}
-
-template<EVertexAttribute... TAttributes>
-void RenderObject<TAttributes...>::RenderInternal()
-{
-	const bool shaderProgramActivated = myShaderProgram.Activate();
-
-	if (!shaderProgramActivated)
-		return;
-
-	myVertexBufferArray.Render();
-	BindTextures();
-
-	const u32 renderCount = myRenderCount ? *myRenderCount : myVertexCount;
-
-	SystemPtr<OpenGLFacade>()->DrawArrays(myGeometryType, 0, renderCount);
-}
-
-template<EVertexAttribute... TAttributes>
-void RenderObject<TAttributes...>::SetRenderCount(const u32 aRenderCount)
-{
-	if (aRenderCount > myVertexCount)
-	{
-		myVertexCount = aRenderCount;
-
-		//[Nicos]: reconstruct vertex buffer
-		myVertexBufferArray.~VertexBufferArray();
-		new (&myVertexBufferArray)VertexBufferArray<TAttributes...>(myVertexCount);
-	}
-	myRenderCount = aRenderCount;
-}
-
-template<EVertexAttribute... TAttributes>
-template<EVertexAttribute TAttribute>
-void RenderObject<TAttributes...>::SetAttribute(const u32 aIndex, decltype(GetValueFromAttribute<TAttribute>()) aAttribute)
-{
-	myVertexBufferArray.template Set<TAttribute>(aIndex, aAttribute);
-}
-
-template<EVertexAttribute... TAttributes>
-void RenderObject<TAttributes...>::BindTextures()
-{
-	for (auto[i, texture] : Utility::Enumerate(myTextures))
-	{
-		if (texture)
-			texture->Bind(static_cast<u32>(i));
-	}
-}
-
-template<EVertexAttribute... TAttributes>
-RenderObject<TAttributes...>::RenderObject(const SRenderObjectInfo& aRenderObjectInfo)
-	: myVertexBufferArray(aRenderObjectInfo.VertexCount)
-	, myShaderProgram(aRenderObjectInfo.VsSystem, aRenderObjectInfo.FsSystem, aRenderObjectInfo.GsSystem, aRenderObjectInfo.VertexShaderPath, aRenderObjectInfo.FragmentShaderPath, aRenderObjectInfo.GeometryShaderPath)
-	, myGeometryType(aRenderObjectInfo.GeometryType)
-{
-	myVertexCount = aRenderObjectInfo.VertexCount;
-	if (aRenderObjectInfo.TextureAsset)
-		myTextures.Add(aRenderObjectInfo.TextureAsset);
-}
-

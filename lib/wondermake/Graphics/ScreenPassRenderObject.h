@@ -8,7 +8,7 @@ class ScreenPassRenderObject : public RenderObject
 	EVertexAttribute::TexCoord>
 {
 public:
-	ScreenPassRenderObject(ResourceSystem<Shader<EShaderType::Vertex>>& aVsSystem, ResourceSystem<Shader<EShaderType::Fragment>>& aFsSystem, ResourceSystem<Shader<EShaderType::Geometry>>& aGsSystem, const std::filesystem::path& aFragmentShader);
-	~ScreenPassRenderObject();
+	ScreenPassRenderObject(ShaderResourceSystem& aShaderSystem, std::shared_ptr<ShaderProgram> aShaderProgram);
+
 };
 

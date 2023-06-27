@@ -14,9 +14,7 @@ namespace JsonUtility
 		std::optional<nlohmann::json> jsonFile{};
 
 		if (json::accept(fileContents))
-		{
 			jsonFile = json::parse(fileContents);
-		}
 
 		return jsonFile;
 	}

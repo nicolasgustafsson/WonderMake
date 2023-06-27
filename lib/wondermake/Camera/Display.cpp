@@ -6,7 +6,7 @@ Display::Display(
 	OpenGLFacade&						aOpenGlFacade,
 	GlfwFacade&							aGlfwFacade,
 	std::string							aName,
-	ResourceProxy<RenderNodeGraph>		aRenderGraph,
+	FileResourcePtr<RenderNodeGraph>	aRenderGraph,
 	const SSettings&					aSettings)
 	: myGlfwFacade(aGlfwFacade)
 	, myName(std::move(aName))
@@ -63,11 +63,11 @@ void Display::SetResolution(const SVector2f aResolution) noexcept
 	SetViewportSize(aResolution);
 }
 
-void Display::SetRenderGraph(ResourceProxy<RenderNodeGraph> aRenderGraph)
+void Display::SetRenderGraph(FileResourcePtr<RenderNodeGraph> aRenderGraph)
 {
 	myRenderGraph = std::move(aRenderGraph);
 
-	if (!myRenderGraph.IsValid())
+	if (!myRenderGraph)
 		return;
 
 	myRenderGraph->myGlobalData["ViewportSize"].emplace<SVector2f>(myViewportSize);
@@ -75,7 +75,7 @@ void Display::SetRenderGraph(ResourceProxy<RenderNodeGraph> aRenderGraph)
 
 [[nodiscard]] RenderTarget* Display::GetRenderTarget() const noexcept
 {
-	if (!myRenderGraph.IsValid())
+	if (!myRenderGraph)
 		return nullptr;
 
 	return myRenderGraph->GetFinalRenderTarget();

@@ -7,12 +7,15 @@
 class GlfwFacade;
 class Window;
 
+class DebugSettingsSystem;
+
 class ConfigurationSystem;
 
 class ImguiWrapper
 	: public System<
 		Policy::Set<
 			PAdd<ConfigurationSystem, PWrite>,
+			PAdd<DebugSettingsSystem, PWrite>,
 			PAdd<GlfwFacade, PWrite>,
 			PAdd<Window, PRead>>,
 		STrait::Set<

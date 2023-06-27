@@ -11,7 +11,6 @@
 
 #include "wondermake-base/ConfigurationSystem.h"
 #include "wondermake-base/SystemGlobal.h"
-#include "wondermake-base/SystemPtr.h"
 
 WM_REGISTER_SYSTEM(ImguiWrapper);
 
@@ -57,7 +56,7 @@ void ImguiWrapper::StartFrame()
 
 	DockSpace();
 
-	if (SystemPtr<DebugSettingsSystem>()->GetOrCreateDebugValue("Show Imgui Demo", false))
+	if (Get<DebugSettingsSystem>().GetOrCreateDebugValue("Show Imgui Demo", false))
 		ImGui::ShowDemoWindow();
 }
 

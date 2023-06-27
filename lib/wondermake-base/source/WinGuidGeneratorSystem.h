@@ -10,6 +10,10 @@ class WinGuidGeneratorSystem
 		Policy::Set<
 			PAdd<WinPlatformSystem, PWrite>>,
 		STrait::Set<
+			STFoundational,
+			STPlatform,
+			STThreadsafe,
+			STSingleton,
 			STWonderMake>>
 {
 public:

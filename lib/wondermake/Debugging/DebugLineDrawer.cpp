@@ -2,18 +2,29 @@
 
 #include "Utilities/TimeKeeper.h"
 
+#include "wondermake-ui/ShaderResourceSystem.h"
+
 #include "wondermake-utility/Utility.h"
 
 WM_REGISTER_SYSTEM(DebugLineDrawer);
 
 DebugLineDrawer::DebugLineDrawer() noexcept
 	: mySubscriber(BindHelper(&DebugLineDrawer::OnGotDebugLineMessage, this))
-{}
+{
+	myOnShaderProgram = Get<ShaderResourceSystem>()
+		.CreateProgram(FilePath(FilePath::EFolder::Bin, "Shaders/Vertex/Line.vert"), FilePath(FilePath::EFolder::Bin, "Shaders/Fragment/Line.frag"))
+		.ThenApply(GetExecutor(), FutureApplyResult([this](auto aProgram)
+			{
+				myRenderObject.emplace(Get<ShaderResourceSystem>(), std::move(aProgram), 10000);
+
+				return MakeCompletedFuture<void>();
+			}));
+}
 
 void DebugLineDrawer::Render()
 {
 	if (!myRenderObject)
-		myRenderObject.emplace(Get<ResourceSystem<Shader<EShaderType::Vertex>>>(), Get<ResourceSystem<Shader<EShaderType::Fragment>>>(), Get<ResourceSystem<Shader<EShaderType::Geometry>>>(), 10000);
+		return;
 
 	for (auto [i, line] : Utility::Enumerate(myDebugLines))
 		myRenderObject->SetLine(static_cast<u32>(i), line);

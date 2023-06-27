@@ -1,4 +1,4 @@
-#include "wondermake-ui/ShaderParser.h"
+#include "ShaderParser.h"
 
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/WmLogTags.h"
@@ -7,27 +7,28 @@
 
 namespace ShaderParser
 {
-	std::optional<std::string> ParseShader(const std::filesystem::path& aShaderPath)
+	std::pair<std::optional<std::string>, std::unordered_set<FilePath>> ParseShader(const FilePath& aShaderPath)
 	{
-		std::unordered_set<std::string> includedFiles;
+		std::unordered_set<FilePath> includedFiles;
+		auto shaderFile = aShaderPath.GetFirstFileFromAllPaths();
 
-		std::ifstream file{ aShaderPath };
+		std::ifstream file{ shaderFile };
 
-		const size_t fileSize = static_cast<size_t>(std::filesystem::file_size(aShaderPath));
+		const size_t fileSize = static_cast<size_t>(std::filesystem::file_size(shaderFile));
 
 		std::string shaderString(fileSize, ' ');
 
 		file.read(shaderString.data(), fileSize);
-
+		
 		std::optional<std::string> parseResult = ParseShaderFileRecursive(aShaderPath, std::move(shaderString), true, includedFiles);
 
 		if (!parseResult)
-			WmLogError(TagWonderMake << TagWmOpenGL << "Failed to parse shader file with path: " << aShaderPath.string() << '.');
+			WmLogError(TagWonderMake << TagWmOpenGL << "Failed to parse shader file with path: " << aShaderPath << '.');
 
-		return parseResult;
+		return std::make_pair(parseResult, std::move(includedFiles));
 	}
 
-	std::optional<std::string> ParseShaderFileRecursive(const std::filesystem::path& aShaderPath, std::string&& aShaderCode, const bool aIsMain, std::unordered_set<std::string>& aOutIncludedPaths)
+	std::optional<std::string> ParseShaderFileRecursive(const FilePath& aShaderPath, std::string&& aShaderCode, const bool aIsMain, std::unordered_set<FilePath>& aOutIncludedPaths)
 	{
 		if (aShaderCode.empty())
 			return {};
@@ -56,16 +57,19 @@ namespace ShaderParser
 			}
 		}
 
-		size_t rootDirectoryEnd = aShaderPath.string().find_last_of('/');
+		auto shaderPath = aShaderPath.GetFirstFileFromAllPaths().string();
+
+		size_t rootDirectoryEnd = shaderPath.find_last_of('/');
 
 		if (rootDirectoryEnd == std::string::npos)
-			rootDirectoryEnd = aShaderPath.string().find_last_of('\\');
+			rootDirectoryEnd = shaderPath.find_last_of('\\');
 
-		std::string root_include_directory = rootDirectoryEnd != std::string::npos ? aShaderPath.string().substr(0, rootDirectoryEnd + 1) : "";
+		std::string root_include_directory = rootDirectoryEnd != std::string::npos ? shaderPath.substr(0, rootDirectoryEnd + 1) : "";
 
 		if (root_include_directory.empty())
 		{
-			WmLogError(TagWonderMake << TagWmOpenGL << "Failed to parse shader, could not find root directory of shader with path:" << aShaderPath.string() << '.');
+			WmLogError(TagWonderMake << TagWmOpenGL << "Failed to parse shader, could not find root directory of shader with path:" << aShaderPath << '.');
+
 			return {};
 		}
 
@@ -81,19 +85,27 @@ namespace ShaderParser
 				const size_t endOfIncludeFilename = aShaderCode.find_first_of('"', startOfIncludeFilename + 1);
 				if (endOfIncludeFilename != std::string::npos)
 				{
-					const std::string includePath = root_include_directory + aShaderCode.substr(startOfIncludeFilename + 1, endOfIncludeFilename - startOfIncludeFilename - 1);
-					const auto insertionResult = aOutIncludedPaths.insert(includePath);
+					std::filesystem::path rawPath = root_include_directory + aShaderCode.substr(startOfIncludeFilename + 1, endOfIncludeFilename - startOfIncludeFilename - 1);
+					FilePath includePath;
+
+					if (rawPath.is_absolute())
+						includePath = FilePath::Resolve(rawPath);
+					else
+						includePath = FilePath(aShaderPath.Location, rawPath)
+							.LexicallyNormal();
+
+					const auto insertionResult = aOutIncludedPaths.insert(FilePath::Resolve(includePath));
 
 					if (insertionResult.second)
 					{
-
 						if (!std::filesystem::exists(includePath))
 						{
 							WmLogError(TagWonderMake << TagWmOpenGL << "Failed to parse shader, could not find file to include with path: " << includePath << '.');
+
 							return {};
 						}
-						std::ifstream includedFileStream{ includePath };
 
+						std::ifstream includedFileStream{ includePath };
 						const size_t fileSize = static_cast<size_t>(std::filesystem::file_size(includePath));
 
 						std::string includedShaderString(fileSize, ' ');
@@ -105,6 +117,7 @@ namespace ShaderParser
 						if (!includedResult)
 						{
 							WmLogError(TagWonderMake << TagWmOpenGL << "Failed to parse shader, could not parse included file with path: " << includePath << '.');
+
 							return {};
 						}
 

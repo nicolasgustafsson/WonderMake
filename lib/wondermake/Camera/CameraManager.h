@@ -17,13 +17,12 @@
 
 class GlfwFacade;
 class OpenGLFacade;
-class RenderNodeGraph;
-template<typename TResource>
-class ResourceSystem;
 class Window;
 
 class DebugSystem;
 class FileSelectSystem;
+
+class FileResourceSystem;
 
 class ConfigurationSystem;
 
@@ -34,7 +33,7 @@ class CameraManager
 			PAdd<FileSelectSystem, PWrite>,
 			PAdd<GlfwFacade, PWrite>,
 			PAdd<OpenGLFacade, PWrite>,
-			PAdd<ResourceSystem<RenderNodeGraph>, PWrite>,
+			PAdd<FileResourceSystem, PWrite>,
 			PAdd<Window, PWrite>,
 			PAdd<DebugSystem, PRead>>,
 		STrait::Set<

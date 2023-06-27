@@ -113,11 +113,21 @@ namespace NodeTypes
 
 		if (!screenPassAny.has_value())
 		{
-			SystemPtr<ResourceSystem<Shader<EShaderType::Vertex>>> vsSystem;
-			SystemPtr<ResourceSystem<Shader<EShaderType::Fragment>>> fsSystem;
-			SystemPtr<ResourceSystem<Shader<EShaderType::Geometry>>> gsSystem;
+			if (CreateProgramFuture.IsValid())
+				return;
 
-			screenPassAny = std::move(std::make_any<std::shared_ptr<ScreenPassRenderObject>>(std::make_shared<ScreenPassRenderObject>(*vsSystem, *fsSystem, *gsSystem, aNode.GetInput<std::filesystem::path>(3))));
+			SystemPtr<ShaderResourceSystem> shaderSystem;
+
+			CreateProgramFuture = shaderSystem
+				->CreateProgram(FilePath(FilePath::EFolder::Bin, "Shaders/Vertex/Pass.vert"), aNode.GetInput<std::filesystem::path>(3))
+				.ThenRun(InlineExecutor(), FutureRunResult([&screenPassAny](auto aProgram)
+					{
+						SystemPtr<ShaderResourceSystem> shaderSystem;
+
+						screenPassAny = std::make_any<std::shared_ptr<ScreenPassRenderObject>>(std::make_shared<ScreenPassRenderObject>(*shaderSystem, std::move(aProgram)));
+					}));
+
+			return;
 		}
 
 		std::shared_ptr<ScreenPassRenderObject> screenPass = std::any_cast<std::shared_ptr<ScreenPassRenderObject>>(screenPassAny);

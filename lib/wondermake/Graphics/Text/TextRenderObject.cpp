@@ -1,26 +1,20 @@
 #include "TextRenderObject.h"
-#include "Font.h"
-#include "Resources/ResourceSystem.h"
 
-TextRenderObject::TextRenderObject(
-	ResourceSystem<Shader<EShaderType::Vertex>>& aVsSystem,
-	ResourceSystem<Shader<EShaderType::Fragment>>& aFsSystem,
-	ResourceSystem<Shader<EShaderType::Geometry>>& aGsSystem,
-	ResourceProxy<Font> aFont)
+#include "wondermake-ui/FontResource.h"
+
+TextRenderObject::TextRenderObject(ShaderResourceSystem& aShaderSystem, std::shared_ptr<ShaderProgram> aShaderProgram, FileResourceRef<FontResource> aFont)
 	: RenderObject(SRenderObjectInfo
-		{	aVsSystem
-		,	aFsSystem
-		,	aGsSystem
-		,	std::filesystem::current_path() / "Shaders/Vertex/Text.vert"
-		,	"" //geometry shader
-		,	"Shaders/Fragment/Text.frag"
-		,	ResourceProxy<Texture>()
-		,	6 * 16
-		,	GL_TRIANGLES })
+		{
+			.ShaderSystem	= aShaderSystem,
+			.ShaderProgram	= std::move(aShaderProgram),
+			.VertexCount	= 6 * 16,
+			.GeometryType	= GL_TRIANGLES
+		})
+	, myFont(std::move(aFont))
 {
-	myFont = std::move(aFont);
 	SetSize(mySize);
-	myTextures.Add(myFont->GetTexture());
+	myTextures.Add(myFont->Atlas());
+
 	UpdateVertices();
 }
 
@@ -69,7 +63,7 @@ void TextRenderObject::SetMaxWidth(const f32 aWidth)
 void TextRenderObject::UpdateVertices()
 {
 	myBoundingBox = CalculateBoundingBox();
-	const SFontMetrics fontMetrics = myFont->GetFontMetrics();
+	const SFontMetrics fontMetrics = myFont->FontMetrics();
 
 	SVector2f cursorPosition = myPosition;
 	cursorPosition.Y -= GetAscent() * mySize;
@@ -78,7 +72,7 @@ void TextRenderObject::UpdateVertices()
 	cursorPosition.Y += myOrigin.Y * myBoundingBox.GetHeight();
 	for (u32 i = 0; i < myText.size(); i++)
 	{
-		const SGlyphMetrics glyph = myFont->GetGlyphMetrics(myText[i]);
+		const SGlyphMetrics glyph = myFont->GlyphMetrics(myText[i]);
 		
 		if (myText[i] == '\n' || ((cursorPosition.X - myPosition.X) > myMaxWidth && myMaxWidth > 0.f))
 		{
@@ -88,7 +82,7 @@ void TextRenderObject::UpdateVertices()
 
 		if (i > 0 && cursorPosition.X != myPosition.X)
 		{
-			cursorPosition.X += myFont->GetKerning(myText[i - 1], myText[i]) * mySize;
+			cursorPosition.X += myFont->Kerning(myText[i - 1], myText[i]) * mySize;
 		}
 
 		SetAttribute<EVertexAttribute::Position>(i * 6 + 0, cursorPosition + SVector2f(glyph.PlaneBounds.Left, glyph.PlaneBounds.Bottom) * mySize);
@@ -113,7 +107,7 @@ void TextRenderObject::UpdateVertices()
 
 SRectangleF TextRenderObject::CalculateBoundingBox() const
 {
-	const SFontMetrics fontMetrics = myFont->GetFontMetrics();
+	const SFontMetrics fontMetrics = myFont->FontMetrics();
 
 	SRectangleF boundingBox{};
 	boundingBox.Left = myPosition.X;
@@ -126,7 +120,7 @@ SRectangleF TextRenderObject::CalculateBoundingBox() const
 
 	for (u32 i = 0; i < myText.size(); i++)
 	{
-		const SGlyphMetrics glyph = myFont->GetGlyphMetrics(myText[i]);
+		const SGlyphMetrics glyph = myFont->GlyphMetrics(myText[i]);
 
 		if (myText[i] == '\n' || ((cursorPosition.X - myPosition.X) > myMaxWidth && myMaxWidth > 0.f))
 		{
@@ -136,7 +130,7 @@ SRectangleF TextRenderObject::CalculateBoundingBox() const
 
 		if (i > 0 && cursorPosition.X != myPosition.X)
 		{
-			cursorPosition.X += myFont->GetKerning(myText[i - 1], myText[i]) * mySize;
+			cursorPosition.X += myFont->Kerning(myText[i - 1], myText[i]) * mySize;
 		}
 
 		if (cursorPosition.X + glyph.PlaneBounds.Right * mySize > maxX)
@@ -164,5 +158,5 @@ SRectangleF TextRenderObject::CalculateBoundingBox() const
 f32 TextRenderObject::GetAscent() const
 {
 	//this is the best looking result
-	return myFont->GetGlyphMetrics('W').PlaneBounds.Top;
+	return myFont->GlyphMetrics('W').PlaneBounds.Top;
 }

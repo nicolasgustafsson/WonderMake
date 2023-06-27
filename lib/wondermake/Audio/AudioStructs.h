@@ -1,14 +1,16 @@
 #pragma once
-#include "AudioFile.h"
-#include "Resources/ResourceProxy.h"
+
+#include "wondermake-ui/AudioResource.h"
+
+#include "wondermake-io/FileResourceProxy.h"
 
 struct SPlayingAudioFile
 {
 	SoLoud::handle Handle;
-	ResourceProxy<AudioFile> AudioResource;
+	FileResourceRef<AudioResource> AudioResource;
 };
 
 struct SQueuedAudioFile
 {
-	ResourceProxy<AudioFile> AudioResource;
+	FileResourceRef<AudioResource> AudioResource;
 };

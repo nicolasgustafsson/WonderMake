@@ -9,6 +9,7 @@
 #include "wondermake-ui/EngineUniformBuffer.h"
 #include "wondermake-ui/GlfwFacade.h"
 #include "wondermake-ui/RenderTarget.h"
+#include "wondermake-ui/ShaderResourceSystem.h"
 #include "wondermake-ui/VertexAttributes.h"
 
 #include "wondermake-engine/ConfigurationEngine.h"
@@ -42,12 +43,15 @@ MessageCallback([[maybe_unused]] GLenum source,
 
 Renderer::Renderer() noexcept
 	: Debugged("Renderer", GetExecutor())
-	, myCopyPass(
-			Get<ResourceSystem<Shader<EShaderType::Vertex>>>(),
-			Get<ResourceSystem<Shader<EShaderType::Fragment>>>(),
-			Get<ResourceSystem<Shader<EShaderType::Geometry>>>(),
-			std::filesystem::current_path() / "Shaders/Fragment/BackbufferCopy.frag")
 {
+	Get<ShaderResourceSystem>()
+		.CreateProgram(FilePath(FilePath::EFolder::Bin, "Shaders/Vertex/Pass.vert"), FilePath(FilePath::EFolder::Bin, "Shaders/Fragment/BackbufferCopy.frag"))
+		.ThenRun(GetExecutor(), FutureRunResult([this](auto aProgram)
+			{
+				myCopyPass.emplace(Get<ShaderResourceSystem>(), std::move(aProgram));
+			}))
+		.Detach();
+
 	Get<OpenGLFacade>().Enable(GL_DEBUG_OUTPUT);
 	Get<OpenGLFacade>().Enable(GL_BLEND);
 
@@ -83,6 +87,9 @@ void Renderer::StartFrame()
 
 void Renderer::FinishFrame()
 {
+	if (!myCopyPass)
+		return;
+
 	auto& cameraManager = Get<CameraManager>();
 
 	auto display = cameraManager.GetMainDisplay();
@@ -132,7 +139,7 @@ void Renderer::FinishFrame()
 
 	renderTarget->BindAsTexture();
 
-	myCopyPass.RenderImmediate();
+	myCopyPass->RenderImmediate();
 }
 
 void Renderer::SwapBuffers()

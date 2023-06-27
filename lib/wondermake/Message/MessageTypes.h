@@ -62,9 +62,3 @@ struct SDebugMessage
 {
 
 };
-
-struct SFileChangedMessage
-	: public Message<SFileChangedMessage>
-{
-	std::filesystem::path FilePath;
-};

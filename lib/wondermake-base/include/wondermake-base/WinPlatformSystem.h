@@ -82,6 +82,15 @@ public:
 		DWORD nNumberOfBytesToWrite,
 		LPDWORD lpNumberOfBytesWritten,
 		LPOVERLAPPED lpOverlapped) = 0;
+	virtual BOOL ReadDirectoryChangesW(
+		HANDLE hDirectory,
+		LPVOID lpBuffer,
+		DWORD nBufferLength,
+		BOOL bWatchSubtree,
+		DWORD dwNotifyFilter,
+		LPDWORD lpBytesReturned,
+		LPOVERLAPPED lpOverlapped,
+		LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine) = 0;
 	
 	virtual HANDLE GetCurrentProcess() = 0;
 	virtual DWORD GetProcessId(

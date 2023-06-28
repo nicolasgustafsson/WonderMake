@@ -3,10 +3,12 @@ cmake_minimum_required(VERSION 3.19)
 add_subdirectory("proto")
 
 list(APPEND SourceFiles
+    "Include/WonderMakeIoTests/FileWatcherSystemMock.h"
     "Include/WonderMakeIoTests/ReadFileJobMock.h"
     "Include/WonderMakeIoTests/SocketAcceptorMock.h"
     "Include/WonderMakeIoTests/SocketMock.h"
     "Include/WonderMakeIoTests/WriteFileJobMock.h"
+    "Tests/FileWatcherSystemTests.cpp"
     "Tests/SocketDecoratorTests.cpp"
     "Tests/SocketProtobufImplTests.cpp"
     "Tests/WinPlatformFilePathsTests.cpp"
@@ -16,6 +18,7 @@ list(APPEND SourceFiles
 list(APPEND SourceFiles
     "../../lib/wondermake-base/source/Configuration.cpp"
     "../../lib/wondermake-base/source/Logger.cpp"
+    "../../lib/wondermake-io/source/FileWatcherSystem.cpp"
     "../../lib/wondermake-io/source/SocketDecorator.cpp"
     "../../lib/wondermake-io/source/WinIpcAcceptor.cpp"
     "../../lib/wondermake-io/source/WinIpcConnection.cpp"

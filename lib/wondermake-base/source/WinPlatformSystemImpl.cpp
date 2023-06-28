@@ -134,6 +134,19 @@ BOOL WinPlatformSystemImpl::WriteFile(
 	return ::WriteFile(hFile, lpBuffer, nNumberOfBytesToWrite, lpNumberOfBytesWritten, lpOverlapped);
 }
 
+BOOL WinPlatformSystemImpl::ReadDirectoryChangesW(
+	HANDLE hDirectory,
+	LPVOID lpBuffer,
+	DWORD nBufferLength,
+	BOOL bWatchSubtree,
+	DWORD dwNotifyFilter,
+	LPDWORD lpBytesReturned,
+	LPOVERLAPPED lpOverlapped,
+	LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine)
+{
+	return ::ReadDirectoryChangesW(hDirectory, lpBuffer, nBufferLength, bWatchSubtree, dwNotifyFilter, lpBytesReturned, lpOverlapped, lpCompletionRoutine);
+}
+
 HANDLE WinPlatformSystemImpl::GetCurrentProcess()
 {
 	return ::GetCurrentProcess();

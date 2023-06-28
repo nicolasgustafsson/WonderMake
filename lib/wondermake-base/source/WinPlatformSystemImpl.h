@@ -88,6 +88,15 @@ public:
 		DWORD nNumberOfBytesToWrite,
 		LPDWORD lpNumberOfBytesWritten,
 		LPOVERLAPPED lpOverlapped) override;
+	BOOL ReadDirectoryChangesW(
+		HANDLE hDirectory,
+		LPVOID lpBuffer,
+		DWORD nBufferLength,
+		BOOL bWatchSubtree,
+		DWORD dwNotifyFilter,
+		LPDWORD lpBytesReturned,
+		LPOVERLAPPED lpOverlapped,
+		LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine) override;
 
 	HANDLE GetCurrentProcess() override;
 	DWORD GetProcessId(

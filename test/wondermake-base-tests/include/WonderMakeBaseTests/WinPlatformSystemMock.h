@@ -82,6 +82,15 @@ public:
 		DWORD nNumberOfBytesToWrite,
 		LPDWORD lpNumberOfBytesWritten,
 		LPOVERLAPPED lpOverlapped), (override));
+	MOCK_METHOD(BOOL, ReadDirectoryChangesW, (
+		HANDLE hDirectory,
+		LPVOID lpBuffer,
+		DWORD nBufferLength,
+		BOOL bWatchSubtree,
+		DWORD dwNotifyFilter,
+		LPDWORD lpBytesReturned,
+		LPOVERLAPPED lpOverlapped,
+		LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine), (override));
 
 	MOCK_METHOD(HANDLE, GetCurrentProcess, (), (override));
 	MOCK_METHOD(DWORD, GetProcessId, (

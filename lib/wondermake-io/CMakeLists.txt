@@ -21,6 +21,8 @@ list(APPEND SourceFiles
     "source/FileWatcherSystem.cpp"
     "source/ReadFileJob.cpp"
     "source/SocketDecorator.cpp"
+    "source/WinFileWatcherSystem.cpp"
+    "source/WinFileWatcherSystem.h"
     "source/WinIpcAcceptor.cpp"
     "source/WinIpcAcceptor.h"
     "source/WinIpcConnection.cpp"

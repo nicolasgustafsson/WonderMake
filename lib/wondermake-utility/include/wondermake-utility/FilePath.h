@@ -58,6 +58,11 @@ public:
 		return FilePath::operator std::filesystem::path().string();
 	}
 
+	[[nodiscard]] inline FilePath LexicallyNormal() const
+	{
+		return FilePath(Location, Path.lexically_normal(), *myData);
+	}
+
 	[[nodiscard]] inline static FilePath Resolve(const std::filesystem::path& aPath, const FilePathData& aData = FilePathData::Get())
 	{
 		auto path = aPath.lexically_normal();

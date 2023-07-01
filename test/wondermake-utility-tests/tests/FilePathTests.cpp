@@ -170,6 +170,14 @@ TEST(FilePathTests, filepath_constructed_with_absolute_path_and_userdata_locatio
 	EXPECT_EQ(path, expectedPath);
 }
 
+TEST(FilePathTests, lexicallynormal_returns_filepath_without_dots)
+{
+	const FilePath passedFilePath	(FilePath::EFolder::Bin, "path\\..\\path\\.\\to\\..\\to\\dir");
+	const FilePath expectedFilePath	(FilePath::EFolder::Bin, "path\\to\\dir");
+
+	EXPECT_EQ(passedFilePath.LexicallyNormal(), expectedFilePath);
+}
+
 TEST(FilePathTests, resolved_filepath_is_in_bin_when_path_is_relative)
 {
 	const std::filesystem::path	path = "path/to/dir";

@@ -35,9 +35,9 @@ public:
 		, myData	(&aData)
 	{}
 
-	inline [[nodiscard]] bool operator==(const FilePath&) const noexcept = default;
+	[[nodiscard]] inline bool operator==(const FilePath&) const noexcept = default;
 
-	inline [[nodiscard]] operator std::filesystem::path() const
+	[[nodiscard]] inline operator std::filesystem::path() const
 	{
 		if (Path.is_absolute())
 			return Path;
@@ -53,9 +53,37 @@ public:
 
 		return Path;
 	}
-	inline [[nodiscard]] operator std::string() const
+	[[nodiscard]] inline operator std::string() const
 	{
 		return FilePath::operator std::filesystem::path().string();
+	}
+
+	[[nodiscard]] inline static FilePath Resolve(const std::filesystem::path& aPath, const FilePathData& aData = FilePathData::Get())
+	{
+		auto path = aPath.lexically_normal();
+
+		const auto& nativePath = path.native();
+
+		for (const auto& root : aData.GetAllPathsBin())
+			if (auto rootLexical = root.lexically_normal(); nativePath.starts_with(rootLexical.native()))
+				return FilePath(EFolder::Bin, std::filesystem::relative(path, rootLexical), aData);
+
+		for (const auto& root : aData.GetAllPathsData())
+			if (auto rootLexical = root.lexically_normal(); nativePath.starts_with(rootLexical.native()))
+				return FilePath(EFolder::Data, std::filesystem::relative(path, rootLexical), aData);
+
+		for (const auto& root : aData.GetAllPathsUser())
+			if (auto rootLexical = root.lexically_normal(); nativePath.starts_with(rootLexical.native()))
+				return FilePath(EFolder::User, std::filesystem::relative(path, rootLexical), aData);
+
+		for (const auto& root : aData.GetAllPathsUserData())
+			if (auto rootLexical = root.lexically_normal(); nativePath.starts_with(rootLexical.native()))
+				return FilePath(EFolder::UserData, std::filesystem::relative(path, rootLexical), aData);
+
+		if (aPath.is_relative())
+			return FilePath(EFolder::Bin, path, aData);
+
+		return FilePath(EFolder::Unset, path, aData);
 	}
 	
 	EFolder					Location = EFolder::Unset;

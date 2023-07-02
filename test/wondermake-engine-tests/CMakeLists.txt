@@ -34,4 +34,10 @@ target_include_directories(WonderMakeEngineTests
 
 target_compile_definitions(WonderMakeEngineTests PUBLIC "WM_SUPPRESS_SYSTEM_GLOBAL" "WM_SUPPRESS_LOGGER" "WM_SUPPRESS_JOB_GLOBAL")
 
+if (MSVC)
+  target_compile_options(WonderMakeEngineTests PRIVATE /bigobj)
+else ()
+  target_compile_options(WonderMakeEngineTests PRIVATE -Wa,-mbig-obj)
+endif ()
+
 gtest_discover_tests(WonderMakeEngineTests)

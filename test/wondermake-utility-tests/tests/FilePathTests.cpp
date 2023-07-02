@@ -7,6 +7,50 @@ inline constexpr auto locPathData		= "data";
 inline constexpr auto locPathUser		= "user";
 inline constexpr auto locPathUserData	= "userdata";
 
+TEST(FilePathTests, filepathdata_extract_bin_paths_correctly)
+{
+	FilePathData data;
+
+	data.Initialize("bin|bin2|binner:the binening", locPathData, locPathUser, locPathUserData);
+
+	EXPECT_EQ(data.GetPathBin(), "bin");
+
+	EXPECT_EQ(data.GetAllPathsBin(), std::vector<std::filesystem::path>({ "bin", "bin2", "binner:the binening" }));
+}
+
+TEST(FilePathTests, filepathdata_extract_data_paths_correctly)
+{
+	FilePathData data;
+
+	data.Initialize(locPathBin, "data|lore", locPathUser, locPathUserData);
+
+	EXPECT_EQ(data.GetPathData(), "data");
+
+	EXPECT_EQ(data.GetAllPathsData(), std::vector<std::filesystem::path>({ "data", "lore" }));
+}
+
+TEST(FilePathTests, filepathdata_extract_user_paths_correctly)
+{
+	FilePathData data;
+
+	data.Initialize(locPathBin, locPathUser, "user|superuser|poweruser|extrasuperuser", locPathUserData);
+
+	EXPECT_EQ(data.GetPathUser(), "user");
+
+	EXPECT_EQ(data.GetAllPathsUser(), std::vector<std::filesystem::path>({ "user", "superuser", "poweruser", "extrasuperuser" }));
+}
+
+TEST(FilePathTests, filepathdata_extract_userdata_paths_correctly)
+{
+	FilePathData data;
+
+	data.Initialize(locPathBin, locPathUser, locPathUser, "userdata|ud|userd|udata");
+
+	EXPECT_EQ(data.GetPathUserData(), "userdata");
+
+	EXPECT_EQ(data.GetAllPathsUserData(), std::vector<std::filesystem::path>({ "userdata", "ud", "userd", "udata" }));
+}
+
 TEST(FilePathTests, default_constructed_filepath_yields_empty_path)
 {
 	FilePathData data;
@@ -191,17 +235,20 @@ TEST(FilePathTests, resolved_filepath_is_in_bin_when_path_is_inside_bin_dir)
 	FilePathData				data;
 
 	data.Initialize(
-		"c:/bin/",
-		"c:/data/",
-		"c:/user/",
-		"c:/userdata/");
+		"c:/bin/|d:/bin/",
+		"c:/data/|d:/data/",
+		"c:/user/|d:/user/",
+		"c:/userdata/|d:/userdata/");
 
-	const std::filesystem::path	path = "c:/bin/dir";
+	const std::filesystem::path	pathA = "c:/bin/dir";
+	const std::filesystem::path	pathB = "d:/bin/dir";
 	const FilePath				expectedFilePath(FilePath::EFolder::Bin, "dir", data);
 
-	const FilePath				returnedFilePath = FilePath::Resolve(path, data);
+	const FilePath				returnedFilePathA = FilePath::Resolve(pathA, data);
+	const FilePath				returnedFilePathB = FilePath::Resolve(pathB, data);
 
-	EXPECT_EQ(returnedFilePath, expectedFilePath);
+	EXPECT_EQ(returnedFilePathA, expectedFilePath);
+	EXPECT_EQ(returnedFilePathB, expectedFilePath);
 }
 
 TEST(FilePathTests, resolved_filepath_is_in_data_when_path_is_inside_data_dir)
@@ -209,17 +256,20 @@ TEST(FilePathTests, resolved_filepath_is_in_data_when_path_is_inside_data_dir)
 	FilePathData				data;
 
 	data.Initialize(
-		"c:/bin/",
-		"c:/data/",
-		"c:/user/",
-		"c:/userdata/");
+		"c:/bin/|d:/bin/",
+		"c:/data/|d:/data/",
+		"c:/user/|d:/user/",
+		"c:/userdata/|d:/userdata/");
 
-	const std::filesystem::path	path = "c:/data/dir";
+	const std::filesystem::path	pathA = "c:/data/dir";
+	const std::filesystem::path	pathB = "d:/data/dir";
 	const FilePath				expectedFilePath(FilePath::EFolder::Data, "dir", data);
 	
-	const FilePath				returnedFilePath = FilePath::Resolve(path, data);
+	const FilePath				returnedFilePathA = FilePath::Resolve(pathA, data);
+	const FilePath				returnedFilePathB = FilePath::Resolve(pathB, data);
 
-	EXPECT_EQ(returnedFilePath, expectedFilePath);
+	EXPECT_EQ(returnedFilePathA, expectedFilePath);
+	EXPECT_EQ(returnedFilePathB, expectedFilePath);
 }
 
 TEST(FilePathTests, resolved_filepath_is_in_user_when_path_is_inside_user_dir)
@@ -227,17 +277,41 @@ TEST(FilePathTests, resolved_filepath_is_in_user_when_path_is_inside_user_dir)
 	FilePathData				data;
 
 	data.Initialize(
-		"c:/bin/",
-		"c:/data/",
-		"c:/user/",
-		"c:/userdata/");
+		"c:/bin/|d:/bin/",
+		"c:/data/|d:/data/",
+		"c:/user/|d:/user/",
+		"c:/userdata/|d:/userdata/");
 
-	const std::filesystem::path	path = "c:/user/dir";
+	const std::filesystem::path	pathA = "c:/user/dir";
+	const std::filesystem::path	pathB = "d:/user/dir";
 	const FilePath				expectedFilePath(FilePath::EFolder::User, "dir", data);
 
-	const FilePath				returnedFilePath = FilePath::Resolve(path, data);
+	const FilePath				returnedFilePathA = FilePath::Resolve(pathA, data);
+	const FilePath				returnedFilePathB = FilePath::Resolve(pathB, data);
 
-	EXPECT_EQ(returnedFilePath, expectedFilePath);
+	EXPECT_EQ(returnedFilePathA, expectedFilePath);
+	EXPECT_EQ(returnedFilePathB, expectedFilePath);
+}
+
+TEST(FilePathTests, resolved_filepath_is_in_userdata_when_path_is_inside_userdata_dir)
+{
+	FilePathData				data;
+
+	data.Initialize(
+		"c:/bin/|d:/bin/",
+		"c:/data/|d:/data/",
+		"c:/user/|d:/user/",
+		"c:/userdata/|d:/userdata/");
+
+	const std::filesystem::path	pathA = "c:/userdata/dir";
+	const std::filesystem::path	pathB = "c:/userdata/dir";
+	const FilePath				expectedFilePath(FilePath::EFolder::UserData, "dir", data);
+
+	const FilePath				returnedFilePathA = FilePath::Resolve(pathA, data);
+	const FilePath				returnedFilePathB = FilePath::Resolve(pathB, data);
+
+	EXPECT_EQ(returnedFilePathA, expectedFilePath);
+	EXPECT_EQ(returnedFilePathB, expectedFilePath);
 }
 
 TEST(FilePathTests, resolved_filepath_is_unset_and_same_path_when_path_is_outside_of_dirs)
@@ -252,24 +326,6 @@ TEST(FilePathTests, resolved_filepath_is_unset_and_same_path_when_path_is_outsid
 
 	const std::filesystem::path	path = "c:/other/dir";
 	const FilePath				expectedFilePath(FilePath::EFolder::Unset, "c:/other/dir", data);
-
-	const FilePath				returnedFilePath = FilePath::Resolve(path, data);
-
-	EXPECT_EQ(returnedFilePath, expectedFilePath);
-}
-
-TEST(FilePathTests, resolved_filepath_is_in_userdata_when_path_is_inside_userdata_dir)
-{
-	FilePathData				data;
-
-	data.Initialize(
-		"c:/bin/",
-		"c:/data/",
-		"c:/user/",
-		"c:/userdata/");
-
-	const std::filesystem::path	path = "c:/userdata/dir";
-	const FilePath				expectedFilePath(FilePath::EFolder::UserData, "dir", data);
 
 	const FilePath				returnedFilePath = FilePath::Resolve(path, data);
 

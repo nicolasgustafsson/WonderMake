@@ -25,19 +25,24 @@ ImguiWrapper::ImguiWrapper()
 	auto& configSys = Get<ConfigurationSystem>();
 
 	myIniFileLocation = configSys.Get<FilePath>(ConfigurationEngine::ImguiIniLocation, FilePath(FilePath::EFolder::UserData, "imgui.ini"));
-	const std::filesystem::path fontDirectory = configSys.Get<FilePath>(ConfigurationEngine::ImguiFontDirectory, FilePath());
+	const auto fontDirectory = configSys.Get<FilePath>(ConfigurationEngine::ImguiFontDirectory, FilePath());
+
+	const auto getFontPath = [&fontDirectory](auto aRelativePath)
+	{
+		return FilePath(fontDirectory.Location, fontDirectory.Path / aRelativePath).GetFirstFileFromAllPaths().string();
+	};
 
 	ImGuiIO& io = ImGui::GetIO();
 
 	io.IniFilename = myIniFileLocation.c_str();
-	io.Fonts->AddFontFromFileTTF((fontDirectory / "ProggyClean.ttf").string().c_str(),		13.f);
-	io.Fonts->AddFontFromFileTTF((fontDirectory / "Roboto-Medium.ttf").string().c_str(),	15.f);
-	io.Fonts->AddFontFromFileTTF((fontDirectory / "DroidSans.ttf").string().c_str(),		13.f);
-	io.Fonts->AddFontFromFileTTF((fontDirectory / "Cousine-Regular.ttf").string().c_str(),	13.f);
-	io.Fonts->AddFontFromFileTTF((fontDirectory / "Karla-Regular.ttf").string().c_str(),	13.f);
-	io.Fonts->AddFontFromFileTTF((fontDirectory / "Cousine-Regular.ttf").string().c_str(),	13.f);
-	io.Fonts->AddFontFromFileTTF((fontDirectory / "ProggyTiny.ttf").string().c_str(),		13.f);
-	io.Fonts->AddFontFromFileTTF((fontDirectory / "Roboto-Medium.ttf").string().c_str(),	13.f);
+	io.Fonts->AddFontFromFileTTF(getFontPath("ProggyClean.ttf").c_str(),		13.f);
+	io.Fonts->AddFontFromFileTTF(getFontPath("Roboto-Medium.ttf").c_str(),		15.f);
+	io.Fonts->AddFontFromFileTTF(getFontPath("DroidSans.ttf").c_str(),			13.f);
+	io.Fonts->AddFontFromFileTTF(getFontPath("Cousine-Regular.ttf").c_str(),	13.f);
+	io.Fonts->AddFontFromFileTTF(getFontPath("Karla-Regular.ttf").c_str(),		13.f);
+	io.Fonts->AddFontFromFileTTF(getFontPath("Cousine-Regular.ttf").c_str(),	13.f);
+	io.Fonts->AddFontFromFileTTF(getFontPath("ProggyTiny.ttf").c_str(),			13.f);
+	io.Fonts->AddFontFromFileTTF(getFontPath("Roboto-Medium.ttf").c_str(),		13.f);
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	io.ConfigDockingWithShift = true;

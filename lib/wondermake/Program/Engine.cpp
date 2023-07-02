@@ -204,7 +204,21 @@ namespace Engine
 
 			auto jobSystem = std::make_shared<JobSystem>(JobGlobal::GetRegistry(), sysContainer, InlineExecutor());
 			auto& configurationSystem = sysContainer.Get<ConfigurationSystem>();
+			
+			configurationSystem.OnOverrideChanged<std::string>(ConfigurationIo::ConfigDirectoryExtraBins, InlineExecutor(), [](const auto& /*aId*/, const auto& aPath)
+				{
+					auto path = FilePathData::Get().GetPathBin();
 
+					if (!aPath.empty())
+					{
+						path += "|";
+
+						path += aPath;
+					}
+
+					FilePathData::Get().SetPathBin(path);
+				})
+				.Detach();
 			configurationSystem.OnOverrideChanged<std::string>(ConfigurationIo::ConfigDirectoryData, InlineExecutor(), [](const auto& /*aId*/, const auto& aPath)
 				{
 					FilePathData::Get().SetPathData(aPath);
@@ -550,10 +564,10 @@ namespace Engine
 			return false;
 
 		FilePathData::Get().Initialize(
-			std::move(*pathBin),
-			std::move(*pathData)		/ aProjectFolderNames,
-			std::move(*pathUser)		/ aProjectFolderNames,
-			std::move(*pathUserData)	/ aProjectFolderNames);
+			*pathBin,
+			*pathData		/ aProjectFolderNames,
+			*pathUser		/ aProjectFolderNames,
+			*pathUserData	/ aProjectFolderNames);
 
 		return true;
 	}

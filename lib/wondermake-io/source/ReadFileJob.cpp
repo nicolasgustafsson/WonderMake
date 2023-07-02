@@ -11,21 +11,23 @@ class ReadFileJobImpl
 public:
 	void Run(Promise<Result<std::vector<u8>, EReadFileError>> aPromise, FilePath aFilePath) override
 	{
-		if (!std::filesystem::exists(aFilePath))
+		auto path = aFilePath.GetFirstFileFromAllPaths();
+
+		if (!std::filesystem::exists(path))
 		{
 			aPromise.Complete(Err(EReadFileError::FileNotFound));
 
 			return;
 		}
 
-		if (!std::filesystem::is_regular_file(aFilePath))
+		if (!std::filesystem::is_regular_file(path))
 		{
 			aPromise.Complete(Err(EReadFileError::NotAFile));
 
 			return;
 		}
 
-		std::ifstream file(aFilePath, std::ios_base::binary);
+		std::ifstream file(path, std::ios_base::binary);
 
 		if (!file)
 		{

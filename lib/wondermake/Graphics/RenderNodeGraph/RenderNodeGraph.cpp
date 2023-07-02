@@ -2,7 +2,7 @@
 
 #include "Graphics/RenderNodeGraph/RenderNodeTypes.h"
 
-RenderNodeGraph::RenderNodeGraph(std::filesystem::path aPath)
+RenderNodeGraph::RenderNodeGraph(FilePath aPath)
 	: NodeGraph(std::move(aPath))
 {
 }

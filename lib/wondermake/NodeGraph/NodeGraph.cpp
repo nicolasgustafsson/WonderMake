@@ -65,7 +65,7 @@ void NodeGraph::Load()
 	if (myRootNodeType == nullptr)
 		WmLogError(TagWonderMake << TagWmNodeGraph << "No root node type registered! Things may break.");
 
-	std::ifstream file(myPath, std::fstream::app);
+	std::ifstream file(myPath.GetFirstFileFromAllPaths(), std::fstream::app);
 
 	std::string fileContents((std::istreambuf_iterator<char>(file)),
 		(std::istreambuf_iterator<char>()));

@@ -5,6 +5,7 @@
 
 #include <filesystem>
 #include <shared_mutex>
+#include <vector>
 
 class FilePathData
 	: public Singleton<FilePathData>
@@ -12,78 +13,154 @@ class FilePathData
 	, NonMovable
 {
 public:
+	inline static std::vector<std::filesystem::path> ExtractPaths(const std::filesystem::path& aPath)
+	{
+		const auto&							str			= aPath.native();
+		char								delimiter	= '|';
+		std::vector<std::filesystem::path>	paths;
+
+		size_t last = 0;
+		size_t next = 0;
+		
+		while ((next = str.find(delimiter, last)) != std::string::npos)
+		{
+			paths.emplace_back(str.substr(last, next - last));
+
+			last = next + 1;
+		}
+
+		paths.emplace_back(str.substr(last));
+
+		return paths;
+	}
+
 	inline FilePathData() noexcept = default;
 	
 	inline void Initialize(
-		std::filesystem::path aPathBin,
-		std::filesystem::path aPathData,
-		std::filesystem::path aPathUser,
-		std::filesystem::path aPathUserData) noexcept
+		const std::filesystem::path& aPathBin,
+		const std::filesystem::path& aPathData,
+		const std::filesystem::path& aPathUser,
+		const std::filesystem::path& aPathUserData) noexcept
 	{
 		std::unique_lock lock(myMutex);
+		
+		myPathListBin		= ExtractPaths(aPathBin);
+		myPathListData		= ExtractPaths(aPathData);
+		myPathListUser		= ExtractPaths(aPathUser);
+		myPathListUserData	= ExtractPaths(aPathUserData);
 
-		myPathBin		= std::move(aPathBin);
-		myPathData		= std::move(aPathData);
-		myPathUser		= std::move(aPathUser);
-		myPathUserData	= std::move(aPathUserData);
+		if (!myPathListBin.empty())
+			myPathBin = myPathListBin.front();
+		if (!myPathListData.empty())
+			myPathData = myPathListData.front();
+		if (!myPathListUser.empty())
+			myPathUser = myPathListUser.front();
+		if (!myPathListUserData.empty())
+			myPathUserData = myPathListUserData.front();
 	}
 	
-	inline void SetPathBin(std::filesystem::path aPath) noexcept
+	inline void SetPathBin(const std::filesystem::path& aPath) noexcept
 	{
 		std::unique_lock lock(myMutex);
 
-		myPathBin = std::move(aPath);
+		myPathBin.clear();
+		myPathListBin = ExtractPaths(aPath);
+
+		if (!myPathListBin.empty())
+			myPathBin = myPathListBin.front();
 	}
-	inline void SetPathData(std::filesystem::path aPath) noexcept
+	inline void SetPathData(const std::filesystem::path& aPath) noexcept
 	{
 		std::unique_lock lock(myMutex);
 
-		myPathData = std::move(aPath);
+		myPathData.clear();
+		myPathListData = ExtractPaths(aPath);
+
+		if (!myPathListData.empty())
+			myPathData = myPathListData.front();
 	}
-	inline void SetPathUser(std::filesystem::path aPath) noexcept
+	inline void SetPathUser(const std::filesystem::path& aPath) noexcept
 	{
 		std::unique_lock lock(myMutex);
 
-		myPathUser = std::move(aPath);
+		myPathUser.clear();
+		myPathListUser = ExtractPaths(aPath);
+
+		if (!myPathListUser.empty())
+			myPathUser = myPathListUser.front();
 	}
-	inline void SetPathUserData(std::filesystem::path aPath) noexcept
+	inline void SetPathUserData(const std::filesystem::path& aPath) noexcept
 	{
 		std::unique_lock lock(myMutex);
 
-		myPathUserData = std::move(aPath);
+		myPathUserData.clear();
+		myPathListUserData = ExtractPaths(aPath);
+
+		if (!myPathListUserData.empty())
+			myPathUserData = myPathListUserData.front();
 	}
 
-	inline [[nodiscard]] const std::filesystem::path& GetPathBin() const noexcept
+	inline [[nodiscard]] std::filesystem::path GetPathBin() const noexcept
 	{
 		std::shared_lock lock(myMutex);
 
 		return myPathBin;
 	}
-	inline [[nodiscard]] const std::filesystem::path& GetPathData() const noexcept
+	inline [[nodiscard]] std::filesystem::path GetPathData() const noexcept
 	{
 		std::shared_lock lock(myMutex);
 
 		return myPathData;
 	}
-	inline [[nodiscard]] const std::filesystem::path& GetPathUser() const noexcept
+	inline [[nodiscard]] std::filesystem::path GetPathUser() const noexcept
 	{
 		std::shared_lock lock(myMutex);
 
 		return myPathUser;
 	}
-	inline [[nodiscard]] const std::filesystem::path& GetPathUserData() const noexcept
+	inline [[nodiscard]] std::filesystem::path GetPathUserData() const noexcept
 	{
 		std::shared_lock lock(myMutex);
 
 		return myPathUserData;
 	}
 
-private:
-	mutable std::shared_mutex	myMutex;
+	inline [[nodiscard]] auto GetAllPathsBin() const noexcept
+	{
+		std::shared_lock lock(myMutex);
 
-	std::filesystem::path		myPathBin;
-	std::filesystem::path		myPathData;
-	std::filesystem::path		myPathUser;
-	std::filesystem::path		myPathUserData;
+		return myPathListBin;
+	}
+	inline [[nodiscard]] auto GetAllPathsData() const noexcept
+	{
+		std::shared_lock lock(myMutex);
+
+		return myPathListData;
+	}
+	inline [[nodiscard]] auto GetAllPathsUser() const noexcept
+	{
+		std::shared_lock lock(myMutex);
+
+		return myPathListUser;
+	}
+	inline [[nodiscard]] auto GetAllPathsUserData() const noexcept
+	{
+		std::shared_lock lock(myMutex);
+
+		return myPathListUserData;
+	}
+
+private:
+	mutable std::shared_mutex			myMutex;
+
+	std::filesystem::path				myPathBin;
+	std::filesystem::path				myPathData;
+	std::filesystem::path				myPathUser;
+	std::filesystem::path				myPathUserData;
+
+	std::vector<std::filesystem::path>	myPathListBin;
+	std::vector<std::filesystem::path>	myPathListData;
+	std::vector<std::filesystem::path>	myPathListUser;
+	std::vector<std::filesystem::path>	myPathListUserData;
 
 };

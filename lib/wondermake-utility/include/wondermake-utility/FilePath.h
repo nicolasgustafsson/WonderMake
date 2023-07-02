@@ -91,6 +91,61 @@ public:
 		return FilePath(EFolder::Unset, path, aData);
 	}
 	
+	[[nodiscard]] inline std::vector<std::filesystem::path> GetAllPaths() const
+	{
+		auto getPaths = [this]() -> std::vector<std::filesystem::path>
+		{
+			switch (Location)
+			{
+			case EFolder::Unset:	break;
+			case EFolder::Bin:		return myData->GetAllPathsBin();
+			case EFolder::Data:		return myData->GetAllPathsData();
+			case EFolder::User:		return myData->GetAllPathsUser();
+			case EFolder::UserData:	return myData->GetAllPathsUserData();
+			}
+
+			return {};
+		};
+
+		auto paths = getPaths();
+
+		for (auto& path : paths)
+			path /= Path;
+
+		return paths;
+	}
+	[[nodiscard]] inline std::filesystem::path GetFirstFileFromAllPaths() const
+	{
+		auto getPaths = [this]() -> std::vector<std::filesystem::path>
+		{
+			switch (Location)
+			{
+			case EFolder::Unset:	break;
+			case EFolder::Bin:		return myData->GetAllPathsBin();
+			case EFolder::Data:		return myData->GetAllPathsData();
+			case EFolder::User:		return myData->GetAllPathsUser();
+			case EFolder::UserData:	return myData->GetAllPathsUserData();
+			}
+
+			return {};
+		};
+		
+		auto paths = getPaths();
+
+		if (paths.empty())
+			return *this;
+
+		for (const auto& path : paths)
+		{
+			auto fullPath = std::filesystem::absolute(path / Path).lexically_normal();
+
+			if (std::filesystem::exists(fullPath))
+				return fullPath;
+		}
+
+		return *this;
+	}
+
 	EFolder					Location = EFolder::Unset;
 	std::filesystem::path	Path;
 

@@ -9,6 +9,7 @@ option(WonderMake_TestingLegacy			"Toggles all Legacy Unit Tests."										OFF)
 option(WonderMake_SetCxxStandard		"Makes CMake set the c++ standard."										ON)
 option(WonderMake_SetConfigurationTypes	"Makes CMake set the configurations."									ON)
 option(WonderMake_IncludeNatvis			"Includes .natvis files, which is a VS debugging feature."				OFF)
+option(WonderMake_CopyBinToOutput		"Copies the bin folder to the output folder when running cmake."		ON)
 option(WonderMake_OfflineMode			"Makes CMake use cached dependencies, and stops it from updating them."	OFF)
 
 # Turning this on makes it so most WonderMake targets use INTERFACE instead of STATIC when calling
@@ -51,6 +52,8 @@ endif()
 
 set_buildsystem_targets_folder("." "wondermake")
 
-if(WonderMake_Main OR WonderMake_TestingLegacy)
+if(WonderMake_CopyBinToOutput)
+	message("Copying wondermake bin folder...")
+
 	file(COPY "bin/." DESTINATION "${WONDERMAKE_BIN_DIR}")
 endif()

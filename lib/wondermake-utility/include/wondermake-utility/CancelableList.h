@@ -44,7 +44,9 @@ private:
 
 	AnyExecutor					myExecutor;
 	std::vector<RequestData>	myRequests;
+	std::vector<RequestIdType>	myEraseBuffer;
 	RequestIdType				myNextId = 0;
+	bool						myIsErasing = false;
 
 public:
 	template<typename TIterator, bool TIsConst>
@@ -95,6 +97,17 @@ public:
 			return retVal;
 		}
 
+		inline [[nodiscard]] Iterator& operator+=(difference_type aOffset) noexcept
+		{
+			myIterator += aOffset;
+
+			return *this;
+		}
+		inline [[nodiscard]] Iterator operator+(difference_type aOffset) const noexcept
+		{
+			return myIterator + aOffset;
+		}
+
 		inline [[nodiscard]] reference operator*() const noexcept
 		{
 			return myIterator->Cancelable;
@@ -138,6 +151,11 @@ public:
 		return myRequests.empty();
 	}
 
+	inline [[nodiscard]] size_t size() const noexcept
+	{
+		return myRequests.size();
+	}
+
 	inline [[nodiscard]] iterator begin() noexcept
 	{
 		return myRequests.begin();
@@ -161,6 +179,15 @@ public:
 	inline [[nodiscard]] const_iterator cend() const noexcept
 	{
 		return myRequests.cend();
+	}
+
+	inline [[nodiscard]] TCancelable& operator[](size_t aIndex)
+	{
+		return myRequests[aIndex].Cancelable;
+	}
+	inline [[nodiscard]] const TCancelable& operator[](size_t aIndex) const
+	{
+		return myRequests[aIndex].Cancelable;
 	}
 
 	inline iterator insert(const_iterator aWhere, const TCancelable& aCancelable) noexcept
@@ -190,23 +217,9 @@ public:
 		const auto requestId = getNextRequestId();
 
 		const auto it = myRequests.insert(aWhere.myIterator, RequestData{ std::move(aCancelable), requestId });
-		auto onCancel = [&requestList = myRequests, requestId]()
+		auto onCancel = [this, requestId]()
 		{
-			const auto pred = [requestId](const auto& aRequest)
-			{
-				return aRequest.RequestId == requestId;
-			};
-
-			const auto it = std::find_if(requestList.begin(), requestList.end(), pred);
-
-			if (it == requestList.end())
-				return;
-
-			auto cancelable = std::move(*it);
-
-			cancelable;
-
-			requestList.erase(it);
+			EraseCallback(requestId);
 		};
 
 		WmCallOnCancel(it->Cancelable, myExecutor, std::move(onCancel));
@@ -216,11 +229,142 @@ public:
 
 	inline iterator erase(const_iterator aWhere) noexcept
 	{
-		return myRequests.erase(aWhere.myIterator);
+		const auto findIt = [this, &aWhere]()
+		{
+			for (auto it = myRequests.begin(); it != myRequests.end(); ++it)
+				if (it == aWhere.myIterator)
+					return it;
+
+			return myRequests.end();
+		};
+
+		auto it = findIt();
+
+		bool alreadyErasing = myIsErasing;
+
+		myIsErasing = true;
+
+		auto nextIt = EraseInternal(it);
+
+		auto eraseBuffer = std::exchange(myEraseBuffer, decltype(myEraseBuffer)());
+
+		for (size_t i = 0; i < eraseBuffer.size(); ++i)
+		{
+			const auto pred = [id = eraseBuffer[i]](const auto& aRequest)
+			{
+				return aRequest.RequestId == id;
+			};
+
+			const auto eraseIt = std::find_if(myRequests.begin(), myRequests.end(), pred);
+
+			if (eraseIt == myRequests.end())
+				continue;
+
+			auto nextEraseIt = EraseInternal(eraseIt);
+
+			if (eraseIt == nextIt)
+				nextIt = nextEraseIt;
+		}
+
+		if (!alreadyErasing)
+			myIsErasing = false;
+
+		return nextIt;
 	}
 	inline iterator erase(const_iterator aFirst, const_iterator aLast) noexcept
 	{
-		return myRequests.erase(aFirst.myIterator, aLast.myIterator);
+		const auto findIt = [this](const_iterator aWhere)
+		{
+			for (auto it = myRequests.begin(); it != myRequests.end(); ++it)
+				if (it == aWhere.myIterator)
+					return it;
+
+			return myRequests.end();
+		};
+
+		if (aFirst == aLast)
+			return findIt(aLast);
+
+		auto itFirst	= findIt(aFirst);
+		auto itLast		= findIt(aLast);
+
+		bool alreadyErasing = myIsErasing;
+
+		myIsErasing = true;
+
+		auto eraseSpan = [this](iterator aFirst, iterator aLast) -> iterator
+		{
+			std::vector<TCancelable> removedList;
+
+			removedList.reserve(std::distance(aFirst, aLast));
+
+			for (auto it = aFirst; it != aLast; ++it)
+				removedList.emplace_back(std::move(*it));
+
+			return myRequests.erase(aFirst.myIterator, aLast.myIterator);
+		};
+
+		iterator nextIt = eraseSpan(itFirst, itLast);
+
+		auto eraseBuffer = std::exchange(myEraseBuffer, decltype(myEraseBuffer)());
+
+		for (size_t i = 0; i < eraseBuffer.size(); ++i)
+		{
+			const auto pred = [id = eraseBuffer[i]](const auto& aRequest)
+			{
+				return aRequest.RequestId == id;
+			};
+
+			const auto eraseIt = std::find_if(myRequests.begin(), myRequests.end(), pred);
+
+			if (eraseIt == myRequests.end())
+				continue;
+
+			auto nextEraseIt = EraseInternal(eraseIt);
+
+			if (eraseIt == nextIt)
+				nextIt = nextEraseIt;
+		}
+
+		if (!alreadyErasing)
+			myIsErasing = false;
+
+		return nextIt;
 	}
+
+private:
+	inline void EraseCallback(RequestIdType aId) noexcept
+	{
+		if (myIsErasing)
+		{
+			myEraseBuffer.emplace_back(aId);
+
+			return;
+		}
+
+		const auto pred = [aId](const auto& aRequest)
+		{
+			return aRequest.RequestId == aId;
+		};
+
+		const auto it = std::find_if(myRequests.begin(), myRequests.end(), pred);
+
+		if (it == myRequests.end())
+			return;
+
+		EraseInternal(it);
+	}
+	inline iterator EraseInternal(iterator aWhere) noexcept
+	{
+		auto temp = std::move(*aWhere);
+
+		auto nextIt = myRequests.erase(aWhere.myIterator);
+
+		// This is never used, it's just to make sure that its destructor is called after erase
+		temp;
+
+		return nextIt;
+	}
+
 
 };

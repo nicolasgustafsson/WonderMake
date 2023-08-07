@@ -15,12 +15,16 @@ struct CancelableStateMock
 		ON_CALL(*this, OnCancel)
 			.WillByDefault([this](auto aOnCancel)
 				{
-					myOnCancel = std::move(aOnCancel);
+					SetOnCancelCallable(std::move(aOnCancel));
 				});
 	}
 
 	MOCK_METHOD(void, OnCancel, (Closure));
 
+	void SetOnCancelCallable(auto aOnCancel)
+	{
+		myOnCancel = std::move(aOnCancel);
+	}
 	void TriggerOnCancel()
 	{
 		std::move(myOnCancel)();
@@ -345,6 +349,64 @@ TEST(CancelableListTests, dereferenced_const_iterator_has_correct_value)
 	EXPECT_EQ(queue.cbegin()->Value, dummyValue);
 }
 
+TEST(CancelableListTests, const_array_index_operator_returns_correct_values)
+{
+	auto queue = CancelableList<CancelableMock>(InlineExecutor());
+
+	queue.Emplace(CancelableMock(1234));
+	queue.Emplace(CancelableMock(2345));
+	queue.Emplace(CancelableMock(3456));
+	queue.Emplace(CancelableMock(4567));
+
+	const auto& constQueue = queue;
+
+	EXPECT_EQ(constQueue[0].Value, 1234);
+	EXPECT_EQ(constQueue[1].Value, 2345);
+	EXPECT_EQ(constQueue[2].Value, 3456);
+	EXPECT_EQ(constQueue[3].Value, 4567);
+}
+
+TEST(CancelableListTests, array_index_operator_returns_correct_values)
+{
+	auto queue = CancelableList<CancelableMock>(InlineExecutor());
+
+	queue.Emplace(CancelableMock(1234));
+	queue.Emplace(CancelableMock(2345));
+	queue.Emplace(CancelableMock(3456));
+	queue.Emplace(CancelableMock(4567));
+
+	queue[0].Value = 5678;
+	queue[1].Value = 6789;
+	queue[2].Value = 7890;
+	queue[3].Value = 8901;
+
+	const auto& constQueue = queue;
+
+	EXPECT_EQ(constQueue[0].Value, 5678);
+	EXPECT_EQ(constQueue[1].Value, 6789);
+	EXPECT_EQ(constQueue[2].Value, 7890);
+	EXPECT_EQ(constQueue[3].Value, 8901);
+}
+
+TEST(CancelableListTests, size_returns_the_number_of_elements)
+{
+	auto queue = CancelableList<CancelableMock>(InlineExecutor());
+
+	EXPECT_EQ(queue.size(), 0);
+
+	queue.Emplace(CancelableMock(1234));
+
+	EXPECT_EQ(queue.size(), 1);
+
+	queue.Emplace(CancelableMock(1234));
+
+	EXPECT_EQ(queue.size(), 2);
+
+	queue.Emplace(CancelableMock(1234));
+
+	EXPECT_EQ(queue.size(), 3);
+}
+
 TEST(CancelableListTests, insert_by_const_ref_inserts_at_iterator)
 {
 	static constexpr u32 dummyValueA = 1234;
@@ -501,7 +563,7 @@ TEST(CancelableListTests, erase_removes_cancelable_at_iterator)
 {
 	static constexpr u32 dummyValueA = 1234;
 	static constexpr u32 dummyValueB = 2345;
-	static constexpr u32 dummyValueC = 2345;
+	static constexpr u32 dummyValueC = 3456;
 
 	auto list = CancelableList<CancelableMock>(InlineExecutor());
 
@@ -530,7 +592,7 @@ TEST(CancelableListTests, erase_removes_range_of_cancelables_between_iterators)
 {
 	static constexpr u32 dummyValueA = 1234;
 	static constexpr u32 dummyValueB = 2345;
-	static constexpr u32 dummyValueC = 2345;
+	static constexpr u32 dummyValueC = 3456;
 
 	auto list = CancelableList<CancelableMock>(InlineExecutor());
 
@@ -564,7 +626,7 @@ TEST(CancelableListTests, erase_returns_element_after_last)
 {
 	static constexpr u32 dummyValueA = 1234;
 	static constexpr u32 dummyValueB = 2345;
-	static constexpr u32 dummyValueC = 2345;
+	static constexpr u32 dummyValueC = 3456;
 
 	auto list = CancelableList<CancelableMock>(InlineExecutor());
 
@@ -583,7 +645,7 @@ TEST(CancelableListTests, erase_range_returns_element_after_last)
 {
 	static constexpr u32 dummyValueA = 1234;
 	static constexpr u32 dummyValueB = 2345;
-	static constexpr u32 dummyValueC = 2345;
+	static constexpr u32 dummyValueC = 3456;
 
 	auto list = CancelableList<CancelableMock>(InlineExecutor());
 
@@ -601,4 +663,40 @@ TEST(CancelableListTests, erase_range_returns_element_after_last)
 	auto it = list.erase(itFirst, itLast);
 
 	EXPECT_EQ(it->Value, dummyValueC);
+}
+
+TEST(CancelableListTests, cancelables_can_cancel_other_elements)
+{
+	static constexpr u32 dummyValueA = 1234;
+	static constexpr u32 dummyValueB = 2345;
+	static constexpr u32 dummyValueC = 3456;
+	static constexpr u32 dummyValueD = 4567;
+
+	auto queue = CancelableList<CancelableMock>(InlineExecutor());
+	NiceMock<CancelableStateMock> mockA;
+	NiceMock<CancelableStateMock> mockB;
+
+	EXPECT_CALL(mockA, OnCancel)
+		.WillOnce([&mockA, &mockB](auto aOnCancel)
+			{
+				mockA.SetOnCancelCallable([&mockB, onCancel = std::move(aOnCancel)]() mutable
+				{
+					mockB.TriggerOnCancel();
+
+					std::move(onCancel)();
+				});
+			});
+
+	queue.Emplace(CancelableMock(dummyValueA));
+	queue.Emplace(CancelableMock(mockA, dummyValueB));
+	queue.Emplace(CancelableMock(mockB, dummyValueC));
+	queue.Emplace(CancelableMock(dummyValueD));
+
+	EXPECT_EQ(queue.size(), 4);
+
+	mockA.TriggerOnCancel();
+
+	EXPECT_EQ(queue.size(), 2);
+	EXPECT_EQ(queue[0].Value, dummyValueA);
+	EXPECT_EQ(queue[1].Value, dummyValueD);
 }

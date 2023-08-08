@@ -2,13 +2,14 @@ cmake_minimum_required(VERSION 3.19)
 
 project(WonderMake VERSION 1.0.0 LANGUAGES CXX)
 
-option(WonderMake_Main					"Toggles all WonderMake engine libraries."					ON)
-option(WonderMake_Testing				"Toggles all Unit Tests."									OFF)
-option(WonderMake_TestingManual			"Toggles all Manual Tests."									OFF)
-option(WonderMake_TestingLegacy			"Toggles all Legacy Unit Tests."							OFF)
-option(WonderMake_SetCxxStandard		"Makes CMake set the c++ standard."							ON)
-option(WonderMake_SetConfigurationTypes	"Makes CMake set the configurations."						ON)
-option(WonderMake_IncludeNatvis			"Includes .natvis files, which is a VS debugging feature."	OFF)
+option(WonderMake_Main					"Toggles all WonderMake engine libraries."								ON)
+option(WonderMake_Testing				"Toggles all Unit Tests."												OFF)
+option(WonderMake_TestingManual			"Toggles all Manual Tests."												OFF)
+option(WonderMake_TestingLegacy			"Toggles all Legacy Unit Tests."										OFF)
+option(WonderMake_SetCxxStandard		"Makes CMake set the c++ standard."										ON)
+option(WonderMake_SetConfigurationTypes	"Makes CMake set the configurations."									ON)
+option(WonderMake_IncludeNatvis			"Includes .natvis files, which is a VS debugging feature."				OFF)
+option(WonderMake_OfflineMode			"Makes CMake use cached dependencies, and stops it from updating them."	OFF)
 
 # Turning this on makes it so most WonderMake targets use INTERFACE instead of STATIC when calling
 # add_library, meaning that it won't link against any libraries. You'll need to supply the static

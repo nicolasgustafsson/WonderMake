@@ -4,12 +4,20 @@ include("${CMAKE_CURRENT_LIST_DIR}/conan.cmake")
 
 conan_check(VERSION 1.51.3 REQUIRED)
 
-conan_cmake_run(CONANFILE "conanfile.txt"
-                UPDATE
-                BUILD missing
-                PROFILE_BUILD default
-                PROFILE default
-                PROFILE_AUTO build_type)
+if (WonderMake_OfflineMode)
+    conan_cmake_run(CONANFILE "conanfile.txt"
+                    BUILD missing
+                    PROFILE_BUILD default
+                    PROFILE default
+                    PROFILE_AUTO build_type)
+else()
+    conan_cmake_run(CONANFILE "conanfile.txt"
+                    UPDATE
+                    BUILD missing
+                    PROFILE_BUILD default
+                    PROFILE default
+                    PROFILE_AUTO build_type)
+endif()
 
 conan_basic_setup()
 

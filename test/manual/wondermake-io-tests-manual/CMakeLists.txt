@@ -12,7 +12,7 @@ list(APPEND SourceFiles
     
 add_executable(WonderMakeIoManualTests ${SourceFiles})
 
-target_link_libraries(WonderMakeIoManualTests gtest_main gmock WonderMakeTestsCommon)
+target_link_libraries(WonderMakeIoManualTests GTest::gtest_main GTest::gmock WonderMakeTestsCommon)
 target_include_directories(WonderMakeIoManualTests
     PUBLIC
         "include"

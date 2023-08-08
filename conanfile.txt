@@ -1,6 +1,7 @@
 [requires]
 zlib/1.2.12@#c2cd5ec484e443e4f01b51ff5370fd11
 protobuf/3.19.2@#1740cb1a218621339a8c73c3f73195b2
+gtest/1.11.0@#d99d2af6a53ab52d3c2dd88cdbc1e0fd
 magic_enum/0.8.0@#329970e8eafd435ddf568958530ebca2
 
 [generators]

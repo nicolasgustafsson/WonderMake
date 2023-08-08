@@ -19,7 +19,7 @@ list(APPEND SourceFiles
     
 add_executable(WonderMakeEngineTests ${SourceFiles})
 
-target_link_libraries(WonderMakeEngineTests gtest_main gmock WonderMakeEngineProto WonderMakeTestsCommon NlohmannJson)
+target_link_libraries(WonderMakeEngineTests GTest::gtest_main GTest::gmock WonderMakeEngineProto WonderMakeTestsCommon NlohmannJson)
 target_include_directories(WonderMakeEngineTests
     PUBLIC
         "include"

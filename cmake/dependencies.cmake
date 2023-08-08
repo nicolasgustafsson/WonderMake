@@ -19,8 +19,9 @@ LIST(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR})
 find_package(Protobuf REQUIRED)
 find_package(magic_enum CONFIG REQUIRED)
 
+if(WonderMake_Testing)
+    find_package(GTest REQUIRED)
+endif()
+
 include("${CMAKE_CURRENT_LIST_DIR}/protobuf_helper.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/target_helper.cmake")
-if(WonderMake_Testing)
-    include("${CMAKE_CURRENT_LIST_DIR}/gtest.cmake")
-endif()

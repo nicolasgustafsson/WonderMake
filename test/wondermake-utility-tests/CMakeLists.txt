@@ -26,7 +26,7 @@ list(APPEND SourceFiles
     
 add_executable(WonderMakeUtilityTests ${SourceFiles})
 
-target_link_libraries(WonderMakeUtilityTests gtest_main gmock WonderMakeTestsCommon)
+target_link_libraries(WonderMakeUtilityTests GTest::gtest_main GTest::gmock WonderMakeTestsCommon)
 target_include_directories(WonderMakeUtilityTests
     PUBLIC
         "include"

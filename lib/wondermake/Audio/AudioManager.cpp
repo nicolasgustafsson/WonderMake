@@ -3,11 +3,11 @@
 #include "Audio/AudioFile.h"
 #include "Audio/AudioMixingNodeGraph.h"
 #include "Audio/AudioStructs.h"
-#include "Imgui/FileSelector.h"
 #include "Imgui/NodeGraphGui.h"
 #include "Resources/ResourceSystem.h"
 
 #include "wondermake-ui/DebugSettingsSystem.h"
+#include "wondermake-ui/FileSelectSystem.h"
 
 #include "wondermake-engine/ConfigurationEngine.h"
 
@@ -125,7 +125,7 @@ void AudioManager::Debug(bool& aIsOpen)
 
 	mySoloudEngine.mGlobalVolume = volume;
 
-	static std::filesystem::path path;
+	static FilePath path;
 
 	ImGui::Text("Audio backend: %s", mySoloudEngine.getBackendString());
 	ImGui::Text("Channel count: %u", mySoloudEngine.getBackendChannels());
@@ -138,9 +138,19 @@ void AudioManager::Debug(bool& aIsOpen)
 	ImGui::Separator();
 
 	ImGui::Text("Audio File tester");
-	if (ImGui::FileSelector::SelectFile(path))
+
+	Get<FileSelectSystem>();
+	if (ImGui::Button("Play File"))
 	{
-		PlayAudio(path);
+		Get<FileSelectSystem>()
+			.OpenFileBrowser("Play audio node graph", path)
+			.ThenRun(GetExecutor(), FutureRunResult([this](FilePath aPath)
+				{
+					path = aPath;
+
+					PlayAudio(aPath.GetFirstFileFromAllPaths());
+				}))
+			.Detach();
 	}
 
 	ImGui::Separator();

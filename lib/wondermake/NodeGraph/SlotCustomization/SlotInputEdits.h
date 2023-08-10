@@ -1,5 +1,4 @@
 #pragma once
-#include "Imgui/FileSelector.h"
 
 #include "wondermake-ui/RenderSettingsManager.h"
 
@@ -46,13 +45,7 @@ namespace SlotInputEdits
 	{
 		ImGui::ColorEdit4("", ((f32*)&aInput));
 	}
-
-	template<>
-	inline void EditInputSlot<std::filesystem::path>(std::filesystem::path& aInput)
-	{
-		ImGui::FileSelector::SelectFile(aInput);
-	}
-
+	
 	template<>
 	inline void EditInputSlot<SRenderSettings>(SRenderSettings& aInput)
 	{

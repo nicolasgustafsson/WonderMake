@@ -3,6 +3,7 @@
 #include "Resources/ResourceSystem.h"
 
 #include "wondermake-ui/DebugSystem.h"
+#include "wondermake-ui/FileSelectSystem.h"
 #include "wondermake-ui/GlfwFacade.h"
 #include "wondermake-ui/Window.h"
 
@@ -225,21 +226,46 @@ void CameraManager::InspectDisplays()
 		if (ImGui::Checkbox("Fixed Aspect", &settings.FixedAspect))
 			display->SetFixedAspect(settings.FixedAspect);
 
-		std::filesystem::path path = renderGraph.IsValid() ? static_cast<std::filesystem::path>(renderGraph->GetPath()) : "";
-
-		if (ImGui::FileSelector::SelectFile(path))
 		{
-			auto& resSysRenderNodeGraph = Get<ResourceSystem<RenderNodeGraph>>();
+			FilePath path = renderGraph.IsValid() ? renderGraph->GetPath() : FilePath();
 
-			auto newRenderGraph = resSysRenderNodeGraph.GetResource(path);
+			std::stringstream ss;
 
-			newRenderGraph->Load();
+			WmLogStream(ss, path);
 
-			renderGraph = newRenderGraph;
+			std::string pathStr = std::move(ss).str();
 
-			display->SetRenderGraph(std::move(newRenderGraph));
+			if (pathStr.empty())
+				ImGui::Text("Please select a file");
+			else
+				ImGui::Text(pathStr.c_str());
+
+			if (ImGui::Button("Select File"))
+			{
+				Get<FileSelectSystem>()
+					.OpenFileBrowser("Select camera node graph", path)
+					.ThenRun(GetExecutor(), FutureRunResult([this, displayWeak](FilePath aPath)
+						{
+							auto display = displayWeak.lock();
+
+							if (!display)
+								return;
+
+							auto& resSysRenderNodeGraph = Get<ResourceSystem<RenderNodeGraph>>();
+
+							auto newRenderGraph = resSysRenderNodeGraph.GetResource(aPath);
+							auto renderGraph = display->GetRenderGraph();
+
+							newRenderGraph->Load();
+
+							renderGraph = newRenderGraph;
+
+							display->SetRenderGraph(std::move(newRenderGraph));
+						}))
+					.Detach();
+			}
 		}
-
+		
 		const bool hasRenderGraph = renderGraph.IsValid();
 
 		if (!hasRenderGraph)

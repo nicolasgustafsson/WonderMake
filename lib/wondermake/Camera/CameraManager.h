@@ -23,6 +23,7 @@ class ResourceSystem;
 class Window;
 
 class DebugSystem;
+class FileSelectSystem;
 
 class ConfigurationSystem;
 
@@ -30,6 +31,7 @@ class CameraManager
 	: public System<
 		Policy::Set<
 			PAdd<ConfigurationSystem, PWrite>,
+			PAdd<FileSelectSystem, PWrite>,
 			PAdd<GlfwFacade, PWrite>,
 			PAdd<OpenGLFacade, PWrite>,
 			PAdd<ResourceSystem<RenderNodeGraph>, PWrite>,

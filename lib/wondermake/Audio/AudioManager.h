@@ -20,6 +20,7 @@ class AudioMixingNodeGraph;
 
 template class ResourceSystem<AudioMixingNodeGraph>;
 class DebugSettingsSystem;
+class FileSelectSystem;
 
 class ConfigurationSystem;
 
@@ -27,6 +28,7 @@ class AudioManager
 	: public System<
 		Policy::Set<
 			PAdd<ConfigurationSystem, PRead>,
+			PAdd<FileSelectSystem, PWrite>,
 			PAdd<ResourceSystem<AudioMixingNodeGraph>, PWrite>,
 			PAdd<DebugSettingsSystem, PWrite>>,
 		STrait::Set<

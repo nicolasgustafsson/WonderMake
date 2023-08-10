@@ -12,6 +12,7 @@ list(APPEND SourceFiles
     "Tests/FilePathTests.cpp"
     "Tests/FixedMapTests.cpp"
     "Tests/FixedSizeStringTests.cpp"
+    "Tests/FlagSetTests.cpp"
     "Tests/FutureTests.cpp"
     "Tests/GuidTests.cpp"
     "Tests/MemoryUnitTests.cpp"

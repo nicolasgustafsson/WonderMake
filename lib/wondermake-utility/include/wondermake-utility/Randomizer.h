@@ -44,6 +44,28 @@ public:
 
 		return values[GetRandomNumber<size_t>(0, values.size() - 1)];
 	}
+	template<typename TContainer>
+	[[nodiscard]] inline const auto& SelectElement(const TContainer& aContainer)
+	{
+		const size_t selectedIndex = GetRandomNumber<size_t>(0, aContainer.size() - 1);
+		auto it = aContainer.cbegin();
+
+		for (size_t i = 0; i < selectedIndex; ++i)
+			++it;
+
+		return *it;
+	}
+	template<typename TContainer>
+	[[nodiscard]] inline auto& SelectElement(TContainer& aContainer)
+	{
+		const size_t selectedIndex = GetRandomNumber<size_t>(0, aContainer.size() - 1);
+		auto it = aContainer.begin();
+
+		for (size_t i = 0; i < selectedIndex; ++i)
+			++it;
+
+		return *it;
+	}
 
 	inline std::ostream& StreamOut(std::ostream& aStream) const
 	{

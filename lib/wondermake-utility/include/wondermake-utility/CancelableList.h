@@ -2,6 +2,7 @@
 
 #include "wondermake-utility/AnyExecutor.h"
 
+#include <list>
 #include <vector>
 
 template<typename TCancelable>
@@ -43,7 +44,7 @@ private:
 	};
 
 	AnyExecutor					myExecutor;
-	std::vector<RequestData>	myRequests;
+	std::list<RequestData>		myRequests;
 	std::vector<RequestIdType>	myEraseBuffer;
 	RequestIdType				myNextId = 0;
 	bool						myIsErasing = false;

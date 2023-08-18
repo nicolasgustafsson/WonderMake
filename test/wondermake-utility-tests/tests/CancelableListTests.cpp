@@ -349,45 +349,6 @@ TEST(CancelableListTests, dereferenced_const_iterator_has_correct_value)
 	EXPECT_EQ(queue.cbegin()->Value, dummyValue);
 }
 
-TEST(CancelableListTests, const_array_index_operator_returns_correct_values)
-{
-	auto queue = CancelableList<CancelableMock>(InlineExecutor());
-
-	queue.Emplace(CancelableMock(1234));
-	queue.Emplace(CancelableMock(2345));
-	queue.Emplace(CancelableMock(3456));
-	queue.Emplace(CancelableMock(4567));
-
-	const auto& constQueue = queue;
-
-	EXPECT_EQ(constQueue[0].Value, 1234);
-	EXPECT_EQ(constQueue[1].Value, 2345);
-	EXPECT_EQ(constQueue[2].Value, 3456);
-	EXPECT_EQ(constQueue[3].Value, 4567);
-}
-
-TEST(CancelableListTests, array_index_operator_returns_correct_values)
-{
-	auto queue = CancelableList<CancelableMock>(InlineExecutor());
-
-	queue.Emplace(CancelableMock(1234));
-	queue.Emplace(CancelableMock(2345));
-	queue.Emplace(CancelableMock(3456));
-	queue.Emplace(CancelableMock(4567));
-
-	queue[0].Value = 5678;
-	queue[1].Value = 6789;
-	queue[2].Value = 7890;
-	queue[3].Value = 8901;
-
-	const auto& constQueue = queue;
-
-	EXPECT_EQ(constQueue[0].Value, 5678);
-	EXPECT_EQ(constQueue[1].Value, 6789);
-	EXPECT_EQ(constQueue[2].Value, 7890);
-	EXPECT_EQ(constQueue[3].Value, 8901);
-}
-
 TEST(CancelableListTests, size_returns_the_number_of_elements)
 {
 	auto queue = CancelableList<CancelableMock>(InlineExecutor());
@@ -697,6 +658,6 @@ TEST(CancelableListTests, cancelables_can_cancel_other_elements)
 	mockA.TriggerOnCancel();
 
 	EXPECT_EQ(queue.size(), 2);
-	EXPECT_EQ(queue[0].Value, dummyValueA);
-	EXPECT_EQ(queue[1].Value, dummyValueD);
+	EXPECT_EQ(queue.begin()->Value, dummyValueA);
+	EXPECT_EQ((++queue.begin())->Value, dummyValueD);
 }

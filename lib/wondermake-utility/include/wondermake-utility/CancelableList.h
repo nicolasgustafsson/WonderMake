@@ -181,15 +181,6 @@ public:
 		return myRequests.cend();
 	}
 
-	inline [[nodiscard]] TCancelable& operator[](size_t aIndex)
-	{
-		return myRequests[aIndex].Cancelable;
-	}
-	inline [[nodiscard]] const TCancelable& operator[](size_t aIndex) const
-	{
-		return myRequests[aIndex].Cancelable;
-	}
-
 	inline iterator insert(const_iterator aWhere, const TCancelable& aCancelable) noexcept
 	{
 		return insert(aWhere, TCancelable(aCancelable));

@@ -5,7 +5,7 @@ layout (location = 1) in vec2 aTexCoord;
 out vec2 vertexScale;
 out vec2 TexCoord;
 
-//!#include "Common.glsl"
+//!#include "common.glsl"
 
 void main() 
 {

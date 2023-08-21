@@ -5,7 +5,7 @@ in vec2 TexCoord;
 
 uniform sampler2D ourTexture;
 
-//!#include "Common.glsl"
+//!#include "common.glsl"
 
 uniform vec4 Color = vec4(0.0, 0.0, 0.0, 0.0);
 uniform vec4 fgColor = vec4(0.0, 0.0, 0.0, 1.0);

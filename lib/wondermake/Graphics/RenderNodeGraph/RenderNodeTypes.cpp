@@ -119,7 +119,7 @@ namespace NodeTypes
 			SystemPtr<ShaderResourceSystem> shaderSystem;
 
 			CreateProgramFuture = shaderSystem
-				->CreateProgram(FilePath(FilePath::EFolder::Bin, "Shaders/Vertex/Pass.vert"), aNode.GetInput<std::filesystem::path>(3))
+				->CreateProgram(FilePath(FilePath::EFolder::Bin, "shaders/vertex/pass.vert"), aNode.GetInput<std::filesystem::path>(3))
 				.ThenRun(InlineExecutor(), FutureRunResult([&screenPassAny](auto aProgram)
 					{
 						SystemPtr<ShaderResourceSystem> shaderSystem;

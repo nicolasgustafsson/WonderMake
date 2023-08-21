@@ -10,7 +10,7 @@ out vec2 vertexOrigin;
 out vec4 vertexColor;
 out float vertexRotation;
 
-//!#include "Common.glsl"
+//!#include "common.glsl"
 
 void main() 
 {

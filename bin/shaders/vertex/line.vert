@@ -4,7 +4,7 @@ layout (location = 1) in vec4 aColor;
 
 out vec4 vertexColor;
 
-//!#include "Common.glsl"
+//!#include "common.glsl"
 
 void main() 
 {

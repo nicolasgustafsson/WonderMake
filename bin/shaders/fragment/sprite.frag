@@ -6,7 +6,7 @@ in vec4 Color;
 
 uniform sampler2D ourTexture;
 
-//!#include "Common.glsl"
+//!#include "common.glsl"
 
 void main()
 {

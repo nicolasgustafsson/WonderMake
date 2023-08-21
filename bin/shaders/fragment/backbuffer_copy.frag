@@ -5,7 +5,7 @@ in vec2 TexCoord;
 
 uniform sampler2D ourTexture;
 
-//!#include "Common.glsl"
+//!#include "common.glsl"
 
 void main()
 {

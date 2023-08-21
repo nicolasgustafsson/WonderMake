@@ -5,7 +5,7 @@ in vec2 TexCoord;
 in vec4 vertexColor;
 
 
-//!#include "Common.glsl"
+//!#include "common.glsl"
 
 void main()
 {

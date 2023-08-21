@@ -1,7 +1,7 @@
 #version 440
 layout (location = 0) in vec2 aPos;
 
-//!#include "Common.glsl"
+//!#include "common.glsl"
 
 void main() 
 {

@@ -30,8 +30,8 @@ list(APPEND IncludeFiles
 list(APPEND SourceFiles
     "source/AudioResourceFactory.cpp"
     "source/AudioResourceFactory.h"
-    "source/ConfigurationDebugUi.cpp"
-    "source/ConfigurationDebugUi.h"
+    "source/ConfigurationUi.cpp"
+    "source/ConfigurationUi.h"
     "source/ConfigurationView.cpp"
     "source/ConfigurationView.h"
     "source/DebugSettingsSystem.cpp"

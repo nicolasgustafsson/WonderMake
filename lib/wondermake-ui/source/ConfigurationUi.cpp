@@ -1,8 +1,8 @@
-#include "ConfigurationDebugUi.h"
+#include "ConfigurationUi.h"
 
 #include "wondermake-base/ConfigurationGlobal.h"
 
-namespace ConfigurationDebugUi
+namespace ConfigurationUi
 {
 	void Configure(
 		ConfigurationSystem& aConfigurationSystem)
@@ -11,4 +11,4 @@ namespace ConfigurationDebugUi
 	}
 }
 
-WM_REGISTER_CONFIGURATION(ConfigurationDebugUi);
+WM_REGISTER_CONFIGURATION(ConfigurationUi);

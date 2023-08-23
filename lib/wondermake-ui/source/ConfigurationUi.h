@@ -6,9 +6,9 @@
 
 class ConfigurationSystem;
 
-namespace ConfigurationDebugUi
+namespace ConfigurationUi
 {
-	inline constexpr std::string_view SettingsFile		= "wondermake_debug_ui.settings_file";
+	inline constexpr std::string_view SettingsFile		= "wondermake_ui.settings_file";
 
 	void Configure(
 		ConfigurationSystem& aConfigurationSystem);

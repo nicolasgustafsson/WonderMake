@@ -1,6 +1,6 @@
 #include "wondermake-ui/DebugSettingsSystem.h"
 
-#include "ConfigurationDebugUi.h"
+#include "ConfigurationUi.h"
 #include "JsonInspector.h"
 
 #include "wondermake-ui/ImguiInclude.h"
@@ -20,7 +20,7 @@ WM_REGISTER_SYSTEM(DebugSettingsSystem);
 
 DebugSettingsSystem::DebugSettingsSystem()
 {
-	auto filePath = Get<ConfigurationSystem>().Get<FilePath>(ConfigurationDebugUi::SettingsFile, FilePath(FilePath::EFolder::Bin, "debugSettings.json"));
+	auto filePath = Get<ConfigurationSystem>().Get<FilePath>(ConfigurationUi::SettingsFile, FilePath(FilePath::EFolder::Bin, "debugSettings.json"));
 
 	Get<JobSystem>()
 		.StartJob<ReadFileJob>(filePath)
@@ -43,7 +43,7 @@ DebugSettingsSystem::DebugSettingsSystem()
 
 void DebugSettingsSystem::SaveSettings()
 {
-	auto filePath = Get<ConfigurationSystem>().Get<FilePath>(ConfigurationDebugUi::SettingsFile, FilePath(FilePath::EFolder::Bin, "debugSettings.json"));
+	auto filePath = Get<ConfigurationSystem>().Get<FilePath>(ConfigurationUi::SettingsFile, FilePath(FilePath::EFolder::Bin, "debugSettings.json"));
 
 	Get<JobSystem>()
 		.StartJob<WriteFileJob>(filePath, mySettings.dump())

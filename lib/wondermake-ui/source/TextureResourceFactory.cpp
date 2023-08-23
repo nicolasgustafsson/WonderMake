@@ -31,9 +31,9 @@ Future<SharedReference<TextureResource>> TextureResourceFactory::CreateResourceS
 
 	openGL.BindTexture(GL_TEXTURE_2D, textureHandle);
 
-	openGL.SetTexureParameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	openGL.SetTexureParameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-	openGL.SetTexureParameter(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	openGL.SetTexureParameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	openGL.SetTexureParameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	openGL.SetTexureParameter(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	openGL.SetTexureParameter(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	const GLenum format = channelCount == 3 ? GL_RGB : GL_RGBA;

@@ -15,7 +15,7 @@ option(WonderMake_OfflineMode			"Makes CMake use cached dependencies, and stops 
 # Turning this on makes it so most WonderMake targets use INTERFACE instead of STATIC when calling
 # add_library, meaning that it won't link against any libraries. You'll need to supply the static
 # libraries yourself. This is done by setting the IMPORTED_LOCATION property of these targets:
-# Imgui WonderMake WonderMakeBase WonderMakeDebugUi WonderMakeEngine WonderMakeIo WonderMakeUtility
+# Imgui WonderMake WonderMakeBase WonderMakeUi WonderMakeEngine WonderMakeIo WonderMakeUtility
 #
 # Note that this not apply to Protobuf targets. They are still compiled and linked towards.
 #

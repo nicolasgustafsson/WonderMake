@@ -7,7 +7,9 @@
 
 namespace ShaderParser
 {
-	std::pair<std::optional<std::string>, std::unordered_set<FilePath>> ParseShader(const FilePath& aShaderPath)
+	[[nodiscard]] std::optional<std::string> ParseShaderFileRecursive(const FilePath& aShaderPath, std::string&& aShaderCode, const bool aIsMain, const FilePath& aSearchPath, std::unordered_set<FilePath>& aOutIncludedPaths);
+
+	std::pair<std::optional<std::string>, std::unordered_set<FilePath>> ParseShader(const FilePath& aShaderPath, const FilePath& aSearchPath)
 	{
 		std::unordered_set<FilePath> includedFiles;
 		auto shaderFile = aShaderPath.GetFirstFileFromAllPaths();
@@ -20,7 +22,7 @@ namespace ShaderParser
 
 		file.read(shaderString.data(), fileSize);
 		
-		std::optional<std::string> parseResult = ParseShaderFileRecursive(aShaderPath, std::move(shaderString), true, includedFiles);
+		std::optional<std::string> parseResult = ParseShaderFileRecursive(aShaderPath, std::move(shaderString), true, aSearchPath, includedFiles);
 
 		if (!parseResult)
 			WmLogError(TagWonderMake << TagWmOpenGL << "Failed to parse shader file with path: " << aShaderPath << '.');
@@ -28,7 +30,7 @@ namespace ShaderParser
 		return std::make_pair(parseResult, std::move(includedFiles));
 	}
 
-	std::optional<std::string> ParseShaderFileRecursive(const FilePath& aShaderPath, std::string&& aShaderCode, const bool aIsMain, std::unordered_set<FilePath>& aOutIncludedPaths)
+	std::optional<std::string> ParseShaderFileRecursive(const FilePath& aShaderPath, std::string&& aShaderCode, const bool aIsMain, const FilePath& aSearchPath, std::unordered_set<FilePath>& aOutIncludedPaths)
 	{
 		if (aShaderCode.empty())
 			return {};
@@ -57,7 +59,7 @@ namespace ShaderParser
 			}
 		}
 
-		auto shaderPath = aShaderPath.GetFirstFileFromAllPaths().string();
+		auto shaderPath = aShaderPath.Path.string();
 
 		size_t rootDirectoryEnd = shaderPath.find_last_of('/');
 
@@ -85,34 +87,43 @@ namespace ShaderParser
 				const size_t endOfIncludeFilename = aShaderCode.find_first_of('"', startOfIncludeFilename + 1);
 				if (endOfIncludeFilename != std::string::npos)
 				{
-					std::filesystem::path rawPath = root_include_directory + aShaderCode.substr(startOfIncludeFilename + 1, endOfIncludeFilename - startOfIncludeFilename - 1);
+					std::filesystem::path rawPath = aShaderCode.substr(startOfIncludeFilename + 1, endOfIncludeFilename - startOfIncludeFilename - 1);
 					FilePath includePath;
 
-					if (rawPath.is_absolute())
-						includePath = FilePath::Resolve(rawPath);
-					else
-						includePath = FilePath(aShaderPath.Location, rawPath)
-							.LexicallyNormal();
+					includePath = FilePath(aShaderPath.Location, root_include_directory / rawPath)
+						.LexicallyNormal();
 
 					const auto insertionResult = aOutIncludedPaths.insert(FilePath::Resolve(includePath));
 
 					if (insertionResult.second)
 					{
-						if (!std::filesystem::exists(includePath))
-						{
-							WmLogError(TagWonderMake << TagWmOpenGL << "Failed to parse shader, could not find file to include with path: " << includePath << '.');
+						auto realPath = includePath
+							.GetFirstFileFromAllPaths();
 
-							return {};
+						if (!std::filesystem::exists(realPath))
+						{
+							includePath = FilePath(aSearchPath.Location, aSearchPath.Path / rawPath)
+								.LexicallyNormal();
+
+							realPath = includePath
+								.GetFirstFileFromAllPaths();
+
+							if (!std::filesystem::exists(realPath))
+							{
+								WmLogError(TagWonderMake << TagWmOpenGL << "Failed to parse shader, could not find file to include with path: " << includePath << '.');
+
+								return {};
+							}
 						}
 
-						std::ifstream includedFileStream{ includePath };
-						const size_t fileSize = static_cast<size_t>(std::filesystem::file_size(includePath));
+						std::ifstream includedFileStream{ realPath };
+						const size_t fileSize = static_cast<size_t>(std::filesystem::file_size(realPath));
 
 						std::string includedShaderString(fileSize, ' ');
 
 						includedFileStream.read(includedShaderString.data(), fileSize);
 
-						std::optional<std::string> includedResult = ParseShaderFileRecursive(includePath, std::move(includedShaderString), false, aOutIncludedPaths);
+						std::optional<std::string> includedResult = ParseShaderFileRecursive(includePath, std::move(includedShaderString), false, aSearchPath, aOutIncludedPaths);
 
 						if (!includedResult)
 						{

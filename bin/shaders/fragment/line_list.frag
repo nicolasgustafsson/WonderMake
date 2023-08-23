@@ -5,8 +5,6 @@ in vec2 TexCoord;
 
 uniform vec4 Color = vec4(0.0, 1.0, 1.0, 1.0);
 
-//!#include "common.glsl"
-
 void main()
 {
     FragColor = Color;

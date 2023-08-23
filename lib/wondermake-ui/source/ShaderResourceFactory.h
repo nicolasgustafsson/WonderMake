@@ -6,11 +6,14 @@
 
 class OpenGLFacade;
 
+class ConfigurationSystem;
+
 template<EShaderType ShaderType>
 class ShaderResourceFactory
 	: public FileResourceFactory<
 		ShaderResource<ShaderType>,
 		Policy::Set<
+			PAdd<ConfigurationSystem, PWrite>,
 			PAdd<OpenGLFacade, PWrite>>,
 		STrait::Set<
 			STGui,
@@ -21,6 +24,7 @@ protected:
 	using MakeResourceOp = FileResourceFactory<
 		ShaderResource<ShaderType>,
 		Policy::Set<
+			PAdd<ConfigurationSystem, PWrite>,
 			PAdd<OpenGLFacade, PWrite>>,
 		STrait::Set<
 			STGui,

@@ -12,7 +12,7 @@ in float vertexRotation[];
 out vec2 TexCoord;
 out vec4 Color;
 
-//!#include "common.glsl"
+//!#include "utility/engine_uniform_buffer.glsl"
 
 void ConstructSpriteRectangle(vec2 position, vec2 origin, vec2 scale, vec4 color, float rotation)
 {    

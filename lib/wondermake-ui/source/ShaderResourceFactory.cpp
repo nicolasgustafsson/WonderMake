@@ -1,9 +1,11 @@
 #include "ShaderResourceFactory.h"
 
+#include "ConfigurationUi.h"
 #include "ShaderParser.h"
 
 #include "wondermake-ui/OpenGLFacade.h"
 
+#include "wondermake-base/ConfigurationSystem.h"
 #include "wondermake-base/SystemGlobal.h"
 
 using ShaderResourceFactoryVertex	= ShaderResourceFactory<EShaderType::Vertex>;
@@ -17,7 +19,9 @@ WM_REGISTER_SYSTEM(ShaderResourceFactoryGeometry);
 template<EShaderType ShaderType>
 Future<SharedReference<ShaderResource<ShaderType>>> ShaderResourceFactory<ShaderType>::CreateResourceStrategy(FileResourceId /*aId*/, FilePath aPath, MakeResourceOp aMakeOp)
 {
-	auto [shaderString, files] = ShaderParser::ParseShader(aPath);
+	auto& configSys = this->Get<ConfigurationSystem>();
+
+	auto [shaderString, files] = ShaderParser::ParseShader(aPath, configSys.Get<FilePath>(ConfigurationUi::ShaderSearchPath, FilePath()));
 
 	for (auto& file : files)
 		aMakeOp.AddRelatedFile(std::move(file));

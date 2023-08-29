@@ -93,29 +93,29 @@ namespace ShaderParser
 					includePath = FilePath(aShaderPath.Location, root_include_directory / rawPath)
 						.LexicallyNormal();
 
-					const auto insertionResult = aOutIncludedPaths.insert(FilePath::Resolve(includePath));
+					auto realPath = includePath
+						.GetFirstFileFromAllPaths();
 
-					if (insertionResult.second)
+					if (!std::filesystem::exists(realPath))
 					{
-						auto realPath = includePath
+						includePath = FilePath(aSearchPath.Location, aSearchPath.Path / rawPath)
+							.LexicallyNormal();
+
+						realPath = includePath
 							.GetFirstFileFromAllPaths();
 
 						if (!std::filesystem::exists(realPath))
 						{
-							includePath = FilePath(aSearchPath.Location, aSearchPath.Path / rawPath)
-								.LexicallyNormal();
+							WmLogError(TagWonderMake << TagWmOpenGL << "Failed to parse shader, could not find file to include with path: " << includePath << '.');
 
-							realPath = includePath
-								.GetFirstFileFromAllPaths();
-
-							if (!std::filesystem::exists(realPath))
-							{
-								WmLogError(TagWonderMake << TagWmOpenGL << "Failed to parse shader, could not find file to include with path: " << includePath << '.');
-
-								return {};
-							}
+							return {};
 						}
+					}
 
+					const auto insertionResult = aOutIncludedPaths.insert(includePath);
+
+					if (insertionResult.second)
+					{
 						std::ifstream includedFileStream{ realPath };
 						const size_t fileSize = static_cast<size_t>(std::filesystem::file_size(realPath));
 

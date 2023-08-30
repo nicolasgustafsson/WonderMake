@@ -3,15 +3,19 @@
 #include "wondermake-base/Logger.h"
 #include "wondermake-base/WmLogTags.h"
 
+#include <algorithm>
 #include <fstream>
+#include <optional>
+#include <string>
+#include <unordered_set>
+#include <vector>
 
 namespace ShaderParser
 {
-	[[nodiscard]] std::optional<std::string> ParseShaderFileRecursive(const FilePath& aShaderPath, std::string&& aShaderCode, const bool aIsMain, const FilePath& aSearchPath, std::unordered_set<FilePath>& aOutIncludedPaths);
+	[[nodiscard]] std::optional<std::string> ParseShaderFileRecursive(const FilePath& aShaderPath, std::string&& aShaderCode, const bool aIsMain, const FilePath& aSearchPath, std::vector<FilePath>& aOutIncludedPaths, std::vector<std::pair<size_t, size_t>>& aOutCodeLines);
 
-	std::pair<std::optional<std::string>, std::unordered_set<FilePath>> ParseShader(const FilePath& aShaderPath, const FilePath& aSearchPath)
+	ShaderParsedData ParseShader(const FilePath& aShaderPath, const FilePath& aSearchPath)
 	{
-		std::unordered_set<FilePath> includedFiles;
 		auto shaderFile = aShaderPath.GetFirstFileFromAllPaths();
 
 		std::ifstream file{ shaderFile };
@@ -21,44 +25,31 @@ namespace ShaderParser
 		std::string shaderString(fileSize, ' ');
 
 		file.read(shaderString.data(), fileSize);
-		
-		std::optional<std::string> parseResult = ParseShaderFileRecursive(aShaderPath, std::move(shaderString), true, aSearchPath, includedFiles);
 
-		if (!parseResult)
+		std::optional<std::string>				allCode;
+		std::vector<FilePath>					relatedFiles;
+		std::vector<std::pair<size_t, size_t>>	codeLines;
+
+		allCode = ParseShaderFileRecursive(aShaderPath, std::move(shaderString), true, aSearchPath, relatedFiles, codeLines);
+
+		if (!allCode)
 			WmLogError(TagWonderMake << TagWmOpenGL << "Failed to parse shader file with path: " << aShaderPath << '.');
 
-		return std::make_pair(parseResult, std::move(includedFiles));
+		return ShaderParsedData(std::move(allCode), std::move(relatedFiles), std::move(codeLines));
 	}
-
-	std::optional<std::string> ParseShaderFileRecursive(const FilePath& aShaderPath, std::string&& aShaderCode, const bool aIsMain, const FilePath& aSearchPath, std::unordered_set<FilePath>& aOutIncludedPaths)
+	
+	std::optional<std::string> ParseShaderFileRecursive(const FilePath& aShaderPath, std::string&& aShaderCode, const bool aIsMain, const FilePath& aSearchPath, std::vector<FilePath>& aOutIncludedPaths, std::vector<std::pair<size_t, size_t>>& aOutCodeLines)
 	{
+		size_t fileIndex = aOutIncludedPaths.size();
+
+		aOutIncludedPaths.emplace_back(aShaderPath);
+
 		if (aShaderCode.empty())
 			return {};
 
-		std::optional<std::string> result("");
-
 		const std::string alwaysExtract = "//!";
 		const std::string extractIfMain = "//?";
-
-		size_t pos = aShaderCode.find(alwaysExtract);
-
-		while (pos != std::string::npos)
-		{
-			aShaderCode = aShaderCode.erase(pos, alwaysExtract.length());
-			pos = aShaderCode.find(alwaysExtract);
-		}
-
-		if (aIsMain)
-		{
-			pos = aShaderCode.find(extractIfMain);
-
-			while (pos != std::string::npos)
-			{
-				aShaderCode = aShaderCode.erase(pos, extractIfMain.length());
-				pos = aShaderCode.find(extractIfMain);
-			}
-		}
-
+		
 		auto shaderPath = aShaderPath.Path.string();
 
 		size_t rootDirectoryEnd = shaderPath.find_last_of('/');
@@ -72,77 +63,142 @@ namespace ShaderParser
 		{
 			WmLogError(TagWonderMake << TagWmOpenGL << "Failed to parse shader, could not find root directory of shader with path:" << aShaderPath << '.');
 
-			return {};
+			return std::nullopt;
 		}
 
-		const char* includePrefix = "#include ";
+		const std::string_view includePrefix = "#include ";
 
-		pos = aShaderCode.find(includePrefix);
+		std::string result;
+		std::string_view shaderCodeView = aShaderCode;
 
-		while (pos != std::string::npos)
+		const auto getFilePath = [&aShaderPath, &aSearchPath, &root_include_directory](const std::filesystem::path& aRawPath) -> std::optional<FilePath>
 		{
-			const size_t startOfIncludeFilename = aShaderCode.find_first_of('"', pos);
-			if (startOfIncludeFilename != std::string::npos)
+			FilePath includePath = FilePath(aShaderPath.Location, root_include_directory / aRawPath)
+				.LexicallyNormal();
+
+			auto realPath = includePath
+				.GetFirstFileFromAllPaths();
+
+			if (std::filesystem::exists(realPath))
+				return includePath;
+
+			includePath = FilePath(aSearchPath.Location, aSearchPath.Path / aRawPath)
+				.LexicallyNormal();
+
+			realPath = includePath
+				.GetFirstFileFromAllPaths();
+
+			if (std::filesystem::exists(realPath))
+				return includePath;
+			
+			WmLogError(TagWonderMake << TagWmOpenGL << "Failed to parse shader, could not find file to include with path: " << includePath << '.');
+
+			return std::nullopt;
+		};
+		const auto readAndParseFile = [&aSearchPath, &aOutIncludedPaths](const FilePath& aPath, std::vector<std::pair<size_t, size_t>>& aOutCodeLines) -> std::optional<std::string>
+		{
+			if (std::ranges::find(aOutIncludedPaths, aPath) != aOutIncludedPaths.end())
+				return std::nullopt;
+
+			auto realPath = aPath
+				.GetFirstFileFromAllPaths();
+
+			std::ifstream includedFileStream{ realPath };
+			const size_t fileSize = static_cast<size_t>(std::filesystem::file_size(realPath));
+
+			std::string includedShaderString(fileSize, ' ');
+
+			includedFileStream.read(includedShaderString.data(), fileSize);
+
+			return ParseShaderFileRecursive(aPath, std::move(includedShaderString), false, aSearchPath, aOutIncludedPaths, aOutCodeLines);
+		};
+
+		size_t appendLine = 0;
+		size_t pos = shaderCodeView.find(includePrefix);
+		size_t fileLine = 0;
+
+		while (pos >= alwaysExtract.length() && pos != std::string::npos)
+		{
+			auto includeLineBegin = shaderCodeView.begin() + (pos - alwaysExtract.length());
+
+			size_t includeLineEndPos = shaderCodeView.find('\n', pos);
+
+			auto includeLineEnd = shaderCodeView.begin() + includeLineEndPos;
+
+			const auto includeLineView		= std::string_view(includeLineBegin, includeLineEnd);
+			const auto includePrefixView	= std::string_view(includeLineBegin, includeLineBegin + alwaysExtract.length());
+
+			const auto prependView = shaderCodeView.substr(appendLine, includeLineEndPos - appendLine);
+
+			size_t lineCount = std::ranges::count(prependView, '\n') + 1;
+
+			for (size_t i = 0; i < lineCount; ++i)
+				aOutCodeLines.emplace_back(std::make_pair(fileIndex, fileLine + i));
+
+			fileLine += lineCount;
+
+			result += prependView;
+
+			const auto parseInclude = [&]()
 			{
-				const size_t endOfIncludeFilename = aShaderCode.find_first_of('"', startOfIncludeFilename + 1);
-				if (endOfIncludeFilename != std::string::npos)
-				{
-					std::filesystem::path rawPath = aShaderCode.substr(startOfIncludeFilename + 1, endOfIncludeFilename - startOfIncludeFilename - 1);
-					FilePath includePath;
+				if (includePrefixView != alwaysExtract
+					&& (!aIsMain || includePrefixView != extractIfMain))
+					return;
 
-					includePath = FilePath(aShaderPath.Location, root_include_directory / rawPath)
-						.LexicallyNormal();
+				auto fileIncludeBegin = std::ranges::find(includeLineView, '"');
 
-					auto realPath = includePath
-						.GetFirstFileFromAllPaths();
+				if (fileIncludeBegin == includeLineView.end())
+					return;
 
-					if (!std::filesystem::exists(realPath))
-					{
-						includePath = FilePath(aSearchPath.Location, aSearchPath.Path / rawPath)
-							.LexicallyNormal();
+				auto fileIncludeEnd = std::find(fileIncludeBegin + 1, includeLineView.end(), '"');
 
-						realPath = includePath
-							.GetFirstFileFromAllPaths();
+				if (fileIncludeEnd == includeLineView.end())
+					return;
 
-						if (!std::filesystem::exists(realPath))
-						{
-							WmLogError(TagWonderMake << TagWmOpenGL << "Failed to parse shader, could not find file to include with path: " << includePath << '.');
+				std::string_view fileView = std::string_view(fileIncludeBegin + 1, fileIncludeEnd);
 
-							return {};
-						}
-					}
+				auto path = getFilePath(fileView);
 
-					const auto insertionResult = aOutIncludedPaths.insert(includePath);
+				if (!path)
+					return;
 
-					if (insertionResult.second)
-					{
-						std::ifstream includedFileStream{ realPath };
-						const size_t fileSize = static_cast<size_t>(std::filesystem::file_size(realPath));
+				std::vector<std::pair<size_t, size_t>> codeLines;
 
-						std::string includedShaderString(fileSize, ' ');
+				auto parsedFileResult = readAndParseFile(*path, codeLines);
 
-						includedFileStream.read(includedShaderString.data(), fileSize);
+				if (!parsedFileResult)
+					return;
 
-						std::optional<std::string> includedResult = ParseShaderFileRecursive(includePath, std::move(includedShaderString), false, aSearchPath, aOutIncludedPaths);
+				size_t lastIndex = aOutCodeLines.size();
 
-						if (!includedResult)
-						{
-							WmLogError(TagWonderMake << TagWmOpenGL << "Failed to parse shader, could not parse included file with path: " << includePath << '.');
+				aOutCodeLines.resize(lastIndex + codeLines.size(), { 0, 0 });
 
-							return {};
-						}
+				std::copy(codeLines.begin(), codeLines.end(), aOutCodeLines.begin() + lastIndex);
 
-						(*result) += aShaderCode.substr(0, pos);
-						(*result) += *includedResult;
-					}
+				result += '\n';
 
-					aShaderCode = aShaderCode.erase(0, endOfIncludeFilename + 1);
-				}
-			}
+				result += *parsedFileResult;
 
-			pos = aShaderCode.find(includePrefix);
+				result += '\n';
+
+				return;
+			};
+
+			parseInclude();
+
+			appendLine = includeLineEndPos + 1;
+
+			pos = aShaderCode.find(includePrefix, appendLine);
 		}
-		(*result) += aShaderCode;
+
+		const auto appendView = shaderCodeView.substr(appendLine, pos - appendLine);
+		
+		size_t lineCount = std::ranges::count(appendView, '\n') + 1;
+
+		for (size_t i = 0; i < lineCount; ++i)
+			aOutCodeLines.emplace_back(std::make_pair(fileIndex, fileLine + i));
+
+		result += appendView;
 
 		return result;
 	}

@@ -2,14 +2,11 @@
 //[Nicos]: Shamefully stolen and repurposed with permission from: https://github.com/carlivandev/sic
 //[Kevin]: Shamelessly refurbished to better fit my needs without permission from: https://github.com/carlivandev/sic - Get got scrub
 
-#include "wondermake-utility/FilePath.h"
+#include "wondermake-ui/ShaderParsedData.h"
 
-#include <optional>
-#include <string>
-#include <unordered_set>
+#include "wondermake-utility/FilePath.h"
 
 namespace ShaderParser
 {
-	[[nodiscard]] std::pair<std::optional<std::string>, std::unordered_set<FilePath>> ParseShader(const FilePath& aShaderPath, const FilePath& aSearchPath);
+	[[nodiscard]] ShaderParsedData ParseShader(const FilePath& aShaderPath, const FilePath& aSearchPath);
 };
-

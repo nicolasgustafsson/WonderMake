@@ -233,10 +233,20 @@ i32 OpenGLFacade::GetShaderParameter(const u32 aShader, const GLenum aParameterN
 
 std::string OpenGLFacade::GetShaderInfoLog(const u32 aShader)
 {
-	char errorMessage[512];
-	glGetShaderInfoLog(aShader, 512, nullptr, errorMessage);
+	GLint logLength;
 
-	return std::string(errorMessage);
+	glGetShaderiv(aShader, GL_INFO_LOG_LENGTH, &logLength);
+
+	std::string errorMessage;
+
+	errorMessage.resize(static_cast<size_t>(logLength));
+
+	glGetShaderInfoLog(aShader, logLength, nullptr, errorMessage.data());
+
+	// Remove extra null-terminator, std::string appends its own
+	errorMessage.pop_back();
+
+	return errorMessage;
 }
 
 u32 OpenGLFacade::CreateShaderProgram()

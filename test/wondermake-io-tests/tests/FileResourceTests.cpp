@@ -100,6 +100,40 @@ TEST(ResourceTests, system_unset_factory_returns_uncompleted_future)
 	EXPECT_TRUE(!future.IsDone());
 }
 
+TEST(ResourceTests, setting_factory_completes_futures)
+{
+	FilePathData fpData;
+
+	FilePath	path = FilePath(FilePath::EFolder::Bin, "path");
+	auto		fileWatcherSys = MakeSharedReference<NiceMock<FileWatcherSystemMock>>(fpData);
+
+	fileWatcherSys->Initialize();
+
+	FileResourceSystem::InjectDependencies(std::make_tuple(fileWatcherSys));
+
+	auto resourceSystem = MakeSharedReference<FileResourceSystem>();
+
+	auto guidSystemMock = MakeSharedReference<NiceMock<GuidGeneratorSystemMock>>();
+
+	guidSystemMock->DelegateToFake();
+
+	TestGameResourceFactoryMock::InjectDependencies(std::make_tuple(guidSystemMock, resourceSystem));
+
+	auto factoryMock = MakeSharedReference<NiceMock<TestGameResourceFactoryMock>>();
+
+	auto future = resourceSystem->GetResource<TestFileResource>(path);
+
+	EXPECT_TRUE(future.IsValid());
+	EXPECT_TRUE(!future.IsDone());
+
+	EXPECT_CALL(*factoryMock, CreateResourceStrategy)
+		.WillOnce(locDefaultMake);
+
+	factoryMock->Initialize();
+
+	EXPECT_TRUE(future.IsCompleted());
+}
+
 TEST_F(ResourceTest, factory_returning_canceled_future_cancels_returned_future)
 {
 	Guid		expectedId		= *Guid::Parse("6b8395b7-b07a-4928-9a8e-806a7a3ab82b");
@@ -238,4 +272,41 @@ TEST_F(ResourceTest, releasing_a_resource_makes_a_destroy_call)
 		.Times(1);
 
 	future.Reset();
+}
+
+TEST(ResourceTests, getting_a_resource_twice_before_finished_calls_create_only_once)
+{
+	FilePathData fpData;
+
+	FilePath	path = FilePath(FilePath::EFolder::Bin, "path");
+	auto		fileWatcherSys = MakeSharedReference<NiceMock<FileWatcherSystemMock>>(fpData);
+
+	fileWatcherSys->Initialize();
+
+	FileResourceSystem::InjectDependencies(std::make_tuple(fileWatcherSys));
+
+	auto resourceSystem = MakeSharedReference<FileResourceSystem>();
+
+	auto guidSystemMock = MakeSharedReference<NiceMock<GuidGeneratorSystemMock>>();
+
+	guidSystemMock->DelegateToFake();
+
+	TestGameResourceFactoryMock::InjectDependencies(std::make_tuple(guidSystemMock, resourceSystem));
+
+	auto factoryMock = MakeSharedReference<StrictMock<TestGameResourceFactoryMock>>();
+
+	factoryMock->Initialize();
+
+	auto [_, future] = MakeAsync<SharedReference<TestFileResource>>();
+
+	EXPECT_CALL(*factoryMock, CreateResourceStrategy)
+		.WillOnce(Return(future));
+
+	auto f1 = resourceSystem->GetResource<TestFileResource>(path);
+	auto f2 = resourceSystem->GetResource<TestFileResource>(path);
+
+	EXPECT_TRUE(f1.IsValid());
+	EXPECT_TRUE(f2.IsValid());
+	EXPECT_FALSE(f1.IsDone());
+	EXPECT_FALSE(f2.IsDone());
 }

@@ -18,7 +18,6 @@
 #include <functional>
 #include <typeindex>
 #include <unordered_map>
-#include <variant>
 
 class FileResourceSystem
 	: public System<
@@ -32,43 +31,65 @@ public:
 	template<CFileResource TResource>
 	void SetFactory(auto aCreateCallable, auto aCreateWithParamsCallable)
 	{
-		auto it = myFactories.find(typeid(TResource));
+		std::string_view resourceName = GetFileResourceTypeName<TResource>();
 
-		if (it == myFactories.end())
+		myResourceTypeMap.emplace(std::make_pair(resourceName, std::type_index(typeid(TResource))));
+
+		auto itSet = myFactorySetFuncs.find(typeid(TResource));
+
+		if (itSet == myFactorySetFuncs.end())
 		{
-			myFactories.emplace(std::make_pair<std::type_index>(typeid(TResource), SCreateFuncs
+			auto itFac = myFactories.find(typeid(TResource));
+
+			if (itFac != myFactories.end())
+			{
+				WmLogError(TagWonderMake << TagWmResources << "Resource factory set twice; resource type: " << GetFileResourceTypeName<TResource>() << '.');
+
+				return;
+			}
+
+			auto future = MakeCompletedFuture<const SCreateFuncs>(
+				SCreateFuncs
 				{
 					.Create				= std::move(aCreateCallable),
 					.CreateWithParams	= std::move(aCreateWithParamsCallable)
-				}));
+				});
+
+			myFactories.emplace(std::make_pair<std::type_index>(typeid(TResource), std::move(future)));
 
 			return;
 		}
 
-		if (!std::holds_alternative<OnFactorySetList>(it->second))
-		{
-			WmLogError(TagWonderMake << TagWmResources << "Resource factory set twice; resource type: " << GetFileResourceTypeName<TResource>() << '.');
+		auto promise = std::move(itSet->second);
 
-			return;
-		}
+		myFactorySetFuncs.erase(itSet);
 
-		auto onSetList = std::move(std::get<OnFactorySetList>(it->second));
-
-		it->second = SCreateFuncs
-		{
-			.Create				= std::move(aCreateCallable),
-			.CreateWithParams	= std::move(aCreateWithParamsCallable)
-		};
-
-		for (auto& onSet : onSetList)
-			std::move(onSet)();
+		promise.Complete(
+			SCreateFuncs
+			{
+				.Create				= std::move(aCreateCallable),
+				.CreateWithParams	= std::move(aCreateWithParamsCallable)
+			});
 	}
-	
+
 	template<CFileResource TResource>
 	Future<FileResourceRef<TResource>> GetResource(const FilePath& aPath)
 	{
-		if (auto ptr = GetResourceFromMap<TResource>(aPath); ptr)
-			return MakeCompletedFuture<FileResourceRef<TResource>>(FileResourcePtr<TResource>(ptr).ToRef());
+		auto future = GetResourceDataFromMap<TResource>(aPath);
+
+		if (!future.IsCanceled())
+			return future.ThenApply(InlineExecutor(), FutureApplyResult([](auto aDataPtr)
+				{
+					if (!aDataPtr)
+						return MakeCanceledFuture<FileResourceRef<TResource>>();
+
+					auto lock = aDataPtr->WeakPtr.lock();
+
+					if (!lock)
+						return MakeCanceledFuture<FileResourceRef<TResource>>();
+
+					return MakeCompletedFuture<FileResourceRef<TResource>>(FileResourcePtr<TResource>(lock).ToRef());
+				}));
 
 		return CreateResourceFromFactoryMap<TResource>(aPath);
 	}
@@ -90,99 +111,103 @@ private:
 		CreateType			Create;
 		CreateWithIdType	CreateWithParams;
 	};
-	using OnFactorySetList		= std::vector<UniqueFunction<void()>>;
 
-	using FactoryVariant		= std::variant<OnFactorySetList, SCreateFuncs>;
-	using ResourceFileMap		= std::unordered_map<FilePath, std::unique_ptr<SResourceDataBase>>;
+	using ResourceFileMap		= std::unordered_map<FilePath, Future<const std::shared_ptr<SResourceDataBase>>>;
 
+	using ResourceTypeMap		= std::unordered_map<std::string_view, std::type_index>;
+	using FactoryMap			= std::unordered_map<std::type_index, Future<const SCreateFuncs>>;
+	using FactorySetMap			= std::unordered_map<std::type_index, Promise<const SCreateFuncs>>;
 	using ResourceMap			= std::unordered_map<std::type_index, ResourceFileMap>;
-	using FactoryMap			= std::unordered_map<std::type_index, FactoryVariant>;
 
 	template<CFileResource TResource>
-	SResourceData<TResource>* GetResourceDataFromMap(const FilePath& aPath)
+	Future<SResourceData<TResource>*> GetResourceDataFromMap(const FilePath& aPath)
 	{
 		auto itType = myResources.find(typeid(TResource));
 
 		if (itType == myResources.end())
-			return nullptr;
+			return MakeCanceledFuture<SResourceData<TResource>*>();
 
-		const auto& resourceMap = itType->second;
+		auto& resourceMap = itType->second;
 
 		auto itFile = resourceMap.find(aPath);
 
 		if (itFile == resourceMap.end())
-			return nullptr;
+			return MakeCanceledFuture<SResourceData<TResource>*>();
 
-		return static_cast<SResourceData<TResource>*>(itFile->second.get());
+		auto& future = itFile->second;
+
+		return future.ThenApply(InlineExecutor(), FutureApplyResult([](const auto& aDataPtr)
+			{
+				if (!aDataPtr)
+					return MakeCanceledFuture<SResourceData<TResource>*>();
+
+				auto castedDataPtr = static_cast<SResourceData<TResource>*>(aDataPtr.get());
+
+				return MakeCompletedFuture<SResourceData<TResource>*>(castedDataPtr);
+			}));
 	}
 
-	template<CFileResource TResource>
-	std::shared_ptr<SharedReference<TResource>> GetResourceFromMap(const FilePath& aPath)
-	{
-		auto ptr = GetResourceDataFromMap<TResource>(aPath);
-
-		if (!ptr)
-			return nullptr;
-
-		return ptr->WeakPtr.lock();
-	}
 	template<CFileResource TResource>
 	Future<FileResourceRef<TResource>> CreateResourceFromFactoryMap(const FilePath& aPath)
 	{
 		auto itFactory = myFactories.find(typeid(TResource));
 
-		const auto addToOnSetList = [this, &aPath](OnFactorySetList& aList) -> Future<FileResourceRef<TResource>>
+		if (itFactory == myFactories.end())
 		{
-			auto [promise, future] = MakeAsync<FileResourceRef<TResource>>();
+			auto [promise, future] = MakeAsync<const SCreateFuncs>();
 
-			aList.emplace_back([this, path = aPath, promise = std::move(promise)]() mutable
-				{
-					auto& createFuncs = std::get<SCreateFuncs>(myFactories.find(typeid(TResource))->second);
+			auto [it, _] = myFactories.insert(std::make_pair(std::type_index(typeid(TResource)), std::move(future)));
+			myFactorySetFuncs.insert(std::make_pair(std::type_index(typeid(TResource)), std::move(promise)));
 
-					createFuncs.Create(path)
-						.ThenRun(GetExecutor(), FutureRunResult([this, path = std::move(path), promise = std::move(promise)](SharedReference<FileResourceBase> aReference) mutable
-							{
-								auto castedRef = StaticReferenceCast<TResource>(aReference);
+			itFactory = it;
+		}
+		
+		auto& future = itFactory->second;
 
-								auto dRef = MakeSharedReference<SharedReference<TResource>>(std::move(castedRef));
+		return future.ThenApply(GetExecutor(), FutureApplyResult([this, aPath](const auto& aCreateFuncs)
+			{
+				auto futureRes = aCreateFuncs.Create(aPath)
+					.ThenApply(GetExecutor(), FutureApplyResult([this, aPath](SharedReference<FileResourceBase> aReference) mutable
+						{
+							auto castedRef = StaticReferenceCast<TResource>(std::move(aReference));
 
-								myResources[typeid(TResource)][std::move(path)] = std::make_unique<SResourceData<TResource>>(SResourceData<TResource>
+							auto ptr = std::shared_ptr<SharedReference<TResource>>(new SharedReference<TResource>(std::move(castedRef)), [this, path = std::move(aPath)](auto) mutable
 								{
-									.WeakPtr		= dRef.Weak(),
-									.OnFileChanges	= OnFileResourceUpdate<TResource>(**dRef)
+									GetExecutor().Execute([this, path = std::move(path)]()
+										{
+											RemoveResource<TResource>(path);
+										});
 								});
 
-								promise.Complete(FileResourcePtr<TResource>(std::move(dRef)).ToRef());
-							}))
-						.Detach();
-				});
+							auto dRef = SharedReference<SharedReference<TResource>>::FromPointer(std::move(ptr)).Unwrap();
 
-			return std::move(future);
-		};
-
-		if (itFactory == myFactories.end())
-			itFactory = myFactories.emplace(std::make_pair<std::type_index>(typeid(TResource), OnFactorySetList())).first;
-
-		if (std::holds_alternative<OnFactorySetList>(itFactory->second))
-			return addToOnSetList(std::get<OnFactorySetList>(itFactory->second));
-
-		auto& createFuncs = std::get<SCreateFuncs>(itFactory->second);
+							return MakeCompletedFuture<const SharedReference<SharedReference<TResource>>>(std::move(dRef));
+						}));
 		
-		return createFuncs.Create(aPath)
-			.ThenApply(GetExecutor(), FutureApplyResult([this, path = aPath](SharedReference<FileResourceBase> aReference) mutable
-				{
-					auto castedRef = StaticReferenceCast<TResource>(std::move(aReference));
+				myResources[typeid(TResource)][aPath] = futureRes
+					.ThenApply(GetExecutor(), FutureApplyResult([this](const auto& aResourceRef)
+						{
+							SResourceData<TResource> data =
+							{
+								.WeakPtr		= aResourceRef.Weak(),
+								.OnFileChanges	= OnFileResourceUpdate<TResource>(**aResourceRef)
+							};
 
-					auto dRef = MakeSharedReference<SharedReference<TResource>>(std::move(castedRef));
+							auto dataPtr = std::make_shared<SResourceData<TResource>>(std::move(data));
 
-					myResources[typeid(TResource)][path] = std::make_unique<SResourceData<TResource>>(SResourceData<TResource>
+							return MakeCompletedFuture<const std::shared_ptr<SResourceDataBase>>(std::move(dataPtr));
+						}));
+
+				return futureRes.ThenApply(InlineExecutor(), FutureApplyResult([](const auto& aResourceRef)
 					{
-						.WeakPtr		= dRef.Weak(),
-						.OnFileChanges	= OnFileResourceUpdate<TResource>(**dRef)
-					});
+						auto resPtr = FileResourcePtr<TResource>(aResourceRef);
 
-					return MakeCompletedFuture<FileResourceRef<TResource>>(FileResourcePtr<TResource>(std::move(dRef)).ToRef());
-				}));
+						auto resRef = resPtr.ToRef();
+
+						return MakeCompletedFuture<FileResourceRef<TResource>>(std::move(resRef));
+					}));
+			}));
+		
 	}
 
 	template<CFileResource TResource>
@@ -200,62 +225,69 @@ private:
 
 			subscribers.emplace_back(
 				Get<FileWatcherSystem>()
-					.OnFileChange(resourcePath, GetExecutor(), Bind(&FileResourceSystem::UpdateResource<TResource>, this, resourcePath)));
+					.OnFileChange(resourcePath, GetExecutor(), Bind(&FileResourceSystem::UpdateFileResource<TResource>, this, resourcePath)));
 			for (const auto& path : relatedFiles)
 				subscribers.emplace_back(
 					Get<FileWatcherSystem>()
-					.OnFileChange(path, GetExecutor(), Bind(&FileResourceSystem::UpdateResource<TResource>, this, resourcePath)));
+					.OnFileChange(path, GetExecutor(), Bind(&FileResourceSystem::UpdateFileResource<TResource>, this, resourcePath)));
 
 			return subscribers;
 		}
 			
 	}
 	template<CFileResource TResource>
-	void UpdateResource(const FilePath& aResourcePath, const FilePath& /*aUpdatedFile*/)
+	void UpdateFileResource(const FilePath& aResourcePath, const FilePath& /*aUpdatedFile*/)
 	{
-		auto ptrData = GetResourceDataFromMap<TResource>(aResourcePath);
+		auto future = GetResourceDataFromMap<TResource>(aResourcePath);
 
-		if (!ptrData)
-		{
-			WmLogError(TagWonderMake << TagWmResources << "Failed to update resource, unknown resource; path: " << aResourcePath << " resource type: " << GetFileResourceTypeName<TResource>() << '.');
+		future.ThenRun(GetExecutor(), FutureRunResult([this, aResourcePath](SResourceData<TResource>* aResData)
+			{
+				auto itFactory = myFactories.find(typeid(TResource));
 
-			return;
-		}
+				auto& future = itFactory->second;
 
-		auto ptr = ptrData->WeakPtr.lock();
-
-		if (!ptr)
-		{
-			RemoveResource<TResource>(aResourcePath);
-
-			return;
-		}
-
-		auto itFactory = myFactories.find(typeid(TResource));
-
-		auto& createFuncs = std::get<SCreateFuncs>(itFactory->second);
-
-		auto id			= (*ptr)->Id();
-		auto generation	= (*ptr)->Generation() + 1;
-
-		WmLogInfo(TagWonderMake << TagWmResources << "Reloading resource; path: " << aResourcePath << " resource type: " << GetFileResourceTypeName<TResource>() << ", id: " << id << ", generation: " << generation << '.');
-
-		createFuncs.CreateWithParams(aResourcePath, id, generation)
-			.ThenRun(GetExecutor(), FutureRunResult([this, aResourcePath, weakPtr = ptrData->WeakPtr, id, generation](SharedReference<FileResourceBase> aReference)
-				{
-					auto ptr = weakPtr.lock();
-
-					if (!ptr)
+				future.ThenRun(GetExecutor(), FutureRunResult([this, aResourcePath, aResData](const auto& aCreateFuncs)
 					{
-						RemoveResource<TResource>(aResourcePath);
+						if (!aResData)
+						{
+							WmLogError(TagWonderMake << TagWmResources << "Failed to update resource, unknown resource; path: " << aResourcePath << " resource type: " << GetFileResourceTypeName<TResource>() << '.');
 
-						return;
-					}
+							return;
+						}
 
-					*ptr = StaticReferenceCast<TResource>(std::move(aReference));
+						auto ptr = aResData->WeakPtr.lock();
 
-					WmLogSuccess(TagWonderMake << TagWmResources << "Reloaded resource; id: " << id << ", generation: " << generation << '.');
-				}))
+						if (!ptr)
+						{
+							RemoveResource<TResource>(aResourcePath);
+
+							return;
+						}
+
+						auto id			= (*ptr)->Id();
+						auto generation	= (*ptr)->Generation() + 1;
+
+						WmLogInfo(TagWonderMake << TagWmResources << "Reloading resource; path: " << aResourcePath << " resource type: " << GetFileResourceTypeName<TResource>() << ", id: " << id << ", generation: " << generation << '.');
+
+						aCreateFuncs.CreateWithParams(aResourcePath, id, generation)
+							.ThenRun(GetExecutor(), FutureRunResult([this, aResourcePath, weakPtr = aResData->WeakPtr, id, generation](SharedReference<FileResourceBase> aReference)
+								{
+									auto ptr = weakPtr.lock();
+
+									if (!ptr)
+									{
+										RemoveResource<TResource>(aResourcePath);
+
+										return;
+									}
+
+									*ptr = StaticReferenceCast<TResource>(std::move(aReference));
+
+									WmLogSuccess(TagWonderMake << TagWmResources << "Reloaded resource; id: " << id << ", generation: " << generation << '.');
+								}))
+							.Detach();
+					}));
+			}))
 			.Detach();
 	}
 
@@ -282,7 +314,9 @@ private:
 		myResources.erase(itType);
 	}
 
-	ResourceMap	myResources;
-	FactoryMap	myFactories;
+	ResourceTypeMap		myResourceTypeMap;
+	FactoryMap			myFactories;
+	FactorySetMap		myFactorySetFuncs;
+	ResourceMap			myResources;
 
 };

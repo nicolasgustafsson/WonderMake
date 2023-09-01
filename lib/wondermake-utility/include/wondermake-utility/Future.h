@@ -647,9 +647,9 @@ private:
 	auto ThenApplyHelper(TypeWrapper<Future<TNewType>>&&, TExecutor&& aExecutor, TCallable&& aCallback)
 	{
 		if (!myState)
-			return Future<std::decay_t<TNewType>>();
+			return Future<std::remove_reference_t<TNewType>>();
 
-		auto [promise, future] = MakeAsync<std::decay_t<TNewType>>(myState->GetSourceLocation());
+		auto [promise, future] = MakeAsync<std::remove_reference_t<TNewType>>(myState->GetSourceLocation());
 
 		promise.AddOwnership(*this);
 
@@ -802,9 +802,9 @@ private:
 	auto ThenApplyHelper(TypeWrapper<Future<TNewType>>&&, TExecutor&& aExecutor, TCallable&& aCallback)
 	{
 		if (!myState)
-			return Future<std::decay_t<TNewType>>();
+			return Future<std::remove_reference_t<TNewType>>();
 
-		auto [promise, future] = MakeAsync<std::decay_t<TNewType>>(myState->GetSourceLocation());
+		auto [promise, future] = MakeAsync<std::remove_reference_t<TNewType>>(myState->GetSourceLocation());
 
 		promise.AddOwnership(*this);
 
@@ -877,7 +877,7 @@ inline Future<void> MakeCompletedFuture<void>(std::source_location aSourceLocati
 template<typename TArg>
 inline Future<TArg> MakeCanceledFuture(std::source_location aSourceLocation = std::source_location::current())
 {
-	auto sharedState = std::make_shared<_Impl::FutureSharedState<std::decay_t<TArg>>>(std::move(aSourceLocation));
+	auto sharedState = std::make_shared<_Impl::FutureSharedState<std::remove_reference_t<TArg>>>(std::move(aSourceLocation));
 	InlineExecutor executor;
 
 	sharedState->Cancel(executor);

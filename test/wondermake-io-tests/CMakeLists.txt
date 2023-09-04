@@ -20,6 +20,7 @@ list(APPEND SourceFiles
     "../../lib/wondermake-base/source/Configuration.cpp"
     "../../lib/wondermake-base/source/Logger.cpp"
     "../../lib/wondermake-io/source/FileResource.cpp"
+    "../../lib/wondermake-io/source/FileResourceSystem.cpp"
     "../../lib/wondermake-io/source/FileWatcherSystem.cpp"
     "../../lib/wondermake-io/source/SocketDecorator.cpp"
     "../../lib/wondermake-io/source/WinIpcAcceptor.cpp"

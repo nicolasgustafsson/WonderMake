@@ -1,0 +1,9 @@
+#include "ShaderResourceFactory.h"
+
+#include "wondermake-base/SystemGlobal.h"
+
+ // Kevin: Split the shader registering due to obj files becoming too big
+
+using ShaderResourceFactoryVertex = ShaderResourceFactory<EShaderType::Vertex>;
+
+WM_REGISTER_SYSTEM(ShaderResourceFactoryVertex);

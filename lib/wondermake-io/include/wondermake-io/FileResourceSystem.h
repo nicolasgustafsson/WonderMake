@@ -171,11 +171,13 @@ private:
 						{
 							auto castedRef = StaticReferenceCast<TResource>(std::move(aReference));
 
-							auto ptr = std::shared_ptr<SharedReference<TResource>>(new SharedReference<TResource>(std::move(castedRef)), [this, path = std::move(aPath)](auto) mutable
+							auto ptr = std::shared_ptr<SharedReference<TResource>>(new SharedReference<TResource>(std::move(castedRef)), [this, path = std::move(aPath)](SharedReference<TResource>* aPtr) mutable
 								{
-									GetExecutor().Execute([this, path = std::move(path)]()
+									GetExecutor().Execute([this, path = std::move(path), aPtr]()
 										{
 											RemoveResource<TResource>(path);
+
+											delete aPtr;
 										});
 								});
 

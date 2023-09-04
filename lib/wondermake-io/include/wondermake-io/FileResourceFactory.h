@@ -153,12 +153,15 @@ private:
 	{
 		FileResourceBase::InjectResourceData(aId, GetFileResourceTypeName<TResource>(), aGeneration, std::move(aFilePath), std::move(aRelatedFiles));
 
-		std::shared_ptr<TResource> ptr(new TResource(std::forward<TArgs>(aArgs)...), [this](TResource* aResource)
+		std::shared_ptr<TResource> ptr(new TResource(std::forward<TArgs>(aArgs)...), [self = this->weak_from_this()](TResource* aResource)
 			{
 				if (!aResource)
 					return;
 
-				DestroyResource(*aResource);
+				auto lock = self.lock();
+
+				if (lock)
+					lock->DestroyResource(*aResource);
 
 				delete aResource;
 			});

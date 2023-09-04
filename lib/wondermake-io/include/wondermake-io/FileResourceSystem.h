@@ -31,10 +31,10 @@ public:
 	template<CFileResource TResource>
 	void SetFactory(auto aCreateCallable, auto aCreateWithParamsCallable)
 	{
-		std::string_view resourceName = GetFileResourceTypeName<TResource>();
-
-		myResourceTypeMap.emplace(std::make_pair(resourceName, std::type_index(typeid(TResource))));
-
+		auto getAsAny = [this](const FilePath& aFilePath) -> std::any
+		{
+			return GetResource<TResource>(aFilePath);
+		};
 		auto itSet = myFactorySetFuncs.find(typeid(TResource));
 
 		if (itSet == myFactorySetFuncs.end())
@@ -52,10 +52,13 @@ public:
 				SCreateFuncs
 				{
 					.Create				= std::move(aCreateCallable),
-					.CreateWithParams	= std::move(aCreateWithParamsCallable)
+					.CreateWithParams	= std::move(aCreateWithParamsCallable),
+					.GetAsAny			= std::move(getAsAny)
 				});
 
 			myFactories.emplace(std::make_pair<std::type_index>(typeid(TResource), std::move(future)));
+
+			SetTypeName<TResource>();
 
 			return;
 		}
@@ -68,8 +71,11 @@ public:
 			SCreateFuncs
 			{
 				.Create				= std::move(aCreateCallable),
-				.CreateWithParams	= std::move(aCreateWithParamsCallable)
+				.CreateWithParams	= std::move(aCreateWithParamsCallable),
+				.GetAsAny			= std::move(getAsAny)
 			});
+
+		SetTypeName<TResource>();
 	}
 
 	template<CFileResource TResource>
@@ -94,6 +100,56 @@ public:
 		return CreateResourceFromFactoryMap<TResource>(aPath);
 	}
 
+	template<CFileResource TResource>
+	void KeepLoaded(const FilePath& aFilePath)
+	{
+		std::type_index id = typeid(TResource);
+
+		auto itFactory = myFactories.find(id);
+
+		if (itFactory == myFactories.end())
+		{
+			auto [promise, future] = MakeAsync<const SCreateFuncs>();
+
+			auto [it, _] = myFactories.insert(std::make_pair(id, std::move(future)));
+			myFactorySetFuncs.insert(std::make_pair(id, std::move(promise)));
+
+			itFactory = it;
+		}
+
+		auto& future = itFactory->second;
+
+		future.ThenRun(GetExecutor(), FutureRunResult([this, aFilePath, id](const auto& aCreateFuncs) mutable
+			{
+				auto anyFuture = aCreateFuncs.GetAsAny(aFilePath);
+
+				auto& fileMap = myKeepLoadedResources[id];
+
+				fileMap.insert(std::make_pair(std::move(aFilePath), std::move(anyFuture)));
+			}));
+	}
+	template<CFileResource TResource>
+	void Unload(const FilePath& aFilePath)
+	{
+		std::type_index id = typeid(TResource);
+
+		auto& fileMap = myKeepLoadedResources[id];
+
+		auto it = fileMap.find(aFilePath);
+
+		if (it == fileMap.end())
+			return;
+
+		auto anyFuture = std::move(it->second);
+
+		fileMap.erase(it);
+
+		anyFuture.reset();
+	}
+	
+	void KeepLoaded(std::string_view aResourceTypeName, const FilePath& aFilePath);
+	void Unload(std::string_view aResourceTypeName, const FilePath& aFilePath);
+
 private:
 	struct SResourceDataBase {};
 	template<CFileResource TResource>
@@ -107,17 +163,22 @@ private:
 	{
 		using CreateType		= std::function<Future<SharedReference<FileResourceBase>>(FilePath)>;
 		using CreateWithIdType	= std::function<Future<SharedReference<FileResourceBase>>(FilePath, FileResourceId, u32)>;
+		using GetAsAnyType		= std::function<std::any(FilePath)>;
 
 		CreateType			Create;
 		CreateWithIdType	CreateWithParams;
+		GetAsAnyType		GetAsAny;
 	};
 
 	using ResourceFileMap		= std::unordered_map<FilePath, Future<const std::shared_ptr<SResourceDataBase>>>;
+	using AnyFileMap			= std::unordered_map<FilePath, std::any>;
 
-	using ResourceTypeMap		= std::unordered_map<std::string_view, std::type_index>;
+	using ResourceTypeMap		= std::unordered_map<std::string_view, Future<const std::type_index>>;
+	using ResourceTypeSetMap	= std::unordered_map<std::string_view, Promise<const std::type_index>>;
 	using FactoryMap			= std::unordered_map<std::type_index, Future<const SCreateFuncs>>;
 	using FactorySetMap			= std::unordered_map<std::type_index, Promise<const SCreateFuncs>>;
 	using ResourceMap			= std::unordered_map<std::type_index, ResourceFileMap>;
+	using AnyMap				= std::unordered_map<std::type_index, AnyFileMap>;
 
 	template<CFileResource TResource>
 	Future<SResourceData<TResource>*> GetResourceDataFromMap(const FilePath& aPath)
@@ -316,9 +377,36 @@ private:
 		myResources.erase(itType);
 	}
 
-	ResourceTypeMap		myResourceTypeMap;
+	template<CFileResource TResource>
+	void SetTypeName()
+	{
+		std::string_view resourceName = GetFileResourceTypeName<TResource>();
+
+		auto itType = myResourceTypes.find(resourceName);
+
+		if (itType == myResourceTypes.end())
+		{
+			myResourceTypes.insert(std::make_pair(resourceName, MakeCompletedFuture<const std::type_index>(std::type_index(typeid(TResource)))));
+
+			return;
+		}
+
+		auto itSet = myResourceTypeSetFuncs.find(resourceName);
+
+		auto promise = std::move(itSet->second);
+
+		myResourceTypeSetFuncs.erase(itSet);
+
+		promise.Complete(std::type_index(typeid(TResource)));
+	}
+
+	ResourceTypeMap		myResourceTypes;
+	ResourceTypeSetMap	myResourceTypeSetFuncs;
+
 	FactoryMap			myFactories;
 	FactorySetMap		myFactorySetFuncs;
+
 	ResourceMap			myResources;
+	AnyMap				myKeepLoadedResources;
 
 };

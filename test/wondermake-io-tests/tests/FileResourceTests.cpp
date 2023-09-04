@@ -310,3 +310,185 @@ TEST(ResourceTests, getting_a_resource_twice_before_finished_calls_create_only_o
 	EXPECT_FALSE(f1.IsDone());
 	EXPECT_FALSE(f2.IsDone());
 }
+
+TEST(ResourceTests, keep_loaded_calls_create_but_never_removed_when_factory_is_already_set)
+{
+	FilePathData fpData;
+
+	FilePath	path = FilePath(FilePath::EFolder::Bin, "path");
+	auto		fileWatcherSys = MakeSharedReference<NiceMock<FileWatcherSystemMock>>(fpData);
+
+	fileWatcherSys->Initialize();
+
+	FileResourceSystem::InjectDependencies(std::make_tuple(fileWatcherSys));
+
+	auto resourceSystem = MakeSharedReference<FileResourceSystem>();
+
+	auto guidSystemMock = MakeSharedReference<NiceMock<GuidGeneratorSystemMock>>();
+
+	guidSystemMock->DelegateToFake();
+
+	TestGameResourceFactoryMock::InjectDependencies(std::make_tuple(guidSystemMock, resourceSystem));
+
+	auto factoryMock = MakeSharedReference<StrictMock<TestGameResourceFactoryMock>>();
+
+	factoryMock->Initialize();
+
+	EXPECT_CALL(*factoryMock, CreateResourceStrategy)
+		.WillOnce(locDefaultMake);
+
+	resourceSystem->KeepLoaded<TestFileResource>(path);
+}
+
+TEST(ResourceTests, keep_loaded_calls_create_but_never_removed_when_factory_is_set_afterwards)
+{
+	FilePathData fpData;
+
+	FilePath	path = FilePath(FilePath::EFolder::Bin, "path");
+	auto		fileWatcherSys = MakeSharedReference<NiceMock<FileWatcherSystemMock>>(fpData);
+
+	fileWatcherSys->Initialize();
+
+	FileResourceSystem::InjectDependencies(std::make_tuple(fileWatcherSys));
+
+	auto resourceSystem = MakeSharedReference<FileResourceSystem>();
+
+	auto guidSystemMock = MakeSharedReference<NiceMock<GuidGeneratorSystemMock>>();
+
+	guidSystemMock->DelegateToFake();
+
+	TestGameResourceFactoryMock::InjectDependencies(std::make_tuple(guidSystemMock, resourceSystem));
+
+	auto factoryMock = MakeSharedReference<StrictMock<TestGameResourceFactoryMock>>();
+
+	resourceSystem->KeepLoaded<TestFileResource>(path);
+
+	EXPECT_CALL(*factoryMock, CreateResourceStrategy)
+		.WillOnce(locDefaultMake);
+
+	factoryMock->Initialize();
+}
+
+TEST(ResourceTests, unload_removes_the_resource)
+{
+	FilePathData fpData;
+
+	FilePath	path = FilePath(FilePath::EFolder::Bin, "path");
+	auto		fileWatcherSys = MakeSharedReference<NiceMock<FileWatcherSystemMock>>(fpData);
+
+	fileWatcherSys->Initialize();
+
+	FileResourceSystem::InjectDependencies(std::make_tuple(fileWatcherSys));
+
+	auto resourceSystem = MakeSharedReference<FileResourceSystem>();
+
+	auto guidSystemMock = MakeSharedReference<NiceMock<GuidGeneratorSystemMock>>();
+
+	guidSystemMock->DelegateToFake();
+
+	TestGameResourceFactoryMock::InjectDependencies(std::make_tuple(guidSystemMock, resourceSystem));
+
+	auto factoryMock = MakeSharedReference<StrictMock<TestGameResourceFactoryMock>>();
+
+	factoryMock->Initialize();
+
+	EXPECT_CALL(*factoryMock, CreateResourceStrategy)
+		.WillOnce(locDefaultMake);
+
+	resourceSystem->KeepLoaded<TestFileResource>(path);
+
+	EXPECT_CALL(*factoryMock, DestroyResource);
+
+	resourceSystem->Unload<TestFileResource>(path);
+}
+
+TEST(ResourceTests, keep_loaded_with_type_name_calls_create_but_never_removed_when_factory_is_already_set)
+{
+	FilePathData fpData;
+
+	FilePath	path = FilePath(FilePath::EFolder::Bin, "path");
+	auto		fileWatcherSys = MakeSharedReference<NiceMock<FileWatcherSystemMock>>(fpData);
+
+	fileWatcherSys->Initialize();
+
+	FileResourceSystem::InjectDependencies(std::make_tuple(fileWatcherSys));
+
+	auto resourceSystem = MakeSharedReference<FileResourceSystem>();
+
+	auto guidSystemMock = MakeSharedReference<NiceMock<GuidGeneratorSystemMock>>();
+
+	guidSystemMock->DelegateToFake();
+
+	TestGameResourceFactoryMock::InjectDependencies(std::make_tuple(guidSystemMock, resourceSystem));
+
+	auto factoryMock = MakeSharedReference<StrictMock<TestGameResourceFactoryMock>>();
+
+	factoryMock->Initialize();
+
+	EXPECT_CALL(*factoryMock, CreateResourceStrategy)
+		.WillOnce(locDefaultMake);
+
+	resourceSystem->KeepLoaded("TestFileResource", path);
+}
+
+TEST(ResourceTests, keep_loaded_with_type_name_calls_create_but_never_removed_when_factory_is_set_afterwards)
+{
+	FilePathData fpData;
+
+	FilePath	path = FilePath(FilePath::EFolder::Bin, "path");
+	auto		fileWatcherSys = MakeSharedReference<NiceMock<FileWatcherSystemMock>>(fpData);
+
+	fileWatcherSys->Initialize();
+
+	FileResourceSystem::InjectDependencies(std::make_tuple(fileWatcherSys));
+
+	auto resourceSystem = MakeSharedReference<FileResourceSystem>();
+
+	auto guidSystemMock = MakeSharedReference<NiceMock<GuidGeneratorSystemMock>>();
+
+	guidSystemMock->DelegateToFake();
+
+	TestGameResourceFactoryMock::InjectDependencies(std::make_tuple(guidSystemMock, resourceSystem));
+
+	auto factoryMock = MakeSharedReference<StrictMock<TestGameResourceFactoryMock>>();
+
+	resourceSystem->KeepLoaded("TestFileResource", path);
+
+	EXPECT_CALL(*factoryMock, CreateResourceStrategy)
+		.WillOnce(locDefaultMake);
+
+	factoryMock->Initialize();
+}
+
+TEST(ResourceTests, unload_with_type_name_removes_the_resource)
+{
+	FilePathData fpData;
+
+	FilePath	path = FilePath(FilePath::EFolder::Bin, "path");
+	auto		fileWatcherSys = MakeSharedReference<NiceMock<FileWatcherSystemMock>>(fpData);
+
+	fileWatcherSys->Initialize();
+
+	FileResourceSystem::InjectDependencies(std::make_tuple(fileWatcherSys));
+
+	auto resourceSystem = MakeSharedReference<FileResourceSystem>();
+
+	auto guidSystemMock = MakeSharedReference<NiceMock<GuidGeneratorSystemMock>>();
+
+	guidSystemMock->DelegateToFake();
+
+	TestGameResourceFactoryMock::InjectDependencies(std::make_tuple(guidSystemMock, resourceSystem));
+
+	auto factoryMock = MakeSharedReference<StrictMock<TestGameResourceFactoryMock>>();
+
+	factoryMock->Initialize();
+
+	EXPECT_CALL(*factoryMock, CreateResourceStrategy)
+		.WillOnce(locDefaultMake);
+
+	resourceSystem->KeepLoaded<TestFileResource>(path);
+
+	EXPECT_CALL(*factoryMock, DestroyResource);
+
+	resourceSystem->Unload("TestFileResource", path);
+}

@@ -62,15 +62,15 @@ private:
 template<>
 [[nodiscard]] inline std::string_view GetFileResourceTypeName<ShaderResource<EShaderType::Vertex>>() noexcept
 {
-	return "Vertex Shader";
+	return "ShaderVertex";
 }
 template<>
 [[nodiscard]] inline std::string_view GetFileResourceTypeName<ShaderResource<EShaderType::Fragment>>() noexcept
 {
-	return "Fragment Shader";
+	return "ShaderFragment";
 }
 template<>
 [[nodiscard]] inline std::string_view GetFileResourceTypeName<ShaderResource<EShaderType::Geometry>>() noexcept
 {
-	return "Geometry Shader";
+	return "ShaderGeometry";
 }

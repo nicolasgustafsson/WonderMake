@@ -33,7 +33,7 @@ SpriteRenderingFunctionality::SpriteRenderingFunctionality()
 	auto& spriteComponent = Get<SSpriteComponent>();
 
 	spriteComponent.OnInitialized = Get<ShaderResourceSystem>()
-		.CreateProgram(FilePath(FilePath::EFolder::Bin, "shaders/vertex/sprite.vert"), FilePath(FilePath::EFolder::Bin, "shaders/fragment/sprite.frag"), FilePath(FilePath::EFolder::Bin, "shaders/geometry/sprite.geom"))
+		.CreateProgram(FilePath(FilePath::EFolder::Bin, "shaders/sprite.vert"), FilePath(FilePath::EFolder::Bin, "shaders/sprite.frag"), FilePath(FilePath::EFolder::Bin, "shaders/sprite.geom"))
 		.ThenApply(GetExecutor(), FutureApplyResult([this](auto aProgram)
 			{
 				Get<SSpriteComponent>().RenderObject.emplace(Get<ShaderResourceSystem>(), std::move(aProgram));

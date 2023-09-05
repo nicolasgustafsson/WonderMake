@@ -12,7 +12,7 @@ DebugLineDrawer::DebugLineDrawer() noexcept
 	: mySubscriber(BindHelper(&DebugLineDrawer::OnGotDebugLineMessage, this))
 {
 	myOnShaderProgram = Get<ShaderResourceSystem>()
-		.CreateProgram(FilePath(FilePath::EFolder::Bin, "shaders/vertex/line.vert"), FilePath(FilePath::EFolder::Bin, "shaders/fragment/line.frag"))
+		.CreateProgram(FilePath(FilePath::EFolder::Bin, "shaders/line.vert"), FilePath(FilePath::EFolder::Bin, "shaders/line.frag"))
 		.ThenApply(GetExecutor(), FutureApplyResult([this](auto aProgram)
 			{
 				myRenderObject.emplace(Get<ShaderResourceSystem>(), std::move(aProgram), 10000);

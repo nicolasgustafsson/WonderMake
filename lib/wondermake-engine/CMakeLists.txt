@@ -18,6 +18,8 @@ list(APPEND SourceFiles
     "source/ConfigurationProtoSerialization.h"
     "source/ConfigurationRemoteSystem.cpp"
     "source/DeserializeConfigurationJob.cpp"
+    "source/FileResourceLoader.cpp"
+    "source/FileResourceLoader.h"
     "source/LoggerFileSystem.cpp"
     "source/LoggerRemoteConnection.cpp"
     "source/LoggerRemoteSocket.cpp"

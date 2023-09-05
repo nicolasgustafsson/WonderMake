@@ -15,12 +15,15 @@ namespace ConfigurationEngine
 		std::string aOverrideFileApplication,
 		FilePath aOverrideFileDevice,
 		FilePath aOverrideFileUser,
+		FilePath aResourceLoaderFile,
 		std::optional<SGraphics> aGraphics,
 		std::optional<SAudio> aAudio)
 	{
 		aConfigurationSystem.Set<std::string>(OverrideFileApplication,	std::move(aOverrideFileApplication),			EConfigGroup::Application);
 		aConfigurationSystem.Set<FilePath>(OverrideFileDevice,			std::move(aOverrideFileDevice),					EConfigGroup::Application);
 		aConfigurationSystem.Set<FilePath>(OverrideFileUser,			std::move(aOverrideFileUser),					EConfigGroup::Application);
+		
+		aConfigurationSystem.Set<FilePath>(ResourceLoaderFile,			std::move(aResourceLoaderFile),					EConfigGroup::Application);
 
 		if (aGraphics)
 		{

@@ -147,6 +147,7 @@ namespace Engine
 						aInfo.Configuration.OverrideFileApplication.string(),
 						aInfo.Configuration.OverrideFileDevice,
 						aInfo.Configuration.OverrideFileUser,
+						aInfo.Configuration.ResourceLoaderFile,
 						std::move(graphics),
 						std::move(audio));
 

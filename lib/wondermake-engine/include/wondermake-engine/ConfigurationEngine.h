@@ -14,6 +14,8 @@ namespace ConfigurationEngine
 	inline constexpr std::string_view OverrideFileDevice			= "wondermake_engine.override_file.device";
 	inline constexpr std::string_view OverrideFileUser				= "wondermake_engine.override_file.user";
 	
+	inline constexpr std::string_view ResourceLoaderFile			= "wondermake_engine.resource_loader.file";
+
 	inline constexpr std::string_view WindowTitle					= "wondermake_engine.window.title";
 	inline constexpr std::string_view WindowWidth					= "wondermake_engine.window.width";
 	inline constexpr std::string_view WindowHeight					= "wondermake_engine.window.height";
@@ -57,6 +59,7 @@ namespace ConfigurationEngine
 		std::string aOverrideFileApplication,
 		FilePath aOverrideFileDevice,
 		FilePath aOverrideFileUser,
+		FilePath aResourceLoaderFile,
 		std::optional<SGraphics> aGraphics,
 		std::optional<SAudio> aAudio);
 }

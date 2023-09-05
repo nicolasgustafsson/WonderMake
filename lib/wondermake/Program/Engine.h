@@ -71,6 +71,9 @@ namespace Engine
 
 		// Path to the json file containing the user configuration overrides.
 		FilePath OverrideFileUser = FilePath(FilePath::EFolder::UserData, "user_settings.json");
+
+		// Path to json file listing all resources that should be kept loaded. This can be done programmatically by calling KeepLoaded in FileResourceSystem for each resource.
+		FilePath ResourceLoaderFile = FilePath();
 	};
 
 	struct GraphicsInfo

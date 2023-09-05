@@ -45,7 +45,7 @@ Renderer::Renderer() noexcept
 	: Debugged("Renderer", GetExecutor())
 {
 	Get<ShaderResourceSystem>()
-		.CreateProgram(FilePath(FilePath::EFolder::Bin, "shaders/vertex/pass.vert"), FilePath(FilePath::EFolder::Bin, "shaders/fragment/backbuffer_copy.frag"))
+		.CreateProgram(FilePath(FilePath::EFolder::Bin, "shaders/pass.vert"), FilePath(FilePath::EFolder::Bin, "shaders/backbuffer_copy.frag"))
 		.ThenRun(GetExecutor(), FutureRunResult([this](auto aProgram)
 			{
 				myCopyPass.emplace(Get<ShaderResourceSystem>(), std::move(aProgram));

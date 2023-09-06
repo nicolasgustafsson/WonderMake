@@ -13,6 +13,9 @@ using ::testing::Args;
 using ::testing::ByMove;
 using ::testing::DoDefault;
 using ::testing::ElementsAre;
+using ::testing::ElementsAreArray;
+using ::testing::UnorderedElementsAre;
+using ::testing::UnorderedElementsAreArray;
 using ::testing::Return;
 
 using ::testing::AllOf;
@@ -22,6 +25,8 @@ using ::testing::StrEq;
 using ::testing::Ref;
 
 using ::testing::Field;
+
+using ::testing::Pair;
 
 // This is a matcher like ElementsAreArray, but it allows you to match against a void *.
 template <typename T>

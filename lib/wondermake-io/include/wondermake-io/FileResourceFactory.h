@@ -93,6 +93,8 @@ public:
 	}
 	[[nodiscard]] inline Future<SharedReference<TResource>> CreateResourceWithParams(FilePath aFilePath, FileResourceId aId, u32 aGeneration)
 	{
+		WmLogInfo(TagWonderMake << TagWmResources << "Loading file resource; resource type: " << GetFileResourceTypeName<TResource>() << ", path: " << aFilePath << ", id: " << aId << ", gen: " << aGeneration << '.');
+
 		MakeResourceOp op(*this, aId, aFilePath, aGeneration);
 
 		return CreateResourceStrategy(aId, std::move(aFilePath), std::move(op));
@@ -151,6 +153,8 @@ private:
 	template<typename... TArgs>
 	[[nodiscard]] inline SharedReference<TResource> MakeResource(FileResourceId aId, u32 aGeneration, FilePath&& aFilePath, std::unordered_set<FilePath>&& aRelatedFiles, TArgs&&... aArgs)
 	{
+		WmLogInfo(TagWonderMake << TagWmResources << "Creating file resource; resource type: " << GetFileResourceTypeName<TResource>() << ", path: " << aFilePath << ", id: " << aId << ", gen: " << aGeneration << '.');
+
 		FileResourceBase::InjectResourceData(aId, GetFileResourceTypeName<TResource>(), aGeneration, std::move(aFilePath), std::move(aRelatedFiles));
 
 		std::shared_ptr<TResource> ptr(new TResource(std::forward<TArgs>(aArgs)...), [self = this->weak_from_this()](TResource* aResource)

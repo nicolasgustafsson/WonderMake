@@ -5,7 +5,7 @@
 
 #include <algorithm>
 
-void Scheduler::AddToSchedule(const SystemId aSystemId, std::vector<Policy> aPolicyList)
+void Scheduler::AddToSchedule(const SystemTypeId aSystemId, std::vector<Policy> aPolicyList)
 {
 	SSchedulingInfo item = {
 		aSystemId,
@@ -40,12 +40,12 @@ void Scheduler::AddToSchedule(const SystemId aSystemId, std::vector<Policy> aPol
 	return true;
 }
 
-void Scheduler::AddSystem(const SystemId aSystemId)
+void Scheduler::AddSystem(const SystemTypeId aSystemId)
 {
 	myEnqueuedSystems.push_back({ aSystemId });
 }
 
-[[nodiscard]] std::optional<SystemId> Scheduler::DequeueSystem()
+[[nodiscard]] std::optional<SystemTypeId> Scheduler::DequeueSystem()
 {
 	const auto canSystemRun = [&runningSystems = myRunningSystem](const auto& aSystemInfo)
 	{
@@ -108,7 +108,7 @@ void Scheduler::AddSystem(const SystemId aSystemId)
 
 	if (dequeuedIt == myEnqueuedSystems.cend())
 	{
-		return std::optional<SystemId>();
+		return std::optional<SystemTypeId>();
 	}
 
 	const auto dequeuedId = dequeuedIt->Id;
@@ -119,7 +119,7 @@ void Scheduler::AddSystem(const SystemId aSystemId)
 		// TODO(Kevin): Assert, something has gone terribly wrong.
 		WmLogError(TagWonderMake << TagWmScheduler << "Unknown system id found.");
 
-		return std::optional<SystemId>();
+		return std::optional<SystemTypeId>();
 	}
 
 	myRunningSystem.emplace(dequeuedId);
@@ -140,7 +140,7 @@ void Scheduler::AddSystem(const SystemId aSystemId)
 	return dequeuedId;
 }
 
-void Scheduler::MarkSystemAsDone(const SystemId aSystemId)
+void Scheduler::MarkSystemAsDone(const SystemTypeId aSystemId)
 {
 	myRunningSystem.erase(aSystemId);
 }

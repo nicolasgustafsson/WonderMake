@@ -2,8 +2,8 @@
 
 #include <algorithm>
 
-#include "wondermake-base/SystemId.h"
 #include "wondermake-base/SystemPolicy.h"
+#include "wondermake-base/SystemTypeId.h"
 
 #include "Policies/Scheduler.h"
 
@@ -110,13 +110,13 @@ void StaticTest_Policy_Concat()
 	static_assert(std::is_same_v<ConcatSetC, ConcatSetE>);
 }
 
-TEST_CASE("SystemId can be created and copied", "[SystemId]")
+TEST_CASE("SystemTypeId can be created and copied", "[SystemTypeId]")
 {
-	SECTION("SystemId can be created and is unique per class")
+	SECTION("SystemTypeId can be created and is unique per class")
 	{
-		const SystemId idSystemA1 = SystemId::Create<SystemA>();
-		const SystemId idSystemA2 = SystemId::Create<SystemA>();
-		const SystemId idSystemB = SystemId::Create<SystemB>();
+		const SystemTypeId idSystemA1 = SystemTypeId::Create<SystemA>();
+		const SystemTypeId idSystemA2 = SystemTypeId::Create<SystemA>();
+		const SystemTypeId idSystemB = SystemTypeId::Create<SystemB>();
 
 		REQUIRE(idSystemA1.Hash() != 0);
 		REQUIRE(idSystemA2.Hash() != 0);
@@ -127,10 +127,10 @@ TEST_CASE("SystemId can be created and copied", "[SystemId]")
 		REQUIRE(idSystemA1.Hash() == idSystemA2.Hash());
 	}
 
-	SECTION("SystemId can be copied")
+	SECTION("SystemTypeId can be copied")
 	{
-		const SystemId idSystemA = SystemId::Create<SystemA>();
-		SystemId idSystemB = SystemId::Create<SystemB>();
+		const SystemTypeId idSystemA = SystemTypeId::Create<SystemA>();
+		SystemTypeId idSystemB = SystemTypeId::Create<SystemB>();
 
 		REQUIRE(idSystemA.Hash() != idSystemB.Hash());
 
@@ -144,7 +144,7 @@ TEST_CASE("Policies can be created and can be tested for conflicts", "[Policy]")
 {
 	SECTION("Policy can be created")
 	{
-		const SystemId idSystemA = SystemId::Create<SystemA>();
+		const SystemTypeId idSystemA = SystemTypeId::Create<SystemA>();
 		const Policy policy = Policy::Create<SystemA>(PRead);
 
 		REQUIRE(policy.myDependencyId == idSystemA);
@@ -161,25 +161,25 @@ TEST_CASE("Policies can be created and can be tested for conflicts", "[Policy]")
 		CHECK(listA.size() == 0);
 
 		REQUIRE(listB.size() == 1);
-		CHECK(listB[0].myDependencyId == SystemId::Create<SystemA>());
+		CHECK(listB[0].myDependencyId == SystemTypeId::Create<SystemA>());
 		CHECK(listB[0].myPermission == PRead);
 
 		REQUIRE(listC.size() == 1);
-		CHECK(listC[0].myDependencyId == SystemId::Create<SystemA>());
+		CHECK(listC[0].myDependencyId == SystemTypeId::Create<SystemA>());
 		CHECK(listC[0].myPermission == PWrite);
 
 		REQUIRE(listD.size() == 3);
-		CHECK(listD[0].myDependencyId == SystemId::Create<SystemA>());
+		CHECK(listD[0].myDependencyId == SystemTypeId::Create<SystemA>());
 		CHECK(listD[0].myPermission == PWrite);
-		CHECK(listD[1].myDependencyId == SystemId::Create<SystemB>());
+		CHECK(listD[1].myDependencyId == SystemTypeId::Create<SystemB>());
 		CHECK(listD[1].myPermission == PRead);
-		CHECK(listD[2].myDependencyId == SystemId::Create<SystemC>());
+		CHECK(listD[2].myDependencyId == SystemTypeId::Create<SystemC>());
 		CHECK(listD[2].myPermission == PWrite);
 	}
 
 	SECTION("Policy can be copied")
 	{
-		const SystemId idSystemA = SystemId::Create<SystemA>();
+		const SystemTypeId idSystemA = SystemTypeId::Create<SystemA>();
 		const Policy policy1 = Policy::Create<SystemA>(PRead);
 		const Policy policy2 = policy1;
 
@@ -222,11 +222,11 @@ TEST_CASE("Scheduler detects circular dependencies", "[Scheduler]")
 
 	Scheduler schedule;
 
-	schedule.AddToSchedule(SystemId::Create<SystemA>(), policyListA);
-	schedule.AddToSchedule(SystemId::Create<SystemB>(), policyListB);
-	schedule.AddToSchedule(SystemId::Create<SystemC>(), policyListC);
-	schedule.AddToSchedule(SystemId::Create<SystemD>(), policyListD);
-	schedule.AddToSchedule(SystemId::Create<SystemE>(), policyListE);
+	schedule.AddToSchedule(SystemTypeId::Create<SystemA>(), policyListA);
+	schedule.AddToSchedule(SystemTypeId::Create<SystemB>(), policyListB);
+	schedule.AddToSchedule(SystemTypeId::Create<SystemC>(), policyListC);
+	schedule.AddToSchedule(SystemTypeId::Create<SystemD>(), policyListD);
+	schedule.AddToSchedule(SystemTypeId::Create<SystemE>(), policyListE);
 
 	REQUIRE_FALSE(schedule.Schedule());
 }

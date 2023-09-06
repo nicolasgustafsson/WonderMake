@@ -34,6 +34,7 @@ list(APPEND IncludeFiles
     "include/wondermake-base/SystemContainer.h"
     "include/wondermake-base/SystemFactory.h"
     "include/wondermake-base/SystemGlobal.h"
+    "include/wondermake-base/SystemId.h"
     "include/wondermake-base/SystemPolicy.h"
     "include/wondermake-base/SystemPtr.h"
     "include/wondermake-base/SystemRegistry.h"

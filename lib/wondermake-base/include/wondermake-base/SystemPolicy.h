@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SystemId.h"
+#include "SystemTypeId.h"
 
 #include <tuple>
 #include <vector>
@@ -14,7 +14,7 @@ struct Policy final
 		Read
 	};
 
-	SystemId		myDependencyId;
+	SystemTypeId	myDependencyId;
 	EPermission		myPermission = EPermission::Read;
 
 	inline [[nodiscard]] bool operator==(const Policy&) const noexcept = default;
@@ -22,7 +22,7 @@ struct Policy final
 	template<typename TDependency>
 	[[nodiscard]] inline static Policy Create(const EPermission aPermission) noexcept
 	{
-		return { SystemId::Create<TDependency>(), aPermission };
+		return { SystemTypeId::Create<TDependency>(), aPermission };
 	}
 
 	[[nodiscard]] inline bool Conflicts(const Policy& aOther) const noexcept

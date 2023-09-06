@@ -16,6 +16,7 @@ list(APPEND SourceFiles
     "Tests/JobSystemTests.cpp"
     "Tests/LoggerTests.cpp"
     "Tests/LogTagTests.cpp"
+    "Tests/SystemCounterTests.cpp"
     "Tests/WinEventSystemImplTests.cpp"
     "Tests/WinGuidGeneratorSystemTests.cpp"
     "Tests/WinProcessSystemTests.cpp"
@@ -24,6 +25,7 @@ list(APPEND SourceFiles
 list(APPEND SourceFiles
     "../../lib/wondermake-base/source/Configuration.cpp"
     "../../lib/wondermake-base/source/JobSystem.cpp"
+    "../../lib/wondermake-base/source/SystemCounter.cpp"
     "../../lib/wondermake-base/source/WinEventSystemImpl.cpp"
     "../../lib/wondermake-base/source/WinGuidGeneratorSystem.cpp"
     "../../lib/wondermake-base/source/WinProcess.cpp"

@@ -58,6 +58,7 @@ list(APPEND SourceFiles
     "source/ObjectDependencyDestructor.cpp"
     "source/PopulateObjectSystem.cpp"
     "source/RandomSystem.cpp"
+    "source/System.cpp"
     "source/SystemCounter.cpp"
     "source/SystemFactory.cpp"
     "source/SystemGlobal.cpp"

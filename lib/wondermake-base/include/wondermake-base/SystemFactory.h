@@ -13,11 +13,13 @@
 #include <functional>
 #include <memory>
 
+class GuidGeneratorSystem;
 class ScheduleSystemSingleton;
 
 class SystemFactory
 	: public System<
 		Policy::Set<
+			PAdd<GuidGeneratorSystem, PWrite>,
 			PAdd<ScheduleSystemSingleton, PWrite>>,
 		STrait::Set<
 			STSingleton,

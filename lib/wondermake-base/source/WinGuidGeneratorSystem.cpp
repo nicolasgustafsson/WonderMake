@@ -3,7 +3,7 @@
 #include "wondermake-base/SystemGlobal.h"
 #include "wondermake-base/WinPlatformSystem.h"
 
-WM_REGISTER_SYSTEM_MASKED(WinGuidGeneratorSystem, GuidGeneratorSystem);
+WM_REGISTER_SYSTEM_WITH_ID_MASKED(WinGuidGeneratorSystem, GuidGeneratorSystem, "459b919a-5617-4dc1-ada9-1b8f2f58154a");
 
 std::optional<Guid> WinGuidGeneratorSystem::GenerateNew()
 {

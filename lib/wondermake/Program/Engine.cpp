@@ -33,6 +33,7 @@
 #include "wondermake-base/ConfigurationGlobal.h"
 #include "wondermake-base/ConfigurationSystem.h"
 #include "wondermake-base/DependencySystem.h"
+#include "wondermake-base/GuidGeneratorSystem.h"
 #include "wondermake-base/JobSystem.h"
 #include "wondermake-base/JobGlobal.h"
 #include "wondermake-base/Logger.h"
@@ -58,19 +59,51 @@ namespace Engine
 
 		auto& sysRegistryRef = Global::GetSystemRegistry();
 
+		std::shared_ptr<GuidGeneratorSystem> guidGenSys;
+
+		const auto generateSystemId = [&guidGenSys]() -> SystemId
 		{
+			auto guid = guidGenSys->GenerateNew();
+
+			if (!guid)
+				WmLogError(TagWonderMake << "Failed to generate system id.");
+
+			return *guid;
+		};
+
+		{
+			SystemContainer platformContainer;
+			const auto returnDefaultIdAndLogError = [&guidGenSys]() -> SystemId
+			{
+				WmLogError(TagWonderMake << "Tried to generated system id for first systems.");
+
+				return Guid::Zero();
+			};
+
+			auto result = sysRegistryRef.CreateSystem<GuidGeneratorSystem>(returnDefaultIdAndLogError);
+
+			if (!result)
+				return;
+
+			platformContainer = std::move(result).Unwrap();
+
+			guidGenSys = platformContainer.GetPtr<GuidGeneratorSystem>();
+
+			if (!guidGenSys)
+				return;
+
 			SystemRegistry::Filter filter;
 
 			filter.RequiredAnyTraits = { STrait::Set<STPlatform, STWonderMake>::ToObject() };
 			if (aInfo.Headless)
 				filter.DisallowedTraits = { STrait::ToObject<STGui>() };
 
-			auto result = sysRegistryRef.CreateSystems(filter);
+			result = sysRegistryRef.CreateSystems(filter, generateSystemId);
 
 			if (!result)
 				return;
 
-			SystemContainer platformContainer = std::move(result).Unwrap();
+			platformContainer = std::move(result).Unwrap();
 
 			if (!SetupPlatformFilePaths(platformContainer, aInfo.ProjectFolderNames))
 				return;
@@ -88,7 +121,7 @@ namespace Engine
 			return taskManager->ScheduleRepeating(std::move(aExecutor), std::move(aTask));
 		};
 
-		sysRegistryRef.AddSystem<JobSystem>([&sysContainer, &taskManager]() -> SharedReference<JobSystem>
+		sysRegistryRef.AddSystem<JobSystem>([&sysContainer, &taskManager](auto aOnCreate, auto) -> SharedReference<JobSystem>
 		{
 			struct SScheduleExecutor
 			{
@@ -100,17 +133,26 @@ namespace Engine
 				}
 			};
 
-			static auto jobSys = MakeSharedReference<JobSystem>(JobGlobal::GetRegistry(), sysContainer, SScheduleExecutor
-				{
-					.Executor = [taskManager](Closure aCallable) { taskManager->Schedule(InlineExecutor(), std::move(aCallable)).Detach(); }
-				});
+			auto create = [&sysContainer, &taskManager, &aOnCreate]()
+			{
+				aOnCreate();
+
+				return MakeSharedReference<JobSystem>(JobGlobal::GetRegistry(), sysContainer, SScheduleExecutor
+					{
+						.Executor = [taskManager](Closure aCallable) { taskManager->Schedule(InlineExecutor(), std::move(aCallable)).Detach(); }
+					});
+			};
+
+			static auto jobSys = create();
 
 			return jobSys;
 		});
-		sysRegistryRef.AddSystem<ConfigurationSystem>([&aInfo]()
+		sysRegistryRef.AddSystem<ConfigurationSystem>([&aInfo](auto aOnCreate, auto)
 			{
-				const auto create = [&aInfo]()
+				const auto create = [&aInfo, &aOnCreate]()
 				{
+					std::move(aOnCreate)();
+
 					auto config = MakeSharedReference<ConfigurationSystem>();
 					const auto& filePathData = FilePathData::Get();
 
@@ -160,24 +202,53 @@ namespace Engine
 
 				return config;
 			});
-		sysRegistryRef.AddSystem<CmdLineArgsSystem>([cmdLineArgs = aInfo.CommandLineArguments]() -> SharedReference<CmdLineArgsSystem>
+		sysRegistryRef.AddSystem<CmdLineArgsSystem>([cmdLineArgs = aInfo.CommandLineArguments](auto aOnCreate, auto) -> SharedReference<CmdLineArgsSystem>
 		{
-			static auto instance = MakeSharedReference<CmdLineArgsSystem>(cmdLineArgs);
+			auto create = [&cmdLineArgs, &aOnCreate]()
+			{
+				aOnCreate();
+
+				return MakeSharedReference<CmdLineArgsSystem>(cmdLineArgs);
+			};
+
+			static auto instance = create();
 
 			return instance;
 		});
-		sysRegistryRef.AddSystem<ScheduleSystemSingleton>([&scheduleProc, &scheduleRepeatingProc]() -> SharedReference<ScheduleSystemSingleton>
+		sysRegistryRef.AddSystem<ScheduleSystemSingleton>([&scheduleProc, &scheduleRepeatingProc](auto aOnCreate, auto) -> SharedReference<ScheduleSystemSingleton>
 			{
-				static auto instance = MakeSharedReference<ScheduleSystemSingleton>(scheduleProc, scheduleRepeatingProc);
+				auto create = [&scheduleProc, &scheduleRepeatingProc, &aOnCreate]()
+				{
+					aOnCreate();
+
+					return MakeSharedReference<ScheduleSystemSingleton>(scheduleProc, scheduleRepeatingProc);
+				};
+
+				static auto instance = create();
 
 				return instance;
 			});
 
 		auto sysRegistry = sysRegistryRef;
 
-		sysRegistry.AddSystem<ScheduleSystem>([&scheduleProc, &scheduleRepeatingProc]() -> SharedReference<ScheduleSystem>
+		sysRegistry.AddSystem<ScheduleSystem>([&scheduleProc, &scheduleRepeatingProc](auto aOnCreate, auto aOnDestroy) -> SharedReference<ScheduleSystem>
 			{
-				return MakeSharedReference<ScheduleSystem>(scheduleProc, scheduleRepeatingProc);
+				auto destroy = [onDestroy = std::move(aOnDestroy)](ScheduleSystem* aPtr) mutable
+				{
+					if (!aPtr)
+						return;
+
+					std::move(onDestroy)(*aPtr);
+
+					delete aPtr;
+				};
+
+				std::move(aOnCreate)();
+
+				auto ptr = std::shared_ptr<ScheduleSystem>(new ScheduleSystem(std::move(scheduleProc), std::move(scheduleRepeatingProc)), destroy);
+
+				return SharedReference<ScheduleSystem>::FromPointer(std::move(ptr))
+					.Unwrap();
 			});
 
 		ProcessId currentProcessId;
@@ -189,7 +260,7 @@ namespace Engine
 			if (aInfo.Headless)
 				filter.DisallowedTraits = { STrait::ToObject<STGui>() };
 
-			auto result = sysRegistry.CreateSystems(filter);
+			auto result = sysRegistry.CreateSystems(filter, generateSystemId);
 
 			if (!result)
 				return;
@@ -315,7 +386,7 @@ namespace Engine
 			if (aInfo.Headless)
 				filter.DisallowedTraits = { STrait::ToObject<STGui>() };
 
-			auto result = sysRegistry.CreateSystems(filter);
+			auto result = sysRegistry.CreateSystems(filter, generateSystemId);
 
 			if (!result)
 				return;
@@ -391,7 +462,7 @@ namespace Engine
 			if (aInfo.Headless)
 				filter.DisallowedTraits = { STrait::ToObject<STGui>() };
 
-			auto result = sysRegistry.CreateSystems(filter);
+			auto result = sysRegistry.CreateSystems(filter, generateSystemId);
 
 			if (!result)
 			{
@@ -419,7 +490,7 @@ namespace Engine
 
 			WmLogInfo(TagWonderMake << "Creating systems...");
 
-			auto result = sysRegistry.CreateSystems(filter);
+			auto result = sysRegistry.CreateSystems(filter, generateSystemId);
 
 			if (!result)
 			{

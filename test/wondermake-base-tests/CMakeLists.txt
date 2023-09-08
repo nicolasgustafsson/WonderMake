@@ -25,6 +25,7 @@ list(APPEND SourceFiles
 list(APPEND SourceFiles
     "../../lib/wondermake-base/source/Configuration.cpp"
     "../../lib/wondermake-base/source/JobSystem.cpp"
+    "../../lib/wondermake-base/source/System.cpp"
     "../../lib/wondermake-base/source/SystemCounter.cpp"
     "../../lib/wondermake-base/source/WinEventSystemImpl.cpp"
     "../../lib/wondermake-base/source/WinGuidGeneratorSystem.cpp"

@@ -10,6 +10,7 @@ list(APPEND SourceFiles
 list(APPEND SourceFiles
     "../../lib/wondermake-base/source/Configuration.cpp"
     "../../lib/wondermake-base/source/Logger.cpp"
+    "../../lib/wondermake-base/source/System.cpp"
     "../../lib/wondermake-engine/source/ConfigurationProtoSerialization.cpp"
     "../../lib/wondermake-engine/source/ConfigurationRemoteSystem.cpp"
     "../../lib/wondermake-engine/source/DeserializeConfigurationJob.cpp"

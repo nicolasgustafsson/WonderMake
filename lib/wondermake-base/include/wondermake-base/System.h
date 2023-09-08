@@ -1,7 +1,8 @@
 #pragma once
 
-#include "SystemPolicy.h"
-#include "SystemTraits.h"
+#include "wondermake-base/SystemId.h"
+#include "wondermake-base/SystemPolicy.h"
+#include "wondermake-base/SystemTraits.h"
 
 #include "wondermake-utility/Executor.h"
 #include "wondermake-utility/RestrictTypes.h"
@@ -18,7 +19,8 @@ public:
 	virtual ~SystemBase() = default;
 
 protected:
-	constexpr SystemBase() noexcept = default;
+	constexpr SystemBase() = default;
+
 };
 
 template<typename TPolicySet = Policy::Set<>, typename TTraitSet = SystemTraits::Set<>>
@@ -75,12 +77,13 @@ protected:
 	}
 
 private:
-	static thread_local std::optional<Dependencies> myInjectedDependencies;
+	static thread_local std::optional<Dependencies>	myInjectedDependencies;
 
 	Dependencies myDependencies;
 
 	template<typename>
 	friend class FunctionalitySystem;
+
 };
 
 template<typename TPolicySet, typename TTraitSet>
@@ -92,8 +95,26 @@ class SystemAbstracted
 public:
 	virtual ~SystemAbstracted() = default;
 
+	inline static void InjectId(SystemId aId)
+	{
+		myInjectedId.emplace(aId);
+	}
+
+	[[nodiscard]] inline SystemId Id() const noexcept
+	{
+		return myId;
+	}
+
 protected:
-	constexpr SystemAbstracted() noexcept = default;
+	inline SystemAbstracted() noexcept
+		: myId(myInjectedId.value_or(Guid::Zero()))
+	{}
+
+private:
+	static thread_local std::optional<SystemId> myInjectedId;
+
+	SystemId myId;
+
 };
 
 template<typename TPolicySet = Policy::Set<>, typename TTraitSet = SystemTraits::Set<>>

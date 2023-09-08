@@ -1,7 +1,14 @@
 #include "wondermake-base/SystemRegistry.h"
 
-Result<SystemContainer, SystemRegistry::SError> SystemRegistry::CreateSystems(const Filter& aFilter)
+SystemRegistry::SystemRegistry()
 {
+	mySharedCounter = std::make_shared<SystemCounter>();
+}
+
+Result<SystemContainer, SystemRegistry::SError> SystemRegistry::CreateSystems(const Filter& aFilter, GenerateSystemIdType aGenerateSystemId)
+{
+	mySharedCounter->IncreaseGeneration();
+
 	DependencyInjector dependencyInjector;
 
 	dependencyInjector.Add<DependencyInjector>([&dependencyInjector]() -> auto&
@@ -39,7 +46,7 @@ Result<SystemContainer, SystemRegistry::SError> SystemRegistry::CreateSystems(co
 	for (auto&& system : std::views::all(mySystemList)
 		| std::views::filter(requiredFilter)
 		| std::views::filter(disallowedFilter))
-		system.InjectFunc(*this, dependencyInjector);
+		system.InjectFunc(*this, dependencyInjector, aGenerateSystemId);
 
 	auto result = dependencyInjector.CreateAll();
 

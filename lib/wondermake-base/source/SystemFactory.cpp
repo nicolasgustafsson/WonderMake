@@ -1,8 +1,11 @@
 #include "wondermake-base/SystemFactory.h"
 
 #include "wondermake-base/DependencySystem.h"
+#include "wondermake-base/GuidGeneratorSystem.h"
+#include "wondermake-base/Logger.h"
 #include "wondermake-base/ScheduleSystem.h"
 #include "wondermake-base/SystemGlobal.h"
+#include "wondermake-base/WmLogTags.h"
 
 WM_REGISTER_SYSTEM(SystemFactory);
 
@@ -12,6 +15,7 @@ Future<Result<std::shared_ptr<SystemContainer>, SystemRegistry::SError>> SystemF
 	std::function<EventSubscriber(AnyExecutor aExecutor, std::function<void()>&& aTask)>	aScheduleRepeatingFunc)
 {
 	auto [promise, future] = MakeAsync<Result<std::shared_ptr<SystemContainer>, SystemRegistry::SError>>();
+	auto& guidGenSys = Get<GuidGeneratorSystem>();
 	auto& scheduleSys = Get<ScheduleSystemSingleton>();
 
 	auto sheduledFuture = scheduleSys
@@ -20,6 +24,7 @@ Future<Result<std::shared_ptr<SystemContainer>, SystemRegistry::SError>> SystemF
 			passedScheduleFunc = std::move(aScheduleFunc),
 			passedScheduleRepeatingFunc = std::move(aScheduleRepeatingFunc),
 			promise = std::move(promise),
+			&guidGenSys,
 			&scheduleSys]() mutable
 	{
 		auto getScheduleFunc = [&scheduleSys, &passedScheduleFunc]()
@@ -50,14 +55,38 @@ Future<Result<std::shared_ptr<SystemContainer>, SystemRegistry::SError>> SystemF
 		auto registry = Global::GetSystemRegistry();
 		auto scheduleFunc = getScheduleFunc();
 		auto scheduleRepeatingFunc = getScheduleRepeatingFunc();
+		const auto generateSystemId = [&guidGenSys]() -> SystemId
+		{
+			auto guid = guidGenSys.GenerateNew();
 
-		registry.AddSystem<ScheduleSystem>([&scheduleFunc, &scheduleRepeatingFunc]() -> SharedReference<ScheduleSystem>
+			if (!guid)
+				WmLogError(TagWonderMake << "Failed to generate system id.");
+
+			return *guid;
+		};
+
+		registry.AddSystem<ScheduleSystem>([&scheduleFunc, &scheduleRepeatingFunc](auto aOnCreate, auto aOnDestroy) -> SharedReference<ScheduleSystem>
 			{
-				return MakeSharedReference<ScheduleSystem>(std::move(scheduleFunc), std::move(scheduleRepeatingFunc));
+				auto destroy = [onDestroy = std::move(aOnDestroy)](ScheduleSystem* aPtr) mutable
+				{
+					if (!aPtr)
+						return;
+
+					std::move(onDestroy)(*aPtr);
+
+					delete aPtr;
+				};
+
+				std::move(aOnCreate)();
+
+				auto ptr = std::shared_ptr<ScheduleSystem>(new ScheduleSystem(std::move(scheduleFunc), std::move(scheduleRepeatingFunc)), destroy);
+
+				return SharedReference<ScheduleSystem>::FromPointer(std::move(ptr))
+					.Unwrap();
 			});
 
 		auto result = registry
-			.CreateSystems(filter);
+			.CreateSystems(filter, generateSystemId);
 
 		if (!result)
 		{

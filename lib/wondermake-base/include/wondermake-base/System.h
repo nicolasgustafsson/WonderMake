@@ -6,8 +6,10 @@
 #include "wondermake-utility/Executor.h"
 #include "wondermake-utility/RestrictTypes.h"
 #include "wondermake-utility/SharedReference.h"
+#include "wondermake-utility/Utility.h"
 
 #include <optional>
+#include <type_traits>
 
 class SystemBase
 	: public NonCopyable
@@ -115,4 +117,19 @@ template<typename TSystem>
 	TSystem::InjectDependencies(std::move(aDependencies));
 
 	return MakeSharedReference<TSystem>();
+}
+
+template<typename TSystem>
+concept CNamedSystem = requires()
+{
+	{ TSystem::TypeName() } -> std::convertible_to<std::string_view>;
+};
+
+template<typename TSystem>
+[[nodiscard]] inline std::string_view GetSystemTypeName() noexcept
+{
+	if constexpr (CNamedSystem<TSystem>)
+		return TSystem::TypeName();
+	else
+		return Utility::GetTypeName<TSystem>();
 }

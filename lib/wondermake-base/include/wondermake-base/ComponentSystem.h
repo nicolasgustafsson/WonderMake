@@ -41,6 +41,22 @@ class ComponentSystem
 	, public std::enable_shared_from_this<ComponentSystem<TComponent>>
 {
 public:
+	[[nodiscard]] inline static std::string_view TypeName() noexcept
+	{
+		if constexpr (CNamedComponent<TComponent>)
+		{
+			static auto typeName = static_cast<std::string>(TComponent::TypeName()) + " System";
+
+			return typeName;
+		}
+		else
+		{
+			static auto typeName = static_cast<std::string>(Utility::GetTypeName<TComponent>()) + " System";
+
+			return typeName;
+		}
+	}
+
 	inline ComponentSystem()
 		: myDependencyDestructor([this](Object& /*aObject*/, auto* aComponent)
 			{

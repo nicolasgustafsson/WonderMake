@@ -10,6 +10,7 @@
 
 #include "wondermake-utility/plf_colony.h"
 #include "wondermake-utility/SharedReference.h"
+#include "wondermake-utility/Utility.h"
 
 #include <functional>
 #include <memory>
@@ -56,6 +57,22 @@ class FunctionalitySystem final
 {
 public:
 	using Super = _Impl::GetFunctionalitySystem<TFunctionality>;
+
+	[[nodiscard]] inline static std::string_view TypeName() noexcept
+	{
+		if constexpr (CNamedFunctionality<TFunctionality>)
+		{
+			static auto typeName = static_cast<std::string>(TFunctionality::TypeName()) + " System";
+
+			return typeName;
+		}
+		else
+		{
+			static auto typeName = static_cast<std::string>(Utility::GetTypeName<TFunctionality>()) + " System";
+
+			return typeName;
+		}
+	}
 
 	inline FunctionalitySystem()
 		: myDependencyDestructor([this](Object& aObject, auto* aFunctionality)
@@ -145,6 +162,13 @@ class FunctionalitySystemDelegate final
 		typename TFunctionality::SystemTraits>
 {
 public:
+	[[nodiscard]] inline static std::string_view TypeName() noexcept
+	{
+		static auto typeName = static_cast<std::string>(FunctionalitySystem<TFunctionality>::TypeName()) + " Delegate";
+
+		return typeName;
+	}
+
 	inline FunctionalitySystemDelegate() noexcept
 		: myFunctionalityConstructor([this](auto& aObject, const bool aExplicitlyAdded) -> auto&
 			{

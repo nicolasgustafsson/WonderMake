@@ -13,6 +13,12 @@ concept CFunctionalityInitializable = requires(TFunctionality& aFunctionality, T
 	{ aFunctionality.Initialize(std::move(aArgs)...) };
 };
 
+template<typename TFunctionality>
+concept CNamedFunctionality = requires()
+{
+	{ TFunctionality::TypeName() } -> std::convertible_to<std::string_view>;
+};
+
 class Object;
 
 template<

@@ -13,6 +13,13 @@ struct _STransformComponent2D
 	using RepPosition = TRepPosition;
 	using RepRotation = TRepRotation;
 
+	[[nodiscard]] inline static std::string_view TypeName() noexcept
+	{
+		static auto typeName = "STransformComponent2D<" + static_cast<std::string>(Utility::GetTypeName<TRepPosition>()) + ", " + static_cast<std::string>(Utility::GetTypeName<TRepRotation>()) + '>';
+
+		return typeName;
+	}
+
 	RepPosition	Position = {};
 	RepRotation	Rotation = {};
 };

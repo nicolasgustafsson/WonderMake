@@ -20,6 +20,13 @@ public:
 	using RepPosition	= TRepVector;
 	using RepRotation	= TRepRotation;
 
+	[[nodiscard]] inline static std::string_view TypeName() noexcept
+	{
+		static auto typeName = "TransformFunctionality2D<" + static_cast<std::string>(Utility::GetTypeName<TRepVector>()) + ", " + static_cast<std::string>(Utility::GetTypeName<TRepRotation>()) + '>';
+
+		return typeName;
+	}
+
 	void Initialize(const RepPosition aPosition)
 	{
 		SetPosition(aPosition);

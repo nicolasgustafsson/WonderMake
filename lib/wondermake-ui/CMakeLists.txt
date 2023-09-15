@@ -63,6 +63,8 @@ list(APPEND SourceFiles
     "source/ShaderParser.cpp"
     "source/ShaderParser.h"
     "source/StbImplementation.cpp"
+    "source/SystemRegistryView.cpp"
+    "source/SystemRegistryView.h"
     "source/TextureResourceFactory.cpp"
     "source/TextureResourceFactory.h"
     "source/TextureResourceSystem.cpp"

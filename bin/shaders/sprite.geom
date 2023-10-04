@@ -12,6 +12,7 @@ in float vertexRotation[];
 out vec2 TexCoord;
 out vec4 Color;
 
+//!#include "common.glsl"
 //!#include "engine_uniform_buffer.glsl"
 
 void ConstructSpriteRectangle(vec2 position, vec2 origin, vec2 scale, vec4 color, float rotation)
@@ -21,7 +22,7 @@ void ConstructSpriteRectangle(vec2 position, vec2 origin, vec2 scale, vec4 color
 
 	float width = TextureSize.x * scale.x * 0.5;
 	float height = TextureSize.y * scale.y * 0.5;
-	mat2 rotationMatrix = mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation));
+	mat2 rotationMatrix = CreateRotation2D(rotation);
 
 	position += origin * vec2(width, height) * rotationMatrix;
 
@@ -29,7 +30,7 @@ void ConstructSpriteRectangle(vec2 position, vec2 origin, vec2 scale, vec4 color
 
 	vec2 rotatedScale = vec2(-width, -height) * rotationMatrix;
 
-	gl_Position.xy = (vec3((position + rotatedScale.xy).xy, 1.0) * ViewProjectionMatrix).xy;
+	gl_Position.xy = (vec3((position + rotatedScale).xy, 1.0) * ViewProjectionMatrix).xy;
 	TexCoord = vec2(0.0, 1.0);
 
 	EmitVertex(); 
@@ -38,7 +39,7 @@ void ConstructSpriteRectangle(vec2 position, vec2 origin, vec2 scale, vec4 color
 
 	rotatedScale = vec2(width, -height) * rotationMatrix;
 
-	gl_Position.xy = (vec3((position + rotatedScale.xy).xy, 1.0) * ViewProjectionMatrix).xy;
+	gl_Position.xy = (vec3((position + rotatedScale).xy, 1.0) * ViewProjectionMatrix).xy;
 	TexCoord = vec2(1.0, 1.0);
 
 	EmitVertex();
@@ -47,7 +48,7 @@ void ConstructSpriteRectangle(vec2 position, vec2 origin, vec2 scale, vec4 color
 
 	rotatedScale = vec2(-width, height) * rotationMatrix;
 
-	gl_Position.xy = (vec3((position + rotatedScale.xy).xy, 1.0) * ViewProjectionMatrix).xy;
+	gl_Position.xy = (vec3((position + rotatedScale).xy, 1.0) * ViewProjectionMatrix).xy;
 	TexCoord = vec2(0.0, 0.0);
 
 	EmitVertex();
@@ -56,7 +57,7 @@ void ConstructSpriteRectangle(vec2 position, vec2 origin, vec2 scale, vec4 color
 
 	rotatedScale = vec2(width, height) * rotationMatrix;
 
-	gl_Position.xy = (vec3((position + rotatedScale.xy).xy, 1.0) * ViewProjectionMatrix).xy;
+	gl_Position.xy = (vec3((position + rotatedScale).xy, 1.0) * ViewProjectionMatrix).xy;
 	TexCoord = vec2(1.0, 0.0);
 
 	EmitVertex();

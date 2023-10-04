@@ -130,6 +130,10 @@ public:
     {
         return *this /= RotationCast<SRotation<TFromRep, TRatio>>(aRhs).Rotation;
     }
+    inline constexpr SRotation operator-() const noexcept
+    {
+        return SRotation(-Rotation);
+    }
 
     TRep Rotation = {};
 };

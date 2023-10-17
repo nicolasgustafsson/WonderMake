@@ -30,6 +30,31 @@ public:
 	template<typename TType>
 	inline void Remove(const bool aExplicitlyRemoved = true);
 
+	template<typename TType>
+	inline std::remove_reference_t<TType>* Get() const noexcept
+	{
+		auto findType = [](const auto& aPair)
+		{
+			return aPair.first == typeid(std::decay_t<TType>);
+		};
+		auto getList = [this]() -> auto&
+		{
+			if constexpr (std::is_base_of_v<SComponent, std::decay_t<TType>>)
+				return myComponents;
+			else if constexpr (std::is_base_of_v<_BaseFunctionality, std::decay_t<TType>>)
+				return myFunctionalities;
+		};
+
+		auto& list = getList();
+
+		auto it = std::ranges::find_if(list, findType);
+
+		if (it != list.end())
+			return reinterpret_cast<std::remove_reference_t<TType>*>(it->second.Reference);
+
+		return nullptr;
+	}
+
 private:
 	template<typename TType>
 	struct SRefCounter

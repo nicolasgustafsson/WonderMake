@@ -118,7 +118,7 @@ private:
 						{
 							SystemId id = aFixedId ? *aFixedId : aGenSystemId();
 
-							sysCounter->AddSystem(id, static_cast<std::string>(GetSystemTypeName<TSystem>())); // FIXME
+							sysCounter->AddSystem(id, static_cast<std::string>(GetSystemTypeName<TSystem>()));
 							(sysCounter->AddSystemDependency(id, aDependencies->Id()), ...);
 
 							TSystem::InjectDependencies(std::make_tuple(std::move(aDependencies)...));

@@ -1,6 +1,7 @@
 #pragma once
 #include <concepts>
 #include <cmath>
+#include <type_traits>
 
 #include "Typedefs.h"
 
@@ -125,7 +126,21 @@ namespace WmMath
 	template<typename T>
 	inline constexpr [[nodiscard]] T Cube(const T aBase) noexcept
 	{
-		return Pow(aBase, 3);
+		return Pow(aBase,	3);
+	}
+
+	template<typename T>
+		requires (std::is_floating_point_v<T>)
+	inline [[nodiscard]] T Sqrt(const T aValue) noexcept
+	{
+		return std::sqrt(aValue);
+	}
+
+	template<typename T>
+		requires (!std::is_floating_point_v<T>)
+	inline [[nodiscard]] f64 Sqrt(const T aValue) noexcept
+	{
+		return std::sqrt(aValue);
 	}
 
 	template<typename T>

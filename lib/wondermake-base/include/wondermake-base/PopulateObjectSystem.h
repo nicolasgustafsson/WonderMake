@@ -40,7 +40,7 @@ public:
 					TFunctionality& functionality = aResult.Unwrap().get().AddFunctionality(aObject);
 
 					static constexpr bool initializable = CFunctionalityInitializable<TFunctionality, TInitializeArgs...>;
-					static constexpr bool hasArgs = sizeof...(args);
+					static constexpr bool hasArgs = sizeof...(args) > 0;
 
 					static_assert(initializable || !hasArgs, "No Initialize function which takes the specified arguments.");
 
